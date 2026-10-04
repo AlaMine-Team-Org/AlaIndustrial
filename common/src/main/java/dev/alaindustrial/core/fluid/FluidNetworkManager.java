@@ -1,13 +1,11 @@
 package dev.alaindustrial.core.fluid;
 
 import dev.alaindustrial.Config;
-import dev.alaindustrial.block.FluidPipeBlock;
-import dev.alaindustrial.block.entity.FluidPipeBlockEntity;
 import dev.alaindustrial.core.net.GraphNetworkManager;
+import dev.alaindustrial.core.net.GraphNetworkOps;
 import dev.alaindustrial.core.net.NetworkOps;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -17,7 +15,7 @@ import net.minecraft.server.level.ServerLevel;
  * shared {@link GraphNetworkManager}; what remains here is what is genuinely fluid's own.
  *
  * <p><b>Connectivity is a PREDICATE, not raw adjacency.</b> A pipe face can be switched off, so
- * {@link FluidPipeBlock#shouldConnectTo} decides what is linked. That is why every entry point which
+ * {@link FluidPipeNode#connects} decides what is linked. That is why every entry point which
  * may have CREATED a link re-runs the union: the framework's re-partition can only ever split (its
  * traversal is bounded by the network's own node set). Skipping that is exactly MOD-282 — a
  * re-enabled joint left the two halves as separate networks forever, on a line that still looked
@@ -37,84 +35,42 @@ public final class FluidNetworkManager {
 	private FluidNetworkManager() {
 	}
 
-	private static final NetworkOps<ServerLevel, FluidNetwork, BlockPos> OPS =
-			new NetworkOps<ServerLevel, FluidNetwork, BlockPos>() {
-				@Override
-				public FluidNetwork create(ServerLevel level) {
-					return new FluidNetwork(level);
-				}
+	/** The frame's view of a fluid network: every operation is the network's own ({@link GraphNetworkOps}, MOD-715). */
+	private static final NetworkOps<ServerLevel, FluidNetwork, BlockPos> OPS = new GraphNetworkOps<>(
+			FluidNetwork::new, FluidNetworkManager::candidates, FluidNetworkManager::connected);
 
-				@Override
-				public Set<BlockPos> nodes(FluidNetwork network) {
-					return network.pipes();
-				}
+	/** The six positions a pipe could touch, ignoring its faces. */
+	private static List<BlockPos> candidates(BlockPos pos) {
+		List<BlockPos> result = new ArrayList<>(6);
+		for (Direction dir : Direction.values()) {
+			result.add(pos.relative(dir).immutable());
+		}
+		return result;
+	}
 
-				@Override
-				public void addNode(FluidNetwork network, BlockPos pos) {
-					network.addPipe(pos);
-				}
-
-				@Override
-				public void removeNode(FluidNetwork network, BlockPos pos) {
-					network.removePipe(pos);
-				}
-
-				@Override
-				public void absorb(FluidNetwork keep, FluidNetwork drop) {
-					keep.absorb(drop);
-				}
-
-				@Override
-				public void markDirty(FluidNetwork network) {
-					network.markDirty();
-				}
-
-				@Override
-				public boolean isAwake(FluidNetwork network) {
-					return network.isAwake();
-				}
-
-				@Override
-				public long tick(FluidNetwork network) {
-					// A fluid network has no throughput counter of its own; the framework's telemetry
-					// slot stays at zero and only the energy manager reads it.
-					network.tick();
-					return 0L;
-				}
-
-				@Override
-				public Iterable<BlockPos> candidates(BlockPos pos) {
-					List<BlockPos> result = new ArrayList<>(6);
-					for (Direction dir : Direction.values()) {
-						result.add(pos.relative(dir).immutable());
-					}
-					return result;
-				}
-
-				@Override
-				public Iterable<BlockPos> connected(ServerLevel level, BlockPos pos) {
-					List<BlockPos> result = new ArrayList<>(6);
-					for (Direction dir : Direction.values()) {
-						if (FluidPipeBlock.shouldConnectTo(level, pos, dir)) {
-							result.add(pos.relative(dir).immutable());
-						}
-					}
-					return result;
-				}
-			};
+	/** The positions a pipe is joined to through a connecting face right now. */
+	private static List<BlockPos> connected(ServerLevel level, BlockPos pos) {
+		List<BlockPos> result = new ArrayList<>(6);
+		for (Direction dir : Direction.values()) {
+			if (level.getBlockEntity(pos) instanceof FluidPipeNode pipe && pipe.connects(dir)) {
+				result.add(pos.relative(dir).immutable());
+			}
+		}
+		return result;
+	}
 
 	private static final GraphNetworkManager<ServerLevel, FluidNetwork, BlockPos> GRAPH =
 			new GraphNetworkManager<>("fluid", OPS, () -> Config.fluidNetworksPerTick,
 					GraphNetworkManager.TickCursor.BY_WINDOW);
 
-	public static void register(FluidPipeBlockEntity pipe) {
+	public static void register(FluidPipeNode pipe) {
 		if (!(pipe.getLevel() instanceof ServerLevel level)) {
 			return;
 		}
 		GRAPH.register(level, pipe.getBlockPos().immutable());
 	}
 
-	public static void unregister(FluidPipeBlockEntity pipe) {
+	public static void unregister(FluidPipeNode pipe) {
 		if (!(pipe.getLevel() instanceof ServerLevel level)) {
 			return;
 		}

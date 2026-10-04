@@ -3,11 +3,12 @@ package dev.alaindustrial;
 import dev.alaindustrial.client.AlaClientConfig;
 import dev.alaindustrial.client.ClientContentManifest;
 import dev.alaindustrial.client.screen.AlaConfigScreen;
-import dev.alaindustrial.client.hud.EnergyPackHud;
 import dev.alaindustrial.client.ModKeyMappings;
 import dev.alaindustrial.client.tooltip.MachineTooltips;
 import dev.alaindustrial.client.neoforge.NeoForgeCableGhost;
 import dev.alaindustrial.client.neoforge.NeoForgeNetworkVisualization;
+import dev.alaindustrial.registry.ModPlayerAttachments;
+import dev.alaindustrial.registry.neoforge.ModAttachmentsNeoForge;
 import net.minecraft.client.Minecraft;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.api.distmarker.Dist;
@@ -45,18 +46,12 @@ public final class IndustrializationNeoForgeClient {
 	public IndustrializationNeoForgeClient(IEventBus modBus, ModContainer container) {
 		initClientConfig(container);
 		registerClientEvents(modBus);
-		// MOD-133: client dashboard reads the local player's synced stats attachment through the seam.
-		dev.alaindustrial.stats.PlayerStatsClientCache.bind(() -> {
-			net.minecraft.client.player.LocalPlayer p = net.minecraft.client.Minecraft.getInstance().player;
-			return p == null ? dev.alaindustrial.stats.PlayerModStats.EMPTY
-					: p.getData(dev.alaindustrial.registry.neoforge.ModAttachmentsNeoForge.PLAYER_STATS);
-		});
-		// MOD-483: the skill screen reads the same way — one synced attachment, no packet of its own.
-		dev.alaindustrial.skill.SkillClientCache.bind(() -> {
-			net.minecraft.client.player.LocalPlayer p = net.minecraft.client.Minecraft.getInstance().player;
-			return p == null ? dev.alaindustrial.skill.PlayerSkills.EMPTY
-					: p.getData(dev.alaindustrial.registry.neoforge.ModAttachmentsNeoForge.PLAYER_SKILLS);
-		});
+		// MOD-133/MOD-483: the dashboard and the skill screen read the local player's synced attachments
+		// through their client caches — one loop over the shared list (MOD-708).
+		for (ModPlayerAttachments.PlayerAttachmentDef<?> def
+				: ModPlayerAttachments.PLAYER_ATTACHMENTS) {
+			bindClientCache(def);
+		}
 
 		Industrialization.LOGGER.info("Industrialization (NeoForge client) initialized.");
 	}
@@ -78,10 +73,21 @@ public final class IndustrializationNeoForgeClient {
 	 * Registers every client-side listener in the original order. The order interleaves mod-bus
 	 * registrations (menu screens, particle providers, tooltip factories, renderers, layer definitions,
 	 * key mappings, GUI layers) with game-bus registrations (item tooltips, world overlays, client tick,
-	 * disconnect cleanup) and the two static client hooks (machine hum, tooltip keys); it is kept as one
-	 * method to preserve that order (MOD-137).
+	 * disconnect cleanup) and the two static client hooks (machine hum, tooltip keys). MOD-137 kept it as
+	 * one method to preserve that order; MOD-706 cut it into three consecutive slices called in that same
+	 * order, so no registration moved across another.
 	 */
 	private void registerClientEvents(IEventBus modBus) {
+		registerContentListeners(modBus);
+		registerClientHooks();
+		registerInputAndHud(modBus);
+	}
+
+	/**
+	 * The first slice of {@link #registerClientEvents}: menu screens, root-soil models, the oil fog, fluid
+	 * models and particles, block tints, the pouch tooltip, block-entity renderers and model layers.
+	 */
+	private void registerContentListeners(IEventBus modBus) {
 		modBus.addListener(this::registerMenuScreens);
 		dev.alaindustrial.client.neoforge.NeoForgeRootSoilModels.init();
 		modBus.addListener(dev.alaindustrial.client.neoforge.NeoForgeRootSoilModels::onBake);
@@ -90,42 +96,7 @@ public final class IndustrializationNeoForgeClient {
 		// implementation must serve both loaders. NeoForge's IClientFluidTypeExtensions overlay hook
 		// IS invoked since 26.2.0.67 but is deliberately left unregistered — see OilScreenEffects.
 		dev.alaindustrial.client.OilFogEnvironment.install();
-		// MOD-238: oil's fluid model — the vanilla FluidStateModelSet hard-codes water/lava only, so a
-		// custom fluid registers its own FluidModel.Unbaked. NeoForge counterpart to the Fabric
-		// FluidRenderingRegistry call in IndustrializationClient; one model shared by still + flowing,
-		// overlay/tint null exactly like vanilla lava (the textures carry their colour).
-		modBus.addListener((net.neoforged.neoforge.client.event.RegisterFluidModelsEvent event) -> {
-			event.register(fluidModel("oil"),
-					dev.alaindustrial.registry.neoforge.ModFluidsNeoForge.OIL,
-					dev.alaindustrial.registry.neoforge.ModFluidsNeoForge.FLOWING_OIL);
-			// MOD-251: the two distillation fractions, same registration shape as oil.
-			event.register(fluidModel("diesel"),
-					dev.alaindustrial.registry.neoforge.ModFluidsNeoForge.DIESEL,
-					dev.alaindustrial.registry.neoforge.ModFluidsNeoForge.FLOWING_DIESEL);
-			event.register(fluidModel("fuel_oil"),
-					dev.alaindustrial.registry.neoforge.ModFluidsNeoForge.FUEL_OIL,
-					dev.alaindustrial.registry.neoforge.ModFluidsNeoForge.FLOWING_FUEL_OIL);
-			// MOD-146/MOD-525: the organic chain's two fluids, same registration shape.
-			event.register(fluidModel("biofuel"),
-					dev.alaindustrial.registry.neoforge.ModFluidsNeoForge.BIOFUEL,
-					dev.alaindustrial.registry.neoforge.ModFluidsNeoForge.FLOWING_BIOFUEL);
-			event.register(fluidModel("nutrient_solution"),
-					dev.alaindustrial.registry.neoforge.ModFluidsNeoForge.NUTRIENT_SOLUTION,
-					dev.alaindustrial.registry.neoforge.ModFluidsNeoForge.FLOWING_NUTRIENT_SOLUTION);
-			// MOD-468: steam, through the single-fluid overload — it has no flowing form, and with no
-			// model every tank and pipe holding it would draw the missing-texture sprite.
-			event.register(fluidModel("steam"),
-					dev.alaindustrial.registry.neoforge.ModFluidsNeoForge.STEAM);
-		});
-		// MOD-085: green flame particle provider for the Enriched Uranium Torch. registerSpriteSet =
-		// json-backed particle (assets/alaindustrial/particles/enriched_uranium_flame.json); reuses the
-		// vanilla FlameParticle provider (like soul_fire_flame), colour comes from the particle texture.
-		modBus.addListener((net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent event) -> {
-			event.registerSpriteSet(dev.alaindustrial.registry.ModParticles.ENRICHED_URANIUM_FLAME,
-					net.minecraft.client.particle.FlameParticle.Provider::new);
-			event.registerSpriteSet(dev.alaindustrial.registry.ModParticles.NUTRIENT_SPRAY,
-					dev.alaindustrial.client.particle.NutrientSprayParticle.Provider::new);
-		});
+		registerFluidModelsAndParticles(modBus);
 		// MOD-118: the incubator dome takes the colour of the glass it was built from — the mod's
 		// first block colour provider. Verified pattern (neoforge-26.2.0.67):
 		// RegisterColorHandlersEvent.BlockTintSources#register(List<BlockTintSource>, Block...), the
@@ -149,6 +120,42 @@ public final class IndustrializationNeoForgeClient {
 		// BlockEntityRendererRegistry + ModelLayerRegistry calls in IndustrializationClient.
 		modBus.addListener(this::registerRenderers);
 		modBus.addListener(this::registerLayerDefinitions);
+	}
+
+	/**
+	 * Fluid models and particle providers from the shared {@link ClientContentManifest} (MOD-238, MOD-706) —
+	 * the same lists the Fabric client replays. A fluid model is registered on the fluids the registry holds
+	 * under the entry's ids; the {@code RegisterFluidModelsEvent} fires after every fluid is registered.
+	 */
+	private void registerFluidModelsAndParticles(IEventBus modBus) {
+		modBus.addListener((net.neoforged.neoforge.client.event.RegisterFluidModelsEvent event) -> {
+			for (ClientContentManifest.FluidModelDef def : ClientContentManifest.FLUID_MODELS) {
+				net.minecraft.world.level.material.Fluid flowing = def.flowingFluid();
+				if (flowing == null) {
+					event.register(def.model(), def.stillFluid());
+				} else {
+					event.register(def.model(), def.stillFluid(), flowing);
+				}
+			}
+		});
+		modBus.addListener((net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent event) -> {
+			ClientContentManifest.ParticleRegistrar registrar = new ClientContentManifest.ParticleRegistrar() {
+				@Override
+				public <T extends net.minecraft.core.particles.ParticleOptions> void register(
+						net.minecraft.core.particles.ParticleType<T> type,
+						java.util.function.Function<net.minecraft.client.particle.SpriteSet,
+								net.minecraft.client.particle.ParticleProvider<T>> factory) {
+					event.registerSpriteSet(type, factory::apply);
+				}
+			};
+			for (ClientContentManifest.ParticleProviderDef<?> def : ClientContentManifest.PARTICLE_PROVIDERS) {
+				def.bindTo(registrar);
+			}
+		});
+	}
+
+	/** The second slice of {@link #registerClientEvents}: client hooks, item tooltips and world overlays. */
+	private void registerClientHooks() {
 		// Install the client-side machine-hum manager (looping ambient sound). Counterpart to the Fabric
 		// IndustrializationClient call; this @Mod class is dist=CLIENT, so it runs only on the physical client.
 		dev.alaindustrial.client.sound.MachineHumClientHook.register();
@@ -167,32 +174,30 @@ public final class IndustrializationNeoForgeClient {
 		// API: a static block-shaped preview gains nothing from per-frame submission.
 		NeoForge.EVENT_BUS.addListener(NeoForgeNetworkVisualization::onSubmitCustomGeometry);
 		NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post event) -> NeoForgeCableGhost.tick());
-		// Energy Pack charge readout (MOD-065) — counterpart to the Fabric KeyMappingHelper +
-		// HudElementRegistry + ClientTickEvents trio. The drawing is loader-neutral (EnergyPackHud):
-		// NeoForge's GuiLayer and Fabric's HudElement take the same (GuiGraphicsExtractor, DeltaTracker).
-		// Only the mapping — NOT the category. ModKeyMappings builds the category with the vanilla
-		// KeyMapping.Category.register, which already appends it to the sort order on both loaders;
-		// calling event.registerCategory here as well would list it twice on NeoForge (harmless today,
-		// since lookups take the first match, but a real loader asymmetry).
+	}
+
+	/**
+	 * The last slice of {@link #registerClientEvents}: key mappings and HUD layers (shared lists, MOD-706),
+	 * the client-tick input steps, the profile button and the world-leave reset.
+	 */
+	private void registerInputAndHud(IEventBus modBus) {
+		// MOD-706: the key mappings and the HUD layers are ClientContentManifest lists, the same ones the Fabric
+		// client replays. Only the mappings are registered here, NOT their category: ModKeyMappings builds it
+		// with the vanilla KeyMapping.Category.register, which already appends it to the sort order on both
+		// loaders; event.registerCategory as well would list it twice on NeoForge.
 		modBus.addListener((RegisterKeyMappingsEvent event) -> {
-			event.register(ModKeyMappings.TOGGLE_ENERGY_HUD);
-			event.register(ModKeyMappings.TOGGLE_DRILL_HUD);
-			event.register(ModKeyMappings.OPEN_PROFILE);
-			event.register(ModKeyMappings.TOGGLE_STEP_ASSIST); // MOD-133 player dashboard
-			event.register(ModKeyMappings.TOGGLE_DRILL_COLUMN); // MOD-482 column bore
+			for (net.minecraft.client.KeyMapping mapping : ClientContentManifest.KEY_MAPPINGS) {
+				event.register(mapping);
+			}
 		});
+		// In list order, which is drawing order: the readouts stay legible over the teleport fade. The
+		// drawing is loader-neutral — NeoForge's GuiLayer and Fabric's HudElement take the same pair.
 		modBus.addListener((RegisterGuiLayersEvent event) -> {
-			event.registerAboveAll(Industrialization.id("root_inspection"), dev.alaindustrial.client.render.RootInspection::renderHud);
-			event.registerAboveAll(Industrialization.id("concentrator_assembly"), dev.alaindustrial.client.render.ConcentratorSchematicRenderer::renderHud);
-			// Teleport screen fade (MOD-106) — counterpart to the Fabric HudElementRegistry entry; the
-			// drawing itself is loader-neutral (TeleportFadeHud). Registered before the readouts so they
-			// stay legible over it.
-			event.registerAboveAll(Industrialization.id("teleport_fade"),
-					dev.alaindustrial.client.hud.TeleportFadeHud::render);
-			event.registerAboveAll(Industrialization.id("energy_pack_hud"), EnergyPackHud::render);
-			// Electric Drill charge readout (MOD-079) — same toggle/key as the pack, stacks below it.
-			event.registerAboveAll(Industrialization.id("electric_drill_hud"),
-					dev.alaindustrial.client.hud.ElectricDrillHud::render);
+			for (ClientContentManifest.HudLayerDef def : ClientContentManifest.HUD_LAYERS) {
+				switch (def.placement()) {
+					case LAST -> event.registerAboveAll(Industrialization.id(def.id()), def.renderer()::render);
+				}
+			}
 		});
 		NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post event) -> ModKeyMappings.handleInput());
 		// Jetpack thrust/glide (MOD-148) — counterpart of the Fabric END_CLIENT_TICK registration.
@@ -210,16 +215,6 @@ public final class IndustrializationNeoForgeClient {
 		NeoForge.EVENT_BUS.addListener(
 				(net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent.LoggingOut event) ->
 						dev.alaindustrial.client.ClientDisconnectReset.run());
-	}
-
-	/** One fluid's {@code FluidModel.Unbaked} built from {@code block/<name>_still|_flow} (MOD-251). */
-	private static net.minecraft.client.renderer.block.FluidModel.Unbaked fluidModel(String name) {
-		return new net.minecraft.client.renderer.block.FluidModel.Unbaked(
-				new net.minecraft.client.resources.model.sprite.Material(
-						Industrialization.id("block/" + name + "_still")),
-				new net.minecraft.client.resources.model.sprite.Material(
-						Industrialization.id("block/" + name + "_flow")),
-				null, null);
 	}
 
 	/**
@@ -297,5 +292,14 @@ public final class IndustrializationNeoForgeClient {
 		for (ClientContentManifest.ModelLayerDef def : ClientContentManifest.MODEL_LAYERS) {
 			event.registerLayerDefinition(def.location(), def.definition());
 		}
+	}
+
+	/** Binds one attachment's client cache; the client reads its synced copy with {@code getData}, as before. */
+	private static <T> void bindClientCache(ModPlayerAttachments.PlayerAttachmentDef<T> def) {
+		var type = ModAttachmentsNeoForge.holder(def);
+		def.bindClientCache().accept(() -> {
+			net.minecraft.client.player.LocalPlayer p = net.minecraft.client.Minecraft.getInstance().player;
+			return p == null ? def.empty() : p.getData(type);
+		});
 	}
 }

@@ -12,7 +12,7 @@ package dev.alaindustrial.core.energy;
  *
  * A store is not a generator, so it contributes nothing to {@code genSupply}. A sink is not a machine,
  * so it contributes nothing to {@code machineDemand}. On a segment whose only source is a store and
- * whose only consumer is a sink, both aggregates are zero, {@code storageBudget} is
+ * whose only consumer is a sink, both aggregates are zero, {@code DischargePlan.backupBudget} is
  * {@code max(0, 0 − 0) = 0}, and the backup-discharge stage never opens. The cascade does not cover the
  * gap either: it is gated on {@code acceptsCascade()}, and the Teleporter is deliberately outside it.
  * The result was a hard, permanent zero — confirmed on an isolated stand before this class was written.

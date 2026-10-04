@@ -1,15 +1,14 @@
 package dev.alaindustrial.block.entity;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.core.environment.GeneratorConfig;
 import dev.alaindustrial.core.environment.SolarSky;
 import dev.alaindustrial.core.environment.SolarSkyCache;
 import dev.alaindustrial.menu.MoonlitSolarPanelMenu;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -20,8 +19,8 @@ import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * LV Moonlit (Lunar) Solar Panel — produces EU from moonlight. Night, under open sky, in the
- * Overworld: 3 EU/t ({@link Config#moonlitEuPerTick}); rain/thunder: a flat 1 EU/t trickle
- * ({@link Config#moonlitWeatherEuPerTick}) rather than the day panels' zero; daytime: 0 (MOD-003).
+ * Overworld: 3 EU/t ({@link GeneratorConfig#moonlitEuPerTick}); rain/thunder: a flat 1 EU/t trickle
+ * ({@link GeneratorConfig#moonlitWeatherEuPerTick}) rather than the day panels' zero; daytime: 0 (MOD-003).
  * Buffer 8000, LV output (20).
  *
  * <p>The night-mirror of {@link SolarPanelBlockEntity}: where the day panel uses
@@ -38,7 +37,7 @@ public class MoonlitSolarPanelBlockEntity extends AbstractGeneratorBlockEntity i
 	/** No machine slots — the GUI is a readout plus the upgrade panel (MOD-439). */
 	public static final int SLOT_COUNT = 0;
 
-	/** Caches the sky/weather verdict for {@link Config#solarSkySampleTicks} ticks to avoid a per-tick column scan. */
+	/** Caches the sky/weather verdict for {@link GeneratorConfig#solarSkySampleTicks} ticks to avoid a per-tick column scan. */
 	private final SolarSkyCache skyCache = new SolarSkyCache();
 
 	/** Mode codes shared with the screen. */
@@ -49,7 +48,8 @@ public class MoonlitSolarPanelBlockEntity extends AbstractGeneratorBlockEntity i
 	public static final int MODE_NIGHT_SNOW = 4;
 
 	public MoonlitSolarPanelBlockEntity(BlockPos pos, BlockState state) {
-		super(ModContent.MOONLIT_SOLAR_PANEL_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT, Config.solarBuffer, MAX_EXTRACT);
+		super(ModContent.MOONLIT_SOLAR_PANEL_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT,
+				GeneratorConfig.solarBuffer, MAX_EXTRACT);
 	}
 
 	/**
@@ -64,7 +64,7 @@ public class MoonlitSolarPanelBlockEntity extends AbstractGeneratorBlockEntity i
 
 	@Override
 	protected int produce(Level level, BlockPos pos, BlockState state) {
-		// Sample sky access + weather on a cadence (Config.solarSkySampleTicks); cached to avoid the
+		// Sample sky access + weather on a cadence (GeneratorConfig.solarSkySampleTicks); cached to avoid the
 		// per-tick column scan above the panel.
 		skyCache.sample(level, pos);
 		int production = 0;
@@ -73,24 +73,24 @@ public class MoonlitSolarPanelBlockEntity extends AbstractGeneratorBlockEntity i
 				? skyCache.sky()
 				: SolarSky.Access.BLOCKED;
 		if (sky != SolarSky.Access.BLOCKED && !level.isBrightOutside()) {
-			production = Config.moonlitEuPerTick;
+			production = GeneratorConfig.moonlitEuPerTick;
 			mode = MODE_NIGHT;
 			switch (skyCache.weather()) {
 				case RAIN -> {
 					// Unlike the day panels, the moonlit panel keeps a small weather trickle in rain/thunder
 					// instead of going dark — the moon is still faintly effective.
-					production = Config.moonlitWeatherEuPerTick;
+					production = GeneratorConfig.moonlitWeatherEuPerTick;
 					mode = MODE_NIGHT_WEATHER;
 				}
 				case SNOW -> {
 					// Snow dims moonlight to a floored trickle (≥1 EU/t), same rule as the other tiers.
-					production = Math.max(1, Math.round(production * Config.solarSnowFactor));
+					production = Math.max(1, Math.round(production * GeneratorConfig.solarSnowFactor));
 					mode = MODE_NIGHT_SNOW;
 				}
 				case NONE -> {
 					if (sky == SolarSky.Access.PARTIAL) {
 						// Moonlight filtered through a translucent block (leaves, cobweb): reduced output (MOD-004).
-						production = Math.round(production * Config.solarTransparentFactor);
+						production = Math.round(production * GeneratorConfig.solarTransparentFactor);
 						mode = MODE_NIGHT_PARTIAL;
 					}
 				}
@@ -109,11 +109,6 @@ public class MoonlitSolarPanelBlockEntity extends AbstractGeneratorBlockEntity i
 	@Override
 	protected void publishEffectiveRate(int effectiveEuPerTick) {
 		this.progress = effectiveEuPerTick;
-	}
-
-	@Override
-	public Component getDisplayName() {
-		return Component.translatable("block.alaindustrial.moonlit_solar_panel");
 	}
 
 	@Override

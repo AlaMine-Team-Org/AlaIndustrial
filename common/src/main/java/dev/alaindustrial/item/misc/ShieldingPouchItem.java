@@ -1,6 +1,6 @@
 package dev.alaindustrial.item.misc;
 
-import dev.alaindustrial.Config;
+import dev.alaindustrial.item.ToolConfig;
 import dev.alaindustrial.item.energy.PouchContents;
 import dev.alaindustrial.item.energy.PouchItem;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -32,12 +32,12 @@ public class ShieldingPouchItem extends PouchItem {
 
 	@Override
 	protected int capacity() {
-		return Config.shieldingPouchCapacity;
+		return ToolConfig.shieldingPouchCapacity;
 	}
 
 	/** The tier's capacity, for callers outside the item (gametests, tooltips). */
 	public static int storageCapacity() {
-		return Config.shieldingPouchCapacity;
+		return ToolConfig.shieldingPouchCapacity;
 	}
 
 	/**

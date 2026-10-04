@@ -35,6 +35,9 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jspecify.annotations.Nullable;
+import dev.alaindustrial.client.ServerBalance;
+import dev.alaindustrial.core.tooltip.HasMachineTooltip;
+import dev.alaindustrial.core.tooltip.MachineTooltipSpec;
 
 /**
  * Teleporter station (spec: alaindustrial:teleporter) — the HV anchor a Teleporter Remote jumps to
@@ -46,7 +49,7 @@ import org.jspecify.annotations.Nullable;
  * a station that banks EU with no way to spend it is not something to ship. The tab entry, the
  * recipe and its unlock advancement all arrived together.
  */
-public class TeleporterBlock extends HorizontalMachineBlock implements CableArmReach {
+public class TeleporterBlock extends HorizontalMachineBlock implements CableArmReach, HasMachineTooltip {
 	/**
 	 * Whether a Random Jump Chip is fitted (MOD-116) — a purely VISUAL mirror of
 	 * {@link TeleporterBlockEntity#hasRtpModule()}.
@@ -335,5 +338,13 @@ public class TeleporterBlock extends HorizontalMachineBlock implements CableArmR
 				.setValue(TeleporterCapsuleBlock.GLASS, upper.get()), Block.UPDATE_ALL);
 		// The remote's "locked in" chime: the capsule is now somewhere a jump can land.
 		level.playSound(null, pos.above(), SoundEvents.END_PORTAL_FRAME_FILL, SoundSource.BLOCKS, 0.7f, 1.3f);
+	}
+
+	/** Hover tooltip of this block's item (MOD-716, ADR-040). */
+	@Override
+	public MachineTooltipSpec machineTooltip() {
+		return new MachineTooltipSpec(MachineTooltipSpec.Tier.HV,
+				List.of(MachineTooltipSpec.stat("buffer", ServerBalance::teleporterBuffer)),
+				List.of(MachineTooltipSpec.text("tooltip.alaindustrial.teleporter_io", MachineTooltipSpec.Tone.GRAY)));
 	}
 }

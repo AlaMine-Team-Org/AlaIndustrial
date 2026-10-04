@@ -55,7 +55,7 @@ public final class AssemblerGuiStands {
     public static void shootAssembler(ClientGameTestContext context, String name,
                                       int energy, int capacity, int progress, int maxProgress,
                                       int activeSlot,
-                                      dev.alaindustrial.block.entity.AssemblerBlockEntity.AssemblerStatus status,
+                                      dev.alaindustrial.block.entity.AssemblerStatus status,
                                       boolean withPattern) {
         LOG.info("[GUITEST][MOD-275] opening {} (E={}/{} P={}/{} active={} status={} pattern={})",
                 name, energy, capacity, progress, maxProgress, activeSlot, status, withPattern);
@@ -96,7 +96,7 @@ public final class AssemblerGuiStands {
     public static Path shootAssemblerQueue(ClientGameTestContext context, String name,
                                            int energy, int capacity, int progress, int maxProgress,
                                            int activeSlot,
-                                           dev.alaindustrial.block.entity.AssemblerBlockEntity.AssemblerStatus status,
+                                           dev.alaindustrial.block.entity.AssemblerStatus status,
                                            boolean recorded) {
         LOG.info("[GUITEST][MOD-275] opening {} (active={} status={} recorded={})",
                 name, activeSlot, status, recorded);
@@ -156,8 +156,7 @@ public final class AssemblerGuiStands {
                     && acs.getMenu() instanceof MachineMenu menu) {
                 menu.injectTestData(CAP * 3 / 4, CAP, ASM / 2, ASM);
                 menu.injectTestChannel(4, fillQueue ? 0 : -1);
-                menu.injectTestChannel(5, dev.alaindustrial.block.entity.AssemblerBlockEntity
-                        .AssemblerStatus.READY.ordinal());
+                menu.injectTestChannel(5, dev.alaindustrial.block.entity.AssemblerStatus.READY.ordinal());
                 selectTab(menu, tab);
                 var box = (dev.alaindustrial.mixin.client.AbstractContainerScreenAccessor) acs;
                 assemblerWindowBox = new int[] {
@@ -334,10 +333,10 @@ public final class AssemblerGuiStands {
         final int CAP = 12000;   // Config.assemblerBuffer
         Path recorded = shootAssemblerQueue(context, "gui_assembler_bp_gate_recorded", CAP, CAP, 0,
                 maxProgress, -1,
-                dev.alaindustrial.block.entity.AssemblerBlockEntity.AssemblerStatus.NO_MATERIALS, true);
+                dev.alaindustrial.block.entity.AssemblerStatus.NO_MATERIALS, true);
         Path blankA = shootAssemblerQueue(context, "gui_assembler_bp_gate_blank_a", CAP, CAP, 0,
                 maxProgress, -1,
-                dev.alaindustrial.block.entity.AssemblerBlockEntity.AssemblerStatus.NO_MATERIALS, false);
+                dev.alaindustrial.block.entity.AssemblerStatus.NO_MATERIALS, false);
         context.waitTicks(3);
         Path blankB = takeCleanScreenshot(context, "gui_assembler_bp_gate_blank_b");
 

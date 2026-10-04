@@ -1,5 +1,8 @@
 package dev.alaindustrial.item.wearable;
 
+import dev.alaindustrial.item.ToolConfig;
+import dev.alaindustrial.item.energy.EnergyBar;
+import dev.alaindustrial.item.energy.PoweredItem;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.item.energy.PlayerEuDistributor;
 import dev.alaindustrial.skill.SkillEnergy;
@@ -24,9 +27,12 @@ import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.equipment.Equippable;
 import net.minecraft.world.item.equipment.EquipmentAsset;
 import net.minecraft.world.item.equipment.EquipmentAssets;
+import dev.alaindustrial.core.tooltip.MachineTooltipSpec;
+import dev.alaindustrial.item.energy.PoweredToolTooltip;
+import java.util.List;
 
 /**
- * Energy Pack (MOD-065) — a worn LV energy buffer: {@link Config#energyPackBuffer} EU carried in the
+ * Energy Pack (MOD-065) — a worn LV energy buffer: {@link ToolConfig#energyPackBuffer} EU carried in the
  * chest slot, charged in the Battery Box charge slot and handed out to the powered items the player
  * carries — the mod's own (the Battery Pouch, MOD-052; the Electric Drill, MOD-079) and, since MOD-084,
  * any other mod's item that exposes the loader's item energy capability. Unlike the pouch it has no
@@ -42,7 +48,7 @@ import net.minecraft.world.item.equipment.EquipmentAssets;
  * <p>Charge lives in the shared {@code pouch_energy} component through {@link ItemEnergy} — the same
  * buffer helper every powered item uses; the pack registers its own capacity there.
  */
-public class EnergyPackItem extends Item {
+public class EnergyPackItem extends Item implements PoweredItem {
 
 	/**
 	 * Visual asset key for the worn pack — a mod-namespaced {@link ResourceKey} into the
@@ -194,8 +200,8 @@ public class EnergyPackItem extends Item {
 	/** Same, told whether the pack is worn — a bagged one pays out at a fraction of the rate. */
 	public static long chargeStep(ItemStack pack, Player player, boolean worn) {
 		long rate = worn
-				? Config.energyPackOutputRate
-				: Math.max(1, Config.energyPackOutputRate / Math.max(1, Config.skillFieldCircuitDivisor));
+				? ToolConfig.energyPackOutputRate
+				: Math.max(1, ToolConfig.energyPackOutputRate / Math.max(1, Config.skillFieldCircuitDivisor));
 		long budget = Math.min(rate * 20L, ItemEnergy.get(pack));
 		if (budget <= 0) {
 			return 0L;
@@ -223,15 +229,37 @@ public class EnergyPackItem extends Item {
 
 	@Override
 	public int getBarWidth(ItemStack stack) {
-		long capacity = ItemEnergy.capacity(stack);
-		if (capacity <= 0) {
-			return 0;
-		}
-		return (int) Math.min(MAX_BAR_WIDTH, MAX_BAR_WIDTH * ItemEnergy.get(stack) / capacity);
+		return EnergyBar.width(stack, MAX_BAR_WIDTH);
 	}
 
 	@Override
 	public int getBarColor(ItemStack stack) {
-		return EnergyTier.LV.color();
+		return EnergyBar.color(EnergyTier.LV);
+	}
+
+	/** MOD-707: this item's EU buffer, read by {@code ItemEnergy.capacity} through {@link PoweredItem}. */
+	@Override
+	public long energyCapacity(ItemStack stack) {
+		return ToolConfig.energyPackBuffer;
+	}
+
+	@Override
+	public long energyInputRate(ItemStack stack) {
+		return ToolConfig.energyPackInputRate;
+	}
+
+	@Override
+	public void onChargeChanged(ItemStack stack, long charge) {
+		// The pack looks different when dead (red light, pale cells), and the worn model is chosen by
+		// its EQUIPPABLE asset, so the visual follows the charge from the one place charge changes.
+		refreshWornAsset(stack, charge);
+	}
+
+	/** What it does while worn, then the charge (MOD-065). */
+	@Override
+	public PoweredToolTooltip toolTooltip() {
+		// Two short usage lines, not one long sentence: the equipment tooltip already carries the armour block.
+		return PoweredToolTooltip.of("energy_pack", List.of()).withBeforeCharge(stack -> MachineTooltipSpec.text(
+				"tooltip.alaindustrial.energy_pack.usage_charges", MachineTooltipSpec.Tone.GRAY));
 	}
 }

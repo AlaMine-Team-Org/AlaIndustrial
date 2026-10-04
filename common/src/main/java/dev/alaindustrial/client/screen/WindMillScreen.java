@@ -73,6 +73,12 @@ public class WindMillScreen extends MachineScreen<WindMillMenu> {
 		return TEXTURE;
 	}
 
+	/** The energy bar and its tooltip, drawn by the base (MOD-716). */
+	@Override
+	protected EnergyBarSpec energyBar() {
+		return EnergyBarSpec.LEFT_WINDMILL;
+	}
+
 	@Override
 	protected void drawMachineFrame(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
 		int x = this.leftPos;
@@ -81,8 +87,6 @@ public class WindMillScreen extends MachineScreen<WindMillMenu> {
 		// Static frame — borders, slot frames, energy/evolution tracks.
 		blitStaticFrame(graphics);
 
-		// ── Energy bar fill (bottom-up) via the shared MachineScreen helper ───────
-		renderEnergyBar(graphics, EnergyBarSpec.LEFT_WINDMILL);
 
 		// ── Status indicator — active while generating (any producing mode) ──────
 		int mode = this.menu.getMode();
@@ -111,12 +115,15 @@ public class WindMillScreen extends MachineScreen<WindMillMenu> {
 					evoFill, EVO_H,
 					TEX_SIZE, TEX_SIZE);
 		}
+	}
 
-		// ── Status text — current output while running, the reason while idle ────
-		// One centred row in the empty band between the rotor slot (ends y≈40) and the evolution bar
-		// (y=70) carries both messages, because only one of them is ever meaningful: a running mill
-		// answers "how much am I making right now" (MOD-346), a stopped one answers "why am I stopped".
-		drawStatusText(graphics, mode, x, y);
+	// ── Status text — current output while running, the reason while idle ────
+	// One centred row in the empty band between the rotor slot (ends y≈40) and the evolution bar
+	// (y=70) carries both messages, because only one of them is ever meaningful: a running mill
+	// answers "how much am I making right now" (MOD-346), a stopped one answers "why am I stopped".
+	@Override
+	protected void drawFrameText(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+		drawStatusText(graphics, this.menu.getMode(), this.leftPos, this.topPos);
 	}
 
 	/** Centered status row: production while generating, the idle reason otherwise. */
@@ -143,10 +150,4 @@ public class WindMillScreen extends MachineScreen<WindMillMenu> {
 		return key == null ? null : Component.translatable(key);
 	}
 
-	@Override
-	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-		super.extractTooltip(graphics, mouseX, mouseY);
-		// Hovering the energy bar shows the exact buffer as "X / max EU" (R-GUI-14).
-		renderEnergyTooltip(graphics, mouseX, mouseY, EnergyBarSpec.LEFT_WINDMILL);
-	}
 }

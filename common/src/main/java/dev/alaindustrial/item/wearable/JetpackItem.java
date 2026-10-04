@@ -1,8 +1,10 @@
 package dev.alaindustrial.item.wearable;
 
+import dev.alaindustrial.item.ToolConfig;
+import dev.alaindustrial.item.energy.EnergyBar;
+import dev.alaindustrial.item.energy.PoweredItem;
 import dev.alaindustrial.item.energy.ItemEnergy;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.core.energy.EnergyTier;
 import net.minecraft.core.component.DataComponents;
@@ -28,12 +30,14 @@ import net.minecraft.world.item.equipment.EquipmentAssets;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import dev.alaindustrial.item.energy.PoweredToolTooltip;
+import java.util.List;
 
 /**
- * Jetpack (MOD-148) — a worn EU flight device: {@link Config#jetpackBuffer} EU in the chest slot,
+ * Jetpack (MOD-148) — a worn EU flight device: {@link ToolConfig#jetpackBuffer} EU in the chest slot,
  * charged like the rest of the powered-item family (Battery Box charge slot, worn Energy Pack,
- * foreign chargers via MOD-084). Holding jump while airborne burns {@link Config#jetpackEuPerTick}
- * EU/tick and lifts the player; with no charge left (or above {@link Config#jetpackMaxY}) the same
+ * foreign chargers via MOD-084). Holding jump while airborne burns {@link ToolConfig#jetpackEuPerTick}
+ * EU/tick and lifts the player; with no charge left (or above {@link ToolConfig#jetpackMaxY}) the same
  * held jump turns into a powerless glide — a damped fall that never deals fall damage. Releasing
  * jump mid-air is a normal, damaging fall: the safety is the engine, not the garment.
  *
@@ -50,7 +54,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * chestplate that also flies). Charge lives in the shared {@code pouch_energy} component through
  * {@link ItemEnergy}.
  */
-public class JetpackItem extends Item {
+public class JetpackItem extends Item implements PoweredItem {
 
 	/** Worn look while the jetpack holds charge — see {@link EnergyPackItem#ENERGY_PACK_ASSET} for
 	 * why the key is built by hand. */
@@ -131,7 +135,7 @@ public class JetpackItem extends Item {
 	 * (the component is network-synchronized), so the two sides flip together give or take one sync.
 	 */
 	public static boolean isPowered(ItemStack stack, Player player) {
-		return ItemEnergy.get(stack) > 0 && player.getY() < Config.jetpackMaxY;
+		return ItemEnergy.get(stack) > 0 && player.getY() < ToolConfig.jetpackMaxY;
 	}
 
 	/**
@@ -152,7 +156,7 @@ public class JetpackItem extends Item {
 	 * One server tick of the flight logic, with the input state passed in so gametests can drive it
 	 * deterministically. On the ground the airborne-thrust session ends (and nothing else happens —
 	 * a held jump there is a vanilla jump). While jump is held airborne: a powered engine burns up to
-	 * {@link Config#jetpackEuPerTick} EU (the spend clamps, so the last tick takes the remainder and
+	 * {@link ToolConfig#jetpackEuPerTick} EU (the spend clamps, so the last tick takes the remainder and
 	 * the buffer hits a clean 0; creative burns nothing — {@link ItemEnergy#spend}) and the exhaust
 	 * plays; the fall distance is zeroed every such tick. With no thrust available the held jump only
 	 * glides — zeroed fall included — if the engine actually fired during THIS airborne stretch: the
@@ -172,7 +176,7 @@ public class JetpackItem extends Item {
 			return;
 		}
 		if (isPowered(stack, player)) {
-			ItemEnergy.spend(stack, Math.min(Config.jetpackEuPerTick, ItemEnergy.get(stack)), player);
+			ItemEnergy.spend(stack, Math.min(ToolConfig.jetpackEuPerTick, ItemEnergy.get(stack)), player);
 			THRUSTED_THIS_FLIGHT.add(player.getUUID());
 			player.resetFallDistance();
 			exhaust(level, player);
@@ -214,15 +218,34 @@ public class JetpackItem extends Item {
 
 	@Override
 	public int getBarWidth(ItemStack stack) {
-		long capacity = ItemEnergy.capacity(stack);
-		if (capacity <= 0) {
-			return 0;
-		}
-		return (int) Math.min(MAX_BAR_WIDTH, MAX_BAR_WIDTH * ItemEnergy.get(stack) / capacity);
+		return EnergyBar.width(stack, MAX_BAR_WIDTH);
 	}
 
 	@Override
 	public int getBarColor(ItemStack stack) {
-		return EnergyTier.LV.color();
+		return EnergyBar.color(EnergyTier.LV);
+	}
+
+	/** MOD-707: this item's EU buffer, read by {@code ItemEnergy.capacity} through {@link PoweredItem}. */
+	@Override
+	public long energyCapacity(ItemStack stack) {
+		return ToolConfig.jetpackBuffer;
+	}
+
+	@Override
+	public long energyInputRate(ItemStack stack) {
+		return ToolConfig.jetpackInputRate;
+	}
+
+	@Override
+	public void onChargeChanged(ItemStack stack, long charge) {
+		// Same contract as the pack: the worn model follows the charge from the single write point.
+		refreshWornAsset(stack, charge);
+	}
+
+	/** How to fly, then the charge (MOD-148). */
+	@Override
+	public PoweredToolTooltip toolTooltip() {
+		return PoweredToolTooltip.of("jetpack", List.of());
 	}
 }

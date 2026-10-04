@@ -2,7 +2,8 @@
 # SAFE, READ-ONLY token check. Manual trigger only (workflow_dispatch). It does
 # NOT build the mod and NOT upload anything to CurseForge — it only makes one
 # authenticated GET to the read-only game-versions endpoint, which simultaneously
-# proves the token is valid and shows whether CurseForge knows Minecraft 26.2.
+# proves the token is valid and shows whether CurseForge knows each Minecraft line
+# the mod ships for (the loop below: 26.2 and 26.3).
 name: Verify CurseForge Token
 
 on:

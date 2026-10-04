@@ -1,73 +1,44 @@
 package dev.alaindustrial.client.tooltip;
 
-import dev.alaindustrial.Config;
-import dev.alaindustrial.block.BatteryBoxBlock;
-import dev.alaindustrial.block.TeleporterBlock;
-import dev.alaindustrial.block.AlloySmelterBlock;
-import dev.alaindustrial.block.CableBlock;
-import dev.alaindustrial.block.ComponentRepairBenchBlock;
-import dev.alaindustrial.block.CompressorBlock;
-import dev.alaindustrial.block.RecyclerBlock;
-import dev.alaindustrial.block.SawmillBlock;
-import dev.alaindustrial.block.DaylightSolarPanelBlock;
-import dev.alaindustrial.block.ElectricFurnaceBlock;
-import dev.alaindustrial.block.ExtractorBlock;
-import dev.alaindustrial.block.GeneratorBlock;
-import dev.alaindustrial.block.GeothermalGeneratorBlock;
-import dev.alaindustrial.block.IncubatorBlock;
-import dev.alaindustrial.block.MaceratorBlock;
-import dev.alaindustrial.block.MoonlitSolarPanelBlock;
-import dev.alaindustrial.block.GardenDroneStationBlock;
-import dev.alaindustrial.block.PumpBlock;
-import dev.alaindustrial.block.FermenterBlock;
-import dev.alaindustrial.block.GalvanicBathBlock;
-import dev.alaindustrial.block.PolymerizerBlock;
-import dev.alaindustrial.block.ThermalCentrifugeBlock;
-import dev.alaindustrial.block.VulcanizerBlock;
-import dev.alaindustrial.block.ElectricHeaterBlock;
-import dev.alaindustrial.block.SolarPanelBlock;
-import dev.alaindustrial.block.UpgradeTableBlock;
-import dev.alaindustrial.core.upgrade.OverclockMath;
+import dev.alaindustrial.client.ServerBalance;
+import dev.alaindustrial.core.tooltip.HasMachineTooltip;
+import dev.alaindustrial.core.tooltip.MachineTooltipSpec;
 import dev.alaindustrial.item.misc.MutationGrades;
 import dev.alaindustrial.mutation.MutationGrade;
 import dev.alaindustrial.item.tool.AnalyzerMode;
-import dev.alaindustrial.item.tool.ElectricChainsawDiamondTipItem;
-import dev.alaindustrial.item.tool.ElectricChainsawItem;
-import dev.alaindustrial.item.tool.DrillUpgrades;
-import dev.alaindustrial.item.tool.ElectricDrillDiamondTipItem;
-import dev.alaindustrial.item.tool.ElectricDrillNetheriteTipItem;
-import dev.alaindustrial.item.tool.ElectricDrillItem;
-import dev.alaindustrial.item.tool.ElectricHoeDiamondTipItem;
-import dev.alaindustrial.item.tool.ElectricHoeItem;
-import dev.alaindustrial.item.tool.ElectricBowItem;
-import dev.alaindustrial.item.tool.ElectricSaberItem;
-import dev.alaindustrial.item.tool.ElectricShovelDiamondTipItem;
-import dev.alaindustrial.item.tool.ElectricShovelItem;
-import dev.alaindustrial.item.wearable.EnergyPackItem;
-import dev.alaindustrial.item.wearable.JetpackItem;
 import dev.alaindustrial.item.energy.BatteryItem;
 import dev.alaindustrial.item.energy.ItemEnergy;
+import dev.alaindustrial.item.energy.PoweredItem;
+import dev.alaindustrial.item.energy.PoweredToolTooltip;
 import dev.alaindustrial.item.tool.NetworkAnalyzerItem;
 import dev.alaindustrial.item.tool.NetworkScanData;
 import dev.alaindustrial.item.energy.PouchItem;
 import dev.alaindustrial.item.misc.ShieldingPouchItem;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModDataComponents;
-import dev.alaindustrial.registry.ModRecipes;
 import java.util.List;
+import java.util.function.Function;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
 import dev.alaindustrial.client.AlaClientConfig;
+import org.jspecify.annotations.Nullable;
 
 /**
- * Loader-neutral hover-tooltip content for machine block items and the Network Analyzer (MOD-022). The
- * body uses only vanilla + neutral {@link Config}/{@link ModDataComponents} — the client "is shift held"
- * check is passed in as a boolean so this class links no client-only types and stays server-safe in
- * {@code common}. Each loader's client hooks its own tooltip event and calls {@link #append}: Fabric via
+ * Loader-neutral hover-tooltip content for the mod's block items, its powered items and the Network Analyzer
+ * (MOD-022). Each loader's client hooks its own tooltip event and calls {@link #append}: Fabric via
  * {@code ItemTooltipCallback}, NeoForge via {@code ItemTooltipEvent}.
+ *
+ * <p><b>A block's tooltip is declared by the block</b> (MOD-716, ADR-040): a block implementing
+ * {@link HasMachineTooltip} hands over its {@link MachineTooltipSpec}, and this class only renders it — it keeps
+ * no list of machines. The four modes ([SHIFT] up/down x the client's {@code showEuNumbers}) are decided by the
+ * description, not by four parallel lists here.
+ *
+ * <p>Client-side code, though it links no client-only type: it reads the player's {@link AlaClientConfig}
+ * (always-detailed tooltips, EU numbers shown) and the server's balance through {@link ServerBalance}. The
+ * "is shift held" check is passed in as a boolean.
  */
 public final class MachineTooltips {
 	private MachineTooltips() {
@@ -114,37 +85,13 @@ public final class MachineTooltips {
 			addBatteryTooltip(stack, lines);
 			return;
 		}
-		if (stack.getItem() instanceof EnergyPackItem) {
-			addEnergyPackTooltip(stack, lines);
-			return;
-		}
-		if (stack.getItem() instanceof ElectricDrillItem) {
-			addElectricDrillTooltip(stack, lines);
-			return;
-		}
-		if (stack.getItem() instanceof ElectricChainsawItem) {
-			addElectricChainsawTooltip(stack, lines);
-			return;
-		}
-		if (stack.getItem() instanceof ElectricShovelItem) {
-			addElectricShovelTooltip(stack, lines);
-			return;
-		}
-		if (stack.getItem() instanceof ElectricHoeItem) {
-			addElectricHoeTooltip(stack, lines);
-			return;
-		}
-		if (stack.getItem() instanceof ElectricSaberItem) {
-			addElectricSaberTooltip(stack, lines);
-			return;
-		}
-		if (stack.getItem() instanceof ElectricBowItem) {
-			addElectricBowTooltip(stack, lines);
-			return;
-		}
-		if (stack.getItem() instanceof JetpackItem) {
-			addJetpackTooltip(stack, lines);
-			return;
+		// A powered tool or wearable declares its own tooltip (MOD-716, ADR-040).
+		if (stack.getItem() instanceof PoweredItem powered) {
+			PoweredToolTooltip tool = powered.toolTooltip();
+			if (tool != null) {
+				addPoweredToolTooltip(stack, tool, lines);
+				return;
+			}
 		}
 		// Plain-item components (not BlockItem) — the windmill rotor is the only such item with a
 		// tooltip. Its line describes what it does in the wind mill, not standalone stats.
@@ -161,67 +108,32 @@ public final class MachineTooltips {
 					.withStyle(ChatFormatting.GRAY));
 			return;
 		}
-		if (!(stack.getItem() instanceof BlockItem bi)) {
-			return;
-		}
-		Block block = bi.getBlock();
-		if (block instanceof UpgradeTableBlock) {
-			addUpgradeTableTooltip(lines, detailed);
-			return;
-		}
-		if (!isMachineBlock(block)) {
-			return;
-		}
-		if (!AlaClientConfig.showEuNumbers) {
-			if (detailed) {
-				addNonNumericTooltip(block, lines);
-			} else {
-				lines.add(Component.translatable("tooltip.alaindustrial.hold_shift")
-						.withStyle(ChatFormatting.DARK_GRAY));
+		if (stack.getItem() instanceof BlockItem blockItem
+				&& blockItem.getBlock() instanceof HasMachineTooltip owner) {
+			for (MachineTooltipSpec.Line line : owner.machineTooltip().lines(detailed, AlaClientConfig.showEuNumbers)) {
+				lines.add(render(line));
 			}
-			return;
-		}
-		addBasicTooltip(block, lines);
-		if (detailed) {
-			addDetailedTooltip(block, lines);
-		} else {
-			lines.add(Component.translatable("tooltip.alaindustrial.hold_shift")
-					.withStyle(ChatFormatting.DARK_GRAY));
 		}
 	}
 
-	private static void addNonNumericTooltip(Block block, List<Component> lines) {
-		if (block instanceof BatteryBoxBlock) {
-			lines.add(tier());
-			lines.add(Component.translatable("tooltip.alaindustrial.battery_box_io")
-					.withStyle(ChatFormatting.GRAY));
-		} else if (block instanceof TeleporterBlock) {
-			lines.add(tierHv());
-			lines.add(Component.translatable("tooltip.alaindustrial.teleporter_io")
-					.withStyle(ChatFormatting.GRAY));
-		} else if (block instanceof CableBlock cable) {
-			lines.add(cableTier(cable));
-			lines.add(cableSafety(cable));
-		} else if (block instanceof SolarPanelBlock) {
-			lines.add(tier());
-			lines.add(Component.translatable("tooltip.alaindustrial.solar_chip_hint")
-					.withStyle(ChatFormatting.DARK_GRAY));
-		} else if (block instanceof DaylightSolarPanelBlock
-				|| block instanceof MoonlitSolarPanelBlock
-				|| block instanceof GeneratorBlock
-				|| block instanceof GeothermalGeneratorBlock
-				|| block instanceof MaceratorBlock
-				|| block instanceof ElectricFurnaceBlock
-				|| block instanceof CompressorBlock
-				|| block instanceof RecyclerBlock
-				|| block instanceof ComponentRepairBenchBlock
-				|| block instanceof ExtractorBlock
-				|| block instanceof IncubatorBlock
-				|| block instanceof AlloySmelterBlock
-				|| block instanceof GardenDroneStationBlock
-				|| block instanceof PumpBlock) {
-			lines.add(tier());
+	/** One described line as a chat component: {@code key(args)} in its colour, or {@code label — key(args)}. */
+	static Component render(MachineTooltipSpec.Line line) {
+		MutableComponent body = Component.translatable(line.key(), line.argValues());
+		if (line.label() == null) {
+			return body.withStyle(color(line.tone()));
 		}
+		return Component.translatable(line.label()).append(" \u2014 ").append(body).withStyle(color(line.tone()));
+	}
+
+	private static ChatFormatting color(MachineTooltipSpec.Tone tone) {
+		return switch (tone) {
+			case GRAY -> ChatFormatting.GRAY;
+			case DARK_GRAY -> ChatFormatting.DARK_GRAY;
+			case GREEN -> ChatFormatting.GREEN;
+			case RED -> ChatFormatting.RED;
+			case LIGHT_PURPLE -> ChatFormatting.LIGHT_PURPLE;
+			case AQUA -> ChatFormatting.AQUA;
+		};
 	}
 
 	/**
@@ -395,257 +307,37 @@ public final class MachineTooltips {
 	}
 
 	/**
-	 * Tooltip text for the Energy Pack (MOD-065): what it does while worn, then its EU charge — same
-	 * shape as the pouch tooltip (gold charge line, red DEPLETED at 0). No [SHIFT] gate: the pack has
-	 * no second layer of detail to hide, and its charge is the one thing the player checks.
-	 *
-	 * <p>The usage text is split over two short lines: the equipment tooltip already carries the
-	 * "When on Chest / +2 Armor" block, and one long sentence on top of that stretched the box across
-	 * half the screen (player feedback).
+	 * A powered tool's tooltip (MOD-716): the usage line, its state lines, the charge — gold
+	 * {@code eu / capacity}, or the red "depleted" line once the item's own rule says it can no longer work —
+	 * then the state lines that follow the charge. No [SHIFT] gate: the charge is what a player checks.
 	 */
-	private static void addEnergyPackTooltip(ItemStack stack, List<Component> lines) {
-		lines.add(Component.translatable("tooltip.alaindustrial.energy_pack.usage")
-				.withStyle(ChatFormatting.GRAY));
-		lines.add(Component.translatable("tooltip.alaindustrial.energy_pack.usage_charges")
-				.withStyle(ChatFormatting.GRAY));
+	private static void addPoweredToolTooltip(ItemStack stack, PoweredToolTooltip tooltip, List<Component> lines) {
+		lines.add(Component.translatable(tooltip.usageKey(), tooltip.usageValues()).withStyle(ChatFormatting.GRAY));
+		addStateLines(stack, tooltip.beforeCharge(), lines);
 		long eu = ItemEnergy.get(stack);
 		long cap = ItemEnergy.capacity(stack);
-		if (eu <= 0) {
-			lines.add(Component.translatable("tooltip.alaindustrial.energy_pack.depleted")
-					.withStyle(ChatFormatting.RED));
+		if (tooltip.depleted().test(stack)) {
+			lines.add(Component.translatable(tooltip.depletedKey()).withStyle(ChatFormatting.RED));
 		} else {
-			lines.add(Component.translatable("tooltip.alaindustrial.energy_pack.charge", eu, cap)
-					.withStyle(ChatFormatting.GOLD));
+			lines.add(Component.translatable(tooltip.chargeKey(), eu, cap).withStyle(ChatFormatting.GOLD));
 		}
+		addStateLines(stack, tooltip.afterCharge(), lines);
 	}
 
-	/**
-	 * Tooltip for the Jetpack (MOD-148): how to fly, then its EU charge — same shape as the Energy
-	 * Pack tooltip (gold charge line, red DEPLETED at 0). One usage line: hold jump in the air to
-	 * fly. The former "keep holding to glide when drained" line was removed — the glide is only a
-	 * mid-flight safety net now (an empty jetpack falls normally), so advertising it as a feature
-	 * misled players.
-	 */
-	private static void addJetpackTooltip(ItemStack stack, List<Component> lines) {
-		lines.add(Component.translatable("tooltip.alaindustrial.jetpack.usage")
-				.withStyle(ChatFormatting.GRAY));
-		long eu = ItemEnergy.get(stack);
-		long cap = ItemEnergy.capacity(stack);
-		if (eu <= 0) {
-			lines.add(Component.translatable("tooltip.alaindustrial.jetpack.depleted")
-					.withStyle(ChatFormatting.RED));
-		} else {
-			lines.add(Component.translatable("tooltip.alaindustrial.jetpack.charge", eu, cap)
-					.withStyle(ChatFormatting.GOLD));
-		}
-	}
-
-	/**
-	 * Tooltip for the Electric Drill (MOD-079): what it does, then its EU charge — same shape as the
-	 * Energy Pack tooltip (gold charge line, red DEPLETED at 0). The usage line names the per-block EU
-	 * cost so the player can gauge how many blocks a full charge is worth; no [SHIFT] gate — the charge
-	 * is the one thing worth checking on a powered tool.
-	 */
-	private static void addElectricDrillTooltip(ItemStack stack, List<Component> lines) {
-		// The usage line names the tier's own reference tool. It used to be one shared string saying
-		// "mines like a diamond pickaxe", which on the netherite-tipped drill read as a downgrade
-		// (MOD-482 bug report). The mining TIER really is diamond on all three — 26.2 has nothing above
-		// it, and a netherite pickaxe unlocks no extra blocks — so each tier now names the pickaxe it is
-		// actually faster than instead of the tier it shares. Netherite is checked FIRST: it is a
-		// subclass of the diamond tip, and the other order would label the top tier as the one below it.
-		String usageKey;
-		if (stack.getItem() instanceof ElectricDrillNetheriteTipItem) {
-			usageKey = "tooltip.alaindustrial.electric_drill_netherite_tip.usage";
-		} else if (stack.getItem() instanceof ElectricDrillDiamondTipItem) {
-			usageKey = "tooltip.alaindustrial.electric_drill_diamond_tip.usage";
-		} else {
-			usageKey = "tooltip.alaindustrial.electric_drill.usage";
-		}
-		lines.add(Component.translatable(usageKey, Config.electricDrillEuPerBlock)
-				.withStyle(ChatFormatting.GRAY));
-		// MOD-321: the upgraded drill adds its switchable Silk Touch mode. The line is worth showing in
-		// both states: vanilla already lists "Silk Touch I" while the mode is on, but with it off nothing
-		// would hint that the drill has a toggle at all, so this is where the player learns the control.
-		// MOD-534: the netherite tip is a subclass of the diamond one, so its branch must come FIRST or the
-		// diamond branch below would claim it and label the top tier with the name of the tier under it.
-		if (stack.getItem() instanceof ElectricDrillNetheriteTipItem) {
-			boolean silk = ElectricDrillDiamondTipItem.isSilkMode(stack);
-			lines.add(Component.translatable(silk
-					? "tooltip.alaindustrial.electric_drill_netherite_tip.silk_on"
-					: "tooltip.alaindustrial.electric_drill_netherite_tip.silk_off")
-					.withStyle(silk ? ChatFormatting.AQUA : ChatFormatting.GRAY));
-		} else if (stack.getItem() instanceof ElectricDrillDiamondTipItem) {
-			boolean silk = ElectricDrillDiamondTipItem.isSilkMode(stack);
-			lines.add(Component.translatable(silk
-					? "tooltip.alaindustrial.electric_drill_diamond_tip.silk_on"
-					: "tooltip.alaindustrial.electric_drill_diamond_tip.silk_off")
-					.withStyle(silk ? ChatFormatting.AQUA : ChatFormatting.GRAY));
-		}
-		// MOD-482: the column bore. One key/one line for all three tiers — unlike Silk Touch, the mode is
-		// installed rather than inherent, so a drill that has never been to the Upgrade Table says nothing:
-		// a stat that cannot happen is noise (same rule as the scythe's zero-chance seed line).
-		if (DrillUpgrades.has(stack, DrillUpgrades.COLUMN_BORE)) {
-			boolean column = ElectricDrillItem.isColumnEnabled(stack);
-			lines.add(Component.translatable(column
-					? "tooltip.alaindustrial.electric_drill.column_on"
-					: "tooltip.alaindustrial.electric_drill.column_off")
-					.withStyle(column ? ChatFormatting.AQUA : ChatFormatting.GRAY));
-		}
-		long eu = ItemEnergy.get(stack);
-		long cap = ItemEnergy.capacity(stack);
-		if (eu <= 0) {
-			lines.add(Component.translatable("tooltip.alaindustrial.electric_drill.depleted")
-					.withStyle(ChatFormatting.RED));
-		} else {
-			lines.add(Component.translatable("tooltip.alaindustrial.electric_drill.charge", eu, cap)
-					.withStyle(ChatFormatting.GOLD));
-		}
-	}
-
-	/**
-	 * Tooltip for the Electric Chainsaw (MOD-337) — the same shape as the drill's: what it does with its
-	 * per-block EU cost, then the charge line (gold, or red DEPLETED at 0). Deliberately a sibling method
-	 * rather than a branch inside the drill's: the chainsaw is not an {@code ElectricDrillItem}, and the
-	 * usage line names logs and leaves instead of a pickaxe's blocks.
-	 */
-	private static void addElectricChainsawTooltip(ItemStack stack, List<Component> lines) {
-		lines.add(Component.translatable("tooltip.alaindustrial.electric_chainsaw.usage",
-						Config.electricChainsawEuPerBlock)
-				.withStyle(ChatFormatting.GRAY));
-		long eu = ItemEnergy.get(stack);
-		long cap = ItemEnergy.capacity(stack);
-		if (eu <= 0) {
-			lines.add(Component.translatable("tooltip.alaindustrial.electric_chainsaw.depleted")
-					.withStyle(ChatFormatting.RED));
-		} else {
-			lines.add(Component.translatable("tooltip.alaindustrial.electric_chainsaw.charge", eu, cap)
-					.withStyle(ChatFormatting.GOLD));
-		}
-		// MOD-374: the diamond-tipped upgrade adds its Silk Touch state. Shown in BOTH states on purpose —
-		// while the mode is on vanilla already prints "Silk Touch I" from the real enchantment, but with it
-		// off nothing would hint that the toggle exists at all.
-		if (stack.getItem() instanceof ElectricChainsawDiamondTipItem) {
-			boolean silk = ElectricChainsawDiamondTipItem.isSilkMode(stack);
-			lines.add(Component.translatable(silk
-					? "tooltip.alaindustrial.electric_chainsaw_diamond_tip.silk_on"
-					: "tooltip.alaindustrial.electric_chainsaw_diamond_tip.silk_off")
-					.withStyle(silk ? ChatFormatting.AQUA : ChatFormatting.GRAY));
-		}
-	}
-
-	/**
-	 * Tooltip for the Electric Shovel (MOD-338) — the same shape as the drill's and the chainsaw's:
-	 * what it does with its per-block EU cost, then the charge line (gold, or red DEPLETED at 0). A
-	 * sibling method rather than a branch inside either of theirs, because the usage line names earth
-	 * instead of stone or wood.
-	 */
-	private static void addElectricShovelTooltip(ItemStack stack, List<Component> lines) {
-		lines.add(Component.translatable("tooltip.alaindustrial.electric_shovel.usage",
-						Config.electricShovelEuPerBlock)
-				.withStyle(ChatFormatting.GRAY));
-		long eu = ItemEnergy.get(stack);
-		long cap = ItemEnergy.capacity(stack);
-		if (eu <= 0) {
-			lines.add(Component.translatable("tooltip.alaindustrial.electric_shovel.depleted")
-					.withStyle(ChatFormatting.RED));
-		} else {
-			lines.add(Component.translatable("tooltip.alaindustrial.electric_shovel.charge", eu, cap)
-					.withStyle(ChatFormatting.GOLD));
-		}
-		// MOD-481: the diamond-tipped upgrade adds its Silk Touch state. Shown in BOTH states on purpose,
-		// exactly like the drill's and the chainsaw's — while the mode is on vanilla already prints
-		// "Silk Touch I" from the real enchantment, but with it off nothing in the UI would say the shovel
-		// has a mode at all, and the control (sneak + right-click) is not discoverable by itself.
-		if (stack.getItem() instanceof ElectricShovelDiamondTipItem) {
-			boolean silk = ElectricShovelDiamondTipItem.isSilkMode(stack);
-			lines.add(Component.translatable(silk
-					? "tooltip.alaindustrial.electric_shovel_diamond_tip.silk_on"
-					: "tooltip.alaindustrial.electric_shovel_diamond_tip.silk_off")
-					.withStyle(silk ? ChatFormatting.AQUA : ChatFormatting.GRAY));
-		}
-	}
-
-	/**
-	 * Tooltip for the Electric Hoe (MOD-342) — same shape as the other three powered tools. The usage
-	 * line names tilling first because that is the action players reach for, and both it and breaking a
-	 * block cost the same figure, so one number covers the whole tool.
-	 */
-	/**
-	 * Saber lines: what a powered swing costs, whether the blade is switched on, and the charge. The
-	 * on/off state comes first among the two state lines because it is the half the player controls —
-	 * a saber that "does nothing" is far more often switched off than empty.
-	 *
-	 * <p>Damage and reach are deliberately absent here: both are real attribute modifiers, so vanilla
-	 * already prints them under the item, and they follow the same charge this block reports.
-	 */
-	private static void addElectricSaberTooltip(ItemStack stack, List<Component> lines) {
-		lines.add(Component.translatable("tooltip.alaindustrial.electric_saber.usage",
-						Config.electricSaberEuPerHit)
-				.withStyle(ChatFormatting.GRAY));
-		boolean on = ElectricSaberItem.isEnabled(stack);
-		lines.add(Component.translatable(on
-						? "tooltip.alaindustrial.electric_saber.state_on"
-						: "tooltip.alaindustrial.electric_saber.state_off")
-				.withStyle(on ? ChatFormatting.GREEN : ChatFormatting.GRAY));
-		long eu = ItemEnergy.get(stack);
-		long cap = ItemEnergy.capacity(stack);
-		if (eu < Config.electricSaberEuPerHit) {
-			lines.add(Component.translatable("tooltip.alaindustrial.electric_saber.depleted")
-					.withStyle(ChatFormatting.RED));
-		} else {
-			lines.add(Component.translatable("tooltip.alaindustrial.electric_saber.charge", eu, cap)
-					.withStyle(ChatFormatting.GOLD));
-		}
-	}
-
-	/**
-	 * Bow lines: what a powered shot buys and costs, then the charge — or, below one shot's worth, that
-	 * the bow is a plain bow until recharged. The threshold is the synced
-	 * {@link ElectricBowItem#showsCharged} flag rather than the local config, so the red line appears
-	 * exactly when the lit texture goes out.
-	 */
-	private static void addElectricBowTooltip(ItemStack stack, List<Component> lines) {
-		lines.add(Component.translatable("tooltip.alaindustrial.electric_bow.usage",
-						Config.electricBowEuPerShot)
-				.withStyle(ChatFormatting.GRAY));
-		long eu = ItemEnergy.get(stack);
-		long cap = ItemEnergy.capacity(stack);
-		if (!ElectricBowItem.showsCharged(stack)) {
-			lines.add(Component.translatable("tooltip.alaindustrial.electric_bow.depleted")
-					.withStyle(ChatFormatting.RED));
-		} else {
-			lines.add(Component.translatable("tooltip.alaindustrial.electric_bow.charge", eu, cap)
-					.withStyle(ChatFormatting.GOLD));
-		}
-	}
-
-	private static void addElectricHoeTooltip(ItemStack stack, List<Component> lines) {
-		lines.add(Component.translatable("tooltip.alaindustrial.electric_hoe.usage",
-						Config.electricHoeEuPerBlock)
-				.withStyle(ChatFormatting.GRAY));
-		long eu = ItemEnergy.get(stack);
-		long cap = ItemEnergy.capacity(stack);
-		if (eu <= 0) {
-			lines.add(Component.translatable("tooltip.alaindustrial.electric_hoe.depleted")
-					.withStyle(ChatFormatting.RED));
-		} else {
-			lines.add(Component.translatable("tooltip.alaindustrial.electric_hoe.charge", eu, cap)
-					.withStyle(ChatFormatting.GOLD));
-		}
-		// MOD-378: the diamond-tipped upgrade waters every plot it tills. Unlike the drill's and the
-		// chainsaw's Silk Touch, this perk has no off state and nothing in the vanilla UI hints at it —
-		// wet farmland just looks like farmland next to water — so the tooltip is the only place a player
-		// can learn the upgrade does anything beyond digging faster.
-		if (stack.getItem() instanceof ElectricHoeDiamondTipItem) {
-			lines.add(Component.translatable("tooltip.alaindustrial.electric_hoe_diamond_tip.irrigation")
-					.withStyle(ChatFormatting.AQUA));
+	private static void addStateLines(ItemStack stack,
+			List<Function<ItemStack, MachineTooltipSpec.@Nullable Line>> states, List<Component> lines) {
+		for (Function<ItemStack, MachineTooltipSpec.@Nullable Line> state : states) {
+			MachineTooltipSpec.Line line = state.apply(stack);
+			if (line != null) {
+				lines.add(render(line));
+			}
 		}
 	}
 
 	/**
 	 * Tooltip for the wooden rotor — describes its role in the wind mill: required to generate,
-	 * and the base EU/t a T1 wind mill produces at full height. Numbers come from {@link Config} so
-	 * the tooltip stays in sync with the balance knobs (the rotor itself carries no stats — it is
+	 * and the base EU/t a T1 wind mill produces at full height. Numbers come from {@link ServerBalance} so
+	 * the tooltip stays in sync with the server's balance knobs (the rotor itself carries no stats — it is
 	 * a gate, the mill's output depends on height/weather).
 	 */
 	private static void addRotorTooltip(List<Component> lines, boolean detailed) {
@@ -653,7 +345,7 @@ public final class MachineTooltips {
 		lines.add(Component.translatable("tooltip.alaindustrial.rotor_role")
 				.withStyle(ChatFormatting.GRAY));
 		// Base T1 output at full height (the cap), so a player can compare rotors without placing.
-		lines.add(tt("rotor_output", Config.windMillMaxEuPerTick));
+		lines.add(tt("rotor_output", ServerBalance.windMillMaxEuPerTick()));
 		if (detailed) {
 			lines.add(tier());
 		} else {
@@ -676,323 +368,13 @@ public final class MachineTooltips {
 				.withStyle(ChatFormatting.GRAY));
 	}
 
-	private static void addUpgradeTableTooltip(List<Component> lines, boolean detailed) {
-		lines.add(Component.translatable("tooltip.alaindustrial.upgrade_table.assemble")
-				.withStyle(ChatFormatting.GRAY));
-		if (!detailed) {
-			lines.add(Component.translatable("tooltip.alaindustrial.hold_shift")
-					.withStyle(ChatFormatting.DARK_GRAY));
-			return;
-		}
-		lines.add(tier());
-		lines.add(Component.translatable("tooltip.alaindustrial.upgrade_table.purpose")
-				.withStyle(ChatFormatting.GRAY));
-		if (AlaClientConfig.showEuNumbers) {
-			// The numbers the table really runs with no overclocker in it: the same speed knob the
-			// machine applies through ProcessingCycle, so a retuned server does not show the base 8 EU/t.
-			int euPerTick = OverclockMath.euPerTick(Config.upgradeTableEuPerTick,
-					Config.globalMachineSpeedMultiplier, Config.overclockerEuFactor, 0);
-			int ticks = Config.scaledDuration(Config.upgradeTableDuration);
-			String seconds = ticks % 20 == 0
-					? Integer.toString(ticks / 20)
-					: String.format(java.util.Locale.ROOT, "%.1f", ticks / 20f);
-			lines.add(Component.translatable("tooltip.alaindustrial.upgrade_table.cost", euPerTick, seconds)
-					.withStyle(ChatFormatting.GRAY));
-		}
-	}
-
-	private static boolean isMachineBlock(Block block) {
-		return block instanceof SolarPanelBlock
-				|| block instanceof DaylightSolarPanelBlock
-				|| block instanceof MoonlitSolarPanelBlock
-				|| block instanceof GeneratorBlock
-				|| block instanceof GeothermalGeneratorBlock
-				|| block instanceof MaceratorBlock
-				|| block instanceof ElectricFurnaceBlock
-				|| block instanceof CompressorBlock
-				|| block instanceof RecyclerBlock
-				|| block instanceof ComponentRepairBenchBlock
-				|| block instanceof SawmillBlock
-				|| block instanceof ExtractorBlock
-				|| block instanceof IncubatorBlock
-				|| block instanceof PumpBlock
-				|| block instanceof PolymerizerBlock
-				|| block instanceof GalvanicBathBlock
-				|| block instanceof FermenterBlock
-				|| block instanceof VulcanizerBlock
-				|| block instanceof ThermalCentrifugeBlock
-				|| block instanceof ElectricHeaterBlock
-				|| block instanceof GardenDroneStationBlock
-				|| block instanceof TeleporterBlock
-				|| block instanceof BatteryBoxBlock
-				|| block instanceof CableBlock;
-	}
-
-	private static void addBasicTooltip(Block block, List<Component> lines) {
-		if (block instanceof SolarPanelBlock) {
-			lines.add(tt("energy_output_day", Config.solarEuPerTick));
-			lines.add(tt("capacity", Config.solarBuffer));
-		} else if (block instanceof DaylightSolarPanelBlock) {
-			lines.add(tt("energy_output_day_only", Config.daylightEuPerTick));
-			lines.add(tt("capacity", Config.solarBuffer));
-		} else if (block instanceof MoonlitSolarPanelBlock) {
-			lines.add(tt("energy_output_night_only", Config.moonlitEuPerTick));
-			lines.add(tt("capacity", Config.solarBuffer));
-		} else if (block instanceof GeneratorBlock) {
-			lines.add(tt("energy_output_fuel", Config.fuelEuPerTick));
-			lines.add(tt("capacity", Config.generatorBuffer));
-		} else if (block instanceof GeothermalGeneratorBlock) {
-			lines.add(tt("energy_output_lava", Config.geothermalEuPerTick));
-			lines.add(tt("capacity", Config.geothermalBuffer));
-		} else if (block instanceof MaceratorBlock) {
-			lines.add(tt("energy_input", Config.machineEuPerTickEffective()));
-			lines.add(tt("duration_ticks", Config.scaledDuration(Config.maceratorDuration)));
-		} else if (block instanceof ElectricFurnaceBlock) {
-			lines.add(tt("energy_input", Config.machineEuPerTickEffective()));
-			lines.add(tt("duration_ticks", Config.scaledDuration(Config.electricFurnaceDuration)));
-		} else if (block instanceof RecyclerBlock) {
-			lines.add(tt("energy_input", Config.recyclerEuPerTick));
-			lines.add(tt("duration_ticks", Config.scaledDuration(Config.recyclerDuration)));
-		} else if (block instanceof CompressorBlock) {
-			lines.add(tt("energy_input", Config.machineEuPerTickEffective()));
-			lines.add(tt("duration_ticks", Config.scaledDuration(Config.compressorDuration)));
-		} else if (block instanceof ComponentRepairBenchBlock) {
-			lines.add(tt("energy_input", Config.repairBenchEuPerTick));
-			lines.add(tt("duration_ticks", Config.scaledDuration(
-					Config.repairBenchTier1EuCost / Math.max(1, Config.repairBenchEuPerTick))));
-		} else if (block instanceof SawmillBlock) {
-			lines.add(tt("energy_input", Config.machineEuPerTickEffective()));
-			lines.add(tt("duration_ticks", Config.scaledDuration(Config.sawmillDuration)));
-		} else if (block instanceof ExtractorBlock) {
-			lines.add(tt("energy_input", Config.machineEuPerTickEffective()));
-			lines.add(tt("duration_ticks", Config.scaledDuration(Config.extractorDuration)));
-		} else if (block instanceof PolymerizerBlock) {
-			lines.add(tt("energy_input", Config.machineEuPerTickEffective()));
-			lines.add(tt("duration_ticks", Config.scaledDuration(Config.polymerizerDuration)));
-		} else if (block instanceof GalvanicBathBlock) {
-			lines.add(tt("energy_input", Config.machineEuPerTickEffective()));
-			lines.add(tt("duration_ticks", Config.scaledDuration(Config.galvanicBathDuration)));
-		} else if (block instanceof FermenterBlock) {
-			lines.add(tt("energy_input", Config.machineEuPerTickEffective()));
-			lines.add(tt("duration_ticks", Config.scaledDuration(Config.fermenterDuration)));
-		} else if (block instanceof VulcanizerBlock) {
-			lines.add(tt("energy_input", Config.machineEuPerTickEffective()));
-			lines.add(tt("duration_ticks", Config.scaledDuration(Config.vulcanizerDuration)));
-		} else if (block instanceof ThermalCentrifugeBlock) {
-			// Its own rate, not machineEuPerTick — the rotor costs more than an ordinary machine tick.
-			lines.add(tt("energy_input", thermalCentrifugeEuPerTick()));
-			lines.add(tt("duration_ticks", Config.scaledDuration(Config.thermalCentrifugeDuration)));
-		} else if (block instanceof ElectricHeaterBlock) {
-			lines.add(tt("energy_input", Config.electricHeaterEuPerTickEffective()));
-			lines.add(tt("capacity", Config.electricHeaterBuffer));
-		} else if (block instanceof IncubatorBlock) {
-			// The incubator does NOT run on machineEuPerTick — it has its own, four times higher draw,
-			// and three durations instead of one (the mutation chip picks the mode). So the basic line
-			// carries the draw and the buffer; the per-mode timings live under [SHIFT].
-			lines.add(tt("energy_input", incubatorEuPerTick()));
-			lines.add(tt("capacity", Config.incubatorBuffer));
-		} else if (block instanceof PumpBlock) {
-			lines.add(tt("pump_cost", Config.pumpEuPerBucket));
-		} else if (block instanceof GardenDroneStationBlock) {
-			lines.add(tt("garden_drone_action_cost", Config.gardenDroneEuPerAction));
-		} else if (block instanceof BatteryBoxBlock) {
-			lines.add(tt("capacity", Config.batteryBoxBuffer));
-			lines.add(tier());
-		} else if (block instanceof CableBlock cable) {
-			lines.add(cableTier(cable));
-			lines.add(tt("buffer", cable.type().segmentBuffer()));
-			lines.add(cableSafety(cable));
-		}
-	}
-
-	private static void addDetailedTooltip(Block block, List<Component> lines) {
-		if (block instanceof SolarPanelBlock) {
-			lines.add(tier());
-			lines.add(tt("solar_day", Config.solarEuPerTick));
-			lines.add(tt("solar_night", 0));
-			lines.add(Component.translatable("tooltip.alaindustrial.solar_chip_hint")
-					.withStyle(ChatFormatting.DARK_GRAY));
-		} else if (block instanceof DaylightSolarPanelBlock) {
-			lines.add(tier());
-			lines.add(tt("solar_day", Config.daylightEuPerTick));
-			lines.add(tt("solar_night", 0));
-		} else if (block instanceof MoonlitSolarPanelBlock) {
-			lines.add(tier());
-			lines.add(tt("solar_day", 0));
-			lines.add(tt("solar_night", Config.moonlitEuPerTick));
-		} else if (block instanceof GeneratorBlock) {
-			lines.add(tier());
-		} else if (block instanceof GeothermalGeneratorBlock) {
-			lines.add(tier());
-			lines.add(tt("geo_burn_ticks", Config.geothermalBurnTicks));
-		} else if (block instanceof MaceratorBlock) {
-			lines.add(tier());
-			lines.add(tt("buffer", Config.maceratorBuffer));
-			lines.add(tt("energy_per_op",
-					Config.machineEuPerTickEffective() * Config.scaledDuration(Config.maceratorDuration)));
-		} else if (block instanceof ElectricFurnaceBlock) {
-			lines.add(tier());
-			lines.add(tt("buffer", Config.machineBuffer));
-			lines.add(tt("energy_per_op",
-					Config.machineEuPerTickEffective() * Config.scaledDuration(Config.electricFurnaceDuration)));
-		} else if (block instanceof RecyclerBlock) {
-			lines.add(tt("energy_input", Config.recyclerEuPerTick));
-			lines.add(tt("duration_ticks", Config.scaledDuration(Config.recyclerDuration)));
-		} else if (block instanceof CompressorBlock) {
-			lines.add(tier());
-			lines.add(tt("buffer", Config.machineBuffer));
-			lines.add(tt("energy_per_op",
-					Config.machineEuPerTickEffective() * Config.scaledDuration(Config.compressorDuration)));
-		} else if (block instanceof ComponentRepairBenchBlock) {
-			lines.add(tier());
-			lines.add(tt("buffer", Config.machineBuffer));
-			// Per-op cost is per GRADE (5000 / 10000 / 18000); the T1 figure stands in here.
-			lines.add(tt("energy_per_op", Config.repairBenchTier1EuCost));
-		} else if (block instanceof SawmillBlock) {
-			lines.add(tier());
-			lines.add(tt("buffer", Config.machineBuffer));
-			lines.add(tt("energy_per_op",
-					Config.machineEuPerTickEffective() * Config.scaledDuration(Config.sawmillDuration)));
-		} else if (block instanceof ExtractorBlock) {
-			lines.add(tier());
-			lines.add(tt("buffer", Config.machineBuffer));
-			lines.add(tt("energy_per_op",
-					Config.machineEuPerTickEffective() * Config.scaledDuration(Config.extractorDuration)));
-		} else if (block instanceof PolymerizerBlock) {
-			lines.add(tier());
-			lines.add(tt("buffer", Config.machineBuffer));
-			lines.add(tt("energy_per_op",
-					Config.machineEuPerTickEffective() * Config.scaledDuration(Config.polymerizerDuration)));
-		} else if (block instanceof GalvanicBathBlock) {
-			lines.add(tier());
-			lines.add(tt("buffer", Config.machineBuffer));
-			lines.add(tt("energy_per_op",
-					Config.machineEuPerTickEffective() * Config.scaledDuration(Config.galvanicBathDuration)));
-		} else if (block instanceof FermenterBlock) {
-			lines.add(tier());
-			lines.add(tt("buffer", Config.machineBuffer));
-			lines.add(tt("energy_per_op",
-					Config.machineEuPerTickEffective() * Config.scaledDuration(Config.fermenterDuration)));
-		} else if (block instanceof VulcanizerBlock) {
-			lines.add(tier());
-			lines.add(tt("buffer", Config.machineBuffer));
-			lines.add(tt("energy_per_op",
-					Config.machineEuPerTickEffective() * Config.scaledDuration(Config.vulcanizerDuration)));
-		} else if (block instanceof ThermalCentrifugeBlock) {
-			lines.add(tier());
-			lines.add(tt("buffer", Config.machineBuffer));
-			lines.add(tt("energy_per_op",
-					thermalCentrifugeEuPerTick() * Config.scaledDuration(Config.thermalCentrifugeDuration)));
-		} else if (block instanceof ElectricHeaterBlock) {
-			lines.add(tier());
-		} else if (block instanceof IncubatorBlock) {
-			lines.add(tier());
-			lines.add(tt("buffer", Config.incubatorBuffer));
-			lines.add(incubatorMode("transform", ModRecipes.MUTATION_TRANSFORM));
-			lines.add(incubatorMode("duplicate", ModRecipes.MUTATION_DUPLICATE));
-			lines.add(incubatorMode("create", ModRecipes.MUTATION_CREATE));
-		} else if (block instanceof PumpBlock) {
-			lines.add(tier());
-		} else if (block instanceof GardenDroneStationBlock) {
-			lines.add(tier());
-			lines.add(tt("garden_drone_range", Config.gardenDroneRange));
-			lines.add(tt("capacity", Config.gardenDroneBuffer));
-		} else if (block instanceof BatteryBoxBlock) {
-			lines.add(Component.translatable("tooltip.alaindustrial.battery_box_io")
-					.withStyle(ChatFormatting.GRAY));
-		} else if (block instanceof TeleporterBlock) {
-			lines.add(tierHv());
-			lines.add(tt("buffer", Config.teleporterBuffer));
-			lines.add(Component.translatable("tooltip.alaindustrial.teleporter_io")
-					.withStyle(ChatFormatting.GRAY));
-		} else if (block instanceof CableBlock cable) {
-			lines.add(tt("cable_loss", cableLossPercent(cable)));
-		}
-	}
-
-	private static Component cableSafety(CableBlock cable) {
-		String key = cable.type().isInsulated() ? "cable_safe" : "cable_shock_warning";
-		ChatFormatting color = cable.type().isInsulated() ? ChatFormatting.GREEN : ChatFormatting.RED;
-		return Component.translatable("tooltip.alaindustrial." + key).withStyle(color);
-	}
-
 	private static Component tt(String key, Object value) {
 		return Component.translatable("tooltip.alaindustrial." + key, value)
 				.withStyle(ChatFormatting.GRAY);
 	}
 
-	/**
-	 * The incubator's draw, mirroring {@code IncubatorBlockEntity#euPerTick()}. It has its own
-	 * {@link Config#incubatorEuPerTick} (four times the machine standard), so
-	 * {@link Config#machineEuPerTickEffective()} would understate it.
-	 */
-	private static int incubatorEuPerTick() {
-		return Math.max(1, Math.round(Config.incubatorEuPerTick * Config.globalMachineSpeedMultiplier));
-	}
-
-	/**
-	 * The centrifuge's effective drain, scaled the same way {@link #incubatorEuPerTick()} scales the
-	 * incubator's: this machine has its own rate rather than the shared {@code machineEuPerTick}, so
-	 * {@code Config.machineEuPerTickEffective()} would quote the wrong number here (MOD-424).
-	 */
-	private static int thermalCentrifugeEuPerTick() {
-		return Math.max(1, Math.round(Config.thermalCentrifugeEuPerTick * Config.globalMachineSpeedMultiplier));
-	}
-
-	/**
-	 * One "Mode - Duration: N ticks" line for the incubator. The mode picks the duration, so three bare
-	 * duration lines would be unreadable; both halves reuse strings that already exist in every locale
-	 * (the GUI mode label and the shared duration line), so no new lang key is introduced. The separator
-	 * is an escaped em dash, so the literal itself stays ASCII and cannot be mangled by a source-encoding
-	 * mismatch (a comment can survive that, a shipped string cannot).
-	 *
-	 * <p>The number comes from the recipe family, the same way the machine and the recipe viewers get
-	 * it: {@code energy / incubatorEuPerTick}. Reading {@code Config.mutationDuration*} here printed a
-	 * figure nothing else used \u2014 every shipped recipe states its energy, so the machine never consults
-	 * those keys, and raising the machine's draw halved the real cycle while the tooltip stood still.
-	 */
-	private static Component incubatorMode(String mode, ModRecipes.Kind kind) {
-		return Component.translatable("gui.alaindustrial.incubator.mode." + mode)
-				.append(" \u2014 ")
-				.append(Component.translatable("tooltip.alaindustrial.duration_ticks",
-						Config.scaledDuration(kind.ticksFor(kind.defaultEnergy()))))
-				.withStyle(ChatFormatting.GRAY);
-	}
-
-	/**
-	 * This cable grade's loss as a percent-per-block string, sourced live from its {@link CableType} so the
-	 * tooltip can never drift from the actual model. Locale.ROOT + trailing-zero trim yields "2" for copper
-	 * and "0.6" for tin (which is why the format keeps three decimals before trimming).
-	 */
-	private static String cableLossPercent(CableBlock cable) {
-		double pct = cable.type().lossPerBlock() * 100.0;
-		String s = String.format(java.util.Locale.ROOT, "%.3f", pct);
-		if (s.contains(".")) {
-			s = s.replaceAll("0+$", "").replaceAll("\\.$", "");
-		}
-		return s;
-	}
-
 	private static Component tier() {
 		return Component.translatable("tooltip.alaindustrial.tier_lv")
 				.withStyle(ChatFormatting.GREEN);
-	}
-
-	/**
-	 * Tier line for a cable, taken from its own grade rather than assumed LV — the gold cable is MV, so the
-	 * blanket {@link #tier()} used by every other block would misreport it (MOD-219).
-	 */
-	private static Component cableTier(CableBlock cable) {
-		return switch (cable.type().tier()) {
-			case LV -> tier();
-			case MV -> Component.translatable("tooltip.alaindustrial.tier_mv").withStyle(ChatFormatting.GREEN);
-			case HV -> tierHv();
-		};
-	}
-
-	/** HV tier line — the teleporter station (MOD-091) and the electrum cable (MOD-358). */
-	private static Component tierHv() {
-		return Component.translatable("tooltip.alaindustrial.tier_hv")
-				.withStyle(ChatFormatting.LIGHT_PURPLE);
 	}
 }

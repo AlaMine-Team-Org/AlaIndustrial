@@ -1,6 +1,7 @@
 package dev.alaindustrial.block.entity;
 
 import java.util.Locale;
+import dev.alaindustrial.core.machine.StatusLine;
 
 /**
  * What the Electric Heater's screen is reporting (MOD-418).
@@ -9,7 +10,7 @@ import java.util.Locale;
  * list of stalls: it is the heater's own state of matter. Two of the six are things the player must
  * fix ({@link #NO_CONSUMER}, {@link #NO_ENERGY}); the rest describe where on the ramp it currently is.
  */
-public enum ElectricHeaterStatus {
+public enum ElectricHeaterStatus implements StatusLine {
 	/** Nothing above that takes heat — the heater is furniture until a Vulcanizer sits on it. */
 	NO_CONSUMER,
 	/** A consumer is there, but the buffer cannot pay for even one heat tick. */
@@ -41,5 +42,11 @@ public enum ElectricHeaterStatus {
 
 	public static ElectricHeaterStatus byOrdinal(int ordinal) {
 		return ordinal >= 0 && ordinal < VALUES.length ? VALUES[ordinal] : COLD;
+	}
+
+	/** {@link StatusLine}: whether this state holds the machine up (see the interface). */
+	@Override
+	public boolean isBlocking() {
+		return needsAttention();
 	}
 }

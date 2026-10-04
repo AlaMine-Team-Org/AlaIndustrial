@@ -1,7 +1,7 @@
 package dev.alaindustrial.block;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.ReactorDoorBlockEntity;
+import dev.alaindustrial.core.reactor.ReactorConfig;
 import dev.alaindustrial.registry.ModSounds;
 import java.util.Map;
 import org.jspecify.annotations.Nullable;
@@ -58,7 +58,7 @@ import net.minecraft.world.entity.player.Player;
  * <ul>
  *   <li>Hands do nothing — {@code useWithoutItem} is left at {@code BlockBehaviour}'s default
  *       {@code PASS}, so there is no "open by clicking" path to disable.</li>
- *   <li>A <em>rising</em> redstone edge opens it and schedules the close, {@link Config#reactorDoorOpenTicks}
+ *   <li>A <em>rising</em> redstone edge opens it and schedules the close, {@link ReactorConfig#reactorDoorOpenTicks}
  *       later. Holding the lever down does not hold the door: the scheduled close still fires, and only a
  *       fresh edge opens it again. That is what makes the room's seal a matter of seconds, not of whether
  *       someone left a lever on.</li>
@@ -251,7 +251,7 @@ public class ReactorDoorBlock extends Block implements EntityBlock {
 		}
 		if (doorwayOccupied(level, lower)) {
 			// Someone is still walking through — try again shortly rather than closing on them.
-			level.scheduleTick(lower, this, Config.reactorDoorOccupiedRecheckTicks);
+			level.scheduleTick(lower, this, ReactorConfig.reactorDoorOccupiedRecheckTicks);
 			return;
 		}
 		setBothHalves(level, lower, s -> s.setValue(OPEN, false));
@@ -268,7 +268,7 @@ public class ReactorDoorBlock extends Block implements EntityBlock {
 			setBothHalves(level, lower, s -> s.setValue(OPEN, true));
 			playDoorSound(level, lower, true);
 		}
-		level.scheduleTick(lower, this, Config.reactorDoorOpenTicks);
+		level.scheduleTick(lower, this, ReactorConfig.reactorDoorOpenTicks);
 	}
 
 	/**

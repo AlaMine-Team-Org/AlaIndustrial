@@ -31,43 +31,9 @@ public final class FluidTankGameTest {
 	/** Mirrors {@code FluidTankScenarios.POS} — the rig slot the Fabric-only capability test uses. */
 	private static final BlockPos TANK_POS = new BlockPos(1, 2, 1);
 
-	@GameTest
-	public void tcFluidTank001Fun02_glassWallStopsAClick(GameTestHelper helper) {
-		FluidTankScenarios.tcFluidTank001Fun02_glassWallStopsAClick(helper);
-	}
-
-	@GameTest
-	public void tcFluidTank001Dat01_contentsCodecRoundTrips(GameTestHelper helper) {
-		FluidTankScenarios.tcFluidTank001Dat01_contentsCodecRoundTrips(helper);
-	}
-
-	@GameTest
-	public void tcFluidTank001Per01_nbtAndComponentRoundTrip(GameTestHelper helper) {
-		FluidTankScenarios.tcFluidTank001Per01_nbtAndComponentRoundTrip(helper);
-	}
-
-	@GameTest
-	public void tcFluidTank001Safe01_filledItemIsAtomicAndUnstackable(GameTestHelper helper) {
-		FluidTankScenarios.tcFluidTank001Safe01_filledItemIsAtomicAndUnstackable(helper);
-	}
-
-	@GameTest
-	public void tcFluidTank001Bva01_componentAmountClampsToCapacity(GameTestHelper helper) {
-		FluidTankScenarios.tcFluidTank001Bva01_componentAmountClampsToCapacity(helper);
-	}
-
-	/**
-	 * @implements TC-FLUIDTANK-002-FUN01 — the advanced grade holds twice as much, and takes that
-	 *     number from the block it is placed in (MOD-612).
-	 */
-	@GameTest
-	public void tcFluidTank002Fun01_advancedGradeHoldsTwiceAsMuch(GameTestHelper helper) {
-		FluidTankScenarios.tcFluidTank002Fun01_advancedGradeHoldsTwiceAsMuch(helper);
-	}
-
 	/**
 	 * Placed locally rather than through {@code FluidTankScenarios.place} on purpose: the
-	 * {@code gametest-bodies-live-in-common} rule in {@code docs/tools/arch_check.py} counts
+	 * {@code gametest-bodies-live-in-common} rule in {@code docs/tools/arch/arch_check.py} counts
 	 * {@code …Scenarios.method(…)} calls against the number of {@code @GameTest} methods, so borrowing
 	 * a helper from common would make this Fabric-only body look like a twelfth delegation and quietly
 	 * drop the file off the frozen debt list.
@@ -113,20 +79,5 @@ public final class FluidTankGameTest {
 			helper.fail("rejected/rolled-back transaction changed tank contents");
 		}
 		helper.succeed();
-	}
-
-	@GameTest
-	public void tcFluidTank001Per02_placingAFilledTankKeepsItsContents(GameTestHelper helper) {
-		FluidTankScenarios.tcFluidTank001Per02_placingAFilledTankKeepsItsContents(helper);
-	}
-
-	@GameTest
-	public void tcFluidTank001Fun01_bucketAndCapsuleUseRealClickRouting(GameTestHelper helper) {
-		FluidTankScenarios.tcFluidTank001Fun01_bucketAndCapsuleUseRealClickRouting(helper);
-	}
-
-	@GameTest
-	public void tcFluidTank001Fun03_modFluidBucketRoundTripsAndMobBucketIsRefused(GameTestHelper helper) {
-		FluidTankScenarios.tcFluidTank001Fun03_modFluidBucketRoundTripsAndMobBucketIsRefused(helper);
 	}
 }

@@ -13,7 +13,6 @@ import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.sprite.SpriteGetter;
 import net.minecraft.client.resources.model.sprite.SpriteId;
@@ -175,7 +174,8 @@ public final class ReactorDoorBlockEntityRenderer
 		float u1 = sprite.getU1();
 		float v0 = Mth.lerp(vTop, sprite.getV0(), sprite.getV1());
 		float v1 = Mth.lerp(vBottom, sprite.getV0(), sprite.getV1());
-		int light = state.lightCoords;
+		// Every face wound both ways (see above).
+		QuadEmitter quads = new QuadEmitter(pose, out, state.lightCoords);
 		// Which way the slab is thin follows the facing: Shapes.rotateHorizontal turns the plate with
 		// the direction, so a north/south door is thin along Z and an east/west one along X. The box
 		// comes out right either way — the UV does not. Assuming Z here (as this did at first) gave
@@ -191,61 +191,34 @@ public final class ReactorDoorBlockEntityRenderer
 
 		if (thinAlongZ) {
 			// Broad faces span X, at the slab's two Z walls.
-			face(pose, out, light,
-					x0, y0, z0, x1, y0, z0, x1, y1, z0, x0, y1, z0, u0, v1, u1, v0, 0.0f, 0.0f, -1.0f);
-			face(pose, out, light,
-					x1, y0, z1, x0, y0, z1, x0, y1, z1, x1, y1, z1, u0, v1, u1, v0, 0.0f, 0.0f, 1.0f);
+			quads.quadBothSides(0.0f, 0.0f, -1.0f, x0, y0, z0, x1, y0, z0, x1, y1, z0, x0, y1, z0,
+					u0, v1, u1, v1, u1, v0, u0, v0);
+			quads.quadBothSides(0.0f, 0.0f, 1.0f, x1, y0, z1, x0, y0, z1, x0, y1, z1, x1, y1, z1,
+					u0, v1, u1, v1, u1, v0, u0, v0);
 			// Jambs span Z — only as wide as the panel is thick.
-			face(pose, out, light,
-					x0, y0, z1, x0, y0, z0, x0, y1, z0, x0, y1, z1, u0, v1, uEdge, v0, -1.0f, 0.0f, 0.0f);
-			face(pose, out, light,
-					x1, y0, z0, x1, y0, z1, x1, y1, z1, x1, y1, z0, u0, v1, uEdge, v0, 1.0f, 0.0f, 0.0f);
+			quads.quadBothSides(-1.0f, 0.0f, 0.0f, x0, y0, z1, x0, y0, z0, x0, y1, z0, x0, y1, z1,
+					u0, v1, uEdge, v1, uEdge, v0, u0, v0);
+			quads.quadBothSides(1.0f, 0.0f, 0.0f, x1, y0, z0, x1, y0, z1, x1, y1, z1, x1, y1, z0,
+					u0, v1, uEdge, v1, uEdge, v0, u0, v0);
 			// The leading edge — the face the player actually watches descend. U runs along X (full),
 			// V along Z (thin).
-			face(pose, out, light,
-					x0, y1, z1, x1, y1, z1, x1, y1, z0, x0, y1, z0, u0, vEdge, u1, v0, 0.0f, 1.0f, 0.0f);
+			quads.quadBothSides(0.0f, 1.0f, 0.0f, x0, y1, z1, x1, y1, z1, x1, y1, z0, x0, y1, z0,
+					u0, vEdge, u1, vEdge, u1, v0, u0, v0);
 		} else {
 			// Broad faces span Z, at the slab's two X walls.
-			face(pose, out, light,
-					x0, y0, z1, x0, y0, z0, x0, y1, z0, x0, y1, z1, u0, v1, u1, v0, -1.0f, 0.0f, 0.0f);
-			face(pose, out, light,
-					x1, y0, z0, x1, y0, z1, x1, y1, z1, x1, y1, z0, u0, v1, u1, v0, 1.0f, 0.0f, 0.0f);
+			quads.quadBothSides(-1.0f, 0.0f, 0.0f, x0, y0, z1, x0, y0, z0, x0, y1, z0, x0, y1, z1,
+					u0, v1, u1, v1, u1, v0, u0, v0);
+			quads.quadBothSides(1.0f, 0.0f, 0.0f, x1, y0, z0, x1, y0, z1, x1, y1, z1, x1, y1, z0,
+					u0, v1, u1, v1, u1, v0, u0, v0);
 			// Jambs span X — only as wide as the panel is thick.
-			face(pose, out, light,
-					x0, y0, z0, x1, y0, z0, x1, y1, z0, x0, y1, z0, u0, v1, uEdge, v0, 0.0f, 0.0f, -1.0f);
-			face(pose, out, light,
-					x1, y0, z1, x0, y0, z1, x0, y1, z1, x1, y1, z1, u0, v1, uEdge, v0, 0.0f, 0.0f, 1.0f);
+			quads.quadBothSides(0.0f, 0.0f, -1.0f, x0, y0, z0, x1, y0, z0, x1, y1, z0, x0, y1, z0,
+					u0, v1, uEdge, v1, uEdge, v0, u0, v0);
+			quads.quadBothSides(0.0f, 0.0f, 1.0f, x1, y0, z1, x0, y0, z1, x0, y1, z1, x1, y1, z1,
+					u0, v1, uEdge, v1, uEdge, v0, u0, v0);
 			// Leading edge, mirrored: here U runs along X (thin) and V along Z (full).
-			face(pose, out, light,
-					x0, y1, z1, x1, y1, z1, x1, y1, z0, x0, y1, z0, u0, v0, uEdge, v1, 0.0f, 1.0f, 0.0f);
+			quads.quadBothSides(0.0f, 1.0f, 0.0f, x0, y1, z1, x1, y1, z1, x1, y1, z0, x0, y1, z0,
+					u0, v0, uEdge, v0, uEdge, v1, u0, v1);
 		}
-	}
-
-	/** One quad, emitted with both windings so neither sheet's back-face culling can hide it. */
-	private static void face(PoseStack.Pose pose, VertexConsumer out, int light,
-			float ax, float ay, float az, float bx, float by, float bz,
-			float cx, float cy, float cz, float dx, float dy, float dz,
-			float uMin, float vMin, float uMax, float vMax,
-			float normalX, float normalY, float normalZ) {
-		vertex(pose, out, ax, ay, az, uMin, vMin, light, normalX, normalY, normalZ);
-		vertex(pose, out, bx, by, bz, uMax, vMin, light, normalX, normalY, normalZ);
-		vertex(pose, out, cx, cy, cz, uMax, vMax, light, normalX, normalY, normalZ);
-		vertex(pose, out, dx, dy, dz, uMin, vMax, light, normalX, normalY, normalZ);
-
-		vertex(pose, out, dx, dy, dz, uMin, vMax, light, -normalX, -normalY, -normalZ);
-		vertex(pose, out, cx, cy, cz, uMax, vMax, light, -normalX, -normalY, -normalZ);
-		vertex(pose, out, bx, by, bz, uMax, vMin, light, -normalX, -normalY, -normalZ);
-		vertex(pose, out, ax, ay, az, uMin, vMin, light, -normalX, -normalY, -normalZ);
-	}
-
-	private static void vertex(PoseStack.Pose pose, VertexConsumer out, float x, float y, float z,
-			float u, float v, int light, float normalX, float normalY, float normalZ) {
-		out.addVertex(pose, x, y, z)
-				.setColor(-1)
-				.setUv(u, v)
-				.setOverlay(OverlayTexture.NO_OVERLAY)
-				.setLight(light)
-				.setNormal(pose, normalX, normalY, normalZ);
 	}
 
 	public static final class State extends BlockEntityRenderState {

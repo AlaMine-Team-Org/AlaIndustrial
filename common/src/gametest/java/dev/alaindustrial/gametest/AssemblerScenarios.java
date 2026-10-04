@@ -1,5 +1,8 @@
 package dev.alaindustrial.gametest;
 
+import static dev.alaindustrial.gametest.AlaGameTestHelper.drive;
+import static dev.alaindustrial.gametest.GameTestDrops.countDrops;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -7,8 +10,9 @@ import com.google.gson.JsonParser;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.AssemblerBlockEntity;
-import dev.alaindustrial.block.entity.AssemblerBlockEntity.AssemblerStatus;
+import dev.alaindustrial.block.entity.AssemblerStatus;
 import dev.alaindustrial.block.entity.StorageModuleBlockEntity;
+import dev.alaindustrial.core.machine.MachineRates;
 import dev.alaindustrial.item.assembler.AssemblyBlueprintItem;
 import dev.alaindustrial.item.assembler.BlueprintPattern;
 import dev.alaindustrial.menu.AssemblerMenu;
@@ -28,7 +32,6 @@ import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ProblemReporter;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.Item;
@@ -40,9 +43,6 @@ import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.storage.TagValueInput;
-import net.minecraft.world.phys.AABB;
-
-import static dev.alaindustrial.gametest.AlaGameTestHelper.drive;
 
 /**
  * Loader-neutral gametest bodies for the Assembler (MOD-275). Wrapped by the Fabric
@@ -61,6 +61,86 @@ import static dev.alaindustrial.gametest.AlaGameTestHelper.drive;
  * deliberate rebalance into an honest, single failing test instead of a silent drift.
  */
 public final class AssemblerScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(AssemblerScenarios::con01BalanceNumbers, "assembler_balance_numbers")
+						.fabricId("AssemblerGameTest", "tcAsm01_balanceNumbers").ticks(20, 40),
+				RosterEntry.of(AssemblerScenarios::fun01OneOperationCostsExactlyOneOperation,
+								"assembler_one_operation_costs_one_operation")
+						.fabricId("AssemblerGameTest", "tcAsm02_oneOperationCostsExactlyOneOperation").ticks(20, 40),
+				RosterEntry.of(AssemblerScenarios::neg01NoEuWithoutMaterials, "assembler_no_eu_without_materials")
+						.fabricId("AssemblerGameTest", "tcAsm03_noEuWithoutMaterials").ticks(20, 40),
+				RosterEntry.of(AssemblerScenarios::neg02NoEuWhenOutputFull, "assembler_no_eu_when_output_full")
+						.fabricId("AssemblerGameTest", "tcAsm04_noEuWhenOutputFull").ticks(20, 40),
+				RosterEntry.of(AssemblerScenarios::fun02OutputAreaUsesEverySlot,
+								"assembler_output_area_uses_every_slot")
+						.fabricId("AssemblerGameTest", "tcAsm05_outputAreaUsesEverySlot").ticks(20, 40),
+				RosterEntry.of(AssemblerScenarios::fun03HammerRemainderReturnsToItsOwnSlot,
+								"assembler_hammer_remainder_returns_home")
+						.fabricId("AssemblerGameTest", "tcAsm06_hammerRemainderReturnsToItsOwnSlot").ticks(20, 40),
+				RosterEntry.of(AssemblerScenarios::neg03SelfReturningIngredientTerminates,
+								"assembler_self_returning_ingredient_terminates")
+						.fabricId("AssemblerGameTest", "tcAsm07_selfReturningIngredientTerminates").ticks(20, 40),
+				RosterEntry.of(AssemblerScenarios::fun04QueueSkipsStarvedBlueprint,
+								"assembler_queue_skips_starved_blueprint")
+						.fabricId("AssemblerGameTest", "tcAsm08_queueSkipsStarvedBlueprint").ticks(20, 40),
+				RosterEntry.of(AssemblerScenarios::fun05QueueRotatesBetweenBlueprints,
+								"assembler_queue_rotates_between_blueprints")
+						.fabricId("AssemblerGameTest", "tcAsm09_queueRotatesBetweenBlueprints").ticks(20, 40),
+				RosterEntry.of(AssemblerScenarios::neg04MissingRecipeStopsWithoutCrashing,
+								"assembler_missing_recipe_stops_without_crashing")
+						.fabricId("AssemblerGameTest", "tcAsm10_missingRecipeStopsWithoutCrashing").ticks(20, 40),
+				RosterEntry.of(AssemblerScenarios::fun06TwoAssemblersShareOneWarehouse,
+								"assembler_two_machines_share_one_warehouse")
+						.fabricId("AssemblerGameTest", "tcAsm11_twoAssemblersShareOneWarehouse").ticks(20, 40),
+				RosterEntry.of(AssemblerScenarios::gui01BlueprintTooltipNamesItsResult,
+								"assembler_blueprint_tooltip_names_its_result")
+						.fabricId("AssemblerGameTest", "tcAsm12_blueprintTooltipNamesItsResult").ticks(20, 40),
+				RosterEntry.of(AssemblerScenarios::gui02WindowShowsTheActiveBlueprint,
+								"assembler_window_shows_the_active_blueprint")
+						.fabricId("AssemblerGameTest", "tcAsm13_windowShowsTheActiveBlueprint").ticks(20, 40),
+				RosterEntry.of(AssemblerScenarios::gui03ActiveBlueprintSlotIsSynced,
+								"assembler_active_blueprint_slot_is_synced")
+						.fabricId("AssemblerGameTest", "tcAsm14_activeBlueprintSlotIsSynced").ticks(20, 40),
+				RosterEntry.of(AssemblerScenarios::gui04BlueprintIconIsWiredToTheCachedResult,
+								"assembler_blueprint_icon_is_wired_to_the_cached_result")
+						.fabricId("AssemblerGameTest", "tcAsm15_blueprintIconIsWiredToTheCachedResult").ticks(20, 40),
+				RosterEntry.of(AssemblerScenarios::con02CraftFillsNineCells, "assembler_craft_fills_nine_cells")
+						.fabricId("AssemblerGameTest", "tcAsm16_craftFillsNineCells").ticks(20, 40),
+				RosterEntry.of(AssemblerScenarios::tab01HiddenTabSlotsAreUnreachable,
+								"assembler_hidden_tab_slots_are_unreachable")
+						.fabricId("AssemblerGameTest", "tcAsm17_hiddenTabSlotsAreUnreachable").ticks(20, 40),
+				RosterEntry.of(AssemblerScenarios::tab02RecordingDoesNotStopProduction,
+								"assembler_recording_does_not_stop_production")
+						.fabricId("AssemblerGameTest", "tcAsm18_recordingDoesNotStopProduction").ticks(20, 40),
+				RosterEntry.of(AssemblerScenarios::tab03WriteBelongsToTheRecordTab,
+								"assembler_write_belongs_to_the_record_tab")
+						.fabricId("AssemblerGameTest", "tcAsm19_writeBelongsToTheRecordTab").ticks(20, 40),
+				RosterEntry.of(AssemblerScenarios::sub01OffByDefaultOnWhenToggled,
+								"assembler_substitution_off_by_default")
+						.fabricId("AssemblerGameTest", "tcAsm20_substitutionOffByDefault").ticks(20, 40),
+				RosterEntry.of(AssemblerScenarios::sub02RecordedItemWins,
+								"assembler_substitution_prefers_recorded_item")
+						.fabricId("AssemblerGameTest", "tcAsm21_substitutionPrefersRecordedItem").ticks(20, 40),
+				RosterEntry.of(AssemblerScenarios::sub03OnlyThisRecipesIngredient,
+								"assembler_substitution_only_this_recipes_ingredient")
+						.fabricId("AssemblerGameTest", "tcAsm22_substitutionOnlyThisRecipesIngredient").ticks(20, 40),
+				RosterEntry.of(AssemblerScenarios::sub04ValidatedByReassembly,
+								"assembler_substitution_validated_by_reassembly")
+						.fabricId("AssemblerGameTest", "tcAsm23_substitutionValidatedByReassembly").ticks(20, 40),
+				RosterEntry.of(AssemblerScenarios::sub05ButtonChannelRoutesToSubstitution,
+								"assembler_substitution_button_channel_routes")
+						.fabricId("AssemblerGameTest", "tcAsm25_substitutionButtonChannelRoutes").ticks(20, 40),
+				RosterEntry.of(AssemblerScenarios::brk01BreakingTheMachineDropsQueueAndOutput,
+								"assembler_breaking_drops_queue_and_output")
+						.fabricId("AssemblerGameTest", "tcAsm26_breakingTheMachineDropsQueueAndOutput").ticks(20, 40),
+				RosterEntry.of(AssemblerScenarios::per01AssemblerStateSurvivesReload, "assembler_state_survives_reload")
+						.fabricId("AssemblerGameTest", "tcAsm27_assemblerStateSurvivesReload").ticks(20, 40));
+
+		private Roster() {}
+	}
 
 	private AssemblerScenarios() {
 	}
@@ -99,7 +179,7 @@ public final class AssemblerScenarios {
 	 * number of operations they expect, so they do not depend on the window at all.
 	 */
 	private static int ticksFor(int ops) {
-		return ops * (Config.scaledDuration(Config.assemblerDuration) + 2);
+		return ops * (MachineRates.duration(Config.assemblerDuration, Config.globalMachineSpeedMultiplier) + 2);
 	}
 
 	/** Builder for a nine-cell pattern; {@link #blueprint()} stamps it onto a recorded blueprint. */
@@ -778,6 +858,8 @@ public final class AssemblerScenarios {
 	 * ({@code "component": "alaindustrial:blueprint_result"}) while the machine writes it through a Java
 	 * constant. Rename the constant and every test in this file still passes, every icon quietly reverts
 	 * to the blank sheet, and nobody finds out until someone looks at a blueprint.
+	 *
+	 * @implements TC-ASM-015 — the blueprint's icon switches on the cached-result component.
 	 */
 	public static void gui04BlueprintIconIsWiredToTheCachedResult(GameTestHelper helper) {
 		JsonObject model = itemDefinitionModel(helper, "assembly_blueprint");
@@ -1527,25 +1609,6 @@ public final class AssemblerScenarios {
 			return;
 		}
 		helper.succeed();
-	}
-
-	/**
-	 * Total count of {@code item} lying within two blocks of {@code pos}.
-	 *
-	 * <p>Radius 2, for the reason spelled out in {@code TrellisScenarios#countDrops}: the NeoForge lane
-	 * puts its rigs about six blocks apart, so a wider box counts the neighbouring test's drops and
-	 * turns a real failure green, while {@code getBounds()} is empty for the code-registered NeoForge
-	 * structures and makes every count zero.
-	 */
-	private static int countDrops(GameTestHelper helper, BlockPos pos, Item item) {
-		AABB box = new AABB(helper.absolutePos(pos)).inflate(2.0);
-		int total = 0;
-		for (ItemEntity entity : helper.getLevel().getEntitiesOfClass(ItemEntity.class, box)) {
-			if (entity.getItem().is(item)) {
-				total += entity.getItem().getCount();
-			}
-		}
-		return total;
 	}
 
 	// -- persistence (MOD-275/MOD-287 tail) -------------------------------------------------------

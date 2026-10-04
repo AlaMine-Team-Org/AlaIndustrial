@@ -54,13 +54,13 @@ dependencies {
     // instead of showing them, so the dev-run classpath carries exactly one of the two.
     if ((project.findProperty('viewer') ?: 'jei').toString().equalsIgnoreCase('jei')) {
         runtimeOnly("mezz.jei:jei-${minecraft_version}-fabric:${jei_version}") {
-            // JEI's POM drags fabric-api 0.158+ and Gradle's highest-wins resolution would
-            // silently override our pinned fabric_version — the pin exists because 0.156+
-            // ships fabric-client-gametest-api 6.0.0, which drops TestSingleplayerContext.
-            // getClientLevel() (see gradle.properties). Without this exclude the very first
-            // client-gametest run under -Pviewer=jei crashes in GuiClientGameTest while a
-            // plain runClient keeps working, so the bump stays invisible until the L3 lane
-            // meets JEI. The fabric-api umbrella we already depend on covers every module
+            // JEI's POM drags its own fabric-api and fabric-loader, and Gradle's highest-wins
+            // resolution would let a viewer's POM, not gradle.properties, decide the Fabric API
+            // the dev run and the L3 lane get. The exclude dates from the <0.156 pin, when such a
+            // silent bump crashed the client gametests (fabric-client-gametest-api 6.x dropped
+            // TestSingleplayerContext.getClientLevel()); MOD-226 lifted that pin and migrated the
+            // harness, and the exclude stays so that fabric_version remains the one place the
+            // version is chosen. The fabric-api umbrella we already depend on covers every module
             // JEI calls at runtime.
             exclude group: 'net.fabricmc.fabric-api'
             exclude group: 'net.fabricmc', module: 'fabric-loader'

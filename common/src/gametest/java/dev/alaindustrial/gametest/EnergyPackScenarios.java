@@ -1,13 +1,17 @@
 package dev.alaindustrial.gametest;
 
+import static dev.alaindustrial.gametest.AlaGameTestHelper.drive;
+
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.item.ToolConfig;
 import dev.alaindustrial.item.wearable.EnergyPackItem;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.menu.BatteryBoxMenu;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModDataComponents;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
@@ -40,13 +44,53 @@ import net.minecraft.world.level.GameType;
  */
 public final class EnergyPackScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(EnergyPackScenarios::fun01WornPackChargesPouch, "pack_worn_charges_pouch")
+						.fabricId("EnergyPackGameTest", "tcPack001Fun01_wornPackChargesPouch").ticks(20, 40),
+				RosterEntry.of(EnergyPackScenarios::fun02ChargesOffhand, "pack_charges_offhand")
+						.fabricId("EnergyPackGameTest", "tcPack001Fun02_chargesOffhand").ticks(20, 40),
+				RosterEntry.of(EnergyPackScenarios::fun03BudgetSplitAcrossConsumers, "pack_budget_split")
+						.fabricId("EnergyPackGameTest", "tcPack001Fun03_budgetSplitAcrossConsumers").ticks(20, 40),
+				RosterEntry.of(EnergyPackScenarios::fun04ChargeInBatteryBox, "pack_charge_in_battery_box")
+						.fabricId("EnergyPackGameTest", "tcPack001Fun04_chargeInBatteryBox").ticks(20, 80),
+				RosterEntry.of(EnergyPackScenarios::fun05PackDoesNotChargePack, "pack_does_not_charge_pack")
+						.fabricId("EnergyPackGameTest", "tcPack001Fun05_packDoesNotChargePack").ticks(20, 40),
+				RosterEntry.of(EnergyPackScenarios::fun06WornAssetFollowsCharge, "pack_worn_asset_follows_charge")
+						.fabricId("EnergyPackGameTest", "tcPack001Fun06_wornAssetFollowsCharge").ticks(20, 40),
+				RosterEntry.of(EnergyPackScenarios::fun07InventoryTickDrivesTransfer, "pack_inventory_tick_transfers")
+						.fabricId("EnergyPackGameTest", "tcPack001Fun07_inventoryTickDrivesTransfer").ticks(20, 60),
+				RosterEntry.of(EnergyPackScenarios::fun08ChargedByComponentFixesItsLook,
+								"pack_component_charge_fixes_look")
+						.fabricId("EnergyPackGameTest", "tcPack001Fun08_chargedByComponentFixesItsLook").ticks(20, 40),
+				RosterEntry.of(EnergyPackScenarios::neg04PackInOffhandNotCharged, "pack_offhand_pack_not_charged")
+						.fabricId("EnergyPackGameTest", "tcPack001Neg04_packInOffhandNotCharged").ticks(20, 40),
+				RosterEntry.of(EnergyPackScenarios::neg01NoTransferWhenNothingToDo, "pack_no_transfer_when_idle")
+						.fabricId("EnergyPackGameTest", "tcPack001Neg01_noTransferWhenNothingToDo").ticks(20, 40),
+				RosterEntry.of(EnergyPackScenarios::neg02PackFloorsAtZero, "pack_floors_at_zero")
+						.fabricId("EnergyPackGameTest", "tcPack001Neg02_packFloorsAtZero").ticks(20, 40),
+				RosterEntry.of(EnergyPackScenarios::neg03MenuSlotAcceptsPack, "pack_menu_slot_accepts_pack")
+						.fabricId("EnergyPackGameTest", "tcPack001Neg03_menuSlotAcceptsPack").ticks(20, 40),
+				RosterEntry.of(EnergyPackScenarios::fun09CreativeKeepsCharge, "pack_creative_keeps_charge")
+						.fabricId("EnergyPackGameTest", "tcPack001Fun09_creativeKeepsCharge").ticks(20, 40),
+				RosterEntry.of(EnergyPackScenarios::fun10ChargesCursorAndCraftGrid, "pack_charges_cursor_and_grid")
+						.fabricId("EnergyPackGameTest", "tcPack001Fun10_chargesCursorAndCraftGrid").ticks(20, 40),
+				RosterEntry.of(EnergyPackScenarios::neg05DoesNotChargeOpenContainer, "pack_skips_open_container")
+						.fabricId("EnergyPackGameTest", "tcPack001Neg05_doesNotChargeOpenContainer").ticks(20, 40),
+				RosterEntry.of(EnergyPackScenarios::per01ChargeRoundTrip, "pack_charge_round_trip")
+						.fabricId("EnergyPackGameTest", "tcPack001Per01_chargeRoundTrip").ticks(20, 40));
+
+		private Roster() {}
+	}
+
 	private EnergyPackScenarios() {}
 
 	private static final BlockPos BOX = new BlockPos(1, 2, 1);
 
 	/** EU the worn pack hands out in one step: a full second's worth of its output rate. */
 	private static long step() {
-		return (long) Config.energyPackOutputRate * 20L;
+		return (long) ToolConfig.energyPackOutputRate * 20L;
 	}
 
 	private static ItemStack pack(long eu) {
@@ -70,19 +114,17 @@ public final class EnergyPackScenarios {
 		return be;
 	}
 
-	private static void tickBox(GameTestHelper helper, BatteryBoxBlockEntity be, int ticks) {
-		for (int i = 0; i < ticks; i++) {
-			be.serverTick(helper.getLevel(), be.getBlockPos(),
-					helper.getLevel().getBlockState(be.getBlockPos()));
-		}
-	}
-
 	// ── FUN — functional ─────────────────────────────────────────────────────────────────────────
 
-	/** FUN01: a worn pack tops up a pouch carried in the inventory, one output batch per step. */
+	/**
+	 * FUN01: a worn pack tops up a pouch carried in the inventory, one output batch per step.
+	 *
+	 * @implements TC-PACK-001-FUN01 — a worn pack tops up a carried pouch by one output batch per
+	 *     step (energyPackOutputRate × 20 EU), paying exactly what it sends.
+	 */
 	public static void fun01WornPackChargesPouch(GameTestHelper helper) {
 		Player player = helper.makeMockPlayer(GameType.SURVIVAL);
-		ItemStack pack = pack(Config.energyPackBuffer);
+		ItemStack pack = pack(ToolConfig.energyPackBuffer);
 		ItemStack pouch = pouch(0);
 		player.getInventory().setItem(0, pouch);
 
@@ -93,16 +135,21 @@ public final class EnergyPackScenarios {
 		if (ItemEnergy.get(pouch) != step()) {
 			helper.fail("the pouch must gain exactly what the pack sent, got " + ItemEnergy.get(pouch));
 		}
-		if (ItemEnergy.get(pack) != Config.energyPackBuffer - step()) {
+		if (ItemEnergy.get(pack) != ToolConfig.energyPackBuffer - step()) {
 			helper.fail("the pack must pay exactly what it sent, left " + ItemEnergy.get(pack));
 		}
 		helper.succeed();
 	}
 
-	/** FUN02: the offhand is not part of the main inventory list — it must still be served. */
+	/**
+	 * FUN02: the offhand is not part of the main inventory list — it must still be served.
+	 *
+	 * @implements TC-PACK-001-FUN02 — the offhand is not part of the main inventory list in 26.2 and
+	 *     is served by its own pass.
+	 */
 	public static void fun02ChargesOffhand(GameTestHelper helper) {
 		Player player = helper.makeMockPlayer(GameType.SURVIVAL);
-		ItemStack pack = pack(Config.energyPackBuffer);
+		ItemStack pack = pack(ToolConfig.energyPackBuffer);
 		ItemStack pouch = pouch(0);
 		player.setItemSlot(EquipmentSlot.OFFHAND, pouch);
 
@@ -113,19 +160,24 @@ public final class EnergyPackScenarios {
 		helper.succeed();
 	}
 
-	/** FUN03: the batch is split across several consumers in slot order until it runs out. */
+	/**
+	 * FUN03: the batch is split across several consumers in slot order until it runs out.
+	 *
+	 * @implements TC-PACK-001-FUN03 — the batch is split across consumers in slot order: the first
+	 *     pouch fills, the leftover budget flows on to the next.
+	 */
 	public static void fun03BudgetSplitAcrossConsumers(GameTestHelper helper) {
 		Player player = helper.makeMockPlayer(GameType.SURVIVAL);
-		ItemStack pack = pack(Config.energyPackBuffer);
+		ItemStack pack = pack(ToolConfig.energyPackBuffer);
 		// First pouch has room for a quarter of the batch; the rest of the budget must flow onwards.
 		long firstRoom = step() / 4;
-		ItemStack first = pouch(Config.lvPouchBuffer - firstRoom);
+		ItemStack first = pouch(ToolConfig.lvPouchBuffer - firstRoom);
 		ItemStack second = pouch(0);
 		player.getInventory().setItem(0, first);
 		player.getInventory().setItem(1, second);
 
 		long moved = EnergyPackItem.chargeStep(pack, player);
-		if (ItemEnergy.get(first) != Config.lvPouchBuffer) {
+		if (ItemEnergy.get(first) != ToolConfig.lvPouchBuffer) {
 			helper.fail("the first pouch must be filled to capacity");
 		}
 		if (ItemEnergy.get(second) != step() - firstRoom) {
@@ -137,29 +189,38 @@ public final class EnergyPackScenarios {
 		helper.succeed();
 	}
 
-	/** FUN04: the pack is charged in the Battery Box slot, capped by its own intake rate. */
+	/**
+	 * FUN04: the pack is charged in the Battery Box slot, capped by its own intake rate.
+	 *
+	 * @implements TC-PACK-001-FUN04 — the pack charges in the Battery Box slot at
+	 *     min(LV ceiling, its own intake rate).
+	 */
 	public static void fun04ChargeInBatteryBox(GameTestHelper helper) {
 		BatteryBoxBlockEntity box = placeBox(helper);
 		box.getEnergyStorage().setAmountUntracked(box.getEnergyStorage().getCapacity());
 		box.setItem(BatteryBoxBlockEntity.CHARGE_SLOT, pack(0));
 
-		tickBox(helper, box, 1);
-		long expected = Math.min(EnergyTier.LV.maxVoltage(), Config.energyPackInputRate);
+		drive(box, helper, 1);
+		long expected = Math.min(EnergyTier.LV.maxVoltage(), ToolConfig.energyPackInputRate);
 		long gained = ItemEnergy.get(box.getItem(BatteryBoxBlockEntity.CHARGE_SLOT));
 		if (gained != expected) {
 			helper.fail("one tick must move min(LV ceiling, pack intake) = " + expected + " EU, got " + gained);
 		}
-		tickBox(helper, box, 9);
+		drive(box, helper, 9);
 		if (ItemEnergy.get(box.getItem(BatteryBoxBlockEntity.CHARGE_SLOT)) != expected * 10) {
 			helper.fail("ten ticks must move ten times the per-tick rate");
 		}
 		helper.succeed();
 	}
 
-	/** FUN05: the pack never charges another pack — that loop would drain the wearer for nothing. */
+	/**
+	 * FUN05: the pack never charges another pack — that loop would drain the wearer for nothing.
+	 *
+	 * @implements TC-PACK-001-FUN05 — a pack never charges another pack (anti-loop filter).
+	 */
 	public static void fun05PackDoesNotChargePack(GameTestHelper helper) {
 		Player player = helper.makeMockPlayer(GameType.SURVIVAL);
-		ItemStack worn = pack(Config.energyPackBuffer);
+		ItemStack worn = pack(ToolConfig.energyPackBuffer);
 		ItemStack carried = pack(0);
 		player.getInventory().setItem(0, carried);
 
@@ -167,7 +228,7 @@ public final class EnergyPackScenarios {
 		if (moved != 0 || ItemEnergy.get(carried) != 0) {
 			helper.fail("a pack must not charge another pack");
 		}
-		if (ItemEnergy.get(worn) != Config.energyPackBuffer) {
+		if (ItemEnergy.get(worn) != ToolConfig.energyPackBuffer) {
 			helper.fail("a pack with nothing to charge must not lose EU");
 		}
 		helper.succeed();
@@ -175,7 +236,12 @@ public final class EnergyPackScenarios {
 
 	// ── NEG — nothing happens when it should not ─────────────────────────────────────────────────
 
-	/** NEG01: an empty pack, a full pouch or a plain item — no transfer, no component writes. */
+	/**
+	 * NEG01: an empty pack, a full pouch or a plain item — no transfer, no component writes.
+	 *
+	 * @implements TC-PACK-001-NEG01 — an empty pack, a full pouch or a plain item all result in no
+	 *     transfer at all.
+	 */
 	public static void neg01NoTransferWhenNothingToDo(GameTestHelper helper) {
 		Player player = helper.makeMockPlayer(GameType.SURVIVAL);
 
@@ -187,10 +253,10 @@ public final class EnergyPackScenarios {
 		}
 
 		// Full pouch: no room, so the pack must not spend anything.
-		ItemStack pack = pack(Config.energyPackBuffer);
-		ItemStack full = pouch(Config.lvPouchBuffer);
+		ItemStack pack = pack(ToolConfig.energyPackBuffer);
+		ItemStack full = pouch(ToolConfig.lvPouchBuffer);
 		player.getInventory().setItem(0, full);
-		if (EnergyPackItem.chargeStep(pack, player) != 0 || ItemEnergy.get(pack) != Config.energyPackBuffer) {
+		if (EnergyPackItem.chargeStep(pack, player) != 0 || ItemEnergy.get(pack) != ToolConfig.energyPackBuffer) {
 			helper.fail("a full pouch must not cost the pack any EU");
 		}
 
@@ -202,7 +268,11 @@ public final class EnergyPackScenarios {
 		helper.succeed();
 	}
 
-	/** NEG02: the pack gives only what it has — the last step drains it to exactly 0. */
+	/**
+	 * NEG02: the pack gives only what it has — the last step drains it to exactly 0.
+	 *
+	 * @implements TC-PACK-001-NEG02 — the pack hands over exactly its remaining EU and floors at 0.
+	 */
 	public static void neg02PackFloorsAtZero(GameTestHelper helper) {
 		Player player = helper.makeMockPlayer(GameType.SURVIVAL);
 		long left = step() / 2;
@@ -224,6 +294,9 @@ public final class EnergyPackScenarios {
 	 * NEG03: the charge slot filter — on BOTH sides. {@code mayPlace} is the client's prediction and
 	 * {@code canPlaceItem} is the server's word; they must agree, or the item flickers in and out of
 	 * the slot. Hoppers stay locked out of the slot entirely (GUI-only), pack included.
+	 *
+	 * @implements TC-PACK-001-NEG03 — the charge slot filter accepts every powered item and refuses
+	 *     items without a buffer.
 	 */
 	public static void neg03MenuSlotAcceptsPack(GameTestHelper helper) {
 		BatteryBoxBlockEntity box = placeBox(helper);
@@ -248,10 +321,15 @@ public final class EnergyPackScenarios {
 		helper.succeed();
 	}
 
-	/** NEG04: a pack in the offhand is not a consumer either — the anti-loop filter covers both passes. */
+	/**
+	 * NEG04: a pack in the offhand is not a consumer either — the anti-loop filter covers both passes.
+	 *
+	 * @implements TC-PACK-001-NEG04 — a pack in the offhand is not charged either (the anti-loop
+	 *     filter covers the offhand pass too).
+	 */
 	public static void neg04PackInOffhandNotCharged(GameTestHelper helper) {
 		Player player = helper.makeMockPlayer(GameType.SURVIVAL);
-		ItemStack worn = pack(Config.energyPackBuffer);
+		ItemStack worn = pack(ToolConfig.energyPackBuffer);
 		ItemStack carried = pack(0);
 		player.setItemSlot(EquipmentSlot.OFFHAND, carried);
 
@@ -267,6 +345,9 @@ public final class EnergyPackScenarios {
 	 * FUN06: the worn look follows the charge — a charged pack points at the lit asset, a drained one
 	 * falls back to the default (dark) asset. This is what the player sees on their back, and it is
 	 * driven purely by the EQUIPPABLE component, so it is worth pinning down.
+	 *
+	 * @implements TC-PACK-001-FUN06 — the worn asset follows the charge: lit while charged, drained
+	 *     (default) at 0 EU.
 	 */
 	public static void fun06WornAssetFollowsCharge(GameTestHelper helper) {
 		ItemStack pack = pack(0);
@@ -300,24 +381,27 @@ public final class EnergyPackScenarios {
 	 * i.e. if the feature were completely dead in game. So: put the pack on the player's chest, run
 	 * the item's own {@code inventoryTick} across a full second, and check the pouch was fed exactly
 	 * one batch — no more (the {@code % 20} gate holds) and no less (the CHEST gate lets it through).
+	 *
+	 * @implements TC-PACK-001-FUN07 — the real tick path: a worn pack feeds the pouch exactly one
+	 *     batch per second through inventoryTick, and a pack that is not worn transfers nothing.
 	 */
 	public static void fun07InventoryTickDrivesTransfer(GameTestHelper helper) {
 		ServerLevel level = helper.getLevel();
 		Player player = helper.makeMockPlayer(GameType.SURVIVAL);
-		ItemStack pack = pack(Config.energyPackBuffer);
+		ItemStack pack = pack(ToolConfig.energyPackBuffer);
 		ItemStack pouch = pouch(0);
 		player.setItemSlot(EquipmentSlot.CHEST, pack);
 		player.getInventory().setItem(0, pouch);
 
 		// A pack that is NOT worn must stay inert no matter how often it is ticked — the slot gate
 		// returns before the clock is even consulted, so this needs no real ticks.
-		ItemStack carried = pack(Config.energyPackBuffer);
+		ItemStack carried = pack(ToolConfig.energyPackBuffer);
 		ItemStack idle = pouch(0);
 		player.getInventory().setItem(1, idle);
 		for (int i = 0; i < 40; i++) {
 			carried.getItem().inventoryTick(carried, level, player, EquipmentSlot.MAINHAND);
 		}
-		if (ItemEnergy.get(idle) != 0 || ItemEnergy.get(carried) != Config.energyPackBuffer) {
+		if (ItemEnergy.get(idle) != 0 || ItemEnergy.get(carried) != ToolConfig.energyPackBuffer) {
 			helper.fail("a pack that is not worn must transfer nothing");
 		}
 
@@ -333,7 +417,7 @@ public final class EnergyPackScenarios {
 						helper.fail("a worn pack must feed the pouch exactly one batch (" + step()
 								+ " EU) per second through inventoryTick, moved " + moved);
 					}
-					if (ItemEnergy.get(pack) != Config.energyPackBuffer - step()) {
+					if (ItemEnergy.get(pack) != ToolConfig.energyPackBuffer - step()) {
 						helper.fail("the pack must pay exactly what the pouch received");
 					}
 				})
@@ -346,13 +430,16 @@ public final class EnergyPackScenarios {
 	 * the charged look. Without the self-heal in {@code inventoryTick} it would be worn with the dead
 	 * texture indefinitely: a charged pack with nothing to charge writes nothing, so nothing would
 	 * ever correct it.
+	 *
+	 * @implements TC-PACK-001-FUN08 — a pack charged straight through the component (/give, loot)
+	 *     corrects its worn look on the next tick.
 	 */
 	public static void fun08ChargedByComponentFixesItsLook(GameTestHelper helper) {
 		ServerLevel level = helper.getLevel();
 		Player player = helper.makeMockPlayer(GameType.SURVIVAL);
 		// Bypass ItemEnergy.set entirely — exactly what /give ...[pouch_energy=20000] produces.
 		ItemStack pack = new ItemStack(ModContent.ENERGY_PACK.get());
-		pack.set(ModDataComponents.POUCH_ENERGY.get(), (long) Config.energyPackBuffer);
+		pack.set(ModDataComponents.POUCH_ENERGY.get(), (long) ToolConfig.energyPackBuffer);
 		if (assetOf(pack) != EnergyPackItem.ENERGY_PACK_OFF_ASSET) {
 			helper.fail("precondition: a component-only charge must leave the default (drained) asset");
 		}
@@ -382,11 +469,14 @@ public final class EnergyPackScenarios {
 	 * batch, exactly as in survival — but the pack itself pays nothing, the way creative does not wear a
 	 * vanilla tool down. Both halves matter: a guard that also stopped the transfer would leave creative
 	 * players with pouches that never fill.
+	 *
+	 * @implements TC-PACK-001-FUN09 — creative and spectator keep the pack's charge (MOD-081): the
+	 *     consumers are still fed, the pack pays nothing, survival still pays.
 	 */
 	public static void fun09CreativeKeepsCharge(GameTestHelper helper) {
 		for (GameType mode : new GameType[] {GameType.CREATIVE, GameType.SPECTATOR}) {
 			Player player = freePlayer(helper, mode);
-			ItemStack pack = pack(Config.energyPackBuffer);
+			ItemStack pack = pack(ToolConfig.energyPackBuffer);
 			ItemStack pouch = pouch(0);
 			player.getInventory().setItem(0, pouch);
 
@@ -394,7 +484,7 @@ public final class EnergyPackScenarios {
 			if (moved != step() || ItemEnergy.get(pouch) != step()) {
 				helper.fail("in " + mode + " the pack must still charge the pouch, moved " + moved);
 			}
-			if (ItemEnergy.get(pack) != Config.energyPackBuffer) {
+			if (ItemEnergy.get(pack) != ToolConfig.energyPackBuffer) {
 				helper.fail("in " + mode + " the pack must not pay for what it sent, left "
 						+ ItemEnergy.get(pack));
 			}
@@ -402,10 +492,10 @@ public final class EnergyPackScenarios {
 		// Survival is the control: the very same step must be paid for, or this case would pass
 		// against a build where the debit is simply gone.
 		Player survival = helper.makeMockPlayer(GameType.SURVIVAL);
-		ItemStack pack = pack(Config.energyPackBuffer);
+		ItemStack pack = pack(ToolConfig.energyPackBuffer);
 		survival.getInventory().setItem(0, pouch(0));
 		EnergyPackItem.chargeStep(pack, survival);
-		if (ItemEnergy.get(pack) != Config.energyPackBuffer - step()) {
+		if (ItemEnergy.get(pack) != ToolConfig.energyPackBuffer - step()) {
 			helper.fail("survival must still pay for the batch");
 		}
 		helper.succeed();
@@ -415,6 +505,9 @@ public final class EnergyPackScenarios {
 	 * FUN10: the pouch on the cursor and the one in the inventory's 2×2 crafting grid are charged too
 	 * (MOD-082) — both sit on the player while the inventory screen is open, and before this they were
 	 * the one place where charging visibly stalled.
+	 *
+	 * @implements TC-PACK-001-FUN10 — the stack on the cursor and the inventory's 2×2 crafting grid
+	 *     are charged as well (MOD-082).
 	 */
 	public static void fun10ChargesCursorAndCraftGrid(GameTestHelper helper) {
 		// A real ServerPlayer, not the plain mock: writing to the crafting grid runs
@@ -423,25 +516,25 @@ public final class EnergyPackScenarios {
 		// is forced off to keep this a survival case — the same trick ElectricDrillScenarios uses.
 		ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper);
 		player.getAbilities().instabuild = false;
-		ItemStack pack = pack(Config.energyPackBuffer);
+		ItemStack pack = pack(ToolConfig.energyPackBuffer);
 		// The cursor is served first, so it is given room for only a quarter of the batch — otherwise it
 		// would swallow the whole thing and the grid would never be reached, passing this case for the
 		// wrong reason.
 		long cursorRoom = step() / 4;
-		ItemStack onCursor = pouch(Config.lvPouchBuffer - cursorRoom);
+		ItemStack onCursor = pouch(ToolConfig.lvPouchBuffer - cursorRoom);
 		ItemStack inGrid = pouch(0);
 		player.containerMenu.setCarried(onCursor);
 		player.inventoryMenu.getCraftSlots().setItem(0, inGrid);
 
 		long moved = EnergyPackItem.chargeStep(pack, player);
-		if (ItemEnergy.get(onCursor) != Config.lvPouchBuffer) {
+		if (ItemEnergy.get(onCursor) != ToolConfig.lvPouchBuffer) {
 			helper.fail("a pouch held on the cursor must be charged, has " + ItemEnergy.get(onCursor));
 		}
 		if (ItemEnergy.get(inGrid) != step() - cursorRoom) {
 			helper.fail("the leftover budget must flow on to the 2×2 crafting grid, grid has "
 					+ ItemEnergy.get(inGrid));
 		}
-		if (moved != step() || ItemEnergy.get(pack) != Config.energyPackBuffer - step()) {
+		if (moved != step() || ItemEnergy.get(pack) != ToolConfig.energyPackBuffer - step()) {
 			helper.fail("the batch must be split across cursor and grid and paid for once, moved " + moved);
 		}
 		helper.succeed();
@@ -452,10 +545,13 @@ public final class EnergyPackScenarios {
 	 * whatever container the player has open belong to a chest or a machine in the world, and a pack
 	 * must not charge through them. The regression guarded here is a lazy "walk containerMenu.slots"
 	 * implementation, which would drain the pack into any chest full of pouches.
+	 *
+	 * @implements TC-PACK-001-NEG05 — the slots of an open container (a chest) are NOT charged: the
+	 *     pack reaches the cursor and its own crafting grid, nothing else (MOD-082).
 	 */
 	public static void neg05DoesNotChargeOpenContainer(GameTestHelper helper) {
 		Player player = helper.makeMockPlayer(GameType.SURVIVAL);
-		ItemStack pack = pack(Config.energyPackBuffer);
+		ItemStack pack = pack(ToolConfig.energyPackBuffer);
 		ItemStack inChest = pouch(0);
 		SimpleContainer chest = new SimpleContainer(9);
 		chest.setItem(0, inChest);
@@ -464,13 +560,18 @@ public final class EnergyPackScenarios {
 		if (EnergyPackItem.chargeStep(pack, player) != 0 || ItemEnergy.get(inChest) != 0) {
 			helper.fail("a pouch inside an open chest must not be charged by the worn pack");
 		}
-		if (ItemEnergy.get(pack) != Config.energyPackBuffer) {
+		if (ItemEnergy.get(pack) != ToolConfig.energyPackBuffer) {
 			helper.fail("the pack must not pay for a transfer it never made");
 		}
 		helper.succeed();
 	}
 
-	/** PER01: charge survives a copy of the stack (the component is what persists, not the instance). */
+	/**
+	 * PER01: charge survives a copy of the stack (the component is what persists, not the instance).
+	 *
+	 * @implements TC-PACK-001-PER01 — charge survives a stack copy, 0 EU removes the component, and
+	 *     writes clamp at capacity.
+	 */
 	public static void per01ChargeRoundTrip(GameTestHelper helper) {
 		ItemStack pack = pack(1234);
 		ItemStack copy = pack.copy();
@@ -483,8 +584,8 @@ public final class EnergyPackScenarios {
 			helper.fail("a drained pack must be component-identical to a fresh one");
 		}
 		// The buffer clamps: a pack cannot be pushed past its capacity.
-		ItemEnergy.set(pack, Config.energyPackBuffer + 5000);
-		if (ItemEnergy.get(pack) != Config.energyPackBuffer) {
+		ItemEnergy.set(pack, ToolConfig.energyPackBuffer + 5000);
+		if (ItemEnergy.get(pack) != ToolConfig.energyPackBuffer) {
 			helper.fail("the pack buffer must clamp at capacity");
 		}
 		helper.succeed();

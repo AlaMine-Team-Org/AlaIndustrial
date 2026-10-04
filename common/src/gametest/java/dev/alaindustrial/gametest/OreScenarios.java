@@ -34,6 +34,31 @@ import java.util.Map;
  */
 public final class OreScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(OreScenarios::tcOre001Brk01_dropsItselfWithPickaxe,
+								"tc_ore001_brk01_drops_itself_with_pickaxe")
+						.fabricId("OreGameTest", "tcOre001Brk01_dropsItselfWithPickaxe").ticks(20, 40),
+				RosterEntry.of(OreScenarios::tcOre001Brk03_noDropByHandAxeOrShovel,
+								"tc_ore001_brk03_no_drop_by_hand_axe_or_shovel")
+						.fabricId("OreGameTest", "tcOre001Brk03_noDropByHandAxeOrShovel").ticks(20, 40),
+				RosterEntry.of(OreScenarios::tcOre001Brk02_pickaxeTierGate, "tc_ore001_brk02_pickaxe_tier_gate")
+						.fabricId("OreGameTest", "tcOre001Brk02_pickaxeTierGate").ticks(20, 40),
+				RosterEntry.of(OreScenarios::tcOre001Brk04_fortuneAndSilkTouchNeutral,
+								"tc_ore001_brk04_fortune_and_silk_touch_neutral")
+						.fabricId("OreGameTest", "tcOre001Brk04_fortuneAndSilkTouchNeutral").ticks(20, 40),
+				RosterEntry.of(OreScenarios::tcOre001Brk05_hardnessStoneVsDeepslate,
+								"tc_ore001_brk05_hardness_stone_vs_deepslate")
+						.fabricId("OreGameTest", "tcOre001Brk05_hardnessStoneVsDeepslate").ticks(20, 40),
+				RosterEntry.of(OreScenarios::tcOre001Phy02_fullCubeHitbox, "tc_ore001_phy02_full_cube_hitbox")
+						.fabricId("OreGameTest", "tcOre001Phy02_fullCubeHitbox").ticks(20, 40),
+				RosterEntry.of(OreScenarios::tcOre001Phy04_nonFlammable, "tc_ore001_phy04_non_flammable")
+						.fabricId("OreGameTest", "tcOre001Phy04_nonFlammable").ticks(20, 40));
+
+		private Roster() {}
+	}
+
 	private OreScenarios() {}
 
 	/** Reused single cell inside the test region; placed, asserted, cleared per block. */
@@ -53,7 +78,7 @@ public final class OreScenarios {
 				ModContent.PALLADIUM_ORE.get());
 	}
 
-	/** Stone-variant ores (hardness 3.0, SoundType.STONE) — see the BLOCK_PROPS manifest. */
+	/** Stone-variant ores (hardness 3.0, SoundType.STONE) — see their ContentManifest declarations. */
 	private static List<Block> stoneOres() {
 		return List.of(
 				ModContent.TIN_ORE.get(), ModContent.SILVER_ORE.get(), ModContent.NICKEL_ORE.get(),
@@ -62,7 +87,7 @@ public final class OreScenarios {
 
 	/**
 	 * Blocks carrying the 4.5 hardness tier — the deepslate variants plus palladium (MOD-423), which
-	 * matches their hardness while sounding like NETHER_ORE. See the BLOCK_PROPS manifest.
+	 * matches their hardness while sounding like NETHER_ORE. See its ContentManifest declaration.
 	 */
 	private static List<Block> deepslateOres() {
 		return List.of(
@@ -321,7 +346,7 @@ public final class OreScenarios {
 
 	/**
 	 * TC-ORE-001-BRK05: stone-variant ores report hardness 3.0 and deepslate-variant ores report
-	 * hardness 4.5 via {@link BlockState#getDestroySpeed}, matching the BLOCK_PROPS manifest
+	 * hardness 4.5 via {@link BlockState#getDestroySpeed}, matching their ContentManifest declarations
 	 * ({@code strength(3.0f, 3.0f)} / {@code strength(4.5f, 3.0f)}).
 	 *
 	 * @implements TC-ORE-001-BRK05
@@ -375,7 +400,7 @@ public final class OreScenarios {
 
 	/**
 	 * TC-ORE-001-PHY04: every ore block is non-flammable — {@code ignitedByLava()} is false, since
-	 * none of the 10 ids call {@code .ignitedByLava()} in their BLOCK_PROPS entry. This is the
+	 * none of the 10 ids call {@code .ignitedByLava()} in their ContentManifest declaration. This is the
 	 * public API surface available for a flammability assertion; full fire-spread behaviour (open
 	 * flame catching, spreading through the block) needs a lit real-world fire simulation and is not
 	 * automated here — see skipped note below.
@@ -386,7 +411,7 @@ public final class OreScenarios {
 	// MOD-498 — BlockStateBase#ignitedByLava() is deprecated by NeoForge only; vanilla does not mark it.
 	// The replacement it names, IBlockStateExtension#ignitedByLava(BlockGetter, BlockPos, Direction), is
 	// NeoForge-only API and is absent from the vanilla classes this shared scenario is compiled against
-	// for the Fabric lane. The flag is a plain BLOCK_PROPS value here, so the position-aware overload
+	// for the Fabric lane. The flag is a plain declared property value here, so the position-aware overload
 	// could not give a different answer anyway.
 	@SuppressWarnings("deprecation")
 	public static void tcOre001Phy04_nonFlammable(GameTestHelper helper) {

@@ -1,6 +1,7 @@
 package dev.alaindustrial.item.energy;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.item.ToolConfig;
 import java.util.function.LongSupplier;
 
 /**
@@ -21,11 +22,11 @@ import java.util.function.LongSupplier;
  */
 public enum CrystalTier {
 	/** MV entry rung. */
-	ENERGY("energy_crystal", () -> Config.energyCrystalBuffer, () -> Config.energyCrystalInputRate),
+	ENERGY("energy_crystal", () -> ToolConfig.energyCrystalBuffer, () -> ToolConfig.energyCrystalInputRate),
 	/** HV rung, built around a finished Energy Crystal. */
-	LAPOTRON("lapotron_crystal", () -> Config.lapotronCrystalBuffer, () -> Config.lapotronCrystalInputRate),
+	LAPOTRON("lapotron_crystal", () -> ToolConfig.lapotronCrystalBuffer, () -> ToolConfig.lapotronCrystalInputRate),
 	/** End of the ladder. */
-	RESONANT("resonant_crystal", () -> Config.resonantCrystalBuffer, () -> Config.resonantCrystalInputRate);
+	RESONANT("resonant_crystal", () -> ToolConfig.resonantCrystalBuffer, () -> ToolConfig.resonantCrystalInputRate);
 
 	private final String id;
 	private final LongSupplier buffer;

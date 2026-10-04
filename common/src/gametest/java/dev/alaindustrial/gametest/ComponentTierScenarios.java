@@ -4,6 +4,7 @@ import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.block.entity.WaterMillBlockEntity;
 import dev.alaindustrial.block.entity.WindMillBlockEntity;
+import dev.alaindustrial.core.environment.GeneratorConfig;
 import dev.alaindustrial.core.machine.ComponentTier;
 import dev.alaindustrial.registry.ModContent;
 import java.util.List;
@@ -32,6 +33,37 @@ import net.minecraft.world.level.block.state.BlockState;
  * production path and the oracle share cannot hide.
  */
 public final class ComponentTierScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(ComponentTierScenarios::waterMill_betterWheelProducesMoreEu,
+								"component_tier_water_mill_better_wheel_produces_more_eu")
+						.fabricId("ComponentTierGameTest", "waterMill_betterWheelProducesMoreEu").ticks(600, 200),
+				RosterEntry.of(ComponentTierScenarios::baselineGradeIsUnchanged,
+								"component_tier_baseline_grade_is_unchanged")
+						.fabricId("ComponentTierGameTest", "baselineGradeIsUnchanged").ticks(600, 200),
+				RosterEntry.of(ComponentTierScenarios::rotorSlotAcceptsEveryGrade,
+								"component_tier_rotor_slot_accepts_every_grade")
+						.fabricId("ComponentTierGameTest", "rotorSlotAcceptsEveryGrade").ticks(20, 40),
+				RosterEntry.of(ComponentTierScenarios::wheelSlotAcceptsEveryGrade,
+								"component_tier_wheel_slot_accepts_every_grade")
+						.fabricId("ComponentTierGameTest", "wheelSlotAcceptsEveryGrade").ticks(20, 40),
+				RosterEntry.of(ComponentTierScenarios::windMill_betterRotorProducesMoreEu,
+								"component_tier_wind_mill_better_rotor_produces_more_eu")
+						.fabricId("ComponentTierGameTest", "windMill_betterRotorProducesMoreEu").ticks(600)
+						.sky(true, false),
+				RosterEntry.of(ComponentTierScenarios::noGradeExceedsTheWindMillCap,
+								"component_tier_no_grade_exceeds_the_wind_mill_cap")
+						.fabricId("ComponentTierGameTest", "noGradeExceedsTheWindMillCap").ticks(600).sky(true, false),
+				RosterEntry.of(ComponentTierScenarios::evolutionCarriesTheUpgradedRotor,
+								"component_tier_evolution_carries_the_upgraded_rotor")
+						.fabricId("ComponentTierGameTest", "evolutionCarriesTheUpgradedRotor").ticks(600)
+						.sky(true, false));
+
+		private Roster() {}
+	}
+
 	private ComponentTierScenarios() {}
 
 	/**
@@ -95,15 +127,9 @@ public final class ComponentTierScenarios {
 	 *     or a high one to keep the cap out of the way of an output comparison
 	 */
 	private static void withBoostedWind(int cap, Runnable body) {
-		int savedBase = Config.windMillMaxBaseEuPerTick;
-		int savedCap = Config.windMillMaxEuPerTick;
-		try {
-			Config.windMillMaxBaseEuPerTick = 40;
-			Config.windMillMaxEuPerTick = cap;
+		try (ConfigOverrides o = ConfigOverrides.sync()) {
+			o.set("windMillMaxBaseEuPerTick", 40).set("windMillMaxEuPerTick", cap);
 			body.run();
-		} finally {
-			Config.windMillMaxBaseEuPerTick = savedBase;
-			Config.windMillMaxEuPerTick = savedCap;
 		}
 	}
 
@@ -199,7 +225,7 @@ public final class ComponentTierScenarios {
 		long banked = bankedWith(helper, mill, WaterMillBlockEntity.WHEEL_SLOT,
 				ModContent.WATER_MILL_WHEEL.get());
 		// Four driven cells at waterMillEuPerTick, times the global economy knob, for DRIVE_TICKS.
-		long expected = (long) Math.max(1, Math.round(4 * Config.waterMillEuPerTick
+		long expected = (long) Math.max(1, Math.round(4 * GeneratorConfig.waterMillEuPerTick
 				* Config.globalEuRateMultiplier)) * DRIVE_TICKS;
 		long capped = Math.min(expected, mill.getEnergyStorage().getCapacity());
 		if (banked != capped) {
@@ -329,7 +355,7 @@ public final class ComponentTierScenarios {
 		worn.setDamageValue(damage);
 		mill.setItem(WindMillBlockEntity.ROTOR_SLOT, worn);
 		mill.setItem(WindMillBlockEntity.CHIP_SLOT, new ItemStack(ModContent.ALIGNMENT_CHIP_DAY.get()));
-		mill.setEvolveProgressTicks(Config.windMillEvolveTicks - 1);
+		mill.setEvolveProgressTicks(GeneratorConfig.windMillEvolveTicks - 1);
 		AlaGameTestHelper.drive(mill, helper, 5);
 
 		if (helper.getBlockEntity(WIND_POS, MachineBlockEntity.class) instanceof MachineBlockEntity evolved) {

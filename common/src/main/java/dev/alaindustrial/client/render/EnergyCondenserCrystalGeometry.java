@@ -4,7 +4,7 @@ package dev.alaindustrial.client.render;
  * Crystal geometry for the Energy Condenser — GENERATED, do not edit by hand.
  *
  * <p>Source: {@code tools/model_sources/energy_condenser/energy_condenser.bbmodel},
- * regenerate with {@code python docs/tools/gen_condenser_crystal_geometry.py}.
+ * regenerate with {@code python docs/tools/authoring/gen_condenser_crystal_geometry.py}.
  *
  * <p>One row is one cube: {@code from} (3), {@code to} (3), rotation in degrees (3), pivot (3),
  * then the UVs of six faces in the order north, east, south, west, up, down, four numbers each

@@ -1,8 +1,12 @@
 package dev.alaindustrial.gametest;
 
+import static dev.alaindustrial.gametest.GameTestDrive.drivePowered;
+
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.AlloySmelterBlockEntity;
+import dev.alaindustrial.core.machine.MachineRates;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.ItemStack;
@@ -32,16 +36,67 @@ import net.minecraft.world.item.Items;
  */
 public final class AlloySmelterScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(AlloySmelterScenarios::fun01BronzeIsSmelted, "alloy_smelter_bronze_is_smelted")
+						.fabricId("AlloySmelterGameTest", "tcAlloy001Fun01_bronzeIsSmelted").ticks(400),
+				RosterEntry.of(AlloySmelterScenarios::fun02OrderDoesNotMatter, "alloy_smelter_order_does_not_matter")
+						.fabricId("AlloySmelterGameTest", "tcAlloy001Fun02_orderDoesNotMatter").ticks(400),
+				RosterEntry.of(AlloySmelterScenarios::fun03ConsumesPerComponentCounts,
+								"alloy_smelter_consumes_per_component_counts")
+						.fabricId("AlloySmelterGameTest", "tcAlloy001Fun03_consumesPerComponentCounts").ticks(400),
+				RosterEntry.of(AlloySmelterScenarios::fun04ElectrumFromGoldAndSilver,
+								"alloy_smelter_electrum_from_gold_and_silver")
+						.fabricId("AlloySmelterGameTest", "tcAlloy001Fun04_electrumFromGoldAndSilver").ticks(400),
+				RosterEntry.of(AlloySmelterScenarios::con01SpareSlotBlocksShorterRecipe,
+								"alloy_smelter_spare_slot_blocks_shorter_recipe")
+						.fabricId("AlloySmelterGameTest", "tcAlloy001Con01_spareSlotBlocksShorterRecipe").ticks(400),
+				RosterEntry.of(AlloySmelterScenarios::con02ShortComponentBlocksWork,
+								"alloy_smelter_short_component_blocks_work")
+						.fabricId("AlloySmelterGameTest", "tcAlloy001Con02_shortComponentBlocksWork").ticks(400),
+				RosterEntry.of(AlloySmelterScenarios::con03NoEnergyBlocksWork, "alloy_smelter_no_energy_blocks_work")
+						.fabricId("AlloySmelterGameTest", "tcAlloy001Con03_noEnergyBlocksWork").ticks(400),
+				RosterEntry.of(AlloySmelterScenarios::reg01DuplicateInputRefused,
+								"alloy_smelter_duplicate_input_refused")
+						.fabricId("AlloySmelterGameTest", "tcAlloy001Reg01_duplicateInputRefused").ticks(20, 60),
+				RosterEntry.of(AlloySmelterScenarios::reg02NonComponentRefused, "alloy_smelter_non_component_refused")
+						.fabricId("AlloySmelterGameTest", "tcAlloy001Reg02_nonComponentRefused").ticks(20, 60),
+				RosterEntry.of(AlloySmelterScenarios::reg03OutputSlotRefusesInsert,
+								"alloy_smelter_output_slot_refuses_insert")
+						.fabricId("AlloySmelterGameTest", "tcAlloy001Reg03_outputSlotRefusesInsert").ticks(20, 60),
+				RosterEntry.of(AlloySmelterScenarios::reg04InputSwapResetsProgress,
+								"alloy_smelter_input_swap_resets_progress")
+						.fabricId("AlloySmelterGameTest", "tcAlloy001Reg04_inputSwapResetsProgress").ticks(400),
+				RosterEntry.of(AlloySmelterScenarios::reg05DistinctMetalsCannotFillEverySlot,
+								"alloy_smelter_distinct_metals_cannot_fill_every_slot")
+						.fabricId("AlloySmelterGameTest", "tcAlloy001Reg05_distinctMetalsCannotFillEverySlot")
+						.ticks(20, 60),
+				RosterEntry.of(AlloySmelterScenarios::reg06SpeedMultiplierKeepsOperationCost,
+								"alloy_smelter_speed_multiplier_keeps_operation_cost")
+						.fabricId("AlloySmelterGameTest", "tcAlloy001Reg06_speedMultiplierKeepsOperationCost")
+						.ticks(400));
+
+		private Roster() {}
+	}
+
 	private AlloySmelterScenarios() {
 	}
 
 	private static final BlockPos POS = new BlockPos(1, 2, 1);
-	/** Comfortably above one operation's cost (1200 EU), set directly so the tier packet cap is bypassed. */
+	/**
+	 * Comfortably above one operation's cost (1200 EU), set directly so the tier packet cap is bypassed — and set
+	 * before EVERY tick ({@link GameTestDrive#drivePowered}), the way a connected cable keeps the machine fed.
+	 *
+	 * <p>Load-bearing: one operation costs 1200 EU while {@code machineBuffer} holds 800, so the
+	 * smelter relies on the network refilling it as it works. A buffer set once at the start would run
+	 * dry two thirds of the way through and report a working machine as broken.
+	 */
 	private static final long AMPLE_EU = 20_000L;
 
 	/** Ticks to drive: one full operation plus slack for the scaled-duration knob. */
 	private static int driveTicks() {
-		return Config.scaledDuration(Config.alloySmelterDuration) + 20;
+		return MachineRates.duration(Config.alloySmelterDuration, Config.globalMachineSpeedMultiplier) + 20;
 	}
 
 	private static AlloySmelterBlockEntity place(GameTestHelper helper) {
@@ -51,20 +106,6 @@ public final class AlloySmelterScenarios {
 			helper.fail("alloy smelter block entity missing after placement");
 		}
 		return be;
-	}
-
-	/**
-	 * Drive the machine with its buffer topped up every tick, the way a connected cable keeps it fed.
-	 *
-	 * <p>Load-bearing: one operation costs 1200 EU while {@code machineBuffer} holds 800, so the
-	 * smelter relies on the network refilling it as it works. A buffer set once at the start would run
-	 * dry two thirds of the way through and report a working machine as broken.
-	 */
-	private static void drivePowered(AlloySmelterBlockEntity be, GameTestHelper helper, int ticks) {
-		for (int i = 0; i < ticks; i++) {
-			be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
-			AlaGameTestHelper.drive(be, helper, 1);
-		}
 	}
 
 	/** Load the three input slots directly, bypassing the slot filter (that is tested separately). */
@@ -101,11 +142,15 @@ public final class AlloySmelterScenarios {
 
 	// ── FUN01/FUN02: the alloy is produced, and the loading order does not matter ───────────────────
 
-	/** Three copper and one tin, loaded in declaration order, become two bronze. */
+	/**
+	 * Three copper and one tin, loaded in declaration order, become two bronze.
+	 *
+	 * @implements TC-ALLOY-001-FUN01 — three copper and one tin become two bronze.
+	 */
 	public static void fun01BronzeIsSmelted(GameTestHelper helper) {
 		AlloySmelterBlockEntity be = place(helper);
 		load(be, copper(3), tin(1), ItemStack.EMPTY);
-		drivePowered(be, helper, driveTicks());
+		drivePowered(be, helper, driveTicks(), AMPLE_EU);
 		assertOutput(be, helper, ModContent.BRONZE_INGOT.get(), 2, "3 copper + 1 tin");
 		helper.succeed();
 	}
@@ -116,23 +161,30 @@ public final class AlloySmelterScenarios {
 	 * <p>The negative control for the whole design: with a positional matcher this is the only case
 	 * that fails, because {@link #fun01BronzeIsSmelted} loads the components in the order the recipe
 	 * declares them and would keep passing.
+	 *
+	 * @implements TC-ALLOY-001-FUN02 — the same mix in reversed slots yields the same bronze. The
+	 * negative control for the whole design: a positional matcher fails only here.
 	 */
 	public static void fun02OrderDoesNotMatter(GameTestHelper helper) {
 		AlloySmelterBlockEntity be = place(helper);
 		// Tin first, and in the LAST slot rather than the first — neither the order nor the gap matches
 		// the recipe's declaration.
 		load(be, ItemStack.EMPTY, tin(1), copper(3));
-		drivePowered(be, helper, driveTicks());
+		drivePowered(be, helper, driveTicks(), AMPLE_EU);
 		assertOutput(be, helper, ModContent.BRONZE_INGOT.get(), 2, "tin and copper in reversed slots");
 		helper.succeed();
 	}
 
-	/** Each input shrinks by its own count — three copper and one tin, not one of each. */
+	/**
+	 * Each input shrinks by its own count — three copper and one tin, not one of each.
+	 *
+	 * @implements TC-ALLOY-001-FUN03 — each input shrinks by its own count, not one of each.
+	 */
 	public static void fun03ConsumesPerComponentCounts(GameTestHelper helper) {
 		AlloySmelterBlockEntity be = place(helper);
 		// One spare of each on top of the recipe's price, so the remainder is unambiguous.
 		load(be, copper(4), tin(2), ItemStack.EMPTY);
-		drivePowered(be, helper, driveTicks());
+		drivePowered(be, helper, driveTicks(), AMPLE_EU);
 		int copperLeft = be.getItem(AlloySmelterBlockEntity.INPUT_SLOT_0).getCount();
 		int tinLeft = be.getItem(AlloySmelterBlockEntity.INPUT_SLOT_1).getCount();
 		if (copperLeft != 1 || tinLeft != 1) {
@@ -142,12 +194,16 @@ public final class AlloySmelterScenarios {
 		helper.succeed();
 	}
 
-	/** A three-slot recipe is not required: two components with one slot empty is the normal case. */
+	/**
+	 * A three-slot recipe is not required: two components with one slot empty is the normal case.
+	 *
+	 * @implements TC-ALLOY-001-FUN04 — a two-component alloy runs with the third slot left empty.
+	 */
 	public static void fun04ElectrumFromGoldAndSilver(GameTestHelper helper) {
 		AlloySmelterBlockEntity be = place(helper);
 		load(be, new ItemStack(Items.GOLD_INGOT), ItemStack.EMPTY,
 				new ItemStack(ModContent.SILVER_INGOT.get()));
-		drivePowered(be, helper, driveTicks());
+		drivePowered(be, helper, driveTicks(), AMPLE_EU);
 		assertOutput(be, helper, ModContent.ELECTRUM_INGOT.get(), 1, "1 gold + 1 silver");
 		helper.succeed();
 	}
@@ -159,20 +215,26 @@ public final class AlloySmelterScenarios {
 	 *
 	 * <p>Without the strictness rule the smelter would eat the copper and tin and leave the player's
 	 * third stack sitting there forever with no indication it was never part of the recipe.
+	 *
+	 * @implements TC-ALLOY-001-CON01 — junk in the spare slot blocks a two-component recipe.
 	 */
 	public static void con01SpareSlotBlocksShorterRecipe(GameTestHelper helper) {
 		AlloySmelterBlockEntity be = place(helper);
 		load(be, copper(3), tin(1), new ItemStack(Items.IRON_INGOT));
-		drivePowered(be, helper, driveTicks());
+		drivePowered(be, helper, driveTicks(), AMPLE_EU);
 		assertOutputEmpty(be, helper, "a spare occupied slot must block a two-component recipe");
 		helper.succeed();
 	}
 
-	/** Too few of one component: nothing runs and nothing is consumed. */
+	/**
+	 * Too few of one component: nothing runs and nothing is consumed.
+	 *
+	 * @implements TC-ALLOY-001-CON02 — one copper short: nothing runs, nothing is consumed.
+	 */
 	public static void con02ShortComponentBlocksWork(GameTestHelper helper) {
 		AlloySmelterBlockEntity be = place(helper);
 		load(be, copper(2), tin(1), ItemStack.EMPTY); // bronze needs three copper
-		drivePowered(be, helper, driveTicks());
+		drivePowered(be, helper, driveTicks(), AMPLE_EU);
 		assertOutputEmpty(be, helper, "two copper is one short of the bronze recipe");
 		if (be.getItem(AlloySmelterBlockEntity.INPUT_SLOT_0).getCount() != 2) {
 			helper.fail("an unaffordable recipe must not consume anything");
@@ -180,7 +242,11 @@ public final class AlloySmelterScenarios {
 		helper.succeed();
 	}
 
-	/** With no energy the machine holds the recipe but produces nothing. */
+	/**
+	 * With no energy the machine holds the recipe but produces nothing.
+	 *
+	 * @implements TC-ALLOY-001-CON03 — an unpowered smelter holds the recipe but produces nothing.
+	 */
 	public static void con03NoEnergyBlocksWork(GameTestHelper helper) {
 		AlloySmelterBlockEntity be = place(helper);
 		load(be, copper(3), tin(1), ItemStack.EMPTY);
@@ -198,6 +264,9 @@ public final class AlloySmelterScenarios {
 	 * <p>This is what stops a hopper full of copper from filling all three inputs with copper — a set
 	 * no recipe matches and which a hopper cannot undo, leaving the machine dead until a player
 	 * intervenes.
+	 *
+	 * @implements TC-ALLOY-001-REG01 — an input slot refuses a metal another input already holds, so a
+	 * hopper cannot fill all three with one metal and deadlock the machine.
 	 */
 	public static void reg01DuplicateInputRefused(GameTestHelper helper) {
 		AlloySmelterBlockEntity be = place(helper);
@@ -220,6 +289,9 @@ public final class AlloySmelterScenarios {
 	 * some alloy, so three hoppers would fill every slot and leave a state no recipe matches — permanent,
 	 * because a hopper cannot pull its mistake back out. The cap is read from the loaded recipes, so this
 	 * stays correct if a three-component alloy is ever added.
+	 *
+	 * @implements TC-ALLOY-001-REG05 — three DIFFERENT valid metals cannot occupy all three inputs while
+	 * no shipped alloy takes three components, so hoppers cannot strand the machine.
 	 */
 	public static void reg05DistinctMetalsCannotFillEverySlot(GameTestHelper helper) {
 		AlloySmelterBlockEntity be = place(helper);
@@ -236,11 +308,12 @@ public final class AlloySmelterScenarios {
 	/**
 	 * The global speed multiplier is documented as energy-neutral: one operation must cost the recipe's
 	 * EU whatever the multiplier is.
+	 *
+	 * @implements TC-ALLOY-001-REG06 — the speed multiplier is energy-neutral: the op still costs 1200 EU.
 	 */
 	public static void reg06SpeedMultiplierKeepsOperationCost(GameTestHelper helper) {
-		float original = Config.globalMachineSpeedMultiplier;
-		try {
-			Config.globalMachineSpeedMultiplier = 2.0f;
+		try (ConfigOverrides o = ConfigOverrides.sync()) {
+			o.set("globalMachineSpeedMultiplier", 2.0f);
 			AlloySmelterBlockEntity be = place(helper);
 			load(be, copper(3), tin(1), ItemStack.EMPTY);
 			// The cost is measured by REFILLING each tick and summing what was drawn, not by setting a
@@ -251,7 +324,8 @@ public final class AlloySmelterScenarios {
 			long cap = be.getEnergyStorage().getCapacity();
 			be.getEnergyStorage().setAmountUntracked(cap);
 			long spent = 0L;
-			for (int i = 0; i < Config.scaledDuration(Config.alloySmelterDuration) + 5; i++) {
+			for (int i = 0; i < MachineRates.duration(Config.alloySmelterDuration,
+					Config.globalMachineSpeedMultiplier) + 5; i++) {
 				AlaGameTestHelper.drive(be, helper, 1);
 				spent += cap - be.getEnergyStorage().getAmount();
 				be.getEnergyStorage().setAmountUntracked(cap);
@@ -264,16 +338,18 @@ public final class AlloySmelterScenarios {
 						+ "(the speed knob is documented energy-neutral)");
 			}
 			helper.succeed();
-		} finally {
-			Config.globalMachineSpeedMultiplier = original;
 		}
 	}
 
 	private static int euPerTickForTest() {
-		return Math.max(1, Math.round(Config.alloySmelterEuPerTick * Config.globalMachineSpeedMultiplier));
+		return MachineRates.euPerTick(Config.alloySmelterEuPerTick, Config.globalMachineSpeedMultiplier);
 	}
 
-	/** An item no alloy recipe uses is refused outright. */
+	/**
+	 * An item no alloy recipe uses is refused outright.
+	 *
+	 * @implements TC-ALLOY-001-REG02 — an item no alloy recipe uses is refused outright.
+	 */
 	public static void reg02NonComponentRefused(GameTestHelper helper) {
 		AlloySmelterBlockEntity be = place(helper);
 		if (be.canPlaceItem(AlloySmelterBlockEntity.INPUT_SLOT_0, new ItemStack(Items.DIRT))) {
@@ -282,7 +358,11 @@ public final class AlloySmelterScenarios {
 		helper.succeed();
 	}
 
-	/** The output slot never accepts a manual insert. */
+	/**
+	 * The output slot never accepts a manual insert.
+	 *
+	 * @implements TC-ALLOY-001-REG03 — the output slot never accepts a manual insert.
+	 */
 	public static void reg03OutputSlotRefusesInsert(GameTestHelper helper) {
 		AlloySmelterBlockEntity be = place(helper);
 		if (be.canPlaceItem(AlloySmelterBlockEntity.OUTPUT_SLOT, copper(1))) {
@@ -291,11 +371,16 @@ public final class AlloySmelterScenarios {
 		helper.succeed();
 	}
 
-	/** Swapping a component mid-melt restarts the operation instead of crediting the old mix. */
+	/**
+	 * Swapping a component mid-melt restarts the operation instead of crediting the old mix.
+	 *
+	 * @implements TC-ALLOY-001-REG04 — swapping a component mid-melt restarts the operation. The shared
+	 * base only watches slot 0, so this guards the two slots it does not.
+	 */
 	public static void reg04InputSwapResetsProgress(GameTestHelper helper) {
 		AlloySmelterBlockEntity be = place(helper);
 		load(be, copper(3), tin(1), ItemStack.EMPTY);
-		drivePowered(be, helper, driveTicks() / 2);
+		drivePowered(be, helper, driveTicks() / 2, AMPLE_EU);
 		// Progress rides the shared ContainerData channel at index 2 (see MachineBlockEntity).
 		if (be.getDataAccess().get(2) <= 0) {
 			helper.fail("sanity: the smelter should have accumulated progress before the swap");

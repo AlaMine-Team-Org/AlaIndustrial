@@ -10,6 +10,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import dev.alaindustrial.client.ServerBalance;
+import dev.alaindustrial.core.tooltip.HasMachineTooltip;
+import dev.alaindustrial.core.tooltip.MachineTooltipSpec;
 
 /**
  * The Fermenter block (MOD-146) — a full cube that faces the player and shows its "on" model while a
@@ -19,7 +22,7 @@ import net.minecraft.world.level.block.state.BlockState;
  * {@link MachineHumProvider}, and this block now has its own — wet, airy compost bubbling, chosen
  * to stay clear of the polymerizer's thick tar-like boil.
  */
-public class FermenterBlock extends LitMachineBlock implements MachineHumProvider {
+public class FermenterBlock extends LitMachineBlock implements MachineHumProvider, HasMachineTooltip {
 	public FermenterBlock(Properties properties) {
 		super(properties);
 	}
@@ -42,5 +45,13 @@ public class FermenterBlock extends LitMachineBlock implements MachineHumProvide
 	@Override
 	public Supplier<SoundEvent> humSound() {
 		return ModSounds.FERMENTER_HUM;
+	}
+
+	/** Hover tooltip of this block's item (MOD-716, ADR-040). */
+	@Override
+	public MachineTooltipSpec machineTooltip() {
+		return MachineTooltipSpec.processing(ServerBalance::machineEuPerTickEffective,
+				() -> ServerBalance.scaledDuration(ServerBalance.fermenterDuration()),
+				ServerBalance::machineBuffer);
 	}
 }

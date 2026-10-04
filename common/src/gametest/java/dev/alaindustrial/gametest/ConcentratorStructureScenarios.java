@@ -16,6 +16,7 @@ import dev.alaindustrial.core.energy.CableType;
 import dev.alaindustrial.core.energy.EnergyLookup;
 import dev.alaindustrial.core.energy.EnergyPort;
 import dev.alaindustrial.core.energy.NetworkManager;
+import dev.alaindustrial.core.environment.GeneratorConfig;
 import dev.alaindustrial.menu.RadiantSolarPanelMenu;
 import dev.alaindustrial.registry.ModContent;
 import java.util.List;
@@ -49,6 +50,57 @@ import net.minecraft.world.phys.Vec3;
  * they touch, stay inside the force-loaded rig.
  */
 public final class ConcentratorStructureScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(ConcentratorStructureScenarios::assemblesInTheBoxThatWasFilled,
+								"concentrator_assembles_in_filled_box")
+						.fabricId("ConcentratorStructureGameTest", "mod603_assemblesInTheBoxThatWasFilled").ticks(100),
+				RosterEntry.of(ConcentratorStructureScenarios::refusesToAssembleWithACellMissing,
+								"concentrator_refuses_incomplete_box")
+						.fabricId("ConcentratorStructureGameTest", "mod603_refusesToAssembleWithACellMissing")
+						.ticks(40),
+				RosterEntry.of(ConcentratorStructureScenarios::breakingAnyCellDisassemblesAll,
+								"concentrator_breaking_any_cell_disassembles")
+						.fabricId("ConcentratorStructureGameTest", "mod603_breakingAnyCellDisassemblesAll").ticks(120),
+				RosterEntry.of(ConcentratorStructureScenarios::bottomTierLendsTheCorePort,
+								"concentrator_bottom_tier_lends_core_port")
+						.fabricId("ConcentratorStructureGameTest", "mod608_bottomTierLendsTheCorePort").ticks(40),
+				RosterEntry.of(ConcentratorStructureScenarios::anyCellOpensTheCoreScreen,
+								"concentrator_any_cell_opens_core_screen")
+						.fabricId("ConcentratorStructureGameTest", "mod608_anyCellOpensTheCoreScreen").ticks(40),
+				RosterEntry.of(ConcentratorStructureScenarios::sectionOnlyCableCarriesTheCoreEnergy,
+								"concentrator_section_only_cable_carries_energy")
+						.fabricId("ConcentratorStructureGameTest", "mod608_sectionOnlyCableCarriesTheCoreEnergy")
+						.ticks(40),
+				RosterEntry.of(ConcentratorStructureScenarios::oneMachinePushesOnePacket,
+								"concentrator_one_machine_pushes_one_packet")
+						.fabricId("ConcentratorStructureGameTest", "mod608_oneMachinePushesOnePacket").ticks(40),
+				RosterEntry.of(ConcentratorStructureScenarios::oneMachineCountsOnceForBackupPower,
+								"concentrator_one_machine_counts_once_for_backup")
+						.fabricId("ConcentratorStructureGameTest", "mod608_oneMachineCountsOnceForBackupPower")
+						.ticks(40),
+				RosterEntry.of(ConcentratorStructureScenarios::cableDropsToTheBottomTier,
+								"concentrator_cable_drops_to_bottom_tier")
+						.fabricId("ConcentratorStructureGameTest", "mod609_cableDropsToTheBottomTier").ticks(40),
+				RosterEntry.of(ConcentratorStructureScenarios::anyCoveredColumnStopsTheMachine,
+								"concentrator_any_covered_column_stops")
+						.fabricId("ConcentratorStructureGameTest", "mod603_anyCoveredColumnStopsTheMachine")
+						.ticks(100).sky(true, false),
+				RosterEntry.of(ConcentratorStructureScenarios::canonicalMappingLandsOnTheCells,
+								"concentrator_canonical_mapping")
+						.fabricId("ConcentratorStructureGameTest", "mod603_canonicalMappingLandsOnTheCells").ticks(40),
+				RosterEntry.of(ConcentratorStructureScenarios::structureCentreMatchesItsCells,
+								"concentrator_structure_centre")
+						.fabricId("ConcentratorStructureGameTest", "mod603_structureCentreMatchesItsCells").ticks(40),
+				RosterEntry.of(ConcentratorStructureScenarios::assembledOutputIsNeverADowngrade,
+								"concentrator_assembly_not_a_downgrade")
+						.fabricId("ConcentratorStructureGameTest", "mod603_assembledOutputIsNeverADowngrade")
+						.ticks(40));
+
+		private Roster() {}
+	}
 
 	private ConcentratorStructureScenarios() {
 	}
@@ -568,9 +620,9 @@ public final class ConcentratorStructureScenarios {
 		placeSections(helper, Direction.NORTH, null);
 		assemble(helper);
 		assertAssembled(helper, Direction.NORTH);
-		if (Config.radiantAssembledEuPerTick < Config.radiantEuPerTick) {
-			helper.fail("the assembled knob (" + Config.radiantAssembledEuPerTick
-					+ ") is below the one-block knob (" + Config.radiantEuPerTick
+		if (GeneratorConfig.radiantAssembledEuPerTick < GeneratorConfig.radiantEuPerTick) {
+			helper.fail("the assembled knob (" + GeneratorConfig.radiantAssembledEuPerTick
+					+ ") is below the one-block knob (" + GeneratorConfig.radiantEuPerTick
 					+ ") — seven sections would buy the player a weaker machine");
 		}
 		helper.succeed();

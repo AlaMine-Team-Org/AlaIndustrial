@@ -1,13 +1,12 @@
 package dev.alaindustrial.core.energy;
 
 import dev.alaindustrial.Config;
-import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.core.net.GraphNetworkManager;
+import dev.alaindustrial.core.net.GraphNetworkOps;
 import dev.alaindustrial.core.net.NetworkOps;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -15,8 +14,8 @@ import net.minecraft.server.level.ServerLevel;
 /**
  * Per-{@link ServerLevel} registry of transient {@link EnergyNetwork}s. Networks are never
  * persisted: they are rebuilt from cable block entities as chunks load
- * ({@link #register(CableBlockEntity)}) and pruned as cables are removed/unloaded
- * ({@link #unregister(CableBlockEntity)}).
+ * ({@link #register(CableNode)}) and pruned as cables are removed/unloaded
+ * ({@link #unregister(CableNode)}).
  *
  * <p>Since MOD-401 the bookkeeping — the position index, the incremental union on register, the BFS
  * re-partition on removal, the round-robin tick and the level sweep — lives in the shared
@@ -27,6 +26,8 @@ import net.minecraft.server.level.ServerLevel;
  *       per-face switch, so {@link NetworkOps#candidates} and {@link NetworkOps#connected} are the
  *       same six positions;</li>
  *   <li><b>the tick budget</b> is {@link Config#networksPerTick};</li>
+ *   <li><b>the balance</b> the algorithms read ({@link NetworkBalance}) is read from {@link Config} here,
+ *       once per {@link #tickAll} pass, and handed to every network it ticks (MOD-710, CORE-10);</li>
  *   <li><b>telemetry</b> — {@link Stats} and the EU counters behind {@code /ala net}. The framework
  *       only accumulates the number each tick returns; what it means is decided here.</li>
  * </ul>
@@ -48,59 +49,13 @@ public final class NetworkManager {
 			int tickedLastTick, long euMovedLastTick, long euMovedTotal) {
 	}
 
-	private static final NetworkOps<ServerLevel, EnergyNetwork, BlockPos> OPS =
-			new NetworkOps<ServerLevel, EnergyNetwork, BlockPos>() {
-				@Override
-				public EnergyNetwork create(ServerLevel level) {
-					return new EnergyNetwork(level);
-				}
-
-				@Override
-				public Set<BlockPos> nodes(EnergyNetwork network) {
-					return network.cables();
-				}
-
-				@Override
-				public void addNode(EnergyNetwork network, BlockPos pos) {
-					network.addCable(pos);
-				}
-
-				@Override
-				public void removeNode(EnergyNetwork network, BlockPos pos) {
-					network.removeCable(pos);
-				}
-
-				@Override
-				public void absorb(EnergyNetwork keep, EnergyNetwork drop) {
-					keep.absorb(drop);
-				}
-
-				@Override
-				public void markDirty(EnergyNetwork network) {
-					network.markDirty();
-				}
-
-				@Override
-				public boolean isAwake(EnergyNetwork network) {
-					return network.isAwake();
-				}
-
-				@Override
-				public long tick(EnergyNetwork network) {
-					return network.tick();
-				}
-
-				@Override
-				public Iterable<BlockPos> candidates(BlockPos pos) {
-					return axisNeighbours(pos);
-				}
-
-				@Override
-				public Iterable<BlockPos> connected(ServerLevel level, BlockPos pos) {
-					// No per-face switch on a cable: everything it touches is connected.
-					return axisNeighbours(pos);
-				}
-			};
+	/**
+	 * The frame's view of an energy network: every operation is the network's own ({@link GraphNetworkOps},
+	 * MOD-715). No per-face switch on a cable: everything it touches is connected, so the candidates and the
+	 * connected positions are the same six.
+	 */
+	private static final NetworkOps<ServerLevel, EnergyNetwork, BlockPos> OPS = new GraphNetworkOps<>(
+			EnergyNetwork::new, NetworkManager::axisNeighbours, (level, pos) -> axisNeighbours(pos));
 
 	private static final GraphNetworkManager<ServerLevel, EnergyNetwork, BlockPos> GRAPH =
 			new GraphNetworkManager<>("energy", OPS, () -> Config.networksPerTick,
@@ -116,7 +71,7 @@ public final class NetworkManager {
 	}
 
 	/** Register a cable block entity on load/place. Idempotent. */
-	public static void register(CableBlockEntity cable) {
+	public static void register(CableNode cable) {
 		ServerLevel level = (ServerLevel) cable.getLevel();
 		if (level == null) {
 			return;
@@ -125,7 +80,7 @@ public final class NetworkManager {
 	}
 
 	/** Unregister a cable on removal/unload. Splits the network if removal disconnects it. */
-	public static void unregister(CableBlockEntity cable) {
+	public static void unregister(CableNode cable) {
 		ServerLevel level = (ServerLevel) cable.getLevel();
 		if (level == null) {
 			return;
@@ -138,9 +93,22 @@ public final class NetworkManager {
 		GRAPH.markDirtyAt(level, pos);
 	}
 
-	/** Tick up to {@link Config#networksPerTick} awake networks; round-robin the remainder. */
+	/**
+	 * Tick up to {@link Config#networksPerTick} awake networks; round-robin the remainder. The balance is
+	 * read once for the whole pass, so every network of it ticks on the same numbers.
+	 */
 	public static void tickAll(ServerLevel level) {
-		GRAPH.tickAll(level);
+		NetworkBalance balance = balance();
+		GRAPH.tickAll(level, network -> network.tick(balance));
+	}
+
+	/**
+	 * The knobs the energy algorithms read, as they are now — the one place in the energy core that reads
+	 * them from {@link Config} (CORE-10). {@link #tickAll} builds it once per pass; the direct cable-less push
+	 * and a lone {@link EnergyNetwork#tick()} take it at the moment they run, as they always read it.
+	 */
+	public static NetworkBalance balance() {
+		return new NetworkBalance(Config.cableBuffer, Config.storageFeedReserveFraction);
 	}
 
 	/**

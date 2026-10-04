@@ -5,10 +5,8 @@ import dev.alaindustrial.block.entity.GardenDroneStatus;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.world.Container;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -33,9 +31,9 @@ public class GardenDroneStationMenu extends MachineMenu {
 	/** Client side — the data width must match the block entity's channel count exactly (MOD-235). */
 	public GardenDroneStationMenu(int syncId, Inventory playerInventory) {
 		super(ModContent.GARDEN_DRONE_STATION_MENU.get(), syncId, playerInventory,
-				new SimpleContainer(GardenDroneStationBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT),
-				new SimpleContainerData(GardenDroneStationBlockEntity.DATA_COUNT),
-				ContainerLevelAccess.NULL, ModContent.GARDEN_DRONE_STATION.get());
+				clientStub(GardenDroneStationBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT,
+						GardenDroneStationBlockEntity.DATA_COUNT),
+				ModContent.GARDEN_DRONE_STATION.get());
 	}
 
 	/**
@@ -103,6 +101,6 @@ public class GardenDroneStationMenu extends MachineMenu {
 
 	/** Why the station is idle, as diagnosed server-side — the screen's status line. */
 	public GardenDroneStatus getStatus() {
-		return GardenDroneStatus.byOrdinal(data.get(GardenDroneStationBlockEntity.DATA_STATUS));
+		return GardenDroneStatus.byOrdinal(channel(GardenDroneStationBlockEntity.Channel.STATUS));
 	}
 }

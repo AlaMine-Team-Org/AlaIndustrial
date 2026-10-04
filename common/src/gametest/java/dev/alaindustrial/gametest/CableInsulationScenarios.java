@@ -32,6 +32,31 @@ import net.minecraft.world.level.block.Blocks;
 
 /** Loader-neutral MOD-259 acceptance scenarios, invoked by both loader GameTest lanes. */
 public final class CableInsulationScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(CableInsulationScenarios::insulatedCopperLosesLessThanBare,
+								"mod259_insulated_copper_loses_less_than_bare")
+						.fabricId("NetworkGameTest", "mod259_insulatedCopperLosesLessThanBare").ticks(400),
+				RosterEntry.of(CableInsulationScenarios::insulatedTinLosesLessThanBare,
+								"mod259_insulated_tin_loses_less_than_bare")
+						.fabricId("NetworkGameTest", "mod259_insulatedTinLosesLessThanBare").ticks(400),
+				RosterEntry.of(CableInsulationScenarios::insulatedGoldLosesLessThanBare,
+								"mod268_insulated_gold_loses_less_than_bare")
+						.fabricId("NetworkGameTest", "mod268_insulatedGoldLosesLessThanBare").ticks(400),
+				RosterEntry.of(CableInsulationScenarios::insulatedElectrumLosesLessThanBare,
+								"mod358_insulated_electrum_loses_less_than_bare")
+						.fabricId("NetworkGameTest", "mod358_insulatedElectrumLosesLessThanBare").ticks(400),
+				RosterEntry.of(CableInsulationScenarios::mixedCopperUsesBareLossDeterministically,
+								"mod259_mixed_copper_uses_bare_loss_deterministically")
+						.fabricId("NetworkGameTest", "mod259_mixedCopperUsesBareLossDeterministically").ticks(400),
+				RosterEntry.of(CableInsulationScenarios::recipesAndVisibility, "mod259_recipes_and_visibility")
+						.fabricId("NetworkGameTest", "mod259_recipesAndVisibility").ticks(40));
+
+		private Roster() {}
+	}
+
 	private CableInsulationScenarios() {
 	}
 

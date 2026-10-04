@@ -1,6 +1,5 @@
 package dev.alaindustrial.core.radiation;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModDataComponents;
 import dev.alaindustrial.registry.ModSounds;
@@ -146,7 +145,7 @@ public final class GeigerTicker {
 			}
 			Reading reading = entry.getValue();
 			if (RadiationCore.readingWentStale(player.level().getGameTime(), reading.takenAt(),
-					Config.radiationTickInterval)) {
+					RadiationConfig.radiationTickInterval)) {
 				entries.remove();
 				continue;
 			}
@@ -229,6 +228,6 @@ public final class GeigerTicker {
 
 	/** Volume, kept as a hook for the client-side slider the task calls for. */
 	private static float clientVolume() {
-		return Math.clamp(Config.geigerVolumePercent / 100.0f, 0.0f, 1.0f);
+		return Math.clamp(RadiationConfig.geigerVolumePercent / 100.0f, 0.0f, 1.0f);
 	}
 }

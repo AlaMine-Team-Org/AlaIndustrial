@@ -1,8 +1,9 @@
 package dev.alaindustrial.client.compat;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.client.ServerBalance;
 import dev.alaindustrial.core.food.CanningMath;
-import dev.alaindustrial.core.food.CanningRules;
+import dev.alaindustrial.block.entity.CanningRules;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -49,8 +50,18 @@ public final class CanningExchange {
 	private CanningExchange() {
 	}
 
-	/** One viewer card: this many of {@code food}, plus one empty can, make one ration. */
-	public record Card(Item food, int itemsPerRation) {
+	/**
+	 * One viewer card: {@link #itemsPerRation()} of {@code food}, plus one empty can, make one ration.
+	 *
+	 * <p>The count is worked out when asked, not stored (MOD-695): viewers register their cards at login,
+	 * before the server's balance arrives, and a stored count would keep quoting the client's own
+	 * {@code canningFoodValuePerCan}.
+	 */
+	public record Card(Item food, int foodValue) {
+		/** Pieces of {@code food} per ration at the server's current exchange rate. */
+		public int itemsPerRation() {
+			return CanningExchange.itemsPerRation(foodValue, ServerBalance.canningFoodValuePerCan());
+		}
 	}
 
 	/**
@@ -83,12 +94,12 @@ public final class CanningExchange {
 	 * reload untouched.
 	 */
 	public static List<Card> cards() {
-		int valuePerRation = Config.canningFoodValuePerCan;
+		int valuePerRation = ServerBalance.canningFoodValuePerCan();
 		List<Card> cards = new ArrayList<>();
 		for (Item item : cannableItems()) {
-			int count = itemsPerRation(CanningRules.foodValue(new ItemStack(item)), valuePerRation);
-			if (count > 0) {
-				cards.add(new Card(item, count));
+			int foodValue = CanningRules.foodValue(new ItemStack(item));
+			if (itemsPerRation(foodValue, valuePerRation) > 0) {
+				cards.add(new Card(item, foodValue));
 			}
 		}
 		return List.copyOf(cards);
@@ -118,18 +129,18 @@ public final class CanningExchange {
 
 	/** Ticks one ration takes on an un-upgraded machine, matching {@code effectiveDuration} at zero chips. */
 	public static int ticksPerRation() {
-		return Config.scaledDuration(Config.canningMachineDuration);
+		return ServerBalance.scaledDuration(ServerBalance.canningMachineDuration());
 	}
 
 	/**
 	 * EU one ration costs on an un-upgraded machine.
 	 *
-	 * <p>Both factors are taken already-scaled, exactly as {@code Config.electricFurnaceVanillaSmeltEu}
+	 * <p>Both factors are taken already-scaled, exactly as {@code MachineRates.vanillaSmeltEu}
 	 * does and for the same reason: each rounds separately, so multiplying the raw fields would only
 	 * agree with the machine at the default speed multiplier.
 	 */
 	public static int energyPerRation() {
-		return Math.max(1, ticksPerRation() * Config.machineEuPerTickEffective());
+		return Math.max(1, ticksPerRation() * ServerBalance.machineEuPerTickEffective());
 	}
 
 	private static List<Item> sweep() {

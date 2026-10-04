@@ -2,8 +2,10 @@ package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.HorizontalMachineBlock;
+import dev.alaindustrial.block.entity.machine.SyncChannels;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.core.environment.GeneratorConfig;
 import dev.alaindustrial.core.machine.ComponentTier;
 import dev.alaindustrial.core.environment.SolarSky;
 import dev.alaindustrial.core.environment.WindMillClearance;
@@ -15,12 +17,10 @@ import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -28,10 +28,11 @@ import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * Storm wind mill (T2, LV) — the weather-focused evolution of {@link WindMillBlockEntity}.
- * Same height step as T1 (step 16) but a higher base cap ({@link Config#stormWindMillMaxBaseEuPerTick} = 6) and stronger
- * weather multipliers ({@link Config#stormWindMillRainFactor} = 2.0,
- * {@link Config#stormWindMillThunderFactor} = 3.0) and a higher cap
- * ({@link Config#stormWindMillMaxEuPerTick} = 16). In clear weather it barely beats T1; in a
+ * Same height step as T1 (step 16) but a higher base cap ({@link GeneratorConfig#stormWindMillMaxBaseEuPerTick} = 6)
+ * and stronger
+ * weather multipliers ({@link GeneratorConfig#stormWindMillRainFactor} = 2.0,
+ * {@link GeneratorConfig#stormWindMillThunderFactor} = 3.0) and a higher cap
+ * ({@link GeneratorConfig#stormWindMillMaxEuPerTick} = 16). In clear weather it barely beats T1; in a
  * thunderstorm it is the strongest LV wind option — a gamble on the weather.
  *
  * <p>No inventory, no evolution (it is a leaf tier). A read-only energy GUI like the T2 solar panels.
@@ -56,7 +57,8 @@ public class StormWindMillBlockEntity extends AbstractGeneratorBlockEntity imple
 	private int effectiveRate = 0;
 
 	public StormWindMillBlockEntity(BlockPos pos, BlockState state) {
-		super(ModContent.STORM_WIND_MILL_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT, Config.t2WindMillBuffer, MAX_EXTRACT);
+		super(ModContent.STORM_WIND_MILL_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT,
+				GeneratorConfig.t2WindMillBuffer, MAX_EXTRACT);
 	}
 
 	/**
@@ -81,9 +83,11 @@ public class StormWindMillBlockEntity extends AbstractGeneratorBlockEntity imple
 	private int sampleRate(Level level, BlockPos pos, float rotorFactor) {
 		return WindMillOutput.euFor(pos.getY(), level.getSeaLevel(), openSky(level, pos),
 				level.isRaining(), level.isThundering(),
-				Config.stormWindMillMaxBaseEuPerTick, WindProfile.DEFAULT_BLOCKS_PER_BASE, Config.stormWindMillMaxEuPerTick,
-				Config.stormWindMillRainFactor, Config.stormWindMillThunderFactor,
-				Config.windCloudY, Config.windDeadY, Config.windRidgeFactor, Config.windTraceFactor,
+				GeneratorConfig.stormWindMillMaxBaseEuPerTick, WindProfile.DEFAULT_BLOCKS_PER_BASE,
+				GeneratorConfig.stormWindMillMaxEuPerTick,
+				GeneratorConfig.stormWindMillRainFactor, GeneratorConfig.stormWindMillThunderFactor,
+				GeneratorConfig.windCloudY, GeneratorConfig.windDeadY, GeneratorConfig.windRidgeFactor,
+				GeneratorConfig.windTraceFactor,
 				// Rotor grade (MOD-385) — folded in before euFor's cap, so it never lifts the ceiling.
 				rotorFactor);
 	}
@@ -130,7 +134,7 @@ public class StormWindMillBlockEntity extends AbstractGeneratorBlockEntity imple
 		}
 		// Rotor grade (MOD-385): read from the slot each tick so a swap takes effect at the next sample.
 		ComponentTier rotorTier = tierOf(rotor, ComponentTier.WINDMILL_ROTOR);
-		if (sampleCounter % Config.windMillSampleTicks == 0) {
+		if (sampleCounter % GeneratorConfig.windMillSampleTicks == 0) {
 			// Blade clearance: a solid block in the rotor disc stalls the blades (rate 0), regardless
 			// of height or weather. Only meaningful under open sky — a roof above is already fatal.
 			Direction facing = state.hasProperty(HorizontalMachineBlock.FACING)
@@ -157,7 +161,8 @@ public class StormWindMillBlockEntity extends AbstractGeneratorBlockEntity imple
 		// Rotor wear (MOD-189): same wear path as the T1 mill — proportional to output (so a thunderstorm's
 		// high output wears the rotor fast) with the shared storm-weather stress multiplier on top.
 		if (cachedRate > 0) {
-			float weather = (level.isThundering() || level.isRaining()) ? Config.windMillStormWearFactor : 1.0f;
+			float weather = (level.isThundering() || level.isRaining()) ? GeneratorConfig.windMillStormWearFactor
+					: 1.0f;
 			// Grade-specific EU-per-damage (MOD-385): cachedRate already carries the grade's multiplier.
 			wearComponent(level, pos, ROTOR_SLOT, cachedRate, weather, rotorTier.euPerDamage());
 		}
@@ -165,7 +170,7 @@ public class StormWindMillBlockEntity extends AbstractGeneratorBlockEntity imple
 	}
 
 	/**
-	 * The readout rides {@link #RATE_CHANNEL}, not channel 2: channel 2 stays the mechanical rate because
+	 * The readout rides {@link Channel#RATE}, not channel 2: channel 2 stays the mechanical rate because
 	 * the rotor renderer turns it into the blades' angular speed (MOD-356).
 	 */
 	@Override
@@ -174,57 +179,25 @@ public class StormWindMillBlockEntity extends AbstractGeneratorBlockEntity imple
 	}
 
 	/**
-	 * Five-wide data — hides {@link MachineBlockEntity#DATA_COUNT} so
-	 * {@code StormWindMillBlockEntity.DATA_COUNT} names this machine's width for the bridge below and for
-	 * {@code StormWindMillMenu}'s client stub (MOD-235).
+	 * GUI sync channels (MOD-712, BE-7): the base four (PROGRESS the mechanical rate, MAX_PROGRESS the
+	 * mode), then the effective generation rate, read-only — see {@link WindMillBlockEntity.Channel}.
 	 */
-	public static final int DATA_COUNT = 5;
+	public enum Channel { ENERGY, CAPACITY, PROGRESS, MAX_PROGRESS, RATE }
 
-	/** Channel carrying the effective (post-multiplier) EU/t the GUI prints — see {@link #effectiveRate}. */
-	public static final int RATE_CHANNEL = 4;
-
-	/**
-	 * Five-wide data: the shared base 0..3 (energy, capacity, mechanical rate, mode) plus the effective
-	 * generation rate on channel 4. The split exists because channel 2 drives the rotor's spin speed —
-	 * the full reasoning lives on {@link WindMillBlockEntity}'s data javadoc.
-	 */
-	private final ContainerData stormWindMillData = new ContainerData() {
-		@Override
-		public int get(int index) {
-			return index == RATE_CHANNEL
-					? effectiveRate
-					: StormWindMillBlockEntity.this.dataAccess.get(index);
-		}
-
-		@Override
-		public void set(int index, int value) {
-			// Channel 4 is a server-authoritative projection: it is recomputed every tick from the
-			// world and the config, so nothing writes it back through the ContainerData.
-			if (index != RATE_CHANNEL) {
-				StormWindMillBlockEntity.this.dataAccess.set(index, value);
-			}
-		}
-
-		@Override
-		public int getCount() {
-			return DATA_COUNT;
-		}
-	};
+	/** Width of {@link #getDataAccess()}, which the menu's client stub sizes itself from (MOD-235). */
+	public static final int DATA_COUNT = Channel.values().length;
 
 	@Override
-	public ContainerData getDataAccess() {
-		return stormWindMillData;
+	protected SyncChannels createChannels() {
+		return channels(Channel.class)
+				.read(Channel.RATE, () -> effectiveRate)
+				.build();
 	}
 
 	@Override
 	public boolean canPlaceItem(int slot, ItemStack stack) {
 		// MOD-385: accepts every rotor grade via the shared tag (see ModTags.Items.WINDMILL_ROTORS).
 		return slot == ROTOR_SLOT && stack.is(ModTags.Items.WINDMILL_ROTORS);
-	}
-
-	@Override
-	public Component getDisplayName() {
-		return Component.translatable("block.alaindustrial.storm_wind_mill");
 	}
 
 	@Override

@@ -1,11 +1,11 @@
 package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
-import dev.alaindustrial.core.energy.EnergyRole;
+import dev.alaindustrial.block.entity.machine.SyncChannels;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.core.heat.HeatConsumer;
 import dev.alaindustrial.core.heat.HeatSource;
-import dev.alaindustrial.core.heat.WorldHeatSources;
+import dev.alaindustrial.core.machine.MachineRates;
 import dev.alaindustrial.menu.ThermalCentrifugeMenu;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
 import dev.alaindustrial.recipe.ProcessingRecipeInput;
@@ -14,7 +14,6 @@ import dev.alaindustrial.registry.ModRecipes;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -62,13 +61,6 @@ public final class ThermalCentrifugeBlockEntity extends MachineBlockEntity
 	public static final int OUTPUT_SLOT = 1;
 	public static final int SLOT_COUNT = 2;
 
-	/** Six-wide data: base 0..3 plus spin permille and status. */
-	public static final int DATA_COUNT = MachineBlockEntity.DATA_COUNT + 2;
-	/** Rotor speed as permille of a full spin-up — the wire format for the screen and the renderer. */
-	public static final int DATA_SPIN = 4;
-	/** {@link ThermalCentrifugeStatus} ordinal. */
-	public static final int DATA_STATUS = 5;
-
 	private static final int[] NO_SLOTS = new int[0];
 
 	/**
@@ -94,7 +86,7 @@ public final class ThermalCentrifugeBlockEntity extends MachineBlockEntity
 	public ThermalCentrifugeBlockEntity(BlockPos pos, BlockState state) {
 		super(ModContent.THERMAL_CENTRIFUGE_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT,
 				Config.machineBuffer, EnergyTier.LV.maxVoltage(), 0L);
-		this.maxProgress = Config.scaledDuration(Config.thermalCentrifugeDuration);
+		this.maxProgress = MachineRates.duration(Config.thermalCentrifugeDuration, Config.globalMachineSpeedMultiplier);
 	}
 
 	private static int spinupTicks() {
@@ -157,30 +149,39 @@ public final class ThermalCentrifugeBlockEntity extends MachineBlockEntity
 			return spinUp(euPerTick);
 		}
 
-		boolean canWork = status == ThermalCentrifugeStatus.READY && energy.getAmount() >= euPerTick;
+		boolean ready = status == ThermalCentrifugeStatus.READY;
+		boolean canWork = ready && energy.getAmount() >= euPerTick;
+		// Resilient Cycle (MOD-483, here since MOD-712) may run an operation tick the buffer cannot pay for,
+		// so the heat gate asks the same question the spend below will: a coasting tick still pays the heater.
+		boolean runs = canWork || OperationEnergy.coasts(this, level, ready);
 		// Discover, then commit: a competing draw can empty the heater between the two, and progress must
 		// never advance on a heat tick nobody paid for.
-		if (canWork && !WorldHeatSources.consumeForProgress(level, pos, heat, overclockerCount())) {
+		if (runs && !WorldHeatSources.consumeForProgress(level, pos, heat, overclockerCount())) {
 			canWork = false;
+			runs = false;
 			setStatus(ThermalCentrifugeStatus.HEATER_COLD);
 		}
 		updateLit(canWork);
 
-		if (!canWork) {
-			return coast();
-		}
+		return runs ? operate(level, recipe, result, euPerTick, canWork, ready) : coast();
+	}
 
+	/**
+	 * One operation tick, already known to run — paid ({@code paid}), or coasting as {@link #onServerTick}
+	 * decided (the heater has only touched its own buffer since, so the spend reaches the same verdict).
+	 */
+	private int operate(Level level, AlaProcessingRecipe recipe, ItemStack result, int euPerTick, boolean paid,
+			boolean ready) {
 		// MOD-125/MOD-440: every branch of this tick reports the draw it actually decided on — the
 		// working rate here, the ramp rate in spinUp, the idle trickle in coast, 0 when stopped.
-		recordEuRate(euPerTick);
-		energy.drainInternal(euPerTick);
+		recordEuRate(paid ? euPerTick : 0);
+		spendOperationEnergy(level, euPerTick, paid, ready);
 		progress++;
 		if (progress >= maxProgress) {
 			progress = 0;
 			recipe.consume(List.of(items.get(INPUT_SLOT)));
 			addOutput(OUTPUT_SLOT, result);
-			recordItemProcessed();
-			creditUsefulWork(level, (long) euPerTick * maxProgress);
+			completeOperation(level, (long) euPerTick * maxProgress);
 		}
 		setChanged();
 		return 0;
@@ -306,11 +307,6 @@ public final class ThermalCentrifugeBlockEntity extends MachineBlockEntity
 	}
 
 	@Override
-	public EnergyRole energyRoleForFace(Direction worldFace) {
-		return facingAwareRole(worldFace, EnergyRole.IN);
-	}
-
-	@Override
 	public boolean canPlaceItem(int slot, ItemStack stack) {
 		return slot == INPUT_SLOT;
 	}
@@ -348,43 +344,26 @@ public final class ThermalCentrifugeBlockEntity extends MachineBlockEntity
 	}
 
 	@Override
-	protected void loadAdditional(ValueInput input) {
-		super.loadAdditional(input);
+	protected void loadMachineData(ValueInput input) {
+		super.loadMachineData(input);
 		spin = Math.max(0, Math.min(input.getIntOr("Spin", 0), spinupTicks()));
 	}
 
-	private final ContainerData centrifugeData = new ContainerData() {
-		@Override
-		public int get(int index) {
-			return switch (index) {
-				case DATA_SPIN -> spinPermille();
-				case DATA_STATUS -> status.ordinal();
-				default -> ThermalCentrifugeBlockEntity.this.dataAccess.get(index);
-			};
-		}
+	/**
+	 * GUI sync channels (MOD-712, BE-7): the base four, the rotor speed in permille and the
+	 * {@link ThermalCentrifugeStatus} ordinal; both derived and read-only.
+	 */
+	public enum Channel { ENERGY, CAPACITY, PROGRESS, MAX_PROGRESS, SPIN, STATUS }
 
-		@Override
-		public void set(int index, int value) {
-			// Both readout channels are derived and server-authoritative.
-			if (index < DATA_SPIN) {
-				ThermalCentrifugeBlockEntity.this.dataAccess.set(index, value);
-			}
-		}
-
-		@Override
-		public int getCount() {
-			return DATA_COUNT;
-		}
-	};
+	/** Width of {@link #getDataAccess()}, which the menu's client stub sizes itself from (MOD-235). */
+	public static final int DATA_COUNT = Channel.values().length;
 
 	@Override
-	public ContainerData getDataAccess() {
-		return centrifugeData;
-	}
-
-	@Override
-	public Component getDisplayName() {
-		return Component.translatable("block.alaindustrial.thermal_centrifuge");
+	protected SyncChannels createChannels() {
+		return channels(Channel.class)
+				.read(Channel.SPIN, () -> spinPermille())
+				.read(Channel.STATUS, () -> status.ordinal())
+				.build();
 	}
 
 	@Override

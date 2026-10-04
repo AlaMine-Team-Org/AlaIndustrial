@@ -3,7 +3,9 @@ package dev.alaindustrial.item.tool;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.KokSagyzBlock;
 import dev.alaindustrial.block.KokSagyzRoots;
-import dev.alaindustrial.core.crop.CropMaturity;
+import dev.alaindustrial.client.ServerBalance;
+import dev.alaindustrial.block.entity.CropMaturity;
+import dev.alaindustrial.item.ToolConfig;
 import dev.alaindustrial.registry.ModSounds;
 import dev.alaindustrial.registry.ModTags;
 import java.util.ArrayList;
@@ -159,7 +161,7 @@ public class ScytheItem extends Item {
 	@Override
 	public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
 			Consumer<Component> adder, TooltipFlag flag) {
-		double chance = ScytheBonus.effectiveChance(profile.bonusSeedChance(), Config.scytheBonusSeedMultiplier);
+		double chance = ScytheBonus.effectiveChance(profile.bonusSeedChance(), ServerBalance.scytheBonusSeedMultiplier());
 		if (chance <= 0.0) {
 			return;
 		}
@@ -285,7 +287,7 @@ public class ScytheItem extends Item {
 		if (player.getAbilities().instabuild || !(state.getBlock() instanceof CropBlock)) {
 			return;
 		}
-		double chance = ScytheBonus.effectiveChance(profile.bonusSeedChance(), Config.scytheBonusSeedMultiplier);
+		double chance = ScytheBonus.effectiveChance(profile.bonusSeedChance(), ToolConfig.scytheBonusSeedMultiplier);
 		if (chance <= 0.0 || level.getRandom().nextDouble() >= chance) {
 			return;
 		}

@@ -47,6 +47,12 @@ public abstract class AbstractT2WindMillScreen<M extends MachineMenu & WindMillR
 		this.inventoryLabelY = 84;
 	}
 
+	/** The energy bar and its tooltip, drawn by the base (MOD-716). */
+	@Override
+	protected EnergyBarSpec energyBar() {
+		return EnergyBarSpec.LEFT_WINDMILL;
+	}
+
 	@Override
 	protected void drawMachineFrame(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
 		int x = this.leftPos;
@@ -55,8 +61,6 @@ public abstract class AbstractT2WindMillScreen<M extends MachineMenu & WindMillR
 
 		blitStaticFrame(graphics);
 
-		// Energy bar fill (bottom-up) via the shared MachineScreen helper.
-		renderEnergyBar(graphics, EnergyBarSpec.LEFT_WINDMILL);
 
 		int mode = this.menu.getMode();
 		boolean generating = mode == WindMillBlockEntity.MODE_BREEZE
@@ -69,9 +73,12 @@ public abstract class AbstractT2WindMillScreen<M extends MachineMenu & WindMillR
 					STATUS_FRAME_W, STATUS_FRAME_H,
 					TEX_SIZE, TEX_SIZE);
 		}
+	}
 
-		// Running: show the current output (MOD-346). Idle: explain why so the player can fix it.
-		drawStatusText(graphics, mode, x, y);
+	// Running: show the current output (MOD-346). Idle: explain why so the player can fix it.
+	@Override
+	protected void drawFrameText(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+		drawStatusText(graphics, this.menu.getMode(), this.leftPos, this.topPos);
 	}
 
 	/** Centred status row: production while generating, the idle reason otherwise. */
@@ -98,10 +105,4 @@ public abstract class AbstractT2WindMillScreen<M extends MachineMenu & WindMillR
 		return key == null ? null : Component.translatable(key);
 	}
 
-	@Override
-	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-		super.extractTooltip(graphics, mouseX, mouseY);
-		// Hovering the energy bar shows the exact buffer as "X / max EU" (R-GUI-14).
-		renderEnergyTooltip(graphics, mouseX, mouseY, EnergyBarSpec.LEFT_WINDMILL);
-	}
 }

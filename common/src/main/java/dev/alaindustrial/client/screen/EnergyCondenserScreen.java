@@ -45,6 +45,16 @@ public class EnergyCondenserScreen extends MachineScreen<EnergyCondenserMenu> {
 	private static final int CX = 88, CY = 46;
 	private static final int FILL_R_OUT = 31, FILL_R_IN = 24;
 
+	/** Top edge of the output slot, which the click area must stop above. */
+	private static final int OUTPUT_SLOT_TOP = 38;
+
+	/**
+	 * Click area of the recipe viewers (MOD-716): the ring gauge, but only its band ABOVE the output slot. The
+	 * full ring box would swallow the slot, and a click area covering a slot steals its click.
+	 */
+	public static final GuiRect PROGRESS_AREA = new GuiRect(CX - FILL_R_OUT, CY - FILL_R_OUT, 2 * FILL_R_OUT + 1,
+			OUTPUT_SLOT_TOP - (CY - FILL_R_OUT));
+
 	// Tier pips, likewise baked at these coordinates — inside the ring, under the slot.
 	private static final int PIP_Y = 60;
 	private static final int[] PIP_XS = {79, 86, 93};

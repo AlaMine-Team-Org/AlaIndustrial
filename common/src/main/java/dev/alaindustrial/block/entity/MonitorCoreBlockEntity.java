@@ -384,8 +384,8 @@ public class MonitorCoreBlockEntity extends EnergyBlockEntity implements Contain
 	}
 
 	@Override
-	protected void loadAdditional(ValueInput input) {
-		super.loadAdditional(input);
+	protected void loadMachineData(ValueInput input) {
+		super.loadMachineData(input);
 		cards.clear();
 		ContainerHelper.loadAllItems(input, cards);
 	}

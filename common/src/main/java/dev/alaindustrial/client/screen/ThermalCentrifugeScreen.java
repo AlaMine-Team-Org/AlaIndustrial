@@ -25,6 +25,9 @@ public class ThermalCentrifugeScreen extends ProgressMachineScreen<ThermalCentri
 			82, 38,           // dest x/y in the 176×166 frame, between the two slots
 			false);
 
+	/** Click area of the recipe viewers (MOD-716): exactly the progress sprite. */
+	public static final GuiRect PROGRESS_AREA = PROGRESS.area();
+
 	/** Rotor gauge: a vertical bar mirroring the energy bar on the opposite side of the frame. */
 	private static final int SPIN_X = 149;
 	private static final int SPIN_BOTTOM = 64;
@@ -45,13 +48,12 @@ public class ThermalCentrifugeScreen extends ProgressMachineScreen<ThermalCentri
 	private static final int STATUS_BAND_LEFT = 32;
 	private static final int STATUS_BAND_RIGHT = 146;
 
-	public ThermalCentrifugeScreen(ThermalCentrifugeMenu menu, Inventory inventory, Component title) {
-		super(menu, inventory, title, PROGRESS);
-	}
+	/** Atlas, energy bar and progress sprite: the whole declared frame (MOD-716, CLI-3). */
+	private static final MachineLayout LAYOUT = MachineLayout.of(TEXTURE, EnergyBarSpec.LEFT)
+			.withProgress(PROGRESS);
 
-	@Override
-	protected Identifier texture() {
-		return TEXTURE;
+	public ThermalCentrifugeScreen(ThermalCentrifugeMenu menu, Inventory inventory, Component title) {
+		super(menu, inventory, title, LAYOUT);
 	}
 
 	@Override
@@ -88,6 +90,6 @@ public class ThermalCentrifugeScreen extends ProgressMachineScreen<ThermalCentri
 		}
 		Component line = Component.translatable(status.translationKey()).withStyle(ChatFormatting.DARK_RED);
 		// The band is this screen's own, narrower than the family default: see STATUS_BAND_LEFT/RIGHT above.
-		drawFittedStatus(graphics, line, STATUS_Y, STATUS_BAND_LEFT, STATUS_BAND_RIGHT, 0xFF404040);
+		drawFittedStatus(graphics, line, STATUS_Y, STATUS_BAND_LEFT, STATUS_BAND_RIGHT, GuiStyle.LABEL);
 	}
 }

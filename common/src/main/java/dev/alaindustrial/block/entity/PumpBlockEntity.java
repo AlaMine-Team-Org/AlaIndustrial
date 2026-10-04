@@ -2,7 +2,7 @@ package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.HorizontalMachineBlock;
-import dev.alaindustrial.core.energy.EnergyRole;
+import dev.alaindustrial.block.entity.machine.SyncChannels;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.core.energy.EnergyTransactions;
 import dev.alaindustrial.core.fluid.FluidAmounts;
@@ -20,7 +20,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.IdMap;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -130,18 +129,6 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 		return !fluid.isEmpty();
 	}
 
-	/**
-	 * EU consumer: every face except {@code FACING} accepts energy (R-NRG-03), none emits. The front
-	 * face is the fluid-intake side and is energy-inert, matching the {@code HorizontalMachineBlock}
-	 * cable rule ({@code FACING} draws no cable arm). Fluid intake is a separate subsystem and keeps
-	 * reading {@code FACING} directly ({@link #acquireFluid}), so this only changes the energy/cable
-	 * contract on that one face — it does not change which way the pump draws fluid from.
-	 */
-	@Override
-	public EnergyRole energyRoleForFace(Direction worldFace) {
-		return facingAwareRole(worldFace, EnergyRole.IN);
-	}
-
 	/** Every face exposes the same single tank — the pump has no per-face fluid restriction. */
 	@Override
 	public FluidPort fluidPort(Direction side) {
@@ -152,6 +139,7 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 	protected int onServerTick(Level level, BlockPos pos, BlockState state) {
 		boolean worked = false;
 		int euPerBucket = Math.max(1, Config.pumpEuPerBucket);
+		long euSpent = 0L;
 
 		// 1) Container handling (no EU cost — manual refill/drain, not pumping): top row empties a full
 		//    container INTO the tank; bottom row fills an empty container FROM the tank. Buckets, our
@@ -170,7 +158,7 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 			if (scanCooldown <= 0) {
 				acquiredFrom = acquireFluid(level, pos, state);
 				if (acquiredFrom != null) {
-					energy.drainInternal(euPerBucket);
+					euSpent = energy.drainInternal(euPerBucket);
 					// MOD-264: pumping credits NO mastery. A pump runs unattended, so one AFK session on an
 					// oil vein (~3 677 buckets average, ~5 497 max) used to hand out that many XP points at
 					// the full euPerXp rate — enough to skip one or two ranks outright, while a hand-run
@@ -203,6 +191,9 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 			litHoldTicks--;
 		}
 		updateLit(litHoldTicks > 0);
+		// MOD-692: the statistics panel's "now" line is what this tick paid — a bucket's price on the tick
+		// it pumps, 0 between buckets. Working time is the ticks a bucket was actually bought.
+		recordEuRate((int) Math.min(Integer.MAX_VALUE, euSpent));
 		if (worked) {
 			setChanged();
 		}
@@ -338,56 +329,26 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 	}
 
 	/**
-	 * Seven-wide data — hides {@link MachineBlockEntity#DATA_COUNT} so {@code PumpBlockEntity.DATA_COUNT}
-	 * names this machine's width for the bridge below and for {@code PumpMenu}'s client stub (MOD-235).
-	 */
-	public static final int DATA_COUNT = 7;
-
-	/**
-	 * Seven-wide sync bridge: base channels 0..3 (energy/capacity/progress/maxProgress) plus tank permille
-	 * (4), permille denominator 1000 (5), and the fluid's registry id (6). Channels 4..6 are derived,
-	 * server-authoritative projections of the tank — nothing writes them back.
+	 * GUI sync channels (MOD-712, BE-7): the base four, the tank level in permille, the permille's
+	 * denominator (1000, so the screen needs no constant of its own) and the fluid's registry id (MOD-099,
+	 * {@link IdMap#DEFAULT} = empty) — the screen derives the fluid's colour from the id: a packed ARGB is
+	 * 32 bits and would arrive truncated (lava's red came through as 0). All three are read-only.
 	 *
-	 * <p>MOD-099: channel 6 is the fluid's {@link BuiltInRegistries#FLUID} registry id
-	 * ({@link IdMap#DEFAULT} = empty) so the client can resolve any fluid, not just lava/water.
-	 *
-	 * <p><b>Every channel must fit a signed 16-bit short.</b> {@code ClientboundContainerSetDataPacket}
-	 * writes each value with {@code FriendlyByteBuf.writeShort} and reads it back with {@code readShort}
-	 * (verified against the 26.2 bytecode), so a value outside {@link Short#MIN_VALUE}..{@link Short#MAX_VALUE}
-	 * silently arrives truncated to its low 16 bits. This is why the tank level is projected as a permille
-	 * (0..1000) rather than raw mB, and why the fluid's display <em>colour</em> is <b>not</b> sent here: a
-	 * packed ARGB is a 32-bit value and always truncates (lava's {@code 0xFFFF0000} arrived as {@code 0},
-	 * water's {@code 0xFF4040FF} as alpha-zero). {@code PumpScreen} derives the colour from channel 6
-	 * instead — it is a pure function of the fluid type, so it needs no syncing at all.
+	 * Every channel is a signed short on the wire (see {@link SyncChannels}), so a tank travels as a
+	 * permille and a fluid as its registry id; the screen derives texture, tint and name from the id.
 	 */
-	private final ContainerData pumpData = new ContainerData() {
-		@Override
-		public int get(int index) {
-			return switch (index) {
-				case 4 -> fluidTank.amount <= 0 ? 0
-						: Math.max(1, (int) Math.min(fluidTank.amount * 1000L / TANK_CAPACITY, 1000));
-				case 5 -> 1000;
-				case 6 -> fluidTank.fluidSyncId();
-				default -> PumpBlockEntity.this.dataAccess.get(index);
-			};
-		}
+	public enum Channel { ENERGY, CAPACITY, PROGRESS, MAX_PROGRESS, LEVEL_PERMILLE, PERMILLE_MAX, FLUID_ID }
 
-		@Override
-		public void set(int index, int value) {
-			if (index != 4 && index != 5 && index != 6) {
-				PumpBlockEntity.this.dataAccess.set(index, value);
-			}
-		}
-
-		@Override
-		public int getCount() {
-			return DATA_COUNT;
-		}
-	};
+	/** Width of {@link #getDataAccess()}, which the menu's client stub sizes itself from (MOD-235). */
+	public static final int DATA_COUNT = Channel.values().length;
 
 	@Override
-	public ContainerData getDataAccess() {
-		return pumpData;
+	protected SyncChannels createChannels() {
+		return channels(Channel.class)
+				.read(Channel.LEVEL_PERMILLE, () -> SyncChannels.permille(fluidTank.amount, TANK_CAPACITY))
+				.read(Channel.PERMILLE_MAX, () -> 1000)
+				.read(Channel.FLUID_ID, () -> fluidTank.fluidSyncId())
+				.build();
 	}
 
 	/**
@@ -430,11 +391,6 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 	}
 
 	@Override
-	public Component getDisplayName() {
-		return Component.translatable("block.alaindustrial.pump");
-	}
-
-	@Override
 	public AbstractContainerMenu createMenu(int syncId, Inventory inventory, Player player) {
 		return new PumpMenu(syncId, inventory, this, ContainerLevelAccess.create(getLevel(), getBlockPos()));
 	}
@@ -451,8 +407,8 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 	}
 
 	@Override
-	protected void loadAdditional(ValueInput input) {
-		super.loadAdditional(input);
+	protected void loadMachineData(ValueInput input) {
+		super.loadMachineData(input);
 		// Two legacy fallbacks the shared tank loader takes as arguments (MOD-556):
 		// MOD-028 — when the mB-valued key is absent/zero, use the Fabric v0.1.0 droplet-valued
 		// "FluidTank" key, converted ÷81 (81000 droplets/bucket ÷ 81 = 1000 mB/bucket, exact);

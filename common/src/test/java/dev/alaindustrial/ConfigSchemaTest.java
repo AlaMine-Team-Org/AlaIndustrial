@@ -3,11 +3,14 @@ package dev.alaindustrial;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import dev.alaindustrial.config.ConfigSchema;
+import dev.alaindustrial.config.KnobEntry;
+import dev.alaindustrial.config.Section;
+import dev.alaindustrial.core.environment.GeneratorConfig;
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -88,13 +91,13 @@ class ConfigSchemaTest {
 				+ "}");
 
 		assertEquals(Config.LoadResult.LOADED, Config.loadFrom(f), "an old flat file still loads");
-		assertEquals(42, Config.solarEuPerTick, "int value survives the flat → sectioned migration");
-		assertEquals(3.25f, Config.windMillRainFactor, 0.0f, "float value survives the migration");
+		assertEquals(42, GeneratorConfig.solarEuPerTick, "int value survives the flat → sectioned migration");
+		assertEquals(3.25f, GeneratorConfig.windMillRainFactor, 0.0f, "float value survives the migration");
 		assertEquals(0.077, Config.copperCableLossPerBlock, 0.0, "double value survives the migration");
 		assertFalse(Config.oilBurns, "boolean value survives the migration");
 
 		String body = Files.readString(f);
-		assertTrue(body.contains("\"schemaVersion\": " + Config.SCHEMA_VERSION),
+		assertTrue(body.contains("\"schemaVersion\": " + ConfigSchema.VERSION),
 				"the rewritten file records the schema version it is now in");
 		assertTrue(body.contains("\"generators\": {"), "the rewritten file is sectioned");
 		assertEquals("generators", keyToSection(body).get("solarEuPerTick"),
@@ -117,7 +120,7 @@ class ConfigSchemaTest {
 		assertEquals(Config.LoadResult.LOADED, Config.loadFrom(f), "second load reads the canonical form");
 		assertEquals(afterFirst, Files.readString(f),
 				"a canonical, current-version file must be left byte-identical on reload");
-		assertEquals(5, Config.solarEuPerTick, "and the value round-trips through the sectioned form");
+		assertEquals(5, GeneratorConfig.solarEuPerTick, "and the value round-trips through the sectioned form");
 	}
 
 	/**
@@ -136,11 +139,11 @@ class ConfigSchemaTest {
 		assertEquals(Config.LoadResult.DEFAULTS_WRITTEN, Config.loadFrom(f));
 
 		String body = Files.readString(f);
-		assertTrue(body.contains("\"schemaVersion\": " + Config.SCHEMA_VERSION),
+		assertTrue(body.contains("\"schemaVersion\": " + ConfigSchema.VERSION),
 				"a freshly written file states its schema version");
 		assertTrue(body.contains("\"_comment_schemaVersion\": \""),
 				"and explains what that version means");
-		for (Config.Section section : Config.Section.values()) {
+		for (Section section : Section.values()) {
 			assertTrue(body.contains("\"" + section.id + "\": {"),
 					"section '" + section.id + "' is written even on a fresh file");
 			assertTrue(body.contains("\"_comment_" + section.id + "\": \""),
@@ -167,14 +170,14 @@ class ConfigSchemaTest {
 	@Test
 	void futureSchemaVersion_appliesNothingAndFallsBackToCompiledDefaults(@TempDir Path dir)
 			throws IOException {
-		Config.solarEuPerTick = 77;
-		Config.windMillRainFactor = 9.5f;
+		GeneratorConfig.solarEuPerTick = 77;
+		GeneratorConfig.windMillRainFactor = 9.5f;
 		Config.copperCableLossPerBlock = 0.5;
 		Config.oilBurns = false;
 
 		Path f = dir.resolve("alaindustrial.json");
 		String written = "{\n"
-				+ "  \"schemaVersion\": " + (Config.SCHEMA_VERSION + 1) + ",\n"
+				+ "  \"schemaVersion\": " + (ConfigSchema.VERSION + 1) + ",\n"
 				+ "  \"generators\": { \"solarEuPerTick\": 123, \"windMillRainFactor\": 8.5 },\n"
 				+ "  \"cables\": { \"copperCableLossPerBlock\": 0.9 },\n"
 				+ "  \"world\": { \"oilBurns\": true }\n"
@@ -186,9 +189,9 @@ class ConfigSchemaTest {
 		// which of the two happened.
 		assertEquals(Config.LoadResult.SCHEMA_TOO_NEW, Config.loadFrom(f),
 				"a newer schema is reported as its own outcome, not quietly accepted and not as a parse error");
-		assertNotEquals(123, Config.solarEuPerTick, "the newer file's value must NOT be applied");
-		assertEquals(1, Config.solarEuPerTick, "int falls back to the value compiled into this build");
-		assertEquals(1.5f, Config.windMillRainFactor, 0.0f, "float falls back to its compiled default");
+		assertNotEquals(123, GeneratorConfig.solarEuPerTick, "the newer file's value must NOT be applied");
+		assertEquals(1, GeneratorConfig.solarEuPerTick, "int falls back to the value compiled into this build");
+		assertEquals(1.5f, GeneratorConfig.windMillRainFactor, 0.0f, "float falls back to its compiled default");
 		assertEquals(0.02, Config.copperCableLossPerBlock, 0.0, "double falls back to its compiled default");
 		assertTrue(Config.oilBurns, "boolean falls back to its compiled default");
 		assertEquals(written, Files.readString(f),
@@ -202,12 +205,12 @@ class ConfigSchemaTest {
 	 */
 	@Test
 	void nonNumericSchemaVersion_isRejected_andNothingIsApplied(@TempDir Path dir) throws IOException {
-		int solarBefore = Config.solarEuPerTick;
+		int solarBefore = GeneratorConfig.solarEuPerTick;
 		Path f = dir.resolve("alaindustrial.json");
 		Files.writeString(f, "{ \"schemaVersion\": \"one\", \"generators\": { \"solarEuPerTick\": 8 } }");
 
 		assertEquals(Config.LoadResult.ERROR, Config.loadFrom(f));
-		assertEquals(solarBefore, Config.solarEuPerTick, "no field applied on a rejected load");
+		assertEquals(solarBefore, GeneratorConfig.solarEuPerTick, "no field applied on a rejected load");
 	}
 
 	// --- section-shaped reads --------------------------------------------------------------------
@@ -220,15 +223,16 @@ class ConfigSchemaTest {
 	 */
 	@Test
 	void wrongTypeInsideASection_leavesEverySectionUnapplied(@TempDir Path dir) throws IOException {
-		int solarBefore = Config.solarEuPerTick;
+		int solarBefore = GeneratorConfig.solarEuPerTick;
 		int machineBefore = Config.machineEuPerTick;
 		Path f = dir.resolve("alaindustrial.json");
-		Files.writeString(f, "{ \"schemaVersion\": " + Config.SCHEMA_VERSION + ","
+		Files.writeString(f, "{ \"schemaVersion\": " + ConfigSchema.VERSION + ","
 				+ " \"generators\": { \"solarEuPerTick\": 9 },"
 				+ " \"machines\": { \"machineEuPerTick\": \"oops\" } }");
 
 		assertEquals(Config.LoadResult.ERROR, Config.loadFrom(f));
-		assertEquals(solarBefore, Config.solarEuPerTick, "a later section's typo does not half-apply an earlier one");
+		assertEquals(solarBefore, GeneratorConfig.solarEuPerTick,
+				"a later section's typo does not half-apply an earlier one");
 		assertEquals(machineBefore, Config.machineEuPerTick);
 	}
 
@@ -241,7 +245,7 @@ class ConfigSchemaTest {
 	void sectionThatIsNotAnObject_isRejected(@TempDir Path dir) throws IOException {
 		int machineBefore = Config.machineEuPerTick;
 		Path f = dir.resolve("alaindustrial.json");
-		Files.writeString(f, "{ \"schemaVersion\": " + Config.SCHEMA_VERSION + ","
+		Files.writeString(f, "{ \"schemaVersion\": " + ConfigSchema.VERSION + ","
 				+ " \"generators\": 5, \"machines\": { \"machineEuPerTick\": 6 } }");
 
 		assertEquals(Config.LoadResult.ERROR, Config.loadFrom(f),
@@ -256,28 +260,31 @@ class ConfigSchemaTest {
 	@Test
 	void unknownKeyAndUnknownSection_areTolerated(@TempDir Path dir) throws IOException {
 		Path f = dir.resolve("alaindustrial.json");
-		Files.writeString(f, "{ \"schemaVersion\": " + Config.SCHEMA_VERSION + ","
+		Files.writeString(f, "{ \"schemaVersion\": " + ConfigSchema.VERSION + ","
 				+ " \"generators\": { \"someRemovedField\": 123, \"solarEuPerTick\": 4 },"
 				+ " \"sectionFromAnotherEra\": { \"whatever\": 1 } }");
 
 		assertEquals(Config.LoadResult.LOADED, Config.loadFrom(f), "stray key and stray section are tolerated");
-		assertEquals(4, Config.solarEuPerTick, "the real key next to them still applies");
+		assertEquals(4, GeneratorConfig.solarEuPerTick, "the real key next to them still applies");
 	}
 
 	/**
-	 * A missing section behaves exactly like a missing key: every field in it keeps its live value.
-	 * This is what makes a hand-trimmed file (only the two sections an operator cares about) legal.
+	 * A missing section behaves exactly like a missing key: every field in it takes the default compiled
+	 * into this build, whatever the live value was before the reload (MOD-694, owner decision D8 = 3b).
+	 * A hand-trimmed file (only the sections an operator cares about) stays legal; the sections it
+	 * leaves out simply carry no override.
 	 */
 	@Test
-	void absentSection_keepsEveryFieldInIt(@TempDir Path dir) throws IOException {
+	void absentSection_takesTheBuiltinDefaultForEveryFieldInIt(@TempDir Path dir) throws IOException {
 		Config.machineEuPerTick = 6;
 		Path f = dir.resolve("alaindustrial.json");
-		Files.writeString(f, "{ \"schemaVersion\": " + Config.SCHEMA_VERSION + ","
+		Files.writeString(f, "{ \"schemaVersion\": " + ConfigSchema.VERSION + ","
 				+ " \"generators\": { \"solarEuPerTick\": 4 } }");
 
 		assertEquals(Config.LoadResult.LOADED, Config.loadFrom(f));
-		assertEquals(4, Config.solarEuPerTick, "the present section applies");
-		assertEquals(6, Config.machineEuPerTick, "a field whose whole section is absent keeps its live value");
+		assertEquals(4, GeneratorConfig.solarEuPerTick, "the present section applies");
+		assertEquals(2, Config.machineEuPerTick,
+				"a field whose whole section is absent takes the builtin default (2), not the live 6");
 	}
 
 	// --- the config shadow: a changed compiled default reaching an existing file (MOD-553) ---------
@@ -300,7 +307,7 @@ class ConfigSchemaTest {
 			double generatorWindRainFactor, double recordedWindRainFactor,
 			double cableLoss, double recordedCableLoss, boolean oilBurns, boolean recordedOilBurns) {
 		return "{\n"
-				+ "  \"schemaVersion\": " + Config.SCHEMA_VERSION + ",\n"
+				+ "  \"schemaVersion\": " + ConfigSchema.VERSION + ",\n"
 				+ "  \"generators\": { \"solarEuPerTick\": " + generatorSolar
 				+ ", \"windMillRainFactor\": " + generatorWindRainFactor + " },\n"
 				+ "  \"cables\": { \"copperCableLossPerBlock\": " + cableLoss + " },\n"
@@ -336,9 +343,9 @@ class ConfigSchemaTest {
 		Files.writeString(f, fileWithRecordedDefaults(99, 99, 9.5, 9.5, 0.9, 0.9, false, false));
 
 		assertEquals(Config.LoadResult.LOADED, Config.loadFrom(f));
-		assertEquals(1, Config.solarEuPerTick,
+		assertEquals(1, GeneratorConfig.solarEuPerTick,
 				"an int left at the default the file recorded follows this build's default");
-		assertEquals(1.5f, Config.windMillRainFactor, 0.0f, "same for a float knob");
+		assertEquals(1.5f, GeneratorConfig.windMillRainFactor, 0.0f, "same for a float knob");
 		assertEquals(0.02, Config.copperCableLossPerBlock, 0.0, "same for a double knob");
 		assertTrue(Config.oilBurns, "same for a boolean knob");
 	}
@@ -354,8 +361,8 @@ class ConfigSchemaTest {
 		Files.writeString(f, fileWithRecordedDefaults(42, 99, 3.25, 9.5, 0.077, 0.9, false, true));
 
 		assertEquals(Config.LoadResult.LOADED, Config.loadFrom(f));
-		assertEquals(42, Config.solarEuPerTick, "an operator's int survives a default change");
-		assertEquals(3.25f, Config.windMillRainFactor, 0.0f, "an operator's float survives");
+		assertEquals(42, GeneratorConfig.solarEuPerTick, "an operator's int survives a default change");
+		assertEquals(3.25f, GeneratorConfig.windMillRainFactor, 0.0f, "an operator's float survives");
 		assertEquals(0.077, Config.copperCableLossPerBlock, 0.0, "an operator's double survives");
 		assertFalse(Config.oilBurns, "an operator's boolean survives");
 	}
@@ -369,36 +376,33 @@ class ConfigSchemaTest {
 	@Test
 	void valueWithNoRecordedDefault_isKeptAsWritten(@TempDir Path dir) throws IOException {
 		Path f = dir.resolve("alaindustrial.json");
-		Files.writeString(f, "{ \"schemaVersion\": " + Config.SCHEMA_VERSION + ","
+		Files.writeString(f, "{ \"schemaVersion\": " + ConfigSchema.VERSION + ","
 				+ " \"generators\": { \"solarEuPerTick\": 42 },"
 				+ " \"builtinDefaults\": { \"daylightEuPerTick\": 4 } }");
 
 		assertEquals(Config.LoadResult.LOADED, Config.loadFrom(f));
-		assertEquals(42, Config.solarEuPerTick, "a knob the defaults block says nothing about is kept");
+		assertEquals(42, GeneratorConfig.solarEuPerTick, "a knob the defaults block says nothing about is kept");
 	}
 
 	/**
 	 * The defaults block never speaks for a key the file does not contain. A knob absent from its
-	 * section keeps its live value, even when the block records a default that happens to equal it.
-	 *
-	 * <p>"Still at the default it was saved with" is a statement about a value the operator's file
-	 * actually holds. Dropping the presence check would let the block alone trigger an adoption on a
-	 * hand-trimmed file — the one shape of file the absent-key contract exists to support.
+	 * section takes the builtin default (MOD-694, D8 = 3b) — and it does so whether or not the block
+	 * records a value for it: the absent key carries no override, so there is nothing to adopt.
 	 */
 	@Test
-	void absentKey_isNeverAdopted_evenWhenTheBlockRecordsItsValue(@TempDir Path dir) throws IOException {
-		Config.solarEuPerTick = 5;
+	void absentKey_takesTheBuiltinDefault_whateverTheBlockRecords(@TempDir Path dir) throws IOException {
+		GeneratorConfig.solarEuPerTick = 5;
 		Path f = dir.resolve("alaindustrial.json");
 		// The section omits solarEuPerTick; only the defaults block mentions it, recording the live 5.
-		Files.writeString(f, "{ \"schemaVersion\": " + Config.SCHEMA_VERSION + ","
+		Files.writeString(f, "{ \"schemaVersion\": " + ConfigSchema.VERSION + ","
 				+ " \"generators\": { \"daylightEuPerTick\": 7 },"
 				+ " \"builtinDefaults\": { \"solarEuPerTick\": 5 } }");
 
 		assertEquals(Config.LoadResult.LOADED, Config.loadFrom(f));
-		assertEquals(7, Config.daylightEuPerTick, "the key that IS in the file applies");
-		assertEquals(5, Config.solarEuPerTick,
-				"a key absent from its section keeps its live value; the defaults block does not stand in"
-						+ " for it and must not pull it to the compiled default of 1");
+		assertEquals(7, GeneratorConfig.daylightEuPerTick, "the key that IS in the file applies");
+		assertEquals(1, GeneratorConfig.solarEuPerTick,
+				"a key absent from its section is the compiled default (1); neither the live 5 nor the"
+						+ " block's recorded 5 stands in for it");
 	}
 
 	/**
@@ -410,12 +414,12 @@ class ConfigSchemaTest {
 	@Test
 	void damagedBuiltinDefaultsBlock_doesNotFailTheLoad(@TempDir Path dir) throws IOException {
 		Path f = dir.resolve("alaindustrial.json");
-		Files.writeString(f, "{ \"schemaVersion\": " + Config.SCHEMA_VERSION + ","
+		Files.writeString(f, "{ \"schemaVersion\": " + ConfigSchema.VERSION + ","
 				+ " \"generators\": { \"solarEuPerTick\": 42 },"
 				+ " \"builtinDefaults\": \"oops\" }");
 
 		assertEquals(Config.LoadResult.LOADED, Config.loadFrom(f), "a broken defaults block is tolerated");
-		assertEquals(42, Config.solarEuPerTick, "and every value in the file is kept as written");
+		assertEquals(42, GeneratorConfig.solarEuPerTick, "and every value in the file is kept as written");
 		assertTrue(Files.readString(f).contains("\"builtinDefaults\": {"),
 				"the self-heal rebuilds the block it could not read");
 	}
@@ -437,11 +441,11 @@ class ConfigSchemaTest {
 				+ "}");
 
 		assertEquals(Config.LoadResult.LOADED, Config.loadFrom(f), "a v1 file still loads");
-		assertEquals(42, Config.solarEuPerTick, "the operator's value survives the v1 -> v2 migration");
+		assertEquals(42, GeneratorConfig.solarEuPerTick, "the operator's value survives the v1 -> v2 migration");
 		assertFalse(Config.oilBurns, "and so does their boolean");
 
 		String body = Files.readString(f);
-		assertTrue(body.contains("\"schemaVersion\": " + Config.SCHEMA_VERSION),
+		assertTrue(body.contains("\"schemaVersion\": " + ConfigSchema.VERSION),
 				"the rewritten file records the schema version it is now in");
 		assertEquals("1", recordedDefault(body, "solarEuPerTick"),
 				"the migrated file records THIS build's default (1), not the operator's 42 — recording the"
@@ -457,14 +461,165 @@ class ConfigSchemaTest {
 	 */
 	@Test
 	void defaultsBlockRecordsTheCompiledDefault_notTheLiveValue(@TempDir Path dir) throws IOException {
-		Config.solarEuPerTick = 77;
+		// Driven through a LOADED file with no defaults block (MOD-694): the missing-file branch now resets
+		// the live balance before it writes, so it can no longer put a non-default live value on disk.
 		Path f = dir.resolve("alaindustrial.json");
+		Files.writeString(f, "{ \"schemaVersion\": " + ConfigSchema.VERSION + ","
+				+ " \"generators\": { \"solarEuPerTick\": 77 } }");
 
-		assertEquals(Config.LoadResult.DEFAULTS_WRITTEN, Config.loadFrom(f));
+		assertEquals(Config.LoadResult.LOADED, Config.loadFrom(f));
+		assertEquals(77, GeneratorConfig.solarEuPerTick, "precondition: the live value is not the default");
 		String body = Files.readString(f);
-		assertTrue(body.contains("\"solarEuPerTick\": 77"), "the section holds the live value");
+		assertEquals("77", valueIn(body, "generators", "solarEuPerTick"), "the section holds the live value");
 		assertEquals("1", recordedDefault(body, "solarEuPerTick"),
 				"the defaults block holds the value compiled into this build, not the live 77");
+	}
+
+	// --- the whole file deleted, or one line of it (MOD-694) ---------------------------------------
+
+	/**
+	 * Deleting the whole file and reloading is the documented way back to the defaults
+	 * ({@code docs/SERVER_CONFIG.md}: "delete the line (or the whole file)"). So the missing-file branch
+	 * must put the LIVE balance back on the compiled defaults, write exactly those, and leave every
+	 * knob recorded as untouched.
+	 *
+	 * <p>Red before MOD-694: that branch wrote the live values as they stood, so the operator's 5
+	 * survived the deletion, was written back to disk under a recorded default of 1, and from then on
+	 * counted as "edited forever" — while {@code /ala config reload} reported "wrote defaults".
+	 */
+	@Test
+	void deletedFile_reload_resetsTheLiveBalanceAndWritesTheCompiledDefaults(@TempDir Path dir)
+			throws IOException {
+		Path f = dir.resolve("alaindustrial.json");
+		Files.writeString(f, "{ \"schemaVersion\": " + ConfigSchema.VERSION + ","
+				+ " \"generators\": { \"solarEuPerTick\": 5 } }");
+		assertEquals(Config.LoadResult.LOADED, Config.loadFrom(f));
+		assertEquals(5, GeneratorConfig.solarEuPerTick, "precondition: the operator's edit is live");
+
+		Files.delete(f);
+		assertEquals(Config.LoadResult.DEFAULTS_WRITTEN, Config.loadFrom(f));
+
+		assertEquals(1, GeneratorConfig.solarEuPerTick,
+				"after the whole file is deleted the live value is the compiled default (1), not the old 5");
+		String body = Files.readString(f);
+		assertEquals("1", valueIn(body, "generators", "solarEuPerTick"),
+				"the rewritten file holds the compiled default");
+		Map<String, String> sections = keyToSection(body);
+		List<String> differ = new ArrayList<>();
+		for (Map.Entry<String, String> e : sections.entrySet()) {
+			String value = valueIn(body, e.getValue(), e.getKey());
+			String recorded = recordedDefault(body, e.getKey());
+			if (!value.equals(recorded)) {
+				differ.add(e.getKey() + ": " + value + " vs recorded " + recorded);
+			}
+		}
+		assertTrue(sections.size() > 100, "sanity: every knob is in the file, got " + sections.size());
+		assertTrue(differ.isEmpty(),
+				"a freshly written defaults file must record every knob as untouched: " + differ);
+	}
+
+	/**
+	 * The consequence that makes the reset above matter: after the file was deleted and rewritten, the
+	 * knob follows the NEXT change of the compiled default (MOD-553) instead of being pinned forever.
+	 *
+	 * <p>A changed compiled default is emulated the only way an L1 test can: the knob's line and its
+	 * recorded default are both rewritten to 9, which is the file the previous build (shipping 9) would
+	 * have written for an untouched knob. Loading it must adopt this build's 1.
+	 */
+	@Test
+	void deletedFile_reload_leavesTheKnobFollowingFutureDefaults(@TempDir Path dir) throws IOException {
+		Path f = dir.resolve("alaindustrial.json");
+		Files.writeString(f, "{ \"schemaVersion\": " + ConfigSchema.VERSION + ","
+				+ " \"generators\": { \"solarEuPerTick\": 5 } }");
+		assertEquals(Config.LoadResult.LOADED, Config.loadFrom(f));
+		Files.delete(f);
+		assertEquals(Config.LoadResult.DEFAULTS_WRITTEN, Config.loadFrom(f));
+
+		String written = Files.readString(f).replace("\r\n", "\n");
+		assertEquals(recordedDefault(written, "solarEuPerTick"), valueIn(written, "generators", "solarEuPerTick"),
+				"the rewritten knob sits at the default recorded beside it, i.e. it counts as untouched");
+		String olderBuild = written.replace("\"solarEuPerTick\": 1", "\"solarEuPerTick\": 9");
+		assertEquals(2, indexCount(olderBuild, "\"solarEuPerTick\": 9"),
+				"sanity: both the section line and the recorded default were rewritten");
+		Files.writeString(f, olderBuild);
+
+		assertEquals(Config.LoadResult.LOADED, Config.loadFrom(f));
+		assertEquals(1, GeneratorConfig.solarEuPerTick,
+				"the untouched knob adopts this build's default — MOD-553 is not switched off for it");
+		assertEquals("1", valueIn(Files.readString(f), "generators", "solarEuPerTick"),
+				"and the self-heal writes the adopted default back");
+	}
+
+	/**
+	 * The reset in the missing-file branch must not outlive a failed write: {@code ERROR} promises
+	 * "the live balance is left exactly as it was", and {@code /ala config reload} says so to the admin.
+	 * A path inside a directory that does not exist makes the write throw after the reset has run.
+	 *
+	 * <p>Red before the review fix of MOD-694: the reset stayed, so the live 5 became the default 1
+	 * while the outcome still read "live balance unchanged".
+	 */
+	@Test
+	void missingFile_failedWrite_isError_andLeavesTheLiveBalanceAsItWas(@TempDir Path dir) throws IOException {
+		Path f = dir.resolve("alaindustrial.json");
+		Files.writeString(f, "{ \"schemaVersion\": " + ConfigSchema.VERSION + ","
+				+ " \"generators\": { \"solarEuPerTick\": 5 } }");
+		assertEquals(Config.LoadResult.LOADED, Config.loadFrom(f));
+		assertEquals(5, GeneratorConfig.solarEuPerTick, "precondition: the operator's edit is live");
+
+		Path unwritable = dir.resolve("no-such-dir").resolve("alaindustrial.json");
+		assertEquals(Config.LoadResult.ERROR, Config.loadFrom(unwritable), "the write cannot succeed");
+
+		assertEquals(5, GeneratorConfig.solarEuPerTick, "ERROR leaves the live balance exactly as it was");
+		assertFalse(Files.exists(unwritable), "sanity: nothing was written");
+	}
+
+	/**
+	 * Characterization of owner decision D8 = 3b (MOD-694): an operator deletes ONE knob's line and
+	 * reloads without a restart. The absent key carries no override, so the knob returns to the default
+	 * compiled into this build — the same value a JVM restart would give — and the self-heal writes that
+	 * default back beside an equal recorded default, so the knob counts as untouched again.
+	 */
+	@Test
+	void deletedLine_liveReload_returnsTheBuiltinDefault(@TempDir Path dir) throws IOException {
+		Path f = dir.resolve("alaindustrial.json");
+		Files.writeString(f, "{ \"schemaVersion\": " + ConfigSchema.VERSION + ","
+				+ " \"generators\": { \"solarEuPerTick\": 5 } }");
+		assertEquals(Config.LoadResult.LOADED, Config.loadFrom(f));
+		assertEquals(5, GeneratorConfig.solarEuPerTick, "precondition: the operator's edit is live");
+
+		String canonical = Files.readString(f).replace("\r\n", "\n");
+		String trimmed = canonical.replace("    \"solarEuPerTick\": 5,\n", "");
+		assertNotEquals(canonical, trimmed, "sanity: the knob's line was found and removed");
+		assertNull(valueIn(trimmed, "generators", "solarEuPerTick"),
+				"sanity: the section no longer carries the key");
+		Files.writeString(f, trimmed);
+
+		assertEquals(Config.LoadResult.LOADED, Config.loadFrom(f));
+		assertEquals(1, GeneratorConfig.solarEuPerTick,
+				"a key deleted from the file returns to the builtin default (1) on a live reload");
+		String body = Files.readString(f);
+		assertEquals("1", valueIn(body, "generators", "solarEuPerTick"),
+				"the self-heal writes the builtin default back into the section");
+		assertEquals("1", recordedDefault(body, "solarEuPerTick"),
+				"beside an equal recorded default, so the knob counts as untouched again");
+	}
+
+	/**
+	 * The same through a live value edited in code rather than through the file: whatever the knob holds
+	 * before the reload, an absent key yields the builtin default. The load starts from the baseline of
+	 * compiled defaults, never from the live balance, so the result does not depend on reload history.
+	 */
+	@Test
+	void editedLiveValue_absentKey_loadFrom_isTheBuiltinDefault(@TempDir Path dir) throws IOException {
+		GeneratorConfig.solarEuPerTick = 42;
+		GeneratorConfig.daylightEuPerTick = 42;
+		Path f = dir.resolve("alaindustrial.json");
+		Files.writeString(f, "{ \"schemaVersion\": " + ConfigSchema.VERSION + ","
+				+ " \"generators\": { \"daylightEuPerTick\": 7 } }");
+
+		assertEquals(Config.LoadResult.LOADED, Config.loadFrom(f));
+		assertEquals(1, GeneratorConfig.solarEuPerTick, "the edited live 42 does not survive an absent key");
+		assertEquals(7, GeneratorConfig.daylightEuPerTick, "the present key still applies");
 	}
 
 	// --- structural guards on the layout itself ---------------------------------------------------
@@ -486,9 +641,9 @@ class ConfigSchemaTest {
 
 		List<String> wrong = new ArrayList<>();
 		int checked = 0;
-		for (Object entry : registry()) {
-			String key = fieldValue(entry, "key", String.class);
-			Config.Section declared = fieldValue(entry, "section", Config.Section.class);
+		for (KnobEntry entry : Config.REGISTRY.entries()) {
+			String key = entry.key();
+			Section declared = entry.section();
 			checked++;
 			if (!declared.id.equals(written.get(key))) {
 				wrong.add(key + ": declared '" + declared.id + "', written under '" + written.get(key) + "'");
@@ -502,23 +657,23 @@ class ConfigSchemaTest {
 	}
 
 	/**
-	 * No {@link Config.Section} may be empty. An empty section renders as {@code "name": {}} — a heading
+	 * No {@link Section} may be empty. An empty section renders as {@code "name": {}} — a heading
 	 * over nothing, which reads to an operator as "this group of knobs was removed". It is also the
 	 * shape a section left behind by a deleted feature would have.
 	 */
 	@Test
 	void everySectionHoldsAtLeastOneField() throws ReflectiveOperationException {
-		Map<Config.Section, Integer> counts = new LinkedHashMap<>();
-		for (Config.Section section : Config.Section.values()) {
+		Map<Section, Integer> counts = new LinkedHashMap<>();
+		for (Section section : Section.values()) {
 			counts.put(section, 0);
 		}
-		for (Object entry : registry()) {
-			Config.Section section = fieldValue(entry, "section", Config.Section.class);
+		for (KnobEntry entry : Config.REGISTRY.entries()) {
+			Section section = entry.section();
 			counts.merge(section, 1, Integer::sum);
 		}
 
-		List<Config.Section> empty = new ArrayList<>();
-		for (Map.Entry<Config.Section, Integer> e : counts.entrySet()) {
+		List<Section> empty = new ArrayList<>();
+		for (Map.Entry<Section, Integer> e : counts.entrySet()) {
 			if (e.getValue() == 0) {
 				empty.add(e.getKey());
 			}
@@ -530,45 +685,25 @@ class ConfigSchemaTest {
 	 * The migration ladder must have exactly one rung per version hop, in ascending order:
 	 * {@code MIGRATIONS.get(i).fromVersion() == i} and {@code MIGRATIONS.size() == SCHEMA_VERSION}.
 	 *
-	 * <p>This is the guard that makes "bump the version" safe. Raising {@link Config#SCHEMA_VERSION}
+	 * <p>This is the guard that makes "bump the version" safe. Raising {@link ConfigSchema#VERSION}
 	 * without appending a migration would leave every existing file silently unconverted; appending a
 	 * migration without raising the version would leave it never running. Both fail here instead.
 	 */
 	@Test
-	void migrationLadderCoversEveryVersionHopExactlyOnce() throws ReflectiveOperationException {
-		Field migrations = Config.class.getDeclaredField("MIGRATIONS");
-		migrations.setAccessible(true);
-		List<?> ladder = (List<?>) migrations.get(null);
+	void migrationLadderCoversEveryVersionHopExactlyOnce() {
+		List<Integer> ladder = Config.FILE.schema().migrationFromVersions();
 
-		assertEquals(Config.SCHEMA_VERSION, ladder.size(),
-				"one migration per version hop: schemaVersion " + Config.SCHEMA_VERSION
+		assertEquals(ConfigSchema.VERSION, ladder.size(),
+				"one migration per version hop: schemaVersion " + ConfigSchema.VERSION
 						+ " needs exactly that many steps (0→1, 1→2, ...)");
 		for (int i = 0; i < ladder.size(); i++) {
-			Object step = ladder.get(i);
-			Method fromVersion = step.getClass().getDeclaredMethod("fromVersion");
-			fromVersion.setAccessible(true);
-			assertEquals(i, (int) (Integer) fromVersion.invoke(step),
+			assertEquals(i, (int) ladder.get(i),
 					"migration " + i + " must convert version " + i + " → " + (i + 1)
 							+ "; the ladder is walked in list order and must be ascending and gapless");
 		}
 	}
 
 	// --- helpers ----------------------------------------------------------------------------------
-
-	/** {@code Config.FIELDS}, read reflectively — the production oracle for key and section. */
-	private static List<?> registry() throws ReflectiveOperationException {
-		Field fields = Config.class.getDeclaredField("FIELDS");
-		fields.setAccessible(true);
-		return (List<?>) fields.get(null);
-	}
-
-	/** Read a field declared on {@code ConfigField} (the shared superclass of every registry entry). */
-	private static <T> T fieldValue(Object entry, String name, Class<T> type)
-			throws ReflectiveOperationException {
-		Field field = entry.getClass().getSuperclass().getDeclaredField(name);
-		field.setAccessible(true);
-		return type.cast(field.get(entry));
-	}
 
 	/**
 	 * Map every knob in a canonical config file to the section it was written under.
@@ -578,7 +713,7 @@ class ConfigSchemaTest {
 	 * exactly one property per line — a section header sits at two spaces of indent and opens a brace,
 	 * its fields at four. {@code _comment_*} lines are skipped; they are documentation, not knobs.
 	 *
-	 * <p>Only objects whose name is an actual {@link Config.Section} id count as sections. The file also
+	 * <p>Only objects whose name is an actual {@link Section} id count as sections. The file also
 	 * carries the machine-owned {@code builtinDefaults} block at the same indent (MOD-553), and reading
 	 * its 380 entries as knobs would double every count here. Matching against the enum rather than
 	 * skipping that one name by hand also makes the guard stricter: a knob written under any object that
@@ -608,9 +743,9 @@ class ConfigSchemaTest {
 		return trimmedLine.substring(1, trimmedLine.indexOf('"', 1));
 	}
 
-	/** True when {@code name} is the json id of a declared {@link Config.Section}. */
+	/** True when {@code name} is the json id of a declared {@link Section}. */
 	private static boolean isSectionId(String name) {
-		for (Config.Section section : Config.Section.values()) {
+		for (Section section : Section.values()) {
 			if (section.id.equals(name)) {
 				return true;
 			}
@@ -624,17 +759,35 @@ class ConfigSchemaTest {
 	 * Textual for the same reason as {@link #keyToSection}: no JSON parser on the L1 classpath.
 	 */
 	private static String recordedDefault(String canonical, String key) {
+		return valueIn(canonical, "builtinDefaults", key);
+	}
+
+	/**
+	 * The value written under {@code key} inside the top-level object {@code block} (a section id or
+	 * {@code builtinDefaults}), as raw text, or {@code null} when that object has no such key. Textual
+	 * for the same reason as {@link #keyToSection}: no JSON parser on the L1 classpath.
+	 */
+	private static String valueIn(String canonical, String block, String key) {
 		boolean inBlock = false;
 		for (String rawLine : canonical.split("\n")) {
 			String line = rawLine.replace("\r", "");
 			String trimmed = line.strip();
 			if (line.startsWith("  \"") && trimmed.endsWith(": {")) {
-				inBlock = "builtinDefaults".equals(nameOf(trimmed));
+				inBlock = block.equals(nameOf(trimmed));
 			} else if (inBlock && line.startsWith("    \"") && nameOf(trimmed).equals(key)) {
 				String value = trimmed.substring(trimmed.indexOf(':') + 1).strip();
 				return value.endsWith(",") ? value.substring(0, value.length() - 1) : value;
 			}
 		}
 		return null;
+	}
+
+	/** Number of non-overlapping occurrences of {@code needle} in {@code haystack}. */
+	private static int indexCount(String haystack, String needle) {
+		int n = 0;
+		for (int i = haystack.indexOf(needle); i >= 0; i = haystack.indexOf(needle, i + needle.length())) {
+			n++;
+		}
+		return n;
 	}
 }

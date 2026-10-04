@@ -105,4 +105,16 @@ class EnergyTierTest {
 		assertEquals(Config.tierMvVoltage, EnergyTier.MV.defaultMaxVoltage());
 		assertEquals(Config.tierHvVoltage, EnergyTier.HV.defaultMaxVoltage());
 	}
+
+	/**
+	 * Same pin for the capacity half (MOD-700): {@code defaultCapacity()} has no production caller, so
+	 * nothing else notices when the enum literal and the matching {@code Config.tier<V>Capacity} default
+	 * drift apart.
+	 */
+	@Test
+	void defaultCapacity_matchesConfigDefault() {
+		assertEquals(Config.tierLvCapacity, EnergyTier.LV.defaultCapacity());
+		assertEquals(Config.tierMvCapacity, EnergyTier.MV.defaultCapacity());
+		assertEquals(Config.tierHvCapacity, EnergyTier.HV.defaultCapacity());
+	}
 }

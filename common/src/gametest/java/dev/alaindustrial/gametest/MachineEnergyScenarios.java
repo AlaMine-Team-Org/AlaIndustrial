@@ -7,6 +7,7 @@ import dev.alaindustrial.block.entity.TeleporterBlockEntity;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModDataComponents;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.Direction;
@@ -28,6 +29,61 @@ import static dev.alaindustrial.gametest.EnergyScenarioSupport.be;
  * Suite contract and shared helpers: {@link EnergyScenarioSupport}.
  */
 public final class MachineEnergyScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(MachineEnergyScenarios::maceratorProcessesRecipe, "macerator_processes_recipe")
+						.fabricId("MachineEnergyGameTest", "maceratorProcessesRecipe").ticks(20, 420),
+				RosterEntry.of(MachineEnergyScenarios::teleporterFaceRoles, "teleporter_face_roles")
+						.fabricId("TeleporterStationGameTest", "tcTele001Nrg03b_faceRoles").ticks(20, 40),
+				RosterEntry.of(MachineEnergyScenarios::teleporterDropCarriesPrivacy, "teleporter_drop_carries_privacy")
+						.fabricId("TeleporterStationGameTest", "tcTele001Brk07b_dropCarriesPrivacy").ticks(20, 40),
+				RosterEntry.of(MachineEnergyScenarios::nbtRoundTripPreservesState, "nbt_round_trip_preserves_state")
+						.fabricId("PersistenceGameTest", "rPer01b_maceratorNbtRoundTripPreservesState").ticks(20, 40),
+				RosterEntry.of(MachineEnergyScenarios::machineNoPowerNoOutput, "machine_no_power_no_output")
+						.fabricId("MachineEnergyGameTest", "machineNoPowerNoOutput").ticks(20, 420),
+				RosterEntry.of(MachineEnergyScenarios::machineFullOutputJams, "machine_full_output_jams")
+						.fabricId("MachineEnergyGameTest", "machineFullOutputJams").ticks(20, 420),
+				RosterEntry.of(MachineEnergyScenarios::machineInputSwapResetsProgress,
+								"machine_input_swap_resets_progress")
+						.fabricId("MachineEnergyGameTest", "machineInputSwapResetsProgress").ticks(20, 200),
+				RosterEntry.of(MachineEnergyScenarios::furnaceNbtRoundTrip, "furnace_nbt_round_trip")
+						.fabricId("PersistenceGameTest", "rPer01c_furnaceNbtRoundTrip").ticks(20, 40),
+				RosterEntry.of(MachineEnergyScenarios::compressorMakesCopperIngot, "compressor_makes_copper_ingot")
+						.fabricId("MachineEnergyGameTest", "compressorMakesCopperIngot").ticks(20, 420),
+				RosterEntry.of(MachineEnergyScenarios::extractorMakesFlint, "extractor_makes_flint")
+						.fabricId("MachineEnergyGameTest", "extractorMakesFlint").ticks(20, 420),
+				RosterEntry.of(MachineEnergyScenarios::furnaceSmeltsRawIron, "furnace_smelts_raw_iron")
+						.fabricId("MachineEnergyGameTest", "furnaceSmeltsRawIron").ticks(20, 420),
+				RosterEntry.of(MachineEnergyScenarios::furnaceNonRecipeNoEuSpent, "furnace_non_recipe_no_eu_spent")
+						.fabricId("MachineEnergyGameTest", "furnaceNonRecipeNoEuSpent").ticks(20, 200),
+				RosterEntry.of(MachineEnergyScenarios::compressorFullOutputJams, "compressor_full_output_jams")
+						.fabricId("MachineEnergyGameTest", "compressorFullOutputJams").ticks(20, 420),
+				RosterEntry.of(MachineEnergyScenarios::extractorInputSwapResetsProgress,
+								"extractor_input_swap_resets_progress")
+						.fabricId("MachineEnergyGameTest", "extractorInputSwapResetsProgress").ticks(20, 200),
+				RosterEntry.of(MachineEnergyScenarios::extractorBlazeRodToPowder, "extractor_blaze_rod_to_powder")
+						.fabricId("MachineEnergyGameTest", "extractorBlazeRodToPowder").ticks(20, 420),
+				RosterEntry.of(MachineEnergyScenarios::furnaceSmeltsSandToGlass, "furnace_smelts_sand_to_glass")
+						.fabricId("MachineEnergyGameTest", "furnaceSmeltsSandToGlass").ticks(20, 420),
+				RosterEntry.of(MachineEnergyScenarios::compressorIronDustToIngot, "compressor_iron_dust_to_ingot")
+						.fabricId("MachineEnergyGameTest", "compressorIronDustToIngot").ticks(20, 420),
+				RosterEntry.of(MachineEnergyScenarios::maceratorEopExactCompletes, "macerator_eop_exact_completes")
+						.fabricId("MachineEnergyGameTest", "maceratorEopExactCompletes").ticks(20, 420),
+				RosterEntry.of(MachineEnergyScenarios::maceratorEopMinusOneStalls, "macerator_eop_minus_one_stalls")
+						.fabricId("MachineEnergyGameTest", "maceratorEopMinusOneStalls").ticks(20, 420),
+				RosterEntry.of(MachineEnergyScenarios::maceratorLitTracksActive, "macerator_lit_tracks_active")
+						.fabricId("MachineEnergyGameTest", "maceratorLitTracksActive").ticks(20, 420),
+				RosterEntry.of(MachineEnergyScenarios::extractorCactusToGreenDye, "extractor_cactus_to_green_dye")
+						.fabricId("MachineEnergyGameTest", "extractorCactusToGreenDye").ticks(20, 420),
+				RosterEntry.of(MachineEnergyScenarios::extractorPumpkinToSeeds, "extractor_pumpkin_to_seeds")
+						.fabricId("MachineEnergyGameTest", "extractorPumpkinToSeeds").ticks(20, 420),
+				RosterEntry.of(MachineEnergyScenarios::maceratorIronOreDoublesDust, "macerator_iron_ore_doubles_dust")
+						.fabricId("MachineEnergyGameTest", "maceratorIronOreDoublesDust").ticks(20, 420));
+
+		private Roster() {}
+	}
 
 	private MachineEnergyScenarios() {}
 
@@ -688,6 +744,9 @@ public final class MachineEnergyScenarios {
 	 * loader too. This is the exact defect class the NeoForge energy adapter has produced before
 	 * (every face reporting both insert and extract regardless of its real role), so the Fabric-side
 	 * {@code TC-TELE-001-NRG03} is not enough on its own — the adapter is per-loader code.
+	 *
+	 * @implements TC-TELE-001-NRG03 — the station's face roles as the energy core sees them (intake on the
+	 * working faces, inert front). Body: {@link MachineEnergyScenarios#teleporterFaceRoles}.
 	 */
 	public static void teleporterFaceRoles(GameTestHelper helper) {
 		helper.setBlock(STATION, ModContent.TELEPORTER.get());
@@ -721,6 +780,10 @@ public final class MachineEnergyScenarios {
 	 * The station's privacy flag rides its dropped item through the {@code teleporter_private} data
 	 * component — the MOD-022 frozen-registry seam, which is exactly what breaks per-loader when a
 	 * component is not registered on one of them (see the battery-box STORED_ENERGY case above).
+	 *
+	 * @implements TC-TELE-001-BRK07 — the {@code teleporter_private} data component rides the dropped station
+	 * (the loader's data-component registration seam). Body: {@link
+	 *     MachineEnergyScenarios#teleporterDropCarriesPrivacy}.
 	 */
 	public static void teleporterDropCarriesPrivacy(GameTestHelper helper) {
 		helper.setBlock(STATION, ModContent.TELEPORTER.get());

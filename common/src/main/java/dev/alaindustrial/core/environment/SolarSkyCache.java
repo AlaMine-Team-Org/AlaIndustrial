@@ -1,12 +1,11 @@
 package dev.alaindustrial.core.environment;
 
-import dev.alaindustrial.Config;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 
 /**
  * Per-panel sampler that caches the {@link SolarSky.Access} and {@link SolarSky.Weather} verdicts for
- * {@link Config#solarSkySampleTicks} ticks, so a solar farm does not re-run the upward column scan
+ * {@link GeneratorConfig#solarSkySampleTicks} ticks, so a solar farm does not re-run the upward column scan
  * ({@link SolarSky#classify}) and the biome-precipitation lookup ({@link SolarSky#classifyWeather})
  * every tick. Mirrors the sampling cadence already used by {@code WindMillBlockEntity}.
  *
@@ -31,11 +30,11 @@ public final class SolarSkyCache {
 
 	/**
 	 * Refresh the verdict if the sample cadence says so and return whether this call sampled fresh
-	 * state (always true the first time, then once every {@link Config#solarSkySampleTicks} ticks).
+	 * state (always true the first time, then once every {@link GeneratorConfig#solarSkySampleTicks} ticks).
 	 * After this call {@link #sky()} and {@link #weather()} return the freshly cached values.
 	 */
 	public void sample(Level level, BlockPos pos) {
-		if (!initialised || sampleCounter % Math.max(1, Config.solarSkySampleTicks) == 0) {
+		if (!initialised || sampleCounter % Math.max(1, GeneratorConfig.solarSkySampleTicks) == 0) {
 			cachedSky = SolarSky.classify(level, pos);
 			cachedWeather = SolarSky.classifyWeather(level, pos);
 			initialised = true;

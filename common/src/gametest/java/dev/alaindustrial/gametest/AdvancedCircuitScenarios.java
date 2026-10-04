@@ -25,6 +25,17 @@ import net.minecraft.world.level.ItemLike;
  * assemble the exact grid a player would.
  */
 public final class AdvancedCircuitScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(AdvancedCircuitScenarios::recipesAndVisibility,
+								"mod299_advanced_circuit_recipes_and_visibility")
+						.fabricId("NetworkGameTest", "mod299_advancedCircuitRecipesAndVisibility").ticks(40));
+
+		private Roster() {}
+	}
+
 	private AdvancedCircuitScenarios() {
 	}
 

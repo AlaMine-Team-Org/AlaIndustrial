@@ -34,6 +34,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import dev.alaindustrial.client.ServerBalance;
+import dev.alaindustrial.core.tooltip.HasMachineTooltip;
+import dev.alaindustrial.core.tooltip.MachineTooltipSpec;
+import java.util.List;
 
 /**
  * The Sprinkler (MOD-525): a squat base with a mast, and a spinning head the block entity renderer
@@ -53,7 +57,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * <p>The screen is deliberately the smallest in the mod — one gauge and a container pair. There is
  * no energy bar because this block takes no EU, and an always-empty bar would read as a fault.
  */
-public class SprinklerBlock extends AbstractMachineBlock {
+public class SprinklerBlock extends AbstractMachineBlock implements HasMachineTooltip {
 	/** True while the tank holds enough to spray — the renderer turns the head on this. */
 	public static final BooleanProperty SPRAYING = BooleanProperty.create("spraying");
 
@@ -216,5 +220,15 @@ public class SprinklerBlock extends AbstractMachineBlock {
 					hanging ? -0.01 : 0.06 + random.nextDouble() * 0.05,
 					sin * speed);
 		}
+	}
+
+	/** Hover tooltip of this block's item (MOD-716, ADR-040). */
+	@Override
+	public MachineTooltipSpec machineTooltip() {
+		// No tier: the sprinkler takes no EU, and a voltage class on it would mislead. Both lines are sizes,
+		// not energy figures, so they show with EU numbers switched off too.
+		return new MachineTooltipSpec(null,
+				List.of(MachineTooltipSpec.plain("tank_mb", ServerBalance::sprinklerTankMb)),
+				List.of(MachineTooltipSpec.plain("range", ServerBalance::sprinklerRange)));
 	}
 }

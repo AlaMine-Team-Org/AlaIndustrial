@@ -43,6 +43,72 @@ import net.minecraft.world.phys.Vec3;
  */
 public final class CablePlacementScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(CablePlacementScenarios::mod039_cableUseReturnsPass, "mod039_cable_use_returns_pass")
+						.fabricId("CablePlacementGameTest", "mod039_cableUseReturnsPass").ticks(20, 40),
+				RosterEntry.of(CablePlacementScenarios::mod039_machineUseReturnsSuccess,
+								"mod039_machine_use_returns_success")
+						.fabricId("CablePlacementGameTest", "mod039_machineUseReturnsSuccess").ticks(20, 40),
+				RosterEntry.of(CablePlacementScenarios::mod039_rmbOnCablePlacesAdjacent,
+								"mod039_rmb_on_cable_places_adjacent")
+						.fabricId("CablePlacementGameTest", "mod039_rmbOnCablePlacesAdjacent").ticks(20, 40),
+				RosterEntry.of(CablePlacementScenarios::mod038_cableDoesNotConnectToIronChest,
+								"mod038_cable_does_not_connect_to_iron_chest")
+						.fabricId("CablePlacementGameTest", "mod038_cableDoesNotConnectToIronChest").ticks(20, 40),
+				RosterEntry.of(CablePlacementScenarios::cableConnectsOnlyToWindMillBackFace,
+								"cable_connects_only_to_wind_mill_back_face")
+						.fabricId("CablePlacementGameTest", "cableConnectsOnlyToWindMillBackFace").ticks(20, 40),
+				RosterEntry.of(CablePlacementScenarios::cableConnectsOnlyToWaterMillBackFace,
+								"cable_connects_only_to_water_mill_back_face")
+						.fabricId("CablePlacementGameTest", "cableConnectsOnlyToWaterMillBackFace").ticks(20, 40),
+				RosterEntry.of(CablePlacementScenarios::cableConnectsOnlyToBatteryBoxIOFaces,
+								"cable_connects_only_to_battery_box_io_faces")
+						.fabricId("CablePlacementGameTest", "cableConnectsOnlyToBatteryBoxIOFaces").ticks(20, 40),
+				RosterEntry.of(CablePlacementScenarios::mod061_cableDoesNotArmToGeneratorFacing,
+								"mod061_cable_does_not_arm_to_generator_facing")
+						.fabricId("CablePlacementGameTest", "mod061_cableDoesNotArmToGeneratorFacing").ticks(20, 40),
+				RosterEntry.of(CablePlacementScenarios::mod061_cableDoesNotArmToGeothermalFacing,
+								"mod061_cable_does_not_arm_to_geothermal_facing")
+						.fabricId("CablePlacementGameTest", "mod061_cableDoesNotArmToGeothermalFacing").ticks(20, 40),
+				RosterEntry.of(CablePlacementScenarios::mod061_cableDoesNotArmToMaceratorFacing,
+								"mod061_cable_does_not_arm_to_macerator_facing")
+						.fabricId("CablePlacementGameTest", "mod061_cableDoesNotArmToMaceratorFacing").ticks(20, 40),
+				RosterEntry.of(CablePlacementScenarios::mod061_cableDoesNotArmToElectricFurnaceFacing,
+								"mod061_cable_does_not_arm_to_electric_furnace_facing")
+						.fabricId("CablePlacementGameTest", "mod061_cableDoesNotArmToElectricFurnaceFacing")
+						.ticks(20, 40),
+				RosterEntry.of(CablePlacementScenarios::mod061_cableDoesNotArmToExtractorFacing,
+								"mod061_cable_does_not_arm_to_extractor_facing")
+						.fabricId("CablePlacementGameTest", "mod061_cableDoesNotArmToExtractorFacing").ticks(20, 40),
+				RosterEntry.of(CablePlacementScenarios::mod061_cableDoesNotArmToCompressorFacing,
+								"mod061_cable_does_not_arm_to_compressor_facing")
+						.fabricId("CablePlacementGameTest", "mod061_cableDoesNotArmToCompressorFacing").ticks(20, 40),
+				RosterEntry.of(CablePlacementScenarios::mod061_cableFacingInertOnNonNorthFacing,
+								"mod061_cable_facing_inert_on_non_north_facing")
+						.fabricId("CablePlacementGameTest", "mod061_cableFacingInertOnNonNorthFacing").ticks(20, 40),
+				RosterEntry.of(CablePlacementScenarios::mod061_cableDoesNotArmToPumpFacing,
+								"mod061_cable_does_not_arm_to_pump_facing")
+						.fabricId("CablePlacementGameTest", "mod061_cableDoesNotArmToPumpFacing").ticks(20, 40),
+				RosterEntry.of(CablePlacementScenarios::mod061_cableStaleFlagsReshapeOnFirstTick,
+								"mod061_cable_stale_flags_reshape_on_first_tick")
+						.fabricId("CablePlacementGameTest", "mod061_cableStaleFlagsReshapeOnFirstTick").ticks(20, 40),
+				RosterEntry.of(CablePlacementScenarios::mod071_cableDoesNotArmToSolarPanelUp,
+								"mod071_cable_does_not_arm_to_solar_panel_up")
+						.fabricId("CablePlacementGameTest", "mod071_cableDoesNotArmToSolarPanelUp").ticks(20, 40),
+				RosterEntry.of(CablePlacementScenarios::mod071_cableDoesNotArmToDaylightSolarPanelUp,
+								"mod071_cable_does_not_arm_to_daylight_solar_panel_up")
+						.fabricId("CablePlacementGameTest", "mod071_cableDoesNotArmToDaylightSolarPanelUp")
+						.ticks(20, 40),
+				RosterEntry.of(CablePlacementScenarios::mod071_cableDoesNotArmToMoonlitSolarPanelUp,
+								"mod071_cable_does_not_arm_to_moonlit_solar_panel_up")
+						.fabricId("CablePlacementGameTest", "mod071_cableDoesNotArmToMoonlitSolarPanelUp")
+						.ticks(20, 40));
+
+		private Roster() {}
+	}
+
 	private CablePlacementScenarios() {}
 
 	/** Existing cable the player aims at. */

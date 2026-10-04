@@ -1,6 +1,6 @@
 package dev.alaindustrial.item.wearable;
 
-import dev.alaindustrial.Config;
+import dev.alaindustrial.item.ToolConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
@@ -57,7 +57,7 @@ public final class JetpackLight {
 	 * a real block. A configured level of 0 disables the feature.
 	 */
 	public static void ignite(ServerLevel level, Player player, long gameTime) {
-		int lightLevel = Math.min(LightBlock.MAX_LEVEL, Config.jetpackFlightLightLevel);
+		int lightLevel = Math.min(LightBlock.MAX_LEVEL, ToolConfig.jetpackFlightLightLevel);
 		if (lightLevel <= 0) {
 			return;
 		}

@@ -11,6 +11,7 @@ import dev.alaindustrial.stats.PlayerStatsStore;
 import dev.alaindustrial.stats.PlayerStatsTracker;
 import dev.alaindustrial.teleporter.TeleportEngine;
 import dev.alaindustrial.teleporter.TeleportWarmupManager;
+import java.util.List;
 import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -29,6 +30,38 @@ import net.minecraft.world.level.block.Blocks;
  * that can be decided from the server state alone.
  */
 public final class TeleporterJumpScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(TeleporterJumpScenarios::tcTele002Fun01_costFormula, "tc_tele002_fun01_cost_formula")
+						.fabricId("TeleporterJumpGameTest", "tcTele002Fun01_costFormula").ticks(20, 40),
+				RosterEntry.of(TeleporterJumpScenarios::tcTele002Fun02_weightIgnoresArmour,
+								"tc_tele002_fun02_weight_ignores_armour")
+						.fabricId("TeleporterJumpGameTest", "tcTele002Fun02_weightIgnoresArmour").ticks(20, 40),
+				RosterEntry.of(TeleporterJumpScenarios::tcTele002Sec01_policyGate, "tc_tele002_sec01_policy_gate")
+						.fabricId("TeleporterJumpGameTest", "tcTele002Sec01_policyGate").ticks(20, 40),
+				RosterEntry.of(TeleporterJumpScenarios::tcTele002Nrg01_failedJumpCostsNothing,
+								"tc_tele002_nrg01_failed_jump_costs_nothing")
+						.fabricId("TeleporterJumpGameTest", "tcTele002Nrg01_failedJumpCostsNothing").ticks(20, 40),
+				RosterEntry.of(TeleporterJumpScenarios::tcTele002Fun03_successMovesAndCharges,
+								"tc_tele002_fun03_success_moves_and_charges")
+						.fabricId("TeleporterJumpGameTest", "tcTele002Fun03_successMovesAndCharges").ticks(20, 40),
+				RosterEntry.of(TeleporterJumpScenarios::tcTele002Nrg02_jumpCountsAsSpending,
+								"tc_tele002_nrg02_jump_counts_as_spending")
+						.fabricId("TeleporterJumpGameTest", "tcTele002Nrg02_jumpCountsAsSpending").ticks(20, 40),
+				RosterEntry.of(TeleporterJumpScenarios::tcTele002Nrg03_refusedJumpBooksNoSpending,
+								"tc_tele002_nrg03_refused_jump_books_no_spending")
+						.fabricId("TeleporterJumpGameTest", "tcTele002Nrg03_refusedJumpBooksNoSpending").ticks(20, 40),
+				RosterEntry.of(TeleporterJumpScenarios::tcTele002Sec02_remoteBindsToOwner,
+								"tc_tele002_sec02_remote_binds_to_owner")
+						.fabricId("TeleporterJumpGameTest", "tcTele002Sec02_remoteBindsToOwner").ticks(20, 40),
+				RosterEntry.of(TeleporterJumpScenarios::tcTele002Sta01_warmupStateStartsClean,
+								"tc_tele002_sta01_warmup_state_starts_clean")
+						.fabricId("TeleporterJumpGameTest", "tcTele002Sta01_warmupStateStartsClean").ticks(20, 40));
+
+		private Roster() {}
+	}
 
 	private TeleporterJumpScenarios() {}
 

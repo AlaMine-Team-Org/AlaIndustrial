@@ -1,6 +1,6 @@
 package dev.alaindustrial.block;
 
-import dev.alaindustrial.Config;
+import dev.alaindustrial.core.reactor.ReactorConfig;
 import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 
@@ -18,13 +18,13 @@ import net.minecraft.world.level.block.state.properties.BlockSetType;
  * the way every player already expects. Only the material, the sound family and the press duration
  * are ours — {@link BlockSetType#IRON} because it is metal, and it takes a hand rather than an arrow.
  *
- * <p>The press lasts {@link Config#reactorButtonPressTicks}, long enough that the pulse comfortably
+ * <p>The press lasts {@link ReactorConfig#reactorButtonPressTicks}, long enough that the pulse comfortably
  * covers the airlock's own opening logic even if the button is wired through a length of dust.
  */
 public class ReactorButtonBlock extends ButtonBlock {
 
 	public ReactorButtonBlock(Properties properties) {
-		super(BlockSetType.IRON, Config.reactorButtonPressTicks, properties);
+		super(BlockSetType.IRON, ReactorConfig.reactorButtonPressTicks, properties);
 	}
 
 }

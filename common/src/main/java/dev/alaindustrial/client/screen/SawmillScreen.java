@@ -34,6 +34,9 @@ public class SawmillScreen extends ProgressMachineScreen<SawmillMenu> {
 
 	// Four 18×18 mode buttons in a centered row below the slots (relative to leftPos/topPos).
 	private static final int BUTTON_SIZE = 18;
+
+	/** Click area of the recipe viewers (MOD-716): exactly the progress sprite. */
+	public static final GuiRect PROGRESS_AREA = PROGRESS.area();
 	private static final int BUTTON_Y = 48;
 	private static final int BUTTON_X0 = 52;
 
@@ -47,18 +50,12 @@ public class SawmillScreen extends ProgressMachineScreen<SawmillMenu> {
 	 */
 	private static final int STATUS_Y = 38;
 
-	private static final int COLOR_BG = 0xFF2B2B2B;
-	private static final int COLOR_BG_ACTIVE = 0xFF5A4A21;
-	private static final int COLOR_BORDER_ACTIVE = 0xFFFFC94A;
-	private static final int COLOR_HOVER = 0x40FFFFFF;
+	/** Atlas, energy bar and progress sprite: the whole declared frame (MOD-716, CLI-3). */
+	private static final MachineLayout LAYOUT = MachineLayout.of(TEXTURE, EnergyBarSpec.LEFT)
+			.withProgress(PROGRESS);
 
 	public SawmillScreen(SawmillMenu menu, Inventory inventory, Component title) {
-		super(menu, inventory, title, PROGRESS);
-	}
-
-	@Override
-	protected Identifier texture() {
-		return TEXTURE;
+		super(menu, inventory, title, LAYOUT);
 	}
 
 	private static int buttonX(int ordinal) {
@@ -86,25 +83,27 @@ public class SawmillScreen extends ProgressMachineScreen<SawmillMenu> {
 	 * row (they live in the top-right corner).
 	 */
 	@Override
-	public void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-		super.extractContents(graphics, mouseX, mouseY, partialTick);
+	protected void drawUnderPanels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		drawProcessingStatus(graphics, this.menu.getStatus(), STATUS_Y);
 		SawmillMode active = this.menu.getMode();
 		for (SawmillMode m : SawmillMode.values()) {
 			int bx = this.leftPos + buttonX(m.ordinal());
 			int by = this.topPos + BUTTON_Y;
 			boolean isActive = m == active;
-			graphics.fill(bx, by, bx + BUTTON_SIZE, by + BUTTON_SIZE, isActive ? COLOR_BG_ACTIVE : COLOR_BG);
+			graphics.fill(bx, by, bx + BUTTON_SIZE, by + BUTTON_SIZE,
+					isActive ? GuiStyle.BUTTON_ACTIVE : GuiStyle.BUTTON);
 			if (isActive) {
 				// 1px highlight frame around the selected mode.
-				graphics.fill(bx, by, bx + BUTTON_SIZE, by + 1, COLOR_BORDER_ACTIVE);
-				graphics.fill(bx, by + BUTTON_SIZE - 1, bx + BUTTON_SIZE, by + BUTTON_SIZE, COLOR_BORDER_ACTIVE);
-				graphics.fill(bx, by, bx + 1, by + BUTTON_SIZE, COLOR_BORDER_ACTIVE);
-				graphics.fill(bx + BUTTON_SIZE - 1, by, bx + BUTTON_SIZE, by + BUTTON_SIZE, COLOR_BORDER_ACTIVE);
+				graphics.fill(bx, by, bx + BUTTON_SIZE, by + 1, GuiStyle.BUTTON_ACTIVE_EDGE);
+				graphics.fill(bx, by + BUTTON_SIZE - 1, bx + BUTTON_SIZE, by + BUTTON_SIZE,
+						GuiStyle.BUTTON_ACTIVE_EDGE);
+				graphics.fill(bx, by, bx + 1, by + BUTTON_SIZE, GuiStyle.BUTTON_ACTIVE_EDGE);
+				graphics.fill(bx + BUTTON_SIZE - 1, by, bx + BUTTON_SIZE, by + BUTTON_SIZE,
+						GuiStyle.BUTTON_ACTIVE_EDGE);
 			}
 			// Hover tint BEFORE the icon so the item stays crisp on top (matches MachineScreen.drawPanel).
 			if (mouseX >= bx && mouseX < bx + BUTTON_SIZE && mouseY >= by && mouseY < by + BUTTON_SIZE) {
-				graphics.fill(bx, by, bx + BUTTON_SIZE, by + BUTTON_SIZE, COLOR_HOVER);
+				graphics.fill(bx, by, bx + BUTTON_SIZE, by + BUTTON_SIZE, GuiStyle.HOVER_WASH);
 			}
 			graphics.item(m.iconStack(), bx + 1, by + 1);
 		}
@@ -113,6 +112,9 @@ public class SawmillScreen extends ProgressMachineScreen<SawmillMenu> {
 	@Override
 	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		super.extractTooltip(graphics, mouseX, mouseY);
+		if (isOverOpenStatsPanel(mouseX, mouseY)) {
+			return; // the statistics panel covers the buttons and owns this area
+		}
 		SawmillMode hovered = buttonAt(mouseX, mouseY);
 		if (hovered != null) {
 			graphics.setTooltipForNextFrame(this.font, Component.translatable(hovered.translationKey()), mouseX, mouseY);
@@ -124,7 +126,8 @@ public class SawmillScreen extends ProgressMachineScreen<SawmillMenu> {
 		// Only claim a click for a mode button when the modal upgrade panel is closed — while it is open
 		// MachineScreen.mouseClicked is modal over its footprint, so defer to super. (The default layout
 		// never overlaps the panel, but the button layout is an open question; this keeps it safe if retuned.)
-		if (event.button() == InputConstants.MOUSE_BUTTON_LEFT && !this.menu.isPanelOpen()) {
+		// The open statistics panel is modal too: a button it covers must not answer (MOD-693).
+		if (event.button() == InputConstants.MOUSE_BUTTON_LEFT && frameAcceptsInput(event.x(), event.y())) {
 			SawmillMode clicked = buttonAt(event.x(), event.y());
 			if (clicked != null) {
 				if (clicked != this.menu.getMode() && this.minecraft != null && this.minecraft.gameMode != null) {

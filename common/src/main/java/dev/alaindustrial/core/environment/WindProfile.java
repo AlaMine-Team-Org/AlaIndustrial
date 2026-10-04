@@ -63,7 +63,7 @@ public final class WindProfile {
 	/**
 	 * Climb length per base point for every branch that does not configure its own — the T1 mill, the
 	 * Tempest Mill, and the Wind Gauge, which must scale to the T1 ridge to predict the T1 mill. Only
-	 * the Sky Mill overrides it ({@code Config.highAltWindMillBlocksPerBase}). Kept here rather than as
+	 * the Sky Mill overrides it ({@code GeneratorConfig.highAltWindMillBlocksPerBase}). Kept here rather than as
 	 * a literal at each of those three call sites: they are only correct while they agree, and a
 	 * gauge that disagreed with the mill would mispredict it silently.
 	 */
@@ -78,10 +78,10 @@ public final class WindProfile {
 	 * @param y            the measured Y level
 	 * @param seaLevel     the world's sea level — the calm floor the profile is measured from
 	 * @param ridgeY       where this consumer's climb segment ends (see {@link #ridgeY})
-	 * @param cloudY       the cloud deck: the windiest height ({@code Config.windCloudY})
-	 * @param deadY        the height above which only a trace remains ({@code Config.windDeadY})
-	 * @param ridgeFactor  fraction of full strength reached at {@code ridgeY} ({@code Config.windRidgeFactor})
-	 * @param traceFactor  fraction left above {@code deadY} ({@code Config.windTraceFactor})
+	 * @param cloudY       the cloud deck: the windiest height ({@code GeneratorConfig.windCloudY})
+	 * @param deadY        the height above which only a trace remains ({@code GeneratorConfig.windDeadY})
+	 * @param ridgeFactor  fraction of full strength reached at {@code ridgeY} ({@code GeneratorConfig.windRidgeFactor})
+	 * @param traceFactor  fraction left above {@code deadY} ({@code GeneratorConfig.windTraceFactor})
 	 */
 	public static float factor(int y, int seaLevel, int ridgeY, int cloudY, int deadY,
 			float ridgeFactor, float traceFactor) {

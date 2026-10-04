@@ -1,6 +1,6 @@
 package dev.alaindustrial.client.screen;
 
-import dev.alaindustrial.Config;
+import dev.alaindustrial.client.ServerBalance;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.core.waste.SlagGrade;
 import dev.alaindustrial.core.waste.WasteFraction;
@@ -94,15 +94,20 @@ public class RecyclerScreen extends MachineScreen<RecyclerMenu> {
 		return TEXTURE;
 	}
 
+	/** The energy bar and its tooltip, drawn by the base (MOD-716). */
+	@Override
+	protected EnergyBarSpec energyBar() {
+		return EnergyBarSpec.LEFT;
+	}
+
 	@Override
 	protected void drawMachineFrame(GuiGraphicsExtractor graphics, int mouseX, int mouseY,
 			float partialTick) {
 		blitStaticFrame(graphics);
-		renderEnergyBar(graphics, EnergyBarSpec.LEFT);
 
 		int x = this.leftPos;
 		int y = this.topPos;
-		int threshold = Math.max(1, Config.recyclerBatchMass);
+		int threshold = Math.max(1, ServerBalance.recyclerBatchMass());
 		int mass = this.menu.batchMass();
 
 		// Batch gauge with its own caption and a mass readout, so the player can see the target.
@@ -176,9 +181,8 @@ public class RecyclerScreen extends MachineScreen<RecyclerMenu> {
 	@Override
 	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		super.extractTooltip(graphics, mouseX, mouseY);
-		renderEnergyTooltip(graphics, mouseX, mouseY, EnergyBarSpec.LEFT);
 
-		int threshold = Math.max(1, Config.recyclerBatchMass);
+		int threshold = Math.max(1, ServerBalance.recyclerBatchMass());
 		if (isHovering(PROGRESS_X, PROGRESS_Y, PROGRESS_W, PROGRESS_H, mouseX, mouseY)) {
 			int maxProgress = Math.max(1, this.menu.getMaxProgress());
 			graphics.setTooltipForNextFrame(this.font,

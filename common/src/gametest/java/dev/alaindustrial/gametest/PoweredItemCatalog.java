@@ -2,6 +2,7 @@ package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.item.energy.ItemEnergy;
+import dev.alaindustrial.registry.ItemCapabilityRoster;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
@@ -15,15 +16,14 @@ import java.util.List;
  * Loader-neutral roster of the mod's powered items, derived from the registry rather than from a
  * hand-written list (MOD-372).
  *
- * <p>The cross-mod energy bridge (MOD-084) is wired per loader by naming every powered item in a
- * literal list — {@code StackAsEnergyStorage.register()} on Fabric,
- * {@code registerItem(Capabilities.Energy.ITEM, …)} on NeoForge. Twice those lists silently fell
- * behind the item roster: the Electric Chainsaw, Shovel, Hoe and Saber shipped with specs promising
- * foreign charging and no capability behind it. A test written against the same literal list could
- * never have caught that — it would only ever assert what the list already says.
+ * <p>The cross-mod energy bridge (MOD-084) used to be wired per loader by naming every powered item in
+ * a literal list, and twice those lists silently fell behind the item roster: the Electric Chainsaw,
+ * Shovel, Hoe and Saber shipped with specs promising foreign charging and no capability behind it. Since
+ * MOD-707 both loaders replay {@link ItemCapabilityRoster#energyItems()} (items implementing
+ * {@code PoweredItem}); a test written against that same roster would only assert what it already says.
  *
- * <p>So the roster here is computed from the one place that cannot drift: {@link ItemEnergy}, which
- * every powered item must teach about its buffer to be chargeable at all. Anything in the
+ * <p>So the roster here is computed independently, from the buffer {@link ItemEnergy} reports — an item
+ * must have one to be chargeable at all. Anything in the
  * {@code alaindustrial} namespace with a non-zero {@link ItemEnergy#capacity} is a powered item, and
  * the loader guards ({@code tcXmod001Reg01_everyPoweredItemExposesCapability} and its NeoForge twin)
  * hold the loader lists to it.
@@ -34,9 +34,9 @@ public final class PoweredItemCatalog {
 	 * Floor on the roster size — the guard against a vacuous pass.
 	 *
 	 * <p>A registry filter that silently matches nothing would let both loader guards go green while
-	 * proving nothing at all. As of MOD-372 the roster holds 15 items (pouch, battery, energy pack,
-	 * drill + diamond tip, chainsaw, shovel, hoe, saber, electromagnet, jetpack, four Fluxweave
-	 * pieces), so the floor equals the real count.
+	 * proving nothing at all. The floor was set at MOD-372, when the roster held 15 items; it has grown
+	 * since (25 at MOD-707 — the exact table is pinned by {@code PoweredItemEnergySnapshotScenarios}),
+	 * and the number is deliberately left a floor.
 	 *
 	 * <p>Adding a powered item needs no change here. <b>Lower</b> this number only when an item is
 	 * deliberately removed — that is the only case where the floor legitimately stops matching reality.
@@ -66,6 +66,21 @@ public final class PoweredItemCatalog {
 		return powered;
 	}
 
+	/**
+	 * The reverse direction of the guard (MOD-707): items the loaders expose through
+	 * {@link ItemCapabilityRoster#energyItems()} that hold no buffer — the interface hung on a finished
+	 * crystal or another item that cannot store EU. Empty when roster and buffers agree.
+	 */
+	public static List<String> rosterItemsWithoutBuffer() {
+		List<String> bad = new ArrayList<>();
+		for (Item item : ItemCapabilityRoster.energyItems()) {
+			if (ItemEnergy.capacity(new ItemStack(item)) <= 0L) {
+				bad.add(idOf(item) + " (in ItemCapabilityRoster but capacity 0)");
+			}
+		}
+		return bad;
+	}
+
 	/** Registry id of an item as a string, for failure messages. */
 	public static String idOf(Item item) {
 		return BuiltInRegistries.ITEM.getKey(item).toString();
@@ -85,8 +100,8 @@ public final class PoweredItemCatalog {
 	 * the item's own input rate, or its whole buffer if that is somehow smaller.
 	 *
 	 * <p><b>Zero means broken, not "nothing expected".</b> {@link ItemEnergy#capacity} and
-	 * {@link ItemEnergy#inputRate} are two independent {@code instanceof} cascades and can drift apart
-	 * exactly the way the two registration lists did. An item that kept its capacity branch but lost its
+	 * {@link ItemEnergy#inputRate} come from two separate methods of each {@code PoweredItem} and can
+	 * drift apart. An item that kept its capacity branch but lost its
 	 * input-rate branch is chargeable by nothing at all — not a foreign mod, not the Battery Box slot,
 	 * not the Charging Station. The loader guards must therefore treat a zero here as a defect; asserting
 	 * "inserted 0, expected 0" would pass green over a fully bricked item.

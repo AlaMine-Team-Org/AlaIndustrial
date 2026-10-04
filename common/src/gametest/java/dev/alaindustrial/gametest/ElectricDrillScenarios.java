@@ -1,9 +1,14 @@
 package dev.alaindustrial.gametest;
 
+import static dev.alaindustrial.gametest.AlaGameTestHelper.drive;
+import static dev.alaindustrial.gametest.AlaGameTestHelper.survivalPlayer;
+
 import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.gametest.compat.UseResults;
+import dev.alaindustrial.item.ToolConfig;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import java.util.List;
 import java.util.Optional;
@@ -54,8 +59,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
-import static dev.alaindustrial.gametest.AlaGameTestHelper.survivalPlayer;
-
 /**
  * Loader-neutral gametest bodies for the Electric Drill (MOD-079, suite TC-DRILL-001). Same pattern as
  * {@link EnergyPackScenarios}/{@link TemperedIronToolScenarios}: plain {@code GameTestHelper} bodies
@@ -67,6 +70,74 @@ import static dev.alaindustrial.gametest.AlaGameTestHelper.survivalPlayer;
  * calling {@link Item#getDestroySpeed}/{@link Item#mineBlock} directly, so every case is deterministic.
  */
 public final class ElectricDrillScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(ElectricDrillScenarios::fun01ChargeInBatteryBox, "drill_charge_in_battery_box")
+						.fabricId("ElectricDrillGameTest", "tcDrill001Fun01_chargeInBatteryBox").ticks(20, 80),
+				RosterEntry.of(ElectricDrillScenarios::fun02DrainOnMineBlock, "drill_drain_on_mine_block")
+						.fabricId("ElectricDrillGameTest", "tcDrill001Fun02_drainOnMineBlock").ticks(20, 40),
+				RosterEntry.of(ElectricDrillScenarios::fun03NoDrainBelowCost, "drill_no_drain_below_cost")
+						.fabricId("ElectricDrillGameTest", "tcDrill001Fun03_noDrainBelowCost").ticks(20, 40),
+				RosterEntry.of(ElectricDrillScenarios::fun04SpeedAndDrops, "drill_speed_and_drops")
+						.fabricId("ElectricDrillGameTest", "tcDrill001Fun04_speedAndDrops").ticks(20, 40),
+				RosterEntry.of(ElectricDrillScenarios::fun05NoDrainOnZeroHardness, "drill_no_drain_on_zero_hardness")
+						.fabricId("ElectricDrillGameTest", "tcDrill001Fun05_noDrainOnZeroHardness").ticks(20, 40),
+				RosterEntry.of(ElectricDrillScenarios::fun06TagsAndEnchants, "drill_tags_and_enchants")
+						.fabricId("ElectricDrillGameTest", "tcDrill001Fun06_tagsAndEnchants").ticks(20, 40),
+				RosterEntry.of(ElectricDrillScenarios::per01ChargeRoundTrip, "drill_charge_round_trip")
+						.fabricId("ElectricDrillGameTest", "tcDrill001Per01_chargeRoundTrip").ticks(20, 40),
+				RosterEntry.of(ElectricDrillScenarios::fun07PlaceTorchFromInventory, "drill_place_torch_from_inventory")
+						.fabricId("ElectricDrillGameTest", "tcDrill001Fun07_placeTorchFromInventory").ticks(20, 40),
+				RosterEntry.of(ElectricDrillScenarios::fun08TorchPriorityUranium, "drill_torch_priority_uranium")
+						.fabricId("ElectricDrillGameTest", "tcDrill001Fun08_torchPriorityUranium").ticks(20, 40),
+				RosterEntry.of(ElectricDrillScenarios::fun09PlaceTorchOnReplaceableBlock,
+								"drill_place_torch_on_replaceable_block")
+						.fabricId("ElectricDrillGameTest", "tcDrill001Fun09_placeTorchOnReplaceableBlock")
+						.ticks(20, 40),
+				RosterEntry.of(ElectricDrillScenarios::neg01TorchRefusedBelowCost, "drill_torch_refused_below_cost")
+						.fabricId("ElectricDrillGameTest", "tcDrill001Neg01_torchRefusedBelowCost").ticks(20, 40),
+				RosterEntry.of(ElectricDrillScenarios::neg02FlatDrillOnUnplaceableSpotDoesNotSwallowClick,
+								"drill_flat_on_unplaceable_spot_passes")
+						.fabricId("ElectricDrillGameTest",
+								"tcDrill001Neg02_flatDrillOnUnplaceableSpotDoesNotSwallowClick")
+						.ticks(20, 40),
+				RosterEntry.of(ElectricDrillScenarios::fun10DiamondTipSpeedAndTier, "drill_diamond_tip_speed_and_tier")
+						.fabricId("ElectricDrillGameTest", "tcDrill001Fun10_diamondTipSpeedAndTier").ticks(20, 40),
+				RosterEntry.of(ElectricDrillScenarios::fun11DiamondTipSilkToggle, "drill_diamond_tip_silk_toggle")
+						.fabricId("ElectricDrillGameTest", "tcDrill001Fun11_diamondTipSilkToggle").ticks(20, 40),
+				RosterEntry.of(ElectricDrillScenarios::fun12UpgradeRecipeAcceptsAnyDrillState,
+								"drill_upgrade_recipe_any_state")
+						.fabricId("ElectricDrillGameTest", "tcDrill001Fun12_upgradeRecipeAcceptsAnyDrillState")
+						.ticks(20, 40),
+				RosterEntry.of(ElectricDrillScenarios::fun13NetheriteTipSpeedTierAndBuffer,
+								"drill_netherite_tip_speed_tier_and_buffer")
+						.fabricId("ElectricDrillGameTest", "tcDrill001Fun13_netheriteTipSpeedTierAndBuffer")
+						.ticks(20, 40),
+				RosterEntry.of(ElectricDrillScenarios::fun14NetheriteTipUpgradeCarriesCharge,
+								"drill_netherite_tip_upgrade_carries_charge")
+						.fabricId("ElectricDrillGameTest", "tcDrill001Fun14_netheriteTipUpgradeCarriesCharge")
+						.ticks(20, 40),
+				RosterEntry.of(ElectricDrillScenarios::fun15ColumnChargesEachExtraBlock,
+								"drill_column_charges_each_extra_block")
+						.fabricId("ElectricDrillGameTest", "tcDrill001Fun15_columnChargesEachExtraBlock")
+						.ticks(20, 40),
+				RosterEntry.of(ElectricDrillScenarios::fun16ColumnSilkTouchReachesExtraBlocks,
+								"drill_column_silk_touch_reaches_extra_blocks")
+						.fabricId("ElectricDrillGameTest", "tcDrill001Fun16_columnSilkTouchReachesExtraBlocks")
+						.ticks(20, 40),
+				RosterEntry.of(ElectricDrillScenarios::fun17DischargedDrillBoresNoColumn,
+								"drill_discharged_drill_bores_no_column")
+						.fabricId("ElectricDrillGameTest", "tcDrill001Fun17_dischargedDrillBoresNoColumn")
+						.ticks(20, 40),
+				RosterEntry.of(ElectricDrillScenarios::fun18ColumnSparesProtectedExtraBlock,
+								"drill_column_spares_protected_extra_block")
+						.fabricId("ElectricDrillGameTest", "tcDrill001Fun18_columnSparesProtectedExtraBlock")
+						.ticks(20, 40));
+
+		private Roster() {}
+	}
 
 	private ElectricDrillScenarios() {}
 
@@ -107,19 +178,15 @@ public final class ElectricDrillScenarios {
 		return be;
 	}
 
-	private static void tickBox(GameTestHelper helper, BatteryBoxBlockEntity be, int ticks) {
-		for (int i = 0; i < ticks; i++) {
-			be.serverTick(helper.getLevel(), be.getBlockPos(),
-					helper.getLevel().getBlockState(be.getBlockPos()));
-		}
-	}
-
 	// ── FUN — functional ─────────────────────────────────────────────────────────────────────────
 
 	/**
 	 * FUN01: the drill is accepted by the Battery Box charge slot (both the menu's client-side
 	 * {@code mayPlace} and the server-side {@code canPlaceItem}, matching NEG03 for the pack) and then
 	 * charges there, capped by its own intake rate.
+	 *
+	 * @implements TC-DRILL-001-FUN01 — the drill is accepted by the Battery Box charge slot (both
+	 *     filters) and charges there at min(LV ceiling, its intake rate).
 	 */
 	public static void fun01ChargeInBatteryBox(GameTestHelper helper) {
 		BatteryBoxBlockEntity box = placeBox(helper);
@@ -135,8 +202,8 @@ public final class ElectricDrillScenarios {
 
 		box.getEnergyStorage().setAmountUntracked(box.getEnergyStorage().getCapacity());
 		box.setItem(BatteryBoxBlockEntity.CHARGE_SLOT, drill(0));
-		tickBox(helper, box, 1);
-		long expected = Math.min(EnergyTier.LV.maxVoltage(), Config.electricDrillInputRate);
+		drive(box, helper, 1);
+		long expected = Math.min(EnergyTier.LV.maxVoltage(), ToolConfig.electricDrillInputRate);
 		long gained = ItemEnergy.get(box.getItem(BatteryBoxBlockEntity.CHARGE_SLOT));
 		if (gained != expected) {
 			helper.fail("one tick must move min(LV ceiling, drill intake) = " + expected + " EU, got " + gained);
@@ -144,30 +211,39 @@ public final class ElectricDrillScenarios {
 		helper.succeed();
 	}
 
-	/** FUN02: mining a hard block with a charged drill drains exactly one block's worth of EU. */
+	/**
+	 * FUN02: mining a hard block with a charged drill drains exactly one block's worth of EU.
+	 *
+	 * @implements TC-DRILL-001-FUN02 — mining a hard block with a charged drill drains exactly one
+	 *     block's worth of EU.
+	 */
 	public static void fun02DrainOnMineBlock(GameTestHelper helper) {
 		ServerLevel level = helper.getLevel();
 		BlockPos abs = helper.absolutePos(ORE);
 		helper.setBlock(ORE, Blocks.STONE);
 		BlockState state = level.getBlockState(abs);
 		Player player = helper.makeMockPlayer(GameType.SURVIVAL);
-		ItemStack drill = drill(Config.electricDrillBuffer);
+		ItemStack drill = drill(ToolConfig.electricDrillBuffer);
 
 		drill.getItem().mineBlock(drill, level, state, abs, player);
-		if (ItemEnergy.get(drill) != Config.electricDrillBuffer - Config.electricDrillEuPerBlock) {
+		if (ItemEnergy.get(drill) != ToolConfig.electricDrillBuffer - ToolConfig.electricDrillEuPerBlock) {
 			helper.fail("mining one block must drain exactly electricDrillEuPerBlock, left " + ItemEnergy.get(drill));
 		}
 		helper.succeed();
 	}
 
-	/** FUN03: a drill that can't afford a block mines it for free — no EU is spent (and none goes negative). */
+	/**
+	 * FUN03: a drill that can't afford a block mines it for free — no EU is spent (and none goes negative).
+	 *
+	 * @implements TC-DRILL-001-FUN03 — a drill below the per-block cost mines for free, spending no EU.
+	 */
 	public static void fun03NoDrainBelowCost(GameTestHelper helper) {
 		ServerLevel level = helper.getLevel();
 		BlockPos abs = helper.absolutePos(ORE);
 		helper.setBlock(ORE, Blocks.STONE);
 		BlockState state = level.getBlockState(abs);
 		Player player = helper.makeMockPlayer(GameType.SURVIVAL);
-		long below = Config.electricDrillEuPerBlock - 1;
+		long below = ToolConfig.electricDrillEuPerBlock - 1;
 		ItemStack drill = drill(below);
 
 		drill.getItem().mineBlock(drill, level, state, abs, player);
@@ -186,12 +262,16 @@ public final class ElectricDrillScenarios {
 	 * are all correctly mined (diamond is the top mining tier — {@code #incorrect_for_diamond_tool} is
 	 * empty in vanilla, so the deny rule only guards modded above-diamond blocks). A shovel block (dirt)
 	 * is the negative: not in {@code #mineable/pickaxe}, so it is not the drill's correct tool.
+	 *
+	 * @implements TC-DRILL-001-FUN04 — 8.5 mining speed while charged (a touch above diamond), exactly hand speed
+	 *     (1.0f)
+	 *     when flat, and correct-for-drops on stone/obsidian/diamond ore but not ancient debris.
 	 */
 	public static void fun04SpeedAndDrops(GameTestHelper helper) {
 		Item drillItem = ModContent.ELECTRIC_DRILL.get();
 		BlockState stone = Blocks.STONE.defaultBlockState();
 
-		float charged = drillItem.getDestroySpeed(drill(Config.electricDrillBuffer), stone);
+		float charged = drillItem.getDestroySpeed(drill(ToolConfig.electricDrillBuffer), stone);
 		if (charged != 8.5f) {
 			helper.fail("a charged drill must mine stone at 8.5 (a touch above diamond), got " + charged);
 		}
@@ -200,7 +280,7 @@ public final class ElectricDrillScenarios {
 			helper.fail("a flat drill must mine at exactly hand speed 1.0 (Efficiency gate), got " + flat);
 		}
 
-		ItemStack charge = drill(Config.electricDrillBuffer);
+		ItemStack charge = drill(ToolConfig.electricDrillBuffer);
 		assertCorrect(helper, charge, Blocks.STONE.defaultBlockState(), "stone", true);
 		assertCorrect(helper, charge, Blocks.OBSIDIAN.defaultBlockState(), "obsidian", true);
 		assertCorrect(helper, charge, Blocks.DIAMOND_ORE.defaultBlockState(), "diamond_ore", true);
@@ -213,17 +293,21 @@ public final class ElectricDrillScenarios {
 		helper.succeed();
 	}
 
-	/** FUN05: instant-break blocks (zero hardness) never cost EU, mirroring vanilla's durability gate. */
+	/**
+	 * FUN05: instant-break blocks (zero hardness) never cost EU, mirroring vanilla's durability gate.
+	 *
+	 * @implements TC-DRILL-001-FUN05 — instant-break blocks (zero hardness) never cost EU.
+	 */
 	public static void fun05NoDrainOnZeroHardness(GameTestHelper helper) {
 		ServerLevel level = helper.getLevel();
 		BlockPos abs = helper.absolutePos(ORE);
 		helper.setBlock(ORE, Blocks.TORCH);
 		BlockState state = level.getBlockState(abs);
 		Player player = helper.makeMockPlayer(GameType.SURVIVAL);
-		ItemStack drill = drill(Config.electricDrillBuffer);
+		ItemStack drill = drill(ToolConfig.electricDrillBuffer);
 
 		drill.getItem().mineBlock(drill, level, state, abs, player);
-		if (ItemEnergy.get(drill) != Config.electricDrillBuffer) {
+		if (ItemEnergy.get(drill) != ToolConfig.electricDrillBuffer) {
 			helper.fail("a zero-hardness block must not cost EU, left " + ItemEnergy.get(drill));
 		}
 		helper.succeed();
@@ -234,6 +318,9 @@ public final class ElectricDrillScenarios {
 	 * enchantable tag chain resolves through), {@code #minecraft:cluster_max_harvestables} (max amethyst
 	 * drop, a direct list not reached via #pickaxes), and {@code #c:tools/mining_tool} (cross-mod). It is
 	 * enchantable with the mining/durability enchantments a diamond pickaxe accepts.
+	 *
+	 * @implements TC-DRILL-001-FUN06 — the drill carries the pickaxe identity tags and is enchantable
+	 *     with the mining enchantments a diamond pickaxe accepts.
 	 */
 	public static void fun06TagsAndEnchants(GameTestHelper helper) {
 		ItemStack drill = drill(0);
@@ -256,6 +343,9 @@ public final class ElectricDrillScenarios {
 	 * consumes one torch, and drains {@code electricDrillTorchEuCost} EU. The torch lands on the block
 	 * above the floor (floor-torch orientation, vanilla {@code canSurvive}); the click is on the floor
 	 * block's top face so the placement target is the air above it.
+	 *
+	 * @implements TC-DRILL-001-FUN07 — right-click with the drill places a torch from the inventory
+	 *     (MOD-089), consuming one torch and draining electricDrillTorchEuCost.
 	 */
 	public static void fun07PlaceTorchFromInventory(GameTestHelper helper) {
 		// A stone floor block to click on; the torch places in the air above it.
@@ -264,14 +354,14 @@ public final class ElectricDrillScenarios {
 		helper.setBlock(floor, Blocks.STONE);
 
 		ServerPlayer player = survivalPlayer(helper);
-		ItemStack drillStack = drill(Config.electricDrillBuffer);
+		ItemStack drillStack = drill(ToolConfig.electricDrillBuffer);
 		player.setItemInHand(InteractionHand.MAIN_HAND, drillStack);
 		// 8 vanilla torches in hotbar slot 1 — slot 0 holds the drill (the selected main-hand slot),
 		// so the torches must live elsewhere or they would overwrite the drill.
 		player.getInventory().setItem(1, new ItemStack(Items.TORCH, 8));
 
 		InteractionResult result = useOnBlock(helper, player, floor);
-		if (!AlaGameTestHelper.isSwingSuccess(result)) {
+		if (!UseResults.isSwingSuccess(result)) {
 			helper.fail("right-click with torches in inventory must return SUCCESS, got " + result);
 		}
 		helper.assertBlockPresent(Blocks.TORCH, torchAt);
@@ -281,9 +371,9 @@ public final class ElectricDrillScenarios {
 			helper.fail("one torch must be consumed (7 left), got "
 					+ player.getInventory().countItem(Items.TORCH));
 		}
-		if (ItemEnergy.get(drillStack) != Config.electricDrillBuffer - Config.electricDrillTorchEuCost) {
+		if (ItemEnergy.get(drillStack) != ToolConfig.electricDrillBuffer - ToolConfig.electricDrillTorchEuCost) {
 			helper.fail("placing a torch must drain electricDrillTorchEuCost ("
-					+ Config.electricDrillTorchEuCost + "), left " + ItemEnergy.get(drillStack));
+					+ ToolConfig.electricDrillTorchEuCost + "), left " + ItemEnergy.get(drillStack));
 		}
 		helper.succeed();
 	}
@@ -292,6 +382,9 @@ public final class ElectricDrillScenarios {
 	 * FUN08: when the inventory holds BOTH torch kinds, the drill places the enriched uranium torch first
 	 * (the advanced, waterlog-safe torch), not the vanilla one. Asserts the placed block is the uranium
 	 * standing torch and that the uranium stack — not the vanilla stack — was decremented.
+	 *
+	 * @implements TC-DRILL-001-FUN08 — when both torch kinds are in the inventory, the drill places the
+	 *     enriched uranium torch first (priority), leaving the vanilla stack untouched.
 	 */
 	public static void fun08TorchPriorityUranium(GameTestHelper helper) {
 		BlockPos floor = new BlockPos(1, 2, 2);
@@ -299,14 +392,14 @@ public final class ElectricDrillScenarios {
 		helper.setBlock(floor, Blocks.STONE);
 
 		ServerPlayer player = survivalPlayer(helper);
-		player.setItemInHand(InteractionHand.MAIN_HAND, drill(Config.electricDrillBuffer));
+		player.setItemInHand(InteractionHand.MAIN_HAND, drill(ToolConfig.electricDrillBuffer));
 		// Both torch kinds in the inventory; slot 0 holds the drill (selected main-hand slot), so the
 		// torches go in slots 1 and 2. Slot order does not matter — priority is uranium-first by item.
 		player.getInventory().setItem(1, new ItemStack(Items.TORCH, 8));
 		player.getInventory().setItem(2, new ItemStack(ModContent.ENRICHED_URANIUM_TORCH_ITEM.get(), 4));
 
 		InteractionResult result = useOnBlock(helper, player, floor);
-		if (!AlaGameTestHelper.isSwingSuccess(result)) {
+		if (!UseResults.isSwingSuccess(result)) {
 			helper.fail("right-click with both torch kinds must place the uranium torch, got " + result);
 		}
 		// Uranium standing torch placed (not the vanilla one), uranium stack decremented, vanilla untouched.
@@ -333,6 +426,10 @@ public final class ElectricDrillScenarios {
 	 *
 	 * <p>Setup mirrors FUN07 but the click target is a grass tuft standing on dirt; the torch replaces the
 	 * grass at the same cell, so the torch ends up at the click position (not above it).
+	 *
+	 * @implements TC-DRILL-001-FUN09 — regression for replaceable-block placement (tall grass): the torch
+	 *     lands at the clicked cell via replaceClicked, and inventory + EU must still be consumed.
+	 *     Guards against the b1573697 block-compare-against-wrong-pos bug returning.
 	 */
 	public static void fun09PlaceTorchOnReplaceableBlock(GameTestHelper helper) {
 		// A dirt floor with a tall-grass tuft on top — grass is replaceable, so vanilla places the torch
@@ -344,13 +441,13 @@ public final class ElectricDrillScenarios {
 		helper.setBlock(grass, Blocks.SHORT_GRASS);
 
 		ServerPlayer player = survivalPlayer(helper);
-		ItemStack drillStack = drill(Config.electricDrillBuffer);
+		ItemStack drillStack = drill(ToolConfig.electricDrillBuffer);
 		player.setItemInHand(InteractionHand.MAIN_HAND, drillStack);
 		player.getInventory().setItem(1, new ItemStack(Items.TORCH, 8));
 
 		// Click the grass (its side) — BlockPlaceContext will treat it as replaceable.
 		InteractionResult result = useOnBlock(helper, player, grass);
-		if (!AlaGameTestHelper.isSwingSuccess(result)) {
+		if (!UseResults.isSwingSuccess(result)) {
 			helper.fail("placing a torch by clicking a replaceable block must return SUCCESS, got " + result);
 		}
 		helper.assertBlockPresent(Blocks.TORCH, torchAt);
@@ -361,9 +458,9 @@ public final class ElectricDrillScenarios {
 			helper.fail("replaceable-block placement must still consume a torch (7 left), got "
 					+ player.getInventory().countItem(Items.TORCH));
 		}
-		if (ItemEnergy.get(drillStack) != Config.electricDrillBuffer - Config.electricDrillTorchEuCost) {
+		if (ItemEnergy.get(drillStack) != ToolConfig.electricDrillBuffer - ToolConfig.electricDrillTorchEuCost) {
 			helper.fail("replaceable-block placement must still drain electricDrillTorchEuCost ("
-					+ Config.electricDrillTorchEuCost + "), left " + ItemEnergy.get(drillStack)
+					+ ToolConfig.electricDrillTorchEuCost + "), left " + ItemEnergy.get(drillStack)
 					+ " — the b1573697 block-compare bug returned here");
 		}
 		helper.succeed();
@@ -376,6 +473,9 @@ public final class ElectricDrillScenarios {
 	 * instead of giving a free one. The right-click returns {@code CONSUME} (the click is eaten, so no
 	 * off-hand fallback fires), the target cell stays air, no torch leaves the inventory, and the drill's
 	 * charge is untouched. This is the exact behaviour FUN07 asserts for a charged drill, inverted.
+	 *
+	 * @implements TC-DRILL-001-NEG01 — a drill below electricDrillTorchEuCost refuses to place a torch
+	 *     (MOD-097): CONSUME, no block placed, no torch consumed, charge untouched. Inverse of FUN07.
 	 */
 	public static void neg01TorchRefusedBelowCost(GameTestHelper helper) {
 		BlockPos floor = new BlockPos(1, 2, 2);
@@ -383,13 +483,13 @@ public final class ElectricDrillScenarios {
 		helper.setBlock(floor, Blocks.STONE);
 
 		ServerPlayer player = survivalPlayer(helper);
-		long belowCost = Config.electricDrillTorchEuCost - 1;
+		long belowCost = ToolConfig.electricDrillTorchEuCost - 1;
 		ItemStack drillStack = drill(belowCost);
 		player.setItemInHand(InteractionHand.MAIN_HAND, drillStack);
 		player.getInventory().setItem(1, new ItemStack(Items.TORCH, 8));
 
 		InteractionResult result = useOnBlock(helper, player, floor);
-		if (!AlaGameTestHelper.isNoSwingConsume(result)) {
+		if (!UseResults.isNoSwingConsume(result)) {
 			helper.fail("a drill below the torch cost must refuse with CONSUME, got " + result);
 		}
 		// Nothing placed: the cell above the clicked floor is still air.
@@ -428,6 +528,10 @@ public final class ElectricDrillScenarios {
 	 * <p>Geometry: a single stone block floating in the rig's air, clicked on its <b>bottom</b> face. The
 	 * placement cell is the air below it — nothing under it for a standing torch, nothing beside it for a
 	 * wall torch.
+	 *
+	 * @implements TC-DRILL-001-NEG02 — a flat drill clicking a spot where no torch can stand returns PASS
+	 *     (the off-hand still runs, no "no charge" line), and a charged drill reaches the same verdict at
+	 *     the same spot — which is what pins the dry probe to vanilla's own answer (MOD-398).
 	 */
 	public static void neg02FlatDrillOnUnplaceableSpotDoesNotSwallowClick(GameTestHelper helper) {
 		BlockPos ceiling = new BlockPos(1, 4, 2);
@@ -458,7 +562,7 @@ public final class ElectricDrillScenarios {
 
 		// Same click, charged drill: vanilla's own place() must refuse this spot too. This is the assertion
 		// that keeps the dry probe honest — it fails the moment the two answers disagree.
-		ItemStack chargedDrill = drill(Config.electricDrillBuffer);
+		ItemStack chargedDrill = drill(ToolConfig.electricDrillBuffer);
 		player.setItemInHand(InteractionHand.MAIN_HAND, chargedDrill);
 
 		InteractionResult charged = useOnFace(helper, player, ceiling, Direction.DOWN);
@@ -470,7 +574,7 @@ public final class ElectricDrillScenarios {
 			helper.fail("a refused placement must consume no torch (8 left), got "
 					+ player.getInventory().countItem(Items.TORCH));
 		}
-		if (ItemEnergy.get(chargedDrill) != Config.electricDrillBuffer) {
+		if (ItemEnergy.get(chargedDrill) != ToolConfig.electricDrillBuffer) {
 			helper.fail("a refused placement must not drain the drill, left " + ItemEnergy.get(chargedDrill));
 		}
 		helper.succeed();
@@ -486,17 +590,20 @@ public final class ElectricDrillScenarios {
 	 * number, and a relative check against the base drill's own {@code getDestroySpeed} makes the test
 	 * fail if someone later raises the base drill to match — a bare {@code == 10.0f} would stay green
 	 * while the upgrade silently stopped being an upgrade.
+	 *
+	 * @implements TC-DRILL-001-FUN10 — the diamond-tipped upgrade (MOD-321) digs at 10.0, strictly faster
+	 *     than the base drill, keeps the diamond mining tier and still drops to hand speed when flat.
 	 */
 	public static void fun10DiamondTipSpeedAndTier(GameTestHelper helper) {
 		Item tip = ModContent.ELECTRIC_DRILL_DIAMOND_TIP.get();
 		BlockState stone = Blocks.STONE.defaultBlockState();
 
-		float charged = tip.getDestroySpeed(diamondTipDrill(Config.electricDrillBuffer), stone);
+		float charged = tip.getDestroySpeed(diamondTipDrill(ToolConfig.electricDrillBuffer), stone);
 		if (charged != 10.0f) {
 			helper.fail("a charged diamond-tipped drill must mine stone at 10.0, got " + charged);
 		}
 		float baseSpeed = ModContent.ELECTRIC_DRILL.get()
-				.getDestroySpeed(drill(Config.electricDrillBuffer), stone);
+				.getDestroySpeed(drill(ToolConfig.electricDrillBuffer), stone);
 		if (!(charged > baseSpeed)) {
 			helper.fail("the upgrade must out-dig the base drill, got " + charged + " vs base " + baseSpeed);
 		}
@@ -506,7 +613,7 @@ public final class ElectricDrillScenarios {
 		}
 
 		// The tier is unchanged: same correct-for-drops answers as the base drill, including the dirt negative.
-		ItemStack charge = diamondTipDrill(Config.electricDrillBuffer);
+		ItemStack charge = diamondTipDrill(ToolConfig.electricDrillBuffer);
 		assertCorrect(helper, charge, Blocks.OBSIDIAN.defaultBlockState(), "obsidian", true);
 		assertCorrect(helper, charge, Blocks.ANCIENT_DEBRIS.defaultBlockState(), "ancient_debris", true);
 		assertCorrect(helper, charge, Blocks.DIRT.defaultBlockState(), "dirt", false);
@@ -522,11 +629,14 @@ public final class ElectricDrillScenarios {
 	 * the test able to fail — asserting only the silk branch would stay green even if the toggle got stuck
 	 * on and quietly broke ore doubling, which is the exact regression this feature was designed to avoid.
 	 * A non-sneaking click is checked too, so the toggle cannot start firing on every plain right-click.
+	 *
+	 * @implements TC-DRILL-001-FUN11 — sneak + right-click toggles the upgrade's Silk Touch mode, and the
+	 *     mode changes the real loot-table drop both ways (ore block ↔ raw iron); a plain click is inert.
 	 */
 	public static void fun11DiamondTipSilkToggle(GameTestHelper helper) {
 		ServerLevel level = helper.getLevel();
 		ServerPlayer player = survivalPlayer(helper);
-		ItemStack stack = diamondTipDrill(Config.electricDrillBuffer);
+		ItemStack stack = diamondTipDrill(ToolConfig.electricDrillBuffer);
 		player.setItemInHand(InteractionHand.MAIN_HAND, stack);
 
 		// A freshly crafted drill starts in normal mode — ore keeps feeding the Macerator out of the box.
@@ -580,13 +690,16 @@ public final class ElectricDrillScenarios {
 	 * is a {@code HolderSet<Item>} and matches by item alone, so components should be irrelevant — this
 	 * test exists to prove that claim against the real {@code RecipeManager} rather than trust it, and to
 	 * lock the behaviour in if anything ever swaps the plain ingredient for a component-sensitive one.
+	 *
+	 * @implements TC-DRILL-001-FUN12 — the upgrade recipe accepts the base drill in any state (empty,
+	 *     charged, part-charged, enchanted). Play-test report: "a charged drill does not fit the craft".
 	 */
 	public static void fun12UpgradeRecipeAcceptsAnyDrillState(GameTestHelper helper) {
 		assertUpgradeCraftable(helper, drill(0), "empty drill");
-		assertUpgradeCraftable(helper, drill(Config.electricDrillBuffer), "fully charged drill");
-		assertUpgradeCraftable(helper, drill(Config.electricDrillBuffer / 3), "part-charged drill");
+		assertUpgradeCraftable(helper, drill(ToolConfig.electricDrillBuffer), "fully charged drill");
+		assertUpgradeCraftable(helper, drill(ToolConfig.electricDrillBuffer / 3), "part-charged drill");
 
-		ItemStack enchanted = drill(Config.electricDrillBuffer);
+		ItemStack enchanted = drill(ToolConfig.electricDrillBuffer);
 		Holder<Enchantment> efficiency = enchant(helper.getLevel(), Enchantments.EFFICIENCY);
 		EnchantmentHelper.updateEnchantments(enchanted, mutable -> mutable.set(efficiency, 3));
 		assertUpgradeCraftable(helper, enchanted, "enchanted charged drill");
@@ -597,13 +710,13 @@ public final class ElectricDrillScenarios {
 		// Inventory.isUsableForCrafting = !damaged && !enchanted && !custom-named. A merely CHARGED drill
 		// passes that gate, so auto-fill must be able to place it; an ENCHANTED one cannot, and that is
 		// vanilla behaviour for every item, not something this recipe can opt out of.
-		assertAutoFillCanCraft(helper, drill(Config.electricDrillBuffer), true, "charged drill");
+		assertAutoFillCanCraft(helper, drill(ToolConfig.electricDrillBuffer), true, "charged drill");
 		assertAutoFillCanCraft(helper, drill(0), true, "empty drill");
 		assertAutoFillCanCraft(helper, enchanted, false, "enchanted drill (vanilla refuses to auto-fill)");
 
 		// Closest possible simulation of the player at a bench: a real CraftingMenu over a real player
 		// inventory, items dropped into the real grid slots, result read from the real result slot.
-		assertBenchCraft(helper, drill(Config.electricDrillBuffer), "charged drill at a real bench");
+		assertBenchCraft(helper, drill(ToolConfig.electricDrillBuffer), "charged drill at a real bench");
 		assertBenchCraft(helper, enchanted, "enchanted charged drill at a real bench");
 
 		helper.succeed();
@@ -699,7 +812,12 @@ public final class ElectricDrillScenarios {
 
 	// ── PER — persistence ────────────────────────────────────────────────────────────────────────
 
-	/** PER01: charge survives a stack copy, 0 EU removes the component, and writes clamp at capacity. */
+	/**
+	 * PER01: charge survives a stack copy, 0 EU removes the component, and writes clamp at capacity.
+	 *
+	 * @implements TC-DRILL-001-PER01 — charge survives a stack copy, 0 EU removes the component, and
+	 *     writes clamp at capacity.
+	 */
 	public static void per01ChargeRoundTrip(GameTestHelper helper) {
 		ItemStack drill = drill(1234);
 		ItemStack copy = drill.copy();
@@ -710,8 +828,8 @@ public final class ElectricDrillScenarios {
 		if (!ItemStack.matches(drill, new ItemStack(ModContent.ELECTRIC_DRILL.get()))) {
 			helper.fail("a drained drill must be component-identical to a fresh one");
 		}
-		ItemEnergy.set(drill, Config.electricDrillBuffer + 5000);
-		if (ItemEnergy.get(drill) != Config.electricDrillBuffer) {
+		ItemEnergy.set(drill, ToolConfig.electricDrillBuffer + 5000);
+		if (ItemEnergy.get(drill) != ToolConfig.electricDrillBuffer) {
 			helper.fail("the drill buffer must clamp at capacity");
 		}
 		helper.succeed();
@@ -728,17 +846,21 @@ public final class ElectricDrillScenarios {
 	 * the interesting one — it is resolved through an {@code instanceof} cascade in {@link ItemEnergy}
 	 * where this subclass sits below {@code ElectricDrillItem}, so putting the branches in the wrong
 	 * order silently hands back the base buffer and nothing else would notice.
+	 *
+	 * @implements TC-DRILL-001-FUN13 — the netherite tip (MOD-534) digs at 12.0, strictly faster than the
+	 *     diamond tip, keeps the diamond mining tier, falls to hand speed when flat, and owns the line's
+	 *     only larger EU buffer while its intake stays the base drill's.
 	 */
 	public static void fun13NetheriteTipSpeedTierAndBuffer(GameTestHelper helper) {
 		Item tip = ModContent.ELECTRIC_DRILL_NETHERITE_TIP.get();
 		BlockState stone = Blocks.STONE.defaultBlockState();
 
-		float charged = tip.getDestroySpeed(netheriteTipDrill(Config.electricDrillNetheriteTipBuffer), stone);
+		float charged = tip.getDestroySpeed(netheriteTipDrill(ToolConfig.electricDrillNetheriteTipBuffer), stone);
 		if (charged != 12.0f) {
 			helper.fail("a charged netherite-tipped drill must mine stone at 12.0, got " + charged);
 		}
 		float diamondSpeed = ModContent.ELECTRIC_DRILL_DIAMOND_TIP.get()
-				.getDestroySpeed(diamondTipDrill(Config.electricDrillBuffer), stone);
+				.getDestroySpeed(diamondTipDrill(ToolConfig.electricDrillBuffer), stone);
 		if (!(charged > diamondSpeed)) {
 			helper.fail("the netherite tip must out-dig the diamond tip, got " + charged + " vs " + diamondSpeed);
 		}
@@ -748,16 +870,16 @@ public final class ElectricDrillScenarios {
 		}
 
 		// The mining tier is unchanged across the whole line — same answers as both tiers below.
-		ItemStack charge = netheriteTipDrill(Config.electricDrillNetheriteTipBuffer);
+		ItemStack charge = netheriteTipDrill(ToolConfig.electricDrillNetheriteTipBuffer);
 		assertCorrect(helper, charge, Blocks.OBSIDIAN.defaultBlockState(), "obsidian", true);
 		assertCorrect(helper, charge, Blocks.ANCIENT_DEBRIS.defaultBlockState(), "ancient_debris", true);
 		assertCorrect(helper, charge, Blocks.DIRT.defaultBlockState(), "dirt", false);
 
 		// The buffer is this tier's own, and bigger than the one the two tiers below share.
 		long capacity = ItemEnergy.capacity(charge);
-		if (capacity != Config.electricDrillNetheriteTipBuffer) {
+		if (capacity != ToolConfig.electricDrillNetheriteTipBuffer) {
 			helper.fail("the netherite tip's buffer is " + capacity + " EU, expected "
-					+ Config.electricDrillNetheriteTipBuffer
+					+ ToolConfig.electricDrillNetheriteTipBuffer
 					+ " — the ItemEnergy branch for this class is missing or sits below the base drill's");
 		}
 		if (!(capacity > ItemEnergy.capacity(diamondTipDrill(0)))) {
@@ -767,8 +889,8 @@ public final class ElectricDrillScenarios {
 		// Intake and per-block cost are deliberately inherited: the tier buys autonomy, not a cheaper
 		// or faster charge. Asserted so a future split cannot happen unnoticed.
 		long intake = ItemEnergy.inputRate(charge);
-		if (intake != Config.electricDrillInputRate) {
-			helper.fail("the netherite tip must accept the base drill's " + Config.electricDrillInputRate
+		if (intake != ToolConfig.electricDrillInputRate) {
+			helper.fail("the netherite tip must accept the base drill's " + ToolConfig.electricDrillInputRate
 					+ " EU/t, got " + intake);
 		}
 		helper.succeed();
@@ -790,6 +912,10 @@ public final class ElectricDrillScenarios {
 	 * <p>The transfer also crosses a buffer boundary the diamond-tip test could not exercise: the input
 	 * holds at most 10 000 while the result holds 15 000, so this pins that the carry is not clamped to
 	 * the source's capacity.
+	 *
+	 * @implements TC-DRILL-001-FUN14 — crafting the netherite tip carries the diamond tip's charge into
+	 *     the result instead of burning it, across the two tiers' differing buffers; a drained input
+	 *     still yields a component-free result.
 	 */
 	public static void fun14NetheriteTipUpgradeCarriesCharge(GameTestHelper helper) {
 		Optional<RecipeHolder<?>> found = helper.getLevel().getServer().getRecipeManager()
@@ -805,7 +931,7 @@ public final class ElectricDrillScenarios {
 					+ " — a bench recipe would burn the drill's charge");
 			return;
 		}
-		long charge = Config.electricDrillBuffer;
+		long charge = ToolConfig.electricDrillBuffer;
 		if (charge <= 0) {
 			helper.fail("the drill's configured buffer is " + charge + " — this test would prove nothing");
 			return;
@@ -875,7 +1001,7 @@ public final class ElectricDrillScenarios {
 
 	/** Charge of one full stroke: the aimed block at the plain price plus two extras at the column price. */
 	private static long fullStrokeCost() {
-		return Config.electricDrillEuPerBlock + 2L * Config.electricDrillColumnEuPerBlock;
+		return ToolConfig.electricDrillEuPerBlock + 2L * ToolConfig.electricDrillColumnEuPerBlock;
 	}
 
 	/** A drill of {@code item} carrying the column bore (enabled — absent toggle means on). */
@@ -922,12 +1048,15 @@ public final class ElectricDrillScenarios {
 	 * column (aim + 2 extras), a column with only ONE extra block to break (air above) — which is what
 	 * proves the charge is per block rather than a flat column fee — and the same column with the mode
 	 * switched off, which must bill the aimed block alone and leave both neighbours standing.
+	 *
+	 * @implements TC-DRILL-001-FUN15 — the column bore bills each extra block at the column price, the
+	 *     aimed block at the plain price; a switched-off column bills the aimed block alone.
 	 */
 	public static void fun15ColumnChargesEachExtraBlock(GameTestHelper helper) {
 		ServerPlayer player = survivalPlayer(helper);
 		Item drillItem = ModContent.ELECTRIC_DRILL.get();
-		long full = Config.electricDrillBuffer;
-		if (Config.electricDrillColumnEuPerBlock == Config.electricDrillEuPerBlock) {
+		long full = ToolConfig.electricDrillBuffer;
+		if (ToolConfig.electricDrillColumnEuPerBlock == ToolConfig.electricDrillEuPerBlock) {
 			helper.fail("fixture error: the two prices are equal, so this test could not tell them apart");
 		}
 
@@ -938,7 +1067,8 @@ public final class ElectricDrillScenarios {
 		helper.assertBlockPresent(Blocks.AIR, COLUMN_AIM);
 		helper.assertBlockPresent(Blocks.AIR, COLUMN_ABOVE);
 		helper.assertBlockPresent(Blocks.AIR, COLUMN_BELOW);
-		assertCharge(helper, drill, full - Config.electricDrillEuPerBlock - 2L * Config.electricDrillColumnEuPerBlock,
+		assertCharge(helper, drill, full - ToolConfig.electricDrillEuPerBlock - 2L
+				* ToolConfig.electricDrillColumnEuPerBlock,
 				"a full column stroke must cost electricDrillEuPerBlock + 2 x electricDrillColumnEuPerBlock");
 
 		// 2. Only one extra block exists: the stroke must cost exactly one column price, not two.
@@ -946,7 +1076,8 @@ public final class ElectricDrillScenarios {
 		ItemStack oneExtra = columnDrill(drillItem, full);
 		mineColumnAim(helper, player, oneExtra);
 		helper.assertBlockPresent(Blocks.AIR, COLUMN_BELOW);
-		assertCharge(helper, oneExtra, full - Config.electricDrillEuPerBlock - Config.electricDrillColumnEuPerBlock,
+		assertCharge(helper, oneExtra, full - ToolConfig.electricDrillEuPerBlock
+				- ToolConfig.electricDrillColumnEuPerBlock,
 				"a column with one extra block must bill that one block only");
 
 		// 3. Mode switched off: a plain stroke, neighbours untouched.
@@ -956,7 +1087,7 @@ public final class ElectricDrillScenarios {
 		mineColumnAim(helper, player, off);
 		helper.assertBlockPresent(Blocks.STONE, COLUMN_ABOVE);
 		helper.assertBlockPresent(Blocks.STONE, COLUMN_BELOW);
-		assertCharge(helper, off, full - Config.electricDrillEuPerBlock,
+		assertCharge(helper, off, full - ToolConfig.electricDrillEuPerBlock,
 				"with the column switched off only the aimed block may be billed");
 		helper.succeed();
 	}
@@ -967,11 +1098,13 @@ public final class ElectricDrillScenarios {
 	 * fall as the ore BLOCK and none as raw iron. Asserting the negative too is what catches loot rolled
 	 * with an empty tool ({@code Level.destroyBlock}), which drops raw iron and would still "break" the
 	 * column.
+	 *
+	 * @implements TC-DRILL-001-FUN16 — Silk Touch mode applies to the column's extra blocks.
 	 */
 	public static void fun16ColumnSilkTouchReachesExtraBlocks(GameTestHelper helper) {
 		ServerPlayer player = survivalPlayer(helper);
 		setColumn(helper, Blocks.IRON_ORE, Blocks.STONE, Blocks.IRON_ORE);
-		ItemStack drill = columnDrill(ModContent.ELECTRIC_DRILL_DIAMOND_TIP.get(), Config.electricDrillBuffer);
+		ItemStack drill = columnDrill(ModContent.ELECTRIC_DRILL_DIAMOND_TIP.get(), ToolConfig.electricDrillBuffer);
 		EnchantmentHelper.updateEnchantments(drill,
 				mutable -> mutable.set(enchant(helper.getLevel(), Enchantments.SILK_TOUCH), 1));
 		if (!ElectricDrillDiamondTipItem.isSilkMode(drill)) {
@@ -999,6 +1132,9 @@ public final class ElectricDrillScenarios {
 	 * {@code 2 x electricDrillColumnEuPerBlock} of what is LEFT, or it is skipped entirely — never half a
 	 * column. Three charges: zero (nothing billed), one EU short of a full stroke (aimed block billed,
 	 * column skipped), and exactly a full stroke (the boundary is inclusive — all three blocks, charge 0).
+	 *
+	 * @implements TC-DRILL-001-FUN17 — a drill that cannot pay for the whole column breaks only the aimed
+	 *     block; exactly a full stroke of charge bores the whole column.
 	 */
 	public static void fun17DischargedDrillBoresNoColumn(GameTestHelper helper) {
 		ServerPlayer player = survivalPlayer(helper);
@@ -1019,7 +1155,7 @@ public final class ElectricDrillScenarios {
 		helper.assertBlockPresent(Blocks.AIR, COLUMN_AIM);
 		helper.assertBlockPresent(Blocks.STONE, COLUMN_ABOVE);
 		helper.assertBlockPresent(Blocks.STONE, COLUMN_BELOW);
-		assertCharge(helper, almost, shortBy1 - Config.electricDrillEuPerBlock,
+		assertCharge(helper, almost, shortBy1 - ToolConfig.electricDrillEuPerBlock,
 				"one EU short of a full stroke: only the aimed block is billed and no column is bored");
 
 		setColumn(helper, Blocks.STONE, Blocks.STONE, Blocks.STONE);
@@ -1044,11 +1180,14 @@ public final class ElectricDrillScenarios {
 	 * remove; only the drill's own filter (pickaxe tag, negative hardness) keeps it. Nothing but the aimed
 	 * block may be billed.</li>
 	 * </ol>
+	 *
+	 * @implements TC-DRILL-001-FUN18 — a protected (adventure CAN_BREAK) or unbreakable extra block stays
+	 *     and is not billed while the rest of the column goes.
 	 */
 	public static void fun18ColumnSparesProtectedExtraBlock(GameTestHelper helper) {
 		ServerPlayer player = survivalPlayer(helper);
 		Item drillItem = ModContent.ELECTRIC_DRILL.get();
-		long full = Config.electricDrillBuffer;
+		long full = ToolConfig.electricDrillBuffer;
 
 		// 1. Adventure mode with a stone-only CAN_BREAK.
 		setColumn(helper, Blocks.OBSIDIAN, Blocks.STONE, Blocks.STONE);
@@ -1064,7 +1203,8 @@ public final class ElectricDrillScenarios {
 		helper.assertBlockPresent(Blocks.AIR, COLUMN_AIM);
 		helper.assertBlockPresent(Blocks.OBSIDIAN, COLUMN_ABOVE);
 		helper.assertBlockPresent(Blocks.AIR, COLUMN_BELOW);
-		assertCharge(helper, adventureDrill, full - Config.electricDrillEuPerBlock - Config.electricDrillColumnEuPerBlock,
+		assertCharge(helper, adventureDrill, full - ToolConfig.electricDrillEuPerBlock
+				- ToolConfig.electricDrillColumnEuPerBlock,
 				"a protected extra block must not be billed; the allowed one must");
 
 		// 2. Survival, unbreakable block in the column.
@@ -1075,7 +1215,7 @@ public final class ElectricDrillScenarios {
 		mineColumnAim(helper, player, survivalDrill);
 		helper.assertBlockPresent(Blocks.AIR, COLUMN_AIM);
 		helper.assertBlockPresent(Blocks.BEDROCK, COLUMN_ABOVE);
-		assertCharge(helper, survivalDrill, full - Config.electricDrillEuPerBlock,
+		assertCharge(helper, survivalDrill, full - ToolConfig.electricDrillEuPerBlock,
 				"an unbreakable block in the column must be skipped and cost nothing");
 		helper.succeed();
 	}

@@ -4,10 +4,12 @@ import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.ComponentRepairBenchBlockEntity;
 import dev.alaindustrial.block.entity.WaterMillBlockEntity;
 import dev.alaindustrial.block.entity.WindMillBlockEntity;
+import dev.alaindustrial.core.environment.GeneratorConfig;
 import dev.alaindustrial.core.machine.ComponentRepair;
 import dev.alaindustrial.core.machine.ComponentTier;
 import dev.alaindustrial.item.misc.DurableComponentItem;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.Direction;
@@ -35,6 +37,53 @@ import net.minecraft.world.level.storage.TagValueInput;
  * fifth repair is refused because it would leave nothing.
  */
 public final class ComponentRepairBenchScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(ComponentRepairBenchScenarios::repairsWornRotorAndLowersCeiling,
+								"repair_bench_repairs_worn_rotor")
+						.fabricId("ComponentRepairBenchGameTest", "repairsWornRotorAndLowersCeiling").ticks(1800),
+				RosterEntry.of(ComponentRepairBenchScenarios::ceilingLadderIsLinearAcrossRepeatedRepairs,
+								"repair_bench_ceiling_ladder_is_linear")
+						.fabricId("ComponentRepairBenchGameTest", "ceilingLadderIsLinearAcrossRepeatedRepairs")
+						.ticks(6200),
+				RosterEntry.of(ComponentRepairBenchScenarios::everyGradeRepairsWithItsOwnMaterial,
+								"repair_bench_every_grade_has_its_material")
+						.fabricId("ComponentRepairBenchGameTest", "everyGradeRepairsWithItsOwnMaterial").ticks(8000),
+				RosterEntry.of(ComponentRepairBenchScenarios::missingMaterialResetsProgress,
+								"repair_bench_missing_material_resets_progress")
+						.fabricId("ComponentRepairBenchGameTest", "missingMaterialResetsProgress").ticks(3200),
+				RosterEntry.of(ComponentRepairBenchScenarios::spentComponentIsRefusedWithoutSpendingAnything,
+								"repair_bench_spent_component_is_refused")
+						.fabricId("ComponentRepairBenchGameTest", "spentComponentIsRefusedWithoutSpendingAnything")
+						.ticks(3100),
+				RosterEntry.of(ComponentRepairBenchScenarios::intactComponentIsNotTouched,
+								"repair_bench_intact_component_is_not_touched")
+						.fabricId("ComponentRepairBenchGameTest", "intactComponentIsNotTouched").ticks(1800),
+				RosterEntry.of(ComponentRepairBenchScenarios::wrongGradeMaterialIsRejected,
+								"repair_bench_wrong_grade_material_rejected")
+						.fabricId("ComponentRepairBenchGameTest", "wrongGradeMaterialIsRejected").ticks(1800),
+				RosterEntry.of(ComponentRepairBenchScenarios::slotsRejectWhatTheyShould,
+								"repair_bench_slots_reject_what_they_should")
+						.fabricId("ComponentRepairBenchGameTest", "slotsRejectWhatTheyShould").ticks(20, 40),
+				RosterEntry.of(ComponentRepairBenchScenarios::extractionOpensOnlyWhenTheBenchIsDone,
+								"repair_bench_extraction_opens_when_done")
+						.fabricId("ComponentRepairBenchGameTest", "extractionOpensOnlyWhenTheBenchIsDone").ticks(1800),
+				RosterEntry.of(ComponentRepairBenchScenarios::repairedPartSurvivesNbtRoundTrip,
+								"repair_bench_repaired_part_survives_round_trip")
+						.fabricId("ComponentRepairBenchGameTest", "repairedPartSurvivesNbtRoundTrip").ticks(1800),
+				RosterEntry.of(ComponentRepairBenchScenarios::repairedWheelStillWearsInTheMill,
+								"repair_bench_repaired_wheel_still_wears")
+						.fabricId("ComponentRepairBenchGameTest", "repairedWheelStillWearsInTheMill").ticks(2600),
+				RosterEntry.of(ComponentRepairBenchScenarios::repairedRotorSurvivesMillEvolution,
+								"repair_bench_repaired_rotor_survives_mill_evolution")
+						.fabricId("ComponentRepairBenchGameTest", "repairedRotorSurvivesMillEvolution").ticks(1800)
+						.sky(true, false));
+
+		private Roster() {}
+	}
+
 	private ComponentRepairBenchScenarios() {}
 
 	private static final BlockPos BENCH = new BlockPos(1, 2, 1);
@@ -361,7 +410,7 @@ public final class ComponentRepairBenchScenarios {
 		}
 		mill.setItem(WindMillBlockEntity.ROTOR_SLOT, repaired);
 		mill.setItem(WindMillBlockEntity.CHIP_SLOT, new ItemStack(ModContent.ALIGNMENT_CHIP_DAY.get(), 3));
-		mill.setEvolveProgressTicks(Config.windMillEvolveTicks - 1);
+		mill.setEvolveProgressTicks(GeneratorConfig.windMillEvolveTicks - 1);
 		AlaGameTestHelper.drive(mill, helper, 40);
 
 		if (!(helper.getLevel().getBlockEntity(helper.absolutePos(millPos))

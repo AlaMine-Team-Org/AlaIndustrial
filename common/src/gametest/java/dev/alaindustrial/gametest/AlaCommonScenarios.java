@@ -40,6 +40,32 @@ import net.minecraft.world.phys.shapes.CollisionContext;
  */
 public final class AlaCommonScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(AlaCommonScenarios::everyBlockPlacesAndBreaks, "every_block_places_and_breaks")
+						.fabricId("AlaCommonGameTest", "everyBlockPlacesAndBreaks").ticks(20, 40),
+				RosterEntry.of(AlaCommonScenarios::networkTickGuardIsolatesThrows, "network_tick_guard_isolates_throws")
+						.fabricId("AlaCommonGameTest", "networkTickGuardIsolatesThrows").ticks(20, 40),
+				RosterEntry.of(AlaCommonScenarios::everyBlockDropsItself, "every_block_drops_itself")
+						.fabricId("AlaCommonGameTest", "everyBlockDropsItself").ticks(20, 40),
+				RosterEntry.of(AlaCommonScenarios::everyBlockNoDropByHand, "every_block_no_drop_by_hand")
+						.fabricId("AlaCommonGameTest", "everyBlockNoDropByHand").ticks(20, 40),
+				RosterEntry.of(AlaCommonScenarios::blockStandardsAllBlocks, "block_standards_all_blocks")
+						.fabricId("AlaCommonGameTest", "blockStandardsAllBlocks").ticks(20, 40),
+				RosterEntry.of(AlaCommonScenarios::alaCommandRegistered, "ala_command_registered")
+						.fabricId("AlaCommonGameTest", "alaCommandRegistered").ticks(20, 40),
+				RosterEntry.of(AlaCommonScenarios::oresInConventionTags, "ores_in_convention_tags")
+						.fabricId("AlaCommonGameTest", "oresInConventionTags").ticks(20, 40),
+				RosterEntry.of(AlaCommonScenarios::gametestRigStructureFitsRigs, "gametest_rig_structure_fits_rigs")
+						.fabricId("AlaCommonGameTest", "gametestRigStructureFitsRigs").ticks(20, 40),
+				RosterEntry.of(AlaCommonScenarios::blockEntityBlockSetsAreImmutable,
+								"block_entity_block_sets_are_immutable")
+						.fabricId("AlaCommonGameTest", "blockEntityBlockSetsAreImmutable").ticks(20, 40));
+
+		private Roster() {}
+	}
+
 	private AlaCommonScenarios() {}
 
 	/** Reused single cell inside the test region; placed, asserted, cleared per block. */

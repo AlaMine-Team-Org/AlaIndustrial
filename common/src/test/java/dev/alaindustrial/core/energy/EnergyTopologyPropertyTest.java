@@ -3,10 +3,13 @@ package dev.alaindustrial.core.energy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import dev.alaindustrial.core.net.GraphComponents;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.UnaryOperator;
+import java.util.stream.IntStream;
 import net.jqwik.api.Arbitraries;
 import net.jqwik.api.Arbitrary;
 import net.jqwik.api.ForAll;
@@ -17,12 +20,12 @@ import net.jqwik.api.Provide;
  * Property-based coverage of the two Minecraft-free layers under the energy network: the arithmetic
  * chained along a line, and the graph partition that decides what counts as one network.
  *
- * <p><b>What this class does NOT do, stated plainly.</b> The live composition lives in
- * {@code EnergyLineDistributor}, which is Minecraft-coupled and cannot run at L1 — so {@code runLine}
- * below is a re-implementation of that chain written here, in the test. It therefore catches a broken
- * {@code split}/{@code cableLoss}, but it cannot catch {@code EnergyLineDistributor} applying them in
- * the wrong order or to the wrong operand. That gap is covered by the world gametests, not here, and
- * pretending otherwise would be worse than the gap itself.
+ * <p><b>The line half runs the real kernel.</b> {@code runLine} below drives {@link EnergyLineDistributor}
+ * itself — since MOD-715 (batch 8) the kernel is generic over its position type and runs at L1 — on a star:
+ * one cable holding the whole supply, every consumer beside it. So a property here catches the kernel
+ * applying {@code split}/{@code cableLoss} in the wrong order or to the wrong operand, not only a broken
+ * {@code split}/{@code cableLoss}; until batch 8 {@code runLine} was a re-implementation of that chain
+ * written in the test, and that gap was covered only by the world gametests.
  *
  * <p>The line properties overlap with {@link EnergySharePropertyTest} on purpose — they exercise the
  * same functions in composition rather than in isolation — so the value they add over it is modest.
@@ -63,31 +66,94 @@ class EnergyTopologyPropertyTest {
 
 	// ── a whole line: split, then per-consumer transit loss ──────────────────────────────────────
 
+	/** The most consumers {@link #consumerRooms} draws: the star's face count. */
+	private static final int MAX_CONSUMERS = 8;
+
 	/**
-	 * Delivers {@code supply} over a line of {@code hops} cable blocks to {@code room.length}
-	 * consumers, exactly as the network does: cap the movable total at the demand, split it
-	 * proportionally to free room, then destroy the distance loss per consumer.
+	 * A star on plain integers: position 0 is the one cable, positions 1..8 the consumers. Every position
+	 * has {@link #MAX_CONSUMERS} faces; the cable's face {@code i} is consumer {@code i + 1}, a consumer's
+	 * face 0 is the cable and its other faces lead nowhere ({@code -1}, not a cable).
+	 */
+	private static final List<UnaryOperator<Integer>> STAR = IntStream.range(0, MAX_CONSUMERS)
+			.mapToObj(face -> (UnaryOperator<Integer>) pos -> pos == 0 ? face + 1 : face == 0 ? 0 : -1).toList();
+
+	/** A consumer port that takes up to its free room. */
+	private static final class Sink implements EnergyPort {
+		final long capacity;
+		long amount;
+
+		Sink(long capacity) {
+			this.capacity = capacity;
+		}
+
+		@Override
+		public long insert(long maxAmount, EnergyPort.Txn txn) {
+			long moved = Math.min(capacity - amount, maxAmount);
+			amount += moved;
+			return moved;
+		}
+
+		@Override
+		public long extract(long maxAmount, EnergyPort.Txn txn) {
+			return 0;
+		}
+
+		@Override
+		public long getAmount() {
+			return amount;
+		}
+
+		@Override
+		public long getCapacity() {
+			return capacity;
+		}
+
+		@Override
+		public boolean supportsInsertion() {
+			return true;
+		}
+
+		@Override
+		public boolean supportsExtraction() {
+			return false;
+		}
+	}
+
+	/**
+	 * Delivers {@code supply} over a line of {@code hops} cable blocks to {@code room.length} consumers
+	 * through the real kernel ({@link EnergyLineDistributor#serveConsumersFromLine}): one cable holds the
+	 * whole supply and touches every consumer, each consumer sits {@code hops} blocks from the source. The
+	 * kernel caps the movable total at the demand, splits it proportionally to free room and destroys the
+	 * distance loss per consumer.
 	 *
-	 * @return {@code [totalDelivered, totalLost, totalMoved]}
+	 * @return {@code [totalDelivered, totalLost, totalMoved]}: what the consumers hold, what left the cable
+	 *     without arriving, and what left the cable
 	 */
 	private static long[] runLine(long supply, long[] room, int hops, double lossPerBlock,
 			long cap) {
-		long demand = 0;
-		for (long r : room) {
-			demand += r;
+		long size = Math.max(supply, 1L);
+		EnergyBuffer cable = new EnergyBuffer(size, size, size, () -> {
+		});
+		cable.setAmountUntracked(supply);
+		List<Sink> sinks = new ArrayList<>();
+		List<EnergyLineDistributor.LiveConsumer<Integer>> consumers = new ArrayList<>();
+		for (int i = 0; i < room.length; i++) {
+			Sink sink = new Sink(room[i]);
+			sinks.add(sink);
+			consumers.add(new EnergyLineDistributor.LiveConsumer<>(i + 1, sink, room[i]));
 		}
-		long moveTotal = EnergyShare.deliverable(supply, demand);
-		long[] shares = EnergyShare.split(moveTotal, room, demand, cap, 0);
+		EnergyLineDistributor<Integer> kernel = new EnergyLineDistributor<>(new LineView<Integer>(STAR,
+				pos -> pos == 0, pos -> pos == 0 ? cable : null, pos -> hops, pos -> null, pos -> null, List.of(),
+				(pos, face) -> true, (pos, face) -> true, List.of(), pos -> null));
+		long returned = kernel.serveConsumersFromLine(consumers, cap, lossPerBlock, participant -> {
+		}, 0);
 		long delivered = 0;
-		long lost = 0;
-		long moved = 0;
-		for (long gross : shares) {
-			long loss = EnergyShare.cableLoss(gross, lossPerBlock, hops);
-			delivered += gross - loss;
-			lost += loss;
-			moved += gross;
+		for (Sink sink : sinks) {
+			delivered += sink.amount;
 		}
-		return new long[] {delivered, lost, moved};
+		assertEquals(delivered, returned, "the kernel reports exactly what the consumers received");
+		long moved = supply - cable.getAmount();
+		return new long[] {delivered, moved - delivered, moved};
 	}
 
 	/**

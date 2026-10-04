@@ -2,6 +2,7 @@ package dev.alaindustrial.recipe;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.core.machine.MachineRates;
 import dev.alaindustrial.registry.ModRecipes;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,7 +42,7 @@ import net.minecraft.world.item.crafting.SmeltingRecipe;
  * the mirrors below surface them in the electric furnace category once. Writing a mod-side duplicate
  * would either double-list it here, or pin a static EU cost that drifts from the runtime once
  * {@code globalMachineSpeedMultiplier} rounds its factors separately (see
- * {@link Config#electricFurnaceVanillaSmeltEu}); the fallback avoids both.
+ * {@link MachineRates#vanillaSmeltEu}); the fallback avoids both.
  *
  * <p><b>Exception, and how the double listing it would cause is avoided (MOD-523).</b> Twelve of the
  * mod's own {@code alaindustrial:smelting} recipes DO have a parallel {@code minecraft:smelting}
@@ -71,12 +72,13 @@ public final class VanillaSmeltingMirror {
 	}
 
 	/**
-	 * EU one vanilla smelt costs in the electric furnace — {@link Config#electricFurnaceVanillaSmeltEu},
+	 * EU one vanilla smelt costs in the electric furnace — {@link MachineRates#vanillaSmeltEu} on its knobs,
 	 * the same figure {@code ElectricFurnaceBlockEntity} ticks away, so the shown cost tracks the real
 	 * one under any speed multiplier.
 	 */
 	public static int energy() {
-		return Config.electricFurnaceVanillaSmeltEu();
+		return MachineRates.vanillaSmeltEu(Config.electricFurnaceDuration, Config.machineEuPerTick,
+				Config.globalMachineSpeedMultiplier);
 	}
 
 	/**

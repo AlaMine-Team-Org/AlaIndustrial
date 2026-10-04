@@ -5,6 +5,7 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.item.ToolConfig;
 import dev.alaindustrial.item.energy.BatteryItem;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.registry.ModContent;
@@ -40,6 +41,39 @@ import java.util.Optional;
  */
 public final class BatteryScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(BatteryScenarios::battery01ChargingAStackCostsPerItem,
+								"battery_charging_a_stack_costs_per_item")
+						.fabricId("BatteryGameTest", "tcBattery001Fun01_chargingAStackCostsPerItem").ticks(20, 40),
+				RosterEntry.of(BatteryScenarios::battery02FullStackStillCharges, "battery_full_stack_still_charges")
+						.fabricId("BatteryGameTest", "tcBattery001Fun02_fullStackStillCharges").ticks(20, 40),
+				RosterEntry.of(BatteryScenarios::battery03DischargeSlotDrainsStack,
+								"battery_discharge_slot_drains_stack")
+						.fabricId("BatteryGameTest", "tcBattery001Fun03_dischargeSlotDrainsStack").ticks(20, 40),
+				RosterEntry.of(BatteryScenarios::battery04StackingFollowsCharge, "battery_stacking_follows_charge")
+						.fabricId("BatteryGameTest", "tcBattery001Fun04_stackingFollowsCharge").ticks(20, 40),
+				RosterEntry.of(BatteryScenarios::battery05CraftCarriesChargeIntoResult, "battery_craft_carries_charge")
+						.fabricId("BatteryGameTest", "tcBattery001Fun05_craftCarriesChargeIntoResult").ticks(20, 40),
+				RosterEntry.of(BatteryScenarios::battery06BatteryIsExcludedFromAutoCharge,
+								"battery_excluded_from_auto_charge")
+						.fabricId("BatteryGameTest", "tcBattery001Fun06_excludedFromAutoCharge").ticks(20, 40),
+				RosterEntry.of(BatteryScenarios::battery07RepeatedAssemblyDoesNotAccumulate,
+								"battery_repeated_assembly_no_accumulation")
+						.fabricId("BatteryGameTest", "tcBattery001Fun07_repeatedAssemblyDoesNotAccumulate")
+						.ticks(20, 40),
+				RosterEntry.of(BatteryScenarios::battery08AssemblerCarriesChargeThrough,
+								"battery_assembler_carries_charge")
+						.fabricId("BatteryGameTest", "tcBattery001Fun08_assemblerCarriesChargeThrough").ticks(20, 40),
+				RosterEntry.of(BatteryScenarios::battery09DrillUpgradeCarriesChargeIntoResult,
+								"battery_drill_upgrade_carries_charge")
+						.fabricId("BatteryGameTest", "tcBattery001Fun09_drillUpgradeCarriesChargeIntoResult")
+						.ticks(20, 40));
+
+		private Roster() {}
+	}
+
 	private BatteryScenarios() {}
 
 	private static final BlockPos STORE = new BlockPos(1, 2, 1);
@@ -68,6 +102,8 @@ public final class BatteryScenarios {
 	 * <p>The dupe guard. A stack of eight is charged for one tick and the EU that left the store is
 	 * compared against the EU that arrived in the stack. Make {@code chargeItem} pay per item instead of
 	 * per stack and the buffer loses an eighth of what the batteries gain — this goes red.
+	 *
+	 * @implements TC-BATTERY-001-FUN01 — charging a stack costs count × the per-item gain (dupe guard).
 	 */
 	public static void battery01ChargingAStackCostsPerItem(GameTestHelper helper) {
 		BatteryBoxBlockEntity be = placeStore(helper);
@@ -110,6 +146,8 @@ public final class BatteryScenarios {
 	 * <p>This is the test that decides the stack size. Energy per item is {@code budget / count}, so once
 	 * the count passes the per-tick ceiling the share rounds to zero and the stack sits at 0 EU forever.
 	 * At {@code stacksTo(16)} against the LV ceiling of 32 there are 2 EU per item to give.
+	 *
+	 * @implements TC-BATTERY-001-FUN02 — a full stack of 16 still charges against the 32 EU/t ceiling.
 	 */
 	public static void battery02FullStackStillCharges(GameTestHelper helper) {
 		BatteryBoxBlockEntity be = placeStore(helper);
@@ -135,6 +173,8 @@ public final class BatteryScenarios {
 	 *
 	 * <p>The mirror of BATTERY-01, and the reason the Battery Box grew a second slot at all: the battery
 	 * is an LV item, and before this its charge could only be recovered a whole tier later.
+	 *
+	 * @implements TC-BATTERY-001-FUN03 — the Battery Box discharge slot drains a stack, conserving EU.
 	 */
 	public static void battery03DischargeSlotDrainsStack(GameTestHelper helper) {
 		BatteryBoxBlockEntity be = placeStore(helper);
@@ -142,7 +182,7 @@ public final class BatteryScenarios {
 			return;
 		}
 		int count = 4;
-		long each = Config.batteryBuffer;
+		long each = ToolConfig.batteryBuffer;
 		be.getEnergyStorage().setAmountUntracked(0);
 		be.setItem(BatteryBoxBlockEntity.DISCHARGE_SLOT, batteries(count, each));
 
@@ -172,23 +212,26 @@ public final class BatteryScenarios {
 	 * <p>Drained batteries have to be component-identical to freshly crafted ones (that is what makes
 	 * "drain it to zero and it stacks again" true), equal charges have to stack, and unequal ones must
 	 * not. Write 0 EU into the component instead of removing it and the first case goes red.
+	 *
+	 * @implements TC-BATTERY-001-FUN04 — drained batteries stack with fresh ones, equal charges stack,
+	 *     unequal ones do not.
 	 */
 	public static void battery04StackingFollowsCharge(GameTestHelper helper) {
 		ItemStack fresh = new ItemStack(ModContent.BATTERY.get());
-		ItemStack drained = batteries(1, Config.batteryBuffer);
+		ItemStack drained = batteries(1, ToolConfig.batteryBuffer);
 		ItemEnergy.set(drained, 0);
 		if (!ItemStack.isSameItemSameComponents(fresh, drained)) {
 			helper.fail("a battery drained to zero does not stack with a fresh one: "
 					+ drained.getComponents() + " vs " + fresh.getComponents());
 			return;
 		}
-		ItemStack fullA = batteries(1, Config.batteryBuffer);
-		ItemStack fullB = batteries(1, Config.batteryBuffer);
+		ItemStack fullA = batteries(1, ToolConfig.batteryBuffer);
+		ItemStack fullB = batteries(1, ToolConfig.batteryBuffer);
 		if (!ItemStack.isSameItemSameComponents(fullA, fullB)) {
 			helper.fail("two equally charged batteries do not stack");
 			return;
 		}
-		ItemStack half = batteries(1, Config.batteryBuffer / 2);
+		ItemStack half = batteries(1, ToolConfig.batteryBuffer / 2);
 		if (ItemStack.isSameItemSameComponents(fullA, half)) {
 			helper.fail("batteries at different charges stack — a stack cannot describe two charges");
 			return;
@@ -206,6 +249,9 @@ public final class BatteryScenarios {
 	 *
 	 * <p>Runs the real recipe out of the recipe manager rather than a hand-built one, so a datapack that
 	 * stopped using the charge-carrying type would fail here rather than silently drop the feature.
+	 *
+	 * @implements TC-BATTERY-001-FUN05 — a charge-carrying recipe hands the result the EU of its
+	 *     batteries, clamped to the result's buffer.
 	 */
 	public static void battery05CraftCarriesChargeIntoResult(GameTestHelper helper) {
 		Optional<RecipeHolder<?>> found = helper.getLevel().getServer().getRecipeManager()
@@ -218,7 +264,7 @@ public final class BatteryScenarios {
 			helper.fail("electric_drill recipe is not a crafting recipe");
 			return;
 		}
-		long each = Config.batteryBuffer;
+		long each = ToolConfig.batteryBuffer;
 		// The real 3×3 layout: III / BPB / CEC. Filling it completely means matches() is exercised too —
 		// that is what proves a CHARGED battery still satisfies the recipe rather than only that the
 		// arithmetic works once a match is assumed.
@@ -262,6 +308,9 @@ public final class BatteryScenarios {
 	 * A recipe that accumulated state between calls — summing the previous result's charge into the next
 	 * one — would multiply energy with every click of the mouse. Two identical calls have to give two
 	 * identical stacks.
+	 *
+	 * @implements TC-BATTERY-001-FUN07 — assembling the same recipe twice yields identical stacks, so a
+	 *     bulk craft cannot multiply energy.
 	 */
 	public static void battery07RepeatedAssemblyDoesNotAccumulate(GameTestHelper helper) {
 		Optional<RecipeHolder<?>> found = helper.getLevel().getServer().getRecipeManager()
@@ -270,7 +319,7 @@ public final class BatteryScenarios {
 			helper.fail("electric_drill recipe not loaded as a crafting recipe");
 			return;
 		}
-		long each = Config.batteryBuffer;
+		long each = ToolConfig.batteryBuffer;
 		List<ItemStack> grid = List.of(
 				new ItemStack(Items.IRON_INGOT), new ItemStack(Items.IRON_INGOT), new ItemStack(Items.IRON_INGOT),
 				batteries(1, each), new ItemStack(Items.DIAMOND_PICKAXE), batteries(1, each),
@@ -297,6 +346,9 @@ public final class BatteryScenarios {
 	 * recipe the real stacks out of its warehouse, so whatever charge those batteries hold ends up in the
 	 * result. Worth pinning, because the assembler compares what it made against what the blueprint
 	 * promised, and a comparison that counted charge would stall the machine on a full warehouse.
+	 *
+	 * @implements TC-BATTERY-001-FUN08 — charged warehouse stock reaches the assembled result, and the
+	 *     result differs from the blueprint's promise by charge alone.
 	 */
 	public static void battery08AssemblerCarriesChargeThrough(GameTestHelper helper) {
 		Optional<RecipeHolder<?>> found = helper.getLevel().getServer().getRecipeManager()
@@ -305,7 +357,7 @@ public final class BatteryScenarios {
 			helper.fail("electric_drill recipe not loaded as a crafting recipe");
 			return;
 		}
-		long each = Config.batteryBuffer;
+		long each = ToolConfig.batteryBuffer;
 		// The blueprint is recorded with DRAINED batteries — the state a player's blueprint is normally
 		// written in — while the warehouse supplies CHARGED ones. That mismatch between the promised
 		// result and the produced one is exactly what the assembler's gate has to tolerate.
@@ -346,6 +398,9 @@ public final class BatteryScenarios {
 	 *
 	 * <p>The recipe is taken out of the {@code RecipeManager} rather than built here, so this goes red if
 	 * the JSON ever reverts to {@code minecraft:crafting_shaped} — which is the whole point of the test.
+	 *
+	 * @implements TC-BATTERY-001-FUN09 — upgrading a charged Electric Drill to the diamond tip carries
+	 *     its EU into the upgrade instead of burning it (MOD-373).
 	 */
 	public static void battery09DrillUpgradeCarriesChargeIntoResult(GameTestHelper helper) {
 		Optional<RecipeHolder<?>> found = helper.getLevel().getServer().getRecipeManager()
@@ -358,7 +413,7 @@ public final class BatteryScenarios {
 			helper.fail("electric_drill_diamond_tip recipe is not a crafting recipe");
 			return;
 		}
-		long charge = Config.electricDrillBuffer;
+		long charge = ToolConfig.electricDrillBuffer;
 		if (charge <= 0) {
 			helper.fail("the drill's configured buffer is " + charge + " — this test would prove nothing");
 			return;
@@ -418,6 +473,9 @@ public final class BatteryScenarios {
 	 * <p>A worn Energy Pack holds 20 000 EU and a full stack of batteries holds 32 000: without the tag
 	 * the pack would empty itself into the spares in the player's backpack the moment they were picked
 	 * up. The Charging Station ignores the tag by policy and still fills them.
+	 *
+	 * @implements TC-BATTERY-001-FUN06 — the battery is tagged no_auto_charge, so a worn Energy Pack
+	 *     does not empty itself into a stack of spares.
 	 */
 	public static void battery06BatteryIsExcludedFromAutoCharge(GameTestHelper helper) {
 		ItemStack battery = new ItemStack(ModContent.BATTERY.get());

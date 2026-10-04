@@ -1,7 +1,7 @@
 package dev.alaindustrial.core.structure;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.block.IrradiatedSoilBlock;
+import dev.alaindustrial.core.reactor.ReactorConfig;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModTags;
 import java.util.ArrayList;
@@ -152,7 +152,7 @@ public final class ReactorBlast {
 	 */
 	public static int scatterFallout(ServerLevel level, List<BlockPos> destroyed, BlockPos centre,
 			int radius) {
-		if (!Config.reactorFalloutEnabled || radius <= 0) {
+		if (!ReactorConfig.reactorFalloutEnabled || radius <= 0) {
 			return 0;
 		}
 		BlockState fallout = ModContent.IRRADIATED_SOIL.get().defaultBlockState()

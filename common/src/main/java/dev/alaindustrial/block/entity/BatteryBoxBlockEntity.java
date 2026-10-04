@@ -2,6 +2,7 @@ package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.HorizontalMachineBlock;
+import dev.alaindustrial.block.entity.machine.SyncChannels;
 import dev.alaindustrial.core.energy.DirectAdjacencyDistributor;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
@@ -15,17 +16,14 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.ValueInput;
 
 /**
  * LV BatteryBox (spec: alaindustrial:battery_box) — the first energy store. Buffers up to 20 000 EU,
@@ -136,22 +134,6 @@ public class BatteryBoxBlockEntity extends MachineBlockEntity implements MenuPro
 	}
 
 	/**
-	 * Reads the container, then walks the save-format ladder (MOD-556).
-	 *
-	 * <p>The pre-MOD-083 slot renumbering (C-20) used to be recognised right here, by noticing an item
-	 * with no EU buffer in the discharge slot. It is now rung 0 → 1 of
-	 * {@link BlockEntityDataMigrations}: same repair, but it runs only against data that actually
-	 * predates the change, and it says so on disk afterwards instead of re-deciding on every load. The
-	 * call must come last — the rung shifts container slots, and the container is what {@code super}
-	 * above has just read.
-	 */
-	@Override
-	protected void loadAdditional(ValueInput input) {
-		super.loadAdditional(input);
-		migrateLoadedData();
-	}
-
-	/**
 	 * GUI-only slot: the base class delegates hopper insertion to {@link #canPlaceItem}, which would
 	 * let hoppers push powered items in — cut that path off entirely. Extraction is already blocked by
 	 * the default {@code isOutputSlot() == false}.
@@ -212,42 +194,19 @@ public class BatteryBoxBlockEntity extends MachineBlockEntity implements MenuPro
 	}
 
 	/**
-	 * Five-wide data — hides {@link MachineBlockEntity#DATA_COUNT} on purpose so
-	 * {@code BatteryBoxBlockEntity.DATA_COUNT} always names <em>this</em> machine's width, for the block
-	 * entity below and for {@code BatteryBoxMenu}'s client stub (MOD-235).
+	 * GUI sync channels (MOD-712, BE-7): the base four, then the per-tick output cap for the readout
+	 * (read-only).
 	 */
-	public static final int DATA_COUNT = 5;
+	public enum Channel { ENERGY, CAPACITY, PROGRESS, MAX_PROGRESS, OUTPUT_CAP }
 
-	/** Five-wide data: base 0..3 plus the per-tick output cap (4) for the GUI readout. */
-	private final ContainerData batteryBoxData = new ContainerData() {
-		@Override
-		public int get(int index) {
-			return index == 4
-					? (int) Math.min(Integer.MAX_VALUE, energy.maxExtract)
-					: BatteryBoxBlockEntity.this.dataAccess.get(index);
-		}
-
-		@Override
-		public void set(int index, int value) {
-			if (index != 4) {
-				BatteryBoxBlockEntity.this.dataAccess.set(index, value);
-			}
-		}
-
-		@Override
-		public int getCount() {
-			return DATA_COUNT;
-		}
-	};
+	/** Width of {@link #getDataAccess()}, which the menu's client stub sizes itself from (MOD-235). */
+	public static final int DATA_COUNT = Channel.values().length;
 
 	@Override
-	public ContainerData getDataAccess() {
-		return batteryBoxData;
-	}
-
-	@Override
-	public Component getDisplayName() {
-		return Component.translatable("block.alaindustrial.battery_box");
+	protected SyncChannels createChannels() {
+		return channels(Channel.class)
+				.read(Channel.OUTPUT_CAP, () -> SyncChannels.clampInt(energy.maxExtract))
+				.build();
 	}
 
 	@Override

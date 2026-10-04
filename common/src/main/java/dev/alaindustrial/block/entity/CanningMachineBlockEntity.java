@@ -1,20 +1,17 @@
 package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
-import dev.alaindustrial.core.energy.EnergyRole;
+import dev.alaindustrial.block.entity.machine.SyncChannels;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.core.food.CanningMath;
-import dev.alaindustrial.core.food.CanningRules;
+import dev.alaindustrial.core.machine.MachineRates;
 import dev.alaindustrial.menu.CanningMachineMenu;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -43,11 +40,6 @@ public final class CanningMachineBlockEntity extends MachineBlockEntity
 	public static final int CAN_SLOT = 1;
 	public static final int OUTPUT_SLOT = 2;
 	public static final int SLOT_COUNT = 3;
-	/** Base four channels plus the buffer and the rate behind it, so the gauge can draw itself. */
-	public static final int DATA_COUNT = MachineBlockEntity.DATA_COUNT + 2;
-	private static final int DATA_FOOD_BUFFER = 4;
-	private static final int DATA_VALUE_PER_RATION = 5;
-
 	/** Accumulated food value in tenths; survives save/load and is shown as the calorie gauge. */
 	private int foodBuffer;
 
@@ -57,7 +49,7 @@ public final class CanningMachineBlockEntity extends MachineBlockEntity
 	public CanningMachineBlockEntity(BlockPos pos, BlockState state) {
 		super(ModContent.CANNING_MACHINE_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT,
 				Config.machineBuffer, EnergyTier.LV.maxVoltage(), 0L);
-		this.maxProgress = Config.scaledDuration(Config.canningMachineDuration);
+		this.maxProgress = MachineRates.duration(Config.canningMachineDuration, Config.globalMachineSpeedMultiplier);
 	}
 
 	@Override
@@ -164,37 +156,21 @@ public final class CanningMachineBlockEntity extends MachineBlockEntity
 		return slot == OUTPUT_SLOT;
 	}
 
-	@Override
-	public EnergyRole energyRoleForFace(Direction worldFace) {
-		return facingAwareRole(worldFace, EnergyRole.IN);
-	}
+	/**
+	 * GUI sync channels (MOD-712, BE-7): the base four, the food buffer and the food value of one can
+	 * (the server's config, so the client never reads its own); both read-only.
+	 */
+	public enum Channel { ENERGY, CAPACITY, PROGRESS, MAX_PROGRESS, FOOD_BUFFER, VALUE_PER_RATION }
 
-	private final ContainerData canningData = new ContainerData() {
-		@Override
-		public int get(int index) {
-			return switch (index) {
-				case DATA_FOOD_BUFFER -> foodBuffer;
-				case DATA_VALUE_PER_RATION -> Config.canningFoodValuePerCan;
-				default -> CanningMachineBlockEntity.this.dataAccess.get(index);
-			};
-		}
-
-		@Override
-		public void set(int index, int value) {
-			if (index != DATA_FOOD_BUFFER && index != DATA_VALUE_PER_RATION) {
-				CanningMachineBlockEntity.this.dataAccess.set(index, value);
-			}
-		}
-
-		@Override
-		public int getCount() {
-			return DATA_COUNT;
-		}
-	};
+	/** Width of {@link #getDataAccess()}, which the menu's client stub sizes itself from (MOD-235). */
+	public static final int DATA_COUNT = Channel.values().length;
 
 	@Override
-	public ContainerData getDataAccess() {
-		return canningData;
+	protected SyncChannels createChannels() {
+		return channels(Channel.class)
+				.read(Channel.FOOD_BUFFER, () -> foodBuffer)
+				.read(Channel.VALUE_PER_RATION, () -> Config.canningFoodValuePerCan)
+				.build();
 	}
 
 	@Override
@@ -204,16 +180,11 @@ public final class CanningMachineBlockEntity extends MachineBlockEntity
 	}
 
 	@Override
-	protected void loadAdditional(ValueInput input) {
-		super.loadAdditional(input);
+	protected void loadMachineData(ValueInput input) {
+		super.loadMachineData(input);
 		// Clamped on the way in as well as on the way up: a hand-edited or mod-corrupted save must not
 		// hand the GUI sync a value the 16-bit channel cannot carry.
 		foodBuffer = Math.max(0, Math.min(CanningMath.MAX_BUFFER, input.getIntOr("FoodBuffer", 0)));
-	}
-
-	@Override
-	public Component getDisplayName() {
-		return Component.translatable("block.alaindustrial.canning_machine");
 	}
 
 	@Override

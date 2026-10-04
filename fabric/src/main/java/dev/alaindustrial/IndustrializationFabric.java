@@ -10,8 +10,6 @@ import dev.alaindustrial.core.energy.EnergyLookup;
 import dev.alaindustrial.core.energy.EnergyTransactions;
 import dev.alaindustrial.core.fluid.FluidLookup;
 import dev.alaindustrial.core.item.ItemLookup;
-import dev.alaindustrial.core.energy.NetworkManager;
-import dev.alaindustrial.core.item.ItemNetworkManager;
 import dev.alaindustrial.core.fabric.FabricEnergyLookup;
 import dev.alaindustrial.core.fabric.FabricEnergyTransactions;
 import dev.alaindustrial.core.fabric.FabricFluidLookup;
@@ -20,7 +18,8 @@ import dev.alaindustrial.core.fabric.FabricItemFluidBridge;
 import dev.alaindustrial.core.fabric.FabricItemLookup;
 import dev.alaindustrial.item.energy.ItemEnergyBridge;
 import dev.alaindustrial.item.fluid.ItemFluidBridge;
-import dev.alaindustrial.network.NetworkAnalyzerPayload;
+import dev.alaindustrial.lifecycle.ServerHookRoster;
+import dev.alaindustrial.network.ModPayloads;
 import dev.alaindustrial.network.NetworkDispatcher;
 import dev.alaindustrial.network.fabric.FabricNetworkDispatcher;
 import dev.alaindustrial.registry.ModBlockEntities;
@@ -33,6 +32,7 @@ import dev.alaindustrial.registry.ModMenus;
 import dev.alaindustrial.registry.ModRecipes;
 import dev.alaindustrial.registry.ModSounds;
 import dev.alaindustrial.registry.ModWorldGen;
+import dev.alaindustrial.registry.RecipeFamily;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLevelEvents;
@@ -40,10 +40,12 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.recipe.v1.sync.RecipeSynchronization;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootPool;
@@ -76,8 +78,8 @@ public class IndustrializationFabric implements ModInitializer {
 		registerEffects();
 		registerSounds();
 		verifyContentBound();
-		dev.alaindustrial.stats.fabric.FabricPlayerStats.init(); // MOD-133 player-stats attachment + store seam
-		dev.alaindustrial.skill.fabric.FabricPlayerSkills.init(); // MOD-483 skill-tree attachment + store seam
+		// MOD-133/MOD-483: the player attachments of ModPlayerAttachments + their store seams (MOD-708).
+		dev.alaindustrial.registry.ModAttachments.init();
 		registerChestStorage();
 		registerNetworkPayloads();
 		registerServerLifecycle();
@@ -187,9 +189,9 @@ public class IndustrializationFabric implements ModInitializer {
 		// MOD-084: item energy capability on the mod's powered items, so other mods' chargers can fill
 		// them (same ordering reason as the capsule — the items must exist first).
 		dev.alaindustrial.core.fabric.StackAsEnergyStorage.register();
-		// MOD-238: oil's Fabric transfer-API attributes (viscosity 3000, the NeoForge FluidType
-		// counterpart). Registered per fluid — still and flowing each get the handler.
-		registerOilFluidAttributes();
+		// MOD-238: Fabric transfer-API attributes of the ModFluidsManifest entries that declare them —
+		// today crude oil only (viscosity 3000); the others keep the API defaults (MOD-728).
+		dev.alaindustrial.registry.ModFluids.registerTransferAttributes();
 		// MOD-238: dispenser support for the filled oil bucket (the empty-bucket pickup behaviour is
 		// generic in vanilla and already worked; emptying is registered per item and was missing).
 		dev.alaindustrial.item.fluid.OilBucketDispenseBehavior.register();
@@ -197,47 +199,25 @@ public class IndustrializationFabric implements ModInitializer {
 		// entity standing INSIDE the single facing block, which a wandering villager keeps leaving.
 		dev.alaindustrial.item.wearable.SuitDispenseBehavior.register();
 		ModRecipes.init();
-		// MOD-543: opt every machine-recipe serializer into fabric-api's recipe sync. Vanilla 26.2
+		// MOD-543: opt every recipe serializer of the mod into fabric-api's recipe sync. Vanilla 26.x
 		// syncs only display-capable vanilla recipes to clients, so on a dedicated server the synced
-		// recipe map (the one JEI reads) holds none of our custom recipe types and every machine
-		// category in JEI stayed empty for server players — the category and its GUI click areas
-		// existed but showed nothing (REI is immune: its server entrypoint ships its own displays).
-		// Both sides run this code, so the client also reports these serializers as supported.
-		for (ModRecipes.Kind kind : ModRecipes.kinds()) {
-			RecipeSynchronization.synchronizeRecipeSerializer(kind.serializer());
-		}
-		for (ModRecipes.FluidKind<?> kind : ModRecipes.fluidKinds()) {
-			RecipeSynchronization.synchronizeRecipeSerializer(kind.serializer());
-		}
-		for (ModRecipes.AlloyKind<?> kind : ModRecipes.alloyKinds()) {
-			RecipeSynchronization.synchronizeRecipeSerializer(kind.serializer());
+		// recipe map (the one JEI reads) would hold none of our custom recipe types and every machine
+		// category in JEI would stay empty for server players (REI is immune: its server entrypoint
+		// ships its own displays). Both sides run this code, so the client also reports these
+		// serializers as supported. MOD-683: the charge-transfer crafting recipes (powered tools, Energy
+		// Pack, Jetpack, Fluxweave armour) look like plain crafting recipes to vanilla but need the same
+		// opt-in — they were once missing from JEI's crafting category because only the machine
+		// families were listed here. MOD-708: one loop over ModRecipes.families(), the list both loaders
+		// register from, so a new family cannot be left out; docs/tools/content/recipe_sync_check.py fails the
+		// build if a shipped recipe type is not a declared family or this loop is gone.
+		for (RecipeFamily<?> family : ModRecipes.families()) {
+			RecipeSynchronization.synchronizeRecipeSerializer(family.serializer());
 		}
 		ModCriteria.init();
 		ModWorldGen.init();
 		// MOD-062: villager profession + its POI (needs the workbench block registered by ModBlocks
 		// above). Fabric keeps both registries writable during init, so this is eager like the rest.
 		registerVillagerProfession();
-	}
-
-	/**
-	 * Registers oil's {@code FluidVariantAttributes} handler (MOD-238): viscosity 3000 — the Fabric
-	 * transfer-API mirror of the NeoForge {@code FluidType} numbers, so cross-mod pipes/tanks see the
-	 * same thickness on both loaders. The handler is per-fluid, so still and flowing register
-	 * separately.
-	 */
-	private void registerOilFluidAttributes() {
-		net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributeHandler oilAttributes =
-				new net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributeHandler() {
-					@Override
-					public int getViscosity(net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant variant,
-							net.minecraft.world.level.Level level) {
-						return 3000;
-					}
-				};
-		net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes.register(
-				dev.alaindustrial.registry.ModFluids.OIL, oilAttributes);
-		net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes.register(
-				dev.alaindustrial.registry.ModFluids.FLOWING_OIL, oilAttributes);
 	}
 
 	/**
@@ -298,173 +278,60 @@ public class IndustrializationFabric implements ModInitializer {
 		ModContent.verifyAllBound();
 	}
 
-	/** Registers the S2C/C2S payload types (and the one C2S receiver) used by the mod. */
+	/**
+	 * Registers every payload type of the shared {@link ModPayloads#PAYLOADS} list (MOD-706), and a server
+	 * receiver for each serverbound one. The client receivers come from {@code ClientPayloadManifest} in
+	 * the client entrypoint; NeoForge replays the same list in {@code NeoForgeNetwork}. Sending is neutral
+	 * via {@code NetworkDispatcher} (installed above).
+	 *
+	 * <p>The receiver hops onto the server thread with {@code server().execute}, as the hand-written
+	 * receivers did. Fabric already calls it there (fabric-networking-api-v1 6.3.x,
+	 * {@code AbstractChanneledNetworkAddon.handle}), so the hop only queues the body; kept, because the
+	 * refactoring changes no behaviour.
+	 */
 	private void registerNetworkPayloads() {
-		// S2C payload for the Network Analyzer item (MOD-016). MOD-022 Phase 3: the payload record + codec
-		// live in common (dev.alaindustrial.network.NetworkAnalyzerPayload); only the type registration and
-		// receiver are loader-side (no neutral form). Fabric registers the type here via PayloadTypeRegistry
-		// and the client receiver in NetworkVisualizationClient; NeoForge does both through
-		// RegisterPayloadHandlersEvent. Sending is neutral via NetworkDispatcher (installed above).
-		PayloadTypeRegistry.clientboundPlay().register(NetworkAnalyzerPayload.TYPE, NetworkAnalyzerPayload.CODEC);
-		// MOD-278: the repeller dome answer — personal, one per button press.
-		PayloadTypeRegistry.clientboundPlay().register(dev.alaindustrial.network.RepellerDomePayload.TYPE,
-				dev.alaindustrial.network.RepellerDomePayload.CODEC);
-		// MOD-125: one machine's career statistics, pushed from its open menu every 40 ticks. Only ever
-		// travels while a player has that machine's screen open.
-		PayloadTypeRegistry.clientboundPlay().register(dev.alaindustrial.network.MachineStatsPayload.TYPE,
-				dev.alaindustrial.network.MachineStatsPayload.CODEC);
-		// MOD-620: the reactor's core, stack by stack, pushed from an open controller screen at most once a second.
-		PayloadTypeRegistry.clientboundPlay().register(dev.alaindustrial.network.ReactorZonePayload.TYPE,
-				dev.alaindustrial.network.ReactorZonePayload.CODEC);
-		// MOD-622: the reactor's event log, pushed from an open controller screen at most twice a second.
-		PayloadTypeRegistry.clientboundPlay().register(dev.alaindustrial.network.ReactorLogPayload.TYPE,
-				dev.alaindustrial.network.ReactorLogPayload.CODEC);
-		// MOD-628: the remote's stations, pushed from an open remote screen at most once a second.
-		PayloadTypeRegistry.clientboundPlay().register(dev.alaindustrial.network.TeleportStationsPayload.TYPE,
-				dev.alaindustrial.network.TeleportStationsPayload.CODEC);
-		// Teleport screen-fade level (MOD-106) — sent every tick of a jump's last second; the client
-		// clears itself when the levels stop, so a cancel needs no packet of its own.
-		PayloadTypeRegistry.clientboundPlay().register(
-				dev.alaindustrial.network.TeleportFadePayload.TYPE,
-				dev.alaindustrial.network.TeleportFadePayload.CODEC);
-		// Why a jump was refused (MOD-093) — shown inside the remote's screen, which covers the action
-		// bar the refusal would otherwise land on.
-		PayloadTypeRegistry.clientboundPlay().register(
-				dev.alaindustrial.network.TeleportNoticePayload.TYPE,
-				dev.alaindustrial.network.TeleportNoticePayload.CODEC);
-		// MOD-513: the player's archive record for the guide book's first page — once per login.
-		PayloadTypeRegistry.clientboundPlay().register(
-				dev.alaindustrial.network.ArchiveRecordPayload.TYPE,
-				dev.alaindustrial.network.ArchiveRecordPayload.CODEC);
-		// The mod's first C2S payload (MOD-093): renaming a teleport point. Every other button on that
-		// screen rides vanilla's container-button packet, which needs no registration — only a name,
-		// being a string, needs a payload of our own.
-		PayloadTypeRegistry.serverboundPlay().register(
-				dev.alaindustrial.network.TeleportRenamePayload.TYPE,
-				dev.alaindustrial.network.TeleportRenamePayload.CODEC);
-		net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.registerGlobalReceiver(
-				dev.alaindustrial.network.TeleportRenamePayload.TYPE,
-				(payload, context) -> context.server().execute(
-						() -> dev.alaindustrial.network.TeleportRenamePayload.handle(payload, context.player())));
-		PayloadTypeRegistry.serverboundPlay().register(
-				dev.alaindustrial.network.FluxweaveStepAssistPayload.TYPE,
-				dev.alaindustrial.network.FluxweaveStepAssistPayload.CODEC);
-		net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.registerGlobalReceiver(
-				dev.alaindustrial.network.FluxweaveStepAssistPayload.TYPE,
-				(payload, context) -> context.server().execute(
-						() -> dev.alaindustrial.network.FluxweaveStepAssistPayload.handle(payload, context.player())));
-		// MOD-482: the column bore's on/off switch. Serverbound only — the reply is an action-bar line.
-		PayloadTypeRegistry.serverboundPlay().register(
-				dev.alaindustrial.network.DrillColumnTogglePayload.TYPE,
-				dev.alaindustrial.network.DrillColumnTogglePayload.CODEC);
-		net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.registerGlobalReceiver(
-				dev.alaindustrial.network.DrillColumnTogglePayload.TYPE,
-				(payload, context) -> context.server().execute(
-						() -> dev.alaindustrial.network.DrillColumnTogglePayload.handle(payload, context.player())));
-		// MOD-483: the upgrade tree needs no clientbound half — the skills attachment syncs itself to its
-		// owner, so this one payload carries every purchase and every reset.
-		PayloadTypeRegistry.serverboundPlay().register(
-				dev.alaindustrial.network.SkillActionPayload.TYPE,
-				dev.alaindustrial.network.SkillActionPayload.CODEC);
-		net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.registerGlobalReceiver(
-				dev.alaindustrial.network.SkillActionPayload.TYPE,
-				(payload, context) -> context.server().execute(
-						() -> dev.alaindustrial.network.SkillActionPayload.handle(payload, context.player())));
+		ModPayloads.Registrar registrar = new ModPayloads.Registrar() {
+			@Override
+			public <T extends CustomPacketPayload> void clientbound(ModPayloads.PayloadDef<T> def) {
+				PayloadTypeRegistry.clientboundPlay().register(def.type(), def.codec());
+			}
+
+			@Override
+			public <T extends CustomPacketPayload> void serverbound(ModPayloads.PayloadDef<T> def) {
+				PayloadTypeRegistry.serverboundPlay().register(def.type(), def.codec());
+				ServerPlayNetworking.registerGlobalReceiver(def.type(),
+						(payload, context) -> context.server().execute(() -> def.handle(payload, context.player())));
+			}
+		};
+		for (ModPayloads.PayloadDef<?> def : ModPayloads.PAYLOADS) {
+			def.bindTo(registrar);
+		}
 	}
 
 	/**
-	 * Wires the server-lifecycle hooks that drive per-level energy networks and per-player teleport
-	 * warmups (tick / level-unload / server-stop), plus the teleport-warmup cancellation listeners and
-	 * the guide-book first-join grant.
+	 * Connects each server event to the shared {@link ServerHookRoster} (MOD-706), one line per event:
+	 * what runs and in which order is the roster's list, the same one NeoForge replays. Only the Fabric
+	 * form of a condition stays here — the damage hook fires for any living entity and reports the
+	 * damage actually taken, so it is narrowed to a server player that lost health.
 	 */
 	private void registerServerLifecycle() {
-		// Energy networks: tick every per-level NetworkManager once per server tick; drop a level's
-		// transient state when that level unloads and all of it on server stop, so per-level networks
-		// never leak across dimension or world reloads.
-		ServerTickEvents.END_SERVER_TICK.register(server -> {
-			for (net.minecraft.server.level.ServerLevel lvl : server.getAllLevels()) {
-				NetworkManager.tickAll(lvl);
-				ItemNetworkManager.tickAll(lvl);
-				dev.alaindustrial.core.fluid.FluidNetworkManager.tickAll(lvl);
-				dev.alaindustrial.core.monitor.MonitorNetworkManager.tickAll(lvl);
-			}
-			// Teleport warmups are per-player, not per-level, so they tick once per server tick
-			// (MOD-092) rather than once per level.
-			dev.alaindustrial.teleporter.TeleportWarmupManager.tickAll(server);
-			// MOD-133: fold pending per-player stat deltas into attachments on the configured cadence.
-			dev.alaindustrial.stats.PlayerStatsTracker.get().onServerTick(server);
-			// MOD-148: clear any jetpack flight-glow light block whose flight ended (land, logout,
-			// death, unequip) — the one cleanup path for every exit (see JetpackLight).
-			dev.alaindustrial.item.wearable.JetpackLight.sweep(server, server.getTickCount());
-			// MOD-470: per-player radiation exposure, on its own configurable cadence.
-			dev.alaindustrial.core.radiation.RadiationTicker.tickAll(server);
-			// MOD-475: the Geiger counter clicks EVERY tick, not on the radiation cadence — a sweep
-			// offers one sound a second, so a denser rattle is unreachable from it. The sweep sets the
-			// step; this spends it.
-			dev.alaindustrial.core.radiation.GeigerTicker.tick(server);
-			// MOD-674: drops that rain onto the demo stand after it was built (decaying leaves).
-			dev.alaindustrial.command.demo.DemoStandDropSweeper.tick(server);
-		});
-		// Teleport warmup cancellation (MOD-092) — the mod's first player-event listeners. Three
-		// separate hooks are needed, not two: AFTER_DAMAGE does NOT fire for a killing blow, and
-		// death does not disconnect the player, so damage/death/disconnect each need their own.
+		ServerTickEvents.END_SERVER_TICK.register(ServerHookRoster::onServerTick);
 		net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents.AFTER_DAMAGE.register(
 				(entity, source, baseDamage, damageTaken, blocked) -> {
 					if (entity instanceof net.minecraft.server.level.ServerPlayer player && damageTaken > 0.0f) {
-						dev.alaindustrial.teleporter.TeleportWarmupManager.cancelHurt(player);
+						ServerHookRoster.onPlayerHurt(player);
 					}
 				});
-		net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents.AFTER_DEATH.register((entity, source) -> {
-			if (entity instanceof net.minecraft.server.level.ServerPlayer player) {
-				dev.alaindustrial.teleporter.TeleportWarmupManager.cancel(player);
-			}
-			// MOD-278: a hostile mob killed by a player personally banks one soul into their vessel.
-			dev.alaindustrial.entity.SoulVesselKills.onDeath(entity, source);
-		});
-		net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
-			// MOD-133: flush this player's pending stats while they are still online (their tail would
-			// otherwise be dropped on the next server-tick flush, which runs after they have left).
-			dev.alaindustrial.stats.PlayerStatsTracker.get().flushPlayer(handler.player);
-			dev.alaindustrial.teleporter.TeleportWarmupManager.forget(handler.player.getUUID());
-			// MOD-475: drop this player's counter reading — the map is server-side and must not
-			// outlive the session.
-			dev.alaindustrial.core.radiation.GeigerTicker.forget(handler.player.getUUID());
-		});
-		// MOD-067: auto-give the Guide Book on first join (once per player; SavedData ledger).
-		// MOD-596: and greet the world, once per world — both are loader-neutral logic in common/,
-		// riding the same join event so the order is fixed rather than accidental.
-		// MOD-513: and send the player their archive record for the book's first page, every login.
-		net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-			dev.alaindustrial.core.guide.GuideBookGiver.giveIfNeeded(handler.player);
-			dev.alaindustrial.chat.WelcomeMessage.sendIfNeeded(handler.player);
-			dev.alaindustrial.core.guide.ArchiveRecordSync.sendOnJoin(handler.player);
-		});
-		// MOD-401: one sweep over everything that holds per-level state, instead of naming managers
-		// here. The by-name list is what leaked: the fluid manager was never added to it, so every
-		// unloaded ServerLevel stayed reachable as a key in its map for the life of the process.
-		ServerLevelEvents.UNLOAD.register(
-				(server, level) -> dev.alaindustrial.core.net.LevelStateRegistry.clearLevel(level));
-		// MOD-062: inject the Industrialist house into the vanilla village pools. SERVER_STARTING
-		// fires before any level/worldgen exists — required (pool maxSize memoizes on first use).
-		ServerLifecycleEvents.SERVER_STARTING.register(
-				dev.alaindustrial.worldgen.VillagePoolInjector::inject);
-		// MOD-133: fold every pending delta before the world saves players. STOPPING runs before
-		// PlayerList#saveAll; STOPPED would be too late and lose the last flush window's tail.
-		ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
-			dev.alaindustrial.stats.PlayerStatsTracker.get().flush(server);
-			// MOD-176: clear a mid-flight glow light before the level save — the per-tick sweep no
-			// longer runs, and a saved minecraft:light block would survive as an invisible orphan.
-			dev.alaindustrial.item.wearable.JetpackLight.shutdown(server);
-			// MOD-475: drop every counter reading. In single player the server object goes away but
-			// this class is static, so a reading left behind would greet the next world.
-			dev.alaindustrial.core.radiation.GeigerTicker.clear();
-		});
-		ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
-			// MOD-401: same sweep, whole-server scope — energy, fluid and item networks plus the
-			// teleporter warmups/cooldowns, whichever of them the run actually loaded.
-			dev.alaindustrial.core.net.LevelStateRegistry.clearAll();
-			dev.alaindustrial.stats.PlayerStatsTracker.get().clear();
-		});
+		net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents.AFTER_DEATH.register(
+				ServerHookRoster::onLivingDeath);
+		net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.DISCONNECT.register(
+				(handler, server) -> ServerHookRoster.onPlayerLeave(handler.player));
+		net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.JOIN.register(
+				(handler, sender, server) -> ServerHookRoster.onPlayerJoin(handler.player));
+		ServerLevelEvents.UNLOAD.register((server, level) -> ServerHookRoster.onLevelUnload(level));
+		ServerLifecycleEvents.SERVER_STARTING.register(ServerHookRoster::onServerStarting);
+		ServerLifecycleEvents.SERVER_STOPPING.register(ServerHookRoster::onServerStopping);
+		ServerLifecycleEvents.SERVER_STOPPED.register(ServerHookRoster::onServerStopped);
 	}
 
 	/**
@@ -477,42 +344,44 @@ public class IndustrializationFabric implements ModInitializer {
 	 * on every query via {@code combinedContainer} (right half first — the same slot order the menu
 	 * and the NeoForge capability use). The VANILLA hopper/dropper/crafter need none of this: their
 	 * container lookup has no such guard and takes the {@code WorldlyContainerHolder} path directly.
+	 *
+	 * <p>MOD-690: the chest blocks come from the same roster NeoForge replays — every
+	 * {@link dev.alaindustrial.registry.BlockCapabilityRoster#itemContainers()} entry whose block entity
+	 * is an {@code AbstractChestBlockEntity} — not from a hand-kept list. The list this replaced named
+	 * five tiers and missed the diamond one, so a diamond pair answered as two 108-slot halves here
+	 * while NeoForge joined it into 216.
 	 */
 	private void registerChestStorage() {
-		net.fabricmc.fabric.api.transfer.v1.item.ItemStorage.SIDED.registerForBlocks(
-				(level, pos, state, blockEntity, side) -> {
-					if (!(state.getBlock() instanceof dev.alaindustrial.block.AbstractModChestBlock chest)) {
-						return null;
-					}
-					net.minecraft.world.Container joined = chest.combinedContainer(state, level, pos);
-					return joined == null ? null
-							: net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage.of(joined, side);
-				},
-				ModBlocks.IRON_CHEST, ModBlocks.SILVER_CHEST, ModBlocks.GOLD_CHEST,
-				ModBlocks.ELECTRUM_CHEST, ModBlocks.SHIELDING_CHEST);
+		for (dev.alaindustrial.registry.ContentManifest.BlockEntityDef<?> def
+				: dev.alaindustrial.registry.BlockCapabilityRoster.itemContainers()) {
+			if (!dev.alaindustrial.block.entity.AbstractChestBlockEntity.class.isAssignableFrom(def.type())) {
+				continue;
+			}
+			net.fabricmc.fabric.api.transfer.v1.item.ItemStorage.SIDED.registerForBlocks(
+					(level, pos, state, blockEntity, side) -> {
+						if (!(state.getBlock() instanceof dev.alaindustrial.block.AbstractModChestBlock chest)) {
+							return null;
+						}
+						net.minecraft.world.Container joined = chest.combinedContainer(state, level, pos);
+						return joined == null ? null
+								: net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage.of(joined, side);
+					},
+					def.blockSet().toArray(new net.minecraft.world.level.block.Block[0]));
+		}
 	}
 
 	/**
-	 * Registers gameplay-interaction hooks: vanilla-bucket-into-mod-tank deposit (MOD-077) and the
-	 * bonus-chest starter-item loot injection (MOD-119).
+	 * Registers gameplay-interaction hooks: the early block-use chain of {@link ServerHookRoster} (MOD-706)
+	 * and the loot injections — bonus chest (MOD-119), bastion drill template (MOD-534), cotton seeds
+	 * (MOD-280).
 	 */
 	private void registerGameplayHooks() {
-		// MOD-077: shift-right-clicking a mod fluid tank (geothermal generator, pump) with a vanilla lava
-		// bucket loads the bucket into the tank instead of spilling it. UseBlockCallback fires early on both
-		// sides — before vanilla's sneak-bypass runs BucketItem#useOn — so it can intercept the spill.
+		// MOD-706: the early block-use chain (bucket deposit → oil lighting → cable dye) is
+		// ServerHookRoster.USE_BLOCK. UseBlockCallback fires on both sides before vanilla's own use, and
+		// its result is the chain's: the first non-PASS link wins, exactly as the three separate
+		// listeners this replaced did.
 		UseBlockCallback.EVENT.register((player, level, hand, hit) ->
-				dev.alaindustrial.item.fluid.VanillaBucketDeposit.tryDeposit(level, player, hand, hit));
-
-		// MOD-238: flint and steel on an oil cell lights it. Same early seam and for the same reason:
-		// oil has an empty outline shape, so the click always lands on the block BEHIND it and vanilla
-		// FlintAndSteelItem#useOn then fails to place fire into the (non-air) oil block.
-		UseBlockCallback.EVENT.register((player, level, hand, hit) ->
-				dev.alaindustrial.block.OilLiquidBlock.tryLight(level, player, hand, hit));
-
-		// MOD-666: a dye on an insulated cable paints it; with Shift, the whole run. Early seam because
-		// vanilla never lets a sneaking player's held item reach the block.
-		UseBlockCallback.EVENT.register((player, level, hand, hit) ->
-				dev.alaindustrial.block.CableDyeing.tryDye(level, player, hand, hit));
+				ServerHookRoster.onUseBlock(level, player, hand, hit));
 
 		// MOD-119: inject the mod's starter items into the vanilla bonus chest. Adds one pool that
 		// references the shared sub-table alaindustrial:inject/bonus_chest (item list + balance live there);

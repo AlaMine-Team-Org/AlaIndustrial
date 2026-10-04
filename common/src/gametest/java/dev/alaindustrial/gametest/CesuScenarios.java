@@ -5,6 +5,7 @@ import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.block.entity.CesuBlockEntity;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -27,6 +28,26 @@ import net.minecraft.world.level.block.state.BlockState;
  * it a guard rather than decoration.
  */
 public final class CesuScenarios {
+
+	/**
+	 * This class's roster entries (nested so reading them does not initialise the class); the Fabric ids
+	 * are those of the former {@code CesuGameTest} wrappers. Tick budgets differ per lane as they were wired
+	 * by hand (Fabric annotation default 20, NeoForge 40) until MOD-717 batch 6 aligns them.
+	 */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(CesuScenarios::cesu01SyncChannelsFitShort, "cesu_sync_channels_fit_short")
+						.fabricId("CesuGameTest", "tcCesu001Fun01_syncChannelsFitShort")
+						.ticks(20, 40),
+				RosterEntry.of(CesuScenarios::cesu02ScaledChannelsMatchBuffer, "cesu_scaled_channels_match_buffer")
+						.fabricId("CesuGameTest", "tcCesu001Fun02_scaledChannelsMatchBuffer")
+						.ticks(20, 40),
+				RosterEntry.of(CesuScenarios::cesu03DischargeSlotFillsBuffer, "cesu_discharge_slot_fills_buffer")
+						.fabricId("CesuGameTest", "tcCesu001Fun03_dischargeSlotFillsBuffer")
+						.ticks(20, 40));
+
+		private Roster() {}
+	}
 
 	private CesuScenarios() {}
 
@@ -51,6 +72,9 @@ public final class CesuScenarios {
 	 *
 	 * <p>Checks the full-buffer case explicitly: capacity is constant, but stored EU only exceeds a
 	 * short once the block is actually full, which is exactly the state the player saw broken.
+	 *
+	 * @implements TC-CESU-001-FUN01 — no sync channel overflows the 16-bit wire. Regression guard for
+	 *     the shipped bug where the 100 000 EU buffer read "0 / −31072 EU (0%)" in the GUI.
 	 */
 	public static void cesu01SyncChannelsFitShort(GameTestHelper helper) {
 		CesuBlockEntity be = place(helper);
@@ -78,6 +102,9 @@ public final class CesuScenarios {
 	 * <p>Without this, CESU-01 could be satisfied by sending zeroes: a channel that is always 0 fits a
 	 * short perfectly and tells the player nothing. This pins the round trip (raw EU → scaled channel →
 	 * ×scale) to within one scale step.
+	 *
+	 * @implements TC-CESU-001-FUN02 — the scaled channels still describe the real buffer, so FUN01
+	 *     cannot be satisfied by sending zeroes.
 	 */
 	public static void cesu02ScaledChannelsMatchBuffer(GameTestHelper helper) {
 		CesuBlockEntity be = place(helper);
@@ -88,8 +115,8 @@ public final class CesuScenarios {
 		be.getEnergyStorage().setAmountUntracked(charge);
 		ContainerData data = be.getDataAccess();
 
-		long readCapacity = (long) data.get(CesuBlockEntity.DATA_CAPACITY_SCALED) * CesuBlockEntity.SYNC_SCALE;
-		long readEnergy = (long) data.get(CesuBlockEntity.DATA_ENERGY_SCALED) * CesuBlockEntity.SYNC_SCALE;
+		long readCapacity = (long) data.get(CesuBlockEntity.Channel.CAPACITY.ordinal()) * CesuBlockEntity.SYNC_SCALE;
+		long readEnergy = (long) data.get(CesuBlockEntity.Channel.ENERGY.ordinal()) * CesuBlockEntity.SYNC_SCALE;
 
 		if (Math.abs(readCapacity - Config.cesuBuffer) >= CesuBlockEntity.SYNC_SCALE) {
 			helper.fail("capacity channel wrong: read " + readCapacity + ", expected ~" + Config.cesuBuffer);
@@ -107,6 +134,9 @@ public final class CesuScenarios {
 	 *
 	 * <p>The one piece of machinery the Battery Box does not have. Also pins the rate cap: a single tick
 	 * may move at most the MV ceiling, so a full Energy Pack cannot teleport its whole charge in one go.
+	 *
+	 * @implements TC-CESU-001-FUN03 — the discharge slot drains a powered item into the buffer, capped
+	 *     at the MV ceiling per tick, conserving EU.
 	 */
 	public static void cesu03DischargeSlotFillsBuffer(GameTestHelper helper) {
 		CesuBlockEntity be = place(helper);

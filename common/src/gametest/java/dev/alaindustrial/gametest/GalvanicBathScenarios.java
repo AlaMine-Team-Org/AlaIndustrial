@@ -1,19 +1,22 @@
 package dev.alaindustrial.gametest;
 
+import static dev.alaindustrial.gametest.AlaGameTestHelper.drive;
+import static dev.alaindustrial.gametest.GameTestDrive.drivePowered;
+
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.GalvanicBathBlockEntity;
 import dev.alaindustrial.block.entity.GalvanicBathStatus;
 import dev.alaindustrial.core.energy.EnergyTransactions;
 import dev.alaindustrial.core.fluid.FluidAmounts;
 import dev.alaindustrial.core.fluid.FluidHolder;
+import dev.alaindustrial.core.machine.MachineRates;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluids;
-
-import static dev.alaindustrial.gametest.AlaGameTestHelper.drive;
 
 /**
  * Loader-neutral gametest bodies for the Galvanic Bath (MOD-127, suite TC-BATH-001). Wrapped by the
@@ -36,16 +39,52 @@ import static dev.alaindustrial.gametest.AlaGameTestHelper.drive;
  */
 public final class GalvanicBathScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(GalvanicBathScenarios::fun01StringBecomesFluxThread,
+								"galvanic_bath_string_becomes_flux_thread")
+						.fabricId("GalvanicBathGameTest", "tcBath001Fun01_stringBecomesFluxThread").ticks(700),
+				RosterEntry.of(GalvanicBathScenarios::fun02CottonBecomesFluxThread,
+								"galvanic_bath_cotton_becomes_flux_thread")
+						.fabricId("GalvanicBathGameTest", "tcBath001Fun02_cottonBecomesFluxThread").ticks(700),
+				RosterEntry.of(GalvanicBathScenarios::fun03OperationDebitsWater, "galvanic_bath_operation_debits_water")
+						.fabricId("GalvanicBathGameTest", "tcBath001Fun03_operationDebitsWater").ticks(700),
+				RosterEntry.of(GalvanicBathScenarios::fun04BucketFillsTank, "galvanic_bath_bucket_fills_tank")
+						.fabricId("GalvanicBathGameTest", "tcBath001Fun04_bucketFillsTank").ticks(20, 60),
+				RosterEntry.of(GalvanicBathScenarios::con01DryTankBlocksWork, "galvanic_bath_dry_tank_blocks_work")
+						.fabricId("GalvanicBathGameTest", "tcBath001Con01_dryTankBlocksWork").ticks(700),
+				RosterEntry.of(GalvanicBathScenarios::con02PartialWaterBlocksWork,
+								"galvanic_bath_partial_water_blocks_work")
+						.fabricId("GalvanicBathGameTest", "tcBath001Con02_partialWaterBlocksWork").ticks(700),
+				RosterEntry.of(GalvanicBathScenarios::con03TankRefusesExtraction,
+								"galvanic_bath_tank_refuses_extraction")
+						.fabricId("GalvanicBathGameTest", "tcBath001Con03_tankRefusesExtraction").ticks(20, 60),
+				RosterEntry.of(GalvanicBathScenarios::reg01TankRefusesNonWater, "galvanic_bath_tank_refuses_non_water")
+						.fabricId("GalvanicBathGameTest", "tcBath001Reg01_tankRefusesNonWater").ticks(20, 60));
+
+		private Roster() {}
+	}
+
 	private GalvanicBathScenarios() {
 	}
 
 	private static final BlockPos POS = new BlockPos(1, 2, 1);
-	/** Far above one operation's cost (600 EU), set directly so the tier packet cap is bypassed. */
+	/**
+	 * Far above one operation's cost, set directly so the tier packet cap is bypassed — and set before EVERY tick
+	 * ({@link GameTestDrive#drivePowered}), the way a connected cable keeps the machine fed.
+	 *
+	 * <p>Necessary because one operation costs 1000 EU while {@code machineBuffer} holds 800: the bath
+	 * draws 2 EU/t over 500 ticks and relies on the network refilling it as it goes, so a buffer set
+	 * once at the start runs dry two thirds of the way through. Not a defect in the machine — the
+	 * energy network does exactly this in play — but a test that skipped it would report a working
+	 * machine as broken.
+	 */
 	private static final long AMPLE_EU = 8000L;
 
 	/** Ticks to drive: one full operation plus slack for the scaled-duration knob. */
 	private static int driveTicks() {
-		return Config.scaledDuration(Config.galvanicBathDuration) + 20;
+		return MachineRates.duration(Config.galvanicBathDuration, Config.globalMachineSpeedMultiplier) + 20;
 	}
 
 	private static GalvanicBathBlockEntity place(GameTestHelper helper) {
@@ -75,22 +114,6 @@ public final class GalvanicBathScenarios {
 		return be;
 	}
 
-	/**
-	 * Drive the machine with its buffer topped up every tick, the way a connected cable keeps it fed.
-	 *
-	 * <p>Necessary because one operation costs 1000 EU while {@code machineBuffer} holds 800: the bath
-	 * draws 2 EU/t over 500 ticks and relies on the network refilling it as it goes, so a buffer set
-	 * once at the start runs dry two thirds of the way through. Not a defect in the machine — the
-	 * energy network does exactly this in play — but a test that skipped it would report a working
-	 * machine as broken.
-	 */
-	private static void drivePowered(GalvanicBathBlockEntity be, GameTestHelper helper, int ticks) {
-		for (int i = 0; i < ticks; i++) {
-			be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
-			AlaGameTestHelper.drive(be, helper, 1);
-		}
-	}
-
 	/** Assert exactly one flux thread landed in the output slot. */
 	private static boolean producedOneThread(GalvanicBathBlockEntity be, GameTestHelper helper, String what) {
 		ItemStack out = be.getItem(GalvanicBathBlockEntity.OUTPUT_SLOT);
@@ -104,10 +127,14 @@ public final class GalvanicBathScenarios {
 
 	// ── FUN01/FUN02: both fibres in the tag reach the same result ───────────────────────────────────
 
-	/** Vanilla string + silver dust + water + EU → one flux thread. */
+	/**
+	 * Vanilla string + silver dust + water + EU → one flux thread.
+	 *
+	 * @implements TC-BATH-001-FUN01 — vanilla string plus silver, water and EU yields one flux thread.
+	 */
 	public static void fun01StringBecomesFluxThread(GameTestHelper helper) {
 		GalvanicBathBlockEntity be = stocked(helper, new ItemStack(Items.STRING));
-		drivePowered(be, helper, driveTicks());
+		drivePowered(be, helper, driveTicks(), AMPLE_EU);
 		if (!producedOneThread(be, helper, "vanilla string")) {
 			return;
 		}
@@ -118,10 +145,13 @@ public final class GalvanicBathScenarios {
 	 * Cotton fibre (MOD-280) must work exactly like string. This is the farming half of the
 	 * {@code #alaindustrial:fiber} tag; without it the trellis line would dead-end and only a spider
 	 * farm would open the Fluxweave chain.
+	 *
+	 * @implements TC-BATH-001-FUN02 — cotton fibre reaches the same result as string, so the farming
+	 * route into the Fluxweave chain stays open.
 	 */
 	public static void fun02CottonBecomesFluxThread(GameTestHelper helper) {
 		GalvanicBathBlockEntity be = stocked(helper, new ItemStack(ModContent.COTTON_FIBER.get()));
-		drivePowered(be, helper, driveTicks());
+		drivePowered(be, helper, driveTicks(), AMPLE_EU);
 		if (!producedOneThread(be, helper, "cotton fibre")) {
 			return;
 		}
@@ -130,11 +160,15 @@ public final class GalvanicBathScenarios {
 
 	// ── FUN03: a completed operation debits exactly one recipe's worth of water ─────────────────────
 
-	/** One operation consumes {@code galvanicBathWaterPerOp} mB — no more, no less. */
+	/**
+	 * One operation consumes {@code galvanicBathWaterPerOp} mB — no more, no less.
+	 *
+	 * @implements TC-BATH-001-FUN03 — a completed operation debits exactly one recipe's worth of water.
+	 */
 	public static void fun03OperationDebitsWater(GameTestHelper helper) {
 		GalvanicBathBlockEntity be = stocked(helper, new ItemStack(Items.STRING));
 		long before = be.fluidTank.amount;
-		drivePowered(be, helper, driveTicks());
+		drivePowered(be, helper, driveTicks(), AMPLE_EU);
 		if (!producedOneThread(be, helper, "string")) {
 			return;
 		}
@@ -152,6 +186,9 @@ public final class GalvanicBathScenarios {
 	/**
 	 * With everything else present but a dry tank, the machine must NOT produce, and must say so.
 	 * Water is not a recipe ingredient, so this hand-written gate is the only thing enforcing it.
+	 *
+	 * @implements TC-BATH-001-CON01 — a dry tank blocks the operation and reports NO_WATER. Water is
+	 * not a recipe ingredient, so nothing in the recipe system enforces this.
 	 */
 	public static void con01DryTankBlocksWork(GameTestHelper helper) {
 		GalvanicBathBlockEntity be = place(helper);
@@ -185,6 +222,8 @@ public final class GalvanicBathScenarios {
 	/**
 	 * Less than one operation's worth of water blocks the run rather than half-paying for it. Without
 	 * this the debit could underflow the tank and hand out a free thread at the bottom of the bath.
+	 *
+	 * @implements TC-BATH-001-CON02 — one millibucket short is still short: nothing runs, nothing is spent.
 	 */
 	public static void con02PartialWaterBlocksWork(GameTestHelper helper) {
 		long need = Math.max(1L, Config.galvanicBathWaterPerOp);
@@ -218,6 +257,8 @@ public final class GalvanicBathScenarios {
 	 * (it answers from the capacity alone) and is true for every tank, filter or no filter. The refusal
 	 * lives in {@code extract(...)}, where the {@code canExtract} predicate is consulted. An earlier
 	 * version of this test checked the flag and failed against a perfectly correct machine.
+	 *
+	 * @implements TC-BATH-001-CON03 — the tank is feedstock, not storage: neighbours cannot drain it.
 	 */
 	public static void con03TankRefusesExtraction(GameTestHelper helper) {
 		GalvanicBathBlockEntity be = place(helper);
@@ -238,7 +279,11 @@ public final class GalvanicBathScenarios {
 
 	// ── REG01: the tank takes water and nothing else ────────────────────────────────────────────────
 
-	/** Lava (or any non-water) must be refused: a single-variant tank stuck on lava would be bricked. */
+	/**
+	 * Lava (or any non-water) must be refused: a single-variant tank stuck on lava would be bricked.
+	 *
+	 * @implements TC-BATH-001-REG01 — the tank takes water and refuses everything else.
+	 */
 	public static void reg01TankRefusesNonWater(GameTestHelper helper) {
 		GalvanicBathBlockEntity be = place(helper);
 		long[] lava = {0};
@@ -260,7 +305,11 @@ public final class GalvanicBathScenarios {
 
 	// ── FUN04: a bucket in the fill slot loads the tank and drops an empty bucket ───────────────────
 
-	/** Manual refill through the item fluid capability, the path a player uses before pipes exist. */
+	/**
+	 * Manual refill through the item fluid capability, the path a player uses before pipes exist.
+	 *
+	 * @implements TC-BATH-001-FUN04 — a water bucket in the fill slot loads the tank and drops empty.
+	 */
 	public static void fun04BucketFillsTank(GameTestHelper helper) {
 		GalvanicBathBlockEntity be = place(helper);
 		be.setItem(GalvanicBathBlockEntity.FILL_INPUT_SLOT, new ItemStack(Items.WATER_BUCKET));

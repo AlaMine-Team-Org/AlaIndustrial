@@ -18,7 +18,8 @@ import net.minecraft.world.item.crafting.ShapedRecipePattern;
 /**
  * A shaped crafting recipe that carries the charge of its ingredients into the result (MOD-083).
  *
- * <p>Ten of the mod's recipes build a powered item out of batteries. A vanilla {@code Ingredient}
+ * <p>Every recipe of this type builds a powered item out of batteries (the powered tools, the Energy
+ * Pack, the Jetpack, the Fluxweave armour — the recipe files are the list). A vanilla {@code Ingredient}
  * compares items and ignores components, so a charged battery has always been accepted by them — and
  * its charge has always evaporated. That is a bad trade for the player: the battery is a carrier, and
  * pouring one into a drill should hand the drill the energy, not burn it. So these recipes sum the EU
@@ -28,7 +29,7 @@ import net.minecraft.world.item.crafting.ShapedRecipePattern;
  * branch on {@code instanceof ShapedRecipe} to recover the <em>positions</em> of a recipe's
  * ingredients — vanilla's {@code PlaceRecipeHelper} and this mod's {@code IngredientSubstitution},
  * which is what lets the Assembler substitute an ingredient cell by cell. A wrapper would still craft
- * correctly and would still fail no test, while quietly demoting every one of these ten recipes to the
+ * correctly and would still fail no test, while quietly demoting every one of these recipes to the
  * "positions unknown" path. Extending keeps that behaviour, and inherits {@code display()} so the
  * recipe book and REI show it as the ordinary crafting-table recipe it is.
  *

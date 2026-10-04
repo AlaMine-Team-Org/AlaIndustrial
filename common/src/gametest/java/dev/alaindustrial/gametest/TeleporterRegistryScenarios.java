@@ -7,6 +7,7 @@ import dev.alaindustrial.item.teleport.TeleportPoint;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.teleporter.TeleportEngine;
 import dev.alaindustrial.teleporter.TeleporterRegistry;
+import java.util.List;
 import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -22,6 +23,45 @@ import net.minecraft.world.level.block.Blocks;
  * so parallel tests never share a key.
  */
 public final class TeleporterRegistryScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(TeleporterRegistryScenarios::tcTele006Fun01_placedStationIsRecorded,
+								"tc_tele006_fun01_placed_station_is_recorded")
+						.fabricId("TeleporterRegistryGameTest", "tcTele006Fun01_placedStationIsRecorded")
+						.ticks(20, 40),
+				RosterEntry.of(TeleporterRegistryScenarios::tcTele006Fun02_capsuleIsRecorded,
+								"tc_tele006_fun02_capsule_is_recorded")
+						.fabricId("TeleporterRegistryGameTest", "tcTele006Fun02_capsuleIsRecorded").ticks(20, 40),
+				RosterEntry.of(TeleporterRegistryScenarios::tcTele006Fun03_ownerPrivacyAndChipAreRecorded,
+								"tc_tele006_fun03_owner_privacy_and_chip_are_recorded")
+						.fabricId("TeleporterRegistryGameTest", "tcTele006Fun03_ownerPrivacyAndChipAreRecorded")
+						.ticks(20, 40),
+				RosterEntry.of(TeleporterRegistryScenarios::tcTele006Fun04_enteringTheWorldRecordsItself,
+								"tc_tele006_fun04_entering_the_world_records_itself")
+						.fabricId("TeleporterRegistryGameTest", "tcTele006Fun04_enteringTheWorldRecordsItself")
+						.ticks(20, 40),
+				RosterEntry.of(TeleporterRegistryScenarios::tcTele006Nrg01_chargingIsThrottled,
+								"tc_tele006_nrg01_charging_is_throttled")
+						.fabricId("TeleporterRegistryGameTest", "tcTele006Nrg01_chargingIsThrottled").ticks(260),
+				RosterEntry.of(TeleporterRegistryScenarios::tcTele006Nrg02_jumpSpendIsRecorded,
+								"tc_tele006_nrg02_jump_spend_is_recorded")
+						.fabricId("TeleporterRegistryGameTest", "tcTele006Nrg02_jumpSpendIsRecorded").ticks(20, 40),
+				RosterEntry.of(TeleporterRegistryScenarios::tcTele006Sec01_foreignPrivateStationIsHidden,
+								"tc_tele006_sec01_foreign_private_station_is_hidden")
+						.fabricId("TeleporterRegistryGameTest", "tcTele006Sec01_foreignPrivateStationIsHidden")
+						.ticks(20, 40),
+				RosterEntry.of(TeleporterRegistryScenarios::tcTele006Fun05_snapshotLoadsNoChunk,
+								"tc_tele006_fun05_snapshot_loads_no_chunk")
+						.fabricId("TeleporterRegistryGameTest", "tcTele006Fun05_snapshotLoadsNoChunk").ticks(20, 40),
+				RosterEntry.of(TeleporterRegistryScenarios::tcTele006Brk01_removedStationIsForgotten,
+								"tc_tele006_brk01_removed_station_is_forgotten")
+						.fabricId("TeleporterRegistryGameTest", "tcTele006Brk01_removedStationIsForgotten")
+						.ticks(20, 40));
+
+		private Roster() {}
+	}
 
 	private TeleporterRegistryScenarios() {}
 

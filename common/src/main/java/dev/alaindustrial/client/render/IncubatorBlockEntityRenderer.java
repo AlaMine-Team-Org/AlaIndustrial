@@ -7,6 +7,7 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.block.LitMachineBlock;
 import dev.alaindustrial.block.entity.IncubatorBlockEntity;
+import dev.alaindustrial.compat.client.Poses;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.BlockAndTintGetter;
@@ -240,9 +241,8 @@ public final class IncubatorBlockEntityRenderer
 		FluidModel model = Minecraft.getInstance().getModelManager().getFluidStateModelSet()
 				.get(Fluids.WATER.defaultFluidState());
 		state.waterSprite = model.stillMaterial().sprite();
-		// MOD-498 — the vanilla accessor is the only form available to both loaders; NeoForge's patch
-		// deprecates it in favour of a type that does not exist on the Fabric side this file also
-		// compiles for.
+		// MOD-498 — the vanilla accessor is the only form available to both loaders; NeoForge's patch deprecates it
+		// in favour of a type that does not exist on the Fabric side this file also compiles for.
 		@SuppressWarnings("deprecation")
 		var tintSource = model.tintSource();
 		int tint = tintSource == null
@@ -265,7 +265,7 @@ public final class IncubatorBlockEntityRenderer
 			TextureAtlasSprite sprite = sprites.get(RING_SPRITE);
 			poseStack.pushPose();
 			poseStack.translate(0.5F, RING_Y, 0.5F);
-			poseStack.rotate(Axis.YP.rotation(state.ringAngle));
+			Poses.rotate(poseStack, Axis.YP.rotation(state.ringAngle));
 			collector.submitCustomGeometry(poseStack, RING_RENDER_TYPE,
 					(pose, consumer) -> renderRing(pose, consumer, sprite));
 			poseStack.popPose();
@@ -276,7 +276,7 @@ public final class IncubatorBlockEntityRenderer
 		}
 		poseStack.pushPose();
 		poseStack.translate(0.5F, CHAMBER_Y + state.bob, 0.5F);
-		poseStack.rotate(Axis.YP.rotation(state.angle));
+		Poses.rotate(poseStack, Axis.YP.rotation(state.angle));
 		poseStack.scale(ITEM_SCALE, ITEM_SCALE, ITEM_SCALE);
 		// Full bright while irradiating: the item is lit by the emitter, not by the room.
 		int light = state.working ? LightCoordsUtil.FULL_BRIGHT : state.chamberLight;
@@ -358,16 +358,16 @@ public final class IncubatorBlockEntityRenderer
 		// Cropped from the bottom of the tile up, so a shallow step shows a slice of water rather than
 		// a whole tile squashed — the portable tank crops its walls the same way.
 		float v0 = Mth.lerp(1.0F - (y1 - y0), sprite.getV0(), v1);
-		int color = state.waterColor;
-		int light = state.bathLight;
-		bathQuad(pose, out, color, light, 0.0F, 0.0F, -1.0F,
-				x0, y0, z0, x1, y0, z0, x1, y1, z0, x0, y1, z0, u0, v0, u1, v1);
-		bathQuad(pose, out, color, light, 0.0F, 0.0F, 1.0F,
-				x1, y0, z1, x0, y0, z1, x0, y1, z1, x1, y1, z1, u0, v0, u1, v1);
-		bathQuad(pose, out, color, light, -1.0F, 0.0F, 0.0F,
-				x0, y0, z1, x0, y0, z0, x0, y1, z0, x0, y1, z1, u0, v0, u1, v1);
-		bathQuad(pose, out, color, light, 1.0F, 0.0F, 0.0F,
-				x1, y0, z0, x1, y0, z1, x1, y1, z1, x1, y1, z0, u0, v0, u1, v1);
+		// Each wall wound both ways; the first corner takes (u0, v1), then across and up.
+		QuadEmitter quads = new QuadEmitter(pose, out, state.bathLight).color(state.waterColor);
+		quads.quadBothSides(0.0F, 0.0F, -1.0F,
+				x0, y0, z0, x1, y0, z0, x1, y1, z0, x0, y1, z0, u0, v1, u1, v1, u1, v0, u0, v0);
+		quads.quadBothSides(0.0F, 0.0F, 1.0F,
+				x1, y0, z1, x0, y0, z1, x0, y1, z1, x1, y1, z1, u0, v1, u1, v1, u1, v0, u0, v0);
+		quads.quadBothSides(-1.0F, 0.0F, 0.0F,
+				x0, y0, z1, x0, y0, z0, x0, y1, z0, x0, y1, z1, u0, v1, u1, v1, u1, v0, u0, v0);
+		quads.quadBothSides(1.0F, 0.0F, 0.0F,
+				x1, y0, z0, x1, y0, z1, x1, y1, z1, x1, y1, z0, u0, v1, u1, v1, u1, v0, u0, v0);
 	}
 
 	/** The one face a player looks down on through the glass. */
@@ -378,36 +378,10 @@ public final class IncubatorBlockEntityRenderer
 		float x1 = step[2] / 16.0F;
 		float z1 = step[3] / 16.0F;
 		float y = DOME_LIFT + stepTop / 16.0F;
-		bathQuad(pose, out, state.waterColor, state.bathLight, 0.0F, 1.0F, 0.0F,
+		new QuadEmitter(pose, out, state.bathLight).color(state.waterColor).quadBothSides(0.0F, 1.0F, 0.0F,
 				x0, y, z0, x1, y, z0, x1, y, z1, x0, y, z1,
-				sprite.getU0(), sprite.getV0(), sprite.getU1(), sprite.getV1());
-	}
-
-	/** One face of the bath, wound both ways so no angle can cull it away. */
-	private static void bathQuad(PoseStack.Pose pose, VertexConsumer out, int color, int light,
-			float nx, float ny, float nz,
-			float ax, float ay, float az, float bx, float by, float bz,
-			float cx, float cy, float cz, float dx, float dy, float dz,
-			float u0, float v0, float u1, float v1) {
-		bathVertex(pose, out, ax, ay, az, u0, v1, color, light, nx, ny, nz);
-		bathVertex(pose, out, bx, by, bz, u1, v1, color, light, nx, ny, nz);
-		bathVertex(pose, out, cx, cy, cz, u1, v0, color, light, nx, ny, nz);
-		bathVertex(pose, out, dx, dy, dz, u0, v0, color, light, nx, ny, nz);
-
-		bathVertex(pose, out, dx, dy, dz, u0, v0, color, light, -nx, -ny, -nz);
-		bathVertex(pose, out, cx, cy, cz, u1, v0, color, light, -nx, -ny, -nz);
-		bathVertex(pose, out, bx, by, bz, u1, v1, color, light, -nx, -ny, -nz);
-		bathVertex(pose, out, ax, ay, az, u0, v1, color, light, -nx, -ny, -nz);
-	}
-
-	private static void bathVertex(PoseStack.Pose pose, VertexConsumer out, float x, float y, float z,
-			float u, float v, int color, int light, float nx, float ny, float nz) {
-		out.addVertex(pose, x, y, z)
-				.setColor(color)
-				.setUv(u, v)
-				.setOverlay(OverlayTexture.NO_OVERLAY)
-				.setLight(light)
-				.setNormal(pose, nx, ny, nz);
+				sprite.getU0(), sprite.getV1(), sprite.getU1(), sprite.getV1(), sprite.getU1(), sprite.getV0(),
+				sprite.getU0(), sprite.getV0());
 	}
 
 	/**
@@ -421,7 +395,7 @@ public final class IncubatorBlockEntityRenderer
 		TextureAtlasSprite glass = sprites.get(RING_SPRITE);
 		poseStack.pushPose();
 		poseStack.translate(0.5F, 0.0F, 0.5F);
-		poseStack.rotate(Axis.YP.rotationDegrees(-state.screenYaw));
+		Poses.rotate(poseStack, Axis.YP.rotationDegrees(-state.screenYaw));
 		poseStack.translate(-0.5F, 0.0F, -0.5F);
 		if (state.waterFill > 0.0F && state.waterSprite != null) {
 			TextureAtlasSprite water = state.waterSprite;
@@ -439,43 +413,30 @@ public final class IncubatorBlockEntityRenderer
 		// The texture is cropped from the bottom up, so a half-full gauge shows half a water tile
 		// rather than a whole one squashed — the same trick the portable tank's walls use.
 		float v0 = Mth.lerp(1.0F - (top - GAUGE_Y0) / (GAUGE_Y1 - GAUGE_Y0), sprite.getV0(), sprite.getV1());
-		gaugeQuad(pose, out, GAUGE_X0, GAUGE_Y0, GAUGE_X1, top, GAUGE_WATER_Z,
+		paneOnBackWall(pose, out, GAUGE_X0, GAUGE_Y0, GAUGE_X1, top, GAUGE_WATER_Z,
 				sprite.getU0(), sprite.getU1(), v0, sprite.getV1(), state.waterColor, state.gaugeLight);
 	}
 
 	private static void renderGaugePane(PoseStack.Pose pose, VertexConsumer out,
 			TextureAtlasSprite sprite, int light) {
-		gaugeQuad(pose, out, GAUGE_X0, GAUGE_Y0, GAUGE_X1, GAUGE_Y1, GAUGE_GLASS_Z,
+		paneOnBackWall(pose, out, GAUGE_X0, GAUGE_Y0, GAUGE_X1, GAUGE_Y1, GAUGE_GLASS_Z,
 				sprite.getU0(), sprite.getU1(), sprite.getV0(), sprite.getV1(), 0xFFFFFFFF, light);
 	}
 
-	/** One flat pane on the back wall, wound both ways so a glancing angle cannot cull it away. */
-	private static void gaugeQuad(PoseStack.Pose pose, VertexConsumer out, float x0, float y0,
+	/**
+	 * One flat pane on the back wall, in 16ths, wound both ways so a glancing angle cannot cull it away; its
+	 * first corner is the bottom-left, at (u0, v1).
+	 */
+	private static void paneOnBackWall(PoseStack.Pose pose, VertexConsumer out, float x0, float y0,
 			float x1, float y1, float z, float u0, float u1, float v0, float v1, int color, int light) {
 		float px0 = x0 / 16.0F;
 		float px1 = x1 / 16.0F;
 		float py0 = y0 / 16.0F;
 		float py1 = y1 / 16.0F;
 		float pz = z / 16.0F;
-		gaugeVertex(pose, out, px0, py0, pz, u0, v1, color, light, -1.0F);
-		gaugeVertex(pose, out, px1, py0, pz, u1, v1, color, light, -1.0F);
-		gaugeVertex(pose, out, px1, py1, pz, u1, v0, color, light, -1.0F);
-		gaugeVertex(pose, out, px0, py1, pz, u0, v0, color, light, -1.0F);
-
-		gaugeVertex(pose, out, px0, py1, pz, u0, v0, color, light, 1.0F);
-		gaugeVertex(pose, out, px1, py1, pz, u1, v0, color, light, 1.0F);
-		gaugeVertex(pose, out, px1, py0, pz, u1, v1, color, light, 1.0F);
-		gaugeVertex(pose, out, px0, py0, pz, u0, v1, color, light, 1.0F);
-	}
-
-	private static void gaugeVertex(PoseStack.Pose pose, VertexConsumer out, float x, float y, float z,
-			float u, float v, int color, int light, float normalZ) {
-		out.addVertex(pose, x, y, z)
-				.setColor(color)
-				.setUv(u, v)
-				.setOverlay(OverlayTexture.NO_OVERLAY)
-				.setLight(light)
-				.setNormal(pose, 0.0F, 0.0F, normalZ);
+		new QuadEmitter(pose, out, light).color(color).quadBothSides(0.0F, 0.0F, -1.0F,
+				px0, py0, pz, px1, py0, pz, px1, py1, pz, px0, py1, pz,
+				u0, v1, u1, v1, u1, v0, u0, v0);
 	}
 
 	/**
@@ -489,7 +450,7 @@ public final class IncubatorBlockEntityRenderer
 		TextureAtlasSprite sprite = sprites.get(PANEL_SPRITE_LIT);
 		poseStack.pushPose();
 		poseStack.translate(0.5F, 0.0F, 0.5F);
-		poseStack.rotate(Axis.YP.rotationDegrees(-state.screenYaw));
+		Poses.rotate(poseStack, Axis.YP.rotationDegrees(-state.screenYaw));
 		poseStack.translate(-0.5F, 0.0F, -0.5F);
 		collector.submitCustomGeometry(poseStack, PANEL_RENDER_TYPE,
 				(pose, consumer) -> renderBars(pose, consumer, sprite, state));
@@ -499,7 +460,7 @@ public final class IncubatorBlockEntityRenderer
 	private static void renderBars(PoseStack.Pose pose, VertexConsumer out, TextureAtlasSprite sprite,
 			State state) {
 		// The panel only ever renders while the machine is lit, and a lit screen is its own light.
-		int light = LightCoordsUtil.FULL_BRIGHT;
+		QuadEmitter quads = new QuadEmitter(pose, out, LightCoordsUtil.FULL_BRIGHT).color(0xFFFFFFFF);
 		float u = Mth.lerp(IncubatorScreenGeometry.INDICATOR_U, sprite.getU0(), sprite.getU1());
 		float v = Mth.lerp(IncubatorScreenGeometry.INDICATOR_V, sprite.getV0(), sprite.getV1());
 		float z = IncubatorScreenGeometry.FRONT_Z / 16.0F;
@@ -511,15 +472,8 @@ public final class IncubatorBlockEntityRenderer
 			float y0 = IncubatorScreenGeometry.BASE_Y / 16.0F;
 			// Wound both ways for the same reason the ring is: the panel can be looked at from an
 			// angle where a single winding would cull the bar away.
-			panelVertex(pose, out, x0, y0, z, u, v, light);
-			panelVertex(pose, out, x1, y0, z, u, v, light);
-			panelVertex(pose, out, x1, top, z, u, v, light);
-			panelVertex(pose, out, x0, top, z, u, v, light);
-
-			panelVertex(pose, out, x0, y0, z, u, v, light);
-			panelVertex(pose, out, x0, top, z, u, v, light);
-			panelVertex(pose, out, x1, top, z, u, v, light);
-			panelVertex(pose, out, x1, y0, z, u, v, light);
+			quads.quad(0.0F, 0.0F, 1.0F, x0, y0, z, x1, y0, z, x1, top, z, x0, top, z, u, v, u, v, u, v, u, v);
+			quads.quad(0.0F, 0.0F, 1.0F, x0, y0, z, x0, top, z, x1, top, z, x1, y0, z, u, v, u, v, u, v, u, v);
 		}
 	}
 
@@ -536,53 +490,28 @@ public final class IncubatorBlockEntityRenderer
 		return low + (ceiling - low) * wave;
 	}
 
-	private static void panelVertex(PoseStack.Pose pose, VertexConsumer out, float x, float y, float z,
-			float u, float v, int light) {
-		out.addVertex(pose, x, y, z)
-				.setColor(0xFFFFFFFF)
-				.setUv(u, v)
-				.setOverlay(OverlayTexture.NO_OVERLAY)
-				.setLight(light)
-				.setNormal(pose, 0.0F, 0.0F, 1.0F);
-	}
-
 	/** A flat square annulus: four bars laid end to end around the centre. */
 	private static void renderRing(PoseStack.Pose pose, VertexConsumer out, TextureAtlasSprite sprite) {
-		bar(pose, out, sprite, -RING_OUTER, RING_OUTER, -RING_OUTER, -RING_INNER);
-		bar(pose, out, sprite, -RING_OUTER, RING_OUTER, RING_INNER, RING_OUTER);
-		bar(pose, out, sprite, -RING_OUTER, -RING_INNER, -RING_INNER, RING_INNER);
-		bar(pose, out, sprite, RING_INNER, RING_OUTER, -RING_INNER, RING_INNER);
+		QuadEmitter quads = new QuadEmitter(pose, out, LightCoordsUtil.FULL_BRIGHT).color(RING_COLOR);
+		bar(quads, sprite, -RING_OUTER, RING_OUTER, -RING_OUTER, -RING_INNER);
+		bar(quads, sprite, -RING_OUTER, RING_OUTER, RING_INNER, RING_OUTER);
+		bar(quads, sprite, -RING_OUTER, -RING_INNER, -RING_INNER, RING_INNER);
+		bar(quads, sprite, RING_INNER, RING_OUTER, -RING_INNER, RING_INNER);
 	}
 
 	/**
 	 * One horizontal bar of the ring, wound both ways: the translucent sheet culls back faces, so a
 	 * single winding would make the ring vanish when looked at from the other side.
 	 */
-	private static void bar(PoseStack.Pose pose, VertexConsumer out, TextureAtlasSprite sprite,
-			float x0, float x1, float z0, float z1) {
+	private static void bar(QuadEmitter quads, TextureAtlasSprite sprite, float x0, float x1, float z0, float z1) {
 		float u0 = sprite.getU0();
 		float u1 = sprite.getU1();
 		float v0 = sprite.getV0();
 		float v1 = sprite.getV1();
-		vertex(pose, out, x0, z0, u0, v0, 1.0F);
-		vertex(pose, out, x0, z1, u0, v1, 1.0F);
-		vertex(pose, out, x1, z1, u1, v1, 1.0F);
-		vertex(pose, out, x1, z0, u1, v0, 1.0F);
-
-		vertex(pose, out, x0, z0, u0, v0, -1.0F);
-		vertex(pose, out, x1, z0, u1, v0, -1.0F);
-		vertex(pose, out, x1, z1, u1, v1, -1.0F);
-		vertex(pose, out, x0, z1, u0, v1, -1.0F);
-	}
-
-	private static void vertex(PoseStack.Pose pose, VertexConsumer out, float x, float z,
-			float u, float v, float normalY) {
-		out.addVertex(pose, x, 0.0F, z)
-				.setColor(RING_COLOR)
-				.setUv(u, v)
-				.setOverlay(OverlayTexture.NO_OVERLAY)
-				.setLight(LightCoordsUtil.FULL_BRIGHT)
-				.setNormal(pose, 0.0F, normalY, 0.0F);
+		quads.quad(0.0F, 1.0F, 0.0F, x0, 0.0F, z0, x0, 0.0F, z1, x1, 0.0F, z1, x1, 0.0F, z0,
+				u0, v0, u0, v1, u1, v1, u1, v0);
+		quads.quad(0.0F, -1.0F, 0.0F, x0, 0.0F, z0, x1, 0.0F, z0, x1, 0.0F, z1, x0, 0.0F, z1,
+				u0, v0, u1, v0, u1, v1, u0, v1);
 	}
 
 	public static final class State extends BlockEntityRenderState {

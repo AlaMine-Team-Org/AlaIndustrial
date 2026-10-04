@@ -1,6 +1,7 @@
 package dev.alaindustrial.core.machine;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.core.environment.GeneratorConfig;
 import java.util.function.IntSupplier;
 
 /**
@@ -74,39 +75,39 @@ import java.util.function.IntSupplier;
 public enum ComponentTier {
 	/** Wooden rotor — the shipped T1 baseline. Its multiplier is 1.0 by default, not by hardcoding. */
 	WINDMILL_ROTOR("windmill_rotor",
-			() -> Config.windMillRotorOutputMultiplier,
-			() -> Config.windMillRotorEuPerDamage,
-			() -> Config.windMillRotorMaxDamage,
+			() -> GeneratorConfig.windMillRotorOutputMultiplier,
+			() -> GeneratorConfig.windMillRotorEuPerDamage,
+			() -> GeneratorConfig.windMillRotorMaxDamage,
 			() -> Config.repairBenchTier1EuCost),
 	/** Reinforced rotor — tempered iron and an iron gear: ×1.25 output, ×3 durability. */
 	WINDMILL_ROTOR_REINFORCED("windmill_rotor_reinforced",
-			() -> Config.windMillRotorReinforcedOutputMultiplier,
-			() -> Config.windMillRotorReinforcedEuPerDamage,
-			() -> Config.windMillRotorReinforcedMaxDamage,
+			() -> GeneratorConfig.windMillRotorReinforcedOutputMultiplier,
+			() -> GeneratorConfig.windMillRotorReinforcedEuPerDamage,
+			() -> GeneratorConfig.windMillRotorReinforcedMaxDamage,
 			() -> Config.repairBenchTier2EuCost),
 	/** Advanced rotor — electronic circuitry: ×1.50 output, ×6 durability. The top grade. */
 	WINDMILL_ROTOR_ADVANCED("windmill_rotor_advanced",
-			() -> Config.windMillRotorAdvancedOutputMultiplier,
-			() -> Config.windMillRotorAdvancedEuPerDamage,
-			() -> Config.windMillRotorAdvancedMaxDamage,
+			() -> GeneratorConfig.windMillRotorAdvancedOutputMultiplier,
+			() -> GeneratorConfig.windMillRotorAdvancedEuPerDamage,
+			() -> GeneratorConfig.windMillRotorAdvancedMaxDamage,
 			() -> Config.repairBenchTier3EuCost),
 	/** Wooden water wheel — the shipped T1 baseline. */
 	WATER_MILL_WHEEL("water_mill_wheel",
-			() -> Config.waterMillWheelOutputMultiplier,
-			() -> Config.waterMillWheelEuPerDamage,
-			() -> Config.waterMillWheelMaxDamage,
+			() -> GeneratorConfig.waterMillWheelOutputMultiplier,
+			() -> GeneratorConfig.waterMillWheelEuPerDamage,
+			() -> GeneratorConfig.waterMillWheelMaxDamage,
 			() -> Config.repairBenchTier1EuCost),
 	/** Reinforced wheel — tempered iron and an iron gear: ×1.25 output, ×3 durability. */
 	WATER_MILL_WHEEL_REINFORCED("water_mill_wheel_reinforced",
-			() -> Config.waterMillWheelReinforcedOutputMultiplier,
-			() -> Config.waterMillWheelReinforcedEuPerDamage,
-			() -> Config.waterMillWheelReinforcedMaxDamage,
+			() -> GeneratorConfig.waterMillWheelReinforcedOutputMultiplier,
+			() -> GeneratorConfig.waterMillWheelReinforcedEuPerDamage,
+			() -> GeneratorConfig.waterMillWheelReinforcedMaxDamage,
 			() -> Config.repairBenchTier2EuCost),
 	/** Advanced wheel — electronic circuitry: ×1.50 output, ×6 durability. The top grade. */
 	WATER_MILL_WHEEL_ADVANCED("water_mill_wheel_advanced",
-			() -> Config.waterMillWheelAdvancedOutputMultiplier,
-			() -> Config.waterMillWheelAdvancedEuPerDamage,
-			() -> Config.waterMillWheelAdvancedMaxDamage,
+			() -> GeneratorConfig.waterMillWheelAdvancedOutputMultiplier,
+			() -> GeneratorConfig.waterMillWheelAdvancedEuPerDamage,
+			() -> GeneratorConfig.waterMillWheelAdvancedMaxDamage,
 			() -> Config.repairBenchTier3EuCost),
 	/**
 	 * Copper conductor tip — the lightning rod's T1 baseline (MOD-386). Its multiplier scales the
@@ -115,21 +116,21 @@ public enum ComponentTier {
 	 * stronger. Both are clamped inside {@code LightningRodOutput}, so the ceilings still hold.
 	 */
 	LIGHTNING_ROD_TIP("lightning_rod_conductor_tip",
-			() -> Config.lightningRodTipOutputMultiplier,
-			() -> Config.lightningRodTipEuPerDamage,
-			() -> Config.lightningRodTipMaxDamage,
+			() -> GeneratorConfig.lightningRodTipOutputMultiplier,
+			() -> GeneratorConfig.lightningRodTipEuPerDamage,
+			() -> GeneratorConfig.lightningRodTipMaxDamage,
 			() -> Config.repairBenchTier1EuCost),
 	/** Reinforced conductor tip — tempered iron: ×1.25 capacity/bleed, ×3 durability. */
 	LIGHTNING_ROD_TIP_REINFORCED("lightning_rod_conductor_tip_reinforced",
-			() -> Config.lightningRodTipReinforcedOutputMultiplier,
-			() -> Config.lightningRodTipReinforcedEuPerDamage,
-			() -> Config.lightningRodTipReinforcedMaxDamage,
+			() -> GeneratorConfig.lightningRodTipReinforcedOutputMultiplier,
+			() -> GeneratorConfig.lightningRodTipReinforcedEuPerDamage,
+			() -> GeneratorConfig.lightningRodTipReinforcedMaxDamage,
 			() -> Config.repairBenchTier2EuCost),
 	/** Advanced conductor tip — electronic circuitry: ×1.50 capacity/bleed, ×6 durability. Top grade. */
 	LIGHTNING_ROD_TIP_ADVANCED("lightning_rod_conductor_tip_advanced",
-			() -> Config.lightningRodTipAdvancedOutputMultiplier,
-			() -> Config.lightningRodTipAdvancedEuPerDamage,
-			() -> Config.lightningRodTipAdvancedMaxDamage,
+			() -> GeneratorConfig.lightningRodTipAdvancedOutputMultiplier,
+			() -> GeneratorConfig.lightningRodTipAdvancedEuPerDamage,
+			() -> GeneratorConfig.lightningRodTipAdvancedMaxDamage,
 			() -> Config.repairBenchTier3EuCost);
 
 	/**

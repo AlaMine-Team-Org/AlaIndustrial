@@ -3,7 +3,9 @@ package dev.alaindustrial.gametest;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.EnergyCondenserBlockEntity;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
+import dev.alaindustrial.core.environment.GeneratorConfig;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import dev.alaindustrial.menu.EnergyCondenserMenu;
@@ -21,6 +23,50 @@ import net.minecraft.world.item.ItemStack;
  * "banking energy yields a clot" would stay green through every way this block can go wrong.
  */
 public final class EnergyCondenserScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(EnergyCondenserScenarios::condenser_tierFollowsTheBank,
+								"condenser_tier_follows_the_bank")
+						.fabricId("EnergyCondenserGameTest", "condenser_tierFollowsTheBank").ticks(20, 40),
+				RosterEntry.of(EnergyCondenserScenarios::condenser_takingSpendsTheWholeBank,
+								"condenser_taking_spends_the_whole_bank")
+						.fabricId("EnergyCondenserGameTest", "condenser_takingSpendsTheWholeBank").ticks(20, 40),
+				RosterEntry.of(EnergyCondenserScenarios::condenser_everyRemovalPathSpendsTheBank,
+								"condenser_every_removal_path_spends_the_bank")
+						.fabricId("EnergyCondenserGameTest", "condenser_everyRemovalPathSpendsTheBank").ticks(20, 60),
+				RosterEntry.of(EnergyCondenserScenarios::condenser_windowRefusesAPlayersOwnClot,
+								"condenser_window_refuses_a_players_own_clot")
+						.fabricId("EnergyCondenserGameTest", "condenser_windowRefusesAPlayersOwnClot").ticks(20, 40),
+				RosterEntry.of(EnergyCondenserScenarios::condenser_facesAreSplitBetweenPowerAndItems,
+								"condenser_faces_are_split_between_power_and_items")
+						.fabricId("EnergyCondenserGameTest", "condenser_facesAreSplitBetweenPowerAndItems")
+						.ticks(20, 40),
+				RosterEntry.of(EnergyCondenserScenarios::condenser_cannotCompeteWithMachines,
+								"condenser_cannot_compete_with_machines")
+						.fabricId("EnergyCondenserGameTest", "condenser_cannotCompeteWithMachines").ticks(20, 40),
+				RosterEntry.of(EnergyCondenserScenarios::condenser_menuSlotsStayInsideTheContainer,
+								"condenser_menu_slots_stay_inside_the_container")
+						.fabricId("EnergyCondenserGameTest", "condenser_menuSlotsStayInsideTheContainer")
+						.ticks(20, 40),
+				RosterEntry.of(EnergyCondenserScenarios::condenser_hasNoUpgradePanel, "condenser_has_no_upgrade_panel")
+						.fabricId("EnergyCondenserGameTest", "condenser_hasNoUpgradePanel").ticks(20, 40),
+				RosterEntry.of(EnergyCondenserScenarios::condenser_banksWhatTheGridOffers,
+								"condenser_banks_what_the_grid_offers")
+						.fabricId("EnergyCondenserGameTest", "condenser_banksWhatTheGridOffers").ticks(260),
+				RosterEntry.of(EnergyCondenserScenarios::condenser_doesNotStarveAMachine,
+								"condenser_does_not_starve_a_machine")
+						.fabricId("EnergyCondenserGameTest", "condenser_doesNotStarveAMachine").ticks(200),
+				RosterEntry.of(EnergyCondenserScenarios::condenser_doesNotDrainAChargedStore,
+								"condenser_does_not_drain_a_charged_store")
+						.fabricId("EnergyCondenserGameTest", "condenser_doesNotDrainAChargedStore").ticks(200),
+				RosterEntry.of(EnergyCondenserScenarios::condenser_cannotBeReachedByAFlushStore,
+								"condenser_cannot_be_reached_by_a_flush_store")
+						.fabricId("EnergyCondenserGameTest", "condenser_cannotBeReachedByAFlushStore").ticks(20, 40));
+
+		private Roster() {}
+	}
 
 	private EnergyCondenserScenarios() {}
 
@@ -347,7 +393,7 @@ public final class EnergyCondenserScenarios {
 				ModContent.ENERGY_CONDENSER.get(), EnergyCondenserBlockEntity.class);
 
 		int ticks = 200;
-		long supplyPerTick = (long) generatorPositions.length * Config.fuelEuPerTick;
+		long supplyPerTick = (long) generatorPositions.length * GeneratorConfig.fuelEuPerTick;
 		long peakCableBuffer = 0;
 		for (int i = 0; i < ticks; i++) {
 			// Same order the server uses: sources, then the wire, then the network, then the sink.

@@ -3,6 +3,7 @@ package dev.alaindustrial.gametest;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.item.wearable.FluxweaveArmorItem;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import java.util.Optional;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
@@ -41,6 +42,35 @@ import static dev.alaindustrial.gametest.AlaGameTestHelper.survivalPlayer;
  * asserted, and the set-bonus cases drive the piece's own tick directly and carry a control leg.
  */
 public final class FluxweaveArmorScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(FluxweaveArmorScenarios::reg01DrainedSetKeepsBaseProtection,
+								"fluxweave_drained_set_keeps_base_protection")
+						.fabricId("FluxweaveArmorGameTest", "tcFlux001Reg01_drainedSetKeepsBaseProtection")
+						.ticks(20, 60),
+				RosterEntry.of(FluxweaveArmorScenarios::fun01ChargeSwitchesBonusesOn,
+								"fluxweave_charge_switches_bonuses_on")
+						.fabricId("FluxweaveArmorGameTest", "tcFlux001Fun01_chargeSwitchesBonusesOn").ticks(20, 60),
+				RosterEntry.of(FluxweaveArmorScenarios::con01BootsSoftenButNeverCancelFalls,
+								"fluxweave_boots_soften_but_never_cancel_falls")
+						.fabricId("FluxweaveArmorGameTest", "tcFlux001Con01_bootsSoftenButNeverCancelFalls")
+						.ticks(20, 60),
+				RosterEntry.of(FluxweaveArmorScenarios::fun02StepAssistIsOptIn, "fluxweave_step_assist_is_opt_in")
+						.fabricId("FluxweaveArmorGameTest", "tcFlux001Fun02_stepAssistIsOptIn").ticks(20, 60),
+				RosterEntry.of(FluxweaveArmorScenarios::con02SetBonusAppliesOncePerSecond,
+								"fluxweave_set_bonus_applies_once_per_second")
+						.fabricId("FluxweaveArmorGameTest", "tcFlux001Con02_setBonusAppliesOncePerSecond").ticks(200),
+				RosterEntry.of(FluxweaveArmorScenarios::con03DeadPieceBreaksTheSet,
+								"fluxweave_dead_piece_breaks_the_set")
+						.fabricId("FluxweaveArmorGameTest", "tcFlux001Con03_deadPieceBreaksTheSet").ticks(200),
+				RosterEntry.of(FluxweaveArmorScenarios::reg02WornAssetFollowsCharge,
+								"fluxweave_worn_asset_follows_charge")
+						.fabricId("FluxweaveArmorGameTest", "tcFlux001Reg02_wornAssetFollowsCharge").ticks(20, 60));
+
+		private Roster() {}
+	}
 
 	private FluxweaveArmorScenarios() {
 	}
@@ -88,7 +118,11 @@ public final class FluxweaveArmorScenarios {
 
 	// ── REG01: a flat suit is still armour ───────────────────────────────────────────────────────────
 
-	/** The load-bearing invariant: charge switches bonuses on, it does not switch protection off. */
+	/**
+	 * The load-bearing invariant: charge switches bonuses on, it does not switch protection off.
+	 *
+	 * @implements TC-FLUX-001-REG01 — a drained set still grants the material's armour and toughness.
+	 */
 	public static void reg01DrainedSetKeepsBaseProtection(GameTestHelper helper) {
 		ItemStack chest = piece(ModContent.FLUXWEAVE_CHESTPLATE, 0);
 		double armor = modifierAmount(chest, Attributes.ARMOR).orElse(0.0);
@@ -105,6 +139,9 @@ public final class FluxweaveArmorScenarios {
 
 	// ── FUN01: charging switches the bonuses on, without dropping the base set ──────────────────────
 
+	/**
+	 * @implements TC-FLUX-001-FUN01 — charging switches the per-slot bonuses on.
+	 */
 	public static void fun01ChargeSwitchesBonusesOn(GameTestHelper helper) {
 		ItemStack helmet = piece(ModContent.FLUXWEAVE_HELMET, 0);
 		if (modifierAmount(helmet, Attributes.OXYGEN_BONUS).isPresent()) {
@@ -131,6 +168,9 @@ public final class FluxweaveArmorScenarios {
 
 	// ── CON01: falls are softened, never cancelled ──────────────────────────────────────────────────
 
+	/**
+	 * @implements TC-FLUX-001-CON01 — boots soften falls but never cancel them.
+	 */
 	public static void con01BootsSoftenButNeverCancelFalls(GameTestHelper helper) {
 		ItemStack boots = piece(ModContent.FLUXWEAVE_BOOTS, AMPLE_EU);
 		double fall = modifierAmount(boots, Attributes.FALL_DAMAGE_MULTIPLIER).orElse(0.0);
@@ -148,6 +188,9 @@ public final class FluxweaveArmorScenarios {
 
 	// ── FUN02: the step assist is opt-in ────────────────────────────────────────────────────────────
 
+	/**
+	 * @implements TC-FLUX-001-FUN02 — step assist starts off and toggles both ways.
+	 */
 	public static void fun02StepAssistIsOptIn(GameTestHelper helper) {
 		ServerPlayer player = survivalPlayer(helper);
 		wearSet(player, AMPLE_EU);
@@ -184,6 +227,9 @@ public final class FluxweaveArmorScenarios {
 
 	// ── CON02: the set bonus is paid for once, not four times ───────────────────────────────────────
 
+	/**
+	 * @implements TC-FLUX-001-CON02 — the set bonus applies once a second, not once per piece.
+	 */
 	public static void con02SetBonusAppliesOncePerSecond(GameTestHelper helper) {
 		ServerPlayer player = survivalPlayer(helper);
 		wearSet(player, AMPLE_EU);
@@ -215,6 +261,9 @@ public final class FluxweaveArmorScenarios {
 
 	// ── CON03: a dead piece breaks the set ──────────────────────────────────────────────────────────
 
+	/**
+	 * @implements TC-FLUX-001-CON03 — one drained piece breaks the 4/4 bonus.
+	 */
 	public static void con03DeadPieceBreaksTheSet(GameTestHelper helper) {
 		ServerPlayer player = survivalPlayer(helper);
 		wearSet(player, AMPLE_EU);
@@ -241,6 +290,9 @@ public final class FluxweaveArmorScenarios {
 
 	// ── REG02: the worn look follows the charge ─────────────────────────────────────────────────────
 
+	/**
+	 * @implements TC-FLUX-001-REG02 — the worn asset follows the charge and is never dropped.
+	 */
 	public static void reg02WornAssetFollowsCharge(GameTestHelper helper) {
 		ItemStack helmet = piece(ModContent.FLUXWEAVE_HELMET, 0);
 		var drained = helmet.get(DataComponents.EQUIPPABLE);

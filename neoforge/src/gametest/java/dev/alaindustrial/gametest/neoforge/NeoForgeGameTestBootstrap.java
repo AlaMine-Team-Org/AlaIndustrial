@@ -35,5 +35,6 @@ public final class NeoForgeGameTestBootstrap {
 		modBus.addListener(NeoForgeGameTests::register);
 		modBus.addListener((RegisterCapabilitiesEvent event) -> ForeignEnergyItemStandIn.register(event));
 		ForeignMaterialStandIn.register(modBus);
+		ScenarioRosterNeoForge.init(modBus); // MOD-717: roster bodies into TEST_FUNCTION
 	}
 }

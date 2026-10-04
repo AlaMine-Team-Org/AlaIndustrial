@@ -3,10 +3,8 @@ package dev.alaindustrial.menu;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.block.entity.PolymerizerBlockEntity;
 import dev.alaindustrial.registry.ModContent;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 
 /**
@@ -24,8 +22,7 @@ public class PolymerizerMenu extends MachineMenu {
 	/** Client side. */
 	public PolymerizerMenu(int syncId, Inventory playerInventory) {
 		super(ModContent.POLYMERIZER_MENU.get(), syncId, playerInventory,
-				new SimpleContainer(PolymerizerBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT),
-				new SimpleContainerData(PolymerizerBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL,
+				clientStub(PolymerizerBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT, PolymerizerBlockEntity.DATA_COUNT),
 				ModContent.POLYMERIZER.get());
 	}
 
@@ -43,7 +40,7 @@ public class PolymerizerMenu extends MachineMenu {
 
 	/** Tank fill permille (0..1000) — sync channel 4. */
 	public int getFluidPermille() {
-		return data.get(4);
+		return channel(PolymerizerBlockEntity.Channel.LEVEL_PERMILLE);
 	}
 
 	/**
@@ -52,6 +49,6 @@ public class PolymerizerMenu extends MachineMenu {
 	 * the screen resolves the texture and name from this rather than assuming our own oil.
 	 */
 	public int getFluidRegistryId() {
-		return data.get(5);
+		return channel(PolymerizerBlockEntity.Channel.FLUID_ID);
 	}
 }

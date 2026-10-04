@@ -3,14 +3,16 @@ package dev.alaindustrial.gametest;
 import static dev.alaindustrial.gametest.EnergyScenarioSupport.be;
 import static dev.alaindustrial.gametest.EnergyScenarioSupport.tick;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.block.CableBlock;
 import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.GeneratorBlockEntity;
+import dev.alaindustrial.compat.Invulnerability;
 import dev.alaindustrial.core.energy.NetworkManager;
+import dev.alaindustrial.core.environment.GeneratorConfig;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -27,6 +29,29 @@ import net.minecraft.world.level.block.PipeBlock;
  * breaker's own segment: the point of the feature is what happens <em>downstream</em> of the switch.
  */
 public final class CableBreakerScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(CableBreakerScenarios::tcBrk001Nrg01_openBreakerCutsTheLine,
+								"tc_brk001_nrg01_open_breaker_cuts_the_line")
+						.fabricId("NetworkGameTest", "tcBrk001Nrg01_openBreakerCutsTheLine").ticks(80),
+				RosterEntry.of(CableBreakerScenarios::tcBrk001Sta01_openBreakerSurvivesCableTicks,
+								"tc_brk001_sta01_open_breaker_survives_cable_ticks")
+						.fabricId("NetworkGameTest", "tcBrk001Sta01_openBreakerSurvivesCableTicks").ticks(80),
+				RosterEntry.of(CableBreakerScenarios::tcBrk001Sec01_openBreakerDisarmsTheShock,
+								"tc_brk001_sec01_open_breaker_disarms_the_shock")
+						.fabricId("NetworkGameTest", "tcBrk001Sec01_openBreakerDisarmsTheShock").ticks(80),
+				RosterEntry.of(CableBreakerScenarios::tcBrk001Fun01_removingBreakerRestoresTheLine,
+								"tc_brk001_fun01_removing_breaker_restores_the_line")
+						.fabricId("NetworkGameTest", "tcBrk001Fun01_removingBreakerRestoresTheLine").ticks(80),
+				RosterEntry.of(CableBreakerScenarios::tcBrk001Vis01_openBreakerGapsTheRun,
+								"tc_brk001_vis01_open_breaker_gaps_the_run")
+						.fabricId("NetworkGameTest", "tcBrk001Vis01_openBreakerGapsTheRun").ticks(80));
+
+		private Roster() {}
+	}
+
 	private static final BlockPos GENERATOR = new BlockPos(1, 2, 1);
 	private static final BlockPos NEAR_CABLE = new BlockPos(2, 2, 1);
 	private static final BlockPos BREAKER_CABLE = new BlockPos(3, 2, 1);
@@ -70,7 +95,7 @@ public final class CableBreakerScenarios {
 	 */
 	private static void energize(GameTestHelper helper) {
 		if (be(helper, GENERATOR) instanceof GeneratorBlockEntity generator) {
-			generator.getEnergyStorage().setAmountUntracked(Config.generatorBuffer);
+			generator.getEnergyStorage().setAmountUntracked(GeneratorConfig.generatorBuffer);
 			generator.setChanged();
 		}
 		for (int i = 0; i < 30; i++) {
@@ -193,7 +218,7 @@ public final class CableBreakerScenarios {
 		// never advances that clock — the flag would still read "live" no matter how many times we
 		// ticked. Real ticks have to pass for it to age out.
 		helper.runAfterDelay(3, () -> {
-			player.setInvulnerableTime(0);
+			Invulnerability.setGraceTicks(player, 0);
 			if (cable(helper, FAR_CABLE).isEnergizedForShock()) {
 				helper.fail("the wire behind an open breaker still reads as energised");
 				return;

@@ -1,26 +1,22 @@
 package dev.alaindustrial.item.tool;
 
+import dev.alaindustrial.item.ToolConfig;
 import dev.alaindustrial.item.energy.ItemEnergy;
 
-import dev.alaindustrial.Config;
-import dev.alaindustrial.core.energy.EnergyTier;
 import java.util.List;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.EquipmentSlotGroup;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.Tool;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
+import dev.alaindustrial.client.ServerBalance;
+import dev.alaindustrial.item.energy.PoweredToolTooltip;
 
 /**
  * Electric Chainsaw (MOD-337) — the wood-side counterpart of the {@link ElectricDrillItem}: an
@@ -30,7 +26,7 @@ import net.minecraft.world.level.block.state.BlockState;
  *
  * <p>Everything energy-related reuses the drill's machinery rather than inventing a parallel one
  * (project rule 4): charge lives in the shared {@code pouch_energy} component through
- * {@link ItemEnergy}, which gains one {@code capacity}/{@code inputRate} branch for this class, so
+ * {@link ItemEnergy}, which reads this class's {@code PoweredItem} answers (MOD-707), so
  * every existing charger — the Battery Box charge slot, a worn Energy Pack, the Charge Pad —
  * charges the chainsaw with no changes on their side.
  *
@@ -54,19 +50,27 @@ import net.minecraft.world.level.block.state.BlockState;
  * woods would fall out of. Keeping the durability-free core matters more than the convenience.
  *
  * <h2>EU behaviour — identical in shape to the drill</h2>
+ * The line's contract, written once in {@link ElectricMiningToolItem} (MOD-707):
  * <ul>
  * <li>{@link #getDestroySpeed}: full {@code TOOL} speed while the chainsaw holds at least one
  * block's worth of EU; otherwise exactly {@code 1.0f}. That value is not an approximation —
  * {@code Player.getDestroySpeed} only applies Efficiency when the tool reports {@code > 1.0F}, so a
  * flat chainsaw is a plain hand and the enchantment cannot revive it.</li>
- * <li>{@link #mineBlock}: drains {@link Config#electricChainsawEuPerBlock} per block actually
+ * <li>{@link #mineBlock}: drains {@link ToolConfig#electricChainsawEuPerBlock} per block actually
  * mined, server-side only, only for blocks with non-zero hardness (so instant-break saplings are free,
- * just as they never wear a vanilla axe — <b>leaves are not</b>, see {@link #mineBlock}), and only when
+ * just as they never wear a vanilla axe — <b>leaves are not</b>, see below), and only when
  * there was enough EU to run at tool speed in the first place. Creative is dropped inside
  * {@link ItemEnergy#spend} (MOD-081).</li>
  * </ul>
+ *
+ * <p><b>Which blocks are free, from the 26.2 sources</b> (MOD-389 — the earlier wording here claimed
+ * leaves and vines were free, and they are not): {@code SaplingBlock} is {@code .instabreak()}, hardness
+ * {@code 0.0} → free. {@code leavesProperties()} is {@code .strength(0.2F)} and {@code VINE} is
+ * {@code 0.2} as well → both are charged the full per-block cost. The gate reads
+ * {@code getDestroySpeed}, not a block tag, so "leafy" has nothing to do with it: only a genuine
+ * zero-hardness block is free. This matters when balancing the chainsaw — a canopy is not free clearing.
  */
-public class ElectricChainsawItem extends Item {
+public class ElectricChainsawItem extends ElectricMiningToolItem {
 
 	/** Mining speed on {@code #minecraft:mineable/axe} — above a vanilla diamond axe (8.0), because the
 	 * chainsaw is crafted around one and should out-cut the tool that goes into it. The same speed is
@@ -121,62 +125,15 @@ public class ElectricChainsawItem extends Item {
 						.build());
 	}
 
-	// --- mining: full speed while charged, hand speed when flat (drops kept either way) ---
-
-	/**
-	 * Returns exactly {@code 1.0f} when the chainsaw cannot afford a block — see the class javadoc for
-	 * why the value must not be "slightly above 1.0". The mining tier and the drops still come from the
-	 * {@code TOOL} component either way, so a flat chainsaw keeps every log's drop; it is just slow.
-	 */
+	/** MOD-707: the energy numbers of this tool's tier; a higher tier of the same line overrides it. */
 	@Override
-	public float getDestroySpeed(ItemStack stack, BlockState state) {
-		if (ItemEnergy.get(stack) >= Config.electricChainsawEuPerBlock) {
-			return super.getDestroySpeed(stack, state);
-		}
-		return 1.0f;
+	protected ElectricToolTier toolTier() {
+		return ElectricToolTier.CHAINSAW;
 	}
 
-	/**
-	 * Drains EU for the block just broken. The two guards mirror vanilla's durability gate in
-	 * {@code Item.mineBlock}: {@code !isClientSide} because {@code mineBlock} runs on both sides and the
-	 * charge must only move on the server (the client picks the new value up from the synced
-	 * {@code pouch_energy} component), and non-zero hardness so instant-break blocks cost nothing.
-	 *
-	 * <p><b>Which blocks that actually is, from the 26.2 sources</b> (MOD-389 — the earlier wording here
-	 * claimed leaves and vines were free, and they are not): {@code SaplingBlock} is {@code .instabreak()},
-	 * hardness {@code 0.0} → free. {@code leavesProperties()} is {@code .strength(0.2F)} and {@code VINE}
-	 * is {@code 0.2} as well → both are charged the full per-block cost. The gate reads
-	 * {@code getDestroySpeed}, not a block tag, so "leafy" has nothing to do with it: only a genuine
-	 * zero-hardness block is free. This matters when balancing the chainsaw — a canopy is not free
-	 * clearing.
-	 */
+	/** Usage, then the charge (MOD-716, ADR-040). */
 	@Override
-	public boolean mineBlock(ItemStack stack, Level level, BlockState state, BlockPos pos, LivingEntity owner) {
-		if (!level.isClientSide() && state.getDestroySpeed(level, pos) != 0.0f
-				&& ItemEnergy.get(stack) >= Config.electricChainsawEuPerBlock) {
-			ItemEnergy.spend(stack, Config.electricChainsawEuPerBlock, owner);
-		}
-		return super.mineBlock(stack, level, state, pos, owner);
-	}
-
-	// --- item bar shows the EU charge in the LV tier colour (numbers are in the tooltip) ---
-
-	@Override
-	public boolean isBarVisible(ItemStack stack) {
-		return true;
-	}
-
-	@Override
-	public int getBarWidth(ItemStack stack) {
-		long capacity = ItemEnergy.capacity(stack);
-		if (capacity <= 0) {
-			return 0;
-		}
-		return (int) Math.min(MAX_BAR_WIDTH, MAX_BAR_WIDTH * ItemEnergy.get(stack) / capacity);
-	}
-
-	@Override
-	public int getBarColor(ItemStack stack) {
-		return EnergyTier.LV.color();
+	public PoweredToolTooltip toolTooltip() {
+		return PoweredToolTooltip.of("electric_chainsaw", List.of(ServerBalance::electricChainsawEuPerBlock));
 	}
 }

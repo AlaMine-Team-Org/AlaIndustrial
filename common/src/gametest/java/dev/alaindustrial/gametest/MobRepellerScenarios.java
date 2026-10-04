@@ -7,6 +7,7 @@ import dev.alaindustrial.entity.MobRepellerField;
 import dev.alaindustrial.entity.SoulVesselKills;
 import dev.alaindustrial.item.misc.SoulVesselItem;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
@@ -34,6 +35,36 @@ import net.minecraft.world.level.GameType;
  */
 public final class MobRepellerScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(MobRepellerScenarios::fun01ExpelsHostileAndBillsUpkeep, "repeller_expels_and_bills")
+						.fabricId("MobRepellerGameTest", "tcRep001Fun01ExpelsHostileAndBillsUpkeep").ticks(20, 40),
+				RosterEntry.of(MobRepellerScenarios::fun02IgnoresPassiveMobs, "repeller_ignores_passive")
+						.fabricId("MobRepellerGameTest", "tcRep001Fun02IgnoresPassiveMobs").ticks(20, 40),
+				RosterEntry.of(MobRepellerScenarios::fun03UnpoweredFieldIsDark, "repeller_unpowered_is_dark")
+						.fabricId("MobRepellerGameTest", "tcRep001Fun03UnpoweredFieldIsDark").ticks(20, 40),
+				RosterEntry.of(MobRepellerScenarios::fun04FullVesselEvolvesTier, "repeller_vessel_evolves_tier")
+						.fabricId("MobRepellerGameTest", "tcRep001Fun04FullVesselEvolvesTier").ticks(20, 40),
+				RosterEntry.of(MobRepellerScenarios::neg01PartialVesselDoesNotEvolve,
+								"repeller_partial_vessel_no_evolve")
+						.fabricId("MobRepellerGameTest", "tcRep001Neg01PartialVesselDoesNotEvolve").ticks(20, 40),
+				RosterEntry.of(MobRepellerScenarios::neg04ForeignItemRejected, "repeller_foreign_item_rejected")
+						.fabricId("MobRepellerGameTest", "tcRep001Neg04ForeignItemRejected").ticks(20, 40),
+				RosterEntry.of(MobRepellerScenarios::fun05PlayerKillBanksSoul, "repeller_player_kill_banks_soul")
+						.fabricId("MobRepellerGameTest", "tcRep001Fun05PlayerKillBanksSoul").ticks(20, 40),
+				RosterEntry.of(MobRepellerScenarios::fun06RealKillThroughLoaderHook, "repeller_real_kill_through_hook")
+						.fabricId("MobRepellerGameTest", "tcRep001Fun06RealKillThroughLoaderHook").ticks(20, 40),
+				RosterEntry.of(MobRepellerScenarios::neg02NonPlayerKillBanksNothing,
+								"repeller_non_player_kill_banks_nothing")
+						.fabricId("MobRepellerGameTest", "tcRep001Neg02NonPlayerKillBanksNothing").ticks(20, 40),
+				RosterEntry.of(MobRepellerScenarios::neg03PassiveKillBanksNothing,
+								"repeller_passive_kill_banks_nothing")
+						.fabricId("MobRepellerGameTest", "tcRep001Neg03PassiveKillBanksNothing").ticks(20, 40));
+
+		private Roster() {}
+	}
+
 	private MobRepellerScenarios() {
 	}
 
@@ -41,12 +72,8 @@ public final class MobRepellerScenarios {
 
 	/** Run {@code body} with the LV field radius pinned to 1 (see the class doc). */
 	private static void withIsolatedZone(Runnable body) {
-		int configured = Config.mobRepellerRange;
-		Config.mobRepellerRange = 1;
-		try {
+		try (ConfigOverrides o = ConfigOverrides.sync().set("mobRepellerRange", 1)) {
 			body.run();
-		} finally {
-			Config.mobRepellerRange = configured;
 		}
 	}
 
@@ -231,6 +258,8 @@ public final class MobRepellerScenarios {
 	 * @implements TC-REP-001-FUN06 — the whole chain end to end: the player deals lethal damage, the
 	 *     LOADER's death hook fires, and the soul lands in the vessel. FUN05 drives the accounting
 	 *     directly and so cannot see a hook that was never wired; this one can.
+	 *
+	 * @implements TC-REP-001-NEG02 — the same kill without a player behind it banks nothing.
 	 */
 	public static void fun06RealKillThroughLoaderHook(GameTestHelper helper) {
 		ServerPlayer player = (ServerPlayer) helper.makeMockServerPlayer(GameType.SURVIVAL);

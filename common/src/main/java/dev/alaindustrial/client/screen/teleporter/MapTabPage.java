@@ -48,7 +48,6 @@ import org.jspecify.annotations.Nullable;
  * index, and the server checks the real station on the jump.
  */
 public final class MapTabPage implements TabPage {
-
 	private static final int RADAR_X = 8, RADAR_Y = 20, SIZE = RemoteMap.SIZE;
 	private static final int CARD_X = 134, CARD_Y = 20, CARD_W = 94, CARD_H = 122;
 	private static final int CARD_TEXT_X = 138, CARD_RIGHT = 224, CARD_TEXT_W = 86;
@@ -545,7 +544,8 @@ public final class MapTabPage implements TabPage {
 	public boolean mouseClicked(MouseButtonEvent event) {
 		LocalPlayer player = screen.minecraftClient().player;
 		ClientLevel level = screen.minecraftClient().level;
-		if (event.button() != InputConstants.MOUSE_BUTTON_LEFT || player == null || level == null || !overRadar(event.x(), event.y())) {
+		if (event.button() != InputConstants.MOUSE_BUTTON_LEFT || player == null || level == null
+				|| !overRadar(event.x(), event.y())) {
 			return false;
 		}
 		TeleportPoints points = screen.getMenu().points();

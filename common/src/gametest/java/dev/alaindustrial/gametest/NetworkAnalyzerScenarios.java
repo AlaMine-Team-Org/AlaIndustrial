@@ -1,10 +1,12 @@
 package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.block.HorizontalMachineBlock;
+import dev.alaindustrial.block.WorkstationBlock;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.GeneratorBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
+import dev.alaindustrial.block.entity.WorkstationBlockEntity;
 import dev.alaindustrial.core.energy.EnergyNetwork;
 import dev.alaindustrial.core.energy.NetworkManager;
 import dev.alaindustrial.item.tool.AnalyzerMode;
@@ -13,6 +15,7 @@ import dev.alaindustrial.network.NetworkTopology;
 import dev.alaindustrial.network.NetworkTraverser;
 import dev.alaindustrial.network.NetworkTraverser.TraversalResult;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -32,6 +35,47 @@ import net.minecraft.world.level.block.entity.BlockEntity;
  * must return only the clicked side.
  */
 public final class NetworkAnalyzerScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(NetworkAnalyzerScenarios::mod047_traverseBridgesBatteryBox,
+								"mod047_traverse_bridges_battery_box")
+						.fabricId("NetworkAnalyzerGameTest", "mod047_traverseBridgesBatteryBox").ticks(20, 40),
+				RosterEntry.of(NetworkAnalyzerScenarios::mod047_stopAtStorageStaysInSegment,
+								"mod047_stop_at_storage_stays_in_segment")
+						.fabricId("NetworkAnalyzerGameTest", "mod047_stopAtStorageStaysInSegment").ticks(20, 40),
+				RosterEntry.of(NetworkAnalyzerScenarios::mod047_traverseCapFlagsLimit,
+								"mod047_traverse_cap_flags_limit")
+						.fabricId("NetworkAnalyzerGameTest", "mod047_traverseCapFlagsLimit").ticks(20, 40),
+				RosterEntry.of(NetworkAnalyzerScenarios::mod313_traverseCrossesSinksInGeometricOrder,
+								"mod313_traverse_crosses_sinks_in_geometric_order")
+						.fabricId("NetworkAnalyzerGameTest", "mod313_traverseCrossesSinksInGeometricOrder")
+						.ticks(20, 40),
+				RosterEntry.of(NetworkAnalyzerScenarios::mod665_traverseCapKeepsAcceptedNetworks,
+								"mod665_traverse_cap_keeps_accepted_networks")
+						.fabricId("NetworkAnalyzerGameTest", "mod665_traverseCapKeepsAcceptedNetworks").ticks(20, 40),
+				RosterEntry.of(NetworkAnalyzerScenarios::mod665_traverseIgnoresInertStorageFace,
+								"mod665_traverse_ignores_inert_storage_face")
+						.fabricId("NetworkAnalyzerGameTest", "mod665_traverseIgnoresInertStorageFace").ticks(20, 40),
+				RosterEntry.of(NetworkAnalyzerScenarios::mod665_dualRoleStoreListedOnce,
+								"mod665_dual_role_store_listed_once")
+						.fabricId("NetworkAnalyzerGameTest", "mod665_dualRoleStoreListedOnce").ticks(20, 40),
+				RosterEntry.of(NetworkAnalyzerScenarios::mod665_endpointFacesAreRealPorts,
+								"mod665_endpoint_faces_are_real_ports")
+						.fabricId("NetworkAnalyzerGameTest", "mod665_endpointFacesAreRealPorts").ticks(20, 40),
+				RosterEntry.of(NetworkAnalyzerScenarios::mod665_traverseCountsPassThroughOnce,
+								"mod665_traverse_counts_pass_through_once")
+						.fabricId("NetworkAnalyzerGameTest", "mod665_traverseCountsPassThroughOnce").ticks(20, 40),
+				RosterEntry.of(NetworkAnalyzerScenarios::mod665_movedGoesStaleWhenTheNetworkSleeps,
+								"mod665_moved_goes_stale_when_the_network_sleeps")
+						.fabricId("NetworkAnalyzerGameTest", "mod665_movedGoesStaleWhenTheNetworkSleeps").ticks(100),
+				RosterEntry.of(NetworkAnalyzerScenarios::mod691_stationClassMatchesNetwork,
+								"mod691_station_class_matches_network")
+						.fabricId("NetworkAnalyzerGameTest", "mod691_stationClassMatchesNetwork").ticks(20, 40));
+
+		private Roster() {}
+	}
 
 	private NetworkAnalyzerScenarios() {}
 
@@ -559,5 +603,101 @@ public final class NetworkAnalyzerScenarios {
 			}
 			helper.succeed();
 		});
+	}
+
+	// ── MOD-691: the analyzer and the network agree on what a store is ───────────────────────────────
+
+	private static final BlockPos CLASS_GEN = new BlockPos(1, 2, 1);
+	private static final BlockPos CLASS_CABLE_A = new BlockPos(2, 2, 1);
+	/** Workstation lower half, facing SOUTH, so both its WEST and EAST faces take a cable. */
+	private static final BlockPos CLASS_STATION = new BlockPos(3, 2, 1);
+	private static final BlockPos CLASS_CABLE_B = new BlockPos(4, 2, 1);
+	private static final BlockPos CLASS_MAC = new BlockPos(5, 2, 1);
+
+	/**
+	 * The analyzer puts the workstation in the class the network serves it in, and walks through it as a
+	 * bridge only if that class is "store".
+	 *
+	 * <p>Layout: {@code [Generator]─cable A─[Workstation]─cable B─[Macerator]}. The station splits the two
+	 * cables into two networks, exactly like the Battery Box of {@link #mod047_traverseBridgesBatteryBox};
+	 * the difference is that energy does not pass through a station, so the second network is no part of
+	 * the first unless the station is a store. The network's own verdict is read from what it did, not from
+	 * a private predicate: over the run it books every delivery into a store as {@code lastTickToStorage}.
+	 * Before MOD-691 the two read the same flag two different ways ({@code instanceof MachineBlockEntity}
+	 * against {@code instanceof EnergyBlockEntity}), and the analyzer drew the station as a store and
+	 * stitched cable B into the picture of a network that served it as a machine.
+	 *
+	 * @implements MOD-691-ANALYZER — the analyzer's storage class matches the network's
+	 * @covers MOD-691
+	 */
+	public static void mod691_stationClassMatchesNetwork(GameTestHelper helper) {
+		helper.setBlock(CLASS_GEN, ModContent.GENERATOR.get());
+		helper.setBlock(CLASS_CABLE_A, ModContent.COPPER_CABLE.get());
+		BlockPos station = helper.absolutePos(CLASS_STATION);
+		helper.getLevel().setBlockAndUpdate(station,
+				ModContent.WORKSTATION.get().defaultBlockState().setValue(WorkstationBlock.FACING, Direction.SOUTH));
+		helper.getLevel().setBlockAndUpdate(station.above(),
+				ModContent.WORKSTATION.get().defaultBlockState().setValue(WorkstationBlock.FACING, Direction.SOUTH));
+		WorkstationBlock.tryAssemble(helper.getLevel(), station.above());
+		helper.setBlock(CLASS_CABLE_B, ModContent.COPPER_CABLE.get());
+		helper.setBlock(CLASS_MAC, ModContent.MACERATOR.get());
+		if (be(helper, CLASS_GEN) instanceof GeneratorBlockEntity gen) {
+			gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
+		}
+		if (be(helper, CLASS_MAC) instanceof MaceratorBlockEntity mac) {
+			mac.setItem(MaceratorBlockEntity.INPUT_SLOT, new ItemStack(Items.RAW_IRON, 8));
+		}
+		if (!(helper.getLevel().getBlockEntity(station) instanceof WorkstationBlockEntity)) {
+			helper.fail("precondition: the workstation did not assemble at " + station);
+			return;
+		}
+
+		long moved = 0L;
+		long intoStorage = 0L;
+		for (int i = 0; i < 40; i++) {
+			tickEntity(helper, CLASS_GEN);
+			tickEntity(helper, CLASS_CABLE_A);
+			tickEntity(helper, CLASS_CABLE_B);
+			tickEntity(helper, CLASS_MAC);
+			NetworkManager.tickAll(helper.getLevel());
+			EnergyNetwork net = NetworkManager.networkAt(helper.getLevel(), helper.absolutePos(CLASS_CABLE_A));
+			if (net != null) {
+				moved += net.lastTickMoved();
+				intoStorage += net.lastTickToStorage();
+			}
+		}
+		EnergyNetwork left = NetworkManager.networkAt(helper.getLevel(), helper.absolutePos(CLASS_CABLE_A));
+		EnergyNetwork right = NetworkManager.networkAt(helper.getLevel(), helper.absolutePos(CLASS_CABLE_B));
+		if (left == null || right == null || left == right) {
+			helper.fail("precondition: the station must split the cables into two networks (left=" + left
+					+ ", right=" + right + ")");
+			return;
+		}
+		if (moved <= 0) {
+			helper.fail("precondition: the generator's network delivered nothing, so the network never said how"
+					+ " it classes the station");
+			return;
+		}
+		boolean networkSaysStore = intoStorage > 0;
+
+		TraversalResult result = NetworkTraverser.traverse(helper.getLevel(), left, AnalyzerMode.TRAVERSE, 32);
+		boolean analyzerSaysStore = result.storageSinks().contains(station);
+		if (analyzerSaysStore != networkSaysStore) {
+			helper.fail("MOD-691: the analyzer draws the workstation as " + (analyzerSaysStore ? "a store" : "a machine")
+					+ " but the network serves it as " + (networkSaysStore ? "a store" : "a machine")
+					+ " (moved=" + moved + ", into storage=" + intoStorage + ")");
+			return;
+		}
+		if (!networkSaysStore && result.cables().contains(helper.absolutePos(CLASS_CABLE_B))) {
+			helper.fail("MOD-691: the analyzer bridged through the workstation into the macerator's network,"
+					+ " although the network does not treat the station as a store: cables=" + result.cables());
+			return;
+		}
+		if (!networkSaysStore && !result.consumers().contains(station)) {
+			helper.fail("MOD-691: a workstation served as a machine must be listed as a consumer: consumers="
+					+ result.consumers() + ", storage=" + result.storageSinks());
+			return;
+		}
+		helper.succeed();
 	}
 }

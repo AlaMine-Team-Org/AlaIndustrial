@@ -1,15 +1,16 @@
 package dev.alaindustrial.block.entity;
 
-import dev.alaindustrial.Config;
+import dev.alaindustrial.block.entity.machine.EvolutionHelper;
+import dev.alaindustrial.block.entity.machine.SyncChannels;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.core.environment.GeneratorConfig;
 import dev.alaindustrial.core.environment.SolarSky;
 import dev.alaindustrial.core.environment.SolarSkyCache;
 import net.minecraft.core.Direction;
 import dev.alaindustrial.menu.SolarPanelMenu;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -28,7 +29,7 @@ import net.minecraft.world.level.storage.ValueOutput;
  * sky, in the Overworld: 1 EU/t default; rain/thunder and night: 0 (MOD-003). Buffer 8000, LV output.
  *
  * <p>Evolution: with an {@linkplain ModContent#ALIGNMENT_CHIP_DAY evolution chip} in its slot, the
- * panel accumulates active sky-time at the chip's time of day; once {@link Config#solarEvolveTicks}
+ * panel accumulates active sky-time at the chip's time of day; once {@link GeneratorConfig#solarEvolveTicks}
  * is reached it transforms into the matching T2 branch (daylight / moonlit), carrying its stored
  * energy and consuming the chip.
  *
@@ -42,7 +43,7 @@ public class SolarPanelBlockEntity extends AbstractGeneratorBlockEntity implemen
 	public static final int SLOT_COUNT = 1;
 	private static final int MAX_EXTRACT = 20;
 
-	/** Caches the sky/weather verdict for {@link Config#solarSkySampleTicks} ticks to avoid a per-tick column scan. */
+	/** Caches the sky/weather verdict for {@link GeneratorConfig#solarSkySampleTicks} ticks (no per-tick scan). */
 	private final SolarSkyCache skyCache = new SolarSkyCache();
 
 	/** Mode codes shared with the screen. */
@@ -63,16 +64,17 @@ public class SolarPanelBlockEntity extends AbstractGeneratorBlockEntity implemen
 	}
 
 	private int evolveProgress;
-	/** Which chip the counter above belongs to; see {@link MachineBlockEntity#saveEvolveChip}. */
-	private int evolveChip = EVOLVE_CHIP_NONE;
+	/** Which chip the counter above belongs to; see {@link EvolutionHelper#saveEvolveChip}. */
+	private int evolveChip = EvolutionHelper.EVOLVE_CHIP_NONE;
 
 	public SolarPanelBlockEntity(BlockPos pos, BlockState state) {
-		super(ModContent.SOLAR_PANEL_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT, Config.solarBuffer, MAX_EXTRACT);
+		super(ModContent.SOLAR_PANEL_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT, GeneratorConfig.solarBuffer,
+				MAX_EXTRACT);
 	}
 
 	@Override
 	protected int produce(Level level, BlockPos pos, BlockState state) {
-		// Sample sky access + weather on a cadence (Config.solarSkySampleTicks); both are cached
+		// Sample sky access + weather on a cadence (GeneratorConfig.solarSkySampleTicks); both are cached
 		// together so the column scan (SolarSky.classify) and the biome-precipitation lookup
 		// (SolarSky.classifyWeather) each run once per cadence window, not once per tick per panel.
 		skyCache.sample(level, pos);
@@ -89,12 +91,12 @@ public class SolarPanelBlockEntity extends AbstractGeneratorBlockEntity implemen
 		// The counter belongs to the chip that earned it (MOD-601). Take the chip out, or swap the
 		// branch, and that run is abandoned rather than banked for the next chip: progress the player
 		// can see draining away is the honest reading of "the chip is what does this".
-		int chipNow = evolveChipOf(chip);
+		int chipNow = EvolutionHelper.evolveChipOf(chip);
 		if (chipNow != evolveChip) {
 			// An UNATTRIBUTED counter is adopted, not cleared: that is the state of a save written
 			// before the marker existed, and of a counter seeded directly by a test rig. Only a
 			// counter that already belongs to a chip can be abandoned by removing or swapping it.
-			if (evolveChip != EVOLVE_CHIP_NONE) {
+			if (evolveChip != EvolutionHelper.EVOLVE_CHIP_NONE) {
 				evolveProgress = 0;
 			}
 			evolveChip = chipNow;
@@ -102,7 +104,7 @@ public class SolarPanelBlockEntity extends AbstractGeneratorBlockEntity implemen
 		}
 		if ((dayChip || nightChip) && overworldSky && (dayChip == bright)) {
 			evolveProgress++;
-			if (evolveProgress >= Config.solarEvolveTicks) {
+			if (evolveProgress >= GeneratorConfig.solarEvolveTicks) {
 				evolveInto(level, pos, dayChip ? ModContent.DAYLIGHT_SOLAR_PANEL.get() : ModContent.MOONLIT_SOLAR_PANEL.get());
 				return 0; // this block entity is gone after the transform
 			}
@@ -113,7 +115,7 @@ public class SolarPanelBlockEntity extends AbstractGeneratorBlockEntity implemen
 		int production = 0;
 		int mode = MODE_NIGHT;
 		if (overworldSky && bright) {
-			production = Config.solarEuPerTick;
+			production = GeneratorConfig.solarEuPerTick;
 			mode = MODE_DAY;
 			switch (skyCache.weather()) {
 				case RAIN -> {
@@ -124,13 +126,13 @@ public class SolarPanelBlockEntity extends AbstractGeneratorBlockEntity implemen
 				case SNOW -> {
 					// Snow dims the panel to a floored trickle (≥1 EU/t) — round(base × factor) alone would
 					// truncate the T1 base of 1 to 0, so the panel appears dead in snow. Beats PARTIAL/DAY.
-					production = Math.max(1, Math.round(production * Config.solarSnowFactor));
+					production = Math.max(1, Math.round(production * GeneratorConfig.solarSnowFactor));
 					mode = MODE_SNOW;
 				}
 				case NONE -> {
 					if (sky == SolarSky.Access.PARTIAL) {
 						// Light filtered through a translucent block (leaves, cobweb): reduced output (MOD-004).
-						production = Math.round(production * Config.solarTransparentFactor);
+						production = Math.round(production * GeneratorConfig.solarTransparentFactor);
 						mode = MODE_PARTIAL;
 					}
 				}
@@ -163,7 +165,7 @@ public class SolarPanelBlockEntity extends AbstractGeneratorBlockEntity implemen
 		// hold up to 64 chips here, so the remainder has to survive the transform.
 		ItemStack remainder = items.get(CHIP_SLOT).copy();
 		remainder.shrink(1);
-		evolveInto(level, pos, target, java.util.Map.of(CHIP_SLOT, remainder));
+		EvolutionHelper.evolveInto(this, items, level, pos, target, java.util.Map.of(CHIP_SLOT, remainder));
 	}
 
 	@Override
@@ -178,55 +180,31 @@ public class SolarPanelBlockEntity extends AbstractGeneratorBlockEntity implemen
 	}
 
 	/**
-	 * Six-wide data — hides {@link MachineBlockEntity#DATA_COUNT} so {@code SolarPanelBlockEntity.DATA_COUNT}
-	 * names this machine's width for the bridge below and for {@code SolarPanelMenu}'s client stub (MOD-235).
-	 */
-	public static final int DATA_COUNT = 6;
-
-	/**
-	 * Six-wide data: base 0..3 plus evolution progress (4) and denominator (5).
+	 * GUI sync channels (MOD-712, BE-7): the base four (a generator's PROGRESS is its production, MAX_PROGRESS
+	 * its mode code), then the evolution progress and its denominator, both read-only.
 	 *
-	 * <p>The evolution channels are scaled to <b>permille (0..1000)</b>, not raw ticks. Vanilla
-	 * {@code DataSlot} serialises each value as a 16-bit short (max 32767), and
-	 * {@link Config#solarEvolveTicks} (33 600 by default) overflows that — sending the raw counter made
-	 * the target arrive <em>negative</em> on the client, so the screen's {@code evoMax > 0} guard failed
-	 * and the progress bar never rendered. Channel 4 is the completion permille (≥1 as soon as any
-	 * progress accrues, preserving the min-1px feedback); channel 5 is the constant denominator 1000.
-	 * The screen renders from the 4/5 ratio, so no client change is needed.
+	 * The evolution channels are a <b>permille</b>, not raw ticks: a channel is a 16-bit short and the
+	 * evolution target (33 600 ticks by default) overflowed it — the target arrived negative and the
+	 * bar never drew. EVOLVE_PERMILLE is at least 1 as soon as any progress accrues; EVOLVE_MAX is the
+	 * constant 1000 the screen divides by.
 	 */
-	private final ContainerData solarData = new ContainerData() {
-		@Override
-		public int get(int index) {
-			return switch (index) {
-				case 4 -> evolveProgress <= 0 ? 0
-						: Math.max(1, (int) Math.min((long) evolveProgress * 1000 / Config.solarEvolveTicks, 1000));
-				case 5 -> 1000;
-				default -> SolarPanelBlockEntity.this.dataAccess.get(index);
-			};
-		}
+	public enum Channel { ENERGY, CAPACITY, PROGRESS, MAX_PROGRESS, EVOLVE_PERMILLE, EVOLVE_MAX }
 
-		@Override
-		public void set(int index, int value) {
-			// Channels 4/5 are derived, server-authoritative projections: evolveProgress lives in NBT and
-			// is advanced only in produce(); nothing writes them back through the ContainerData.
-			if (index != 4 && index != 5) {
-				SolarPanelBlockEntity.this.dataAccess.set(index, value);
-			}
-		}
-
-		@Override
-		public int getCount() {
-			return DATA_COUNT;
-		}
-	};
+	/** Width of {@link #getDataAccess()}, which the menu's client stub sizes itself from (MOD-235). */
+	public static final int DATA_COUNT = Channel.values().length;
 
 	@Override
-	public ContainerData getDataAccess() {
-		return solarData;
+	protected SyncChannels createChannels() {
+		return channels(Channel.class)
+				.read(Channel.EVOLVE_PERMILLE, () -> evolveProgress <= 0 ? 0
+						: Math.max(1, (int) Math.min((long) evolveProgress * 1000 / GeneratorConfig.solarEvolveTicks,
+								1000)))
+				.read(Channel.EVOLVE_MAX, () -> 1000)
+				.build();
 	}
 
 	/**
-	 * Raw accumulated evolution counter in ticks (0..{@link Config#solarEvolveTicks}), persisted in NBT.
+	 * Raw accumulated evolution counter in ticks (0..{@link GeneratorConfig#solarEvolveTicks}), persisted in NBT.
 	 * Sync channel 4 exposes only a permille projection of this (see {@code solarData}), so callers that
 	 * need the exact tick count — NBT round-trip tests, future logic — must use this accessor, not the
 	 * ContainerData channel.
@@ -241,11 +219,6 @@ public class SolarPanelBlockEntity extends AbstractGeneratorBlockEntity implemen
 	}
 
 	@Override
-	public Component getDisplayName() {
-		return Component.translatable("block.alaindustrial.solar_panel");
-	}
-
-	@Override
 	public AbstractContainerMenu createMenu(int syncId, Inventory inventory, Player player) {
 		return new SolarPanelMenu(syncId, inventory, this, ContainerLevelAccess.create(getLevel(), getBlockPos()));
 	}
@@ -253,14 +226,14 @@ public class SolarPanelBlockEntity extends AbstractGeneratorBlockEntity implemen
 	@Override
 	protected void saveAdditional(ValueOutput output) {
 		super.saveAdditional(output);
-		saveEvolve(output, evolveProgress);
-		saveEvolveChip(output, evolveChip);
+		EvolutionHelper.saveEvolve(output, evolveProgress);
+		EvolutionHelper.saveEvolveChip(output, evolveChip);
 	}
 
 	@Override
-	protected void loadAdditional(ValueInput input) {
-		super.loadAdditional(input);
-		evolveProgress = loadEvolve(input);
-		evolveChip = loadEvolveChip(input);
+	protected void loadMachineData(ValueInput input) {
+		super.loadMachineData(input);
+		evolveProgress = EvolutionHelper.loadEvolve(input);
+		evolveChip = EvolutionHelper.loadEvolveChip(input);
 	}
 }

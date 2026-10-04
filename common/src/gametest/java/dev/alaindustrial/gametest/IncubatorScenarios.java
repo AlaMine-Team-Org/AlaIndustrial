@@ -12,6 +12,7 @@ import dev.alaindustrial.item.misc.MutationGrades;
 import dev.alaindustrial.menu.IncubatorMenu;
 import dev.alaindustrial.mutation.MutationGrade;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -41,6 +42,70 @@ import net.minecraft.world.phys.Vec3;
  * assertions test the machine rather than the player's luck.
  */
 public final class IncubatorScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(IncubatorScenarios::fun01GlassOnTopFormsTheDome, "incubator_glass_forms_dome")
+						.fabricId("IncubatorGameTest", "fun01_glassOnTopFormsTheDome").ticks(20, 40),
+				RosterEntry.of(IncubatorScenarios::fun02RemovingTheDomeReturnsTheOriginalGlass,
+								"incubator_dome_returns_glass")
+						.fabricId("IncubatorGameTest", "fun02_removingTheDomeReturnsTheOriginalGlass").ticks(20, 40),
+				RosterEntry.of(IncubatorScenarios::fun03TransformYieldsTheOtherMineral,
+								"incubator_transform_yields_mineral")
+						.fabricId("IncubatorGameTest", "fun03_transformYieldsTheOtherMineral").ticks(20, 40),
+				RosterEntry.of(IncubatorScenarios::fun04OneIngotPowersSeveralAttempts,
+								"incubator_ingot_powers_attempts")
+						.fabricId("IncubatorGameTest", "fun04_oneIngotPowersSeveralAttempts").ticks(20, 40),
+				RosterEntry.of(IncubatorScenarios::fun05NonPlayerBreakStillReturnsTheGlass,
+								"incubator_non_player_break_returns_glass")
+						.fabricId("IncubatorGameTest", "fun05_nonPlayerBreakStillReturnsTheGlass").ticks(20, 40),
+				RosterEntry.of(IncubatorScenarios::fun06BreakingTheBaseKeepsTheColouredGlass,
+								"incubator_base_break_keeps_coloured_glass")
+						.fabricId("IncubatorGameTest", "fun06_breakingTheBaseKeepsTheColouredGlass").ticks(20, 40),
+				RosterEntry.of(IncubatorScenarios::fun07AutomationTakesOnlyTheProducts,
+								"incubator_automation_takes_products_only")
+						.fabricId("IncubatorGameTest", "fun07_automationTakesOnlyTheProducts").ticks(20, 40),
+				RosterEntry.of(IncubatorScenarios::fun08ClickingTheDomeOpensTheMenu, "incubator_dome_click_opens_menu")
+						.fabricId("IncubatorGameTest", "fun08_clickingTheDomeOpensTheMenu").ticks(20, 40),
+				RosterEntry.of(IncubatorScenarios::fun09TakingTheResultAwardsTheAdvancements,
+								"incubator_advancements_awarded")
+						.fabricId("IncubatorGameTest", "fun09_takingTheResultAwardsTheAdvancements").ticks(20, 40),
+				RosterEntry.of(IncubatorScenarios::fun10IngotCommitsOnInsertion, "incubator_ingot_commits_on_insertion")
+						.fabricId("IncubatorGameTest", "fun10_ingotCommitsOnInsertion").ticks(20, 40),
+				RosterEntry.of(IncubatorScenarios::neg01NoDomeNoOutput, "incubator_no_dome_no_output")
+						.fabricId("IncubatorGameTest", "neg01_noDomeNoOutput").ticks(20, 40),
+				RosterEntry.of(IncubatorScenarios::neg02NoChipNoOutput, "incubator_no_chip_no_output")
+						.fabricId("IncubatorGameTest", "neg02_noChipNoOutput").ticks(20, 40),
+				RosterEntry.of(IncubatorScenarios::neg03CreativeBreakDropsNoGlass,
+								"incubator_creative_break_drops_nothing")
+						.fabricId("IncubatorGameTest", "neg03_creativeBreakDropsNoGlass").ticks(20, 40),
+				RosterEntry.of(IncubatorScenarios::con01DomeBlocksPistons, "incubator_dome_blocks_pistons")
+						.fabricId("IncubatorGameTest", "con01_domeBlocksPistons").ticks(20, 40),
+				RosterEntry.of(IncubatorScenarios::reg01GradedResultNeverDestroysTheOutput,
+								"incubator_graded_result_not_destroyed")
+						.fabricId("IncubatorGameTest", "reg01_gradedResultNeverDestroysTheOutput").ticks(20, 40),
+				RosterEntry.of(IncubatorScenarios::reg02SlagNeverDestroysTheOutput, "incubator_slag_not_destroyed")
+						.fabricId("IncubatorGameTest", "reg02_slagNeverDestroysTheOutput").ticks(20, 40),
+				RosterEntry.of(IncubatorScenarios::reg03NoFreeRerollBeforeTheCycleIsPaid, "incubator_no_free_reroll")
+						.fabricId("IncubatorGameTest", "reg03_noFreeRerollBeforeTheCycleIsPaid").ticks(20, 40),
+				RosterEntry.of(IncubatorScenarios::reg04HopperBelowCannotStealTheChip,
+								"incubator_hopper_cannot_steal_chip")
+						.fabricId("IncubatorGameTest", "reg04_hopperBelowCannotStealTheChip").ticks(20, 40),
+				RosterEntry.of(IncubatorScenarios::reg05StatusExplainsEveryStall,
+								"incubator_status_explains_every_stall")
+						.fabricId("IncubatorGameTest", "reg05_statusExplainsEveryStall").ticks(20, 40),
+				RosterEntry.of(IncubatorScenarios::reg06PipeReturnsTheResultToTheInput,
+								"incubator_pipe_returns_result_to_input")
+						.fabricId("IncubatorGameTest", "reg06_pipeReturnsTheResultToTheInput").ticks(20, 40),
+				RosterEntry.of(IncubatorScenarios::reg07ClientMenuCoversEveryDataChannel,
+								"incubator_client_menu_data_width")
+						.fabricId("IncubatorGameTest", "reg07_clientMenuCoversEveryDataChannel").ticks(20, 40),
+				RosterEntry.of(IncubatorScenarios::reg08PipeDrainsProductsIntoAChest, "incubator_pipe_drains_products")
+						.fabricId("IncubatorGameTest", "reg08_pipeDrainsProductsIntoAChest").ticks(20, 40));
+
+		private Roster() {}
+	}
 
 	private static final BlockPos POS = new BlockPos(1, 2, 1);
 	private static final int AMPLE_EU = 64_000;
@@ -83,33 +148,24 @@ public final class IncubatorScenarios {
 	 */
 	private static void withPinnedDice(double success, double slag, double rare, double epic,
 			double legendary, Runnable body) {
-		double oldChance = Config.mutationChanceTransform;
-		double oldSlag = Config.mutationSlagChance;
-		double oldCap = Config.mutationChanceCap;
-		double oldRare = Config.mutationGradeRare;
-		double oldEpic = Config.mutationGradeEpic;
-		double oldLegendary = Config.mutationGradeLegendary;
-		try {
-			Config.mutationChanceTransform = success;
-			Config.mutationSlagChance = slag;
-			Config.mutationChanceCap = 1.0;
-			Config.mutationGradeRare = rare;
-			Config.mutationGradeEpic = epic;
-			Config.mutationGradeLegendary = legendary;
+		try (ConfigOverrides o = ConfigOverrides.sync()) {
+			o.set("mutationChanceTransform", success);
+			o.set("mutationSlagChance", slag);
+			o.set("mutationChanceCap", 1.0);
+			o.set("mutationGradeRare", rare);
+			o.set("mutationGradeEpic", epic);
+			o.set("mutationGradeLegendary", legendary);
 			body.run();
-		} finally {
-			Config.mutationChanceTransform = oldChance;
-			Config.mutationSlagChance = oldSlag;
-			Config.mutationChanceCap = oldCap;
-			Config.mutationGradeRare = oldRare;
-			Config.mutationGradeEpic = oldEpic;
-			Config.mutationGradeLegendary = oldLegendary;
 		}
 	}
 
 	// ── the multiblock ─────────────────────────────────────────────────────────────────────────────
 
-	/** Placing glass over the base assembles the multiblock: the glass becomes the dome. */
+	/**
+	 * Placing glass over the base assembles the multiblock: the glass becomes the dome.
+	 *
+	 * @implements TC-INCU-001-FUN01 — glass placed on the base becomes the dome and forms the structure.
+	 */
 	public static void fun01GlassOnTopFormsTheDome(GameTestHelper helper) {
 		place(helper);
 		helper.setBlock(POS.above(), Blocks.GLASS);
@@ -124,7 +180,11 @@ public final class IncubatorScenarios {
 		helper.succeed();
 	}
 
-	/** Removing the dome unforms the structure and hands the exact glass back as an item. */
+	/**
+	 * Removing the dome unforms the structure and hands the exact glass back as an item.
+	 *
+	 * @implements TC-INCU-001-FUN02 — removing the dome unforms the machine and returns that exact glass.
+	 */
 	public static void fun02RemovingTheDomeReturnsTheOriginalGlass(GameTestHelper helper) {
 		place(helper);
 		helper.setBlock(POS.above(), Blocks.STAINED_GLASS.lime());
@@ -147,6 +207,8 @@ public final class IncubatorScenarios {
 	 * update, so it reaches neither removal hook and takes the glass with it — as it does a chest's
 	 * contents in vanilla. The distinction is worth stating, because the comment here used to claim
 	 * the command was covered.
+	 *
+	 * @implements TC-INCU-001-FUN05 — a non-player break of the dome still hands the glass back.
 	 */
 	public static void fun05NonPlayerBreakStillReturnsTheGlass(GameTestHelper helper) {
 		place(helper);
@@ -160,6 +222,8 @@ public final class IncubatorScenarios {
 	 * Breaking the base hands the coloured glass back as a block, not as plain glass. The block entity
 	 * holds the only record of which glass was used, and it is gone by the time the block's own removal
 	 * hook runs — so the hand-back has to happen earlier, from the block entity itself.
+	 *
+	 * @implements TC-INCU-001-FUN06 — breaking the base leaves the coloured glass, not plain glass.
 	 */
 	public static void fun06BreakingTheBaseKeepsTheColouredGlass(GameTestHelper helper) {
 		place(helper);
@@ -175,7 +239,11 @@ public final class IncubatorScenarios {
 		helper.succeed();
 	}
 
-	/** A creative break drops nothing, as everywhere in vanilla. */
+	/**
+	 * A creative break drops nothing, as everywhere in vanilla.
+	 *
+	 * @implements TC-INCU-001-NEG03 — a creative break of the dome drops nothing.
+	 */
 	public static void neg03CreativeBreakDropsNoGlass(GameTestHelper helper) {
 		ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper);
 		player.setGameMode(GameType.CREATIVE);
@@ -190,6 +258,8 @@ public final class IncubatorScenarios {
 	/**
 	 * Right-clicking the dome opens the machine below it. The dome is the half a player actually sees
 	 * and reaches for, and until this shipped it was dead to the touch — the click did nothing at all.
+	 *
+	 * @implements TC-INCU-001-FUN08 — right-clicking the dome opens the machine below it.
 	 */
 	public static void fun08ClickingTheDomeOpensTheMenu(GameTestHelper helper) {
 		place(helper);
@@ -217,13 +287,15 @@ public final class IncubatorScenarios {
 	/**
 	 * A piston must not take the dome: it is half of a multiblock and the glass it was made of is
 	 * remembered by the base below, so moving it away would strand both halves.
+	 *
+	 * @implements TC-INCU-001-CON01 — a piston cannot move the dome away from its base.
 	 */
 	public static void con01DomeBlocksPistons(GameTestHelper helper) {
 		place(helper);
 		helper.setBlock(POS.above(), Blocks.GLASS);
 		BlockState dome = helper.getLevel().getBlockState(helper.absolutePos(POS.above()));
 		// 26.3 renamed the constants: the old BLOCK ("a piston refuses to move it") is IMMOVEABLE.
-		// Same value the dome is declared with in ContentManifest.BLOCK_PROPS, so this still asserts
+		// Same value the dome is declared with in AgricultureContent.INCUBATOR_DOME, so this still asserts
 		// the declaration rather than a constant of its own choosing.
 		if (dome.getPistonPushReaction() != PushReaction.IMMOVEABLE) {
 			helper.fail("a piston can move the dome (push reaction " + dome.getPistonPushReaction() + ")");
@@ -243,6 +315,8 @@ public final class IncubatorScenarios {
 	 * The machine names every reason it is idle (MOD-234). Each of these was a silent stall: the screen
 	 * printed the mode name and the player was left guessing. The worst was a blocked result slot — a
 	 * held outcome with nowhere to go looks exactly like "duplication worked once and then broke".
+	 *
+	 * @implements TC-INCU-001-REG05 — the status line names every reason the machine is idle.
 	 */
 	public static void reg05StatusExplainsEveryStall(GameTestHelper helper) {
 		IncubatorBlockEntity be = place(helper);
@@ -277,6 +351,8 @@ public final class IncubatorScenarios {
 	 * pair of endpoints on the same block, so this build did nothing at all.
 	 *
 	 * <p>Faces are chosen away from {@code FACING} (NORTH by default), which is inert to automation.
+	 *
+	 * @implements TC-INCU-001-REG06 — a pipe may return the result into the same machine's input.
 	 */
 	public static void reg06PipeReturnsTheResultToTheInput(GameTestHelper helper) {
 		IncubatorBlockEntity be = place(helper);
@@ -329,6 +405,8 @@ public final class IncubatorScenarios {
 	 * 561 server-side tests were all green, because none of them ever touched the client constructor.
 	 * This walks every accessor through that constructor; a channel added to one side and not the other
 	 * throws here instead of in front of the player.
+	 *
+	 * @implements TC-INCU-001-REG07 — the client menu is as wide as the block entity's channel list.
 	 */
 	public static void reg07ClientMenuCoversEveryDataChannel(GameTestHelper helper) {
 		ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper);
@@ -346,6 +424,8 @@ public final class IncubatorScenarios {
 	 * and the ash into a chest (owner report, 2026-07-26). Asserted on a face that is <b>not</b>
 	 * {@code FACING} — the front is inert to automation by design — so a failure here means the machine
 	 * refuses automation outright rather than the player having picked the wrong side.
+	 *
+	 * @implements TC-INCU-001-REG08 — a pipe on a side face drains the result and ash into a chest.
 	 */
 	public static void reg08PipeDrainsProductsIntoAChest(GameTestHelper helper) {
 		IncubatorBlockEntity be = place(helper);
@@ -418,6 +498,8 @@ public final class IncubatorScenarios {
 	 * (owner acceptance, 2026-07-26). An unassembled base must NOT take the ingot: without the dome
 	 * the chamber is open and nothing is being irradiated. Fails on the pre-polish machine, which
 	 * only pulled fuel once a full cycle could start.
+	 *
+	 * @implements TC-INCU-001-FUN10 — the ingot commits on insertion once the dome is on.
 	 */
 	public static void fun10IngotCommitsOnInsertion(GameTestHelper helper) {
 		IncubatorBlockEntity be = place(helper);
@@ -449,7 +531,11 @@ public final class IncubatorScenarios {
 		helper.succeed();
 	}
 
-	/** Without the dome the machine refuses to run, however much fuel and power it holds. */
+	/**
+	 * Without the dome the machine refuses to run, however much fuel and power it holds.
+	 *
+	 * @implements TC-INCU-001-NEG01 — without the dome nothing runs, whatever the fuel and power.
+	 */
 	public static void neg01NoDomeNoOutput(GameTestHelper helper) {
 		withCertainSuccess(() -> {
 			IncubatorBlockEntity be = place(helper);
@@ -462,7 +548,11 @@ public final class IncubatorScenarios {
 		});
 	}
 
-	/** With no chip there is no mode, so nothing runs even with the dome in place. */
+	/**
+	 * With no chip there is no mode, so nothing runs even with the dome in place.
+	 *
+	 * @implements TC-INCU-001-NEG02 — with no chip there is no mode, so nothing runs.
+	 */
 	public static void neg02NoChipNoOutput(GameTestHelper helper) {
 		withCertainSuccess(() -> {
 			IncubatorBlockEntity be = place(helper);
@@ -480,7 +570,11 @@ public final class IncubatorScenarios {
 		});
 	}
 
-	/** A complete rig mutates the input: lapis in, redstone out. */
+	/**
+	 * A complete rig mutates the input: lapis in, redstone out.
+	 *
+	 * @implements TC-INCU-001-FUN03 — a complete rig transforms lapis into redstone.
+	 */
 	public static void fun03TransformYieldsTheOtherMineral(GameTestHelper helper) {
 		withCertainSuccess(() -> {
 			IncubatorBlockEntity be = place(helper);
@@ -499,6 +593,8 @@ public final class IncubatorScenarios {
 	/**
 	 * The uranium is a charge, not a per-operation cost: one ingot is pulled once and powers
 	 * {@code mutationAttemptsPerIngot} attempts before it drops into the ash slot.
+	 *
+	 * @implements TC-INCU-001-FUN04 — one ingot is a charge of several attempts, then becomes ash.
 	 */
 	public static void fun04OneIngotPowersSeveralAttempts(GameTestHelper helper) {
 		withCertainSuccess(() -> {
@@ -538,6 +634,8 @@ public final class IncubatorScenarios {
 	 * Automation takes the products — the result and the ash — through any face it can see, and never
 	 * the chip or the uranium. Pulling the chip used to be allowed so a hopper could switch modes; it
 	 * cost more than it was worth (MOD-234).
+	 *
+	 * @implements TC-INCU-001-FUN07 — automation takes the result and the ash, never the chip or fuel.
 	 */
 	public static void fun07AutomationTakesOnlyTheProducts(GameTestHelper helper) {
 		IncubatorBlockEntity be = place(helper);
@@ -580,6 +678,8 @@ public final class IncubatorScenarios {
 	 * consume the input for a result the slot cannot hold. Before the outcome was rolled up front, the
 	 * pre-check tested an ungraded result, the graded one then failed to merge, and the item was
 	 * destroyed together with the input and the irradiation charge.
+	 *
+	 * @implements TC-INCU-001-REG01 — a graded result is never destroyed by an occupied output slot.
 	 */
 	public static void reg01GradedResultNeverDestroysTheOutput(GameTestHelper helper) {
 		// Every success is legendary, so the result can never merge with the plain redstone below.
@@ -642,6 +742,8 @@ public final class IncubatorScenarios {
 	 * dark at zero progress from the first tick, having already decided in secret. Here it works and
 	 * stays lit through the whole cycle, and only stops at the very end — which is the proof that the
 	 * roll happens there and that the lit state is not a window into it.
+	 *
+	 * @implements TC-INCU-001-REG03 — the outcome is rolled at the end of a paid cycle, not up front.
 	 */
 	public static void reg03NoFreeRerollBeforeTheCycleIsPaid(GameTestHelper helper) {
 		withPinnedDice(1.0, 0.0, 0.0, 0.0, 1.0, () -> {
@@ -701,6 +803,8 @@ public final class IncubatorScenarios {
 	 * the four {@code create} outputs (matched through the {@code mutation_created} tag), and it is
 	 * legendary — so a single take proves the trigger fires and that both predicates read what they
 	 * are supposed to read.
+	 *
+	 * @implements TC-INCU-001-FUN09 — taking the result awards the three incubator advancements.
 	 */
 	public static void fun09TakingTheResultAwardsTheAdvancements(GameTestHelper helper) {
 		IncubatorBlockEntity be = place(helper);
@@ -736,7 +840,11 @@ public final class IncubatorScenarios {
 		helper.succeed();
 	}
 
-	/** A hopper under the machine collects results and ash, and must not walk off with the chip. */
+	/**
+	 * A hopper under the machine collects results and ash, and must not walk off with the chip.
+	 *
+	 * @implements TC-INCU-001-REG04 — a hopper below collects results and ash but never the chip.
+	 */
 	public static void reg04HopperBelowCannotStealTheChip(GameTestHelper helper) {
 		IncubatorBlockEntity be = place(helper);
 		ItemStack chip = new ItemStack(ModContent.MUTATION_CHIP_TRANSFORM.get());
@@ -759,6 +867,8 @@ public final class IncubatorScenarios {
 	/**
 	 * Slag is an outcome like any other and shares the output slot, so it is held to the same rule: no
 	 * room, no operation. It used to be missing from the pre-check entirely and vanished silently.
+	 *
+	 * @implements TC-INCU-001-REG02 — slag is never destroyed by an occupied output slot either.
 	 */
 	public static void reg02SlagNeverDestroysTheOutput(GameTestHelper helper) {
 		// Never succeeds, always slags.

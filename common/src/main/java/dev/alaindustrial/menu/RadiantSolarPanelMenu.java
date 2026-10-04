@@ -3,10 +3,8 @@ package dev.alaindustrial.menu;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.block.entity.RadiantSolarPanelBlockEntity;
 import dev.alaindustrial.registry.ModContent;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.SimpleContainerData;
 
 /** Menu for the Mirror Concentrator — no machine slots; shows energy, production and sky mode. */
 public class RadiantSolarPanelMenu extends MachineMenu {
@@ -20,8 +18,7 @@ public class RadiantSolarPanelMenu extends MachineMenu {
 	/** Client side. */
 	public RadiantSolarPanelMenu(int syncId, Inventory playerInventory) {
 		super(ModContent.RADIANT_SOLAR_PANEL_MENU.get(), syncId, playerInventory,
-				new SimpleContainer(RadiantSolarPanelBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT),
-				new SimpleContainerData(MachineBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL,
+				clientStub(RadiantSolarPanelBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT, MachineBlockEntity.DATA_COUNT),
 				ModContent.RADIANT_SOLAR_PANEL.get());
 	}
 

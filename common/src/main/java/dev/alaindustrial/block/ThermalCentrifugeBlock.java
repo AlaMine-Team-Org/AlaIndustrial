@@ -1,6 +1,7 @@
 package dev.alaindustrial.block;
 
 import dev.alaindustrial.block.entity.ThermalCentrifugeBlockEntity;
+import dev.alaindustrial.core.machine.MachineRates;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -13,6 +14,9 @@ import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import dev.alaindustrial.client.ServerBalance;
+import dev.alaindustrial.core.tooltip.HasMachineTooltip;
+import dev.alaindustrial.core.tooltip.MachineTooltipSpec;
 
 /**
  * Redstone-started, externally heated LV centrifuge that doubles an ore dust into shavings.
@@ -23,7 +27,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * straight through the rotor into whatever is behind the machine. Same reasoning, same numbers, as the
  * Energy Condenser.
  */
-public final class ThermalCentrifugeBlock extends LitMachineBlock {
+public final class ThermalCentrifugeBlock extends LitMachineBlock implements HasMachineTooltip {
 	private static final VoxelShape SHAPE = Block.box(1, 0, 1, 15, 16, 15);
 
 	public ThermalCentrifugeBlock(Properties properties) {
@@ -73,5 +77,16 @@ public final class ThermalCentrifugeBlock extends LitMachineBlock {
 				&& level.getBlockEntity(pos) instanceof ThermalCentrifugeBlockEntity centrifuge) {
 			centrifuge.onHeatNeighbourChanged();
 		}
+	}
+
+	/** Hover tooltip of this block's item (MOD-716, ADR-040). */
+	@Override
+	public MachineTooltipSpec machineTooltip() {
+		// Its own rate, not machineEuPerTick — the rotor costs more than an ordinary machine tick (MOD-424).
+		return MachineTooltipSpec.processing(
+				() -> MachineRates.euPerTick(ServerBalance.thermalCentrifugeEuPerTick(),
+						ServerBalance.globalMachineSpeedMultiplier()),
+				() -> ServerBalance.scaledDuration(ServerBalance.thermalCentrifugeDuration()),
+				ServerBalance::machineBuffer);
 	}
 }

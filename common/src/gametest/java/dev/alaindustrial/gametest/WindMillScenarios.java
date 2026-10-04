@@ -5,9 +5,11 @@ import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.block.entity.HighAltitudeWindMillBlockEntity;
 import dev.alaindustrial.block.entity.StormWindMillBlockEntity;
 import dev.alaindustrial.block.entity.WindMillBlockEntity;
+import dev.alaindustrial.core.environment.GeneratorConfig;
 import dev.alaindustrial.core.environment.WindMillOutput;
 import dev.alaindustrial.core.environment.WindProfile;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -30,6 +32,88 @@ import net.minecraft.world.level.storage.TagValueInput;
  * rain level. Numbers come from {@link Config} (canon), never hard-coded.
  */
 public final class WindMillScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(WindMillScenarios::tcWindmill001Fun01_generatesSampledRate,
+								"wind_mill_generates_sampled_rate")
+						.fabricId("WindMillGameTest", "tcWindmill001Fun01_generatesSampledRate").ticks(120).sky(),
+				RosterEntry.of(WindMillScenarios::tcWindmill001Neg02_frontObstructionYieldsZero,
+								"wind_mill_front_obstruction_yields_zero")
+						.fabricId("WindMillGameTest", "tcWindmill001Neg02_frontObstructionYieldsZero").ticks(120)
+						.sky(),
+				RosterEntry.of(WindMillScenarios::tcWindmill001Neg03_sideObstructionYieldsZero,
+								"wind_mill_side_obstruction_yields_zero")
+						.fabricId("WindMillGameTest", "tcWindmill001Neg03_sideObstructionYieldsZero").ticks(120).sky(),
+				RosterEntry.of(WindMillScenarios::tcWindmill001Neg04_pitObstructionYieldsZero,
+								"wind_mill_pit_obstruction_yields_zero")
+						.fabricId("WindMillGameTest", "tcWindmill001Neg04_pitObstructionYieldsZero").ticks(120).sky(),
+				RosterEntry.of(WindMillScenarios::tcWindmill001Neg05_clearAreaNotObstructed,
+								"wind_mill_clear_area_not_obstructed")
+						.fabricId("WindMillGameTest", "tcWindmill001Neg05_clearAreaNotObstructed").ticks(120).sky(),
+				RosterEntry.of(WindMillScenarios::tcWindmill001Prf01_bufferCapsAtMax, "wind_mill_buffer_caps_at_max")
+						.fabricId("WindMillGameTest", "tcWindmill001Prf01_bufferCapsAtMax").ticks(120).sky(),
+				RosterEntry.of(WindMillScenarios::tcWindmill001Per01_energySurvivesNbtRoundTrip,
+								"wind_mill_energy_survives_nbt_round_trip")
+						.fabricId("WindMillGameTest", "tcWindmill001Per01_energySurvivesNbtRoundTrip").ticks(120)
+						.sky(),
+				RosterEntry.of(WindMillScenarios::tcWindmill001Fun02_noRotorProducesNothing,
+								"wind_mill_no_rotor_produces_nothing")
+						.fabricId("WindMillGameTest", "tcWindmill001Fun02_noRotorProducesNothing").ticks(120).sky(),
+				RosterEntry.of(WindMillScenarios::tcWindmill001Neg06_sideBySideInterference,
+								"wind_mill_side_by_side_interference")
+						.fabricId("WindMillGameTest", "tcWindmill001Neg06_sideBySideInterference").ticks(120).sky(),
+				RosterEntry.of(WindMillScenarios::tcWindmill001Neg07_faceToFaceAcrossGapNotInterfering,
+								"wind_mill_face_to_face_across_gap_not_interfering")
+						.fabricId("WindMillGameTest", "tcWindmill001Neg07_faceToFaceAcrossGapNotInterfering")
+						.ticks(120).sky(),
+				RosterEntry.of(WindMillScenarios::tcWindmill001Neg08_lateRotorTriggersInterference,
+								"wind_mill_late_rotor_triggers_interference")
+						.fabricId("WindMillGameTest", "tcWindmill001Neg08_lateRotorTriggersInterference").ticks(160)
+						.sky(),
+				RosterEntry.of(WindMillScenarios::tcWindmill001Neg09_spacedMillsNotInterfering,
+								"wind_mill_spaced_mills_not_interfering")
+						.fabricId("WindMillGameTest", "tcWindmill001Neg09_spacedMillsNotInterfering").ticks(120).sky(),
+				RosterEntry.of(WindMillScenarios::tcWindmill001Neg10_backToBackNotInterfering,
+								"wind_mill_back_to_back_not_interfering")
+						.fabricId("WindMillGameTest", "tcWindmill001Neg10_backToBackNotInterfering").ticks(120).sky(),
+				RosterEntry.of(WindMillScenarios::tcWindmill001Fun04_interferenceFreezesEvolution,
+								"wind_mill_interference_freezes_evolution")
+						.fabricId("WindMillGameTest", "tcWindmill001Fun04_interferenceFreezesEvolution").ticks(120)
+						.sky(),
+				RosterEntry.of(WindMillScenarios::tcWindmill001Fun03_dayChipEvolvesToHighAltitude,
+								"wind_mill_day_chip_evolves_to_high_altitude")
+						.fabricId("WindMillGameTest", "tcWindmill001Fun03_dayChipEvolvesToHighAltitude").ticks(120)
+						.sky(),
+				RosterEntry.of(WindMillScenarios::windMill_automationCannotStackSecondChip,
+								"wind_mill_automation_cannot_stack_second_chip")
+						.fabricId("WindMillGameTest", "windMill_automationCannotStackSecondChip").ticks(20, 100),
+				RosterEntry.of(WindMillScenarios::windMill_evolutionConsumesOneChipNotTheStack,
+								"wind_mill_evolution_consumes_one_chip_not_the_stack")
+						.fabricId("WindMillGameTest", "windMill_evolutionConsumesOneChipNotTheStack").ticks(120).sky(),
+				RosterEntry.of(WindMillScenarios::tcWindmill001Fun05_nightChipEvolvesToStorm,
+								"wind_mill_night_chip_evolves_to_storm")
+						.fabricId("WindMillGameTest", "tcWindmill001Fun05_nightChipEvolvesToStorm").ticks(120).sky(),
+				RosterEntry.of(WindMillScenarios::tcWindmill001Wear01_rotorWearsOutAndBreaks,
+								"wind_mill_rotor_wears_out_and_breaks")
+						.fabricId("WindMillGameTest", "tcWindmill001Wear01_rotorWearsOutAndBreaks").ticks(120).sky(),
+				RosterEntry.of(WindMillScenarios::tcWindmill001Wear02_t2HighAltitudeRotorBreaks,
+								"wind_mill_t2_high_altitude_rotor_breaks")
+						.fabricId("WindMillGameTest", "tcWindmill001Wear02_t2HighAltitudeRotorBreaks").ticks(120)
+						.sky(),
+				RosterEntry.of(WindMillScenarios::tcWindmill001Wear03_noWearWhileIdle, "wind_mill_no_wear_while_idle")
+						.fabricId("WindMillGameTest", "tcWindmill001Wear03_noWearWhileIdle").ticks(120).sky(),
+				RosterEntry.of(WindMillScenarios::tcWindmill001Wear04_wearSurvivesEvolution,
+								"wind_mill_wear_survives_evolution")
+						.fabricId("WindMillGameTest", "tcWindmill001Wear04_wearSurvivesEvolution").ticks(120).sky(),
+				RosterEntry.of(WindMillScenarios::tcWindmill001Wear05_wearsAtFullBufferWithNoConsumer,
+								"wind_mill_wears_at_full_buffer_with_no_consumer")
+						.fabricId("WindMillGameTest", "tcWindmill001Wear05_wearsAtFullBufferWithNoConsumer")
+						.ticks(120).sky());
+
+		private Roster() {}
+	}
 
 	private WindMillScenarios() {}
 
@@ -126,10 +210,11 @@ public final class WindMillScenarios {
 		// MOD-347: the height term is the shared altitude profile, not a 16-block ramp. Ask the
 		// profile itself what base this rig gets, so the tripwire cannot drift from production.
 		int ridge = WindProfile.ridgeY(sea,
-				Config.windMillMaxBaseEuPerTick, 16, Config.windCloudY);
-		int base = Math.round(Config.windMillMaxBaseEuPerTick
+				GeneratorConfig.windMillMaxBaseEuPerTick, 16, GeneratorConfig.windCloudY);
+		int base = Math.round(GeneratorConfig.windMillMaxBaseEuPerTick
 				* WindProfile.factor(abs.getY(), sea, ridge,
-						Config.windCloudY, Config.windDeadY, Config.windRidgeFactor, Config.windTraceFactor));
+						GeneratorConfig.windCloudY, GeneratorConfig.windDeadY, GeneratorConfig.windRidgeFactor,
+								GeneratorConfig.windTraceFactor));
 		if (base <= 0) {
 			helper.fail("wind-mill rate test region is below the first height base step: absY=" + abs.getY()
 					+ " sea=" + sea + " → base=0 → expected rate is always 0, so the got!=expected assertion "
@@ -143,11 +228,12 @@ public final class WindMillScenarios {
 		BlockPos abs = helper.absolutePos(rel);
 		int sea = helper.getLevel().getSeaLevel();
 		int ridge = WindProfile.ridgeY(sea,
-				Config.windMillMaxBaseEuPerTick, 16, Config.windCloudY);
+				GeneratorConfig.windMillMaxBaseEuPerTick, 16, GeneratorConfig.windCloudY);
 		float f = WindProfile.factor(abs.getY(), sea, ridge,
-				Config.windCloudY, Config.windDeadY, Config.windRidgeFactor, Config.windTraceFactor);
+				GeneratorConfig.windCloudY, GeneratorConfig.windDeadY, GeneratorConfig.windRidgeFactor,
+						GeneratorConfig.windTraceFactor);
 		return "absY=" + abs.getY() + " sea=" + sea + " ridge=" + ridge + " factor=" + f
-				+ " base=" + Math.round(Config.windMillMaxBaseEuPerTick * f);
+				+ " base=" + Math.round(GeneratorConfig.windMillMaxBaseEuPerTick * f);
 	}
 
 	/** The per-tick EU the mill should produce under the current world state (open sky assumed). */
@@ -156,9 +242,10 @@ public final class WindMillScenarios {
 		BlockPos abs = helper.absolutePos(millRel);
 		return WindMillOutput.euFor(abs.getY(), level.getSeaLevel(), true,
 				level.isRaining(), level.isThundering(),
-				Config.windMillMaxBaseEuPerTick, 16, Config.windMillMaxEuPerTick,
-				Config.windMillRainFactor, Config.windMillThunderFactor,
-				Config.windCloudY, Config.windDeadY, Config.windRidgeFactor, Config.windTraceFactor, 1.0f);
+				GeneratorConfig.windMillMaxBaseEuPerTick, 16, GeneratorConfig.windMillMaxEuPerTick,
+				GeneratorConfig.windMillRainFactor, GeneratorConfig.windMillThunderFactor,
+				GeneratorConfig.windCloudY, GeneratorConfig.windDeadY, GeneratorConfig.windRidgeFactor,
+						GeneratorConfig.windTraceFactor, 1.0f);
 	}
 
 	private static long afterGlobalRate(int made) {
@@ -192,13 +279,18 @@ public final class WindMillScenarios {
 	 * windows, the accumulated EU equals the per-tick rate × ticks. Raised rig + height-base
 	 * tripwire so the rate is non-zero.
 	 * Mirrors: WindMillGameTest.tcWindmill001Fun01_generatesSampledRate
+	 *
+	 * @implements TC-WINDMILL-001-FUN01 — under open sky the wind mill produces the height/weather rate
+	 *     {@link WindMillOutput#euFor} yields for the region, sampled every {@code windMillSampleTicks}. Driven
+	 *     for more than one sample window; the accumulated EU equals the per-tick rate × ticks.
+	 * @covers R-NRG-04
 	 */
 	public static void tcWindmill001Fun01_generatesSampledRate(GameTestHelper helper) {
 		WindMillBlockEntity mill = placeRaised(helper); // raised so base >= 1 (see RAISED_POS)
 		requirePositiveHeightBase(helper, RAISED_POS); // tripwire: fail loudly if the rig ever drops below base 1
 		setClear(helper);
 		mill.getEnergyStorage().setAmountUntracked(0);
-		int ticks = Config.windMillSampleTicks * 2 + 5; // span multiple sample windows
+		int ticks = GeneratorConfig.windMillSampleTicks * 2 + 5; // span multiple sample windows
 		long perTick = afterGlobalRate(expectedRate(helper, RAISED_POS));
 		drive(mill, helper, ticks);
 		long got = mill.getEnergyStorage().getAmount();
@@ -215,13 +307,19 @@ public final class WindMillScenarios {
 	 * A solid block in the FRONT neighbour's space (where the spinning 2×2 rotor lives) stalls the
 	 * blades: mode OBSTRUCTED. The mode assertion is the signal — EU is 0 from height in the region.
 	 * Mirrors: WindMillGameTest.tcWindmill001Neg02_frontObstructionYieldsZero
+	 *
+	 * @implements TC-WINDMILL-001-NEG02 — the spinning 2×2 rotor lives in the FRONT neighbour's block
+	 *     space (the renderer pushes the quad 0.58 forward, past the mill's boundary). FACING = NORTH by
+	 *     default, so the front is one block north. A solid block there stalls the blades: mode OBSTRUCTED.
+	 *     The mode assertion is what catches the regression — EU is 0 from height here anyway.
+	 * @covers R-NRG-04
 	 */
 	public static void tcWindmill001Neg02_frontObstructionYieldsZero(GameTestHelper helper) {
 		WindMillBlockEntity mill = place(helper);
 		helper.setBlock(POS.north(), Blocks.STONE); // FACING NORTH → the front block the rotor occupies
 		setRaining(helper, true); // storm would normally maximise output
 		mill.getEnergyStorage().setAmountUntracked(0);
-		drive(mill, helper, Config.windMillSampleTicks + 1);
+		drive(mill, helper, GeneratorConfig.windMillSampleTicks + 1);
 		if (mill.getDataAccess().get(3) != WindMillBlockEntity.MODE_OBSTRUCTED) {
 			helper.fail("front-obstructed wind mill mode = " + mill.getDataAccess().get(3)
 					+ "; expected OBSTRUCTED (" + WindMillBlockEntity.MODE_OBSTRUCTED + ")");
@@ -233,13 +331,18 @@ public final class WindMillScenarios {
 	 * The blade tips reach one block left/right of the FRONT block; a solid block beside the front
 	 * stalls a blade tip: mode OBSTRUCTED.
 	 * Mirrors: WindMillGameTest.tcWindmill001Neg03_sideObstructionYieldsZero
+	 *
+	 * @implements TC-WINDMILL-001-NEG03 — the blade tips reach one block left/right of the FRONT block
+	 *     (not the mill body). FACING = NORTH, so the front is north; its east neighbour is POS.north().east().
+	 *     A solid block there stalls a blade tip: mode OBSTRUCTED.
+	 * @covers R-NRG-04
 	 */
 	public static void tcWindmill001Neg03_sideObstructionYieldsZero(GameTestHelper helper) {
 		WindMillBlockEntity mill = place(helper);
 		helper.setBlock(POS.north().east(), Blocks.STONE); // blade tip reaches one block east of the front
 		setRaining(helper, true);
 		mill.getEnergyStorage().setAmountUntracked(0);
-		drive(mill, helper, Config.windMillSampleTicks + 1);
+		drive(mill, helper, GeneratorConfig.windMillSampleTicks + 1);
 		if (mill.getDataAccess().get(3) != WindMillBlockEntity.MODE_OBSTRUCTED) {
 			helper.fail("side-obstructed wind mill mode = " + mill.getDataAccess().get(3)
 					+ "; expected OBSTRUCTED (" + WindMillBlockEntity.MODE_OBSTRUCTED + ")");
@@ -251,13 +354,17 @@ public final class WindMillScenarios {
 	 * The lower blade arc dips into the pit below the FRONT block; a solid block directly beneath
 	 * the front stalls the blades: mode OBSTRUCTED.
 	 * Mirrors: WindMillGameTest.tcWindmill001Neg04_pitObstructionYieldsZero
+	 *
+	 * @implements TC-WINDMILL-001-NEG04 — the lower blade arc dips into the pit below the FRONT block.
+	 *     A solid block directly beneath the front (centre of the pit) stalls the blades: mode OBSTRUCTED.
+	 * @covers R-NRG-04
 	 */
 	public static void tcWindmill001Neg04_pitObstructionYieldsZero(GameTestHelper helper) {
 		WindMillBlockEntity mill = place(helper);
 		helper.setBlock(POS.north().below(), Blocks.STONE); // the pit's centre is below the front block
 		setRaining(helper, true);
 		mill.getEnergyStorage().setAmountUntracked(0);
-		drive(mill, helper, Config.windMillSampleTicks + 1);
+		drive(mill, helper, GeneratorConfig.windMillSampleTicks + 1);
 		if (mill.getDataAccess().get(3) != WindMillBlockEntity.MODE_OBSTRUCTED) {
 			helper.fail("pit-obstructed wind mill mode = " + mill.getDataAccess().get(3)
 					+ "; expected OBSTRUCTED (" + WindMillBlockEntity.MODE_OBSTRUCTED + ")");
@@ -269,11 +376,17 @@ public final class WindMillScenarios {
 	 * Control case: with open sky and all clearance positions free, the mill is NOT obstructed —
 	 * mode CALM (distinct from OBSTRUCTED) proves the clearance check does not fire on empty space.
 	 * Mirrors: WindMillGameTest.tcWindmill001Neg05_clearAreaNotObstructed
+	 *
+	 * @implements TC-WINDMILL-001-NEG05 — control case: with open sky and all clearance positions free,
+	 *     the mill is NOT obstructed. On the region's low altitude EU/t is 0 from height, so the mode is
+	 *     CALM — which is distinct from OBSTRUCTED and proves the clearance check does not fire on empty
+	 *     space. Guards against false positives in {@code WindMillClearance}.
+	 * @covers R-NRG-04
 	 */
 	public static void tcWindmill001Neg05_clearAreaNotObstructed(GameTestHelper helper) {
 		WindMillBlockEntity mill = place(helper);
 		setClear(helper);
-		drive(mill, helper, Config.windMillSampleTicks + 1);
+		drive(mill, helper, GeneratorConfig.windMillSampleTicks + 1);
 		int mode = mill.getDataAccess().get(3);
 		if (mode == WindMillBlockEntity.MODE_OBSTRUCTED) {
 			helper.fail("wind mill reported OBSTRUCTED with a clear area; mode=" + mode);
@@ -282,18 +395,22 @@ public final class WindMillScenarios {
 	}
 
 	/**
-	 * The buffer caps at {@code Config.windMillBuffer}; excess EU is discarded
+	 * The buffer caps at {@code GeneratorConfig.windMillBuffer}; excess EU is discarded
 	 * (use-it-or-lose-it), even if the mill is producing.
 	 * Mirrors: WindMillGameTest.tcWindmill001Prf01_bufferCapsAtMax
+	 *
+	 * @implements TC-WINDMILL-001-PRF01 — the buffer caps at {@code GeneratorConfig.windMillBuffer}; excess EU is
+	 *     discarded (use-it-or-lose-it), even if the mill is producing.
+	 * @covers R-NRG-01
 	 */
 	public static void tcWindmill001Prf01_bufferCapsAtMax(GameTestHelper helper) {
 		WindMillBlockEntity mill = place(helper);
 		setRaining(helper, true);
-		mill.getEnergyStorage().setAmountUntracked(Config.windMillBuffer);
-		drive(mill, helper, Config.windMillSampleTicks * 2);
+		mill.getEnergyStorage().setAmountUntracked(GeneratorConfig.windMillBuffer);
+		drive(mill, helper, GeneratorConfig.windMillSampleTicks * 2);
 		long got = mill.getEnergyStorage().getAmount();
-		if (got != Config.windMillBuffer) {
-			helper.fail("buffer changed from cap: expected " + Config.windMillBuffer + " got " + got);
+		if (got != GeneratorConfig.windMillBuffer) {
+			helper.fail("buffer changed from cap: expected " + GeneratorConfig.windMillBuffer + " got " + got);
 		}
 		helper.succeed();
 	}
@@ -302,6 +419,10 @@ public final class WindMillScenarios {
 	 * The stored EU buffer survives an NBT save/load round-trip (energy persists via the base
 	 * MachineBlockEntity; the mill's sampling state is transient and recomputed).
 	 * Mirrors: WindMillGameTest.tcWindmill001Per01_energySurvivesNbtRoundTrip
+	 *
+	 * @implements TC-WINDMILL-001-PER01 — the stored EU buffer survives an NBT save/load round-trip (energy
+	 *     persists via the base MachineBlockEntity; the mill's sampling state is transient and recomputed).
+	 * @covers R-PER-01
 	 */
 	public static void tcWindmill001Per01_energySurvivesNbtRoundTrip(GameTestHelper helper) {
 		WindMillBlockEntity mill = place(helper);
@@ -321,12 +442,16 @@ public final class WindMillScenarios {
 	 * With no rotor in the slot the mill produces nothing, even under open sky and storm — the
 	 * rotor is a generation gate (progression), not just cosmetic.
 	 * Mirrors: WindMillGameTest.tcWindmill001Fun02_noRotorProducesNothing
+	 *
+	 * @implements TC-WINDMILL-001-FUN02 — with no rotor in the slot the mill produces nothing, even under open
+	 *     sky and storm. The rotor is a generation gate (progression), not just cosmetic.
+	 * @covers R-NRG-04
 	 */
 	public static void tcWindmill001Fun02_noRotorProducesNothing(GameTestHelper helper) {
 		WindMillBlockEntity mill = placeWithoutRotor(helper);
 		setRaining(helper, true); // worst case: storm would normally maximise output
 		mill.getEnergyStorage().setAmountUntracked(0);
-		drive(mill, helper, Config.windMillSampleTicks * 2 + 5);
+		drive(mill, helper, GeneratorConfig.windMillSampleTicks * 2 + 5);
 		long got = mill.getEnergyStorage().getAmount();
 		if (got != 0) {
 			helper.fail("rotorless wind mill generated " + got + " EU; expected 0 (no rotor = no generation)");
@@ -339,6 +464,12 @@ public final class WindMillScenarios {
 	 * discs are coplanar and overlap by a full block, so BOTH mills report MODE_INTERFERENCE and
 	 * produce nothing — there is no tie-break (MOD-051). Even a storm does not override interference.
 	 * Mirrors: WindMillGameTest.tcWindmill001Neg06_sideBySideInterference
+	 *
+	 * @implements TC-WINDMILL-001-NEG06 — two mills side by side (directly adjacent, same FACING) with
+	 *     rotors in both: the 2×2 rotor discs are coplanar and overlap by a full block, so BOTH mills
+	 *     report MODE_INTERFERENCE and produce nothing — there is no tie-break (MOD-051). Even a storm
+	 *     does not override interference.
+	 * @covers R-NRG-04
 	 */
 	public static void tcWindmill001Neg06_sideBySideInterference(GameTestHelper helper) {
 		WindMillBlockEntity a = place(helper); // FACING NORTH at POS
@@ -346,8 +477,8 @@ public final class WindMillScenarios {
 		setRaining(helper, true);
 		a.getEnergyStorage().setAmountUntracked(0);
 		b.getEnergyStorage().setAmountUntracked(0);
-		drive(a, helper, Config.windMillSampleTicks + 1);
-		drive(b, helper, Config.windMillSampleTicks + 1);
+		drive(a, helper, GeneratorConfig.windMillSampleTicks + 1);
+		drive(b, helper, GeneratorConfig.windMillSampleTicks + 1);
 		assertMode(helper, a, "side-by-side mill A", WindMillBlockEntity.MODE_INTERFERENCE);
 		assertMode(helper, b, "side-by-side mill B", WindMillBlockEntity.MODE_INTERFERENCE);
 		if (a.getEnergyStorage().getAmount() != 0 || b.getEnergyStorage().getAmount() != 0) {
@@ -361,6 +492,12 @@ public final class WindMillScenarios {
 	 * own face, so the two sit 0.84 apart inside the gap and never meet — neither mill may report
 	 * MODE_INTERFERENCE (MOD-634; MOD-051 placed the discs half a block further out and stalled both).
 	 * Mirrors: WindMillGameTest.tcWindmill001Neg07_faceToFaceAcrossGapNotInterfering
+	 *
+	 * @implements TC-WINDMILL-001-NEG07 — control: two mills facing each other across a one-block gap have
+	 *     discs 0.84 apart inside the gap, so neither reports MODE_INTERFERENCE (MOD-634). (Directly
+	 *     adjacent face-to-face mills are OBSTRUCTED — each disc sits inside the other mill's solid block,
+	 *     which WindMillClearance catches before the interference scan runs.)
+	 * @covers R-NRG-04
 	 */
 	public static void tcWindmill001Neg07_faceToFaceAcrossGapNotInterfering(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.WIND_MILL.get().defaultBlockState()
@@ -372,8 +509,8 @@ public final class WindMillScenarios {
 		a.setItem(WindMillBlockEntity.ROTOR_SLOT, new ItemStack(ModContent.WINDMILL_ROTOR.get()));
 		WindMillBlockEntity b = placeNeighbour(helper, POS.east(2), Direction.WEST);
 		setClear(helper);
-		drive(a, helper, Config.windMillSampleTicks + 1);
-		drive(b, helper, Config.windMillSampleTicks + 1);
+		drive(a, helper, GeneratorConfig.windMillSampleTicks + 1);
+		drive(b, helper, GeneratorConfig.windMillSampleTicks + 1);
 		for (WindMillBlockEntity mill : new WindMillBlockEntity[] {a, b}) {
 			int mode = mill.getDataAccess().get(3);
 			// NO_ROTOR, ROOFED and OBSTRUCTED all skip the interference scan, so any of them would pass a
@@ -393,6 +530,11 @@ public final class WindMillScenarios {
 	 * installed in an adjacent mill (the disc appears only with a rotor). Guards the "player
 	 * builds a second mill next to a working one" path (MOD-051).
 	 * Mirrors: WindMillGameTest.tcWindmill001Neg08_lateRotorTriggersInterference
+	 *
+	 * @implements TC-WINDMILL-001-NEG08 — a mill running clean flips to MODE_INTERFERENCE within one
+	 *     sample window after a rotor is installed in an adjacent mill (the disc appears only with a
+	 *     rotor). Guards the "player builds a second mill next to a working one" path (MOD-051).
+	 * @covers R-NRG-04
 	 */
 	public static void tcWindmill001Neg08_lateRotorTriggersInterference(GameTestHelper helper) {
 		WindMillBlockEntity a = place(helper); // FACING NORTH, rotor installed
@@ -404,14 +546,14 @@ public final class WindMillScenarios {
 		if (b == null) {
 			helper.fail("neighbour wind mill block entity missing after placement");
 		}
-		drive(a, helper, Config.windMillSampleTicks + 1);
+		drive(a, helper, GeneratorConfig.windMillSampleTicks + 1);
 		int mode = a.getDataAccess().get(3);
 		if (mode == WindMillBlockEntity.MODE_INTERFERENCE) {
 			helper.fail("mill A interfered while the neighbour had no rotor; mode=" + mode);
 		}
 		// Install the neighbour's rotor: A must flip to INTERFERENCE on its next sample.
 		b.setItem(WindMillBlockEntity.ROTOR_SLOT, new ItemStack(ModContent.WINDMILL_ROTOR.get()));
-		drive(a, helper, Config.windMillSampleTicks);
+		drive(a, helper, GeneratorConfig.windMillSampleTicks);
 		assertMode(helper, a, "mill A after neighbour rotor install", WindMillBlockEntity.MODE_INTERFERENCE);
 		helper.succeed();
 	}
@@ -421,13 +563,18 @@ public final class WindMillScenarios {
 	 * exactly edge-to-edge, which is NOT interference — both keep running. Guards against false
 	 * positives that would outlaw legitimate compact wind farms (MOD-051).
 	 * Mirrors: WindMillGameTest.tcWindmill001Neg09_spacedMillsNotInterfering
+	 *
+	 * @implements TC-WINDMILL-001-NEG09 — control: mills two blocks apart (one air block between, same
+	 *     FACING) have discs meeting exactly edge-to-edge, which is NOT interference — both keep running.
+	 *     Guards against false positives that would outlaw legitimate compact wind farms (MOD-051).
+	 * @covers R-NRG-04
 	 */
 	public static void tcWindmill001Neg09_spacedMillsNotInterfering(GameTestHelper helper) {
 		WindMillBlockEntity a = place(helper); // FACING NORTH at POS
 		WindMillBlockEntity b = placeNeighbour(helper, POS.east(2), Direction.NORTH);
 		setClear(helper);
-		drive(a, helper, Config.windMillSampleTicks + 1);
-		drive(b, helper, Config.windMillSampleTicks + 1);
+		drive(a, helper, GeneratorConfig.windMillSampleTicks + 1);
+		drive(b, helper, GeneratorConfig.windMillSampleTicks + 1);
 		if (a.getDataAccess().get(3) == WindMillBlockEntity.MODE_INTERFERENCE
 				|| b.getDataAccess().get(3) == WindMillBlockEntity.MODE_INTERFERENCE) {
 			helper.fail("mills two blocks apart reported INTERFERENCE; discs only touch edge-to-edge");
@@ -440,13 +587,18 @@ public final class WindMillScenarios {
 	 * discs on opposite sides — no overlap, no interference (MOD-051). Turning mills apart is the
 	 * documented way to pack them tightly.
 	 * Mirrors: WindMillGameTest.tcWindmill001Neg10_backToBackNotInterfering
+	 *
+	 * @implements TC-WINDMILL-001-NEG10 — control: directly adjacent mills facing AWAY from each other
+	 *     (opposite FACING) put their discs on opposite sides — no overlap, no interference (MOD-051).
+	 *     Turning mills apart is the documented way to pack them tightly.
+	 * @covers R-NRG-04
 	 */
 	public static void tcWindmill001Neg10_backToBackNotInterfering(GameTestHelper helper) {
 		WindMillBlockEntity a = place(helper); // FACING NORTH at POS
 		WindMillBlockEntity b = placeNeighbour(helper, POS.east(), Direction.SOUTH);
 		setClear(helper);
-		drive(a, helper, Config.windMillSampleTicks + 1);
-		drive(b, helper, Config.windMillSampleTicks + 1);
+		drive(a, helper, GeneratorConfig.windMillSampleTicks + 1);
+		drive(b, helper, GeneratorConfig.windMillSampleTicks + 1);
 		if (a.getDataAccess().get(3) == WindMillBlockEntity.MODE_INTERFERENCE
 				|| b.getDataAccess().get(3) == WindMillBlockEntity.MODE_INTERFERENCE) {
 			helper.fail("opposite-facing adjacent mills reported INTERFERENCE; their discs cannot overlap");
@@ -459,6 +611,11 @@ public final class WindMillScenarios {
 	 * evolve counter does not advance (blades that cannot turn do not evolve — same rule as
 	 * obstruction, MOD-051).
 	 * Mirrors: WindMillGameTest.tcWindmill001Fun04_interferenceFreezesEvolution
+	 *
+	 * @implements TC-WINDMILL-001-FUN04 — evolution freezes under interference: with a chip, a rotor and
+	 *     an interfering neighbour, the evolve counter does not advance (blades that cannot turn do not
+	 *     evolve — same rule as obstruction, MOD-051).
+	 * @covers R-NRG-04
 	 */
 	public static void tcWindmill001Fun04_interferenceFreezesEvolution(GameTestHelper helper) {
 		WindMillBlockEntity a = place(helper); // FACING NORTH, rotor installed
@@ -466,7 +623,7 @@ public final class WindMillScenarios {
 		setClear(helper);
 		a.setItem(WindMillBlockEntity.CHIP_SLOT, new ItemStack(ModContent.ALIGNMENT_CHIP_DAY.get()));
 		a.setEvolveProgressTicks(0);
-		drive(a, helper, Config.windMillSampleTicks + 1);
+		drive(a, helper, GeneratorConfig.windMillSampleTicks + 1);
 		if (a.getEvolveProgressTicks() != 0) {
 			helper.fail("evolve counter advanced under interference: " + a.getEvolveProgressTicks()
 					+ " ticks; expected 0");
@@ -476,17 +633,22 @@ public final class WindMillScenarios {
 
 	/**
 	 * With an altitude chip and a rotor installed, the evolve counter advances under open sky; once
-	 * {@link Config#windMillEvolveTicks} is reached the block transforms into
+	 * {@link GeneratorConfig#windMillEvolveTicks} is reached the block transforms into
 	 * {@code high_altitude_wind_mill} carrying its stored EU, the rotor (slot override) and
 	 * consuming the chip (MOD-166 #4).
 	 * Mirrors: WindMillGameTest.tcWindmill001Fun03_dayChipEvolvesToHighAltitude
+	 *
+	 * @implements TC-WINDMILL-001-FUN03 — with an altitude chip and a rotor installed, the evolve counter
+	 *     advances one tick per server-tick under open sky; once {@link GeneratorConfig#windMillEvolveTicks} is
+	 *     reached the block transforms into {@code high_altitude_wind_mill} carrying its stored EU.
+	 * @covers R-NRG-04
 	 */
 	public static void tcWindmill001Fun03_dayChipEvolvesToHighAltitude(GameTestHelper helper) {
 		WindMillBlockEntity mill = place(helper); // rotor installed
 		setClear(helper);
 		mill.setItem(WindMillBlockEntity.CHIP_SLOT, new ItemStack(ModContent.ALIGNMENT_CHIP_DAY.get()));
 		mill.getEnergyStorage().setAmountUntracked(1500); // seed EU to verify it carries across the transform
-		mill.setEvolveProgressTicks(Config.windMillEvolveTicks - 1); // one tick short of evolution
+		mill.setEvolveProgressTicks(GeneratorConfig.windMillEvolveTicks - 1); // one tick short of evolution
 		drive(mill, helper, 1); // the next tick trips the threshold
 		// The block should have transformed — the old BE is no longer the block entity at POS.
 		var evolved = helper.getLevel().getBlockEntity(helper.absolutePos(POS));
@@ -545,7 +707,7 @@ public final class WindMillScenarios {
 		WindMillBlockEntity mill = place(helper);
 		setClear(helper);
 		mill.setItem(WindMillBlockEntity.CHIP_SLOT, new ItemStack(ModContent.ALIGNMENT_CHIP_DAY.get(), 8));
-		mill.setEvolveProgressTicks(Config.windMillEvolveTicks - 1);
+		mill.setEvolveProgressTicks(GeneratorConfig.windMillEvolveTicks - 1);
 		drive(mill, helper, 1);
 		var evolved = helper.getBlockEntity(POS, HighAltitudeWindMillBlockEntity.class);
 		if (evolved == null) {
@@ -561,10 +723,17 @@ public final class WindMillScenarios {
 
 	/**
 	 * With a night (storm) chip and a rotor installed, the evolve counter advances under open sky;
-	 * once {@link Config#windMillEvolveTicks} is reached the block transforms into
+	 * once {@link GeneratorConfig#windMillEvolveTicks} is reached the block transforms into
 	 * {@code storm_wind_mill} carrying its stored EU and rotor, consuming the chip (MOD-166 #4)
 	 * and keeping the owner so production stays attributed (MOD-133). Night branch of FUN03.
 	 * Mirrors: WindMillGameTest.tcWindmill001Fun05_nightChipEvolvesToStorm
+	 *
+	 * @implements TC-WINDMILL-001-FUN05 — with a night (storm) chip and a rotor installed, the evolve
+	 *     counter advances one tick per server-tick under open sky; once {@link GeneratorConfig#windMillEvolveTicks}
+	 *     is reached the block transforms into {@code storm_wind_mill} carrying its stored EU and rotor,
+	 *     and consuming the chip. Mirror of {@link #tcWindmill001Fun03_dayChipEvolvesToHighAltitude} for
+	 *     the night branch — closes the Tempest-evolution test gap identified in MOD-172.
+	 * @covers R-NRG-04
 	 */
 	public static void tcWindmill001Fun05_nightChipEvolvesToStorm(GameTestHelper helper) {
 		WindMillBlockEntity mill = place(helper); // rotor installed
@@ -576,7 +745,7 @@ public final class WindMillScenarios {
 		// evolved mill's owner would be null and its production would never reach the player's profile.
 		java.util.UUID ownerId = new java.util.UUID(0x51A2B3C4D5E6F708L, 0x1122334455667788L);
 		mill.setOwner(ownerId, "TestPlayer");
-		mill.setEvolveProgressTicks(Config.windMillEvolveTicks - 1); // one tick short of evolution
+		mill.setEvolveProgressTicks(GeneratorConfig.windMillEvolveTicks - 1); // one tick short of evolution
 		drive(mill, helper, 1); // the next tick trips the threshold
 		// The block should have transformed — the old BE is no longer the block entity at POS.
 		var evolved = helper.getLevel().getBlockEntity(helper.absolutePos(POS));
@@ -620,32 +789,35 @@ public final class WindMillScenarios {
 	 * per durability point) makes wear fast and deterministic, plus a rotor pre-damaged to one
 	 * point from death.
 	 * Mirrors: WindMillGameTest.tcWindmill001Wear01_rotorWearsOutAndBreaks
+	 *
+	 * @implements TC-WINDMILL-001-WEAR01 — a producing T1 wind mill wears its rotor down and, once its
+	 *     durability is spent, breaks it: the slot empties, generation halts and the mode drops to
+	 *     MODE_NO_ROTOR. Config override (1 EU per durability point) makes wear fast and deterministic —
+	 *     the wear RATE is read live — plus a rotor pre-damaged to one point from death. Regression guard:
+	 *     without the wear code the rotor never breaks and the first assertion fails.
 	 */
 	public static void tcWindmill001Wear01_rotorWearsOutAndBreaks(GameTestHelper helper) {
-		int savedRate = Config.windMillRotorEuPerDamage;
-		try {
-			Config.windMillRotorEuPerDamage = 1; // 1 EU of production spends 1 durability point
+		// 1 EU of production spends 1 durability point
+		try (ConfigOverrides o = ConfigOverrides.sync().set("windMillRotorEuPerDamage", 1)) {
 			WindMillBlockEntity mill = placeRaised(helper); // base >= 1 → real production under open sky
 			requirePositiveHeightBase(helper, RAISED_POS);
 			setClear(helper);
 			ItemStack rotor = new ItemStack(ModContent.WINDMILL_ROTOR.get());
 			rotor.setDamageValue(rotor.getMaxDamage() - 1); // one active tick from breaking
 			mill.setItem(WindMillBlockEntity.ROTOR_SLOT, rotor);
-			drive(mill, helper, Config.windMillSampleTicks + 2); // sample so rate>0 is cached, then wear
+			drive(mill, helper, GeneratorConfig.windMillSampleTicks + 2); // sample so rate>0 is cached, then wear
 			if (!mill.getItem(WindMillBlockEntity.ROTOR_SLOT).isEmpty()) {
 				helper.fail("worn-out rotor was not removed from the slot; damage="
 						+ mill.getItem(WindMillBlockEntity.ROTOR_SLOT).getDamageValue()
 						+ " rate=" + mill.getDataAccess().get(2));
 			}
 			mill.getEnergyStorage().setAmountUntracked(0);
-			drive(mill, helper, Config.windMillSampleTicks + 1);
+			drive(mill, helper, GeneratorConfig.windMillSampleTicks + 1);
 			if (mill.getEnergyStorage().getAmount() != 0) {
 				helper.fail("wind mill kept generating after its rotor broke");
 			}
 			assertMode(helper, mill, "broken-rotor mill", WindMillBlockEntity.MODE_NO_ROTOR);
 			helper.succeed();
-		} finally {
-			Config.windMillRotorEuPerDamage = savedRate;
 		}
 	}
 
@@ -654,25 +826,26 @@ public final class WindMillScenarios {
 	 * fires on the T2 evolutions too: a producing high-altitude mill breaks a spent rotor exactly
 	 * like the T1 mill. Proves the wear call site in the T2 {@code produce()}.
 	 * Mirrors: WindMillGameTest.tcWindmill001Wear02_t2HighAltitudeRotorBreaks
+	 *
+	 * @implements TC-WINDMILL-001-WEAR02 — the rotor wear path is the SHARED
+	 *     {@code AbstractGeneratorBlockEntity#wearComponent}, so it fires on the T2 evolutions too: a
+	 *     producing high-altitude mill breaks a spent rotor exactly like the T1 mill (the storm mill uses
+	 *     the identical shared call). Proves the wear call site in the T2 {@code produce()}.
 	 */
 	public static void tcWindmill001Wear02_t2HighAltitudeRotorBreaks(GameTestHelper helper) {
-		int savedRate = Config.windMillRotorEuPerDamage;
-		try {
-			Config.windMillRotorEuPerDamage = 1;
+		try (ConfigOverrides o = ConfigOverrides.sync().set("windMillRotorEuPerDamage", 1)) {
 			var mill = placeRaisedHighAltitude(helper); // base >= 1 for the T2 formula → real production
 			setClear(helper);
 			ItemStack rotor = new ItemStack(ModContent.WINDMILL_ROTOR.get());
 			rotor.setDamageValue(rotor.getMaxDamage() - 1);
 			mill.setItem(WindMillBlockEntity.ROTOR_SLOT, rotor);
-			AlaGameTestHelper.drive(mill, helper, Config.windMillSampleTicks + 2);
+			AlaGameTestHelper.drive(mill, helper, GeneratorConfig.windMillSampleTicks + 2);
 			if (!mill.getItem(WindMillBlockEntity.ROTOR_SLOT).isEmpty()) {
 				helper.fail("high-altitude T2 rotor did not break when spent; damage="
 						+ mill.getItem(WindMillBlockEntity.ROTOR_SLOT).getDamageValue()
 						+ " rate=" + mill.getDataAccess().get(2));
 			}
 			helper.succeed();
-		} finally {
-			Config.windMillRotorEuPerDamage = savedRate;
 		}
 	}
 
@@ -682,20 +855,29 @@ public final class WindMillScenarios {
 	 * {@code windMillMaxBaseEuPerTick = 0} (not the rig's altitude) so the test stays about the
 	 * wear gate and is immune to future retunes of the altitude curve (MOD-347).
 	 * Mirrors: WindMillGameTest.tcWindmill001Wear03_noWearWhileIdle
+	 *
+	 * @implements TC-WINDMILL-001-WEAR03 — a rotor in an idle mill (produces 0 EU) does NOT wear even at
+	 *     the aggressive 1-EU-per-point rate: wear accrues only while the mill produces EU. The rotor is
+	 *     pre-damaged to one point from death, so any spurious idle wear would break it.
+	 *
+	 *     <p>Idleness is forced with {@code windMillMaxBaseEuPerTick = 0} rather than by relying on the
+	 *     rig sitting below the first height step. It used to rely on that, and MOD-347 broke it: the
+	 *     stepped ramp became the smooth {@code WindProfile} curve, which yields a base of 1 only eight
+	 *     blocks above sea level, so the "idle" mill started generating and chewed through its rotor.
+	 *     Pinning the rate to zero at the source keeps this test about the wear gate
+	 *     ({@code cachedRate > 0}) and immune to future retunes of the altitude curve.
 	 */
 	public static void tcWindmill001Wear03_noWearWhileIdle(GameTestHelper helper) {
-		int savedRate = Config.windMillRotorEuPerDamage;
-		int savedBase = Config.windMillMaxBaseEuPerTick;
-		try {
-			Config.windMillRotorEuPerDamage = 1;
-			Config.windMillMaxBaseEuPerTick = 0; // force rate 0 at any height (see javadoc)
+		try (ConfigOverrides o = ConfigOverrides.sync()) {
+			o.set("windMillRotorEuPerDamage", 1);
+			o.set("windMillMaxBaseEuPerTick", 0); // force rate 0 at any height (see javadoc)
 			WindMillBlockEntity mill = placeWithoutRotor(helper);
 			setClear(helper);
 			ItemStack rotor = new ItemStack(ModContent.WINDMILL_ROTOR.get());
 			int seeded = rotor.getMaxDamage() - 1;
 			rotor.setDamageValue(seeded);
 			mill.setItem(WindMillBlockEntity.ROTOR_SLOT, rotor);
-			drive(mill, helper, Config.windMillSampleTicks * 2 + 5);
+			drive(mill, helper, GeneratorConfig.windMillSampleTicks * 2 + 5);
 			// Guard against the test passing for the wrong reason: if the mill were somehow producing,
 			// "no wear" would be a genuine bug rather than the expected result.
 			int observedRate = mill.getDataAccess().get(2);
@@ -713,9 +895,6 @@ public final class WindMillScenarios {
 						+ "; expected no wear at rate 0");
 			}
 			helper.succeed();
-		} finally {
-			Config.windMillRotorEuPerDamage = savedRate;
-			Config.windMillMaxBaseEuPerTick = savedBase;
 		}
 	}
 
@@ -725,6 +904,11 @@ public final class WindMillScenarios {
 	 * evolution would break the wear economy. Uses the low-Y region (rate 0) so no wear accrues
 	 * during the single evolution tick and the damage assertion is exact.
 	 * Mirrors: WindMillGameTest.tcWindmill001Wear04_wearSurvivesEvolution
+	 *
+	 * @implements TC-WINDMILL-001-WEAR04 — evolution must NOT repair the rotor: a partially-worn rotor keeps
+	 *     its exact damage when the mill evolves T1 → T2 (the shared {@code evolveInto} copies the stack). A
+	 *     free repair on evolution would break the wear economy. Uses the low-Y region (rate 0) so no wear
+	 *     accrues during the single evolution tick and the damage assertion is exact.
 	 */
 	public static void tcWindmill001Wear04_wearSurvivesEvolution(GameTestHelper helper) {
 		WindMillBlockEntity mill = place(helper); // rotor installed at POS (base 0 → no wear)
@@ -734,7 +918,7 @@ public final class WindMillScenarios {
 		rotor.setDamageValue(worn);
 		mill.setItem(WindMillBlockEntity.ROTOR_SLOT, rotor);
 		mill.setItem(WindMillBlockEntity.CHIP_SLOT, new ItemStack(ModContent.ALIGNMENT_CHIP_DAY.get()));
-		mill.setEvolveProgressTicks(Config.windMillEvolveTicks - 1); // one tick short of evolution
+		mill.setEvolveProgressTicks(GeneratorConfig.windMillEvolveTicks - 1); // one tick short of evolution
 		drive(mill, helper, 1); // trips the transform
 		var evolvedMill = helper.getBlockEntity(POS, HighAltitudeWindMillBlockEntity.class);
 		if (evolvedMill == null) {
@@ -759,11 +943,16 @@ public final class WindMillScenarios {
 	 * stored). Pins the deliberate design decision that wear is not gated on the buffer-room
 	 * check.
 	 * Mirrors: WindMillGameTest.tcWindmill001Wear05_wearsAtFullBufferWithNoConsumer
+	 *
+	 * @implements TC-WINDMILL-001-WEAR05 — wear tracks mechanical spinning, NOT delivered EU: a mill with a
+	 *     FULL buffer and no downstream consumer still wears its rotor (the blades turn in the wind whether or
+	 *     not the EU is stored). Pins the deliberate design decision (wear is not gated on the buffer-room
+	 *     check) — a buffer-gated wear model would leave the rotor at full durability here and this test would
+	 *     fail. Mirrors the "active tick = rate > 0" definition, distinct from the fuel generator's R-NRG-11
+	 *     "full buffer pauses burn" (fuel is a consumed input; the free wind is not).
 	 */
 	public static void tcWindmill001Wear05_wearsAtFullBufferWithNoConsumer(GameTestHelper helper) {
-		int savedRate = Config.windMillRotorEuPerDamage;
-		try {
-			Config.windMillRotorEuPerDamage = 1;
+		try (ConfigOverrides o = ConfigOverrides.sync().set("windMillRotorEuPerDamage", 1)) {
 			WindMillBlockEntity mill = placeRaised(helper); // base >= 1 → rate > 0 under open sky
 			requirePositiveHeightBase(helper, RAISED_POS);
 			setClear(helper);
@@ -771,14 +960,12 @@ public final class WindMillScenarios {
 			ItemStack rotor = new ItemStack(ModContent.WINDMILL_ROTOR.get());
 			rotor.setDamageValue(rotor.getMaxDamage() - 1);
 			mill.setItem(WindMillBlockEntity.ROTOR_SLOT, rotor);
-			drive(mill, helper, Config.windMillSampleTicks + 2);
+			drive(mill, helper, GeneratorConfig.windMillSampleTicks + 2);
 			if (!mill.getItem(WindMillBlockEntity.ROTOR_SLOT).isEmpty()) {
 				helper.fail("rotor did not wear at a full buffer — wear must track the spinning blades, not "
 						+ "delivered EU; damage=" + mill.getItem(WindMillBlockEntity.ROTOR_SLOT).getDamageValue());
 			}
 			helper.succeed();
-		} finally {
-			Config.windMillRotorEuPerDamage = savedRate;
 		}
 	}
 }

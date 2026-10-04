@@ -1,6 +1,7 @@
 package dev.alaindustrial.block.entity;
 
 import java.util.Locale;
+import dev.alaindustrial.core.machine.StatusLine;
 
 /**
  * What the Garden Drone Station is doing right now (MOD-277) — the screen's status line and, from
@@ -15,7 +16,7 @@ import java.util.Locale;
  * <p>Ordinals travel over a {@code ContainerData} channel <em>and</em> are persisted, so appending
  * new constants is safe but reordering the existing ones is not.
  */
-public enum GardenDroneStatus {
+public enum GardenDroneStatus implements StatusLine {
 	/** Nothing to do: every tile in range is tended. Not a fault. */
 	IDLE,
 	/** Flying a job right now. */
@@ -36,5 +37,11 @@ public enum GardenDroneStatus {
 
 	public static GardenDroneStatus byOrdinal(int ordinal) {
 		return ordinal >= 0 && ordinal < VALUES.length ? VALUES[ordinal] : IDLE;
+	}
+
+	/** {@link StatusLine}: whether this state holds the machine up (see the interface). */
+	@Override
+	public boolean isBlocking() {
+		return this != WORKING && this != IDLE;
 	}
 }

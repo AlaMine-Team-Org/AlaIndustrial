@@ -5,6 +5,7 @@ import static dev.alaindustrial.gametest.VisualStandSupport.takeCleanScreenshot;
 
 import dev.alaindustrial.block.entity.ElectricHeaterBlockEntity;
 import dev.alaindustrial.block.entity.ElectricHeaterStatus;
+import dev.alaindustrial.item.ToolConfig;
 import dev.alaindustrial.menu.MachineMenu;
 import dev.alaindustrial.menu.SolarPanelMenu;
 import dev.alaindustrial.block.entity.ComponentRepairBenchBlockEntity;
@@ -143,6 +144,9 @@ public final class MachineGuiStands {
         shootStatsPanel(context, "gui_macerator_stats_no_chip", ModContent.MACERATOR_MENU.get(), "Macerator", CAP, false);
         // With a chip fitted: the frame, the title, the close cross and the "waiting for data" line.
         shootStatsPanel(context, "gui_macerator_stats_open", ModContent.MACERATOR_MENU.get(), "Macerator", CAP, true);
+        // MOD-693: the open panel is modal — dragged over a screen's own control, it takes the click and
+        // is drawn above the control (the Assembler's Record tab, the Mob Repeller's dome button).
+        StatsPanelModalStand.shoot(context);
 
         // ── Electric Furnace — three states ──────────────────────────────────────────
         // State 1: empty — no fuel, no energy
@@ -199,11 +203,11 @@ public final class MachineGuiStands {
         // atlas, so these shots are the only visual guard on it.
         final int ASM = 40;   // Config.assemblerDuration — one operation at 1.0 speed
         AssemblerGuiStands.shootAssembler(context, "gui_assembler_empty", 0, CAP, 0, ASM, -1,
-                dev.alaindustrial.block.entity.AssemblerBlockEntity.AssemblerStatus.NO_BLUEPRINT, false);
+                dev.alaindustrial.block.entity.AssemblerStatus.NO_BLUEPRINT, false);
         AssemblerGuiStands.shootAssembler(context, "gui_assembler_working", CAP * 3 / 4, CAP, ASM / 2, ASM, 0,
-                dev.alaindustrial.block.entity.AssemblerBlockEntity.AssemblerStatus.READY, true);
+                dev.alaindustrial.block.entity.AssemblerStatus.READY, true);
         AssemblerGuiStands.shootAssembler(context, "gui_assembler_output_full", CAP, CAP, 0, ASM, 2,
-                dev.alaindustrial.block.entity.AssemblerBlockEntity.AssemblerStatus.OUTPUT_FULL, true);
+                dev.alaindustrial.block.entity.AssemblerStatus.OUTPUT_FULL, true);
         // Two more states, and they are the reason this stand exists after MOD-275's playtest: a queue
         // of recorded blueprints has to be readable WITHOUT touching anything. State 4 is the machine
         // idle — no layout of the player's own, so the window shows the queued blueprint's, dimmed and
@@ -212,9 +216,9 @@ public final class MachineGuiStands {
         // queue carry their own products in their icons (sticks vs planks — two different products in
         // one frame, so the icon cannot be a fixed picture).
         AssemblerGuiStands.shootAssemblerQueue(context, "gui_assembler_blueprint_preview", CAP, CAP, 0, ASM, -1,
-                dev.alaindustrial.block.entity.AssemblerBlockEntity.AssemblerStatus.NO_MATERIALS, true);
+                dev.alaindustrial.block.entity.AssemblerStatus.NO_MATERIALS, true);
         AssemblerGuiStands.shootAssemblerQueue(context, "gui_assembler_blueprint_active", CAP * 3 / 4, CAP, ASM / 2, ASM, 1,
-                dev.alaindustrial.block.entity.AssemblerBlockEntity.AssemblerStatus.READY, true);
+                dev.alaindustrial.block.entity.AssemblerStatus.READY, true);
         AssemblerGuiStands.assertBlueprintPreviewInFrame(context, ASM);
         // MOD-275, the tab split: one window, two tabs, and the two jobs must not share screen space.
         // Both tabs are photographed, and the gate proves the hidden one's contents are GONE rather
@@ -368,7 +372,8 @@ public final class MachineGuiStands {
                     && acs.getMenu() instanceof MachineMenu menu) {
                 menu.injectTestData(energy, capacity, 0, 0);
                 ItemStack pouch = new ItemStack(ModItems.BATTERY_POUCH);
-                dev.alaindustrial.item.energy.ItemEnergy.set(pouch, dev.alaindustrial.Config.lvPouchBuffer / 2);
+                dev.alaindustrial.item.energy.ItemEnergy.set(pouch, dev.alaindustrial.item.ToolConfig.lvPouchBuffer
+		/ 2);
                 menu.getSlot(0).container.setItem(0, pouch);
             }
         });
@@ -391,7 +396,8 @@ public final class MachineGuiStands {
                     && acs.getMenu() instanceof MachineMenu menu) {
                 menu.injectTestData(energy, capacity, 0, 0);
                 ItemStack pack = new ItemStack(ModItems.ENERGY_PACK);
-                dev.alaindustrial.item.energy.ItemEnergy.set(pack, dev.alaindustrial.Config.energyPackBuffer / 2);
+                dev.alaindustrial.item.energy.ItemEnergy.set(pack, dev.alaindustrial.item.ToolConfig.energyPackBuffer
+		/ 2);
                 menu.getSlot(0).container.setItem(0, pack);
             }
         });
@@ -443,7 +449,7 @@ public final class MachineGuiStands {
             if (mc.gui.screen() instanceof AbstractContainerScreen<?> acs
                     && acs.getMenu() instanceof MachineMenu menu) {
                 menu.injectTestData(energy, capacity, progress, maxProgress);
-                menu.injectTestChannel(ComponentRepairBenchBlockEntity.STATUS_CHANNEL, status.code());
+                menu.injectTestChannel(ComponentRepairBenchBlockEntity.Channel.STATUS.ordinal(), status.code());
             }
         });
         awaitMenuScreen(context);
@@ -469,7 +475,7 @@ public final class MachineGuiStands {
             if (mc.gui.screen() instanceof AbstractContainerScreen<?> acs
                     && acs.getMenu() instanceof MachineMenu menu) {
                 menu.injectTestData(energy, capacity, progress, maxProgress);
-                menu.injectTestChannel(AbstractProcessingMachineBlockEntity.DATA_STATUS, status.ordinal());
+                menu.injectTestChannel(AbstractProcessingMachineBlockEntity.Channel.STATUS.ordinal(), status.ordinal());
             }
         });
         awaitMenuScreen(context);
@@ -517,9 +523,9 @@ public final class MachineGuiStands {
             if (mc.gui.screen() instanceof AbstractContainerScreen<?> acs
                     && acs.getMenu() instanceof MachineMenu menu) {
                 menu.injectTestData(energy, capacity, 0, 0);
-                menu.injectTestChannel(ElectricHeaterBlockEntity.DATA_HEAT, heatPermille);
-                menu.injectTestChannel(ElectricHeaterBlockEntity.DATA_RATE, rate);
-                menu.injectTestChannel(ElectricHeaterBlockEntity.DATA_STATUS, status.ordinal());
+                menu.injectTestChannel(ElectricHeaterBlockEntity.Channel.HEAT.ordinal(), heatPermille);
+                menu.injectTestChannel(ElectricHeaterBlockEntity.Channel.RATE.ordinal(), rate);
+                menu.injectTestChannel(ElectricHeaterBlockEntity.Channel.STATUS.ordinal(), status.ordinal());
             }
         });
         awaitMenuScreen(context);
@@ -622,7 +628,7 @@ public final class MachineGuiStands {
      * @param production     EU/t being produced (shown in the production-rate channel)
      * @param mode           sky mode: 0=night, 1=day, 2=weather, 3=partial
      * @param evolveProgress chip ticks accumulated (0..evolveMax)
-     * @param evolveMax      chip ticks needed to evolve (Config.solarEvolveTicks, 33600 default)
+     * @param evolveMax      chip ticks needed to evolve (GeneratorConfig.solarEvolveTicks, 33600 default)
      */
     private static void shootSolarPanel(ClientGameTestContext context, String name,
                                         int energy, int capacity, int production, int mode,

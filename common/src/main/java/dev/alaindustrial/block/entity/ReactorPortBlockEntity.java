@@ -1,10 +1,10 @@
 package dev.alaindustrial.block.entity;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.core.fluid.FluidHolder;
 import dev.alaindustrial.core.fluid.FluidPort;
 import dev.alaindustrial.core.fluid.FluidPortHost;
 import dev.alaindustrial.core.fluid.FluidTank;
+import dev.alaindustrial.core.reactor.ReactorConfig;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -20,7 +20,7 @@ import net.minecraft.world.level.storage.ValueOutput;
 /**
  * The inlet's tank (MOD-468, stage 3): one small buffer, published on every face.
  *
- * <p><b>A crossing, not a store.</b> Its whole capacity is {@code Config.reactorPortThroughput} —
+ * <p><b>A crossing, not a store.</b> Its whole capacity is {@code ReactorConfig.reactorPortThroughput} —
  * one tick's worth — so it behaves as a hole in the wall rather than as a reservoir: the pipe outside
  * fills it, the pipe inside empties it, and nothing accumulates. Sizing it to exactly one tick is what
  * makes the throughput figure real, because a segment can never hand on more than it holds (the same
@@ -38,7 +38,7 @@ public class ReactorPortBlockEntity extends BlockEntity implements FluidPortHost
 	 * far side takes water and nothing else, which is the honest place for that rule: a pipe carrying
 	 * the wrong fluid should stall against the machine that cannot use it, not against the wall.
 	 */
-	public final FluidTank tank = new FluidTank(Config.reactorPortThroughput,
+	public final FluidTank tank = new FluidTank(ReactorConfig.reactorPortThroughput,
 			fluid -> true, fluid -> true, this::setChanged);
 
 	public ReactorPortBlockEntity(BlockPos pos, BlockState state) {

@@ -1,31 +1,25 @@
 package dev.alaindustrial.registry.neoforge;
 
 import dev.alaindustrial.Industrialization;
-import dev.alaindustrial.recipe.AlaProcessingRecipe;
-import dev.alaindustrial.recipe.AlloyRecipeInput;
-import dev.alaindustrial.recipe.ChargedCraftRecipe;
-import dev.alaindustrial.recipe.FluidRecipeInput;
 import dev.alaindustrial.registry.ModRecipes;
-import dev.alaindustrial.registry.ModRecipes.AlloyKind;
-import dev.alaindustrial.registry.ModRecipes.FluidKind;
-import dev.alaindustrial.registry.ModRecipes.Kind;
+import dev.alaindustrial.registry.RecipeFamily;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.Recipe;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 /**
- * NeoForge machine-recipe registration (MOD-022 facade). NeoForge freezes the vanilla
+ * NeoForge recipe registration (MOD-022 facade). NeoForge freezes the vanilla
  * {@code RECIPE_TYPE}/{@code RECIPE_SERIALIZER} registries before mod construction, so the neutral
- * {@link ModRecipes} cannot self-register there (unlike Fabric). These {@link DeferredRegister}s register
- * one {@link RecipeType}+{@link RecipeSerializer} per {@link Kind} on the mod bus, then {@link #init()}
- * binds each kind to its deferred holders (each a {@code Supplier}, resolved lazily after the
- * {@code RegisterEvent}).
+ * {@link ModRecipes} cannot self-register there (unlike Fabric). These {@link DeferredRegister}s replay
+ * {@link ModRecipes#families()} — one {@link RecipeType} (when the family has its own) and one
+ * {@link RecipeSerializer} per {@link RecipeFamily}, in list order — and {@link #init()} binds each family
+ * to its deferred holders (each a {@code Supplier}, resolved lazily after the {@code RegisterEvent}).
  */
 public final class ModRecipesNeoForge {
 	public static final DeferredRegister<RecipeType<?>> TYPES =
@@ -33,60 +27,27 @@ public final class ModRecipesNeoForge {
 	public static final DeferredRegister<RecipeSerializer<?>> SERIALIZERS =
 			DeferredRegister.create(Registries.RECIPE_SERIALIZER, Industrialization.MOD_ID);
 
-	private record Holders(Kind kind,
-			DeferredHolder<RecipeType<?>, RecipeType<AlaProcessingRecipe>> type,
-			DeferredHolder<RecipeSerializer<?>, RecipeSerializer<AlaProcessingRecipe>> serializer) {
-	}
-
-	private static final List<Holders> HOLDERS = new ArrayList<>();
-	private static final List<Runnable> FLUID_BINDERS = new ArrayList<>();
-	private static final List<Runnable> ALLOY_BINDERS = new ArrayList<>();
+	private static final List<Runnable> BINDERS = new ArrayList<>();
 
 	static {
-		// MOD-083: a crafting recipe, so only a serializer — the type is vanilla's CRAFTING.
-		DeferredHolder<RecipeSerializer<?>, RecipeSerializer<ChargedCraftRecipe>> chargedCraft =
-				SERIALIZERS.register(ModRecipes.CHARGED_CRAFT_ID, ModRecipes::createChargedCraftSerializer);
-		ModRecipes.bindChargedCraft((Supplier<RecipeSerializer<ChargedCraftRecipe>>) chargedCraft);
-		for (Kind kind : ModRecipes.kinds()) {
-			DeferredHolder<RecipeType<?>, RecipeType<AlaProcessingRecipe>> type =
-					TYPES.register(kind.id(), () -> ModRecipes.createType(kind));
-			DeferredHolder<RecipeSerializer<?>, RecipeSerializer<AlaProcessingRecipe>> serializer =
-					SERIALIZERS.register(kind.id(), () -> ModRecipes.createSerializer(kind));
-			HOLDERS.add(new Holders(kind, type, serializer));
-		}
-		for (FluidKind<?> kind : ModRecipes.fluidKinds()) {
-			registerFluid(kind);
-		}
-		for (AlloyKind<?> kind : ModRecipes.alloyKinds()) {
-			registerAlloy(kind);
+		for (RecipeFamily<?> family : ModRecipes.families()) {
+			BINDERS.add(register(family));
 		}
 	}
 
-	private static <R extends Recipe<FluidRecipeInput>> void registerFluid(FluidKind<R> kind) {
-		DeferredHolder<RecipeType<?>, RecipeType<R>> type =
-				TYPES.register(kind.id(), () -> ModRecipes.createType(kind));
+	/** Queues one family on the two registers and returns the step that binds it to the holders. */
+	private static <R extends Recipe<?>> Runnable register(RecipeFamily<R> family) {
+		Supplier<RecipeType<R>> type = family.createType().isPresent()
+				? TYPES.register(family.id(), () -> family.createType().orElseThrow())::get
+				: RecipeFamily.noType(family.id());
 		DeferredHolder<RecipeSerializer<?>, RecipeSerializer<R>> serializer =
-				SERIALIZERS.register(kind.id(), () -> ModRecipes.createSerializer(kind));
-		FLUID_BINDERS.add(() -> kind.bind(type::get, serializer::get));
-	}
-
-	private static <R extends Recipe<AlloyRecipeInput>> void registerAlloy(AlloyKind<R> kind) {
-		DeferredHolder<RecipeType<?>, RecipeType<R>> type =
-				TYPES.register(kind.id(), () -> ModRecipes.createType(kind));
-		DeferredHolder<RecipeSerializer<?>, RecipeSerializer<R>> serializer =
-				SERIALIZERS.register(kind.id(), () -> ModRecipes.createSerializer(kind));
-		ALLOY_BINDERS.add(() -> kind.bind(type::get, serializer::get));
+				SERIALIZERS.register(family.id(), family::createSerializer);
+		return () -> family.bind(type, serializer::get);
 	}
 
 	/** Bind each family to its deferred holders (lazy suppliers). Called from the {@code @Mod} ctor. */
 	public static void init() {
-		for (Holders h : HOLDERS) {
-			h.kind().bind(h.type()::get, h.serializer()::get);
-		}
-		for (Runnable binder : FLUID_BINDERS) {
-			binder.run();
-		}
-		for (Runnable binder : ALLOY_BINDERS) {
+		for (Runnable binder : BINDERS) {
 			binder.run();
 		}
 	}

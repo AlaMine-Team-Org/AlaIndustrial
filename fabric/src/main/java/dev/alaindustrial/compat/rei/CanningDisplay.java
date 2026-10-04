@@ -29,15 +29,11 @@ public final class CanningDisplay implements Display {
 	public static final CategoryIdentifier<CanningDisplay> CATEGORY =
 			CategoryIdentifier.of(Industrialization.id("canning"));
 
-	private final List<EntryIngredient> inputs;
+	private final CanningExchange.Card card;
 	private final List<EntryIngredient> outputs;
 
 	public CanningDisplay(CanningExchange.Card card) {
-		// The food slot carries the whole per-ration count, not one item: "1 sweet berry -> 1 ration"
-		// would understate the real cost eleven-fold, and the rate is the only thing this card teaches.
-		this.inputs = List.of(
-				EntryIngredients.of(card.food(), card.itemsPerRation()),
-				EntryIngredients.of(ModContent.EMPTY_CAN.get()));
+		this.card = card;
 		this.outputs = List.of(EntryIngredients.of(ModContent.CANNED_RATION.get()));
 	}
 
@@ -51,9 +47,16 @@ public final class CanningDisplay implements Display {
 		return CanningExchange.ticksPerRation();
 	}
 
+	/**
+	 * Built on every call (MOD-695): the count follows the server's exchange rate, which arrives after
+	 * the displays are registered. The food slot carries the whole per-ration count, not one item:
+	 * "1 sweet berry -> 1 ration" would understate the real cost eleven-fold.
+	 */
 	@Override
 	public List<EntryIngredient> getInputEntries() {
-		return inputs;
+		return List.of(
+				EntryIngredients.of(card.food(), card.itemsPerRation()),
+				EntryIngredients.of(ModContent.EMPTY_CAN.get()));
 	}
 
 	@Override

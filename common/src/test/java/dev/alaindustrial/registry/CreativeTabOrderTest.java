@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import dev.alaindustrial.gametest.CreativeTabSnapshotView;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -20,24 +22,39 @@ import java.util.regex.Pattern;
 import org.junit.jupiter.api.Test;
 
 /**
- * The mod tab's composition, checked as text rather than at runtime (MOD-407).
+ * The mod tab's composition (MOD-407), split by what can answer each question (MOD-711, batch 0b).
  *
- * <p><b>Why text.</b> Filling a creative tab needs registered {@code Item} instances, which do not
- * exist without a running game — so the honest options were an L2 gametest or reading the one file
- * that decides the composition. Reading the file wins here because the failures this guards against
- * are all visible in it: an entry listed twice, an entry that quietly disappeared, a group that
- * stopped being called. None of those need a live registry to see, and catching them in
- * {@code :common:test} means they fail the build in seconds instead of minutes.
+ * <p><b>Two sources, on purpose.</b> What the tabs SHOW — which entries, in which order, how many, none
+ * twice — is a fact about runtime output, so it is read from {@link CreativeTabSnapshotView}: the reviewed
+ * capture ({@code CreativeTabSnapshot}) that {@code CreativeTabSnapshotScenarios} holds both loaders'
+ * real output against, line for line. A check on that capture is a check on what the player sees, and it
+ * survives {@code CreativeTabContent} being cut into domain sections, which a scan of that one file does
+ * not. The snapshot reaches this class through the {@code gametest} source set the L1 lane already
+ * compiles against ({@code common/build.gradle}); nothing here parses it as text.
+ *
+ * <p>What the capture CANNOT say is about the code that produced it, so those tests still read source
+ * text: whether a group method is reachable from a tab ({@link #everyGroupIsReachableFromSomeTab()} — a
+ * group nobody calls leaves no trace in the output, which is exactly the failure), which groups a loader
+ * calls ({@link #rootsAreCalledBySomeLoader()} — the capture is taken by calling the roots itself, so it
+ * is blind to who else does), and whether an entry goes through the guarded accessor
+ * ({@link #tabEntriesGoThroughTheGuardedAccessor()} — a style of call, not an outcome). Since batch 4 the
+ * group bodies are section methods of the domain files ({@code registry/content/<Domain>Content.java}) and
+ * {@code CreativeTabContent} is the table of contents that calls them by class name, so these three read
+ * {@link #SOURCE} and every file of {@link #DOMAIN_DIR}. A group name is unique across them
+ * ({@link #bodies()} fails otherwise): the Python readers of the tab look a group up by its name alone.
  *
  * <p><b>What it does NOT check</b>, deliberately: that every registered item appears somewhere. That
  * question belongs to the runtime registry — several items are registered and intentionally hidden
- * (pre-release content), and a text scan cannot tell "hidden on purpose" from "forgotten". The
- * loader-parity and registry validators already own that side.
+ * (pre-release content), and neither the capture nor a text scan can tell "hidden on purpose" from
+ * "forgotten". The loader-parity and registry validators own that side.
  */
 class CreativeTabOrderTest {
 
 	private static final Path SOURCE = Path.of(
 			"src/main/java/dev/alaindustrial/registry/CreativeTabContent.java");
+
+	/** The domain files whose section methods hold the group bodies since MOD-711, batch 4. */
+	private static final Path DOMAIN_DIR = Path.of("src/main/java/dev/alaindustrial/registry/content");
 
 	/**
 	 * The groups a loader fills a tab from — the entry points every other group has to be reachable
@@ -78,9 +95,6 @@ class CreativeTabOrderTest {
 	 */
 	private static final Pattern JAVA_COMMENT = Pattern.compile("/\\*.*?\\*/|//[^\\n]*", Pattern.DOTALL);
 
-	/** {@code show(out, ModContent.X)} — the current form — and the older {@code out.accept(...)}. */
-	private static final Pattern ENTRY = Pattern.compile(
-			"show\\(out, ModContent\\.(\\w+)\\)|out\\.accept\\(ModContent\\.(\\w+)\\.get\\(\\)\\)");
 	/**
 	 * A group call. The sink is normally the parameter {@code out}, but {@code main} buffers the tab
 	 * through a {@code ShapeSorted} to group it by silhouette (MOD-574) and hands that buffer to
@@ -89,8 +103,11 @@ class CreativeTabOrderTest {
 	 * <p>Spelling the two names out rather than accepting any identifier is deliberate: {@code (\w+)}
 	 * there would also match an ordinary one-argument statement and quietly invent a group that does
 	 * not exist. If a third sink name appears, it belongs here, next to these two.
+	 *
+	 * <p>The table of contents names a section by its domain class ({@code FluidContent.fluids(out);},
+	 * MOD-711 batch 4), so an optional {@code Class.} qualifier precedes the name.
 	 */
-	private static final Pattern CALL = Pattern.compile("^\\t\\t(\\w+)\\((?:out|sorted)\\);");
+	private static final Pattern CALL = Pattern.compile("^\\t\\t(?:\\w+\\.)?(\\w+)\\((?:out|sorted)\\);");
 	/**
 	 * A group head. {@code AnchoredSink} is a {@link CreativeTabContent.Sink} that can also place an entry
 	 * after an anchor — the vanilla Combat and Tools &amp; Utilities groups take one (MOD-555). Without
@@ -100,15 +117,34 @@ class CreativeTabOrderTest {
 	private static final Pattern METHOD = Pattern.compile(
 			"(?:private|public) static void (\\w+)\\((?:Anchored)?Sink out\\) \\{");
 
+	/** {@link #SOURCE} first, then every domain file in name order. */
+	private static List<Path> sources() throws IOException {
+		List<Path> sources = new ArrayList<>(List.of(SOURCE));
+		try (var files = Files.list(DOMAIN_DIR)) {
+			files.filter(path -> path.toString().endsWith(".java")).sorted().forEach(sources::add);
+		}
+		return sources;
+	}
+
 	private static Map<String, List<String>> bodies() throws IOException {
-		List<String> lines = Files.readAllLines(SOURCE, StandardCharsets.UTF_8);
 		Map<String, List<String>> bodies = new LinkedHashMap<>();
+		for (Path source : sources()) {
+			readBodies(source, bodies);
+		}
+		return bodies;
+	}
+
+	private static void readBodies(Path source, Map<String, List<String>> bodies) throws IOException {
 		String current = null;
-		for (String line : lines) {
+		for (String line : Files.readAllLines(source, StandardCharsets.UTF_8)) {
 			Matcher head = METHOD.matcher(line.strip());
 			if (head.lookingAt()) {
 				current = head.group(1);
-				bodies.put(current, new ArrayList<>());
+				if (bodies.put(current, new ArrayList<>()) != null) {
+					fail("tab group '" + current + "' is declared twice across CreativeTabContent and the domain "
+							+ "files (again in " + source.getFileName() + ") — the readers of the tab look a group "
+							+ "up by its name alone, so a section needs a name of its own");
+				}
 				continue;
 			}
 			if (current != null) {
@@ -119,27 +155,39 @@ class CreativeTabOrderTest {
 				}
 			}
 		}
-		return bodies;
 	}
 
-	/** Every entry the tab shows, in order, expanding the group calls the way the game will. */
-	private static List<String> entriesOf(String method, Map<String, List<String>> bodies, int depth) {
-		List<String> out = new ArrayList<>();
-		if (depth > 6 || !bodies.containsKey(method)) {
-			return out;
-		}
-		for (String line : bodies.get(method)) {
-			Matcher entry = ENTRY.matcher(line);
-			if (entry.find()) {
-				out.add(entry.group(1) != null ? entry.group(1) : entry.group(2));
-				continue;
+	/** Tab name as the capture writes it: the root's camelCase name in snake_case. */
+	private static String tabName(String root) {
+		return root.replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.ROOT);
+	}
+
+	/**
+	 * The reference, per tab, as the ids each tab receives in order. An appended entry is one id; an anchored
+	 * insertion ({@code <tab> after <anchor>: <ids>}) contributes the ids it inserts, never the anchor — the
+	 * anchor is somebody else's entry (usually vanilla's), not a repeat.
+	 */
+	private static Map<String, List<String>> snapshotTabs() {
+		assertTrue(CreativeTabSnapshotView.captured(), "the creative tab reference was never captured "
+				+ "(CreativeTabSnapshot.CAPTURED is false) — these checks would read an empty reference and "
+				+ "prove nothing; run the update command in CreativeTabSnapshot's javadoc");
+		Map<String, List<String>> tabs = new LinkedHashMap<>();
+		for (String line : CreativeTabSnapshotView.lines()) {
+			int space = line.indexOf(' ');
+			assertTrue(space > 0, "malformed reference line (want '<tab> <id>'): " + line);
+			String tab = line.substring(0, space);
+			String rest = line.substring(space + 1);
+			List<String> ids = tabs.computeIfAbsent(tab, k -> new ArrayList<>());
+			if (rest.startsWith("after ")) {
+				int colon = rest.indexOf(": ");
+				assertTrue(colon > 0, "malformed anchored reference line (want '<tab> after <anchor>: <ids>'): "
+						+ line);
+				ids.addAll(List.of(rest.substring(colon + 2).split(" ")));
+			} else {
+				ids.add(rest);
 			}
-			Matcher call = CALL.matcher(line);
-			if (call.find()) {
-				out.addAll(entriesOf(call.group(1), bodies, depth + 1));
-			}
 		}
-		return out;
+		return tabs;
 	}
 
 	/**
@@ -147,9 +195,12 @@ class CreativeTabOrderTest {
 	 * second copy pushes everything after it one place along, which is how a carefully ordered group
 	 * turns into a shuffled one. This caught six real duplicates the moment the tab was regrouped —
 	 * the fluid machines were listed both with the machines and with the fluid chain.
+	 *
+	 * <p>Read from the reviewed capture of what {@code main} really hands the loader, so a duplicate that
+	 * arises from two groups both calling the same helper is seen as the player would see it.
 	 */
 	@Test
-	void modTabListsEveryItemExactlyOnce() throws IOException {
+	void modTabListsEveryItemExactlyOnce() {
 		assertNoDuplicates("main");
 	}
 
@@ -161,21 +212,24 @@ class CreativeTabOrderTest {
 	 * worse — NeoForge collects into a set and swallows the second copy, Fabric appends and shows the
 	 * icon twice, so the same source file produces two different tabs and neither loader complains.
 	 *
-	 * <p>{@code combat} and {@code toolsAndUtilities} are not here: they place entries with an anchor
-	 * ({@code after(...)}) rather than by appending, so a repeat is a positioning question this parser
-	 * cannot answer. {@code CreativeTabAnchorSafetyTest} on the NeoForge side covers those two.
+	 * <p><b>Wider than the text check it replaces.</b> {@code combat} and {@code tools_and_utilities} are
+	 * in the list now. The text parser could not follow their anchored placement ({@code after(...)}) and
+	 * left them to {@code CreativeTabAnchorSafetyTest} on the NeoForge side; the capture lists the ids each
+	 * anchored insertion adds, so the same "one id, one cell" rule applies to them directly. That test still
+	 * owns the OTHER question for those two tabs — whether an anchor exists in the vanilla tab.
 	 */
 	@Test
-	void vanillaTabsListEveryItemExactlyOnce() throws IOException {
-		for (String root : List.of("functionalBlocks", "buildingBlocks", "naturalBlocks", "ingredients")) {
+	void vanillaTabsListEveryItemExactlyOnce() {
+		for (String root : List.of("functionalBlocks", "buildingBlocks", "naturalBlocks", "ingredients",
+				"combat", "toolsAndUtilities")) {
 			assertNoDuplicates(root);
 		}
 	}
 
-	private void assertNoDuplicates(String root) throws IOException {
-		List<String> entries = entriesOf(root, bodies(), 0);
-		assertFalse(entries.isEmpty(), "tab root '" + root + "' resolved to no entries at all — the "
-				+ "parser stopped seeing the group calls, so this test proves nothing");
+	private void assertNoDuplicates(String root) {
+		List<String> entries = snapshotTabs().getOrDefault(tabName(root), List.of());
+		assertFalse(entries.isEmpty(), "tab '" + tabName(root) + "' has no entries in the reference at all — "
+				+ "the capture stopped covering it, so this test proves nothing");
 		Set<String> seen = new LinkedHashSet<>();
 		List<String> duplicates = new ArrayList<>();
 		for (String entry : entries) {
@@ -184,7 +238,7 @@ class CreativeTabOrderTest {
 			}
 		}
 		if (!duplicates.isEmpty()) {
-			fail("tab '" + root + "' lists these entries more than once: " + duplicates
+			fail("tab '" + tabName(root) + "' lists these entries more than once: " + duplicates
 					+ " — one item, one cell; a second copy also shifts every entry after it");
 		}
 	}
@@ -194,13 +248,38 @@ class CreativeTabOrderTest {
 	 * and a test that has to be edited on every addition gets edited without being read. What it does
 	 * catch is the failure that matters — a refactor that drops a group call and silently halves the
 	 * tab.
+	 *
+	 * <p>Against the capture this guards the REFERENCE: the scenario already fails a loader whose tab differs
+	 * from it, so what is left to prevent is a reference re-captured from a run that had lost half the tab
+	 * and then committed without anyone reading the diff.
 	 */
 	@Test
-	void modTabIsNotSilentlyEmptied() throws IOException {
-		List<String> entries = entriesOf("main", bodies(), 0);
-		assertTrue(entries.size() >= 150,
-				"the mod tab shows " + entries.size() + " entries, expected at least 150 — did a group "
-						+ "stop being called from main()?");
+	void modTabIsNotSilentlyEmptied() {
+		int shown = snapshotTabs().getOrDefault("main", List.of()).size();
+		assertTrue(shown >= 150,
+				"the reference shows " + shown + " entries in the mod tab, expected at least 150 — was it "
+						+ "re-captured after a group stopped being called from main()?");
+	}
+
+	/**
+	 * The capture covers every tab a loader fills — the check that stops the two duplicate tests above from
+	 * going blind on a tab nobody captured.
+	 *
+	 * <p>The scenario records the output by calling the public group roots itself; {@link #ROOTS} is the set
+	 * the loaders are proven (by {@link #rootsAreCalledBySomeLoader()}) to call. If a loader starts filling a
+	 * new tab, ROOTS grows with it and this test then demands that tab in the reference, instead of letting
+	 * it be filled with nothing characterizing what it gets.
+	 */
+	@Test
+	void referenceCoversEveryRoot() {
+		Set<String> captured = snapshotTabs().keySet();
+		Set<String> expected = new LinkedHashSet<>();
+		for (String root : ROOTS) {
+			expected.add(tabName(root));
+		}
+		assertEquals(expected, new LinkedHashSet<>(captured),
+				"the tabs in CreativeTabSnapshot must be exactly the roots a loader fills (ROOTS, snake_case) — "
+						+ "extend CreativeTabSnapshotScenarios.capture() and re-capture, or fix ROOTS");
 	}
 
 	/**

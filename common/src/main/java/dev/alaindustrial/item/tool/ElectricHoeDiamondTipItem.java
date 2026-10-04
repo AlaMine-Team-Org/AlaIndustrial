@@ -1,5 +1,6 @@
 package dev.alaindustrial.item.tool;
 
+import dev.alaindustrial.compat.RightClickTransform;
 import dev.alaindustrial.item.energy.ItemEnergy;
 
 import java.util.List;
@@ -13,7 +14,6 @@ import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.component.BlockTransformers;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.Tool;
 import net.minecraft.world.item.context.UseOnContext;
@@ -21,6 +21,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.FarmlandBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import dev.alaindustrial.core.tooltip.MachineTooltipSpec;
+import dev.alaindustrial.item.energy.PoweredToolTooltip;
 
 /**
  * Diamond-Tipped Electric Hoe (MOD-378) — the upgrade tier of the {@link ElectricHoeItem}, third in the
@@ -101,15 +103,14 @@ public class ElectricHoeDiamondTipItem extends ElectricHoeItem {
 	 * <p>Rule order is load-bearing and matches the base hoe: {@code deniesDrops} on the diamond deny-tag
 	 * first, {@code minesAndDrops} on {@code #mineable/hoe} second — the first matching rule wins.
 	 *
-	 * <p>The {@code BLOCK_TRANSFORMER} declaration has to be repeated here for the same reason the rest of
-	 * this method is a copy: the upgrade builds its own {@code Properties} and inherits nothing from the
-	 * base hoe's factory. Leaving it out would give the upgrade a {@code useOn} that reaches the
+	 * <p>The {@link RightClickTransform#HOE} declaration has to be repeated here for the same reason the
+	 * rest of this method is a copy: the upgrade builds its own {@code Properties} and inherits nothing from
+	 * the base hoe's factory. Leaving it out can give the upgrade a {@code useOn} that reaches the
 	 * irrigation code and never tills (MOD-226) — the exact shape of the defect this replaced, one tier up.
 	 */
 	public static Properties electricHoeDiamondTipProperties(Properties props) {
 		HolderGetter<Block> blocks = BuiltInRegistries.acquireBootstrapRegistrationLookup(BuiltInRegistries.BLOCK);
-		return props.stacksTo(1)
-				.delayedHolderComponent(DataComponents.BLOCK_TRANSFORMER, BlockTransformers.HOE)
+		return RightClickTransform.HOE.declare(props.stacksTo(1))
 				.component(DataComponents.TOOL, new Tool(
 						List.of(
 								Tool.Rule.deniesDrops(blocks.getOrThrow(BlockTags.INCORRECT_FOR_DIAMOND_TOOL)),
@@ -157,5 +158,14 @@ public class ElectricHoeDiamondTipItem extends ElectricHoeItem {
 			}
 		}
 		return result;
+	}
+
+	/** The base tooltip, then the irrigation perk. */
+	@Override
+	public PoweredToolTooltip toolTooltip() {
+		// MOD-378: the tipped hoe waters every plot it tills; nothing in the vanilla UI hints at it, so the
+		// tooltip is the only place a player learns the upgrade does more than dig faster.
+		return super.toolTooltip().withAfterCharge(stack -> MachineTooltipSpec.text(
+				"tooltip.alaindustrial.electric_hoe_diamond_tip.irrigation", MachineTooltipSpec.Tone.AQUA));
 	}
 }

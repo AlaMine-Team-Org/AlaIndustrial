@@ -1,8 +1,8 @@
 package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
-import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.core.machine.MachineRates;
 import dev.alaindustrial.menu.AlloySmelterMenu;
 import dev.alaindustrial.recipe.AlloyRecipeInput;
 import dev.alaindustrial.recipe.AlloyingRecipe;
@@ -11,7 +11,6 @@ import dev.alaindustrial.registry.ModRecipes;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -52,7 +51,7 @@ public final class AlloySmelterBlockEntity extends MachineBlockEntity implements
 	public AlloySmelterBlockEntity(BlockPos pos, BlockState state) {
 		super(ModContent.ALLOY_SMELTER_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT,
 				Config.machineBuffer, EnergyTier.LV.maxVoltage(), 0L);
-		this.maxProgress = Config.scaledDuration(Config.alloySmelterDuration);
+		this.maxProgress = MachineRates.duration(Config.alloySmelterDuration, Config.globalMachineSpeedMultiplier);
 	}
 
 	/** The smelter's own tariff — four times the shared machine rate (MOD-064). */
@@ -235,17 +234,6 @@ public final class AlloySmelterBlockEntity extends MachineBlockEntity implements
 			progress = 0;
 		}
 		super.setItem(slot, stack);
-	}
-
-	/** Consumer: every face accepts energy except the inert FACING front (R-NRG-03). */
-	@Override
-	public EnergyRole energyRoleForFace(Direction worldFace) {
-		return facingAwareRole(worldFace, EnergyRole.IN);
-	}
-
-	@Override
-	public Component getDisplayName() {
-		return Component.translatable("block.alaindustrial.alloy_smelter");
 	}
 
 	@Override

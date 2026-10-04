@@ -14,6 +14,7 @@ import dev.alaindustrial.skill.SkillSlot;
 import dev.alaindustrial.skill.SkillStore;
 import dev.alaindustrial.stats.PlayerModStats;
 import dev.alaindustrial.stats.PlayerStatsStore;
+import java.util.List;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
@@ -42,6 +43,20 @@ import net.minecraft.world.level.GameType;
  * left for the next person to rediscover.
  */
 public final class SkillPurchaseScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(SkillPurchaseScenarios::offlineOwnerGetsNoBuffs, "mod483_offline_owner_gets_no_buffs")
+						.fabricId("SkillPurchaseGameTest", "mod483OfflineOwnerGetsNoBuffs").ticks(20, 40),
+				RosterEntry.of(SkillPurchaseScenarios::buildSurvivesSaveAndLoad, "mod483_build_survives_save_and_load")
+						.fabricId("SkillPurchaseGameTest", "mod483BuildSurvivesSaveAndLoad").ticks(20, 40),
+				RosterEntry.of(SkillPurchaseScenarios::upkeepIsPricedPerTickNotPerVisit,
+								"mod483_upkeep_is_priced_per_tick_not_per_visit")
+						.fabricId("SkillPurchaseGameTest", "mod483UpkeepIsPricedPerTickNotPerVisit").ticks(100));
+
+		private Roster() {}
+	}
 
 	private SkillPurchaseScenarios() {
 	}

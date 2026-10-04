@@ -30,6 +30,28 @@ import net.minecraft.world.level.material.Fluids;
  * measure a shorter line than the one named.
  */
 public final class FluidLineThroughputScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(FluidLineThroughputScenarios::basicLineOf3, "fluid_line_basic_3")
+						.fabricId("FluidLineThroughputGameTest", "mod677BasicLineOf3").ticks(20, 60),
+				RosterEntry.of(FluidLineThroughputScenarios::basicLineOf10, "fluid_line_basic_10")
+						.fabricId("FluidLineThroughputGameTest", "mod677BasicLineOf10").ticks(20, 60),
+				RosterEntry.of(FluidLineThroughputScenarios::basicLineOf30, "fluid_line_basic_30")
+						.fabricId("FluidLineThroughputGameTest", "mod677BasicLineOf30").ticks(20, 60),
+				RosterEntry.of(FluidLineThroughputScenarios::advancedLineOf30, "fluid_line_advanced_30")
+						.fabricId("FluidLineThroughputGameTest", "mod677AdvancedLineOf30").ticks(20, 60),
+				RosterEntry.of(FluidLineThroughputScenarios::thinSegmentCapsAThickLine, "fluid_line_thin_segment_caps")
+						.fabricId("FluidLineThroughputGameTest", "mod677ThinSegmentCapsAThickLine").ticks(20, 60),
+				RosterEntry.of(FluidLineThroughputScenarios::fullNearTankDoesNotStarveAFarOne,
+								"fluid_line_full_near_tank")
+						.fabricId("FluidLineThroughputGameTest", "mod677FullNearTankDoesNotStarveAFarOne")
+						.ticks(20, 60));
+
+		private Roster() {}
+	}
+
 	private FluidLineThroughputScenarios() {
 	}
 

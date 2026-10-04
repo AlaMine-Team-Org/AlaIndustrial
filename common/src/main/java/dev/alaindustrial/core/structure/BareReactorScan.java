@@ -78,7 +78,7 @@ public final class BareReactorScan {
 	 * Racks this controller may burn, with the two anti-duplication rules already applied.
 	 *
 	 * @param controller where the controller stands — the centre of both the search and the claim
-	 * @param radius     {@code Config.reactorBareSearchRadius}
+	 * @param radius     {@code ReactorConfig.reactorBareSearchRadius}
 	 */
 	public static Result scan(ServerLevel level, BlockPos controller, int radius) {
 		if (radius <= 0) {

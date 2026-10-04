@@ -1,14 +1,34 @@
 package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.block.entity.AlloySmelterBlockEntity;
+import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
+import dev.alaindustrial.block.entity.CesuBlockEntity;
+import dev.alaindustrial.block.entity.ElectricHeaterBlockEntity;
+import dev.alaindustrial.block.entity.GardenDroneStationBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
+import dev.alaindustrial.block.entity.PumpBlockEntity;
+import dev.alaindustrial.core.energy.EnergyBuffer;
+import dev.alaindustrial.core.energy.EnergyTransactions;
+import dev.alaindustrial.core.machine.MachineRates;
 import dev.alaindustrial.registry.ModContent;
+import dev.alaindustrial.skill.PlayerSkills;
+import dev.alaindustrial.skill.SkillBranch;
+import dev.alaindustrial.skill.SkillBuild;
+import dev.alaindustrial.skill.SkillSlot;
+import dev.alaindustrial.skill.SkillStore;
+import java.util.List;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Fluids;
 
 /**
  * L2 suite for the statistics chip (MOD-125) — the gate that decides whether a machine measures at all.
@@ -19,6 +39,45 @@ import net.minecraft.world.item.Items;
  * entity's inventory and its tick, neither of which exists without Minecraft.
  */
 public final class StatsChipScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(StatsChipScenarios::statsChip_withoutChipNothingIsMeasured,
+								"stats_chip_without_chip_nothing_is_measured")
+						.fabricId("StatsChipGameTest", "statsChip_withoutChipNothingIsMeasured").ticks(20, 120),
+				RosterEntry.of(StatsChipScenarios::statsChip_withChipTheCountersRun,
+								"stats_chip_with_chip_the_counters_run")
+						.fabricId("StatsChipGameTest", "statsChip_withChipTheCountersRun").ticks(20, 120),
+				RosterEntry.of(StatsChipScenarios::statsChip_countingStartsWhenTheChipIsFitted,
+								"stats_chip_counting_starts_when_the_chip_is_fitted")
+						.fabricId("StatsChipGameTest", "statsChip_countingStartsWhenTheChipIsFitted").ticks(20, 140),
+				RosterEntry.of(StatsChipScenarios::statsChip_removingTheChipKeepsWhatWasCounted,
+								"stats_chip_removing_the_chip_keeps_what_was_counted")
+						.fabricId("StatsChipGameTest", "statsChip_removingTheChipKeepsWhatWasCounted").ticks(20, 140),
+				RosterEntry.of(StatsChipScenarios::statsChip_countersRunOnHandRolledMachine,
+								"stats_chip_counters_run_on_hand_rolled_machine")
+						.fabricId("StatsChipGameTest", "statsChip_countersRunOnHandRolledMachine").ticks(400),
+				RosterEntry.of(StatsChipScenarios::statsChip_batteryBoxCountsTransfers,
+								"stats_chip_battery_box_counts_transfers")
+						.fabricId("StatsChipGameTest", "statsChip_batteryBoxCountsTransfers").ticks(120),
+				RosterEntry.of(StatsChipScenarios::statsChip_cesuCountsTransfers, "stats_chip_cesu_counts_transfers")
+						.fabricId("StatsChipGameTest", "statsChip_cesuCountsTransfers").ticks(120),
+				RosterEntry.of(StatsChipScenarios::statsChip_pumpCountsItsDraw, "stats_chip_pump_counts_its_draw")
+						.fabricId("StatsChipGameTest", "statsChip_pumpCountsItsDraw").ticks(120),
+				RosterEntry.of(StatsChipScenarios::statsChip_pumpStopsCountingWhenTheChipIsPulled,
+								"stats_chip_pump_stops_counting_when_the_chip_is_pulled")
+						.fabricId("StatsChipGameTest", "statsChip_pumpStopsCountingWhenTheChipIsPulled").ticks(120),
+				RosterEntry.of(StatsChipScenarios::statsChip_gardenDroneCountsItsActions,
+								"stats_chip_garden_drone_counts_its_actions")
+						.fabricId("StatsChipGameTest", "statsChip_gardenDroneCountsItsActions").ticks(120),
+				RosterEntry.of(StatsChipScenarios::statsChip_freeTelemetryLeavesPanellessBlocksUncounted,
+								"stats_chip_free_telemetry_leaves_panelless_blocks_uncounted")
+						.fabricId("StatsChipGameTest", "statsChip_freeTelemetryLeavesPanellessBlocksUncounted")
+						.ticks(120));
+
+		private Roster() {}
+	}
 
 	private StatsChipScenarios() {}
 
@@ -160,7 +219,7 @@ public final class StatsChipScenarios {
 		}
 		// One operation costs 1200 EU against an 800 EU buffer, so the buffer is topped up every tick the
 		// way a connected cable would keep it fed (the alloy suite's drivePowered contract).
-		int ticks = Config.scaledDuration(Config.alloySmelterDuration) + 20;
+		int ticks = MachineRates.duration(Config.alloySmelterDuration, Config.globalMachineSpeedMultiplier) + 20;
 		for (int i = 0; i < ticks; i++) {
 			be.getEnergyStorage().setAmountUntracked(be.getEnergyStorage().getCapacity());
 			AlaGameTestHelper.drive(be, helper, 1);
@@ -178,6 +237,232 @@ public final class StatsChipScenarios {
 		}
 		if (be.totalItemsProcessed() <= 0) {
 			helper.fail("a completed operation was not counted on a hand-rolled machine with a chip fitted");
+		}
+		helper.succeed();
+	}
+
+	// --- MOD-692: blocks that own their tick and never reach recordEuRate --------------------------
+
+	/**
+	 * Energy that crosses {@code be}'s buffer in committed transactions, the way a cable or a neighbouring
+	 * machine moves it: {@code in} EU inserted, then {@code out} EU extracted, each in its own transaction
+	 * so neither nets the other out at settlement.
+	 */
+	private static void moveEnergyThrough(MachineBlockEntity be, long in, long out) {
+		EnergyBuffer buffer = be.getEnergyStorage();
+		EnergyTransactions.get().runCommitting(txn -> buffer.insert(in, txn));
+		EnergyTransactions.get().runCommitting(txn -> buffer.extract(out, txn));
+	}
+
+	/**
+	 * The storage half of MOD-692: a Battery Box or CESU has the panel and the chip arm, but its tick
+	 * never called {@code recordEuRate} — the only place the buffer's counters were ever switched on — so
+	 * energy flowed through it all day while the panel read zero in and zero out.
+	 *
+	 * <p>First without a chip, where the transfers must stay uncounted (MOD-125 unchanged), then with one.
+	 */
+	private static void storageCountsTransfers(GameTestHelper helper, Block block,
+			Class<? extends MachineBlockEntity> type) {
+		MachineBlockEntity be = AlaGameTestHelper.place(helper, POS, block, type);
+		AlaGameTestHelper.drive(be, helper, 1);
+		moveEnergyThrough(be, 32L, 16L);
+		EnergyBuffer buffer = be.getEnergyStorage();
+		if (buffer.getAmount() <= 0) {
+			helper.fail("the rig moved no energy into " + block + " — every counter below would be vacuous");
+		}
+		if (buffer.countersEnabled() || buffer.getTotalEnergyIn() != 0 || buffer.getTotalEnergyOut() != 0) {
+			helper.fail(block + " measured without a chip: in=" + buffer.getTotalEnergyIn()
+					+ " out=" + buffer.getTotalEnergyOut());
+		}
+
+		fitChip(be);
+		AlaGameTestHelper.drive(be, helper, 1);
+		moveEnergyThrough(be, 32L, 16L);
+		if (buffer.getTotalEnergyIn() <= 0) {
+			helper.fail(block + " with a chip did not count the energy delivered into it");
+		}
+		if (buffer.getTotalEnergyOut() <= 0) {
+			helper.fail(block + " with a chip did not count the energy drawn out of it");
+		}
+		helper.succeed();
+	}
+
+	/** MOD-692: the Battery Box counts what passes through it once a chip is fitted. */
+	public static void statsChip_batteryBoxCountsTransfers(GameTestHelper helper) {
+		storageCountsTransfers(helper, ModContent.BATTERY_BOX.get(), BatteryBoxBlockEntity.class);
+	}
+
+	/** MOD-692: the CESU counts what passes through it once a chip is fitted. */
+	public static void statsChip_cesuCountsTransfers(GameTestHelper helper) {
+		storageCountsTransfers(helper, ModContent.CESU.get(), CesuBlockEntity.class);
+	}
+
+	/** A pump facing EAST with a water source in front of it and exactly one bucket's price in its buffer. */
+	private static PumpBlockEntity rigPump(GameTestHelper helper) {
+		helper.setBlock(POS, ModContent.PUMP.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.EAST));
+		PumpBlockEntity pump = helper.getBlockEntity(POS, PumpBlockEntity.class);
+		if (pump == null) {
+			helper.fail("pump block entity missing after placement");
+		}
+		refillPumpSource(helper, pump);
+		return pump;
+	}
+
+	/** Put the water source back in front of the pump and pay for one more bucket. */
+	private static void refillPumpSource(GameTestHelper helper, PumpBlockEntity pump) {
+		helper.getLevel().setBlockAndUpdate(helper.absolutePos(POS.relative(Direction.EAST)),
+				Blocks.WATER.defaultBlockState());
+		pump.getEnergyStorage().setAmountUntracked(Config.pumpEuPerBucket);
+	}
+
+	private static boolean pumpSourceDrained(GameTestHelper helper) {
+		return !helper.getLevel().getFluidState(helper.absolutePos(POS.relative(Direction.EAST)))
+				.isSourceOfType(Fluids.WATER);
+	}
+
+	/**
+	 * MOD-692: the pump spends {@code Config.pumpEuPerBucket} per bucket straight out of its buffer and never
+	 * reported it, so a chip in a pump read 0 EU/t, zero consumption and zero working time. One bucket with
+	 * a chip fitted has to show on all three.
+	 */
+	public static void statsChip_pumpCountsItsDraw(GameTestHelper helper) {
+		PumpBlockEntity pump = rigPump(helper);
+		fitChip(pump);
+		AlaGameTestHelper.drive(pump, helper, 1);
+
+		if (!pumpSourceDrained(helper)) {
+			helper.fail("the pump rig pumped nothing — the counters below would be meaningless");
+		}
+		if (pump.getEnergyStorage().getTotalEnergyConsumed() <= 0) {
+			helper.fail("the energy a bucket cost was not counted on a pump with a chip fitted");
+		}
+		if (pump.activeTicks() <= 0) {
+			helper.fail("working time did not advance on a pump that just moved a bucket");
+		}
+		// The panel's first snapshot reads this instantaneous rate, later ones the consumption total above.
+		if (pump.currentEuRate() <= 0 || pump.peakEuRate() <= 0) {
+			helper.fail("the pump published no EU/t for the tick it paid for a bucket: now="
+					+ pump.currentEuRate() + " peak=" + pump.peakEuRate());
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * MOD-692: pulling the chip switches the counters off and zeroes the "now" line even while the block
+	 * keeps working — the {@code !measuring} branch, on a block that reaches it only since this task. The
+	 * pump pumps a second bucket after the chip is gone; that bucket must not be counted.
+	 */
+	public static void statsChip_pumpStopsCountingWhenTheChipIsPulled(GameTestHelper helper) {
+		PumpBlockEntity pump = rigPump(helper);
+		fitChip(pump);
+		AlaGameTestHelper.drive(pump, helper, 1);
+		long counted = pump.getEnergyStorage().getTotalEnergyConsumed();
+		long worked = pump.activeTicks();
+		if (counted <= 0 || pump.currentEuRate() <= 0) {
+			helper.fail("nothing was measured while the chip was in: consumed=" + counted
+					+ " now=" + pump.currentEuRate());
+		}
+
+		pump.setItem(pump.upgradeSlotStart() + STATS_ARM, ItemStack.EMPTY);
+		refillPumpSource(helper, pump);
+		// Past the scan cooldown the pump fires again; the rate is checked on every tick, the pumping one
+		// included.
+		for (int i = 0; i < Config.pumpScanCooldownTicks + 2; i++) {
+			AlaGameTestHelper.drive(pump, helper, 1);
+			if (pump.currentEuRate() != 0) {
+				helper.fail("the pump still published " + pump.currentEuRate() + " EU/t with the chip pulled");
+			}
+		}
+
+		if (!pumpSourceDrained(helper)) {
+			helper.fail("the pump did not pump its second bucket — the frozen totals below prove nothing");
+		}
+		if (pump.getEnergyStorage().countersEnabled()) {
+			helper.fail("the energy counters stayed on after the chip was pulled");
+		}
+		if (pump.getEnergyStorage().getTotalEnergyConsumed() != counted) {
+			helper.fail("a bucket pumped without a chip was counted: " + counted + " -> "
+					+ pump.getEnergyStorage().getTotalEnergyConsumed());
+		}
+		if (pump.activeTicks() != worked) {
+			helper.fail("working time moved after the chip was pulled: " + worked + " -> " + pump.activeTicks());
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * MOD-692: the Garden Drone Station pays {@code Config.gardenDroneEuPerAction} for each action it lands
+	 * and never reported it. Same rig as {@code GardenDroneScenarios.fun01TillsDirtAndSpendsEu}, plus a chip.
+	 */
+	public static void statsChip_gardenDroneCountsItsActions(GameTestHelper helper) {
+		GardenDroneScenarios.withIsolatedZone(() -> {
+			GardenDroneStationBlockEntity station = GardenDroneScenarios.place(helper);
+			GardenDroneScenarios.charge(station);
+			fitChip(station);
+			helper.setBlock(GardenDroneScenarios.PLOT, Blocks.DIRT);
+			helper.setBlock(GardenDroneScenarios.PLOT.above(), Blocks.AIR);
+
+			AlaGameTestHelper.drive(station, helper, GardenDroneScenarios.TICKS_PER_JOB);
+
+			if (!helper.getLevel().getBlockState(helper.absolutePos(GardenDroneScenarios.PLOT))
+					.is(Blocks.FARMLAND)) {
+				helper.fail("the drone rig landed no action — the counters below would be meaningless");
+			}
+			if (station.getEnergyStorage().getTotalEnergyConsumed() != Config.gardenDroneEuPerAction) {
+				helper.fail("one landed action should count exactly " + Config.gardenDroneEuPerAction
+						+ " EU, counted " + station.getEnergyStorage().getTotalEnergyConsumed());
+			}
+			if (station.activeTicks() <= 0) {
+				helper.fail("working time did not advance on a station that landed an action");
+			}
+			if (station.peakEuRate() <= 0) {
+				helper.fail("the station never published an EU/t for the action it paid for");
+			}
+			helper.succeed();
+		});
+	}
+
+	/**
+	 * MOD-692, open question 3: Free Telemetry (MECH/B2) makes {@code hasStatsChip()} true on EVERY block the
+	 * owner placed, including those without an upgrade panel. Decision: the counters follow the panel — a
+	 * block with no panel keeps them off, so nothing new is counted into its save tag.
+	 *
+	 * <p>The Battery Box, owned by the same player and carrying no chip, is the control: it must count, or
+	 * the heater staying silent would only prove that the skill never switched on.
+	 */
+	public static void statsChip_freeTelemetryLeavesPanellessBlocksUncounted(GameTestHelper helper) {
+		ServerPlayer owner = AlaGameTestHelper.survivalPlayer(helper);
+		SkillStore.set(owner, new PlayerSkills(SkillBuild.EMPTY.with(SkillBranch.MECH, SkillSlot.B2)));
+
+		MachineBlockEntity box = AlaGameTestHelper.place(helper, POS, ModContent.BATTERY_BOX.get(),
+				BatteryBoxBlockEntity.class);
+		box.setOwner(owner.getUUID(), owner.getGameProfile().name());
+		// Three blocks apart: the box pushes into adjacent machines and must not feed the heater.
+		MachineBlockEntity heater = AlaGameTestHelper.place(helper, POS.east(3), ModContent.ELECTRIC_HEATER.get(),
+				ElectricHeaterBlockEntity.class);
+		heater.setOwner(owner.getUUID(), owner.getGameProfile().name());
+		if (heater.hasUpgradeSlots()) {
+			helper.fail("the electric heater grew an upgrade panel — pick another panelless block for this rig");
+		}
+		if (!heater.hasStatsChip() || !box.hasStatsChip()) {
+			helper.fail("Free Telemetry did not switch the statistics on for its owner's blocks");
+		}
+
+		AlaGameTestHelper.drive(box, helper, 1);
+		AlaGameTestHelper.drive(heater, helper, 1);
+		moveEnergyThrough(box, 32L, 16L);
+		EnergyTransactions.get().runCommitting(txn -> heater.getEnergyStorage().insert(32L, txn));
+
+		if (box.getEnergyStorage().getTotalEnergyIn() <= 0) {
+			helper.fail("the skill did not start the counters on a block with a panel (the control)");
+		}
+		if (heater.getEnergyStorage().getAmount() <= 0) {
+			helper.fail("the rig delivered nothing to the heater — its silence below would be vacuous");
+		}
+		if (heater.getEnergyStorage().countersEnabled() || heater.getEnergyStorage().getTotalEnergyIn() != 0) {
+			helper.fail("a block without an upgrade panel started counting under Free Telemetry: in="
+					+ heater.getEnergyStorage().getTotalEnergyIn());
 		}
 		helper.succeed();
 	}

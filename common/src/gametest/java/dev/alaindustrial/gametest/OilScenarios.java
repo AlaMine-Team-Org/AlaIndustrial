@@ -14,6 +14,7 @@ import dev.alaindustrial.worldgen.OilLakeConfiguration;
 import dev.alaindustrial.worldgen.OilLakeFeature;
 import dev.alaindustrial.worldgen.OilLakeShape;
 import java.util.EnumSet;
+import java.util.List;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -77,6 +78,47 @@ import static dev.alaindustrial.gametest.AlaGameTestHelper.survivalPlayer;
  */
 public final class OilScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(OilScenarios::neg04HangingBasinIsRefused, "oil_hanging_basin_refused")
+						.fabricId("OilGameTest", "tcOil001Neg04_hangingBasinIsRefused").ticks(20, 40),
+				RosterEntry.of(OilScenarios::fun01BucketPlaceAndPickup, "oil_bucket_place_and_pickup")
+						.fabricId("OilGameTest", "tcOil001Fun01_bucketPlaceAndPickup").ticks(20, 60),
+				RosterEntry.of(OilScenarios::fun02CapsulePickupAndPlace, "oil_capsule_pickup_and_place")
+						.fabricId("OilGameTest", "tcOil001Fun02_capsulePickupAndPlace").ticks(20, 100),
+				RosterEntry.of(OilScenarios::fun03PumpDrainsOilLakeIntoTank, "oil_pump_drains_lake_into_tank")
+						.fabricId("OilGameTest", "tcOil001Fun03_pumpDrainsOilLakeIntoTank").ticks(340),
+				RosterEntry.of(OilScenarios::neg01GapNeverBecomesSource, "oil_gap_never_becomes_source")
+						.fabricId("OilGameTest", "tcOil001Neg01_gapNeverBecomesSource").ticks(220),
+				RosterEntry.of(OilScenarios::neg03EntitySinksInsteadOfHanging, "oil_entity_sinks_instead_of_hanging")
+						.fabricId("OilGameTest", "tcOil001Neg03_entitySinksInsteadOfHanging").ticks(80),
+				RosterEntry.of(OilScenarios::fun10ImmersionDampsFallInViscosityOrder,
+								"oil_immersion_damps_fall_in_viscosity_order")
+						.fabricId("OilGameTest", "tcOil001Fun10_immersionDampsFallInViscosityOrder").ticks(80),
+				RosterEntry.of(OilScenarios::fun04BurnGateOnThenOff, "oil_burn_gate_on_then_off")
+						.fabricId("OilGameTest", "tcOil001Fun04_burnGateOnThenOff").ticks(200, 220),
+				RosterEntry.of(OilScenarios::fun05BurnSpreadsAcrossPool, "oil_burn_spreads_across_pool")
+						.fabricId("OilGameTest", "tcOil001Fun05_burnSpreadsAcrossPool").ticks(160)
+						.environment(Industrialization.id("config_overrides")),
+				RosterEntry.of(OilScenarios::fun11SootOnlyWhereOilBurntOut, "oil_soot_only_where_oil_burnt_out")
+						.fabricId("OilGameTest", "tcOil001Fun11_sootOnlyWhereOilBurntOut").ticks(1500)
+						.environment(Industrialization.id("config_overrides")),
+				RosterEntry.of(OilScenarios::neg02LavaNeighbourNeverIgnites, "oil_lava_neighbour_never_ignites")
+						.fabricId("OilGameTest", "tcOil001Neg02_lavaNeighbourNeverIgnites").ticks(140, 160)
+						.environment(Industrialization.id("config_overrides_2")),
+				RosterEntry.of(OilScenarios::fun06DispenserEmptiesOilBucket, "oil_dispenser_empties_bucket")
+						.fabricId("OilGameTest", "tcOil001Fun06_dispenserEmptiesOilBucket").ticks(100, 120),
+				RosterEntry.of(OilScenarios::prf01ViscousSpreadProfile, "oil_viscous_spread_profile")
+						.fabricId("OilGameTest", "tcOil001Prf01_viscousSpreadProfile").ticks(300),
+				RosterEntry.of(OilScenarios::fun08TorchLogsWithOil, "oil_torch_logs_with_oil")
+						.fabricId("OilGameTest", "tcOil001Fun07_torchLogsWithOil").ticks(60, 80),
+				RosterEntry.of(OilScenarios::fun09FirstOilAwardsTheAdvancement, "oil_first_bucket_awards_advancement")
+						.fabricId("OilGameTest", "tcOil001Fun08_firstOilAwardsTheAdvancement").ticks(20, 100));
+
+		private Roster() {}
+	}
+
 	private OilScenarios() {
 	}
 
@@ -112,6 +154,9 @@ public final class OilScenarios {
 	 * LEVEL=0), and scooping it back through the vanilla {@link BucketPickup} path returns a full oil
 	 * bucket and leaves the cell fluid-free. Exercises the two oil-specific wirings the vanilla bucket
 	 * dispatch rides on: {@code OilFluid#createLegacyBlock} and {@code Fluid#getBucket}.
+	 *
+	 * @implements TC-OIL-001-FUN01 — the oil bucket places an oil SOURCE and scooping it back returns
+	 * a full oil bucket, leaving the cell fluid-free.
 	 */
 	public static void fun01BucketPlaceAndPickup(GameTestHelper helper) {
 		ServerLevel level = helper.getLevel();
@@ -164,6 +209,9 @@ public final class OilScenarios {
 	 * FlowingFluid} gate in {@code VacuumCapsuleItem#use} — and the filled capsule then places the
 	 * source back and swaps to empty. Survival on purpose: {@code ItemUtils.createFilledResult} keeps
 	 * the original stack in creative (see the creative-filled-result gotcha).
+	 *
+	 * @implements TC-OIL-001-FUN02 — the vacuum capsule picks an oil source up through the REAL
+	 * useItem routing (the FlowingFluid gate passes for oil) and the filled capsule places it back.
 	 */
 	public static void fun02CapsulePickupAndPlace(GameTestHelper helper) {
 		ServerLevel level = helper.getLevel();
@@ -215,6 +263,9 @@ public final class OilScenarios {
 	 * traverse the flowing oil to the farther sources. That is the exact in-game draining loop; a
 	 * synchronous drive leaves the front block permanently empty and stalls after one bucket (the
 	 * first run of this test proved it).
+	 *
+	 * @implements TC-OIL-001-FUN03 — the pump drains a three-source oil lake into an adjacent
+	 * portable fluid tank, one bucket per EU charge, with the first bucket observed mid-run.
 	 */
 	public static void fun03PumpDrainsOilLakeIntoTank(GameTestHelper helper) {
 		ServerLevel level = helper.getLevel();
@@ -289,6 +340,10 @@ public final class OilScenarios {
 	 * MUST convert its gap to a source by the same deadline, proving the geometry does trigger
 	 * vanilla {@code getNewLiquid} source conversion — so flipping oil's {@code canConvertToSource}
 	 * to {@code true} makes the oil assertion fail rather than the whole test being vacuous.
+	 *
+	 * @implements TC-OIL-001-NEG01 — a gap between two oil sources fills with FLOWING oil but never
+	 * converts to a source (canConvertToSource=false); a water control rig proves the geometry does
+	 * convert for a converting fluid.
 	 */
 	public static void neg01GapNeverBecomesSource(GameTestHelper helper) {
 		ServerLevel level = helper.getLevel();
@@ -325,23 +380,12 @@ public final class OilScenarios {
 
 	// ── FUN04: the oilBurns config gate, driven by a real flint-and-steel click ───────────────────
 
-	/**
-	 * Force {@link Config#oilBurns} for the duration of one test and make the restore survive EVERY
-	 * exit path, including a timeout.
-	 *
-	 * <p>{@code Config} is global mutable state shared by a concurrently running gametest batch, so a
-	 * test that leaves the flag flipped poisons every later oil test. A {@code finally} in the
-	 * asserting lambda is not enough: if the test times out, that lambda never runs at all.
-	 * {@code runBeforeTestEnd} schedules the restore at {@code timeout - 1}, which is precisely the
-	 * tick a hung test still reaches — so the flag is put back either by the explicit restore on the
-	 * success/fail path or by this backstop. Restoring twice is harmless (it writes the same value).
-	 */
-	private static boolean forceOilBurns(GameTestHelper helper, boolean value) {
-		boolean saved = Config.oilBurns;
-		helper.runBeforeTestEnd(() -> Config.oilBurns = saved);
-		Config.oilBurns = value;
-		return saved;
-	}
+	// The tests below that hold a knob across ticks (fun05, neg02, fun11) call ConfigOverrides.forTest(helper)
+	// directly: the handle puts the knob back on EVERY exit path — success, failure and timeout — when the
+	// test ends, so no restore is written here. fun05 and neg02 hold the SAME knob (oilBurns), and two holders
+	// of one key may not share a gametest batch (the owner registry refuses the second), so neg02 runs in the
+	// next config_overrides test environment. Every such call is listed, with its environment, in
+	// ArchitectureRules.FOR_TEST_USERS.
 
 	/** Right-click the top face of {@code floorRel} with {@code stack} through the real interaction path. */
 	private static InteractionResult useOnTopFace(GameTestHelper helper, ServerPlayer player,
@@ -373,11 +417,13 @@ public final class OilScenarios {
 	 * identical rig is NOT ours — vanilla handles it, fails to place fire into the non-air oil block,
 	 * and the oil source is untouched. Both phases live in ONE test because {@code Config} is global
 	 * and a batch runs concurrently.
+	 *
+	 * @implements TC-OIL-001-FUN04 — the oilBurns gate through a real flint-and-steel click: ON, the
+	 * oil cell becomes fire and the lighter takes damage; OFF, the same click changes nothing.
 	 */
 	public static void fun04BurnGateOnThenOff(GameTestHelper helper) {
 		ServerLevel level = helper.getLevel();
-		boolean saved = forceOilBurns(helper, true);
-		try {
+		try (ConfigOverrides o = ConfigOverrides.sync().set("oilBurns", true)) {
 			basin(helper, 2, 2, 2, 2);
 			basin(helper, 2, 5, 2, 5);
 			ServerPlayer player = survivalPlayer(helper);
@@ -400,7 +446,7 @@ public final class OilScenarios {
 			}
 
 			// Phase 2 — gate OFF: the same click must fall through to vanilla and change nothing.
-			Config.oilBurns = false;
+			o.set("oilBurns", false);
 			BlockPos oilOffAbs = helper.absolutePos(new BlockPos(2, 2, 5));
 			level.setBlockAndUpdate(oilOffAbs, oilSource());
 			InteractionResult refused = useOnTopFace(helper, player,
@@ -412,8 +458,6 @@ public final class OilScenarios {
 				return;
 			}
 			helper.succeed();
-		} finally {
-			Config.oilBurns = saved;
 		}
 	}
 
@@ -421,9 +465,9 @@ public final class OilScenarios {
 
 	/**
 	 * Force the vanilla anti-griefing game rule {@code fire_spread_radius_around_player} for the
-	 * duration of one test, restoring it on every exit path (same reasoning and same
-	 * {@code runBeforeTestEnd} backstop as {@link #forceOilBurns}: the rule is server-global state,
-	 * and a timed-out test would otherwise leave it flipped for the rest of the run).
+	 * duration of one test, restoring it on every exit path with a {@code runBeforeTestEnd} backstop: the
+	 * rule is server-global state, and a timed-out test would otherwise leave it flipped for the rest of
+	 * the run. (A game rule, not a {@code Config} knob, so it stays out of {@code ConfigOverrides}.)
 	 *
 	 * @param radius {@code -1} unlimited spread, {@code 0} no spread at all.
 	 */
@@ -472,6 +516,9 @@ public final class OilScenarios {
 	 * fluid tick one delay out, and that stale pending tick would re-flood the first burnt cell before
 	 * the next one caught — an artefact of building the rig in a single tick, not of the mechanic (an
 	 * in-world lake has no pending fluid ticks until something disturbs it).
+	 *
+	 * @implements TC-OIL-001-FUN05 — chain reaction: lighting one end of a three-source oil trench
+	 * consumes the whole trench (the BlockTags.FIRE neighbour trigger, one cell per ignition delay).
 	 */
 	public static void fun05BurnSpreadsAcrossPool(GameTestHelper helper) {
 		ServerLevel level = helper.getLevel();
@@ -481,7 +528,7 @@ public final class OilScenarios {
 		// along an edge or not at all (MOD-250).
 		final BlockPos diagonal = new BlockPos(5, 2, 6);
 		final BlockPos wellBottom = new BlockPos(8, 2, 6);
-		boolean savedBurns = forceOilBurns(helper, true);
+		ConfigOverrides.forTest(helper).set("oilBurns", true); // environment alaindustrial:config_overrides
 		forceFireSpreadRadius(helper, 0);
 		basin(helper, 2, 2, 4, 2);
 		basin(helper, 2, 5, 5, 6);
@@ -515,7 +562,6 @@ public final class OilScenarios {
 			InteractionResult lit = useOnTopFace(helper, survivalPlayer(helper),
 					new ItemStack(Items.FLINT_AND_STEEL), new BlockPos(2, 1, 2));
 			if (!lit.consumesAction()) {
-				Config.oilBurns = savedBurns;
 				helper.fail("flint and steel refused to light the west end of the blocked trench: " + lit);
 			}
 		});
@@ -524,7 +570,6 @@ public final class OilScenarios {
 			for (int i = 1; i < blocked.length; i++) {
 				FluidState fs = level.getFluidState(helper.absolutePos(blocked[i]));
 				if (!isOil(fs)) {
-					Config.oilBurns = savedBurns;
 					helper.fail("fire_spread_radius_around_player=0 must stop the burn from spreading,"
 							+ " but cell " + blocked[i] + " now holds "
 							+ (fs.isEmpty() ? "nothing" : fs.getType().toString())
@@ -538,53 +583,37 @@ public final class OilScenarios {
 					new ItemStack(Items.FLINT_AND_STEEL), new BlockPos(2, 1, 5));
 			dev.alaindustrial.block.OilLiquidBlock.ignite(level, helper.absolutePos(wellBottom.above()));
 			if (!lit.consumesAction()) {
-				Config.oilBurns = savedBurns;
 				helper.fail("flint and steel refused to light the west end of the pool: " + lit);
 			}
 		});
 		// Three cells at one ignition delay (10) each after the tick-50 light: done by ~tick 80.
 		helper.runAtTickTime(120, () -> {
-			try {
-				for (BlockPos cell : pool) {
-					FluidState fs = level.getFluidState(helper.absolutePos(cell));
-					if (isOil(fs)) {
-						helper.fail("the burn must walk the whole pool: cell " + cell + " still holds "
-								+ fs.getType() + " (amount=" + fs.getAmount() + ")");
-						return;
-					}
-				}
-				FluidState bottom = level.getFluidState(helper.absolutePos(wellBottom));
-				if (isOil(bottom)) {
-					helper.fail("the burn must reach the oil UNDER a burning cell: " + wellBottom
-							+ " still holds oil — the fire over it did not survive on a liquid floor");
+			for (BlockPos cell : pool) {
+				FluidState fs = level.getFluidState(helper.absolutePos(cell));
+				if (isOil(fs)) {
+					helper.fail("the burn must walk the whole pool: cell " + cell + " still holds "
+							+ fs.getType() + " (amount=" + fs.getAmount() + ")");
 					return;
 				}
-				FluidState edge = level.getFluidState(helper.absolutePos(diagonal));
-				if (isOil(edge)) {
-					helper.fail("the burn must also cross an edge diagonal: " + diagonal + " still holds oil"
-							+ " (amount=" + edge.getAmount() + ") — either the ignition search is back to"
-							+ " faces only, or a lit cell no longer wakes its diagonal neighbours");
-					return;
-				}
-				helper.succeed();
-			} finally {
-				Config.oilBurns = savedBurns;
 			}
+			FluidState bottom = level.getFluidState(helper.absolutePos(wellBottom));
+			if (isOil(bottom)) {
+				helper.fail("the burn must reach the oil UNDER a burning cell: " + wellBottom
+						+ " still holds oil — the fire over it did not survive on a liquid floor");
+				return;
+			}
+			FluidState edge = level.getFluidState(helper.absolutePos(diagonal));
+			if (isOil(edge)) {
+				helper.fail("the burn must also cross an edge diagonal: " + diagonal + " still holds oil"
+						+ " (amount=" + edge.getAmount() + ") — either the ignition search is back to"
+						+ " faces only, or a lit cell no longer wakes its diagonal neighbours");
+				return;
+			}
+			helper.succeed();
 		});
 	}
 
 	// ── FUN11: burnt-out oil fire leaves soot only on a floor; the layer drops soot to a shovel ────
-
-	/**
-	 * Force {@link Config#oilSootChance} for one test, restored on every exit path (same backstop as
-	 * {@link #forceOilBurns}). ONLY {@link #fun11SootOnlyWhereOilBurntOut} may call this: a second test
-	 * forcing the same global knob in a concurrent batch could restore the other one's value.
-	 */
-	private static void forceSootChance(GameTestHelper helper, double chance) {
-		double saved = Config.oilSootChance;
-		helper.runBeforeTestEnd(() -> Config.oilSootChance = saved);
-		Config.oilSootChance = chance;
-	}
 
 	/**
 	 * MOD-638, with the soot chance forced to 1 so every burnout that is ALLOWED to leave soot does:
@@ -602,10 +631,15 @@ public final class OilScenarios {
 	 * The world does not need the fire-spread game rule: the cells are lit directly and the fire's own
 	 * burnout is not gated by it (unlike vanilla fire, which never ages in a playerless gametest). The
 	 * roll itself — chance 0, 1 and in between — is covered on the L1 lane ({@code SootDepositTest}).
+	 *
+	 * @implements TC-OIL-001-FUN11 — a burnt-out oil fire leaves soot only on a sturdy floor, never when
+	 * hanging or put out by a player; the layer drops soot to a shovel only and vanishes with its floor
+	 * (MOD-638).
 	 */
 	public static void fun11SootOnlyWhereOilBurntOut(GameTestHelper helper) {
 		ServerLevel level = helper.getLevel();
-		forceSootChance(helper, 1.0);
+		// Held for the whole test, restored when it ends; only this test may force the soot chance.
+		ConfigOverrides.forTest(helper).set("oilSootChance", 1.0); // environment alaindustrial:config_overrides
 		final BlockPos floorCell = new BlockPos(2, 2, 2);
 		final BlockPos hanging = new BlockPos(5, 4, 2);
 		final BlockPos punched = new BlockPos(8, 2, 2);
@@ -666,10 +700,13 @@ public final class OilScenarios {
 	 *
 	 * <p>Not vacuous by construction: FUN04/FUN05 above prove the very same rig DOES ignite from a
 	 * real igniter, so "nothing ever burns" cannot make this pass.
+	 *
+	 * @implements TC-OIL-001-NEG02 — a LAVA neighbour never ignites oil, even with oilBurns=true
+	 * (worldgen puts deposits flush against lava lakes; the old behaviour burned them away).
 	 */
 	public static void neg02LavaNeighbourNeverIgnites(GameTestHelper helper) {
 		ServerLevel level = helper.getLevel();
-		boolean saved = forceOilBurns(helper, true);
+		ConfigOverrides.forTest(helper).set("oilBurns", true); // environment alaindustrial:config_overrides_2
 		// Lava at x=2, oil at x=3 — oil placed LAST so its onPlace sees the lava, exactly the
 		// ordering that used to schedule the ignition tick.
 		basin(helper, 2, 2, 3, 2);
@@ -679,18 +716,14 @@ public final class OilScenarios {
 		// The gate stays forced ON for the whole observation window — restoring it early would let a
 		// stale oilBurns=false, not the fix, be the reason nothing burned.
 		helper.runAtTickTime(90, () -> {
-			try {
-				FluidState fs = level.getFluidState(oilAbs);
-				if (!fs.isSourceOfType(ModContent.OIL.get())) {
-					helper.fail("a lava NEIGHBOUR must never ignite oil (worldgen puts deposits next to"
-							+ " lava lakes), but the cell now holds " + fs.getType()
-							+ " / block " + level.getBlockState(oilAbs));
-					return;
-				}
-				helper.succeed();
-			} finally {
-				Config.oilBurns = saved;
+			FluidState fs = level.getFluidState(oilAbs);
+			if (!fs.isSourceOfType(ModContent.OIL.get())) {
+				helper.fail("a lava NEIGHBOUR must never ignite oil (worldgen puts deposits next to"
+						+ " lava lakes), but the cell now holds " + fs.getType()
+						+ " / block " + level.getBlockState(oilAbs));
+				return;
 			}
+			helper.succeed();
 		});
 	}
 
@@ -703,6 +736,9 @@ public final class OilScenarios {
 	 * EMPTY-bucket behaviour is generic ({@code instanceof BucketPickup}) and always scooped oil up.
 	 * That asymmetry (oil goes in, never comes out) is what this covers, on both loaders: Fabric
 	 * registers the behaviour during mod init, NeoForge inside {@code FMLCommonSetupEvent}.
+	 *
+	 * @implements TC-OIL-001-FUN06 — a dispenser empties an oil bucket into the cell it faces and
+	 * keeps the empty bucket (vanilla registers filled-bucket dispensing per item, by name).
 	 */
 	public static void fun06DispenserEmptiesOilBucket(GameTestHelper helper) {
 		ServerLevel level = helper.getLevel();
@@ -747,6 +783,9 @@ public final class OilScenarios {
 	 * tick-delay measurement (tick delay 15 and slope-find 2 are not observable on a closed flat
 	 * trench and stay covered by the dev-client gameplay check; see the suite doc). Tick delay 40 is
 	 * still not asserted here — only the settle deadline scales with it.
+	 *
+	 * @implements TC-OIL-001-PRF01 — viscous spread profile: drop-off 2 pins flowing amounts 6/4/2
+	 * along a flat trench and a hard stop at distance 3 (water would wet every cell).
 	 */
 	public static void prf01ViscousSpreadProfile(GameTestHelper helper) {
 		ServerLevel level = helper.getLevel();
@@ -793,6 +832,10 @@ public final class OilScenarios {
 	 * {@code CriteriaTriggers.INVENTORY_CHANGED} for any slot backed by the player's own inventory.
 	 * {@code broadcastChanges()} is what walks the slots and fires it. How the bucket got there is
 	 * irrelevant to the criterion, and the scooping path itself is already covered by FUN01/FUN02.
+	 *
+	 * @implements TC-OIL-001-FUN08 — an oil bucket reaching the inventory awards "Black Gold"
+	 * (alaindustrial:first_oil). The tree is not retroactive, so a node that silently stops firing
+	 * cannot be handed back to the players who missed it.
 	 */
 	public static void fun09FirstOilAwardsTheAdvancement(GameTestHelper helper) {
 		ServerPlayer player = survivalPlayer(helper);
@@ -834,6 +877,9 @@ public final class OilScenarios {
 	 * <p>Asserting the fluid state rather than only the property is deliberate: the property is what
 	 * the placement writes, the fluid state is what the chunk renderer reads, and it is the renderer's
 	 * view that the player complained about.
+	 *
+	 * @implements TC-OIL-001-FUN07 — a torch placed into an oil source comes out oil-logged and
+	 * reports a full oil source to the renderer, instead of leaving an air pocket in the pool.
 	 */
 	public static void fun08TorchLogsWithOil(GameTestHelper helper) {
 		ServerLevel level = helper.getLevel();
@@ -1168,6 +1214,9 @@ public final class OilScenarios {
 	 * hanging in it as a one-block stone bowl. Assert only the third case and the test would stay
 	 * green under "refuse everything"; assert only the first two and it would stay green under the
 	 * bug it exists to catch.
+	 *
+	 * @implements TC-OIL-001-NEG04 — a deposit whose basin floor is a cave hall is refused, while the
+	 * same deposit in rock — and in rock with one cell of cave — is placed and sealed (MOD-526).
 	 */
 	public static void neg04HangingBasinIsRefused(GameTestHelper helper) {
 		fillWithRock(helper);

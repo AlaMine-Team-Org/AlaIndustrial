@@ -12,6 +12,7 @@ import dev.alaindustrial.block.entity.ReactorControllerBlockEntity;
 import dev.alaindustrial.block.entity.ReactorIdleReason;
 import dev.alaindustrial.block.entity.ReactorRoomStatus;
 import dev.alaindustrial.Config;
+import dev.alaindustrial.core.reactor.ReactorConfig;
 import dev.alaindustrial.core.structure.CrystalFarmRoom;
 import dev.alaindustrial.core.structure.ReactorCore;
 import dev.alaindustrial.core.structure.RoomFill;
@@ -74,6 +75,40 @@ import net.minecraft.world.phys.AABB;
  * is not fixed here).
  */
 public final class DemoStandScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(DemoStandScenarios::demoStandBuildsCoversAndRuns, "demo_stand_builds_covers_and_runs")
+						.fabricId("DemoStandGameTest", "demoStandBuildsCoversAndRuns").ticks(300).sky()
+						.structure(Industrialization.id("demo_stand_area")),
+				RosterEntry.of(DemoStandScenarios::demoReactorRunsCoolOnItsOwnLoop,
+								"demo_reactor_runs_cool_on_its_own_loop")
+						.fabricId("DemoStandGameTest", "demoReactorRunsCoolOnItsOwnLoop").ticks(500).sky()
+						.structure(Industrialization.id("demo_stand_area")),
+				RosterEntry.of(DemoStandScenarios::demoStandClearLeavesNoBlocks, "demo_stand_clear_leaves_no_blocks")
+						.fabricId("DemoStandGameTest", "demoStandClearLeavesNoBlocks").ticks(100).sky()
+						.structure(Industrialization.id("demo_stand_area")),
+				RosterEntry.of(DemoStandScenarios::demoStandRebuildIsIdempotent, "demo_stand_rebuild_is_idempotent")
+						.fabricId("DemoStandGameTest", "demoStandRebuildIsIdempotent").ticks(100).sky()
+						.structure(Industrialization.id("demo_stand_area")),
+				RosterEntry.of(DemoStandScenarios::demoStandShowcaseCoversItems, "demo_stand_showcase_covers_items")
+						.fabricId("DemoStandGameTest", "demoStandShowcaseCoversItems").ticks(100).sky()
+						.structure(Industrialization.id("demo_stand_area")),
+				RosterEntry.of(DemoStandScenarios::demoStandWritesEachCellOnce, "demo_stand_writes_each_cell_once")
+						.fabricId("DemoStandGameTest", "demoStandWritesEachCellOnce").ticks(100).sky()
+						.structure(Industrialization.id("demo_stand_area")),
+				RosterEntry.of(DemoStandScenarios::demoStandFramesHangInFreeCells,
+								"demo_stand_frames_hang_in_free_cells")
+						.fabricId("DemoStandGameTest", "demoStandFramesHangInFreeCells").ticks(100).sky()
+						.structure(Industrialization.id("demo_stand_area")),
+				RosterEntry.of(DemoStandScenarios::demoStandSweepsLateDrops, "demo_stand_sweeps_late_drops")
+						.fabricId("DemoStandGameTest", "demoStandSweepsLateDrops").ticks(200).sky()
+						.structure(Industrialization.id("demo_stand_area")));
+
+		private Roster() {}
+	}
+
 	private DemoStandScenarios() {
 	}
 
@@ -120,8 +155,8 @@ public final class DemoStandScenarios {
 		} else {
 			RoomScan.Result room = RoomValidator.scan(helper.getLevel(), controllerPos,
 					controllerState.getValue(HorizontalDirectionalBlock.FACING),
-					Config.reactorRoomMinInner, Config.reactorRoomMaxInner,
-					Config.reactorRoomMaxGlassPercent);
+					ReactorConfig.reactorRoomMinInner, ReactorConfig.reactorRoomMaxInner,
+					ReactorConfig.reactorRoomMaxGlassPercent);
 			if (room.status() != RoomScan.Status.FORMED) {
 				helper.fail("the demo stand's reactor room does not form: " + room.status()
 						+ " at " + room.x() + "," + room.y() + "," + room.z());
@@ -376,7 +411,7 @@ public final class DemoStandScenarios {
 			if (brain.getIdleReason() != ReactorIdleReason.RUNNING) {
 				helper.fail("the demo reactor room did not start on its lever: " + brain.getIdleReason());
 			}
-			long heatPercent = ReactorCore.heatPercent(brain.getHeat(), Config.reactorHeatCapacity);
+			long heatPercent = ReactorCore.heatPercent(brain.getHeat(), ReactorConfig.reactorHeatCapacity);
 			if (brain.isMeltingDown() || heatPercent >= 10) {
 				helper.fail("the demo reactor room heats up on its own loop: " + heatPercent + "% of the scale");
 			}

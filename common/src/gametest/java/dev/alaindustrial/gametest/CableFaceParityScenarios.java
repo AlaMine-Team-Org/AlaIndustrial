@@ -50,6 +50,17 @@ import net.minecraft.world.level.block.state.BlockState;
  * player keeps this test free of false alarms, which is what decides whether a guard survives.
  */
 public final class CableFaceParityScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(CableFaceParityScenarios::inertFacesRejectCableArms,
+								"cable_face_parity_inert_faces_reject_arms")
+						.fabricId("CablePlacementGameTest", "mod199_inertFacesRejectCableArms").ticks(20, 60));
+
+		private Roster() {}
+	}
+
 	private CableFaceParityScenarios() { }
 
 	/** Where each candidate block is placed in turn. */

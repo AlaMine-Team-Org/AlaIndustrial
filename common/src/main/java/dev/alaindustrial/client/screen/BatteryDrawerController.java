@@ -1,8 +1,17 @@
 package dev.alaindustrial.client.screen;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import dev.alaindustrial.Industrialization;
+import java.util.ArrayList;
+import java.util.List;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.FormattedCharSequence;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -15,8 +24,11 @@ import org.jspecify.annotations.Nullable;
  * and a screen that moves its bar moves its key with it.
  *
  * <p>All positions are relative to {@code leftPos}/{@code topPos}, like vanilla slot coordinates.
+ *
+ * <p>Since MOD-716 it is also the drawer's {@link ScreenOverlay}: the drawer behind the frame, the key on it,
+ * the key's tooltip and click, and the open drawer as a place a click may land without dropping the stack.
  */
-public final class BatteryDrawerController {
+public final class BatteryDrawerController implements ScreenOverlay {
 	static final Identifier ATLAS = Industrialization.id("textures/gui/container/battery_drawer.png");
 	static final int ATLAS_W = 128, ATLAS_H = 64;
 
@@ -117,5 +129,78 @@ public final class BatteryDrawerController {
 
 	Rect2i drawerArea(int leftPos, int topPos) {
 		return new Rect2i(leftPos + drawerX(), topPos + drawerY(), DRAWER_W, DRAWER_H);
+	}
+
+	// --- ScreenOverlay (MOD-716): moved from MachineScreen unchanged ---
+
+	private final OverlayHost host;
+
+	/**
+	 * Whether the drawer art is shown this frame, decided before the frame is drawn and kept for the key:
+	 * the frame's energy bar may place the drawer for the first time, and the key follows on the next frame.
+	 */
+	private boolean shownThisFrame;
+
+	BatteryDrawerController(OverlayHost host) {
+		this.host = host;
+	}
+
+	/** The drawer goes down BEFORE the frame, so the frame's edge covers its inner end (MOD-679). */
+	@Override
+	public void drawBehindFrame(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+		shownThisFrame = host.menu().hasBatteryDrawer() && placed();
+		if (shownThisFrame && host.menu().isBatteryDrawerOpen()) {
+			graphics.blit(RenderPipelines.GUI_TEXTURED, ATLAS, host.left() + drawerX(), host.top() + drawerY(),
+					(float) drawerU(), (float) DRAWER_V, DRAWER_W, DRAWER_H, ATLAS_W, ATLAS_H);
+		}
+	}
+
+	/** The key, on the frame next to the energy bar. */
+	@Override
+	public void drawOnFrame(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+		if (!shownThisFrame) {
+			return;
+		}
+		int u = host.menu().isBatteryDrawerOpen() ? KEY_U_ON
+				: isOverKey(mouseX, mouseY, host.left(), host.top()) ? KEY_U_HOVER : KEY_U_OFF;
+		graphics.blit(RenderPipelines.GUI_TEXTURED, ATLAS, host.left() + keyX(), host.top() + keyY(),
+				(float) u, (float) KEY_V, KEY_W, KEY_H, ATLAS_W, ATLAS_H);
+	}
+
+	@Override
+	public boolean handleTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+		if (!host.menu().hasBatteryDrawer() || !isOverKey(mouseX, mouseY, host.left(), host.top())) {
+			return false;
+		}
+		List<FormattedCharSequence> lines = new ArrayList<>();
+		lines.addAll(host.font().split(Component.translatable("gui.alaindustrial.battery_drawer"), 200));
+		lines.addAll(host.font().split(Component.translatable("gui.alaindustrial.battery_drawer.hint")
+				.withStyle(ChatFormatting.GRAY), 200));
+		graphics.setTooltipForNextFrame(host.font(), lines, mouseX, mouseY);
+		return true;
+	}
+
+	/** The key sits inside the frame, where nothing else answers a click. */
+	@Override
+	public boolean clickHandle(MouseButtonEvent event) {
+		if (event.button() == InputConstants.MOUSE_BUTTON_LEFT && host.menu().hasBatteryDrawer()
+				&& isOverKey(event.x(), event.y(), host.left(), host.top())) {
+			host.toggleBatteryDrawer();
+			return true;
+		}
+		return false;
+	}
+
+	/** The open drawer sticks out of the frame; a click on it is not a click that drops the held stack. */
+	@Override
+	public boolean keepsClickInside(double mouseX, double mouseY) {
+		return host.menu().isBatteryDrawerOpen() && isOverDrawer(mouseX, mouseY, host.left(), host.top());
+	}
+
+	@Override
+	public void addExclusionAreas(List<Rect2i> areas) {
+		if (host.menu().hasBatteryDrawer() && host.menu().isBatteryDrawerOpen() && placed()) {
+			areas.add(drawerArea(host.left(), host.top()));
+		}
 	}
 }

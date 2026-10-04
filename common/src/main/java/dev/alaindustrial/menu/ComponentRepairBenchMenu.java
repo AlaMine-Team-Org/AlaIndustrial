@@ -4,10 +4,8 @@ import dev.alaindustrial.block.entity.ComponentRepairBenchBlockEntity;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.core.machine.RepairStatus;
 import dev.alaindustrial.registry.ModContent;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
@@ -32,9 +30,9 @@ public class ComponentRepairBenchMenu extends MachineMenu {
 
 	public ComponentRepairBenchMenu(int syncId, Inventory playerInventory) {
 		super(ModContent.COMPONENT_REPAIR_BENCH_MENU.get(), syncId, playerInventory,
-				new SimpleContainer(ComponentRepairBenchBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT),
-				new SimpleContainerData(ComponentRepairBenchBlockEntity.DATA_COUNT),
-				ContainerLevelAccess.NULL, ModContent.COMPONENT_REPAIR_BENCH.get());
+				clientStub(ComponentRepairBenchBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT,
+						ComponentRepairBenchBlockEntity.DATA_COUNT),
+				ModContent.COMPONENT_REPAIR_BENCH.get());
 	}
 
 	/**
@@ -67,7 +65,7 @@ public class ComponentRepairBenchMenu extends MachineMenu {
 
 	/** The bench's current {@link RepairStatus}, for the screen's status line. */
 	public RepairStatus getStatus() {
-		return RepairStatus.byCode(data.get(ComponentRepairBenchBlockEntity.STATUS_CHANNEL));
+		return RepairStatus.byCode(channel(ComponentRepairBenchBlockEntity.Channel.STATUS));
 	}
 
 	/**
@@ -78,16 +76,16 @@ public class ComponentRepairBenchMenu extends MachineMenu {
 	 * locally-read number would print a confident lie. The block entity publishes them each tick.
 	 */
 	public int getRepairEuCost() {
-		return data.get(ComponentRepairBenchBlockEntity.COST_CHANNEL);
+		return channel(ComponentRepairBenchBlockEntity.Channel.COST);
 	}
 
 	/** Percent of the original durability ceiling one repair burns. */
 	public int getDecayPercent() {
-		return data.get(ComponentRepairBenchBlockEntity.DECAY_CHANNEL);
+		return channel(ComponentRepairBenchBlockEntity.Channel.DECAY);
 	}
 
 	/** How many repairs one component is ever allowed. */
 	public int getMaxRepairs() {
-		return data.get(ComponentRepairBenchBlockEntity.MAX_REPAIRS_CHANNEL);
+		return channel(ComponentRepairBenchBlockEntity.Channel.MAX_REPAIRS);
 	}
 }

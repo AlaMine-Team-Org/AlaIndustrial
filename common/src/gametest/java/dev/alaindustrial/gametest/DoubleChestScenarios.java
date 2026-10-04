@@ -3,11 +3,15 @@ package dev.alaindustrial.gametest;
 import dev.alaindustrial.block.AbstractModChestBlock;
 import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.block.entity.AbstractChestBlockEntity;
+import dev.alaindustrial.core.item.ItemLookup;
+import dev.alaindustrial.core.item.ItemMover;
+import dev.alaindustrial.core.item.ItemPort;
 import dev.alaindustrial.menu.DoubleChestMenu;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -29,6 +33,8 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Loader-neutral gametest bodies for the double chest (MOD-391, suite TC-CHEST-001). Same pattern as
@@ -42,10 +48,47 @@ import net.minecraft.world.phys.Vec3;
  */
 public final class DoubleChestScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(DoubleChestScenarios::fun01PairFormsAndJoins, "double_chest_pair_forms_and_joins")
+						.fabricId("DoubleChestGameTest", "tcChest001Fun01_pairFormsAndJoins").ticks(20, 40),
+				RosterEntry.of(DoubleChestScenarios::fun02CrossTierNeverPairs, "double_chest_cross_tier_never_pairs")
+						.fabricId("DoubleChestGameTest", "tcChest001Fun02_crossTierNeverPairs").ticks(20, 40),
+				RosterEntry.of(DoubleChestScenarios::fun03PlacementSneakStaysSingle, "double_chest_sneak_stays_single")
+						.fabricId("DoubleChestGameTest", "tcChest001Fun03_placementSneakStaysSingle").ticks(20, 40),
+				RosterEntry.of(DoubleChestScenarios::fun04BreakHalfRevertsPartner, "double_chest_break_reverts_partner")
+						.fabricId("DoubleChestGameTest", "tcChest001Fun04_breakHalfRevertsPartner").ticks(20, 40),
+				RosterEntry.of(DoubleChestScenarios::fun05HopperOverflowsIntoSecondHalf, "double_chest_hopper_overflow")
+						.fabricId("DoubleChestGameTest", "tcChest001Fun05_hopperOverflowsIntoSecondHalf")
+						.ticks(20, 100),
+				RosterEntry.of(DoubleChestScenarios::fun06ComparatorReadsJoined, "double_chest_comparator_joined")
+						.fabricId("DoubleChestGameTest", "tcChest001Fun06_comparatorReadsJoined").ticks(20, 40),
+				RosterEntry.of(DoubleChestScenarios::fun07WindowScrollsHiddenRows, "double_chest_window_scrolls")
+						.fabricId("DoubleChestGameTest", "tcChest001Fun07_windowScrollsHiddenRows").ticks(20, 40),
+				RosterEntry.of(DoubleChestScenarios::fun08ShiftClickReachesHiddenRows,
+								"double_chest_shift_click_hidden_rows")
+						.fabricId("DoubleChestGameTest", "tcChest001Fun08_shiftClickReachesHiddenRows").ticks(20, 40),
+				RosterEntry.of(DoubleChestScenarios::fun09WaterloggedSurvivesBreak, "double_chest_waterlogged_break")
+						.fabricId("DoubleChestGameTest", "tcChest001Fun09_waterloggedSurvivesBreak").ticks(20, 40),
+				RosterEntry.of(DoubleChestScenarios::fun10BreakingHalfClosesWindow, "double_chest_break_closes_window")
+						.fabricId("DoubleChestGameTest", "tcChest001Fun10_breakingHalfClosesWindow").ticks(20, 40),
+				RosterEntry.of(DoubleChestScenarios::per01ItemsSurviveNbtRoundTrip, "double_chest_nbt_round_trip")
+						.fabricId("DoubleChestGameTest", "tcChest001Per01_itemsSurviveNbtRoundTrip").ticks(20, 40),
+				RosterEntry.of(DoubleChestScenarios::fun11ItemLookupSeesJoinedPairEveryTier,
+								"double_chest_item_lookup_every_tier")
+						.fabricId("DoubleChestGameTest", "tcChest001Fun11_itemLookupSeesJoinedPairEveryTier")
+						.ticks(20, 40));
+
+		private Roster() {}
+	}
+
 	private DoubleChestScenarios() {}
 
 	private static final BlockPos A = new BlockPos(1, 2, 1);
 	private static final BlockPos B = new BlockPos(2, 2, 1);
+	/** A lone iron chest two blocks south of the pair — never adjacent, so it can never join it. */
+	private static final BlockPos SINK = new BlockPos(1, 2, 3);
 	private static final int IRON_SLOTS = 36;
 
 	private static Block ironChest() {
@@ -96,7 +139,11 @@ public final class DoubleChestScenarios {
 
 	// ── pairing ──────────────────────────────────────────────────────────────────────────────────
 
-	/** TC-CHEST-001-FUN01 — a LEFT half arriving next to a same-tier SINGLE pairs it up as RIGHT. */
+	/**
+	 * TC-CHEST-001-FUN01 — a LEFT half arriving next to a same-tier SINGLE pairs it up as RIGHT.
+	 *
+	 * @implements TC-CHEST-001-FUN01 — a LEFT half pairs a same-tier SINGLE up as RIGHT, 72 joined slots.
+	 */
 	public static void fun01PairFormsAndJoins(GameTestHelper helper) {
 		placePair(helper);
 		ChestType typeA = helper.getBlockState(A).getValue(AbstractModChestBlock.TYPE);
@@ -122,7 +169,11 @@ public final class DoubleChestScenarios {
 		helper.succeed();
 	}
 
-	/** TC-CHEST-001-FUN02 — a foreign-tier neighbour never joins: both sides stay functionally single. */
+	/**
+	 * TC-CHEST-001-FUN02 — a foreign-tier neighbour never joins: both sides stay functionally single.
+	 *
+	 * @implements TC-CHEST-001-FUN02 — a foreign-tier neighbour never joins.
+	 */
 	public static void fun02CrossTierNeverPairs(GameTestHelper helper) {
 		helper.setBlock(A, single(ironChest()));
 		// setBlock never runs updateShape on the NEW block itself, so the stranded silver LEFT keeps
@@ -143,7 +194,11 @@ public final class DoubleChestScenarios {
 		helper.succeed();
 	}
 
-	/** TC-CHEST-001-FUN03 — placement rules: auto-join without sneak, deliberately single with sneak. */
+	/**
+	 * TC-CHEST-001-FUN03 — placement rules: auto-join without sneak, deliberately single with sneak.
+	 *
+	 * @implements TC-CHEST-001-FUN03 — auto-join without sneak; sneak placement stays single.
+	 */
 	public static void fun03PlacementSneakStaysSingle(GameTestHelper helper) {
 		helper.setBlock(A, single(ironChest()));
 		Player player = helper.makeMockPlayer(GameType.SURVIVAL);
@@ -187,6 +242,8 @@ public final class DoubleChestScenarios {
 	/**
 	 * TC-CHEST-001-FUN10 — breaking either half invalidates an open double window (vanilla
 	 * {@code ChestMenu} semantics: {@code CompoundContainer.stillValid} ANDs both halves).
+	 *
+	 * @implements TC-CHEST-001-FUN10 — breaking a half invalidates the open double window.
 	 */
 	public static void fun10BreakingHalfClosesWindow(GameTestHelper helper) {
 		placePair(helper);
@@ -211,7 +268,11 @@ public final class DoubleChestScenarios {
 		helper.succeed();
 	}
 
-	/** TC-CHEST-001-FUN04 — breaking one half reverts the partner to SINGLE with its items intact. */
+	/**
+	 * TC-CHEST-001-FUN04 — breaking one half reverts the partner to SINGLE with its items intact.
+	 *
+	 * @implements TC-CHEST-001-FUN04 — breaking one half reverts the partner to SINGLE, items intact.
+	 */
 	public static void fun04BreakHalfRevertsPartner(GameTestHelper helper) {
 		placePair(helper);
 		chestAt(helper, A).setItem(3, new ItemStack(Items.IRON_INGOT, 7));
@@ -235,6 +296,8 @@ public final class DoubleChestScenarios {
 	/**
 	 * TC-CHEST-001-FUN05 — a hopper feeding a FULL first half overflows into the second: the vanilla
 	 * hopper resolves the double through {@code WorldlyContainerHolder} as one 72-slot container.
+	 *
+	 * @implements TC-CHEST-001-FUN05 — a hopper overflows a full first half into the second.
 	 */
 	public static void fun05HopperOverflowsIntoSecondHalf(GameTestHelper helper) {
 		placePair(helper);
@@ -258,7 +321,11 @@ public final class DoubleChestScenarios {
 		});
 	}
 
-	/** TC-CHEST-001-FUN06 — the comparator reads the pair as one container, the same from either half. */
+	/**
+	 * TC-CHEST-001-FUN06 — the comparator reads the pair as one container, the same from either half.
+	 *
+	 * @implements TC-CHEST-001-FUN06 — the comparator reads the pair as one, the same from either half.
+	 */
 	public static void fun06ComparatorReadsJoined(GameTestHelper helper) {
 		placePair(helper);
 		// Items only in the LEFT half: a per-half signal from A would be 0.
@@ -279,9 +346,99 @@ public final class DoubleChestScenarios {
 		helper.succeed();
 	}
 
+	/**
+	 * TC-CHEST-001-FUN11 (MOD-690) — for EVERY chest tier, the loader's item lookup on the LEFT half
+	 * answers for the whole pair, right half first: the view the mod's item pipes (and any other
+	 * transfer-API mod) get. Fabric used to list the tiers by hand for its combined provider and the
+	 * diamond tier was missing, so a pipe on one diamond half saw its own 108 slots instead of 216.
+	 *
+	 * <p>The tiers are enumerated from the block registry by class, independently of how either
+	 * loader registers the capability, so a future tier is covered without touching this test.
+	 * Every slot of both halves holds ONE item (diamonds right, emeralds left): draining through the
+	 * left half must move {@code 2 × half} items — a per-half view moves exactly {@code half}, the
+	 * left half's own emeralds. A single item pushed back through the left half must land in the
+	 * RIGHT half's slot 0, which pins the slot order (right half first, as the menu and NeoForge).
+	 *
+	 * @implements TC-CHEST-001-FUN11 — every tier's pair is one container to the item lookup (MOD-690).
+	 */
+	public static void fun11ItemLookupSeesJoinedPairEveryTier(GameTestHelper helper) {
+		List<Block> tiers = new ArrayList<>();
+		for (Block block : BuiltInRegistries.BLOCK) {
+			if (block instanceof AbstractModChestBlock) {
+				tiers.add(block);
+			}
+		}
+		if (!tiers.contains(ModContent.DIAMOND_CHEST.get())) {
+			helper.fail("the chest-tier enumeration must include the diamond chest, found " + tiers);
+			return;
+		}
+		for (Block tier : tiers) {
+			if (!joinedThroughItemLookup(helper, tier)) {
+				return;
+			}
+		}
+		helper.succeed();
+	}
+
+	/** One tier of {@link #fun11ItemLookupSeesJoinedPairEveryTier}; clears the rig afterwards. */
+	private static boolean joinedThroughItemLookup(GameTestHelper helper, Block tier) {
+		String name = BuiltInRegistries.BLOCK.getKey(tier).toString();
+		helper.setBlock(A, single(tier));
+		helper.setBlock(B, half(tier, ChestType.LEFT));
+		helper.setBlock(SINK, single(ironChest()));
+		if (helper.getBlockState(A).getValue(AbstractModChestBlock.TYPE) != ChestType.RIGHT) {
+			helper.fail(name + ": the pair did not form (existing single must join as RIGHT)");
+			return false;
+		}
+		AbstractChestBlockEntity right = chestAt(helper, A);
+		AbstractChestBlockEntity left = chestAt(helper, B);
+		AbstractChestBlockEntity sinkChest = chestAt(helper, SINK);
+		int half = right.getContainerSize();
+		for (int slot = 0; slot < half; slot++) {
+			right.setItem(slot, new ItemStack(Items.DIAMOND, 1));
+			left.setItem(slot, new ItemStack(Items.EMERALD, 1));
+		}
+		ItemPort pair = ItemLookup.get().find(helper.getLevel(), helper.absolutePos(B), Direction.UP);
+		ItemPort sink = ItemLookup.get().find(helper.getLevel(), helper.absolutePos(SINK), Direction.UP);
+		if (pair == null || sink == null) {
+			helper.fail(name + ": no item port on the pair's left half or on the sink on this loader");
+			return false;
+		}
+		// Ask for one item more than the pair holds, so the amount moved is decided by what the port sees.
+		int drained = ItemMover.move(pair, sink, half * 2 + 1);
+		if (drained != half * 2) {
+			helper.fail(name + ": a pipe on the left half must reach all " + (half * 2)
+					+ " slots of the pair (one item each), moved " + drained
+					+ (drained == half ? " — only the left half's own slots" : ""));
+			return false;
+		}
+		if (!right.isEmpty()) {
+			helper.fail(name + ": draining through the left half must empty the right half too");
+			return false;
+		}
+		int returned = ItemMover.move(sink, pair, 1);
+		if (returned != 1 || right.getItem(0).isEmpty() || !left.isEmpty()) {
+			helper.fail(name + ": one item inserted through the left half must land in the RIGHT half's"
+					+ " slot 0 (right half first), moved " + returned + ", right slot 0 = "
+					+ right.getItem(0) + ", left empty = " + left.isEmpty());
+			return false;
+		}
+		right.clearContent();
+		left.clearContent();
+		sinkChest.clearContent();
+		helper.setBlock(B, Blocks.AIR);
+		helper.setBlock(A, Blocks.AIR);
+		helper.setBlock(SINK, Blocks.AIR);
+		return true;
+	}
+
 	// ── the shared window ────────────────────────────────────────────────────────────────────────
 
-	/** TC-CHEST-001-FUN07 — the 6-row window scrolls over the double's 8 rows; the slots never move. */
+	/**
+	 * TC-CHEST-001-FUN07 — the 6-row window scrolls over the double's 8 rows; the slots never move.
+	 *
+	 * @implements TC-CHEST-001-FUN07 — the 6-row window scrolls over the double's rows.
+	 */
 	public static void fun07WindowScrollsHiddenRows(GameTestHelper helper) {
 		placePair(helper);
 		Container joined = new CompoundContainer(chestAt(helper, A), chestAt(helper, B));
@@ -303,7 +460,11 @@ public final class DoubleChestScenarios {
 		helper.succeed();
 	}
 
-	/** TC-CHEST-001-FUN08 — shift-click reaches the rows the window does not show. */
+	/**
+	 * TC-CHEST-001-FUN08 — shift-click reaches the rows the window does not show.
+	 *
+	 * @implements TC-CHEST-001-FUN08 — shift-click reaches the hidden rows.
+	 */
 	public static void fun08ShiftClickReachesHiddenRows(GameTestHelper helper) {
 		placePair(helper);
 		Container joined = new CompoundContainer(chestAt(helper, A), chestAt(helper, B));
@@ -335,7 +496,11 @@ public final class DoubleChestScenarios {
 
 	// ── persistence & waterlogging ───────────────────────────────────────────────────────────────
 
-	/** TC-CHEST-001-PER01 — a half's items survive the NBT round-trip (the chunk save/load path). */
+	/**
+	 * TC-CHEST-001-PER01 — a half's items survive the NBT round-trip (the chunk save/load path).
+	 *
+	 * @implements TC-CHEST-001-PER01 — a half's items survive the NBT round-trip.
+	 */
 	public static void per01ItemsSurviveNbtRoundTrip(GameTestHelper helper) {
 		placePair(helper);
 		ServerLevel level = helper.getLevel();
@@ -356,7 +521,11 @@ public final class DoubleChestScenarios {
 		helper.succeed();
 	}
 
-	/** TC-CHEST-001-FUN09 — waterlogging survives the pair breaking apart. */
+	/**
+	 * TC-CHEST-001-FUN09 — waterlogging survives the pair breaking apart.
+	 *
+	 * @implements TC-CHEST-001-FUN09 — waterlogging survives the pair breaking apart.
+	 */
 	public static void fun09WaterloggedSurvivesBreak(GameTestHelper helper) {
 		helper.setBlock(A, single(ironChest()).setValue(AbstractModChestBlock.WATERLOGGED, true));
 		helper.setBlock(B, half(ironChest(), ChestType.LEFT));

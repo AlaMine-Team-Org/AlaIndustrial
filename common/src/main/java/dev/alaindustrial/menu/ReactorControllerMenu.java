@@ -3,12 +3,11 @@ package dev.alaindustrial.menu;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.block.entity.ReactorControllerBlockEntity;
 import dev.alaindustrial.block.entity.ReactorRoomStatus;
+import dev.alaindustrial.block.entity.reactor.ReactorChannels;
 import dev.alaindustrial.registry.ModContent;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -57,9 +56,8 @@ public class ReactorControllerMenu extends MachineMenu {
 
 	/** Client side. The stub container is empty — no slots, and no upgrade block appended. */
 	public ReactorControllerMenu(int syncId, Inventory playerInventory) {
-		super(ModContent.REACTOR_CONTROLLER_MENU.get(), syncId, playerInventory, new SimpleContainer(0),
-				new SimpleContainerData(ReactorControllerBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL,
-				ModContent.REACTOR_CONTROLLER.get());
+		super(ModContent.REACTOR_CONTROLLER_MENU.get(), syncId, playerInventory,
+				clientStub(0, ReactorChannels.COUNT), ModContent.REACTOR_CONTROLLER.get());
 		this.controller = null;
 		this.viewer = playerInventory.player;
 	}
@@ -199,14 +197,6 @@ public class ReactorControllerMenu extends MachineMenu {
 	protected void addMachineSlots() {
 	}
 
-	/**
-	 * No upgrade panel. This must agree with {@link ReactorControllerBlockEntity#hasUpgradePanel()}:
-	 * the slot indices are derived from it on both sides.
-	 */
-	@Override
-	public boolean hasUpgradePanel() {
-		return false;
-	}
 
 	/** Shift-clicking into a menu with no slots has nowhere to go; say so rather than misbehaving. */
 	@Override
@@ -215,33 +205,33 @@ public class ReactorControllerMenu extends MachineMenu {
 	}
 
 	public ReactorRoomStatus getStatus() {
-		return ReactorRoomStatus.byOrdinal(data.get(ReactorControllerBlockEntity.DATA_STATUS));
+		return ReactorRoomStatus.byOrdinal(channel(ReactorChannels.STATUS));
 	}
 
 	/** Offset from the controller to the reported problem, in blocks (east/up/south positive). */
 	public int getBreachDx() {
-		return data.get(ReactorControllerBlockEntity.DATA_BREACH_DX);
+		return channel(ReactorChannels.BREACH_DX);
 	}
 
 	public int getBreachDy() {
-		return data.get(ReactorControllerBlockEntity.DATA_BREACH_DY);
+		return channel(ReactorChannels.BREACH_DY);
 	}
 
 	public int getBreachDz() {
-		return data.get(ReactorControllerBlockEntity.DATA_BREACH_DZ);
+		return channel(ReactorChannels.BREACH_DZ);
 	}
 
 	/** Interior extent measured by the last scan, in blocks; zero when the scan never got that far. */
 	public int getSizeX() {
-		return data.get(ReactorControllerBlockEntity.DATA_SIZE_X);
+		return channel(ReactorChannels.SIZE_X);
 	}
 
 	public int getSizeY() {
-		return data.get(ReactorControllerBlockEntity.DATA_SIZE_Y);
+		return channel(ReactorChannels.SIZE_Y);
 	}
 
 	public int getSizeZ() {
-		return data.get(ReactorControllerBlockEntity.DATA_SIZE_Z);
+		return channel(ReactorChannels.SIZE_Z);
 	}
 
 	/** Whether the last scan got far enough to measure the interior box — the rays found all six walls (MOD-619). */
@@ -251,32 +241,32 @@ public class ReactorControllerMenu extends MachineMenu {
 
 	/** Offset from the controller to the interior's west edge (smallest X), in blocks; see {@link #isBoxMeasured}. */
 	public int getBoxWest() {
-		return data.get(ReactorControllerBlockEntity.DATA_BOX_WEST);
+		return channel(ReactorChannels.BOX_WEST);
 	}
 
 	/** Offset from the controller to the interior's north edge (smallest Z), in blocks. */
 	public int getBoxNorth() {
-		return data.get(ReactorControllerBlockEntity.DATA_BOX_NORTH);
+		return channel(ReactorChannels.BOX_NORTH);
 	}
 
 	/** Smallest interior edge this server's scan accepts, in blocks. */
 	public int getRoomMinInner() {
-		return data.get(ReactorControllerBlockEntity.DATA_ROOM_MIN_INNER);
+		return channel(ReactorChannels.ROOM_MIN_INNER);
 	}
 
 	/** Largest interior edge this server's scan accepts, in blocks. */
 	public int getRoomMaxInner() {
-		return data.get(ReactorControllerBlockEntity.DATA_ROOM_MAX_INNER);
+		return channel(ReactorChannels.ROOM_MAX_INNER);
 	}
 
 	/** Largest share of the shell, in percent, this server's scan lets be glass. */
 	public int getRoomMaxGlassPercent() {
-		return data.get(ReactorControllerBlockEntity.DATA_ROOM_MAX_GLASS);
+		return channel(ReactorChannels.ROOM_MAX_GLASS);
 	}
 
 	/** Every hole the last scan found in the shell; zero unless the verdict is a breach (MOD-619). */
 	public int getHoleCount() {
-		return data.get(ReactorControllerBlockEntity.DATA_HOLE_COUNT);
+		return channel(ReactorChannels.HOLE_COUNT);
 	}
 
 	/** How many holes arrive by position — at most {@code RoomScan.MAX_LISTED_HOLES}. */
@@ -286,66 +276,66 @@ public class ReactorControllerMenu extends MachineMenu {
 
 	/** Offset from the controller to a listed hole, east/up/south positive. */
 	public int getHoleDx(int index) {
-		return data.get(ReactorControllerBlockEntity.DATA_HOLE_FIRST + 3 * index);
+		return data.get(ReactorChannels.HOLE_FIRST + 3 * index);
 	}
 
 	public int getHoleDy(int index) {
-		return data.get(ReactorControllerBlockEntity.DATA_HOLE_FIRST + 3 * index + 1);
+		return data.get(ReactorChannels.HOLE_FIRST + 3 * index + 1);
 	}
 
 	public int getHoleDz(int index) {
-		return data.get(ReactorControllerBlockEntity.DATA_HOLE_FIRST + 3 * index + 2);
+		return data.get(ReactorChannels.HOLE_FIRST + 3 * index + 2);
 	}
 
 	/** Heat as a percentage of the scale — what the gauge fills to. */
 	public int getHeatPercent() {
-		return data.get(ReactorControllerBlockEntity.DATA_HEAT_PERCENT);
+		return channel(ReactorChannels.HEAT_PERCENT);
 	}
 
 	/** Rods burning across the whole room. */
 	public int getRods() {
-		return data.get(ReactorControllerBlockEntity.DATA_RODS);
+		return channel(ReactorChannels.RODS);
 	}
 
 	/** Control-rod depth in percent — the throttle position. */
 	public int getDepthPercent() {
-		return data.get(ReactorControllerBlockEntity.DATA_DEPTH_PERCENT);
+		return channel(ReactorChannels.DEPTH_PERCENT);
 	}
 
 	/** EU/t the last tick actually produced. */
 	public int getOutput() {
-		return data.get(ReactorControllerBlockEntity.DATA_OUTPUT);
+		return channel(ReactorChannels.OUTPUT);
 	}
 
 	/** Coolant left in the loop, 0…100. */
 	public int getWaterPercent() {
-		return data.get(ReactorControllerBlockEntity.DATA_WATER_PERCENT);
+		return channel(ReactorChannels.WATER_PERCENT);
 	}
 
 	/** Coolant the reactor boiled last tick, in mB. */
 	public int getWaterRate() {
-		return data.get(ReactorControllerBlockEntity.DATA_WATER_RATE);
+		return channel(ReactorChannels.WATER_RATE);
 	}
 
 	/** Why the reactor is idle, or {@code RUNNING} when it is not. */
 	public dev.alaindustrial.block.entity.ReactorIdleReason getIdleReason() {
 		return dev.alaindustrial.block.entity.ReactorIdleReason.byOrdinal(
-				data.get(ReactorControllerBlockEntity.DATA_IDLE_REASON));
+				channel(ReactorChannels.IDLE_REASON));
 	}
 
 	/** Charge in the reactor's own buffer, 0…100. */
 	public int getStoredPercent() {
-		return data.get(ReactorControllerBlockEntity.DATA_ENERGY_PERCENT);
+		return channel(ReactorChannels.ENERGY_PERCENT);
 	}
 
 	/** Charge in EU, rounded to the nearest hundred — see the channel's note on 16-bit sync. */
 	public int getStoredEu() {
-		return data.get(ReactorControllerBlockEntity.DATA_ENERGY_HUNDREDS) * 100;
+		return channel(ReactorChannels.ENERGY_HUNDREDS) * 100;
 	}
 
 	/** Steam waiting to be exhausted, 0…100. A full loop is a stalled one. */
 	public int getSteamPercent() {
-		return data.get(ReactorControllerBlockEntity.DATA_STEAM_PERCENT);
+		return channel(ReactorChannels.STEAM_PERCENT);
 	}
 
 	/**
@@ -355,32 +345,32 @@ public class ReactorControllerMenu extends MachineMenu {
 	 * from this, and a bar is exactly as much as the player is meant to know.
 	 */
 	public int getBlastPercent() {
-		return data.get(ReactorControllerBlockEntity.DATA_BLAST_PERCENT);
+		return channel(ReactorChannels.BLAST_PERCENT);
 	}
 
 	/** A bare core's instability, 0…100. Zero for a sealed room, which runs on heat instead. */
 	public int getInstabilityPercent() {
-		return data.get(ReactorControllerBlockEntity.DATA_INSTABILITY);
+		return channel(ReactorChannels.INSTABILITY);
 	}
 
 	/** Share of the reaction's heat the water carried last tick, 0…100 — the share of power paid (MOD-623). */
 	public int getCoolantSharePercent() {
-		return data.get(ReactorControllerBlockEntity.DATA_COOLANT_SHARE);
+		return channel(ReactorChannels.COOLANT_SHARE);
 	}
 
 	/** Heat from which the reactor reports running hot, in percent — this server's setting (MOD-618). */
 	public int getHeatWarnPercent() {
-		return data.get(ReactorControllerBlockEntity.DATA_HEAT_WARN);
+		return channel(ReactorChannels.HEAT_WARN);
 	}
 
 	/** Heat from which a sealed room melts its contents, in percent — this server's setting (MOD-618). */
 	public int getMeltdownStartPercent() {
-		return data.get(ReactorControllerBlockEntity.DATA_HEAT_MELTDOWN);
+		return channel(ReactorChannels.HEAT_MELTDOWN);
 	}
 
 	/** Whether the room is melting its own contents right now (MOD-469). */
 	public boolean isMeltingDown() {
-		return data.get(ReactorControllerBlockEntity.DATA_MELTDOWN) != 0;
+		return channel(ReactorChannels.MELTDOWN) != 0;
 	}
 
 	/**

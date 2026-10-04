@@ -75,13 +75,12 @@ public class ComponentRepairBenchScreen extends ProgressMachineScreen<ComponentR
 	private static final int STATUS_BAND_LEFT = 32;
 	private static final int STATUS_BAND_RIGHT = 168;
 
-	public ComponentRepairBenchScreen(ComponentRepairBenchMenu menu, Inventory inventory, Component title) {
-		super(menu, inventory, title, PROGRESS);
-	}
+	/** Atlas, energy bar and progress sprite: the whole declared frame (MOD-716, CLI-3). */
+	private static final MachineLayout LAYOUT = MachineLayout.of(TEXTURE, EnergyBarSpec.LEFT)
+			.withProgress(PROGRESS);
 
-	@Override
-	protected Identifier texture() {
-		return TEXTURE;
+	public ComponentRepairBenchScreen(ComponentRepairBenchMenu menu, Inventory inventory, Component title) {
+		super(menu, inventory, title, LAYOUT);
 	}
 
 	/** The component currently loaded, or empty. Read off the synced slot, so it is client-safe. */
@@ -126,16 +125,9 @@ public class ComponentRepairBenchScreen extends ProgressMachineScreen<ComponentR
 	/** One centred row: what the bench is doing, or the single reason it is not. Never blank. */
 	private void drawStatusText(GuiGraphicsExtractor graphics) {
 		RepairStatus status = this.menu.getStatus();
-		String key = switch (status) {
-			// An empty bench used to say nothing, on the theory that two empty slots are the message.
-			// Playtesting disagreed: it is the state a player meets first and the one they get stuck on.
-			case NO_TARGET -> "gui.alaindustrial.component_repair_bench.insert_component";
-			case NOT_DAMAGED -> "gui.alaindustrial.component_repair_bench.not_damaged";
-			case LIMIT_REACHED -> "gui.alaindustrial.component_repair_bench.limit_reached";
-			case NEEDS_MATERIAL -> "gui.alaindustrial.component_repair_bench.needs_material";
-			case READY -> "gui.alaindustrial.component_repair_bench.repairing";
-		};
-		Component label = Component.translatable(key);
+		// An empty bench used to say nothing, on the theory that two empty slots are the message. Playtesting
+		// disagreed: it is the state a player meets first and the one they get stuck on.
+		Component label = Component.translatable(status.translationKey());
 		int colour = status == RepairStatus.READY ? GuiStyle.TEXT : GuiStyle.TEXT_DIM;
 		drawFittedStatus(graphics, label, STATUS_TEXT_Y, STATUS_BAND_LEFT, STATUS_BAND_RIGHT, colour);
 	}
@@ -143,8 +135,6 @@ public class ComponentRepairBenchScreen extends ProgressMachineScreen<ComponentR
 	@Override
 	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		super.extractTooltip(graphics, mouseX, mouseY);
-		// Hovering the energy bar shows the exact buffer as "X / max EU" (R-GUI-14).
-		renderEnergyTooltip(graphics, mouseX, mouseY, EnergyBarSpec.LEFT);
 		// The arrow stands in for the recipe entry this machine cannot have: pressing it in a recipe
 		// viewer finds nothing, so hovering it has to carry the whole deal instead.
 		if (this.isHovering(ARROW_X, ARROW_Y, ARROW_W, ARROW_H, mouseX, mouseY)) {

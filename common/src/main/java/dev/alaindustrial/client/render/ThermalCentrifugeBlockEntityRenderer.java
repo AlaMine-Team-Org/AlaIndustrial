@@ -5,6 +5,8 @@ import com.mojang.math.Axis;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.LitMachineBlock;
 import dev.alaindustrial.block.entity.ThermalCentrifugeBlockEntity;
+import dev.alaindustrial.compat.client.ModelSubmit;
+import dev.alaindustrial.compat.client.Poses;
 import dev.alaindustrial.core.machine.RotorSpin;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -275,7 +277,7 @@ public final class ThermalCentrifugeBlockEntityRenderer
 		// machine rather than as a switched-off one — standing still IS the "off" state.
 		poseStack.pushPose();
 		poseStack.translate(CENTRE, CENTRE, CENTRE);
-		poseStack.rotate(Axis.YP.rotation(state.angle));
+		Poses.rotate(poseStack, Axis.YP.rotation(state.angle));
 		ModelSubmit.withCrumbling(collector, structureModel, Unit.INSTANCE, poseStack, state.lightCoords,
 				OverlayTexture.NO_OVERLAY, -1, STRUCTURE, sprites, 0, state.breakProgress);
 		ModelSubmit.withCrumbling(collector, vaneModel, Unit.INSTANCE, poseStack, state.lightCoords,

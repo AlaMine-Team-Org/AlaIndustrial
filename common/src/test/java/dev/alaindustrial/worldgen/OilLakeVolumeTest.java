@@ -21,7 +21,7 @@ import org.junit.jupiter.params.provider.CsvSource;
  *
  * <p><b>What the numbers mean.</b> They are counts of oil <em>source</em> blocks (one source = one
  * bucket = 1000 mB) over the bare geometry. In a world they are an upper bound: the feature still
- * skips cells it may not replace, and {@code OilLakeFeature} abandons whole sites that cannot hold a
+ * skips cells it may not replace, and {@code OilLakePlacer} abandons whole sites that cannot hold a
  * lake. They also are not a specific world's deposits — worldgen runs on xoroshiro through
  * {@code WorldgenRandom}, not on {@link Random} — so what is pinned here is the distribution of the
  * shape, sampled through a source that a second implementation can reproduce exactly.
@@ -29,7 +29,7 @@ import org.junit.jupiter.params.provider.CsvSource;
  * <p><b>Why the protocol is spelled out.</b> {@link #SEED} and {@link #SAMPLES} are part of the
  * published figures, not an implementation detail: at 400 samples the deep layer's median swings by
  * about 4 % from seed to seed, which is how the old table came to hold numbers nobody could
- * regenerate. {@code docs/tools/oil_volume_check.py} replays this exact protocol in Python and
+ * regenerate. {@code docs/tools/content/oil_volume_check.py} replays this exact protocol in Python and
  * compares its result against the same literals below, which is what keeps the replica honest —
  * without that link the two implementations would be free to drift apart, each green on its own.
  *
@@ -109,7 +109,7 @@ class OilLakeVolumeTest {
 	 * surface deposit in the game came to be an empty pit of cave air — 995 of 2001 samples. The
 	 * fix moved that range to 3–4; this test keeps the underlying arithmetic pinned, because the
 	 * range is data and could be lowered again by anyone editing the JSON. What guards the shipped
-	 * ranges themselves is {@code docs/tools/oil_volume_check.py}, which reads the configured
+	 * ranges themselves is {@code docs/tools/content/oil_volume_check.py}, which reads the configured
 	 * features for real and refuses a minimum below 3 — a check this Minecraft-free lane cannot
 	 * make, having no codec to read them with.
 	 */
@@ -257,7 +257,7 @@ class OilLakeVolumeTest {
 	}
 
 	/**
-	 * Runs one layer through the same call order {@code OilLakeFeature.place} uses, so that the
+	 * Runs one layer through the same call order {@code OilLakePlacer.place} uses, so that the
 	 * pinned figures describe the feature and not a rearrangement of it: horizontal radius, then
 	 * vertical radius, then blob count, then the six draws per blob that {@link OilLakeShape} takes.
 	 */

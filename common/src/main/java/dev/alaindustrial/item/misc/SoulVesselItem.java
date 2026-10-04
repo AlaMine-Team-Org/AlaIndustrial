@@ -1,6 +1,7 @@
 package dev.alaindustrial.item.misc;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.client.ServerBalance;
 import dev.alaindustrial.registry.ModDataComponents;
 import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
@@ -61,7 +62,8 @@ public class SoulVesselItem extends Item {
 	// MOD-498 — Item#appendHoverText carries a vanilla soft-deprecation marker but is still the only hook
 	// an item has for its own tooltip lines: ItemStack#addDetailsToTooltip calls it, and vanilla itself
 	// overrides it (DiscFragmentItem, HangingEntityItem, SmithingTemplateItem). A data-component
-	// TooltipProvider could not produce these lines — they mix the stack's soul count with Config values.
+	// TooltipProvider could not produce these lines — they mix the stack's soul count with the
+	// server's balance, read through ServerBalance (MOD-695) because a tooltip runs on the client.
 	@SuppressWarnings("deprecation")
 	@Override
 	public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
@@ -69,9 +71,9 @@ public class SoulVesselItem extends Item {
 		adder.accept(Component.translatable("item.alaindustrial.soul_vessel.flavor")
 				.withStyle(ChatFormatting.GRAY));
 		adder.accept(Component.translatable("item.alaindustrial.soul_vessel.souls",
-				kills(stack), cap()).withStyle(ChatFormatting.AQUA));
+				kills(stack), ServerBalance.mobRepellerEvolveKillsHv()).withStyle(ChatFormatting.AQUA));
 		adder.accept(Component.translatable("item.alaindustrial.soul_vessel.thresholds",
-				Config.mobRepellerEvolveKillsMv, Config.mobRepellerEvolveKillsHv)
+				ServerBalance.mobRepellerEvolveKillsMv(), ServerBalance.mobRepellerEvolveKillsHv())
 				.withStyle(ChatFormatting.DARK_GRAY));
 	}
 
@@ -84,7 +86,9 @@ public class SoulVesselItem extends Item {
 
 	@Override
 	public int getBarWidth(ItemStack stack) {
-		return (int) Math.min(MAX_BAR_WIDTH, (long) MAX_BAR_WIDTH * kills(stack) / Math.max(1, cap()));
+		// Drawn on the client: the server's cap (MOD-695), not the client file's.
+		int cap = Math.max(1, ServerBalance.mobRepellerEvolveKillsHv());
+		return (int) Math.min(MAX_BAR_WIDTH, (long) MAX_BAR_WIDTH * kills(stack) / cap);
 	}
 
 	@Override

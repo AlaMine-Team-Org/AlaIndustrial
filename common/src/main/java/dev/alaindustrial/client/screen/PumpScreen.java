@@ -47,6 +47,12 @@ public class PumpScreen extends MachineScreen<PumpMenu> {
 		return TEXTURE;
 	}
 
+	/** The energy bar and its tooltip, drawn by the base (MOD-716). */
+	@Override
+	protected EnergyBarSpec energyBar() {
+		return EnergyBarSpec.RIGHT;
+	}
+
 	@Override
 	protected void drawMachineFrame(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
 		int x = this.leftPos;
@@ -68,8 +74,6 @@ public class PumpScreen extends MachineScreen<PumpMenu> {
 			}
 		}
 
-		// Energy fill (right bar): blit the segmented orange sprite (bottom-up) via the shared helper.
-		renderEnergyBar(graphics, EnergyBarSpec.RIGHT);
 	}
 
 	/**
@@ -91,8 +95,6 @@ public class PumpScreen extends MachineScreen<PumpMenu> {
 	@Override
 	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		super.extractTooltip(graphics, mouseX, mouseY);
-		// Right bar — stored EU / buffer.
-		renderEnergyTooltip(graphics, mouseX, mouseY, EnergyBarSpec.RIGHT);
 		// Left bar — fluid name + level as millibuckets. The name is resolved client-side from the synced
 		// fluid registry id (channel 6), so it shows the right label for any fluid, not just lava/water.
 		int fluidId = this.menu.getFluidRegistryId();

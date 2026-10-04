@@ -2,6 +2,7 @@ package dev.alaindustrial.item.misc;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.ItemPipeBlock;
+import dev.alaindustrial.client.ServerBalance;
 import dev.alaindustrial.core.item.PipeTier;
 import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
@@ -50,7 +51,7 @@ public class ItemPipeBlockItem extends BlockItem {
 			return;
 		}
 		int batch = Math.max(1, tier().itemsPerTransfer());
-		int interval = Math.max(1, Config.itemPipeTransferIntervalTicks);
+		int interval = Math.max(1, ServerBalance.itemPipeTransferIntervalTicks());
 		// Throughput as items per second, one decimal: 2 items / 20 ticks reads as "2.0/s". Computed from
 		// the live config so a retuned server is described truthfully.
 		String perSecond = String.format("%.1f", batch * 20.0 / interval);

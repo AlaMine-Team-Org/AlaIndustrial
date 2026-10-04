@@ -2,6 +2,7 @@ package dev.alaindustrial.advancement;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.alaindustrial.compat.CriterionPlayer;
 import java.util.Optional;
 import net.minecraft.advancements.triggers.SimpleCriterionTrigger;
 import net.minecraft.core.Holder;
@@ -24,10 +25,11 @@ public class NetworkEnergizedTrigger extends SimpleCriterionTrigger<NetworkEnerg
 		trigger(player, instance -> true);
 	}
 
-	public record TriggerInstance(Optional<Holder<LootItemCondition>> player)
+	public record TriggerInstance(
+			Optional<Holder<LootItemCondition>> player)
 			implements SimpleCriterionTrigger.SimpleInstance {
 		public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(i -> i.group(
-				LootItemCondition.CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player)
+				CriterionPlayer.FIELD.forGetter(TriggerInstance::player)
 		).apply(i, TriggerInstance::new));
 	}
 }

@@ -2,6 +2,9 @@ package dev.alaindustrial.registry;
 
 import dev.alaindustrial.core.energy.EnergyPortHost;
 import dev.alaindustrial.core.fluid.FluidPortHost;
+import dev.alaindustrial.registry.content.AgricultureContent;
+import dev.alaindustrial.registry.content.FluidContent;
+import dev.alaindustrial.registry.content.StorageContent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -30,16 +33,19 @@ import net.minecraft.world.Container;
  * {@code BlockEntityType} through {@code def.registeredType()} at its own registration moment, which
  * throws rather than guesses if it is asked too early.
  *
- * <p><b>The hand-maintained exceptions.</b> {@link #NO_ENERGY_CAPABILITY}: the item pipe and the
- * fluid pipe extend {@code EnergyBlockEntity} for its tick/persistence scaffolding and therefore
- * implement {@link EnergyPortHost} with a zero-capacity buffer and the default {@code BOTH} face
- * role. Neither loader ever registered them for energy, and exposing them would change gameplay on
- * Fabric: the mod's own network discovers endpoints through {@code EnergyStorage.SIDED} there, so an
- * item pipe next to a cable would become a 0-EU BOTH endpoint of the energy network. (NeoForge's own
- * lookup takes {@code energyPort()} straight from the block entity and already hands out the pipes'
- * ports — a pre-existing asymmetry, logged in MOD-433, deliberately not touched here.) The exclusion
- * is pinned by the both-loader gametest sweep {@code BlockCapabilityParityScenarios}, which asserts
- * independently — by id, not through this constant — that the pipes expose no energy.
+ * <p><b>The hand-maintained exceptions.</b> {@link #NO_ENERGY_CAPABILITY} holds three block-entity
+ * DEFINITIONS (MOD-711; they were ids, and a block id there excluded nothing): {@code item_pipe}
+ * (the item pipe and its advanced grade), {@code fluid_pipe} (one block entity behind five blocks: the
+ * basic, advanced and reinforced fluid pipes and both steam pipes) and {@code sprinkler}. Both pipes
+ * extend {@code EnergyBlockEntity} for its tick/persistence scaffolding and therefore implement
+ * {@link EnergyPortHost} with a zero-capacity buffer. Since MOD-691 they report {@code NONE} on every
+ * face, so {@code energyPort()} is {@code null} on both loaders and they are no endpoint of the energy
+ * network anywhere; before that the default {@code BOTH} role made them 0-EU endpoints on NeoForge,
+ * whose own lookup takes {@code energyPort()} straight from the block entity. Neither loader ever
+ * registered them for energy. The exclusion is pinned by the both-loader gametest sweep
+ * {@code BlockCapabilityParityScenarios}, which asserts independently — by id, not through this
+ * constant — that the pipes expose no energy on any of their blocks, and that every id here names a
+ * manifest block entity.
  *
  * <p>The sprinkler (MOD-525) is the third, for a different reason: it extends {@code EnergyBlockEntity}
  * for the same tick/persistence scaffolding but draws no EU at all — a zero-capacity buffer and
@@ -54,17 +60,18 @@ public final class BlockCapabilityRoster {
 	}
 
 	/**
-	 * Block-entity ids that implement {@link EnergyPortHost} but must NOT publish an energy capability.
-	 * See the class doc for why these, and why the list is closed by a gametest rather than by
-	 * convention.
+	 * Block-entity definitions that implement {@link EnergyPortHost} but must NOT publish an energy
+	 * capability. Definitions, not ids (MOD-711): a block id cannot be put here by type. See the class doc
+	 * for why these, and why the list is closed by a gametest rather than by convention.
 	 */
-	public static final Set<String> NO_ENERGY_CAPABILITY = Set.of("item_pipe", "fluid_pipe", "fluid_pipe_advanced", "reinforced_fluid_pipe", "sprinkler");
+	public static final Set<ContentManifest.BlockEntityDef<?>> NO_ENERGY_CAPABILITY = Set.of(
+			StorageContent.ITEM_PIPE_BE, FluidContent.FLUID_PIPE_BE, AgricultureContent.SPRINKLER_BE);
 
 	/** Every manifest entry whose block entity is an {@link EnergyPortHost}, minus {@link #NO_ENERGY_CAPABILITY}. */
 	public static List<ContentManifest.BlockEntityDef<?>> energyHosts() {
 		List<ContentManifest.BlockEntityDef<?>> hosts = new ArrayList<>();
 		for (ContentManifest.BlockEntityDef<?> def : ContentManifest.BLOCK_ENTITIES) {
-			if (EnergyPortHost.class.isAssignableFrom(def.type()) && !NO_ENERGY_CAPABILITY.contains(def.id())) {
+			if (EnergyPortHost.class.isAssignableFrom(def.type()) && !NO_ENERGY_CAPABILITY.contains(def)) {
 				hosts.add(def);
 			}
 		}

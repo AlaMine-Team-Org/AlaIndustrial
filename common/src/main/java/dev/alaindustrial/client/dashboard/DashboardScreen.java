@@ -1,7 +1,7 @@
 package dev.alaindustrial.client.dashboard;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.client.screen.GuiStyle;
+import dev.alaindustrial.client.skill.MasteryReadout;
 import dev.alaindustrial.skill.SkillBuild;
 import dev.alaindustrial.skill.SkillClientCache;
 import dev.alaindustrial.skill.SkillPoints;
@@ -130,9 +130,8 @@ public final class DashboardScreen extends Screen {
 		// earn, whichever is higher. Using highestLevelReached alone would lag whenever points move
 		// without a flush having run yet (e.g. right after a rate change retroactively raises the
 		// total), showing a stale rank next to a bar clamped at 100%.
-		int level = Math.max(Math.max(1, stats.highestLevelReached()),
-				LevelMath.levelForXp(stats.xp(Config.euPerXp, Config.euPerXpGenerated),
-						Config.xpLevelOneCost, Config.levelXpMultiplier));
+		int level = MasteryReadout.level(stats.euUsefulConsumedTotal(), stats.euProducedTotal(),
+				stats.highestLevelReached());
 		// Module title makes the progression its own named system ("Mastery"), distinct from vanilla XP.
 		moduleTitle(g, Component.translatable("gui.alaindustrial.dashboard.mastery"), inX, y + 5);
 		String rankName = Component.translatable("alaindustrial.rank." + LevelMath.rankKey(level)).getString();
@@ -142,8 +141,8 @@ public final class DashboardScreen extends Screen {
 		g.text(this.font, Component.literal(levelTag), inRight - this.font.width(levelTag), y + 17, GuiStyle.TEXT_DIM, false);
 
 		// Mastery bar (deliberately NOT called "XP" — see the mastery label below).
-		long xp = stats.xp(Config.euPerXp, Config.euPerXpGenerated);
-		double progress = LevelMath.progressToNext(xp, level, Config.xpLevelOneCost, Config.levelXpMultiplier);
+		long xp = MasteryReadout.xp(stats.euUsefulConsumedTotal(), stats.euProducedTotal());
+		double progress = MasteryReadout.progress(xp, level);
 		int barY = y + 30;
 		int barW = inRight - inX;
 		g.fill(inX, barY, inRight, barY + 8, XP_TRACK);

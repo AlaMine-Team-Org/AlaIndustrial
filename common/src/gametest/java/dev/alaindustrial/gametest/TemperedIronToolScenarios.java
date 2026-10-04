@@ -1,6 +1,7 @@
 package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -14,9 +15,8 @@ import net.minecraft.world.item.enchantment.Enchantments;
 /**
  * Loader-neutral world-based gametest bodies for tempered-iron hand tools (MOD-057). Each scenario is
  * a plain {@code Consumer<GameTestHelper>} using only vanilla {@code GameTestHelper} + loader-neutral
- * content ({@link ModContent}) — no loader-specific gametest infrastructure. Both the Fabric
- * {@code @GameTest} suite ({@code TemperedIronToolsGameTest}) and the NeoForge {@code gameTestServer}
- * lane (via {@code dev.alaindustrial.gametest.neoforge.NeoForgeGameTests}) exercise the SAME checks.
+ * content ({@link ModContent}) — no loader-specific gametest infrastructure. Both lanes run the SAME
+ * checks from the scenario roster ({@link Roster}, MOD-717).
  *
  * <p><b>What these tests guard (MOD-057 root cause):</b> {@code Item.Properties.{pickaxe,axe,hoe,
  * shovel,sword}()} in MC 26.2 attach only the {@code Tool}/{@code Weapon} data-component and do NOT
@@ -35,6 +35,23 @@ import net.minecraft.world.item.enchantment.Enchantments;
  */
 public final class TemperedIronToolScenarios {
 
+	/**
+	 * This class's roster entries (nested so reading them does not initialise the class); the Fabric ids
+	 * are those of the former {@code TemperedIronToolsGameTest} wrappers. Tick budgets differ per lane as
+	 * they were wired by hand (Fabric annotation default 20, NeoForge 40) until MOD-717 batch 6 aligns them.
+	 */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(TemperedIronToolScenarios::toolMembershipTags, "tempered_iron_tool_membership_tags")
+						.fabricId("TemperedIronToolsGameTest", "tcTi001_toolMembershipTags")
+						.ticks(20, 40),
+				RosterEntry.of(TemperedIronToolScenarios::enchantmentAccepted, "tempered_iron_enchantment_accepted")
+						.fabricId("TemperedIronToolsGameTest", "tcTi002_enchantmentAccepted")
+						.ticks(20, 40));
+
+		private Roster() {}
+	}
+
 	private TemperedIronToolScenarios() {}
 
 	/**
@@ -42,7 +59,8 @@ public final class TemperedIronToolScenarios {
 	 * A dropped {@code data/minecraft/tags/item/<tool>.json} fails here. Asserts the positive mapping
 	 * (pickaxe → {@link ItemTags#PICKAXES}, etc.) for all five tools in one pass.
 	 *
-	 * <p>Mirrors: TemperedIronToolsGameTest.tcTi001_toolMembershipTags
+	 * @implements TC-TI-001
+	 * @covers MOD-057 (tag membership regression gate)
 	 */
 	public static void toolMembershipTags(GameTestHelper helper) {
 		assertInTag(helper, ModContent.TEMPERED_IRON_PICKAXE.get(), ItemTags.PICKAXES, "tempered_iron_pickaxe", "#minecraft:pickaxes");
@@ -62,7 +80,8 @@ public final class TemperedIronToolScenarios {
 	 * {@code fortune} (sword is not in {@code #minecraft:enchantable/mining}) — so an over-broad tag
 	 * JSON is caught too.
 	 *
-	 * <p>Mirrors: TemperedIronToolsGameTest.tcTi002_enchantmentAccepted
+	 * @implements TC-TI-002
+	 * @covers MOD-057 (enchantability regression gate)
 	 */
 	public static void enchantmentAccepted(GameTestHelper helper) {
 		ServerLevel level = helper.getLevel();

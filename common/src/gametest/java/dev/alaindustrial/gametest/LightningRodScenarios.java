@@ -1,8 +1,9 @@
 package dev.alaindustrial.gametest;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.LightningRodGeneratorBlockEntity;
+import dev.alaindustrial.core.environment.GeneratorConfig;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -21,6 +22,38 @@ import net.minecraft.world.level.storage.TagValueInput;
  * world is everything downstream of it, which is exactly what the seam exposes.
  */
 public final class LightningRodScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(LightningRodScenarios::strikeBanksIntoTheCapacitor,
+								"lightning_rod_strike_banks_into_capacitor")
+						.fabricId("GeneratorGameTest", "lightningRod_strikeBanksIntoTheCapacitor").ticks(20, 40),
+				RosterEntry.of(LightningRodScenarios::strikeWithoutTipBanksNothing,
+								"lightning_rod_strike_without_tip_banks_nothing")
+						.fabricId("GeneratorGameTest", "lightningRod_strikeWithoutTipBanksNothing").ticks(20, 60),
+				RosterEntry.of(LightningRodScenarios::strikeOnFullCapacitorIsWastedAndWearsTheTip,
+								"lightning_rod_overload_wastes_strike_and_wears_tip")
+						.fabricId("GeneratorGameTest", "lightningRod_strikeOnFullCapacitorIsWastedAndWearsTheTip")
+						.ticks(20, 40),
+				RosterEntry.of(LightningRodScenarios::capacitorBleedsIntoTheBuffer,
+								"lightning_rod_capacitor_bleeds_into_buffer")
+						.fabricId("GeneratorGameTest", "lightningRod_capacitorBleedsIntoTheBuffer").ticks(20, 60),
+				RosterEntry.of(LightningRodScenarios::aFullBufferDoesNotDrainTheCapacitor,
+								"lightning_rod_full_buffer_does_not_drain_capacitor")
+						.fabricId("GeneratorGameTest", "lightningRod_aFullBufferDoesNotDrainTheCapacitor")
+						.ticks(20, 60),
+				RosterEntry.of(LightningRodScenarios::capacitorSurvivesSaveAndLoad,
+								"lightning_rod_capacitor_survives_save_and_load")
+						.fabricId("GeneratorGameTest", "lightningRod_capacitorSurvivesSaveAndLoad").ticks(20, 40),
+				RosterEntry.of(LightningRodScenarios::aBreakingTipTakesItsStoredChargeWithIt,
+								"lightning_rod_breaking_tip_takes_its_charge")
+						.fabricId("GeneratorGameTest", "lightningRod_aBreakingTipTakesItsStoredChargeWithIt")
+						.ticks(20, 40));
+
+		private Roster() {}
+	}
+
 	private LightningRodScenarios() {
 	}
 
@@ -47,9 +80,9 @@ public final class LightningRodScenarios {
 					+ rod.capacitorCharge());
 		}
 		rod.strikeNow(helper.getLevel());
-		if (rod.capacitorCharge() != Config.lightningRodStrikeEu) {
+		if (rod.capacitorCharge() != GeneratorConfig.lightningRodStrikeEu) {
 			helper.fail("an empty capacitor must bank the whole strike: expected "
-					+ Config.lightningRodStrikeEu + " EU, banked " + rod.capacitorCharge());
+					+ GeneratorConfig.lightningRodStrikeEu + " EU, banked " + rod.capacitorCharge());
 		}
 		helper.succeed();
 	}
@@ -133,7 +166,7 @@ public final class LightningRodScenarios {
 		}
 		// Rate ceiling: the bleed must respect the LV cap rather than dumping the burst in one tick.
 		int drained = banked - rod.capacitorCharge();
-		int ceiling = Config.lightningRodMaxBleedEuPerTick * 20;
+		int ceiling = GeneratorConfig.lightningRodMaxBleedEuPerTick * 20;
 		if (drained > ceiling) {
 			helper.fail("bleed exceeded the LV ceiling: drained " + drained + " EU in 20 ticks, cap is "
 					+ ceiling);

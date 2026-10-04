@@ -267,28 +267,29 @@ class Mod413ForkStarvationSimTest {
 
 			long genSupply = Math.min(solar.getAmount(), SOLAR_MAX_EXTRACT);
 			Set<BlockPos> supplying = genSupply > 0 ? Set.of(solarPos) : Set.of();
-			List<EnergyLineDistributor.LiveProducer> generators =
-					List.of(new EnergyLineDistributor.LiveProducer(solarPos, solar));
+			List<EnergyLineDistributor.LiveProducer<BlockPos>> generators =
+					List.of(new EnergyLineDistributor.LiveProducer<>(solarPos, solar));
 
 			// consumers in endpoint-list order (geometric: A's cable sorts before B's)
-			List<EnergyLineDistributor.LiveConsumer> machines = new ArrayList<>();
+			List<EnergyLineDistributor.LiveConsumer<BlockPos>> machines = new ArrayList<>();
 			long machineDemand = 0;
 			for (var pair : List.of(Map.entry(machineAPos, machineA), Map.entry(machineBPos, machineB))) {
 				long room = Math.min(pair.getValue().capacity - pair.getValue().getAmount(), MACHINE_MAX_INSERT);
 				if (room > 0) {
-					machines.add(new EnergyLineDistributor.LiveConsumer(pair.getKey(), pair.getValue(), room));
+					machines.add(new EnergyLineDistributor.LiveConsumer<>(pair.getKey(), pair.getValue(), room));
 					machineDemand += room;
 				}
 			}
 
 			Set<BlockPos> sinkSeeds = new LinkedHashSet<>();
-			for (EnergyLineDistributor.LiveConsumer c : machines) {
+			for (EnergyLineDistributor.LiveConsumer<BlockPos> c : machines) {
 				sinkSeeds.add(c.pos());
 			}
 			updateLiveEndpoints(supplying, sinkSeeds, sinkSeeds);
 
 			boolean hasSupply = !supplying.isEmpty();
-			EnergyLineDistributor distributor = new EnergyLineDistributor(
+			EnergyLineDistributor<BlockPos> distributor = new EnergyLineDistributor<>(new LineView<>(
+					LineEndpoints.BLOCK_FACES,
 					cables::contains,
 					cableBuffers::get,
 					pos -> consumerDistance.getOrDefault(pos, 0),
@@ -299,11 +300,11 @@ class Mod413ForkStarvationSimTest {
 					(p, d) -> true,
 					(p, d) -> true,
 					hasSupply ? strandedFillOrder : List.of(),
-					producerDistance::get);
+					producerDistance::get));
 
 			long moved = distributor.serveConsumersFromLine(machines, PACKET_CAP, COPPER_LOSS, txn, producerCursor);
-			distributor.chargeAndPropagateLine(generators, List.of(), machineDemand, genSupply,
-					PACKET_CAP, txn, producerCursor);
+			distributor.chargeAndPropagateLine(generators, List.of(),
+					DischargePlan.backupOnly(machineDemand, genSupply), PACKET_CAP, txn, producerCursor);
 			producerCursor = (producerCursor + 1) & Integer.MAX_VALUE;
 			return moved;
 		}

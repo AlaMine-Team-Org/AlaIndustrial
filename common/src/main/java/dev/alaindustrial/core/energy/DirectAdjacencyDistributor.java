@@ -1,7 +1,5 @@
 package dev.alaindustrial.core.energy;
 
-import dev.alaindustrial.block.entity.CableBlockEntity;
-import dev.alaindustrial.block.entity.MachineBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -27,7 +25,7 @@ public final class DirectAdjacencyDistributor {
 	}
 
 	/** Push energy from {@code source} to every adjacent insertable storage, with tier limits. */
-	public static void distribute(Level level, BlockPos pos, MachineBlockEntity source) {
+	public static void distribute(Level level, BlockPos pos, DirectPushSource source) {
 		distribute(level, pos, source, false);
 	}
 
@@ -37,7 +35,17 @@ public final class DirectAdjacencyDistributor {
 	 * path is handled exclusively by the {@link EnergyNetwork} (which pulls from the generator),
 	 * while the direct, cable-less adjacency case (generator touching a machine) still works.
 	 */
-	public static void distribute(Level level, BlockPos pos, MachineBlockEntity source, boolean skipCables) {
+	public static void distribute(Level level, BlockPos pos, DirectPushSource source, boolean skipCables) {
+		distribute(level, pos, source, skipCables, NetworkManager.balance());
+	}
+
+	/**
+	 * The push itself, on {@code balance} (MOD-710, CORE-10): the store → store deadband is
+	 * {@link NetworkBalance#cableBuffer()}, exactly the {@code Config.cableBuffer} it always was — not the
+	 * strongest grade's segment buffer the cabled cascade uses; that difference is kept as it is.
+	 */
+	public static void distribute(Level level, BlockPos pos, DirectPushSource source, boolean skipCables,
+			NetworkBalance balance) {
 		EnergyPort src = source.getEnergyStorage();
 		if (!src.supportsExtraction() || src.getAmount() <= 0) {
 			return;
@@ -54,7 +62,7 @@ public final class DirectAdjacencyDistributor {
 				continue;
 			}
 			BlockPos np = pos.relative(dir);
-			if (skipCables && level.getBlockEntity(np) instanceof CableBlockEntity) {
+			if (skipCables && level.getBlockEntity(np) instanceof CableNode) {
 				continue;
 			}
 			EnergyPort target = lookup.find(level, np, dir.getOpposite());
@@ -77,7 +85,7 @@ public final class DirectAdjacencyDistributor {
 					continue;
 				}
 				limit = CascadeShare.allowance(src.getAmount(), src.getCapacity(),
-						target.getAmount(), target.getCapacity(), dev.alaindustrial.Config.cableBuffer, limit);
+						target.getAmount(), target.getCapacity(), balance.cableBuffer(), limit);
 				if (limit <= 0) {
 					continue;
 				}
@@ -100,6 +108,6 @@ public final class DirectAdjacencyDistributor {
 	 * different answers for the same pair of blocks.
 	 */
 	private static boolean isCascadeStore(Level level, BlockPos pos) {
-		return level.getBlockEntity(pos) instanceof MachineBlockEntity mbe && mbe.acceptsCascade();
+		return level.getBlockEntity(pos) instanceof StorageEndpoint be && be.acceptsCascade();
 	}
 }

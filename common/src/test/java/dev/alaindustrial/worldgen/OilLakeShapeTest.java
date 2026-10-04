@@ -15,7 +15,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 /**
  * L1 unit tests for the oil-deposit blob geometry (MOD-248).
  *
- * <p>{@link OilLakeFeature} does no bounds checking when it looks for cells bordering the hollow —
+ * <p>{@link OilLakePlacer} does no bounds checking when it looks for cells bordering the hollow —
  * it relies on {@link OilLakeShape} never filling the outermost layer of the grid. If that
  * invariant breaks the feature reads past the array on the very first lake, and in a world it looks
  * like an unsealed deposit rather than a crash, which is far harder to trace. Hence the emphasis

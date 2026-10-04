@@ -3,6 +3,7 @@ package dev.alaindustrial;
 import dev.alaindustrial.core.energy.EnergyLookup;
 import dev.alaindustrial.core.energy.EnergyPortHost;
 import dev.alaindustrial.item.energy.ItemEnergyBridge;
+import dev.alaindustrial.lifecycle.ServerHookRoster;
 import dev.alaindustrial.core.energy.EnergyTransactions;
 import dev.alaindustrial.core.fluid.FluidLookup;
 import dev.alaindustrial.core.fluid.FluidPortHost;
@@ -25,8 +26,6 @@ import dev.alaindustrial.registry.neoforge.ModBlocksNeoForge;
 import dev.alaindustrial.registry.neoforge.ModItemsNeoForge;
 import dev.alaindustrial.registry.neoforge.ModMenusNeoForge;
 import dev.alaindustrial.command.AlaCommandCommon;
-import dev.alaindustrial.core.energy.NetworkManager;
-import dev.alaindustrial.core.item.ItemNetworkManager;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.bus.api.IEventBus;
@@ -43,30 +42,31 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
 /**
- * NeoForge {@code @Mod} entrypoint (MOD-022 Phase 3 scaffold). Mirrors the Fabric
- * {@code dev.alaindustrial.IndustrializationFabric} entrypoint; loader-neutral constants live in
- * {@link Industrialization} (common).
+ * NeoForge {@code @Mod} entrypoint. Mirrors the Fabric {@code dev.alaindustrial.IndustrializationFabric}
+ * entrypoint; loader-neutral constants live in {@link Industrialization} (common), and the content itself
+ * is declared once in {@code common} and replayed here.
  *
- * <p><b>Verified 26.2 wiring (against neoforge-26.2.0.67):</b>
+ * <p><b>Wiring:</b>
  * <ul>
  *   <li>{@code @Mod(MOD_ID)} + a {@code (IEventBus modBus)} constructor — NeoForge injects the mod
  *       event bus.</li>
- *   <li>{@code DeferredRegister} objects are registered on the mod bus in this constructor
- *       ({@code BLOCKS.register(modBus)}).</li>
- *   <li>Per-side energy exposure goes through {@link RegisterCapabilitiesEvent} using
- *       {@code Capabilities.Energy.BLOCK} (a {@code BlockCapability<EnergyHandler, Direction>});
- *       each machine's {@code BlockEntityType} is registered here once those types exist
- *       (Phase 3/4). The {@code EnergyHandler} returned is adapted to the common
- *       {@code EnergyPort} via {@code dev.alaindustrial.core.neoforge.NeoForgeEnergyPort}.</li>
+ *   <li>Every registry is frozen before mod construction, so each {@code Mod*NeoForge} class queues the
+ *       shared lists on a {@code DeferredRegister}, registered on the mod bus in this constructor
+ *       ({@code BLOCKS.register(modBus)}), and binds its lazy holders into {@code ModContent}.</li>
+ *   <li>Block capabilities (energy, fluid, item) are published on {@link RegisterCapabilitiesEvent} for every
+ *       block entity of {@code ContentManifest.BLOCK_ENTITIES}, derived by interface from
+ *       {@code BlockCapabilityRoster}; the energy capability adapts the common {@code EnergyPort} to
+ *       NeoForge's {@code EnergyHandler}.</li>
+ *   <li>Packets go through the neutral seam {@link NetworkDispatcher}; the payloads of
+ *       {@code ModPayloads.PAYLOADS} are registered by {@link NeoForgeNetwork} on
+ *       {@code RegisterPayloadHandlersEvent}. The client side (screens, renderers, models) is
+ *       {@link IndustrializationNeoForgeClient}.</li>
  * </ul>
  *
- * <p><b>Phase 3 scope:</b> the neutral packet-send seam ({@link NetworkDispatcher}) is installed;
- * the S2C payload is registered via {@link NeoForgeNetwork} on {@code RegisterPayloadHandlersEvent};
- * the block/item/block-entity/menu {@code DeferredRegister} objects are created and registered on the
- * mod bus, and the client screen binding runs from {@link IndustrializationNeoForgeClient} on
- * {@code RegisterMenuScreensEvent}. The registries still hold representative stubs / Phase-4 entry
- * helpers — the machine content classes move to {@code common} in Phase 4 (per-machine migration),
- * at which point each registry's entries and the screen bindings are filled in.
+ * <p><b>Order.</b> The constructor is a table of contents (MOD-137): each step is a named private method,
+ * and the order is load-bearing — every {@code DeferredRegister} is registered on the mod bus before the
+ * {@code init()} calls bind the {@code ModContent} facade, and {@code ModContent.verifyAllBound()} runs
+ * after both.
  */
 @Mod(Industrialization.MOD_ID)
 public final class IndustrializationNeoForge {
@@ -83,6 +83,7 @@ public final class IndustrializationNeoForge {
 		verifyContentBound();
 		registerModBusEvents(modBus);
 		loadConfig();
+		registerServerHooks();
 		registerGameBusEvents();
 
 		Industrialization.LOGGER.info("Industrialization (NeoForge) initialized.");
@@ -93,17 +94,16 @@ public final class IndustrializationNeoForge {
 	 * packet dispatcher) so common transport/content code stays loader-neutral.
 	 */
 	private void installLoaderSeams() {
-		// MOD-022 Phase 2: install the NeoForge energy seams (transaction opener + capability lookup) so
-		// the common transport code can open transactions and resolve per-face ports through the NeoForge
-		// EnergyHandler API without importing loader types. These are inert until the NeoForge tick loop
-		// and machine BlockEntity types exist (Phase 3/4) — nothing calls them at runtime yet.
+		// MOD-022: install the NeoForge energy seams (transaction opener + capability lookup) so the common
+		// transport code can open transactions and resolve per-face ports through the NeoForge
+		// EnergyHandler API without importing loader types.
 		EnergyTransactions.install(new NeoForgeEnergyTransactions());
 		EnergyLookup.install(new NeoForgeEnergyLookup());
 		// MOD-028: install the NeoForge fluid lookup seam (same seam shape as energy) so common fluid
 		// content (the pump) can resolve a neighbour's FluidPort without importing NeoForge transfer types.
 		// Fluid transactions reuse the already-installed NeoForgeEnergyTransactions (see FluidPort class doc).
 		FluidLookup.install(new NeoForgeFluidLookup());
-		// MOD-104: common item pipes resolve neighbouring inventories through the 26.2
+		// MOD-104: common item pipes resolve neighbouring inventories through the
 		// Capabilities.Item.BLOCK transfer API at this loader seam.
 		ItemLookup.install(new NeoForgeItemLookup());
 		// MOD-480: read-only counterpart of the lookup above — the monitoring wall counts what is in a
@@ -118,7 +118,7 @@ public final class IndustrializationNeoForge {
 		// Capabilities.Fluid.ITEM, without common code importing NeoForge transfer types.
 		dev.alaindustrial.item.fluid.ItemFluidBridge.install(new dev.alaindustrial.core.neoforge.NeoForgeItemFluidBridge());
 
-		// MOD-022 Phase 3: install the NeoForge packet-send seam so content code dispatches through the
+		// MOD-022: install the NeoForge packet-send seam so content code dispatches through the
 		// neutral NetworkDispatcher instead of PacketDistributor directly.
 		NetworkDispatcher.install(new NeoForgeNetworkDispatcher());
 		// MOD-391: a chest pairing up / falling back to single is a property-only state change, which
@@ -246,8 +246,8 @@ public final class IndustrializationNeoForge {
 	private void registerModBusEvents(IEventBus modBus) {
 		// Mod-bus events. Capability + payload registration both fire on the mod bus.
 		modBus.addListener(this::registerCapabilities);
-		// MOD-022 Phase 3: NeoForge payload registration (S2C Network Analyzer) — counterpart to the
-		// Fabric PayloadTypeRegistry call + client receiver.
+		// MOD-022: NeoForge payload registration (every ModPayloads entry) — counterpart to the
+		// Fabric PayloadTypeRegistry calls + receivers.
 		modBus.addListener(NeoForgeNetwork::register);
 		// MOD-238: dispenser support for the filled oil bucket. DispenserBlock.registerBehavior writes a
 		// plain (unsynchronised) map and mod setup runs in parallel on NeoForge, so it must go through
@@ -269,143 +269,72 @@ public final class IndustrializationNeoForge {
 	}
 
 	/**
-	 * Wires the game-bus listeners: energy-network ticking, teleport-warmup cancellation, guide-book
-	 * first-join grant, per-level/server-stop network teardown, config reload parity, vanilla-bucket
-	 * deposit and the {@code /ala} command.
+	 * Connects each server event on the game bus to the shared {@link ServerHookRoster} (MOD-706), one line
+	 * per event — the counterpart of {@code IndustrializationFabric#registerServerLifecycle}. What runs, and
+	 * in which order, is the roster's list, the same one Fabric replays; only the NeoForge form of a
+	 * condition stays here (the entity and level types these events hand over). Registered before
+	 * {@link #registerGameBusEvents}, as these listeners always were.
 	 */
-	private void registerGameBusEvents() {
-		// Game-bus wiring (counterpart to the Fabric ServerTickEvents/ServerLevelEvents/ServerLifecycleEvents
-		// + CommandRegistrationCallback tail of IndustrializationFabric#onInitialize). These fire on the game
-		// event bus, not the mod bus.
-		//
-		// Energy networks: tick every per-level NetworkManager once per server tick. WITHOUT this, cables
-		// never transfer EU on NeoForge (the single most important gameplay seam). Drop a level's transient
-		// state on unload and all of it on server stop so per-level networks never leak across reloads.
-		// MOD-062: inject the Industrialist house into the vanilla village pools. ServerAboutToStart
-		// fires before any level/worldgen exists — required (pool maxSize memoizes on first use).
+	private void registerServerHooks() {
 		NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.server.ServerAboutToStartEvent event) ->
-				dev.alaindustrial.worldgen.VillagePoolInjector.inject(event.getServer()));
-		NeoForge.EVENT_BUS.addListener((ServerTickEvent.Post event) -> {
-			for (ServerLevel lvl : event.getServer().getAllLevels()) {
-				NetworkManager.tickAll(lvl);
-				ItemNetworkManager.tickAll(lvl);
-				dev.alaindustrial.core.fluid.FluidNetworkManager.tickAll(lvl);
-				dev.alaindustrial.core.monitor.MonitorNetworkManager.tickAll(lvl);
-			}
-			// Teleport warmups are per-player, not per-level (MOD-092).
-			dev.alaindustrial.teleporter.TeleportWarmupManager.tickAll(event.getServer());
-			// MOD-133: fold pending per-player stat deltas into attachments on the configured cadence.
-			dev.alaindustrial.stats.PlayerStatsTracker.get().onServerTick(event.getServer());
-			// MOD-470: per-player radiation exposure, on its own configurable cadence.
-			dev.alaindustrial.core.radiation.RadiationTicker.tickAll(event.getServer());
-			// MOD-475: the Geiger counter clicks EVERY tick, not on the radiation cadence — a sweep
-			// offers one sound a second, so a denser rattle is unreachable from it. The sweep sets the
-			// step; this spends it.
-			dev.alaindustrial.core.radiation.GeigerTicker.tick(event.getServer());
-			// MOD-148: clear any jetpack flight-glow light block whose flight ended (land, logout,
-			// death, unequip) — the one cleanup path for every exit (see JetpackLight).
-			dev.alaindustrial.item.wearable.JetpackLight.sweep(event.getServer(), event.getServer().getTickCount());
-			// MOD-674: drops that rain onto the demo stand after it was built (decaying leaves).
-			dev.alaindustrial.command.demo.DemoStandDropSweeper.tick(event.getServer());
-		});
-		// Teleport warmup cancellation (MOD-092). Three hooks, not two: LivingDamageEvent.Post does
-		// not fire for a killing blow, and death does not disconnect the player.
+				ServerHookRoster.onServerStarting(event.getServer()));
+		NeoForge.EVENT_BUS.addListener((ServerTickEvent.Post event) ->
+				ServerHookRoster.onServerTick(event.getServer()));
 		NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.entity.living.LivingDamageEvent.Post event) -> {
 			if (event.getEntity() instanceof net.minecraft.server.level.ServerPlayer player
 					&& event.getHealthDamage() > 0.0f) {
-				dev.alaindustrial.teleporter.TeleportWarmupManager.cancelHurt(player);
+				ServerHookRoster.onPlayerHurt(player);
 			}
 		});
-		NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.entity.living.LivingDeathEvent event) -> {
-			if (event.getEntity() instanceof net.minecraft.server.level.ServerPlayer player) {
-				dev.alaindustrial.teleporter.TeleportWarmupManager.cancel(player);
-			}
-			// MOD-278: a hostile mob killed by a player personally banks one soul into their vessel.
-			dev.alaindustrial.entity.SoulVesselKills.onDeath(event.getEntity(), event.getSource());
-		});
+		NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.entity.living.LivingDeathEvent event) ->
+				ServerHookRoster.onLivingDeath(event.getEntity(), event.getSource()));
+		// PlayerList.remove(ServerPlayer) is where the event fires, so on a server the entity is always a
+		// server player; the guard only gives the roster its type.
 		NeoForge.EVENT_BUS.addListener(
 				(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent event) -> {
-					// MOD-133: flush this player's pending stats while still online (their tail would
-					// otherwise be dropped on the next server-tick flush, after they have left).
-					if (event.getEntity() instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
-						dev.alaindustrial.stats.PlayerStatsTracker.get().flushPlayer(serverPlayer);
+					if (event.getEntity() instanceof net.minecraft.server.level.ServerPlayer player) {
+						ServerHookRoster.onPlayerLeave(player);
 					}
-					dev.alaindustrial.teleporter.TeleportWarmupManager.forget(event.getEntity().getUUID());
-					// MOD-475: drop this player's counter reading (see the Fabric twin).
-					dev.alaindustrial.core.radiation.GeigerTicker.forget(event.getEntity().getUUID());
 				});
-		// MOD-067: auto-give the Guide Book on first join (game-bus event; once per player).
-		// MOD-596: and greet the world, once per world — the same two calls, in the same order, as the
-		// Fabric hook. Both bodies are one line each into common/, which is what keeps them equal.
 		NeoForge.EVENT_BUS.addListener(
 				(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent event) -> {
-					if (event.getEntity() instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
-						dev.alaindustrial.core.guide.GuideBookGiver.giveIfNeeded(serverPlayer);
-						dev.alaindustrial.chat.WelcomeMessage.sendIfNeeded(serverPlayer);
-						// MOD-513: the archive record for the book's first page, every login (Fabric twin).
-						dev.alaindustrial.core.guide.ArchiveRecordSync.sendOnJoin(serverPlayer);
+					if (event.getEntity() instanceof net.minecraft.server.level.ServerPlayer player) {
+						ServerHookRoster.onPlayerJoin(player);
 					}
 				});
-		// MOD-401: one sweep over everything that holds per-level state, instead of naming managers
-		// here. The by-name list is what leaked: the fluid manager was never added to it, so every
-		// unloaded ServerLevel stayed reachable as a key in its map for the life of the process.
 		NeoForge.EVENT_BUS.addListener((LevelEvent.Unload event) -> {
-			if (event.getLevel() instanceof ServerLevel lvl) {
-				dev.alaindustrial.core.net.LevelStateRegistry.clearLevel(lvl);
+			if (event.getLevel() instanceof ServerLevel level) {
+				ServerHookRoster.onLevelUnload(level);
 			}
 		});
-		// MOD-133: fold every pending delta before players are saved. ServerStoppingEvent runs before the
-		// player save; ServerStoppedEvent is too late and would lose the last flush window's tail.
-		NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.server.ServerStoppingEvent event) -> {
-			dev.alaindustrial.stats.PlayerStatsTracker.get().flush(event.getServer());
-			// MOD-176: clear a mid-flight glow light before the level save — the per-tick sweep no
-			// longer runs, and a saved minecraft:light block would survive as an invisible orphan.
-			dev.alaindustrial.item.wearable.JetpackLight.shutdown(event.getServer());
-			// MOD-475: drop every counter reading. In single player the server object goes away but
-			// this class is static, so a reading left behind would greet the next world.
-			dev.alaindustrial.core.radiation.GeigerTicker.clear();
-		});
-		NeoForge.EVENT_BUS.addListener((ServerStoppedEvent event) -> {
-			// MOD-401: same sweep, whole-server scope — energy, fluid and item networks plus the
-			// teleporter warmups/cooldowns, whichever of them the run actually loaded.
-			dev.alaindustrial.core.net.LevelStateRegistry.clearAll();
-			dev.alaindustrial.stats.PlayerStatsTracker.get().clear();
-		});
+		NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.server.ServerStoppingEvent event) ->
+				ServerHookRoster.onServerStopping(event.getServer()));
+		NeoForge.EVENT_BUS.addListener((ServerStoppedEvent event) ->
+				ServerHookRoster.onServerStopped(event.getServer()));
+	}
+
+	/**
+	 * Wires the remaining game-bus listeners: config reload parity, the early block-use hooks and the
+	 * {@code /ala} command (counterpart to the Fabric {@code ServerLifecycleEvents} /
+	 * {@code CommandRegistrationCallback} tail of {@code IndustrializationFabric#onInitialize}). These fire
+	 * on the game event bus, not the mod bus.
+	 */
+	private void registerGameBusEvents() {
 		// Balance-config reload parity with Fabric (MOD-100, absorbs MOD-041). OnDatapackSyncEvent fires on a
 		// player join AND on /reload; getPlayer()==null is the all-players sync, i.e. /reload — the exact
 		// analogue of Fabric's END_DATA_PACK_RELOAD. Guarding on null avoids re-reading on every single join.
 		NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.OnDatapackSyncEvent event) -> {
 			if (event.getPlayer() == null) {
-				NeoForgeConfigLoader.reload();
+				// MOD-695: the reload is re-sent to every connected client.
+				NeoForgeConfigLoader.reload(net.neoforged.neoforge.server.ServerLifecycleHooks.getCurrentServer());
 			}
 		});
-		// MOD-077: shift-right-clicking a mod fluid tank (geothermal generator, pump) with a vanilla lava
-		// bucket loads the bucket into the tank instead of spilling it. RightClickBlock fires early on both
-		// sides — before vanilla's sneak-bypass runs BucketItem#useOn — so it can intercept the spill. The
-		// neutral helper is shared with the Fabric UseBlockCallback registration.
+		// MOD-706: the early block-use chain (bucket deposit → oil lighting → cable dye) is
+		// ServerHookRoster.USE_BLOCK. RightClickBlock fires on both sides before vanilla's own use; a
+		// non-PASS result takes the interaction by cancelling the event, as each of the three listeners
+		// this replaced did — a cancelled event never reached the next one, so the first non-PASS won.
 		NeoForge.EVENT_BUS.addListener((PlayerInteractEvent.RightClickBlock event) -> {
-			InteractionResult result = dev.alaindustrial.item.fluid.VanillaBucketDeposit.tryDeposit(
-					event.getLevel(), event.getEntity(), event.getHand(), event.getHitVec());
-			if (result != InteractionResult.PASS) {
-				event.setCancellationResult(result);
-				event.setCanceled(true);
-			}
-		});
-		// MOD-238: flint and steel on an oil cell lights it. Same early seam and for the same reason:
-		// oil has an empty outline shape, so the click always lands on the block BEHIND it and vanilla
-		// FlintAndSteelItem#useOn then fails to place fire into the (non-air) oil block.
-		NeoForge.EVENT_BUS.addListener((PlayerInteractEvent.RightClickBlock event) -> {
-			InteractionResult result = dev.alaindustrial.block.OilLiquidBlock.tryLight(
-					event.getLevel(), event.getEntity(), event.getHand(), event.getHitVec());
-			if (result != InteractionResult.PASS) {
-				event.setCancellationResult(result);
-				event.setCanceled(true);
-			}
-		});
-		// MOD-666: a dye on an insulated cable paints it; with Shift, the whole run. Early seam because
-		// vanilla never lets a sneaking player's held item reach the block.
-		NeoForge.EVENT_BUS.addListener((PlayerInteractEvent.RightClickBlock event) -> {
-			InteractionResult result = dev.alaindustrial.block.CableDyeing.tryDye(
+			InteractionResult result = ServerHookRoster.onUseBlock(
 					event.getLevel(), event.getEntity(), event.getHand(), event.getHitVec());
 			if (result != InteractionResult.PASS) {
 				event.setCancellationResult(result);
@@ -420,8 +349,8 @@ public final class IndustrializationNeoForge {
 	}
 
 	/**
-	 * Publishes each block entity's per-face capabilities on the REAL {@code BlockEntityType}s. Verified
-	 * pattern (neoforge-26.2.0.67):
+	 * Publishes each block entity's per-face capabilities on the REAL {@code BlockEntityType}s. Pattern
+	 * (verified by javap against the NeoForge version in gradle.properties):
 	 * {@code event.registerBlockEntity(Capabilities.Energy.BLOCK, TYPE, (be, side) -> handler)} where the
 	 * provider is an {@code ICapabilityProvider<BE, Direction, EnergyHandler>}
 	 * ({@code getCapability(BE, Direction)}); fluid and item go through
@@ -489,32 +418,14 @@ public final class IndustrializationNeoForge {
 
 		// MOD-084: item-side energy capability on the mod's powered items, so other mods' chargers can
 		// fill them. Insert-only — see StackAsEnergyHandler.
-		// The list must cover EVERY powered item: it is hand-written and twice fell behind the item list
-		// (MOD-372). ItemEnergyCapabilityScenarios.reg01EveryPoweredItemExposesCapability derives the
-		// expected set from ItemEnergy.capacity(stack) > 0 and reddens the lane on the next omission.
+		// MOD-707: the powered items come from ItemCapabilityRoster (every mod item implementing PoweredItem),
+		// the same roster Fabric replays — no hand-written list to fall behind (MOD-372).
+		// ItemEnergyCapabilityScenarios.reg01EveryPoweredItemExposesCapability derives the expected set
+		// independently from ItemEnergy.capacity(stack) > 0.
 		event.registerItem(Capabilities.Energy.ITEM,
 				(stack, access) -> new dev.alaindustrial.core.neoforge.StackAsEnergyHandler(access),
-				ModItemsNeoForge.BATTERY_POUCH.get(), ModItemsNeoForge.SHIELDING_POUCH.get(),
-				ModItemsNeoForge.BATTERY.get(),
-				ModItemsNeoForge.ENERGY_PACK.get(),
-				ModItemsNeoForge.ELECTRIC_DRILL.get(), ModItemsNeoForge.ELECTRIC_DRILL_DIAMOND_TIP.get(),
-				ModItemsNeoForge.ELECTRIC_DRILL_NETHERITE_TIP.get(),
-				ModItemsNeoForge.ELECTRIC_CHAINSAW.get(),
-				ModItemsNeoForge.ELECTRIC_CHAINSAW_DIAMOND_TIP.get(),
-				ModItemsNeoForge.ELECTRIC_SHOVEL.get(),
-				ModItemsNeoForge.ELECTRIC_SHOVEL_DIAMOND_TIP.get(), ModItemsNeoForge.ELECTRIC_HOE.get(),
-				ModItemsNeoForge.ELECTRIC_HOE_DIAMOND_TIP.get(),
-				ModItemsNeoForge.ELECTRIC_SABER.get(),
-				ModItemsNeoForge.ELECTRIC_BOW.get(),
-				ModItemsNeoForge.ELECTROMAGNET.get(),
-				ModItemsNeoForge.ELECTROMAGNET_ADVANCED.get(),
-				ModItemsNeoForge.JETPACK.get(),
-				ModItemsNeoForge.FLUXWEAVE_HELMET.get(), ModItemsNeoForge.FLUXWEAVE_CHESTPLATE.get(),
-				ModItemsNeoForge.FLUXWEAVE_LEGGINGS.get(), ModItemsNeoForge.FLUXWEAVE_BOOTS.get(),
-				// EU crystal BLANKS (MOD-504) — only they have a buffer; the finished crystals hold no
-				// energy and must not appear here.
-				ModItemsNeoForge.ENERGY_CRYSTAL_BLANK.get(), ModItemsNeoForge.LAPOTRON_CRYSTAL_BLANK.get(),
-				ModItemsNeoForge.RESONANT_CRYSTAL_BLANK.get());
+				dev.alaindustrial.registry.ItemCapabilityRoster.energyItems()
+						.toArray(new net.minecraft.world.item.Item[0]));
 
 		// MOD-084/MOD-242: the fake "other mod" energy item (ForeignEnergyItemStandIn) is registered by
 		// NeoForgeGameTestBootstrap via its own RegisterCapabilitiesEvent listener — gametest source
@@ -547,7 +458,7 @@ public final class IndustrializationNeoForge {
 
 	/**
 	 * MOD-104: publishes a transactional, side-aware item view of {@code def}'s container — required
-	 * because a vanilla {@code Container} is not automatically a 26.2 {@code ResourceHandler} on NeoForge.
+	 * because a vanilla {@code Container} is not automatically a {@code ResourceHandler} on NeoForge.
 	 * The roster guarantees the {@code Container} cast.
 	 */
 	private static <T extends BlockEntity> void registerItemContainer(RegisterCapabilitiesEvent event,

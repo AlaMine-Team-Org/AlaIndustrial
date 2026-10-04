@@ -1,13 +1,14 @@
 package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
-import dev.alaindustrial.core.energy.EnergyRole;
+import dev.alaindustrial.block.entity.machine.SyncChannels;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.core.fluid.FluidAmounts;
 import dev.alaindustrial.core.fluid.FluidHolder;
 import dev.alaindustrial.core.fluid.FluidPort;
 import dev.alaindustrial.core.fluid.FluidPortHost;
 import dev.alaindustrial.core.fluid.FluidTank;
+import dev.alaindustrial.core.machine.MachineRates;
 import dev.alaindustrial.item.fluid.ItemFluidBridge;
 import dev.alaindustrial.menu.GalvanicBathMenu;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
@@ -18,13 +19,11 @@ import dev.alaindustrial.registry.ModTags;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -107,17 +106,11 @@ public class GalvanicBathBlockEntity extends MachineBlockEntity implements Overc
 		// Shares machineBuffer with the other LV processing machines.
 		super(ModContent.GALVANIC_BATH_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT,
 				Config.machineBuffer, EnergyTier.LV.maxVoltage(), 0L);
-		this.maxProgress = Config.scaledDuration(Config.galvanicBathDuration);
+		this.maxProgress = MachineRates.duration(Config.galvanicBathDuration, Config.globalMachineSpeedMultiplier);
 	}
 
 	private static boolean isWater(FluidHolder fluid) {
 		return !fluid.isEmpty() && fluid.fluid() == Fluids.WATER;
-	}
-
-	/** Consumer: every face accepts energy except the inert FACING front (R-NRG-03). */
-	@Override
-	public EnergyRole energyRoleForFace(Direction worldFace) {
-		return facingAwareRole(worldFace, EnergyRole.IN);
 	}
 
 
@@ -230,50 +223,24 @@ public class GalvanicBathBlockEntity extends MachineBlockEntity implements Overc
 	}
 
 	/**
-	 * Seven-wide data — hides {@link MachineBlockEntity#DATA_COUNT} so
-	 * {@code GalvanicBathBlockEntity.DATA_COUNT} names this machine's width for both the bridge below
-	 * and {@code GalvanicBathMenu}'s client stub (MOD-235).
-	 */
-	public static final int DATA_COUNT = 7;
-
-	/**
-	 * Base channels 0..3 (energy/capacity/progress/maxProgress) plus the tank fill as a permille (4),
-	 * the held fluid's registry id (5) and the idle reason (6). Channels 4..6 are derived,
-	 * server-authoritative projections; nothing writes them back.
+	 * GUI sync channels (MOD-712, BE-7): the base four, the tank fill in permille, the held fluid's
+	 * registry id and the idle reason ({@link GalvanicBathStatus} ordinal); all three read-only.
 	 *
-	 * <p><b>Every channel must fit a signed 16-bit short</b> — {@code ClientboundContainerSetDataPacket}
-	 * writes each value with {@code writeShort}, so a larger value silently arrives truncated. That is
-	 * why the tank level travels as a permille (0..1000) rather than raw mB, and why the fluid's colour
-	 * is not sent at all: a packed ARGB is 32 bits. The screen derives it from channel 5.
+	 * Every channel is a signed short on the wire (see {@link SyncChannels}), so a tank travels as a
+	 * permille and a fluid as its registry id; the screen derives texture, tint and name from the id.
 	 */
-	private final ContainerData bathData = new ContainerData() {
-		@Override
-		public int get(int index) {
-			return switch (index) {
-				case 4 -> fluidTank.amount <= 0 ? 0
-						: Math.max(1, (int) Math.min(fluidTank.amount * 1000L / TANK_CAPACITY, 1000));
-				case 5 -> fluidTank.fluidSyncId();
-				case 6 -> status.ordinal();
-				default -> GalvanicBathBlockEntity.this.dataAccess.get(index);
-			};
-		}
+	public enum Channel { ENERGY, CAPACITY, PROGRESS, MAX_PROGRESS, LEVEL_PERMILLE, FLUID_ID, STATUS }
 
-		@Override
-		public void set(int index, int value) {
-			if (index < 4) {
-				GalvanicBathBlockEntity.this.dataAccess.set(index, value);
-			}
-		}
-
-		@Override
-		public int getCount() {
-			return DATA_COUNT;
-		}
-	};
+	/** Width of {@link #getDataAccess()}, which the menu's client stub sizes itself from (MOD-235). */
+	public static final int DATA_COUNT = Channel.values().length;
 
 	@Override
-	public ContainerData getDataAccess() {
-		return bathData;
+	protected SyncChannels createChannels() {
+		return channels(Channel.class)
+				.read(Channel.LEVEL_PERMILLE, () -> SyncChannels.permille(fluidTank.amount, TANK_CAPACITY))
+				.read(Channel.FLUID_ID, () -> fluidTank.fluidSyncId())
+				.read(Channel.STATUS, () -> status.ordinal())
+				.build();
 	}
 
 	/**
@@ -312,11 +279,6 @@ public class GalvanicBathBlockEntity extends MachineBlockEntity implements Overc
 	}
 
 	@Override
-	public Component getDisplayName() {
-		return Component.translatable("block.alaindustrial.galvanic_bath");
-	}
-
-	@Override
 	public AbstractContainerMenu createMenu(int syncId, Inventory inventory, Player player) {
 		return new GalvanicBathMenu(syncId, inventory, this,
 				ContainerLevelAccess.create(getLevel(), getBlockPos()));
@@ -330,8 +292,8 @@ public class GalvanicBathBlockEntity extends MachineBlockEntity implements Overc
 	}
 
 	@Override
-	protected void loadAdditional(ValueInput input) {
-		super.loadAdditional(input);
+	protected void loadMachineData(ValueInput input) {
+		super.loadMachineData(input);
 		// The tank clamps to its own capacity (TANK_CAPACITY, the value it was built with) and upholds
 		// the invariant in both directions: no fluid means no amount, and vice versa.
 		fluidTank.load(input, "FluidTank");

@@ -1,9 +1,12 @@
 package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.block.ItemPipeBlock;
+import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.core.item.ItemNetworkManager;
+import dev.alaindustrial.core.item.ItemPipeNode;
 import dev.alaindustrial.core.item.PipeFaceMode;
+import dev.alaindustrial.core.item.PipeTier;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -20,7 +23,7 @@ import net.minecraft.world.level.storage.ValueOutput;
  * panel and no owner — the pipe is bufferless and every item it moves is atomically handed from one
  * container to the next by {@link ItemNetworkManager}.
  */
-public final class ItemPipeBlockEntity extends EnergyBlockEntity {
+public final class ItemPipeBlockEntity extends EnergyBlockEntity implements ItemPipeNode {
 	private int packedFaceModes;
 	private boolean registered;
 	/** Whether the once-per-load face re-derive has run — see {@link #validateShapeOnce}. */
@@ -28,6 +31,18 @@ public final class ItemPipeBlockEntity extends EnergyBlockEntity {
 
 	public ItemPipeBlockEntity(BlockPos pos, BlockState state) {
 		super(ModContent.ITEM_PIPE_BE.get(), pos, state, EnergyTier.LV, 0, 0, 0);
+	}
+
+	/**
+	 * Not an energy block (MOD-691): no face is a port. The zero-capacity buffer is scaffolding inherited
+	 * with the tick and persistence of {@link EnergyBlockEntity}; left on the default {@code BOTH} role it
+	 * made every face a live port, and NeoForge's lookup, which asks {@code energyPort()} directly, turned a
+	 * pipe pressed against a cable into a producer and a consumer of that network — one that then never
+	 * slept. {@code NONE} makes {@link #energyPort} return {@code null} on both loaders, as the sprinkler's does.
+	 */
+	@Override
+	public EnergyRole energyRoleForFace(Direction worldFace) {
+		return EnergyRole.NONE;
 	}
 
 	@Override
@@ -61,8 +76,24 @@ public final class ItemPipeBlockEntity extends EnergyBlockEntity {
 		}
 	}
 
+	@Override
 	public PipeFaceMode faceMode(Direction direction) {
 		return PipeFaceMode.values()[(packedFaceModes >>> (direction.ordinal() * 2)) & 3];
+	}
+
+	/**
+	 * The grade of the block this segment stands in, or {@code null} when that block is not an item pipe
+	 * ({@link ItemPipeNode}, MOD-715).
+	 */
+	@Override
+	public PipeTier tier() {
+		return getBlockState().getBlock() instanceof ItemPipeBlock pipe ? pipe.tier() : null;
+	}
+
+	/** {@link ItemPipeBlock#shouldConnectTo} for this segment's own position ({@link ItemPipeNode}). */
+	@Override
+	public boolean connects(Direction side) {
+		return ItemPipeBlock.shouldConnectTo(level, worldPosition, side);
 	}
 
 	/** Advance this face one step along the wrench ladder (MOD-108: neutral → extract → insert → disabled). */
@@ -93,8 +124,8 @@ public final class ItemPipeBlockEntity extends EnergyBlockEntity {
 	}
 
 	@Override
-	protected void loadAdditional(ValueInput input) {
-		super.loadAdditional(input);
+	protected void loadMachineData(ValueInput input) {
+		super.loadMachineData(input);
 		packedFaceModes = input.getIntOr("FaceModes", 0);
 	}
 

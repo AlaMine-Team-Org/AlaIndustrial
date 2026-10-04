@@ -13,9 +13,9 @@ import net.minecraft.world.level.block.state.BlockState;
  * Diamond Chest block (MOD-599) — the tier above electrum: 108 slots behind the same six-row
  * scrolling window, and the first chest of the mod that shrugs off explosions.
  *
- * <p><b>Blast resistance 1200</b> (the ancient-debris figure) is set in {@code BLOCK_PROPS}. At that
- * value an explosion ray loses its whole budget on the first block it meets, so TNT and creepers —
- * charged ones included — leave the chest and its contents alone.
+ * <p><b>Blast resistance 1200</b> (the ancient-debris figure) is set in its {@code ContentManifest}
+ * declaration. At that value an explosion ray loses its whole budget on the first block it meets, so
+ * TNT and creepers — charged ones included — leave the chest and its contents alone.
  *
  * <p><b>It is not invulnerable, and the docs must not say so.</b> A wither's ram is gated by the
  * {@code minecraft:wither_immune} tag rather than by resistance, and ancient debris is not in that

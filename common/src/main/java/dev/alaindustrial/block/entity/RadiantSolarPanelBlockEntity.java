@@ -1,16 +1,15 @@
 package dev.alaindustrial.block.entity;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.block.RadiantSolarPanelBlock;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.core.environment.GeneratorConfig;
 import dev.alaindustrial.core.environment.SolarSky;
 import dev.alaindustrial.core.environment.SolarSkyCache;
 import dev.alaindustrial.menu.RadiantSolarPanelMenu;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -22,7 +21,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * Mirror Concentrator — the third rung of the day branch (MOD-602). Base output
- * {@link Config#radiantEuPerTick}, lifted by half over the two thousand ticks around noon; rain,
+ * {@link GeneratorConfig#radiantEuPerTick}, lifted by half over the two thousand ticks around noon; rain,
  * thunder and snow all stop it dead.
  *
  * <p><b>Why snow is a blackout here and a trickle on its ancestors.</b> The two panels below spread
@@ -54,7 +53,7 @@ public class RadiantSolarPanelBlockEntity extends AbstractGeneratorBlockEntity i
 	private static final long PEAK_HALF_WIDTH = 1000L;
 	private static final long DAY_LENGTH = 24000L;
 
-	/** Caches the sky/weather verdict for {@link Config#solarSkySampleTicks} ticks. */
+	/** Caches the sky/weather verdict for {@link GeneratorConfig#solarSkySampleTicks} ticks. */
 	private final SolarSkyCache skyCache = new SolarSkyCache();
 
 	/** Mode codes shared with the screen. */
@@ -68,7 +67,7 @@ public class RadiantSolarPanelBlockEntity extends AbstractGeneratorBlockEntity i
 
 	public RadiantSolarPanelBlockEntity(BlockPos pos, BlockState state) {
 		super(ModContent.RADIANT_SOLAR_PANEL_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT,
-				Config.radiantBuffer, MAX_EXTRACT);
+				GeneratorConfig.radiantBuffer, MAX_EXTRACT);
 	}
 
 	/** Top face is the working surface and emits no EU; the other five are generator outputs (R-NRG-03). */
@@ -107,8 +106,8 @@ public class RadiantSolarPanelBlockEntity extends AbstractGeneratorBlockEntity i
 			// or not, this is one machine reading one column of sky, and the four-times figure is the
 			// four blocks of ground it now covers.
 			production = state.getValue(RadiantSolarPanelBlock.ASSEMBLED)
-					? Config.radiantAssembledEuPerTick
-					: Config.radiantEuPerTick;
+					? GeneratorConfig.radiantAssembledEuPerTick
+					: GeneratorConfig.radiantEuPerTick;
 			mode = isNoon(level) ? MODE_DAY_PEAK : MODE_DAY;
 			if (mode == MODE_DAY_PEAK) {
 				// Half again as much, rounded — the peak is a window, not a curve, so the number the
@@ -130,7 +129,7 @@ public class RadiantSolarPanelBlockEntity extends AbstractGeneratorBlockEntity i
 					if (sky == SolarSky.Access.PARTIAL) {
 						// Light through leaves or cobweb still reaches the collector, just less of it
 						// (MOD-004). Applied after the noon lift so the two stack the way a player expects.
-						production = Math.round(production * Config.solarTransparentFactor);
+						production = Math.round(production * GeneratorConfig.solarTransparentFactor);
 						mode = MODE_DAY_PARTIAL;
 					}
 				}
@@ -209,11 +208,6 @@ public class RadiantSolarPanelBlockEntity extends AbstractGeneratorBlockEntity i
 		float t = Mth.clamp(elapsed / FOLD_TICKS, 0.0f, 1.0f);
 		float eased = t * t * (3.0f - 2.0f * t);
 		return now ? 1.0f - eased : eased;
-	}
-
-	@Override
-	public Component getDisplayName() {
-		return Component.translatable("block.alaindustrial.radiant_solar_panel");
 	}
 
 	@Override

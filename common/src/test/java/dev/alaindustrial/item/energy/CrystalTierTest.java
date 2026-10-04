@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.item.ToolConfig;
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.jupiter.api.AfterEach;
@@ -33,10 +34,10 @@ class CrystalTierTest {
 		// Config is static and shared across the suite: leaving a probe value behind would make an
 		// unrelated balance test read a number nobody put in gradle.properties.
 		if (energyBuffer != 0) {
-			Config.energyCrystalBuffer = energyBuffer;
+			ToolConfig.energyCrystalBuffer = energyBuffer;
 		}
 		if (energyRate != 0) {
-			Config.energyCrystalInputRate = energyRate;
+			ToolConfig.energyCrystalInputRate = energyRate;
 		}
 	}
 
@@ -60,18 +61,18 @@ class CrystalTierTest {
 
 	@Test
 	void capacityAndIntakeFollowConfigAfterAReload() {
-		energyBuffer = Config.energyCrystalBuffer;
-		energyRate = Config.energyCrystalInputRate;
+		energyBuffer = ToolConfig.energyCrystalBuffer;
+		energyRate = ToolConfig.energyCrystalInputRate;
 
-		Config.energyCrystalBuffer = 123_000;
-		Config.energyCrystalInputRate = 77;
+		ToolConfig.energyCrystalBuffer = 123_000;
+		ToolConfig.energyCrystalInputRate = 77;
 		assertEquals(123_000L, CrystalTier.ENERGY.capacity(),
 				"capacity must read Config live, not a value captured at class-init");
 		assertEquals(77L, CrystalTier.ENERGY.inputRate(),
 				"intake must read Config live, not a value captured at class-init");
 
 		// A second move proves it is a live read rather than a one-time copy taken on first call.
-		Config.energyCrystalBuffer = 456_000;
+		ToolConfig.energyCrystalBuffer = 456_000;
 		assertEquals(456_000L, CrystalTier.ENERGY.capacity());
 	}
 

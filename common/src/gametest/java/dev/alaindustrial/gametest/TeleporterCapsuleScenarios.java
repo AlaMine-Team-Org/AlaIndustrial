@@ -32,6 +32,43 @@ import net.minecraft.world.phys.AABB;
  */
 public final class TeleporterCapsuleScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(TeleporterCapsuleScenarios::tcTele005Fun01_twoGlassFormTheCapsule,
+								"tc_tele005_fun01_two_glass_form_the_capsule")
+						.fabricId("TeleporterCapsuleGameTest", "tcTele005Fun01_twoGlassFormTheCapsule").ticks(20, 40),
+				RosterEntry.of(TeleporterCapsuleScenarios::tcTele005Fun02_secondGlassFoundByPolling,
+								"tc_tele005_fun02_second_glass_found_by_polling")
+						.fabricId("TeleporterCapsuleGameTest", "tcTele005Fun02_secondGlassFoundByPolling")
+						.ticks(20, 40),
+				RosterEntry.of(TeleporterCapsuleScenarios::tcTele005Fun03_doorOpensAndClosesItself,
+								"tc_tele005_fun03_door_opens_and_closes_itself")
+						.fabricId("TeleporterCapsuleGameTest", "tcTele005Fun03_doorOpensAndClosesItself").ticks(120),
+				RosterEntry.of(TeleporterCapsuleScenarios::tcTele005Neg01_doorWaitsForAnOccupiedDoorway,
+								"tc_tele005_neg01_door_waits_for_an_occupied_doorway")
+						.fabricId("TeleporterCapsuleGameTest", "tcTele005Neg01_doorWaitsForAnOccupiedDoorway")
+						.ticks(160),
+				RosterEntry.of(TeleporterCapsuleScenarios::tcTele005Neg02_clickDuringSlideIsIgnored,
+								"tc_tele005_neg02_click_during_slide_is_ignored")
+						.fabricId("TeleporterCapsuleGameTest", "tcTele005Neg02_clickDuringSlideIsIgnored")
+						.ticks(20, 40),
+				RosterEntry.of(TeleporterCapsuleScenarios::tcTele005Brk01_breakingACellReturnsItsGlass,
+								"tc_tele005_brk01_breaking_a_cell_returns_its_glass")
+						.fabricId("TeleporterCapsuleGameTest", "tcTele005Brk01_breakingACellReturnsItsGlass")
+						.ticks(20, 40),
+				RosterEntry.of(TeleporterCapsuleScenarios::tcTele005Brk02_breakingTheStationFreesBothGlasses,
+								"tc_tele005_brk02_breaking_the_station_frees_both_glasses")
+						.fabricId("TeleporterCapsuleGameTest", "tcTele005Brk02_breakingTheStationFreesBothGlasses")
+						.ticks(20, 40),
+				RosterEntry.of(TeleporterCapsuleScenarios::tcTele005Sec01_stationWithoutCapsuleRefusesJump,
+								"tc_tele005_sec01_station_without_capsule_refuses_jump")
+						.fabricId("TeleporterCapsuleGameTest", "tcTele005Sec01_stationWithoutCapsuleRefusesJump")
+						.ticks(20, 40));
+
+		private Roster() {}
+	}
+
 	private TeleporterCapsuleScenarios() {}
 
 	private static final BlockPos STATION = new BlockPos(1, 2, 1);

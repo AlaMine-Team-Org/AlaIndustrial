@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "global": {
+    "globalMachineSpeedMultiplier": 2.5
+  },
+  "machines": {
+    "_comment_machineEuPerTick": "an operator note the rewrite replaces",
+    "machineEuPerTick": 5,
+    "mutationSlagChance": 0.5,
+    "reactorBlastFire": false
+  },
+  "cables": {
+    "cableBuffer": 30
+  }
+}

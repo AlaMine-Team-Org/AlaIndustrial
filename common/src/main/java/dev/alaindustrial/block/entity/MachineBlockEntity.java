@@ -1,23 +1,24 @@
 package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
-import dev.alaindustrial.block.HorizontalMachineBlock;
-import dev.alaindustrial.core.energy.EnergyLookup;
-import dev.alaindustrial.core.energy.EnergyPort;
+import dev.alaindustrial.block.entity.machine.BatteryDrawer;
+import dev.alaindustrial.block.entity.machine.ChannelBridge;
+import dev.alaindustrial.block.entity.machine.MachineChannels;
+import dev.alaindustrial.block.entity.machine.MachineInventory;
+import dev.alaindustrial.block.entity.machine.MachineTelemetry;
+import dev.alaindustrial.block.entity.machine.OwnerRecord;
+import dev.alaindustrial.block.entity.machine.SlotLayout;
+import dev.alaindustrial.block.entity.machine.SyncChannels;
+import dev.alaindustrial.block.entity.machine.UpgradePanel;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
-import dev.alaindustrial.core.upgrade.OverclockMath;
-import dev.alaindustrial.item.energy.ItemEnergy;
-import dev.alaindustrial.item.misc.OverclockerChipItem;
-import dev.alaindustrial.registry.ModContent;
-import dev.alaindustrial.skill.SkillMachine;
+import dev.alaindustrial.core.machine.MachineRates;
 import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.UUIDUtil;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
-import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Player;
@@ -30,15 +31,34 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jspecify.annotations.Nullable;
 
+// size-justified: what is left is the base's own job — the persistence order, the default title, role and
+// GUI channels, the WorldlyContainer and tick hooks — plus one-line delegates to the components (ADR-042)
+// that keep every call site, the characterization gametests included, saying machine.activeTicks().
 /**
- * The spine of every Industrialization machine: the energy half inherited from
- * {@link EnergyBlockEntity} plus an item inventory, a generic processing progress counter, upgrade
- * slots, ownership and live GUI sync.
+ * The base of every Industrialization machine: the energy half inherited from {@link EnergyBlockEntity}
+ * plus an item inventory, a generic processing progress counter and live GUI sync.
  *
  * <p>To add a new machine, subclass this, pass slot count / tier / capacity / I-O limits to
  * the constructor, and implement {@link #onServerTick}. The base handles inventory
- * ({@link Container}), NBT persistence (via {@link ValueInput}/{@link ValueOutput}), and the
- * {@link #dataAccess} bridge that syncs energy + progress to an open screen.
+ * ({@link Container}), NBT persistence (via {@link ValueInput}/{@link ValueOutput}), the
+ * {@link #getDataAccess()} channels that sync energy + progress to an open screen, the screen title (the
+ * block's own name) and the consumer energy role (every face but the front) — override those two only
+ * when the machine is not the usual case. A machine with GUI channels of its own declares them once, as
+ * an enum starting with the four of {@link MachineChannels}, and binds them in {@link #createChannels()}
+ * on {@link SyncChannels}; its menu reads them by name (MOD-712 BE-7, ADR-042).
+ *
+ * <p><b>Cross-cutting capabilities are components (MOD-712, BE-1)</b> in
+ * {@code dev.alaindustrial.block.entity.machine}, each held in one field here with thin delegates, so a
+ * call site keeps saying {@code machine.activeTicks()}: {@link SlotLayout} (where the machine's own slots,
+ * the upgrade block and the battery drawer sit — read by the menu too), {@link MachineInventory} (what a
+ * change to the container does, the automation faces, {@code Items}), {@link MachineTelemetry}
+ * (statistics, {@code Stats*} keys), {@link OwnerRecord} ({@code Owner}/{@code OwnerName}),
+ * {@link UpgradePanel} (mute and statistics chips, overclocker), {@link BatteryDrawer} (the drawer's
+ * drain), and the static {@link dev.alaindustrial.block.entity.machine.EvolutionHelper} that the four
+ * evolving machines call by name. A new capability is a new component there plus one field here — not
+ * more code in this class.
+ * The processing tick itself is the separate {@link ProcessingCycle} a machine composes (ADR-021); its
+ * end, shared with the four machines that keep their own loop, is {@link #completeOperation}.
  *
  * <p><b>A machine, not merely a powered block (MOD-400).</b> Transport blocks — the cable and the two
  * pipes — extend {@link EnergyBlockEntity} directly: they have no inventory, no progress, no upgrade
@@ -48,66 +68,56 @@ import org.jspecify.annotations.Nullable;
 public abstract class MachineBlockEntity extends EnergyBlockEntity implements WorldlyContainer {
 
 	/** Upgrade slots appended to the tail of every GUI machine's inventory (MOD-080). */
-	public static final int UPGRADE_SLOT_COUNT = 4;
+	public static final int UPGRADE_SLOT_COUNT = UpgradePanel.SLOT_COUNT;
 	/** The active upgrade slot on the MVP panel (upgrade-block index 0); the mute chip goes here. */
 	public static final int ACTIVE_UPGRADE_INDEX = 0;
 
 	protected final NonNullList<ItemStack> items;
 	/** Count of machine-specific slots (indices 0..baseSlots-1); upgrade slots follow at the tail. */
 	protected final int baseSlots;
-	/** Container index of the battery drawer slot (MOD-679), or -1 for a machine without one. */
-	private final int batterySlot;
+	/** Where the machine's own slots, the upgrade block and the battery drawer sit in {@link #items}. */
+	private final SlotLayout layout;
+	/** What taking, placing and clearing a stack does, and which slots each face exposes (MOD-712, BE-1). */
+	private final MachineInventory inventory;
 	protected int progress;
 	protected int maxProgress;
 
-	/**
-	 * The player who placed this machine (MOD-133). Set once at placement by
-	 * {@link dev.alaindustrial.block.AbstractMachineBlock#setPlacedBy}; re-assigned on every re-place
-	 * (it does not ride the dropped item). Null for a machine placed by non-player means (structure,
-	 * {@code /ala demo} stand) — the player-stats hooks treat a null owner as a no-op. Gated by
-	 * {@link #tracksOwner()}.
-	 */
-	@Nullable
-	private UUID owner;
-	/** Owner's name at placement time — a display snapshot (no UUID→name lookup for offline players). */
-	private String ownerName = "";
+	/** Who placed this machine (MOD-133), under {@code Owner}/{@code OwnerName}; see {@link #tracksOwner()}. */
+	private final OwnerRecord owner = new OwnerRecord();
+
+	/** The upgrade panel's chips and what they do (MOD-080/125/392, MOD-712 BE-1); its slots live in {@link #items}. */
+	private final UpgradePanel upgrades;
+
+	/** The battery drawer's drain (MOD-679, MOD-712 BE-1); its slot is the last of {@link #items}. */
+	private final BatteryDrawer drawer;
 
 	protected MachineBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state,
 			EnergyTier tier, int slots, long capacity, long maxInsert, long maxExtract) {
 		super(type, pos, state, tier, capacity, maxInsert, maxExtract);
 		this.baseSlots = slots;
-		// Every GUI machine gets four upgrade slots appended to the tail of `items` (MOD-080). "GUI
-		// machine" = a MenuProvider; the screenless blocks (the electric heater, the charging station)
-		// are not, so they keep their zero slots. Appending at the tail leaves existing indices
-		// (0=input, 1=output, …)
-		// and their gametests untouched. `this instanceof` is well-defined here: the object's runtime
-		// type is the concrete subclass throughout super-construction.
-		boolean panel = this instanceof MenuProvider && hasUpgradePanel();
-		int total = slots + (panel ? UPGRADE_SLOT_COUNT : 0);
-		// The battery drawer (MOD-679) goes AFTER the upgrade block, at the very end: a save written before
-		// the drawer existed then loads with every index where it was and the new slot simply empty — no
-		// data migration, unlike MOD-083, whose slot went in front of the chips and moved them.
-		if (panel && this instanceof BatteryFed) {
-			total++;
-		}
-		this.batterySlot = this instanceof BatteryFed && panel ? total - 1 : -1;
-		this.items = NonNullList.withSize(total, ItemStack.EMPTY);
+		// Every GUI machine (a MenuProvider with a panel) gets four upgrade slots at the tail of `items` (MOD-080),
+		// and a battery-fed one the drawer after them (MOD-679) — see SlotLayout for why in that order.
+		// `this instanceof` sees the concrete subclass throughout super-construction.
+		this.layout = SlotLayout.of(slots, this instanceof MenuProvider, hasUpgradePanel(), this instanceof BatteryFed);
+		this.items = NonNullList.withSize(layout.size(), ItemStack.EMPTY);
+		this.inventory = new MachineInventory(items, slots, this::contentsChanged, this::wake);
+		this.upgrades = new UpgradePanel(this, items, layout.upgradeStart(), layout.batterySlot());
+		this.drawer = new BatteryDrawer(layout, items, energy, tier);
 	}
 
 	/**
-	 * Whether this block gets the four upgrade slots. Default true for every GUI machine (MOD-080).
-	 *
-	 * <p>Opt-out exists because a panel is a promise: a block that shows upgrade slots is telling the
-	 * player those upgrades do something there. The Energy Condenser (MOD-393) is the first block for
-	 * which that would be a lie — it is meant to sip surplus, and an overclocker in it would turn it
-	 * into a pump on the grid.
-	 *
-	 * <p>Called from the constructor, so an override MUST be a constant — it cannot read subclass
-	 * fields, which are not initialised yet. Same contract as the {@code instanceof MenuProvider} test
-	 * beside it.
+	 * Whether this block gets the four upgrade slots: every GUI machine (MOD-080) but a
+	 * {@link NoUpgradePanel} — a panel is a promise that the upgrades do something here. A marker rather
+	 * than an override so the client menu, which has no block entity, reaches the same answer
+	 * ({@link SlotLayout#hasPanel}).
 	 */
-	public boolean hasUpgradePanel() {
-		return true;
+	public final boolean hasUpgradePanel() {
+		return !(this instanceof NoUpgradePanel);
+	}
+
+	/** Where this machine's slots sit; the menu reads the same object server-side (MOD-712, BE-1). */
+	public SlotLayout slotLayout() {
+		return layout;
 	}
 
 	// --- Ownership (MOD-133): who placed this machine, for per-player statistics/XP ---
@@ -127,87 +137,111 @@ public abstract class MachineBlockEntity extends EnergyBlockEntity implements Wo
 
 	/** Set at placement (and re-place); a null UUID clears ownership. Persisted when {@link #tracksOwner()}. */
 	public void setOwner(@Nullable UUID owner, @Nullable String ownerName) {
-		this.owner = owner;
-		this.ownerName = ownerName == null ? "" : ownerName;
+		this.owner.set(owner, ownerName);
 		setChanged();
 	}
 
 	/** The placer's UUID, or null for a machine placed by non-player means. */
 	@Nullable
 	public UUID getOwner() {
-		return owner;
+		return owner.uuid();
 	}
 
 	/** The placer's name snapshot, or {@code ""} when there is no owner. */
 	public String getOwnerName() {
-		return ownerName;
+		return owner.name();
 	}
 
 	/** True when {@code player} is this machine's owner. */
 	public boolean isOwner(UUID player) {
-		return owner != null && owner.equals(player);
+		return owner.is(player);
+	}
+
+	/** Credit one completed operation's EU cost to the owner (MOD-133): see {@link OwnerRecord#creditUsefulWork}. */
+	protected void creditUsefulWork(Level level, long euCost) {
+		owner.creditUsefulWork(level, euCost);
 	}
 
 	/**
-	 * MOD-133: credit one completed unit of useful work (its full EU cost) to this machine's owner —
-	 * the sole XP source. Called once per completed operation (never per tick), so a redstone
-	 * contraption that aborts an operation before completion burns EU but earns no XP. A no-op
-	 * off-server, without an owner, or for non-positive cost; the tracker additionally ignores it when
-	 * the owner is offline or in creative.
+	 * The shared end of one completed operation (MOD-712, BE-3): count it in the lifetime statistics
+	 * (MOD-125) and credit its EU cost to the owner (MOD-133) — the mod's only XP source, paid per completed
+	 * operation and never per tick, so a contraption that aborts one mid-run burns EU and earns nothing.
+	 * {@code ProcessingCycle} ends every operation through this, and so do the four machines with a cycle of
+	 * their own (assembler, incubator, distillation column, thermal centrifuge). A non-positive
+	 * {@code euCost} counts the operation and credits nothing — an incubator attempt that missed.
 	 */
-	protected void creditUsefulWork(net.minecraft.world.level.Level level, long euCost) {
-		if (euCost <= 0 || owner == null
-				|| !(level instanceof net.minecraft.server.level.ServerLevel serverLevel)) {
-			return;
-		}
-		dev.alaindustrial.stats.PlayerStatsTracker.get()
-				.recordUsefulWork(serverLevel.getServer(), owner, euCost);
+	protected final void completeOperation(Level level, long euCost) {
+		recordItemProcessed();
+		creditUsefulWork(level, euCost);
 	}
 
-	/** The energy/progress data bridge a {@code MachineMenu} binds for live GUI sync. */
-	public ContainerData getDataAccess() {
-		return dataAccess;
+	/** One operation tick's energy, Mechanic skills included (MOD-483, MOD-712 D4): see {@link OperationEnergy}. */
+	protected final boolean spendOperationEnergy(Level level, int euPerTick, boolean canWork, boolean ready) {
+		return OperationEnergy.spend(this, level, euPerTick, canWork, ready);
 	}
 
 	/**
-	 * How many sync channels {@link #getDataAccess()} projects — the single source of the width, read by
-	 * both sides (MOD-235). The block entity's {@code getCount()} returns it, and the machine's <b>client</b>
-	 * menu constructor sizes its {@code SimpleContainerData} from it, so the two can no longer drift: a
-	 * subclass that adds a channel bumps its own {@code DATA_COUNT} and the client stub follows. Before
-	 * MOD-235 the width was a literal on both sides, and adding a channel to the block entity alone threw
-	 * {@code ArrayIndexOutOfBoundsException} in the client render thread while every server test stayed green.
+	 * The screen title of a machine that opens a menu: its block's own name, so the title and the item in
+	 * the player's hand can never disagree (MOD-712, BE-10). The machines whose screen carries another
+	 * title (the upgrade table) override it; a block entity serving several blocks names each of them.
 	 */
-	public static final int DATA_COUNT = 4;
+	public Component getDisplayName() {
+		return Component.translatable(getBlockState().getBlock().getDescriptionId());
+	}
 
-	/** Index map for {@link #dataAccess}: 0 energy, 1 capacity, 2 progress, 3 maxProgress. */
-	public final ContainerData dataAccess = new ContainerData() {
-		@Override
-		public int get(int index) {
-			return switch (index) {
-				case 0 -> (int) Math.min(Integer.MAX_VALUE, energy.getAmount());
-				case 1 -> (int) Math.min(Integer.MAX_VALUE, energy.getCapacity());
-				case 2 -> progress;
-				case 3 -> maxProgress;
-				default -> 0;
-			};
-		}
+	/**
+	 * A machine is a consumer: it takes EU on every face but its {@code FACING} front, which stays inert
+	 * (R-NRG-03, MOD-712 BE-10). Generators, storage and the machines with a layout of their own override
+	 * this; before it was the default, fourteen consumers each wrote it out.
+	 */
+	@Override
+	public EnergyRole energyRoleForFace(Direction worldFace) {
+		return facingAwareRole(worldFace, EnergyRole.IN);
+	}
 
-		@Override
-		public void set(int index, int value) {
-			switch (index) {
-				case 0 -> energy.setAmountUntracked(value);
-				case 2 -> progress = value;
-				case 3 -> maxProgress = value;
-				default -> {
-				}
-			}
-		}
+	/**
+	 * The GUI sync channels a {@code MachineMenu} binds (MOD-235, MOD-712 BE-7): built once, on first use,
+	 * from {@link #createChannels()}.
+	 */
+	public final ContainerData getDataAccess() {
+		return channelBridge.data();
+	}
 
-		@Override
-		public int getCount() {
-			return DATA_COUNT;
-		}
-	};
+	/** {@code channels} as the vanilla {@link ContainerData} a menu binds: see {@link ChannelBridge#of}. */
+	protected static ContainerData asContainerData(SyncChannels channels) {
+		return ChannelBridge.of(channels);
+	}
+
+	/** Builds {@link #getDataAccess()} on first use; a server-side object, a client menu has a stub. */
+	private final ChannelBridge channelBridge = new ChannelBridge(this::createChannels);
+
+	/**
+	 * This machine's channels. The default is the four of {@link MachineChannels}; a machine with channels of
+	 * its own declares them in an enum that starts with those four and binds the rest on {@link #channels}.
+	 */
+	protected SyncChannels createChannels() {
+		return channels(MachineChannels.class).build();
+	}
+
+	/**
+	 * A channel builder over {@code type} with the four base channels already bound: energy and capacity
+	 * (clamped to {@code int}), progress and its length. Energy, progress and length take a write.
+	 */
+	protected final <C extends Enum<C>> SyncChannels.Builder<C> channels(Class<C> type) {
+		return SyncChannels.of(type)
+				.inherit(MachineChannels.ENERGY, () -> SyncChannels.clampInt(energy.getAmount()),
+						value -> energy.setAmountUntracked(value))
+				.inherit(MachineChannels.CAPACITY, () -> SyncChannels.clampInt(energy.getCapacity()), null)
+				.inherit(MachineChannels.PROGRESS, () -> progress, value -> progress = value)
+				.inherit(MachineChannels.MAX_PROGRESS, () -> maxProgress, value -> maxProgress = value);
+	}
+
+	/**
+	 * How many sync channels the base projects — read by both sides (MOD-235): the block entity's
+	 * {@code getCount()} and a <b>client</b> menu stub's width come from the same enum, so they cannot drift.
+	 * A machine with channels of its own has its own {@code DATA_COUNT}, the size of its channel enum.
+	 */
+	public static final int DATA_COUNT = MachineChannels.values().length;
 
 	// --- persistence (26.2 ValueInput/ValueOutput) ---
 
@@ -218,255 +252,87 @@ public abstract class MachineBlockEntity extends EnergyBlockEntity implements Wo
 		super.saveAdditional(output);
 		output.putInt("Progress", progress);
 		output.putInt("MaxProgress", maxProgress);
-		ContainerHelper.saveAllItems(output, items);
-		saveStats(output);
+		inventory.save(output);
+		telemetry.save(output);
 		// MOD-133: owner persisted here (NBT keys "Owner"/"OwnerName") for every tracking machine.
-		// The teleporter station used the same keys before this moved to the base, so existing
-		// stations round-trip without a data migration.
 		if (tracksOwner()) {
-			output.storeNullable("Owner", UUIDUtil.CODEC, owner);
-			output.putString("OwnerName", ownerName);
+			owner.save(output);
 		}
 	}
 
 	@Override
-	protected void loadAdditional(ValueInput input) {
-		super.loadAdditional(input);
+	protected void loadMachineData(ValueInput input) {
+		super.loadMachineData(input);
 		progress = input.getIntOr("Progress", 0);
 		maxProgress = input.getIntOr("MaxProgress", 0);
-		items.clear();
-		ContainerHelper.loadAllItems(input, items);
-		loadStats(input);
+		inventory.load(input);
+		telemetry.load(input);
 		if (tracksOwner()) {
-			owner = input.read("Owner", UUIDUtil.CODEC).orElse(null);
-			ownerName = input.getStringOr("OwnerName", "");
+			owner.load(input);
 		}
 	}
 
 	// --- Block statistics (MOD-125) --------------------------------------------------------------
 
-	/**
-	 * Ticks this block has actually WORKED — produced or consumed EU — not ticks since it was placed.
-	 *
-	 * <p>The distinction is the whole meaning of the readout. A furnace sitting unpowered in a corner for
-	 * a week has an age of a week and a working time of zero, and reporting the age under the label
-	 * "working time" is simply a false number: it climbs on a machine that has never run once.
-	 *
-	 * <p>Accumulated per tick, which is safe precisely BECAUSE of the sleep gate rather than in spite of
-	 * it: a block skips its tick only while idle, and an idle tick is one this counter must not count
-	 * anyway. (An age-since-placed counter is the opposite case and could NOT be accumulated this way.)
-	 */
-	private long activeTicks;
-
-	/** Last per-tick EU rate this block reported. Session state: never persisted, 0 after a reload. */
-	private int currentEuRate;
-
-	/** Highest {@link #currentEuRate} seen since the block entity loaded. Session state, deliberately. */
-	private int peakEuRate;
+	/** Working time, reported EU rate, completed operations and their save keys (MOD-125, MOD-712 BE-1). */
+	private final MachineTelemetry telemetry = new MachineTelemetry(energy);
 
 	/**
-	 * Whether a statistics chip is fitted (MOD-125). Without one this block measures nothing at all: no
-	 * counters advance, nothing is written to its save tag, and no packet is ever built for it.
-	 *
-	 * <p>That is the point of making it a chip rather than a free feature — telemetry is something the
-	 * player chooses to install where it matters, and a base full of un-instrumented machines costs
-	 * exactly what it did before this task existed.
+	 * Whether a statistics chip is fitted (MOD-125) — or the owner's Free Telemetry makes one unnecessary.
+	 * Without it this block measures nothing at all: see {@link UpgradePanel#hasStatsChip()}.
 	 */
 	public boolean hasStatsChip() {
-		// MOD-483 Free Telemetry: the panel reads the same way, the chip is simply no longer the
-		// only way to switch it on — which frees the upgrade slot it used to occupy.
-		if (SkillMachine.statsWithoutChip(this.level, getOwner())) {
-			return true;
-		}
-		if (!hasUpgradeSlots()) {
-			return false;
-		}
-		for (int i = 0; i < UPGRADE_SLOT_COUNT; i++) {
-			if (getUpgradeStack(i).is(ModContent.STATS_CHIP.get())) {
-				return true;
-			}
-		}
-		return false;
+		return upgrades.hasStatsChip();
+	}
+
+	/**
+	 * Switch the buffer's energy counters to follow the statistics chip before every tick (MOD-692). They
+	 * used to be switched from {@link #recordEuRate} alone, so a block whose tick never reported a rate —
+	 * the pump, the drone station, both energy stores — kept them off with a chip fitted and its panel
+	 * read zero. Here no block has to remember. The rule itself, including what a block with no upgrade
+	 * panel does under Free Telemetry, is {@link StatsCounterGate}.
+	 */
+	@Override
+	protected void beforeServerTick() {
+		StatsCounterGate.sync(energy, hasUpgradeSlots(), this::hasStatsChip);
 	}
 
 	/**
 	 * Record this tick's EU rate — production for a generator, draw for a consumer. Called from the
-	 * generator/machine tick, so a subclass never has to remember to feed the statistics panel.
-	 *
-	 * <p>A non-zero rate is also this block's definition of "working", so the working-time counter is
-	 * advanced from the same call: the two answers can never disagree about whether the machine ran.
-	 *
-	 * <p>Gated on the chip, and the energy counters in the buffer are gated with it, so "measuring
-	 * starts when you install the sensor" holds for every number the panel can show — not just the ones
-	 * that happen to pass through here.
+	 * generator/machine tick, so a subclass never has to remember to feed the statistics panel. A non-zero
+	 * rate also advances the working time; both only while {@link #beforeServerTick} switched the buffer's
+	 * counters on for this tick — see {@link MachineTelemetry#recordEuRate}.
 	 */
 	public void recordEuRate(int euPerTick) {
-		boolean measuring = hasStatsChip();
-		energy.setCountersEnabled(measuring);
-		if (!measuring) {
-			currentEuRate = 0;
-			return;
-		}
-		int rate = Math.max(0, euPerTick);
-		currentEuRate = rate;
-		if (rate > peakEuRate) {
-			peakEuRate = rate;
-		}
-		if (rate > 0) {
-			activeTicks++;
-		}
+		telemetry.recordEuRate(euPerTick);
 	}
 
 	/** Ticks this block spent actually working. */
 	public long activeTicks() {
-		return activeTicks;
+		return telemetry.activeTicks();
 	}
 
 	public int currentEuRate() {
-		return currentEuRate;
+		return telemetry.currentEuRate();
 	}
 
 	public int peakEuRate() {
-		return peakEuRate;
+		return telemetry.peakEuRate();
 	}
 
-	/**
-	 * How many of the six direct faces currently sit against a usable energy port, split into sources
-	 * (something that could feed this block) and sinks (something this block could feed).
-	 *
-	 * <p>Six lookups, run only when a statistics packet is actually being built — not per tick, and never
-	 * a walk of the cable graph. A cable neighbour counts as one connection, not as everything behind it:
-	 * answering "what is on the other end of the wire" is the network analyzer's job, not this panel's.
-	 *
-	 * @return sources in the low 16 bits, sinks in the next 16 — packed because the pair travels together
-	 *     and a two-field return would need a record no other caller wants
-	 */
+	/** Direct energy neighbours, sources low 16 bits, sinks high: {@link MachineTelemetry#countDirectConnections}. */
 	public int countDirectConnections() {
-		if (level == null) {
-			return 0;
-		}
-		int sources = 0;
-		int sinks = 0;
-		EnergyLookup lookup = EnergyLookup.get();
-		for (Direction dir : Direction.values()) {
-			EnergyRole role = energyRoleForFace(dir);
-			if (role == EnergyRole.NONE) {
-				continue;
-			}
-			EnergyPort port = lookup.find(level, worldPosition.relative(dir), dir.getOpposite());
-			if (port == null) {
-				continue;
-			}
-			// Mirror the direct-push rules (R-NRG-03): a face that cannot extract has no sink behind it
-			// even when the neighbour would accept energy, and vice versa.
-			if (role.canInsert() && port.supportsExtraction()) {
-				sources++;
-			}
-			if (role.canExtract() && port.supportsInsertion()) {
-				sinks++;
-			}
-		}
-		return (sources & 0xFFFF) | ((sinks & 0xFFFF) << 16);
+		return MachineTelemetry.countDirectConnections(this);
 	}
 
-	private void saveStats(ValueOutput output) {
-		output.putLong("StatsActiveTicks", activeTicks);
-		output.putLong("StatsEnergyIn", energy.getTotalEnergyIn());
-		output.putLong("StatsEnergyOut", energy.getTotalEnergyOut());
-		output.putLong("StatsEnergyGenerated", energy.getTotalEnergyGenerated());
-		output.putLong("StatsEnergyConsumed", energy.getTotalEnergyConsumed());
-		output.putLong("StatsItemsProcessed", totalItemsProcessed);
-	}
-
-	private void loadStats(ValueInput input) {
-		activeTicks = input.getLongOr("StatsActiveTicks", 0L);
-		energy.restoreCounters(
-				input.getLongOr("StatsEnergyIn", 0L),
-				input.getLongOr("StatsEnergyOut", 0L),
-				input.getLongOr("StatsEnergyGenerated", 0L),
-				input.getLongOr("StatsEnergyConsumed", 0L));
-		totalItemsProcessed = input.getLongOr("StatsItemsProcessed", 0L);
-	}
-
-	/**
-	 * Completed operations over this block's lifetime. Counted and persisted from the start (MOD-125) even
-	 * though the MVP panel does not draw it: the machines task that will show it then needs no save
-	 * migration, and a counter that starts at zero on every existing machine would be worse than useless.
-	 */
-	private long totalItemsProcessed;
-
+	/** Completed operations over this block's lifetime (MOD-125), persisted under {@code StatsItemsProcessed}. */
 	public long totalItemsProcessed() {
-		return totalItemsProcessed;
+		return telemetry.totalItemsProcessed();
 	}
 
 	/** Count one finished operation. Called by the processing machines when they commit a result. */
 	public void recordItemProcessed() {
-		totalItemsProcessed++;
-	}
-
-	// --- Evolvable persistence helper (shared by SolarPanelBlockEntity + WindMillBlockEntity) ---
-
-	/**
-	 * Write the evolution counter under the canonical NBT key. Both base-tier evolvable generators
-	 * (solar panel, wind mill) persist their chip progress identically; centralising the literal here
-	 * keeps the save format consistent and makes a future rename a one-line change. The key stays
-	 * {@code "EvolveProgress"} for backwards compatibility with existing single-player saves.
-	 */
-	protected static void saveEvolve(ValueOutput output, int evolveProgress) {
-		output.putInt("EvolveProgress", evolveProgress);
-	}
-
-	/**
-	 * Read the evolution counter written by {@link #saveEvolve}; {@code 0} when the key is absent
-	 * (pre-evolution save, or a freshly placed block).
-	 */
-	protected static int loadEvolve(ValueInput input) {
-		return input.getIntOr("EvolveProgress", 0);
-	}
-
-	/** No chip is earning the evolution counter right now. */
-	public static final int EVOLVE_CHIP_NONE = 0;
-	/** The counter belongs to a day alignment chip. */
-	public static final int EVOLVE_CHIP_DAY = 1;
-	/** The counter belongs to a night alignment chip. */
-	public static final int EVOLVE_CHIP_NIGHT = 2;
-	/**
-	 * The counter belongs to a resonance chip (MOD-602) — the one chip that serves BOTH branches on
-	 * the second rung, since by then the panel already knows which branch it is.
-	 */
-	public static final int EVOLVE_CHIP_RESONANCE = 3;
-
-	/**
-	 * Which chip the evolution counter belongs to, persisted next to the counter itself.
-	 *
-	 * <p>Without it the counter is anonymous, and an anonymous counter cannot be abandoned: a player
-	 * who pulls the chip out keeps the progress it earned, and one who swaps a day chip for a night
-	 * chip carries progress across the fork the chip is supposed to decide. The slot cannot answer
-	 * this on its own — a swap performed in a single click never leaves it empty for a tick to see.
-	 */
-	protected static void saveEvolveChip(ValueOutput output, int evolveChip) {
-		output.putInt("EvolveChip", evolveChip);
-	}
-
-	/**
-	 * Read the chip marker written by {@link #saveEvolveChip}. Absent in saves written before the
-	 * marker existed; {@link #EVOLVE_CHIP_NONE} there means the first tick simply re-attributes the
-	 * counter to whatever chip is in the slot, which is exactly the old behaviour for that one tick
-	 * and costs an existing player nothing.
-	 */
-	protected static int loadEvolveChip(ValueInput input) {
-		return input.getIntOr("EvolveChip", EVOLVE_CHIP_NONE);
-	}
-
-	/** Classify the stack in an evolution chip slot into one of the {@code EVOLVE_CHIP_*} codes. */
-	protected static int evolveChipOf(ItemStack chip) {
-		if (chip.is(ModContent.ALIGNMENT_CHIP_DAY.get())) {
-			return EVOLVE_CHIP_DAY;
-		}
-		if (chip.is(ModContent.ALIGNMENT_CHIP_NIGHT.get())) {
-			return EVOLVE_CHIP_NIGHT;
-		}
-		return chip.is(ModContent.RESONANCE_CHIP.get()) ? EVOLVE_CHIP_RESONANCE : EVOLVE_CHIP_NONE;
+		telemetry.recordItemProcessed();
 	}
 
 	// --- Container over `items` ---
@@ -478,12 +344,7 @@ public abstract class MachineBlockEntity extends EnergyBlockEntity implements Wo
 
 	@Override
 	public boolean isEmpty() {
-		for (ItemStack stack : items) {
-			if (!stack.isEmpty()) {
-				return false;
-			}
-		}
-		return true;
+		return inventory.isEmpty();
 	}
 
 	@Override
@@ -493,24 +354,18 @@ public abstract class MachineBlockEntity extends EnergyBlockEntity implements Wo
 
 	@Override
 	public ItemStack removeItem(int slot, int amount) {
-		ItemStack removed = ContainerHelper.removeItem(items, slot, amount);
-		if (!removed.isEmpty()) {
-			setChanged();
-			syncBlockEntityToClient();
-			wake(); // output pulled / input taken — re-evaluate next tick (R-29)
-		}
-		return removed;
+		return inventory.removeItem(slot, amount);
 	}
 
 	@Override
 	public ItemStack removeItemNoUpdate(int slot) {
-		wake();
-		ItemStack removed = ContainerHelper.takeItem(items, slot);
-		if (!removed.isEmpty()) {
-			setChanged();
-			syncBlockEntityToClient();
-		}
-		return removed;
+		return inventory.removeItemNoUpdate(slot);
+	}
+
+	/** The {@code changed} hook of {@link MachineInventory}: mark dirty, then sync to the client. */
+	private void contentsChanged() {
+		setChanged();
+		syncBlockEntityToClient();
 	}
 
 	/**
@@ -524,47 +379,20 @@ public abstract class MachineBlockEntity extends EnergyBlockEntity implements Wo
 
 	// --- Result slot helpers (MOD-440): one predicate for every machine that fills an output slot ---
 
-	/**
-	 * Output stack cap. A result slot never grows past this even for an item whose own max stack size is
-	 * larger; for the ordinary 64-stack item the two limits coincide.
-	 *
-	 * <p>One declaration for the whole machine family. Before MOD-440 nine block entities each carried a
-	 * private {@code OUTPUT_MAX = 64} and five of them a private copy of {@link #canOutput}/
-	 * {@link #addOutput} — identical in behaviour, free to drift in text.
-	 */
-	protected static final int OUTPUT_MAX = 64;
+	/** Output stack cap of the whole machine family: see {@link MachineInventory#OUTPUT_MAX}. */
+	protected static final int OUTPUT_MAX = MachineInventory.OUTPUT_MAX;
 
 	/**
-	 * Whether {@code slot} can take one more {@code result} stack: empty, or the same item with room for
-	 * the whole result under {@code min(OUTPUT_MAX, maxStackSize)}.
-	 *
-	 * <p>Item identity only, deliberately — this is the merge rule every processing machine has always
-	 * used, and a recipe result carries no components that could tell two stacks of it apart. A machine
-	 * whose output CAN differ by components (the incubator's graded results) keeps its own component-aware
-	 * test instead of using this one. An empty result never "fits": there is nothing to place, and a
-	 * caller asking is a machine with no recipe.
+	 * Whether {@code slot} can take one more {@code result} stack — empty, or the same item with room for
+	 * all of it: see {@link MachineInventory#canOutput}.
 	 */
 	protected final boolean canOutput(int slot, ItemStack result) {
-		if (result.isEmpty()) {
-			return false;
-		}
-		ItemStack out = items.get(slot);
-		return out.isEmpty()
-				|| (out.getItem() == result.getItem()
-						&& out.getCount() + result.getCount() <= Math.min(OUTPUT_MAX, out.getMaxStackSize()));
+		return inventory.canOutput(slot, result);
 	}
 
-	/**
-	 * Place one {@code result} stack into {@code slot}, growing the matching stack already there. The
-	 * caller has checked {@link #canOutput} first — this method does not re-check.
-	 */
+	/** Place one {@code result} stack into {@code slot}; the caller has checked {@link #canOutput} first. */
 	protected final void addOutput(int slot, ItemStack result) {
-		ItemStack out = items.get(slot);
-		if (out.isEmpty()) {
-			items.set(slot, result.copy());
-		} else {
-			out.grow(result.getCount());
-		}
+		inventory.addOutput(slot, result);
 	}
 
 	@Override
@@ -575,10 +403,7 @@ public abstract class MachineBlockEntity extends EnergyBlockEntity implements Wo
 				&& !ItemStack.isSameItem(items.get(0), stack)) {
 			progress = 0; // input item changed -> restart the operation (TC-MACH-001-FUN04)
 		}
-		items.set(slot, stack);
-		setChanged();
-		syncBlockEntityToClient();
-		wake(); // new input / output change — re-evaluate next tick (R-29)
+		inventory.setItem(slot, stack);
 	}
 
 	@Override
@@ -588,17 +413,14 @@ public abstract class MachineBlockEntity extends EnergyBlockEntity implements Wo
 
 	@Override
 	public void clearContent() {
-		items.clear();
-		setChanged();
-		syncBlockEntityToClient();
-		wake();
+		inventory.clear();
 	}
 
 	// --- Upgrade slots (MOD-080): GUI-only slots appended to the tail of `items` ---
 
 	/** First index of the upgrade block in {@link #items}; equals {@link #baseSlots}. */
 	public int upgradeSlotStart() {
-		return baseSlots;
+		return layout.upgradeStart();
 	}
 
 	/** Whether this machine carries upgrade slots (all GUI machines do). */
@@ -608,69 +430,37 @@ public abstract class MachineBlockEntity extends EnergyBlockEntity implements Wo
 
 	/** The stack in upgrade-block index {@code i} (0-based), or empty when there are no upgrade slots. */
 	public ItemStack getUpgradeStack(int i) {
-		int idx = baseSlots + i;
-		return i >= 0 && i < UPGRADE_SLOT_COUNT && idx < items.size() && idx != batterySlot
-				? items.get(idx) : ItemStack.EMPTY;
+		return upgrades.stack(i);
 	}
 
 	// --- Battery drawer (MOD-679): one slot whose item the machine drains into its own buffer ---
 
 	/** Whether this machine has a battery drawer. */
 	public boolean hasBatterySlot() {
-		return batterySlot >= 0;
+		return layout.batteryDrawer();
 	}
 
 	/** Container index of the battery drawer slot, or -1 when there is none. The last index when present. */
 	public int batterySlotIndex() {
-		return batterySlot;
+		return layout.batterySlot();
 	}
 
-	/**
-	 * Drain the drawer's item into the buffer, at most one tier-voltage packet per tick — the most a cable
-	 * of this machine's tier could deliver in the same tick, so a battery is a portable wire, not a faster
-	 * one. Bounded by the room left too, so a full machine leaves the battery alone.
-	 */
+	/** Drain the drawer into the buffer, one tier-voltage packet at most: see {@link BatteryDrawer#drain()}. */
 	@Override
 	protected boolean pullStoredCharge() {
-		if (batterySlot < 0) {
+		if (!drawer.drain()) {
 			return false;
 		}
-		ItemStack source = items.get(batterySlot);
-		if (source.isEmpty()) {
-			return false;
-		}
-		long room = energy.getCapacity() - energy.getAmount();
-		if (room <= 0) {
-			return false;
-		}
-		long moved = ItemEnergy.discharge(source, Math.min(room, tier.maxVoltage()));
-		if (moved <= 0) {
-			return false;
-		}
-		energy.receiveInternal(moved);
 		setChanged();
 		return true;
 	}
 
 	/**
-	 * Whether a mute chip sits in ANY upgrade slot. Single source of truth for silencing this
-	 * machine: the client hum manager and any future machine sound MUST honor it. Safe to read
-	 * client-side — upgrade-slot contents sync with the block entity (getUpdateTag), so no extra
-	 * networking is needed.
-	 *
-	 * <p>Scans every slot rather than only {@link #ACTIVE_UPGRADE_INDEX}: since MOD-392 all four
-	 * slots accept upgrades, so the player may park the mute chip anywhere in the panel.
+	 * Whether a mute chip sits in ANY upgrade slot — the single source of truth for silencing this machine,
+	 * readable on the client too: see {@link UpgradePanel#isMuted()}.
 	 */
 	public boolean isMuted() {
-		if (!hasUpgradeSlots()) {
-			return false;
-		}
-		for (int i = 0; i < UPGRADE_SLOT_COUNT; i++) {
-			if (getUpgradeStack(i).is(ModContent.MUTE_CHIP.get())) {
-				return true;
-			}
-		}
-		return false;
+		return upgrades.isMuted();
 	}
 
 	// --- Overclocking (MOD-392): speed chips in the upgrade panel ---
@@ -706,131 +496,39 @@ public abstract class MachineBlockEntity extends EnergyBlockEntity implements Wo
 		return this instanceof Overclockable;
 	}
 
-	/**
-	 * How many overclocker chips this machine can actually use.
-	 *
-	 * <p>Not a flat constant: a machine may hold no more chips than its own voltage tier can feed.
-	 * Beyond that point the block would demand more EU/t than {@link EnergyTier#maxVoltage()} lets it
-	 * accept in a tick, so the extra chips could never pay off — the machine would simply starve while
-	 * the player believes they bought speed. Derived by stepping the factor instead of a logarithm, so
-	 * a retuned {@link Config#overclockerEuFactor} cannot drift the two apart through rounding.
-	 */
+	/** How many overclocker chips this machine can actually use: see {@link UpgradePanel#overclockerCap()}. */
 	public int overclockerCap() {
-		if (!supportsOverclock() || !hasUpgradeSlots()) {
-			return 0;
-		}
-		int cap = OverclockMath.cap(baseEuPerTick(), tier.maxVoltage(),
-				Config.overclockerEuFactor, Config.overclockerMaxPerMachine);
-		// MOD-483 Overclock Headroom: one chip beyond what the tier would feed. It pays for itself — the
-		// fourth chip costs 6.5x the energy per operation — so no extra balancing is needed here.
-		return SkillMachine.overclockerCap(cap, this.level, getOwner());
+		return upgrades.overclockerCap();
 	}
 
-	/**
-	 * Steps of overclocking actually in effect: the tier of the chip in the panel, clamped to
-	 * {@link #overclockerCap()}.
-	 *
-	 * <p>The tier rides on the item (three separate chips) rather than on a stack size, so "how much
-	 * speed" is a property of what the player crafted, not of how many copies they crammed into a slot.
-	 * The clamp still applies: a machine whose voltage tier cannot feed the chip runs at what it can.
-	 */
+	/** Steps of overclocking in effect, clamped to {@link #overclockerCap()}: see {@link UpgradePanel}. */
 	public int overclockerCount() {
-		int cap = overclockerCap();
-		if (cap <= 0) {
-			return 0;
-		}
-		int tier = 0;
-		for (int i = 0; i < UPGRADE_SLOT_COUNT; i++) {
-			tier = Math.max(tier, OverclockerChipItem.tierOf(getUpgradeStack(i)));
-		}
-		return Math.min(tier, cap);
+		return upgrades.overclockerCount();
 	}
 
 	/**
 	 * The EU/t this machine actually draws: its base rate scaled by the global speed multiplier and
 	 * then by one {@link Config#overclockerEuFactor} per installed chip.
 	 *
-	 * <p>Machines MUST call this instead of {@code Config.machineEuPerTickEffective()} — that method is
-	 * static and knows nothing about a specific block, so it can never see the chips. Enforced by
-	 * {@code docs/tools/arch_check.py}.
+	 * <p>Machines MUST call this instead of the static tariff formula {@code MachineRates.euPerTick} — that
+	 * is static and knows nothing about a specific block, so it can never see the chips. Enforced by the
+	 * bytecode rule {@code ArchitectureRules.machinesUseOverclockHelpers} (ADR-014).
 	 */
 	public int effectiveEuPerTick(int baseEuPerTick) {
-		return OverclockMath.euPerTick(baseEuPerTick, Config.globalMachineSpeedMultiplier,
-				Config.overclockerEuFactor, overclockerCount());
+		return upgrades.effectiveEuPerTick(baseEuPerTick);
 	}
 
 	/**
 	 * The operation length in ticks: the base duration after the global speed multiplier, then one
-	 * {@link Config#overclockerSpeedFactor} per installed chip.
+	 * {@link Config#overclockerSpeedFactor} per installed chip, then the owner's skills.
 	 *
 	 * <p>{@code baseTicks} must be the UNSCALED duration (recipe energy divided by the machine's raw
 	 * tariff, not by the multiplied one) — scaling twice is the classic way to make a retuned server
-	 * silently run at the square of its configured speed.
+	 * silently run at the square of its configured speed. The multiplier is applied here, not in the
+	 * panel: {@code machinesUseOverclockHelpers} lets only this class call the static shortcut.
 	 */
 	public int effectiveDuration(int baseTicks) {
-		int ticks = OverclockMath.duration(Config.scaledDuration(baseTicks),
-				Config.overclockerSpeedFactor, overclockerCount());
-		// MOD-483 Tuned Drive / Fine Tuning — applied last, on top of the chip, and only
-		// while the owner is in the world.
-		return SkillMachine.duration(ticks, this.level, getOwner());
-	}
-
-	// --- Tier evolution (MOD-211, generalized in MOD-278): replace this block with a grown branch ---
-
-	/**
-	 * Replace this machine with its evolved branch — shared by the solar panel and wind mill
-	 * evolution paths (MOD-211) and the Mob Repeller tier ladder (MOD-278). Carries stored EU
-	 * (clamped to the evolved block's capacity), preserves the FACING blockstate when both the old
-	 * and new blocks have one, and consumes the trigger slot (the caller passes {@code slotOverrides}
-	 * that does both jobs specific to this machine's slot layout — e.g. clearing {@code CHIP_SLOT} on
-	 * both, and snapshotting the wind-mill rotor so it can be re-placed on the evolved mill).
-	 *
-	 * <p>Lived in {@code AbstractGeneratorBlockEntity} until MOD-278: nothing in the body is
-	 * generator-specific (owner, energy, FACING, slots — all base state), and the repeller is a
-	 * consumer, so the seam moved up rather than being copied down.
-	 *
-	 * @param target the block to evolve into (e.g. {@code ModContent.DAYLIGHT_SOLAR_PANEL.get()})
-	 * @param slotOverrides additional slots to copy from this machine into the evolved block BEFORE
-	 *     the energy transfer (e.g. the wind mill's rotor slot). Map of slot index → stack to place.
-	 *     Empty for the solar panel.
-	 */
-	protected void evolveInto(net.minecraft.world.level.Level level, BlockPos pos,
-			net.minecraft.world.level.block.Block target,
-			java.util.Map<Integer, ItemStack> slotOverrides) {
-		long saved = energy.getAmount();
-		// Carry ownership across the evolution. The evolved block is created via setBlockAndUpdate — NOT a
-		// player placement — so setPlacedBy never runs and the new block entity would default to a null
-		// owner. Without this, an evolved T2 generator (wind mills, solar panels) attributes none of its
-		// production to the player: it silently vanished from the profile's per-generator breakdown (MOD-133).
-		java.util.UUID savedOwner = getOwner();
-		String savedOwnerName = getOwnerName();
-		for (java.util.Map.Entry<Integer, ItemStack> entry : slotOverrides.entrySet()) {
-			// Caller has already snapshotted these into the overrides map; clear the source slot so the
-			// block's inventory reads empty before the swap (the chip slot is always cleared here too —
-			// see callers).
-			items.set(entry.getKey(), ItemStack.EMPTY);
-		}
-		BlockState oldState = getBlockState();
-		BlockState newState = target.defaultBlockState();
-		// Preserve FACING when both old and new blocks have it (wind mill family); the solar panels
-		// have no FACING, so this is a no-op for them.
-		if (oldState.hasProperty(HorizontalMachineBlock.FACING)
-				&& newState.hasProperty(HorizontalMachineBlock.FACING)) {
-			newState = newState.setValue(HorizontalMachineBlock.FACING, oldState.getValue(HorizontalMachineBlock.FACING));
-		}
-		level.setBlockAndUpdate(pos, newState);
-		if (level.getBlockEntity(pos) instanceof MachineBlockEntity evolved) {
-			evolved.setOwner(savedOwner, savedOwnerName);
-			evolved.getEnergyStorage().setAmountUntracked(Math.min(saved, evolved.getEnergyStorage().getCapacity()));
-			for (java.util.Map.Entry<Integer, ItemStack> entry : slotOverrides.entrySet()) {
-				int slot = entry.getKey();
-				ItemStack stack = entry.getValue();
-				if (!stack.isEmpty() && slot >= 0 && slot < evolved.getContainerSize()) {
-					evolved.setItem(slot, stack);
-				}
-			}
-			evolved.setChanged();
-		}
+		return upgrades.effectiveDuration(MachineRates.duration(baseTicks, Config.globalMachineSpeedMultiplier));
 	}
 
 	// --- Sided automation (R-GUI-05/R-GUI-07): hoppers/pipes must respect slot roles ---
@@ -840,26 +538,10 @@ public abstract class MachineBlockEntity extends EnergyBlockEntity implements Wo
 		return false;
 	}
 
-	/** Shared empty answer for faces automation must not touch (the FACING face, MOD-179). */
-	private static final int[] NO_AUTOMATION_SLOTS = new int[0];
-
+	/** The machine's own slots on every face but the front (MOD-179): see {@link MachineInventory#slotsForFace}. */
 	@Override
 	public int[] getSlotsForFace(Direction side) {
-		// The front (FACING) face is the machine's working face and is inert for automation, matching
-		// the energy side (facingAwareRole) and the block specs ("hoppers do not work through it").
-		// Before MOD-179 this method ignored `side`, so a hopper aimed at the front face could insert.
-		BlockState state = getBlockState();
-		if (state.hasProperty(HorizontalMachineBlock.FACING)
-				&& side == state.getValue(HorizontalMachineBlock.FACING)) {
-			return NO_AUTOMATION_SLOTS;
-		}
-		// Automation sees machine slots only; upgrade slots (MOD-080) are GUI-only and excluded here
-		// so hoppers/pipes can neither fill nor drain them, on either loader.
-		int[] slots = new int[baseSlots];
-		for (int i = 0; i < baseSlots; i++) {
-			slots[i] = i;
-		}
-		return slots;
+		return inventory.slotsForFace(getBlockState(), side);
 	}
 
 	/** Automation may insert only where manual placement is allowed (e.g. never the output slot). */

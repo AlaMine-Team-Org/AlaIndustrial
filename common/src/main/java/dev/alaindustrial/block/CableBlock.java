@@ -2,6 +2,7 @@ package dev.alaindustrial.block;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.CableBlockEntity;
+import dev.alaindustrial.compat.Invulnerability;
 import dev.alaindustrial.core.energy.CableType;
 import dev.alaindustrial.core.energy.EnergyHostRedirect;
 import dev.alaindustrial.core.energy.NetworkManager;
@@ -53,6 +54,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import dev.alaindustrial.core.tooltip.HasMachineTooltip;
+import dev.alaindustrial.core.tooltip.MachineTooltipSpec;
 
 /**
  * LV copper cable. Connects (visually + for routing) to adjacent cables and machines via the six
@@ -66,7 +69,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * derived generically from the neighbour's collision shape ({@code maxY <= 0.5}), not from any
  * specific block type, so any future half-block machine connects the same way.
  */
-public class CableBlock extends AbstractMachineBlock {
+public class CableBlock extends AbstractMachineBlock implements HasMachineTooltip {
 	private final CableType type;
 
 	/** Collision/outline that matches the model: a 6px core plus an arm toward each connection. */
@@ -256,7 +259,7 @@ public class CableBlock extends AbstractMachineBlock {
 			// every tick of contact — without this the set would be charged wear twenty times a second
 			// and a helmet would die in three seconds of standing still. Exactly the trap MOD-279's
 			// stand fell into; here it bites durability instead of the hit chance.
-			player.setInvulnerableTime(Config.shockGuardGraceTicks);
+			Invulnerability.setGraceTicks(player, Config.shockGuardGraceTicks);
 			return false;
 		}
 
@@ -306,7 +309,7 @@ public class CableBlock extends AbstractMachineBlock {
 		if (level.getRandom().nextDouble() < guard.hitChance()) {
 			return true;
 		}
-		player.setInvulnerableTime(Config.shockGuardGraceTicks);
+		Invulnerability.setGraceTicks(player, Config.shockGuardGraceTicks);
 		return false;
 	}
 
@@ -350,10 +353,9 @@ public class CableBlock extends AbstractMachineBlock {
 	public static float insulatedShockDamage(float raw, ServerPlayer player) {
 		float afterArmour = ShockInsulation.remaining(raw, wornInsulatingPieces(player),
 				Config.bareCableShockInsulationPerPiecePercent);
-		// MOD-483 Dielectric / Full Insulation. Applied here, at the point of harm, and never in
-		// the "does this cable bite" predicate — that one is a pure function asserted directly by
-		// gametests on both loaders. The armour is charged durability for its own share above, so the
-		// skill's cut costs the set nothing.
+		// MOD-483 Dielectric / Full Insulation. Applied here, at the point of harm, and never in the "does this cable
+		// bite" predicate — that one is a pure function asserted directly by gametests on both loaders. The armour is
+		// charged durability for its own share above, so the skill's cut costs the set nothing.
 		return SkillHazard.shockDamage(afterArmour, player);
 	}
 
@@ -386,7 +388,7 @@ public class CableBlock extends AbstractMachineBlock {
 				&& !player.getAbilities().instabuild
 				&& !player.isSpectator()
 				&& !type.isInsulated()
-				&& player.getInvulnerableTime() <= 0
+				&& Invulnerability.graceTicks(player) <= 0
 				&& level.getBlockEntity(pos) instanceof CableBlockEntity cable
 				&& cable.isEnergizedForShock()
 				&& shockReachesPlayer(cable, pos, player);
@@ -792,5 +794,11 @@ public class CableBlock extends AbstractMachineBlock {
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
 			BlockEntityType<T> type) {
 		return machineTicker(level);
+	}
+
+	/** Hover tooltip of this block's item (MOD-716, ADR-040). */
+	@Override
+	public MachineTooltipSpec machineTooltip() {
+		return CableTooltip.of(type());
 	}
 }

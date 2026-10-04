@@ -1,11 +1,12 @@
 package dev.alaindustrial.gametest;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.block.FuelRodAssemblyBlock;
 import dev.alaindustrial.block.ReactorDoorBlock;
 import dev.alaindustrial.block.entity.FuelRodAssemblyBlockEntity;
 import dev.alaindustrial.block.entity.IronChestBlockEntity;
 import dev.alaindustrial.block.entity.ShieldingChestBlockEntity;
+import dev.alaindustrial.core.radiation.RadiationConfig;
+import dev.alaindustrial.item.ToolConfig;
 import dev.alaindustrial.item.energy.PouchContents;
 import dev.alaindustrial.item.energy.PouchItem;
 import dev.alaindustrial.item.misc.ShieldingPouchItem;
@@ -71,6 +72,84 @@ import net.minecraft.world.phys.Vec3;
  */
 public final class RadiationScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(RadiationScenarios::rodIrradiatesWhatItCanSee, "rad_rod_irradiates_what_it_can_see")
+						.fabricId("RadiationGameTest", "radRodIrradiatesWhatItCanSee").ticks(20, 40),
+				RosterEntry.of(RadiationScenarios::casingBlocksTheRod, "rad_casing_blocks_the_rod")
+						.fabricId("RadiationGameTest", "radCasingBlocksTheRod").ticks(20, 40),
+				RosterEntry.of(RadiationScenarios::villagerBecomesZombieVillager,
+								"rad_villager_becomes_zombie_villager")
+						.fabricId("RadiationGameTest", "radVillagerBecomesZombieVillager").ticks(20, 40),
+				RosterEntry.of(RadiationScenarios::suitedVillagerTakesNoDose, "rad_suited_villager_takes_no_dose")
+						.fabricId("RadiationGameTest", "radSuitedVillagerTakesNoDose").ticks(20, 40),
+				RosterEntry.of(RadiationScenarios::dispenserDressesTheVillagerForRadiation,
+								"rad_dispenser_dresses_the_villager_for_radiation")
+						.fabricId("RadiationGameTest", "radDispenserDressesTheVillagerForRadiation").ticks(20, 40),
+				RosterEntry.of(RadiationScenarios::dispenserRefusesToDressAnyoneButConvertibleMobs,
+								"rad_dispenser_refuses_to_dress_anyone_but_convertible_mobs")
+						.fabricId("RadiationGameTest", "radDispenserRefusesToDressAnyoneButConvertibleMobs")
+						.ticks(20, 40),
+				RosterEntry.of(RadiationScenarios::liveTickChainShieldsTheSuitedVillager,
+								"rad_live_tick_chain_shields_the_suited_villager")
+						.fabricId("RadiationGameTest", "radLiveTickChainShieldsTheSuitedVillager").ticks(200),
+				RosterEntry.of(RadiationScenarios::cowBecomesMooshroom, "rad_cow_becomes_mooshroom")
+						.fabricId("RadiationGameTest", "radCowBecomesMooshroom").ticks(20, 40),
+				RosterEntry.of(RadiationScenarios::zombieVillagerIsPastTheEnd, "rad_zombie_villager_is_past_the_end")
+						.fabricId("RadiationGameTest", "radZombieVillagerIsPastTheEnd").ticks(20, 40),
+				RosterEntry.of(RadiationScenarios::droppedUraniumStillRadiates, "rad_dropped_uranium_still_radiates")
+						.fabricId("RadiationGameTest", "radDroppedUraniumStillRadiates").ticks(20, 40),
+				RosterEntry.of(RadiationScenarios::distanceWeakensTheRod, "rad_distance_weakens_the_rod")
+						.fabricId("RadiationGameTest", "radDistanceWeakensTheRod").ticks(20, 40),
+				RosterEntry.of(RadiationScenarios::oreBehindStoneIsHeardButFeedsNoDose,
+								"rad_ore_behind_stone_is_heard_but_feeds_no_dose")
+						.fabricId("RadiationGameTest", "radOreBehindStoneIsHeardButFeedsNoDose").ticks(20, 40),
+				RosterEntry.of(RadiationScenarios::theCounterHearsBeyondTheDoseRadius,
+								"rad_counter_hears_beyond_the_dose_radius")
+						.fabricId("RadiationGameTest", "radCounterHearsBeyondTheDoseRadius").ticks(20, 40),
+				RosterEntry.of(RadiationScenarios::tcGeiger002Fun01_wallDampsDetectorButNotDose,
+								"radiation_tc_geiger002_fun01_wall_damps_detector_but_not_dose")
+						.fabricId("RadiationGameTest", "tcGeiger002Fun01_wallDampsDetectorButNotDose").ticks(20, 40),
+				RosterEntry.of(RadiationScenarios::manyCountersReadAsOneAndTheLampIsAState,
+								"rad_many_counters_read_as_one_and_the_lamp_is_a_state")
+						.fabricId("RadiationGameTest", "radManyCountersReadAsOneAndTheLampIsAState").ticks(20, 40),
+				RosterEntry.of(RadiationScenarios::casingBlocksDroppedUranium, "rad_casing_blocks_dropped_uranium")
+						.fabricId("RadiationGameTest", "radCasingBlocksDroppedUranium").ticks(20, 40),
+				RosterEntry.of(RadiationScenarios::openDoorLeaksRadiation, "rad_open_door_leaks_radiation")
+						.fabricId("RadiationGameTest", "radOpenDoorLeaksRadiation").ticks(20, 40),
+				RosterEntry.of(RadiationScenarios::shieldedLeverOnTheWallDoesNotLeakRadiation,
+								"rad_shielded_lever_on_the_wall_does_not_leak")
+						.fabricId("RadiationGameTest", "radShieldedLeverOnTheWallDoesNotLeak").ticks(20, 40),
+				RosterEntry.of(RadiationScenarios::shieldingChestStopsWhatAnOrdinaryChestDoesNot,
+								"rad_shielding_chest_stops_what_an_ordinary_chest_does_not")
+						.fabricId("RadiationGameTest", "radShieldingChestStopsWhatAnOrdinaryChestDoesNot")
+						.ticks(20, 40),
+				RosterEntry.of(RadiationScenarios::sweepLeavesUngeneratedLootAlone,
+								"rad_sweep_leaves_ungenerated_loot_alone")
+						.fabricId("RadiationGameTest", "radSweepLeavesUngeneratedLootAlone").ticks(20, 40),
+				RosterEntry.of(RadiationScenarios::pouchHidesEveryTagFromTheCarrier,
+								"rad_pouch_hides_every_tag_from_the_carrier")
+						.fabricId("RadiationGameTest", "radPouchHidesEveryTagFromTheCarrier").ticks(20, 40),
+				RosterEntry.of(RadiationScenarios::pouchRuleHoldsInsideAnotherContainer,
+								"rad_pouch_rule_holds_inside_another_container")
+						.fabricId("RadiationGameTest", "radPouchRuleHoldsInsideAnotherContainer").ticks(20, 40),
+				RosterEntry.of(RadiationScenarios::pouchCarrierDoesNotIrradiateBystanders,
+								"rad_pouch_carrier_does_not_irradiate_bystanders")
+						.fabricId("RadiationGameTest", "radPouchCarrierDoesNotIrradiateBystanders").ticks(20, 40),
+				RosterEntry.of(RadiationScenarios::pouchDoesNotShieldTheField, "rad_pouch_does_not_shield_the_field")
+						.fabricId("RadiationGameTest", "radPouchDoesNotShieldTheField").ticks(20, 40),
+				RosterEntry.of(RadiationScenarios::pouchIsQuietOnTheFloorAndInAChest,
+								"rad_pouch_is_quiet_on_the_floor_and_in_a_chest")
+						.fabricId("RadiationGameTest", "radPouchIsQuietOnTheFloorAndInAChest").ticks(20, 40),
+				RosterEntry.of(RadiationScenarios::emptyReactorColumnInThePocketIsNotRadioactive,
+								"rad_empty_reactor_column_in_the_pocket_is_not_radioactive")
+						.fabricId("RadiationGameTest", "radEmptyReactorColumnInThePocketIsNotRadioactive")
+						.ticks(20, 40));
+
+		private Roster() {}
+	}
+
 	private RadiationScenarios() {
 	}
 
@@ -87,15 +166,10 @@ public final class RadiationScenarios {
 	 * it, which is the only reason it is not in the shipped test now saying green about nothing.
 	 */
 	private static void withIsolatedField(Runnable body) {
-		int source = Config.radiationSourceRadius;
-		int ground = Config.radiationGroundRadius;
-		Config.radiationSourceRadius = 3;
-		Config.radiationGroundRadius = 3;
-		try {
+		try (ConfigOverrides o = ConfigOverrides.sync()) {
+			o.set("radiationSourceRadius", 3);
+			o.set("radiationGroundRadius", 3);
 			body.run();
-		} finally {
-			Config.radiationSourceRadius = source;
-			Config.radiationGroundRadius = ground;
 		}
 	}
 
@@ -108,7 +182,7 @@ public final class RadiationScenarios {
 		// mob's own position already sits a metre and a half away and comes back attenuated.
 		Vec3 at = target.getEyePosition();
 		RadiationMobs.sweep(level, List.of(at), List.of(new RadiationSources.Source(at, strength)),
-				Config.radiationSourceRadius);
+				RadiationConfig.radiationSourceRadius);
 	}
 
 	/** A fuelled rack: four rods in the assembly, which is what a running reactor column holds. */
@@ -128,12 +202,12 @@ public final class RadiationScenarios {
 			helper.setBlock(WALL, Blocks.STONE.defaultBlockState());
 			Cow viewer = helper.spawn(EntityTypes.COW, BYSTANDER);
 			double heard = RadiationSources.nearestOreDistance(helper.getLevel(), viewer,
-					Config.geigerOreRadius);
+					RadiationConfig.geigerOreRadius);
 			if (heard < 0) {
 				helper.fail("ore behind a wall must still be heard; the scan found none in range");
 			}
 			int field = RadiationSources.exposureAt(helper.getLevel(), viewer,
-					Config.radiationSourceRadius);
+					RadiationConfig.radiationSourceRadius);
 			if (field != 0) {
 				helper.fail("ore in the rock must add nothing to the field that becomes a dose; got "
 						+ field);
@@ -146,7 +220,7 @@ public final class RadiationScenarios {
 	 * The counter hears a hazard from beyond the distance at which that hazard can dose anyone.
 	 *
 	 * <p>This is the whole reason the instrument has its own radius. The first shipped version shared
-	 * {@link Config#radiationSourceRadius}, so it first spoke where the dose had already started
+	 * {@link RadiationConfig#radiationSourceRadius}, so it first spoke where the dose had already started
 	 * climbing — measured in game at three blocks from a chest of uranium, taking damage, one click a
 	 * second. The scale is compressed to the rig here (a dose radius of one against a counter radius of
 	 * four); what is asserted is the ORDER, which is the rule, not the shipped numbers.
@@ -154,15 +228,13 @@ public final class RadiationScenarios {
 	 * @implements R-RAD-23 — see docs/testing/RULES.md
 	 */
 	public static void theCounterHearsBeyondTheDoseRadius(GameTestHelper helper) {
-		int source = Config.radiationSourceRadius;
-		int ground = Config.radiationGroundRadius;
-		Config.radiationSourceRadius = 1;
-		Config.radiationGroundRadius = 1;
-		try {
+		try (ConfigOverrides o = ConfigOverrides.sync()) {
+			o.set("radiationSourceRadius", 1);
+			o.set("radiationGroundRadius", 1);
 			placeFuelledRack(helper);
 			Cow viewer = helper.spawn(EntityTypes.COW, BYSTANDER);
 			int dosing = RadiationSources.exposureAt(helper.getLevel(), viewer,
-					Config.radiationSourceRadius);
+					RadiationConfig.radiationSourceRadius);
 			if (dosing != 0) {
 				helper.fail("the rig must put the viewer outside the dose radius; got " + dosing);
 			}
@@ -172,9 +244,6 @@ public final class RadiationScenarios {
 						+ heard);
 			}
 			helper.succeed();
-		} finally {
-			Config.radiationSourceRadius = source;
-			Config.radiationGroundRadius = ground;
 		}
 	}
 
@@ -234,7 +303,8 @@ public final class RadiationScenarios {
 		withIsolatedField(() -> {
 			placeFuelledRack(helper);
 			Cow viewer = helper.spawn(EntityTypes.COW, BYSTANDER);
-			int exposure = RadiationSources.exposureAt(helper.getLevel(), viewer, Config.radiationSourceRadius);
+			int exposure = RadiationSources.exposureAt(helper.getLevel(), viewer,
+					RadiationConfig.radiationSourceRadius);
 			if (exposure <= 0) {
 				helper.fail("a fuelled rod two blocks away in open air must irradiate; got " + exposure);
 			}
@@ -258,12 +328,12 @@ public final class RadiationScenarios {
 			placeFuelledRack(helper);
 			helper.setBlock(WALL, ModContent.REACTOR_CASING.get());
 			Cow viewer = helper.spawn(EntityTypes.COW, BYSTANDER);
-			int blocked = RadiationSources.exposureAt(helper.getLevel(), viewer, Config.radiationSourceRadius);
+			int blocked = RadiationSources.exposureAt(helper.getLevel(), viewer, RadiationConfig.radiationSourceRadius);
 			if (blocked != 0) {
 				helper.fail("a casing wall must stop the rod entirely; got " + blocked);
 			}
 			helper.setBlock(WALL, net.minecraft.world.level.block.Blocks.AIR);
-			int open = RadiationSources.exposureAt(helper.getLevel(), viewer, Config.radiationSourceRadius);
+			int open = RadiationSources.exposureAt(helper.getLevel(), viewer, RadiationConfig.radiationSourceRadius);
 			if (open <= 0) {
 				helper.fail("with the wall gone the same rod must irradiate again; got " + open
 						+ " — the zero above proved nothing");
@@ -283,7 +353,7 @@ public final class RadiationScenarios {
 			ServerLevel level = helper.getLevel();
 			// One sweep carrying a full scale of dose: the ramp is arithmetic and belongs to L1, while
 			// what a world has to prove is that the transformation itself happens and carries data across.
-			sweepWithCarried(level, villager, Config.radiationDoseCapacity);
+			sweepWithCarried(level, villager, RadiationConfig.radiationDoseCapacity);
 			if (villager.isAlive() && !villager.isRemoved()) {
 				helper.fail("the villager should have been converted, not left standing");
 			}
@@ -326,7 +396,7 @@ public final class RadiationScenarios {
 			placeFuelledRack(helper);
 			Villager villager = helper.spawn(EntityTypes.VILLAGER, BYSTANDER);
 			ServerLevel level = helper.getLevel();
-			int radius = Config.radiationSourceRadius;
+			int radius = RadiationConfig.radiationSourceRadius;
 
 			int raw = RadiationSources.exposureAt(level, villager, radius);
 			if (raw < 20) {
@@ -350,7 +420,7 @@ public final class RadiationScenarios {
 			}
 
 			// Then the exact exposure that converts a bare villager (R-RAD-03): same answer — nothing.
-			sweepWithCarried(level, villager, Config.radiationDoseCapacity);
+			sweepWithCarried(level, villager, RadiationConfig.radiationDoseCapacity);
 			int both = RadiationDose.of(villager);
 			if (both != 0) {
 				helper.fail("a converting carried exposure must not pass a full suit: leaked " + both);
@@ -406,7 +476,7 @@ public final class RadiationScenarios {
 					villager.setItemSlot(EquipmentSlot.LEGS, new ItemStack(ModContent.SHIELDING_LEGGINGS.get()));
 					villager.setItemSlot(EquipmentSlot.FEET, new ItemStack(ModContent.SHIELDING_BOOTS.get()));
 					withIsolatedField(() -> {
-						sweepWithCarried(helper.getLevel(), villager, Config.radiationDoseCapacity);
+						sweepWithCarried(helper.getLevel(), villager, RadiationConfig.radiationDoseCapacity);
 						int dose = RadiationDose.of(villager);
 						if (dose != 0) {
 							helper.fail("a dispenser-suited villager must take no dose from a converting "
@@ -522,7 +592,7 @@ public final class RadiationScenarios {
 			Cow cow = helper.spawn(EntityTypes.COW, BYSTANDER);
 			float health = cow.getHealth();
 			ServerLevel level = helper.getLevel();
-			sweepWithCarried(level, cow, Config.radiationDoseCapacity);
+			sweepWithCarried(level, cow, RadiationConfig.radiationDoseCapacity);
 			if (cow.getHealth() < health) {
 				helper.fail("a cow must not be hurt by radiation, only changed");
 			}
@@ -544,7 +614,7 @@ public final class RadiationScenarios {
 	public static void zombieVillagerIsPastTheEnd(GameTestHelper helper) {
 		withIsolatedField(() -> {
 			ZombieVillager zombie = helper.spawn(EntityTypes.ZOMBIE_VILLAGER, BYSTANDER);
-			sweepWithCarried(helper.getLevel(), zombie, Config.radiationDoseCapacity);
+			sweepWithCarried(helper.getLevel(), zombie, RadiationConfig.radiationDoseCapacity);
 			if (zombie.hasEffect(ModEffects.RADIATION.get())) {
 				helper.fail("a zombie villager must not accumulate a dose — it is already the outcome");
 			}
@@ -566,7 +636,7 @@ public final class RadiationScenarios {
 			ItemEntity drop = new ItemEntity(level, abs.getX() + 0.5, abs.getY(), abs.getZ() + 0.5,
 					new ItemStack(ModContent.REFINED_URANIUM.get(), 4));
 			level.addFreshEntity(drop);
-			int exposure = RadiationSources.exposureAt(level, viewer, Config.radiationSourceRadius);
+			int exposure = RadiationSources.exposureAt(level, viewer, RadiationConfig.radiationSourceRadius);
 			if (exposure <= 0) {
 				helper.fail("uranium lying on the ground must still irradiate; got " + exposure);
 			}
@@ -588,8 +658,8 @@ public final class RadiationScenarios {
 			placeFuelledRack(helper);
 			Cow near = helper.spawn(EntityTypes.COW, RACK.above());
 			Cow far = helper.spawn(EntityTypes.COW, BYSTANDER);
-			int close = RadiationSources.exposureAt(helper.getLevel(), near, Config.radiationSourceRadius);
-			int distant = RadiationSources.exposureAt(helper.getLevel(), far, Config.radiationSourceRadius);
+			int close = RadiationSources.exposureAt(helper.getLevel(), near, RadiationConfig.radiationSourceRadius);
+			int distant = RadiationSources.exposureAt(helper.getLevel(), far, RadiationConfig.radiationSourceRadius);
 			if (close <= distant) {
 				helper.fail("radiation must fall off with distance; next to the rack " + close
 						+ ", two blocks away " + distant);
@@ -619,12 +689,12 @@ public final class RadiationScenarios {
 			ItemEntity drop = new ItemEntity(level, abs.getX() + 0.5, abs.getY() + 0.5, abs.getZ() + 0.5,
 					new ItemStack(ModContent.REFINED_URANIUM.get(), 16));
 			level.addFreshEntity(drop);
-			int blocked = RadiationSources.exposureAt(level, viewer, Config.radiationSourceRadius);
+			int blocked = RadiationSources.exposureAt(level, viewer, RadiationConfig.radiationSourceRadius);
 			if (blocked != 0) {
 				helper.fail("a casing wall must stop dropped uranium too; got " + blocked);
 			}
 			helper.setBlock(WALL, net.minecraft.world.level.block.Blocks.AIR);
-			int open = RadiationSources.exposureAt(level, viewer, Config.radiationSourceRadius);
+			int open = RadiationSources.exposureAt(level, viewer, RadiationConfig.radiationSourceRadius);
 			if (open <= 0) {
 				helper.fail("with the wall gone the same pile must irradiate; got " + open
 						+ " — the zero above proved nothing");
@@ -649,14 +719,14 @@ public final class RadiationScenarios {
 			helper.setBlock(WALL, door);
 			helper.setBlock(WALL.above(), door.setValue(ReactorDoorBlock.HALF, DoubleBlockHalf.UPPER));
 			Cow viewer = helper.spawn(EntityTypes.COW, BYSTANDER);
-			int closed = RadiationSources.exposureAt(helper.getLevel(), viewer, Config.radiationSourceRadius);
+			int closed = RadiationSources.exposureAt(helper.getLevel(), viewer, RadiationConfig.radiationSourceRadius);
 			if (closed != 0) {
 				helper.fail("a closed airlock must stop the rod; got " + closed);
 			}
 			helper.setBlock(WALL, door.setValue(ReactorDoorBlock.OPEN, true));
 			helper.setBlock(WALL.above(), door.setValue(ReactorDoorBlock.HALF, DoubleBlockHalf.UPPER)
 					.setValue(ReactorDoorBlock.OPEN, true));
-			int opened = RadiationSources.exposureAt(helper.getLevel(), viewer, Config.radiationSourceRadius);
+			int opened = RadiationSources.exposureAt(helper.getLevel(), viewer, RadiationConfig.radiationSourceRadius);
 			if (opened <= 0) {
 				helper.fail("an open doorway must leak radiation; got " + opened);
 			}
@@ -690,14 +760,14 @@ public final class RadiationScenarios {
 					.setValue(FaceAttachedHorizontalDirectionalBlock.FACE, AttachFace.WALL)
 					.setValue(HorizontalDirectionalBlock.FACING, Direction.SOUTH));
 			Cow viewer = helper.spawn(EntityTypes.COW, BYSTANDER);
-			int hung = RadiationSources.exposureAt(helper.getLevel(), viewer, Config.radiationSourceRadius);
+			int hung = RadiationSources.exposureAt(helper.getLevel(), viewer, RadiationConfig.radiationSourceRadius);
 			if (hung != 0) {
 				helper.fail("a lever hanging on the casing let " + hung + " through a wall that must stop it");
 			}
 			// Take the wall away and leave the lever exactly where it was: the dose must come back, or
 			// the zero above proved nothing about the lever.
 			helper.setBlock(WALL, Blocks.AIR);
-			int bare = RadiationSources.exposureAt(helper.getLevel(), viewer, Config.radiationSourceRadius);
+			int bare = RadiationSources.exposureAt(helper.getLevel(), viewer, RadiationConfig.radiationSourceRadius);
 			if (bare <= 0) {
 				helper.fail("with the casing gone the lever alone stopped the rod (got " + bare
 						+ ") — it is not a wall and must not act like one");
@@ -727,7 +797,7 @@ public final class RadiationScenarios {
 			helper.setBlock(RACK, ModContent.IRON_CHEST.get());
 			Container plain = helper.getBlockEntity(RACK, IronChestBlockEntity.class);
 			plain.setItem(0, fuel.copy());
-			int exposed = RadiationSources.exposureAt(level, viewer, Config.radiationSourceRadius);
+			int exposed = RadiationSources.exposureAt(level, viewer, RadiationConfig.radiationSourceRadius);
 			if (exposed <= 0) {
 				helper.fail("uranium in an ordinary chest must irradiate; got " + exposed);
 			}
@@ -738,7 +808,7 @@ public final class RadiationScenarios {
 			for (int slot = 0; slot < 27; slot++) {
 				plain.setItem(slot, new ItemStack(ModContent.REFINED_URANIUM.get(), 64));
 			}
-			int hoard = RadiationSources.exposureAt(level, viewer, Config.radiationSourceRadius);
+			int hoard = RadiationSources.exposureAt(level, viewer, RadiationConfig.radiationSourceRadius);
 			if (hoard != exposed) {
 				helper.fail("past the cap a fuller chest must not irradiate harder; 16 items gave "
 						+ exposed + ", a packed chest gave " + hoard);
@@ -752,7 +822,7 @@ public final class RadiationScenarios {
 			helper.setBlock(RACK, ModContent.SHIELDING_CHEST.get());
 			Container shielded = helper.getBlockEntity(RACK, ShieldingChestBlockEntity.class);
 			shielded.setItem(0, fuel.copy());
-			int stopped = RadiationSources.exposureAt(level, viewer, Config.radiationSourceRadius);
+			int stopped = RadiationSources.exposureAt(level, viewer, RadiationConfig.radiationSourceRadius);
 			if (stopped != 0) {
 				helper.fail("the same uranium in a shielding chest must not irradiate at all; got " + stopped);
 			}
@@ -789,7 +859,7 @@ public final class RadiationScenarios {
 			helper.setBlock(RACK, Blocks.BARREL);
 			BarrelBlockEntity loaded = helper.getBlockEntity(RACK, BarrelBlockEntity.class);
 			loaded.setItem(0, new ItemStack(ModContent.REFINED_URANIUM.get(), 16));
-			int reached = RadiationSources.exposureAt(level, viewer, Config.radiationSourceRadius);
+			int reached = RadiationSources.exposureAt(level, viewer, RadiationConfig.radiationSourceRadius);
 			if (reached <= 0) {
 				helper.fail("rig is wrong: uranium in a vanilla barrel here must irradiate, otherwise the "
 						+ "loot-table assertion below proves nothing; got " + reached);
@@ -802,7 +872,7 @@ public final class RadiationScenarios {
 			helper.setBlock(RACK, Blocks.BARREL);
 			BarrelBlockEntity pending = helper.getBlockEntity(RACK, BarrelBlockEntity.class);
 			pending.setLootTable(BuiltInLootTables.SIMPLE_DUNGEON);
-			RadiationSources.exposureAt(level, viewer, Config.radiationSourceRadius);
+			RadiationSources.exposureAt(level, viewer, RadiationConfig.radiationSourceRadius);
 			if (pending.getLootTable() == null) {
 				helper.fail("the sweep generated a foreign chest's loot: the pending loot table is gone, "
 						+ "which leaves another mod's chest empty for good (MOD-524)");
@@ -825,7 +895,7 @@ public final class RadiationScenarios {
 	private static ItemStack batteryPouchOf(ItemStack stack) {
 		ItemStack pouch = new ItemStack(ModContent.BATTERY_POUCH.get());
 		PouchItem.setContents(pouch,
-				PouchContents.EMPTY.insert(stack, Config.lvPouchCapacity).contents());
+				PouchContents.EMPTY.insert(stack, ToolConfig.lvPouchCapacity).contents());
 		return pouch;
 	}
 
@@ -948,7 +1018,7 @@ public final class RadiationScenarios {
 				helper.fail("rig is wrong: loose uranium must have strength; got " + loose);
 			}
 			RadiationMobs.sweep(level, List.of(at), List.of(new RadiationSources.Source(at, loose)),
-					Config.radiationSourceRadius);
+					RadiationConfig.radiationSourceRadius);
 			int dosed = RadiationDose.of(bystander);
 			if (dosed <= 0) {
 				helper.fail("rig is wrong: a carried source at the mob's eyes must dose it; got " + dosed);
@@ -960,7 +1030,7 @@ public final class RadiationScenarios {
 			if (shielded != 0) {
 				helper.fail("a shielding pouch must not be a source; got " + shielded);
 			}
-			RadiationMobs.sweep(level, List.of(at), List.of(), Config.radiationSourceRadius);
+			RadiationMobs.sweep(level, List.of(at), List.of(), RadiationConfig.radiationSourceRadius);
 			int after = RadiationDose.of(bystander);
 			if (after > dosed) {
 				helper.fail("a pouch carrier must not raise a bystander's dose; it went from " + dosed
@@ -986,13 +1056,13 @@ public final class RadiationScenarios {
 			placeFuelledRack(helper);
 
 			carrier.getInventory().clearContent();
-			int bare = RadiationSources.exposureAt(level, carrier, Config.radiationSourceRadius);
+			int bare = RadiationSources.exposureAt(level, carrier, RadiationConfig.radiationSourceRadius);
 			if (bare <= 0) {
 				helper.fail("rig is wrong: a fuelled rack must irradiate the carrier; got " + bare);
 			}
 
 			carrier.getInventory().add(shieldingPouchOf(new ItemStack(ModContent.REFINED_URANIUM.get(), 8)));
-			int withPouch = RadiationSources.exposureAt(level, carrier, Config.radiationSourceRadius);
+			int withPouch = RadiationSources.exposureAt(level, carrier, RadiationConfig.radiationSourceRadius);
 			if (withPouch != bare) {
 				helper.fail("a shielding pouch must not shield the field: the rack read " + bare
 						+ " without it and " + withPouch + " with it");
@@ -1019,7 +1089,7 @@ public final class RadiationScenarios {
 			ItemEntity loose = new ItemEntity(level, abs.getX() + 0.5, abs.getY() + 0.5, abs.getZ() + 0.5,
 					fuel.copy());
 			level.addFreshEntity(loose);
-			int spilled = RadiationSources.exposureAt(level, viewer, Config.radiationSourceRadius);
+			int spilled = RadiationSources.exposureAt(level, viewer, RadiationConfig.radiationSourceRadius);
 			if (spilled <= 0) {
 				helper.fail("rig is wrong: uranium on the floor must irradiate; got " + spilled);
 			}
@@ -1029,7 +1099,7 @@ public final class RadiationScenarios {
 			ItemEntity dropped = new ItemEntity(level, abs.getX() + 0.5, abs.getY() + 0.5, abs.getZ() + 0.5,
 					shieldingPouchOf(fuel.copy()));
 			level.addFreshEntity(dropped);
-			int onFloor = RadiationSources.exposureAt(level, viewer, Config.radiationSourceRadius);
+			int onFloor = RadiationSources.exposureAt(level, viewer, RadiationConfig.radiationSourceRadius);
 			if (onFloor != 0) {
 				helper.fail("a dropped shielding pouch must not radiate; got " + onFloor);
 			}
@@ -1039,7 +1109,7 @@ public final class RadiationScenarios {
 			helper.setBlock(RACK, ModContent.IRON_CHEST.get());
 			Container chest = helper.getBlockEntity(RACK, IronChestBlockEntity.class);
 			chest.setItem(0, fuel.copy());
-			int stored = RadiationSources.exposureAt(level, viewer, Config.radiationSourceRadius);
+			int stored = RadiationSources.exposureAt(level, viewer, RadiationConfig.radiationSourceRadius);
 			if (stored <= 0) {
 				helper.fail("rig is wrong: uranium in an ordinary chest must irradiate; got " + stored);
 			}
@@ -1047,7 +1117,7 @@ public final class RadiationScenarios {
 			// Empty it before the next phase, or the loose stack keeps radiating from the same chest.
 			chest.clearContent();
 			chest.setItem(0, shieldingPouchOf(fuel.copy()));
-			int pouched = RadiationSources.exposureAt(level, viewer, Config.radiationSourceRadius);
+			int pouched = RadiationSources.exposureAt(level, viewer, RadiationConfig.radiationSourceRadius);
 			if (pouched != 0) {
 				helper.fail("a shielding pouch in a chest must not radiate; got " + pouched);
 			}
@@ -1118,6 +1188,8 @@ public final class RadiationScenarios {
 	 * <p>Both halves are asserted together on purpose. Making the instrument hear through a wall is only
 	 * correct while the DOSE still does not: a lead casing and the shielding suit are the whole point,
 	 * and a fix that quietly let radiation leak through walls would be worse than the bug.
+	 *
+	 * @implements TC-GEIGER-002-FUN01 — a wall damps the detector and still stops the dose dead.
 	 */
 	public static void tcGeiger002Fun01_wallDampsDetectorButNotDose(GameTestHelper helper) {
 		withIsolatedField(() -> {
@@ -1136,7 +1208,7 @@ public final class RadiationScenarios {
 				helper.fail("the counter must still hear a shielded rack, or it is deaf exactly where a "
 						+ "detector is wanted; got " + heard);
 			}
-			if (heard >= RadiationCore.attenuate(Config.radiationRodDosePerTick, 2.0, 8)) {
+			if (heard >= RadiationCore.attenuate(RadiationConfig.radiationRodDosePerTick, 2.0, 8)) {
 				helper.fail("a wall must be AUDIBLE as a wall — the shielded reading must be quieter "
 						+ "than an open one; got " + heard);
 			}

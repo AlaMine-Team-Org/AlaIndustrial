@@ -70,7 +70,7 @@ class WaterMillOutputTest {
 	}
 
 	/**
-	 * The canonical balance point: {@code Config.waterMillEuPerTick = 1} per side, fully surrounded
+	 * The canonical balance point: {@code GeneratorConfig.waterMillEuPerTick = 1} per side, fully surrounded
 	 * (4 faces) → 4 EU/t. Pins the realistic production number the live {@code produce()} reaches.
 	 */
 	@Test

@@ -6,11 +6,9 @@ import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
@@ -64,8 +62,7 @@ public class CreativeEnergySourceMenu extends MachineMenu {
 	/** Client side. One machine slot and no upgrade block — the block has no upgrade panel. */
 	public CreativeEnergySourceMenu(int syncId, Inventory playerInventory) {
 		super(ModContent.CREATIVE_ENERGY_SOURCE_MENU.get(), syncId, playerInventory,
-				new SimpleContainer(CreativeEnergySourceBlockEntity.MACHINE_SLOTS),
-				new SimpleContainerData(CreativeEnergySourceBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL,
+				clientStub(CreativeEnergySourceBlockEntity.MACHINE_SLOTS, CreativeEnergySourceBlockEntity.DATA_COUNT),
 				ModContent.CREATIVE_ENERGY_SOURCE.get());
 		this.source = null;
 	}
@@ -82,11 +79,6 @@ public class CreativeEnergySourceMenu extends MachineMenu {
 		});
 	}
 
-	/** The block has none — an overclocker cannot speed up an infinite source. */
-	@Override
-	public boolean hasUpgradePanel() {
-		return false;
-	}
 
 	/**
 	 * Applies a click from the screen. Every branch re-reads the block entity rather than trusting the
@@ -133,12 +125,12 @@ public class CreativeEnergySourceMenu extends MachineMenu {
 	// --- readouts for the screen ---------------------------------------------------------------
 
 	public boolean isSourceEnabled() {
-		return data.get(CreativeEnergySourceBlockEntity.DATA_ENABLED) != 0;
+		return channel(CreativeEnergySourceBlockEntity.Channel.ENABLED) != 0;
 	}
 
 	/** Current output limit in EU/tick. */
 	public int getOutputLimit() {
-		return data.get(CreativeEnergySourceBlockEntity.DATA_OUTPUT);
+		return channel(CreativeEnergySourceBlockEntity.Channel.OUTPUT);
 	}
 
 	@Override

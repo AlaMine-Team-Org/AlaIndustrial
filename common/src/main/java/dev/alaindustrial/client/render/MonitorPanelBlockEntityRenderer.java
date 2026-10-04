@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import dev.alaindustrial.block.MonitorPanelBlock;
 import dev.alaindustrial.block.entity.MonitorPanelBlockEntity;
+import dev.alaindustrial.compat.client.Poses;
 import dev.alaindustrial.core.monitor.MonitorReadout;
 import java.util.Locale;
 import net.minecraft.client.gui.Font;
@@ -104,7 +105,7 @@ public class MonitorPanelBlockEntityRenderer
 		poseStack.pushPose();
 		// Put +Z on the face the panel was placed looking out of, then step just clear of the surface.
 		poseStack.translate(0.5F, 0.5F, 0.5F);
-		poseStack.rotate(Axis.YP.rotationDegrees(-state.facing.toYRot()));
+		Poses.rotate(poseStack, Axis.YP.rotationDegrees(-state.facing.toYRot()));
 		// The screen is recessed behind the bezel, so dynamic content sits on that exact plane.
 		poseStack.pushPose();
 		// A GUI item may be a 3D block. Flatten only its depth instead of moving it behind the opaque

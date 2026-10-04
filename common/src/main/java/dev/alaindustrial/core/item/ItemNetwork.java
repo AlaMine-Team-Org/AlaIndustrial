@@ -1,8 +1,8 @@
 package dev.alaindustrial.core.item;
 
 import dev.alaindustrial.Config;
-import dev.alaindustrial.block.ItemPipeBlock;
-import dev.alaindustrial.block.entity.ItemPipeBlockEntity;
+import dev.alaindustrial.core.net.GraphNetwork;
+import dev.alaindustrial.core.net.NodeSet;
 import dev.alaindustrial.loot.PendingLoot;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -17,7 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 /** One connected component of item-pipe segments, ticked once by {@link ItemNetworkManager}. */
-public final class ItemNetwork {
+public final class ItemNetwork implements GraphNetwork<ItemNetwork, BlockPos> {
 	private record Endpoint(BlockPos pos, Direction side) { }
 
 	/**
@@ -41,10 +41,11 @@ public final class ItemNetwork {
 			Comparator.comparingLong((Endpoint e) -> e.pos().asLong()).thenComparingInt(e -> e.side().ordinal());
 
 	private final ServerLevel level;
-	private final Set<BlockPos> pipes = new LinkedHashSet<>();
+	/** The pipes and the "refresh the endpoints" flag (MOD-715, batch 11). */
+	private final NodeSet<BlockPos> nodes = new NodeSet<>();
+	private final Set<BlockPos> pipes = nodes.nodes();
 	private final List<Endpoint> sources = new ArrayList<>();
 	private final List<Endpoint> targets = new ArrayList<>();
-	private boolean endpointsDirty = true;
 	private int sourceCursor;
 	private int targetCursor;
 	/**
@@ -83,7 +84,7 @@ public final class ItemNetwork {
 	private PipeTier weakestTier() {
 		PipeTier weakest = null;
 		for (BlockPos pos : pipes) {
-			if (level.getBlockState(pos).getBlock() instanceof ItemPipeBlock pipe) {
+			if (level.getBlockEntity(pos) instanceof ItemPipeNode pipe && pipe.tier() != null) {
 				weakest = PipeTier.min(weakest, pipe.tier());
 			}
 		}
@@ -94,14 +95,23 @@ public final class ItemNetwork {
 	int size() { return pipes.size(); }
 	boolean contains(BlockPos pos) { return pipes.contains(pos); }
 	boolean isEmpty() { return pipes.isEmpty(); }
-	void addPipe(BlockPos pos) { if (pipes.add(pos.immutable())) endpointsDirty = true; }
-	void removePipe(BlockPos pos) { if (pipes.remove(pos)) endpointsDirty = true; }
-	void absorb(ItemNetwork other) { pipes.addAll(other.pipes); endpointsDirty = true; }
-	void markDirty() { endpointsDirty = true; }
+	@Override public Set<BlockPos> nodes() { return pipes; }
+	@Override public void addNode(BlockPos pos) { nodes.add(pos.immutable()); }
+	@Override public void removeNode(BlockPos pos) { nodes.remove(pos); }
+	@Override public void absorb(ItemNetwork other) { nodes.absorb(other.nodes); }
+	@Override public void markDirty() { nodes.markDirty(); }
 
-	boolean isAwake() {
-		if (endpointsDirty) refreshEndpoints();
+	@Override
+	public boolean isAwake() {
+		if (nodes.isDirty()) refreshEndpoints();
 		return !sources.isEmpty() && !targets.isEmpty();
+	}
+
+	/** One tick. Items moved are not a throughput the frame's telemetry slot carries, so it reports 0. */
+	@Override
+	public long tick() {
+		transfer();
+		return 0L;
 	}
 
 	/**
@@ -115,15 +125,15 @@ public final class ItemNetwork {
 	 * lockstep). The cooldown is only spent when something actually moved: a network whose source is
 	 * empty or whose targets are all full keeps checking every tick and resumes the instant that changes.
 	 */
-	int tick() {
-		if (endpointsDirty) refreshEndpoints();
+	private int transfer() {
+		if (nodes.isDirty()) refreshEndpoints();
 		if (sources.isEmpty() || targets.isEmpty()) return 0;
 		if (transferCooldown > 0) {
 			transferCooldown--;
 			return 0;
 		}
 		// MOD-581: the network moves at its WEAKEST segment's pace. Computed in refreshEndpoints, which
-		// the same endpointsDirty flag already gates, so a mixed line costs no extra walk per tick.
+		// the same dirty flag already gates, so a mixed line costs no extra walk per tick.
 		int per = tier.itemsPerTransfer();
 		int sourceCount = sources.size();
 		int targetCount = targets.size();
@@ -164,7 +174,7 @@ public final class ItemNetwork {
 	 */
 	private boolean hasExplicitRole() {
 		for (BlockPos pipe : pipes) {
-			if (!(level.getBlockEntity(pipe) instanceof ItemPipeBlockEntity entity)) continue;
+			if (!(level.getBlockEntity(pipe) instanceof ItemPipeNode entity)) continue;
 			for (Direction direction : Direction.values()) {
 				PipeFaceMode mode = entity.faceMode(direction);
 				if (mode == PipeFaceMode.EXTRACT || mode == PipeFaceMode.INSERT) {
@@ -282,9 +292,9 @@ public final class ItemNetwork {
 		Set<Endpoint> targetSeen = new LinkedHashSet<>();
 		boolean configured = hasExplicitRole();
 		for (BlockPos pipe : pipes) {
-			if (!(level.getBlockEntity(pipe) instanceof ItemPipeBlockEntity entity)) continue;
+			if (!(level.getBlockEntity(pipe) instanceof ItemPipeNode entity)) continue;
 			for (Direction direction : Direction.values()) {
-				if (!ItemPipeBlock.shouldConnectTo(level, pipe, direction)) continue;
+				if (!entity.connects(direction)) continue;
 				BlockPos neighbour = pipe.relative(direction);
 				if (pipes.contains(neighbour)) continue;
 				PipeFaceMode mode = entity.faceMode(direction);
@@ -300,7 +310,7 @@ public final class ItemNetwork {
 		targets.addAll(targetSeen);
 		sources.sort(ENDPOINT_ORDER);
 		targets.sort(ENDPOINT_ORDER);
-		endpointsDirty = false;
+		nodes.clearDirty();
 		if (!sources.isEmpty()) sourceCursor %= sources.size(); else sourceCursor = 0;
 		if (!targets.isEmpty()) targetCursor %= targets.size(); else targetCursor = 0;
 	}

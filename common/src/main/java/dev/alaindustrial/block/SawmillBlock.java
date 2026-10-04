@@ -10,8 +10,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import dev.alaindustrial.client.ServerBalance;
+import dev.alaindustrial.core.tooltip.HasMachineTooltip;
+import dev.alaindustrial.core.tooltip.MachineTooltipSpec;
 
-public class SawmillBlock extends LitMachineBlock implements MachineHumProvider {
+public class SawmillBlock extends LitMachineBlock implements MachineHumProvider, HasMachineTooltip {
 	public SawmillBlock(Properties properties) {
 		super(properties);
 	}
@@ -31,5 +34,13 @@ public class SawmillBlock extends LitMachineBlock implements MachineHumProvider 
 	@Override
 	public Supplier<SoundEvent> humSound() {
 		return ModSounds.SAWMILL_HUM;
+	}
+
+	/** Hover tooltip of this block's item (MOD-716, ADR-040). */
+	@Override
+	public MachineTooltipSpec machineTooltip() {
+		return MachineTooltipSpec.processing(ServerBalance::machineEuPerTickEffective,
+				() -> ServerBalance.scaledDuration(ServerBalance.sawmillDuration()),
+				ServerBalance::machineBuffer);
 	}
 }

@@ -5,10 +5,8 @@ import dev.alaindustrial.block.entity.FermenterStatus;
 import dev.alaindustrial.item.fluid.ItemFluidBridge;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.world.Container;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
@@ -33,8 +31,7 @@ public final class FermenterMenu extends MachineMenu {
 
 	public FermenterMenu(int syncId, Inventory playerInventory) {
 		super(ModContent.FERMENTER_MENU.get(), syncId, playerInventory,
-				new SimpleContainer(FermenterBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT),
-				new SimpleContainerData(FermenterBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL,
+				clientStub(FermenterBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT, FermenterBlockEntity.DATA_COUNT),
 				ModContent.FERMENTER.get());
 	}
 
@@ -65,26 +62,26 @@ public final class FermenterMenu extends MachineMenu {
 
 	/** Water level as a permille (0..1000) — scaled because the sync channel is a signed short. */
 	public int getWaterPermille() {
-		return data.get(FermenterBlockEntity.CH_WATER_PERMILLE);
+		return channel(FermenterBlockEntity.Channel.WATER_PERMILLE);
 	}
 
 	/** Registry id of the fluid in the water tank, or {@link FermenterBlockEntity#FLUID_ID_NONE}. */
 	public int getWaterFluidId() {
-		return data.get(FermenterBlockEntity.CH_WATER_FLUID_ID);
+		return channel(FermenterBlockEntity.Channel.WATER_FLUID_ID);
 	}
 
 	/** Biofuel level as a permille (0..1000). */
 	public int getBiofuelPermille() {
-		return data.get(FermenterBlockEntity.CH_BIOFUEL_PERMILLE);
+		return channel(FermenterBlockEntity.Channel.BIOFUEL_PERMILLE);
 	}
 
 	/** Registry id of the fluid in the biofuel tank, or {@link FermenterBlockEntity#FLUID_ID_NONE}. */
 	public int getBiofuelFluidId() {
-		return data.get(FermenterBlockEntity.CH_BIOFUEL_FLUID_ID);
+		return channel(FermenterBlockEntity.Channel.BIOFUEL_FLUID_ID);
 	}
 
 	/** Why the machine is idle, for the screen's status line. */
 	public FermenterStatus getStatus() {
-		return FermenterStatus.byOrdinal(data.get(FermenterBlockEntity.CH_STATUS));
+		return FermenterStatus.byOrdinal(channel(FermenterBlockEntity.Channel.STATUS));
 	}
 }

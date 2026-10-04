@@ -1,8 +1,10 @@
 package dev.alaindustrial.item.tool;
 
+import dev.alaindustrial.item.ToolConfig;
+import dev.alaindustrial.item.energy.EnergyBar;
+import dev.alaindustrial.item.energy.PoweredItem;
 import dev.alaindustrial.item.energy.ItemEnergy;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.registry.ModDataComponents;
@@ -38,6 +40,9 @@ import net.minecraft.world.item.component.Weapon;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import dev.alaindustrial.client.ServerBalance;
+import dev.alaindustrial.core.tooltip.MachineTooltipSpec;
+import dev.alaindustrial.item.energy.PoweredToolTooltip;
 
 /**
  * Electric Saber (MOD-149) — the EU line's first weapon, after four hand tools (drill MOD-079,
@@ -45,14 +50,14 @@ import net.minecraft.world.level.block.Blocks;
  * instead of durability, never breaks, and when it runs flat it degrades rather than switching off.
  *
  * <p>Energy is not re-implemented (project rule 4): the charge lives in the shared
- * {@code pouch_energy} component through {@link ItemEnergy}, which gains one {@code capacity} /
- * {@code inputRate} branch — so the Battery Box charge slot, a worn Energy Pack and the Charging
+ * {@code pouch_energy} component through {@link ItemEnergy}, which reads this class's
+ * {@code PoweredItem} answers (MOD-707) — so the Battery Box charge slot, a worn Energy Pack and the Charging
  * Station all charge the saber with no changes on their side.
  *
  * <h2>Three states, two of them the player's choice</h2>
  * <ul>
  * <li><b>Charged and switched on</b> — 12 damage, 4 blocks of reach,
- * {@link Config#electricSaberEuPerHit} per hit, and a jolt of Slowness on the target.</li>
+ * {@link ToolConfig#electricSaberEuPerHit} per hit, and a jolt of Slowness on the target.</li>
  * <li><b>Switched off</b> (shift-right-click) — 4 damage, vanilla reach, free.</li>
  * <li><b>Flat</b> — the same plain sword the switched-off blade is, and for the same reason: no
  * energy is flowing.</li>
@@ -92,7 +97,7 @@ import net.minecraft.world.level.block.Blocks;
  * feedback. The attack cooldown is safe either way: {@code Player.tick} resets it on
  * {@code !isSameItem}, i.e. on a different item, not on changed components.
  */
-public class ElectricSaberItem extends Item {
+public class ElectricSaberItem extends Item implements PoweredItem {
 
 	/** Enchantability — the diamond value ({@code ToolMaterial.DIAMOND.enchantmentValue}), like the line. */
 	private static final int ENCHANT_VALUE = 10;
@@ -157,7 +162,7 @@ public class ElectricSaberItem extends Item {
 
 	/** Whether the saber would spend EU and hit hard right now: switched on and holding a hit's worth. */
 	public static boolean isLive(ItemStack stack) {
-		return isEnabled(stack) && ItemEnergy.get(stack) >= Config.electricSaberEuPerHit;
+		return isEnabled(stack) && ItemEnergy.get(stack) >= ToolConfig.electricSaberEuPerHit;
 	}
 
 	/**
@@ -179,7 +184,7 @@ public class ElectricSaberItem extends Item {
 		if (!(stack.getItem() instanceof ElectricSaberItem)) {
 			return;
 		}
-		boolean live = isEnabled(stack) && eu >= Config.electricSaberEuPerHit;
+		boolean live = isEnabled(stack) && eu >= ToolConfig.electricSaberEuPerHit;
 		ItemAttributeModifiers wanted = attributesFor(live);
 		if (!wanted.equals(stack.get(DataComponents.ATTRIBUTE_MODIFIERS))) {
 			stack.set(DataComponents.ATTRIBUTE_MODIFIERS, wanted);
@@ -284,7 +289,7 @@ public class ElectricSaberItem extends Item {
 		if (!isLive(stack)) {
 			return;
 		}
-		ItemEnergy.spend(stack, Config.electricSaberEuPerHit, attacker);
+		ItemEnergy.spend(stack, ToolConfig.electricSaberEuPerHit, attacker);
 		shock(target, attacker);
 	}
 
@@ -297,7 +302,7 @@ public class ElectricSaberItem extends Item {
 	 * effect (mob-vs-player kill credit, {@code entity_effect} advancement triggers).
 	 */
 	public static void shock(LivingEntity target, LivingEntity attacker) {
-		int seconds = Config.electricSaberShockSeconds;
+		int seconds = ToolConfig.electricSaberShockSeconds;
 		if (seconds <= 0) {
 			return;
 		}
@@ -338,15 +343,41 @@ public class ElectricSaberItem extends Item {
 
 	@Override
 	public int getBarWidth(ItemStack stack) {
-		long capacity = ItemEnergy.capacity(stack);
-		if (capacity <= 0) {
-			return 0;
-		}
-		return (int) Math.min(MAX_BAR_WIDTH, MAX_BAR_WIDTH * ItemEnergy.get(stack) / capacity);
+		return EnergyBar.width(stack, MAX_BAR_WIDTH);
 	}
 
 	@Override
 	public int getBarColor(ItemStack stack) {
-		return EnergyTier.LV.color();
+		return EnergyBar.color(EnergyTier.LV);
+	}
+
+	/** MOD-707: this item's EU buffer, read by {@code ItemEnergy.capacity} through {@link PoweredItem}. */
+	@Override
+	public long energyCapacity(ItemStack stack) {
+		return ToolConfig.electricSaberBuffer;
+	}
+
+	@Override
+	public long energyInputRate(ItemStack stack) {
+		return ToolConfig.electricSaberInputRate;
+	}
+
+	@Override
+	public void onChargeChanged(ItemStack stack, long charge) {
+		// Damage, attack speed and reach follow the charge from the one place charge changes, so the
+		// tooltip can never promise a hit the weapon cannot land.
+		refreshAttributes(stack, charge);
+	}
+
+	/** Swing cost, blade state, then the charge — red below one swing's worth. */
+	@Override
+	public PoweredToolTooltip toolTooltip() {
+		// The on/off state first among the state lines: a saber that "does nothing" is far more often switched
+		// off than empty. Damage and reach are real attribute modifiers, so vanilla prints them itself.
+		return PoweredToolTooltip.of("electric_saber", List.of(ServerBalance::electricSaberEuPerHit))
+				.withBeforeCharge(PoweredToolTooltip.toggle(ElectricSaberItem::isEnabled,
+						"tooltip.alaindustrial.electric_saber.state_on", MachineTooltipSpec.Tone.GREEN,
+						"tooltip.alaindustrial.electric_saber.state_off"))
+				.withDepleted(stack -> ItemEnergy.get(stack) < ServerBalance.electricSaberEuPerHit());
 	}
 }

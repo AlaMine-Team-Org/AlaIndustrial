@@ -17,6 +17,14 @@ public final class PayloadBudget {
 	 */
 	public static final int MAX_POSITIONS = 16_384;
 
+	/**
+	 * Most bytes the config-sync payload may carry (MOD-695). A knob costs its name, a type byte and at
+	 * most eight bytes of value — some 40 bytes — so even a snapshot of all 459 knobs is under 20 KiB;
+	 * the ~70 client-visible ones are a few KiB. 32 KiB leaves room to grow and stays at 1/32 of the
+	 * vanilla limit. {@code KnobSnapshotTest} encodes every knob and holds it under this ceiling.
+	 */
+	public static final int MAX_CONFIG_SNAPSHOT_BYTES = 32_768;
+
 	private PayloadBudget() {
 	}
 

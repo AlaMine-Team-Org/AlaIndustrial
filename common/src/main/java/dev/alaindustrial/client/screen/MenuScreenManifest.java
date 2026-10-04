@@ -91,7 +91,11 @@ public final class MenuScreenManifest {
 		return new ScreenDef<>(menuType, screen);
 	}
 
-	/** Every machine/chest menu&#8594;screen pair, in the same shared order as {@code ContentManifest.MENUS}. */
+	/**
+	 * Every machine/chest menu&#8594;screen pair. Each entry is bound by its {@code ModContent} menu slot
+	 * ({@link ScreenDef#bindTo}), so the order of this list carries no meaning: a new screen goes anywhere,
+	 * and {@code menu_screen_parity_check.py} pairs the two manifests by slot, not by index (MOD-716).
+	 */
 	public static final List<ScreenDef<?, ?>> SCREENS = List.of(
 			screen(() -> ModContent.GENERATOR_MENU.get(), GeneratorScreen::new),
 			screen(() -> ModContent.MACERATOR_MENU.get(), MaceratorScreen::new),
@@ -118,8 +122,6 @@ public final class MenuScreenManifest {
 			screen(() -> ModContent.BATTERY_BOX_MENU.get(), BatteryBoxScreen::new),
 			screen(() -> ModContent.ENERGY_CONDENSER_MENU.get(), EnergyCondenserScreen::new),
 			screen(() -> ModContent.CESU_MENU.get(), CesuScreen::new),
-			// MOD-416 — kept at the same index as its MENUS entry; the parity gate compares order, not
-			// just membership.
 			screen(() -> ModContent.CHARGE_PAD_MENU.get(), ChargePadScreen::new),
 			screen(() -> ModContent.TELEPORTER_STATION_MENU.get(), TeleporterStationScreen::new),
 			screen(() -> ModContent.TELEPORTER_REMOTE_MENU.get(), TeleporterRemoteScreen::new),
@@ -149,13 +151,10 @@ public final class MenuScreenManifest {
 			screen(() -> ModContent.MOB_REPELLER_MENU.get(), MobRepellerScreen::new),
 			screen(() -> ModContent.MOB_REPELLER_MV_MENU.get(), MobRepellerMvScreen::new),
 			screen(() -> ModContent.MOB_REPELLER_HV_MENU.get(), MobRepellerHvScreen::new),
-			// MOD-424 — last, at the same index as its MENUS entry.
 			screen(() -> ModContent.THERMAL_CENTRIFUGE_MENU.get(), ThermalCentrifugeScreen::new),
-			// MOD-386 — last, at the same index as its MENUS entry.
 			screen(() -> ModContent.LIGHTNING_ROD_GENERATOR_MENU.get(), LightningRodGeneratorScreen::new),
-			// MOD-468 — last, at the same index as its MENUS entry.
 			screen(() -> ModContent.REACTOR_CONTROLLER_MENU.get(), ReactorControllerScreen::new),
-			// MOD-479 — last, at the same index as its MENUS entry.
 			screen(() -> ModContent.MONITOR_CORE_MENU.get(), MonitorCoreScreen::new),
-			screen(() -> ModContent.CREATIVE_ENERGY_SOURCE_MENU.get(), CreativeEnergySourceScreen::new));
+			screen(() -> ModContent.CREATIVE_ENERGY_SOURCE_MENU.get(), CreativeEnergySourceScreen::new),
+			screen(() -> ModContent.MAGNET_MENU.get(), MagnetScreen::new));
 }

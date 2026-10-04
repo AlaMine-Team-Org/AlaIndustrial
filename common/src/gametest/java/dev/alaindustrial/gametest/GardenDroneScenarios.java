@@ -4,6 +4,7 @@ import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.GardenDroneStationBlockEntity;
 import dev.alaindustrial.block.entity.GardenDroneStatus;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.ItemStack;
@@ -25,14 +26,49 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public final class GardenDroneScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(GardenDroneScenarios::fun01TillsDirtAndSpendsEu, "garden_drone_tills_dirt")
+						.fabricId("AlaCommonGameTest", "gardenDroneTillsDirt").ticks(20, 40),
+				RosterEntry.of(GardenDroneScenarios::fun02PlantsSeedOnFarmland, "garden_drone_plants_seed")
+						.fabricId("AlaCommonGameTest", "gardenDronePlantsSeed").ticks(20, 40),
+				RosterEntry.of(GardenDroneScenarios::fun03HarvestsRipeCropIntoStation,
+								"garden_drone_harvests_into_station")
+						.fabricId("AlaCommonGameTest", "gardenDroneHarvestsIntoStation").ticks(20, 40),
+				RosterEntry.of(GardenDroneScenarios::fun04NoEnergyLeavesCropUntouched,
+								"garden_drone_without_energy_does_nothing")
+						.fabricId("AlaCommonGameTest", "gardenDroneWithoutEnergyDoesNothing").ticks(20, 40),
+				RosterEntry.of(GardenDroneScenarios::fun05FullOutputLeavesCropStanding,
+								"garden_drone_full_output_keeps_crop")
+						.fabricId("AlaCommonGameTest", "gardenDroneFullOutputKeepsCrop").ticks(20, 40),
+				RosterEntry.of(GardenDroneScenarios::fun07WithoutDroneNothingHappens,
+								"garden_drone_without_drone_is_inert")
+						.fabricId("AlaCommonGameTest", "gardenDroneWithoutDroneIsInert").ticks(20, 40),
+				RosterEntry.of(GardenDroneScenarios::fun08HoeBreaksOnItsLastUse, "garden_drone_hoe_breaks_on_last_use")
+						.fabricId("AlaCommonGameTest", "gardenDroneHoeBreaksOnLastUse").ticks(20, 40),
+				RosterEntry.of(GardenDroneScenarios::fun09HoeSurvivesUntilItsLastUse,
+								"garden_drone_hoe_survives_until_last_use")
+						.fabricId("AlaCommonGameTest", "gardenDroneHoeSurvivesUntilLastUse").ticks(20, 40),
+				RosterEntry.of(GardenDroneScenarios::fun06FlightDelaysTheAction, "garden_drone_flight_delays_action")
+						.fabricId("AlaCommonGameTest", "gardenDroneFlightDelaysAction").ticks(20, 300),
+				RosterEntry.of(GardenDroneScenarios::fun10StandsOnTheTileBeforeFlyingHome,
+								"garden_drone_stands_on_tile_before_flying_home")
+						.fabricId("AlaCommonGameTest", "gardenDroneStandsOnTileBeforeFlyingHome").ticks(20, 300),
+				RosterEntry.of(GardenDroneScenarios::fun11PlantsOnTaggedSoil, "garden_drone_plants_on_tagged_soil")
+						.fabricId("AlaCommonGameTest", "gardenDronePlantsOnTaggedSoil").ticks(20, 40));
+
+		private Roster() {}
+	}
+
 	private GardenDroneScenarios() {}
 
 	/** The station sits here; the farm plot is laid out beside it, inside the scan radius. */
 	private static final BlockPos STATION = new BlockPos(1, 2, 1);
 	/** One tile of the plot — adjacent, so it is in range at any sane radius. */
-	private static final BlockPos PLOT = new BlockPos(2, 2, 1);
+	static final BlockPos PLOT = new BlockPos(2, 2, 1);
 
-	private static GardenDroneStationBlockEntity place(GameTestHelper helper) {
+	static GardenDroneStationBlockEntity place(GameTestHelper helper) {
 		helper.setBlock(STATION, ModContent.GARDEN_DRONE_STATION.get());
 		GardenDroneStationBlockEntity station =
 				helper.getBlockEntity(STATION, GardenDroneStationBlockEntity.class);
@@ -46,7 +82,7 @@ public final class GardenDroneScenarios {
 	}
 
 	/** Enough EU for many actions, so a scenario never stalls on an empty buffer mid-way. */
-	private static void charge(GardenDroneStationBlockEntity station) {
+	static void charge(GardenDroneStationBlockEntity station) {
 		station.getEnergyStorage().setAmountUntracked(Config.gardenDroneBuffer);
 	}
 
@@ -62,19 +98,14 @@ public final class GardenDroneScenarios {
 	 * neighbours. Radius 1 keeps every action inside the cell this scenario built, so the two loaders
 	 * assert the same thing.
 	 */
-	private static void withIsolatedZone(Runnable body) {
-		int configuredRange = Config.gardenDroneRange;
-		int configuredFlight = Config.gardenDroneFlightTicksPerBlock;
-		Config.gardenDroneRange = 1;
-		// Flight is a visual concern; pinning it to the shortest possible hop makes "one job" a fixed
-		// number of ticks ({@link #TICKS_PER_JOB}) so the EU assertions stay exact. FUN06 covers the
-		// flight delay itself.
-		Config.gardenDroneFlightTicksPerBlock = 0;
-		try {
+	static void withIsolatedZone(Runnable body) {
+		try (ConfigOverrides o = ConfigOverrides.sync()) {
+			o.set("gardenDroneRange", 1);
+			// Flight is a visual concern; pinning it to the shortest possible hop makes "one job" a fixed
+			// number of ticks ({@link #TICKS_PER_JOB}) so the EU assertions stay exact. FUN06 covers the
+			// flight delay itself.
+			o.set("gardenDroneFlightTicksPerBlock", 0);
 			body.run();
-		} finally {
-			Config.gardenDroneRange = configuredRange;
-			Config.gardenDroneFlightTicksPerBlock = configuredFlight;
 		}
 	}
 
@@ -86,11 +117,13 @@ public final class GardenDroneScenarios {
 	 * <p>Derived from the machine's own constant rather than copied. It was a literal once, and raising
 	 * the flight floor turned every scenario red at the same moment for a reason none of them named.
 	 */
-	private static final int TICKS_PER_JOB = GardenDroneStationBlockEntity.MIN_FLIGHT_TICKS + 2;
+	static final int TICKS_PER_JOB = GardenDroneStationBlockEntity.MIN_FLIGHT_TICKS + 2;
 
 	/**
 	 * TC-DRONE-001-FUN01 — the station tills bare dirt into farmland and spends exactly one action's
 	 * worth of EU doing it.
+	 *
+	 * @implements TC-DRONE-001-FUN01 — bare dirt is tilled, one action's EU is spent
 	 */
 	public static void fun01TillsDirtAndSpendsEu(GameTestHelper helper) {
 		withIsolatedZone(() -> {
@@ -117,7 +150,11 @@ public final class GardenDroneScenarios {
 		});
 	}
 
-	/** TC-DRONE-001-FUN02 — a seed from the seed slot is planted onto bare farmland and is consumed. */
+	/**
+	 * TC-DRONE-001-FUN02 — a seed from the seed slot is planted onto bare farmland and is consumed.
+	 *
+	 * @implements TC-DRONE-001-FUN02 — a seed is planted on bare farmland and consumed
+	 */
 	public static void fun02PlantsSeedOnFarmland(GameTestHelper helper) {
 		withIsolatedZone(() -> {
 			GardenDroneStationBlockEntity station = place(helper);
@@ -143,6 +180,8 @@ public final class GardenDroneScenarios {
 	/**
 	 * TC-DRONE-001-FUN03 — the headline behaviour: a <b>ripe</b> crop ends up in the station's output
 	 * slots, the crop block is gone, and nothing was dropped into the world.
+	 *
+	 * @implements TC-DRONE-001-FUN03 — a ripe crop lands in the station, never in the world
 	 */
 	public static void fun03HarvestsRipeCropIntoStation(GameTestHelper helper) {
 		withIsolatedZone(() -> {
@@ -173,6 +212,8 @@ public final class GardenDroneScenarios {
 	 * TC-DRONE-001-FUN04 — with no EU the station does nothing at all: the ripe crop stays in the
 	 * ground and the station reports why. The "nothing is lost when the power dies" half of the
 	 * anti-dupe contract.
+	 *
+	 * @implements TC-DRONE-001-FUN04 — an unpowered station leaves the crop alone
 	 */
 	public static void fun04NoEnergyLeavesCropUntouched(GameTestHelper helper) {
 		withIsolatedZone(() -> {
@@ -198,6 +239,8 @@ public final class GardenDroneScenarios {
 	 * TC-DRONE-001-FUN05 — a full output slot set blocks the harvest instead of voiding the crop.
 	 * This is the case that a naive "compute drops, then remove the block" implementation gets wrong,
 	 * and the reason the insertion is two-pass.
+	 *
+	 * @implements TC-DRONE-001-FUN05 — a full output blocks the harvest instead of voiding it
 	 */
 	public static void fun05FullOutputLeavesCropStanding(GameTestHelper helper) {
 		withIsolatedZone(() -> {
@@ -226,11 +269,11 @@ public final class GardenDroneScenarios {
 	 * TC-DRONE-001-FUN06 — the drone flies before it works. With the shipped flight speed the action
 	 * must NOT land on the tick the target is chosen; the farm is tended at the speed of a machine
 	 * moving, not instantly. This is the one scenario that keeps the configured flight speed.
+	 *
+	 * @implements TC-DRONE-001-FUN06 — the drone flies before its action lands
 	 */
 	public static void fun06FlightDelaysTheAction(GameTestHelper helper) {
-		int configuredRange = Config.gardenDroneRange;
-		Config.gardenDroneRange = 1;
-		try {
+		try (ConfigOverrides o = ConfigOverrides.sync().set("gardenDroneRange", 1)) {
 			GardenDroneStationBlockEntity station = place(helper);
 			charge(station);
 			helper.setBlock(PLOT, Blocks.DIRT);
@@ -251,14 +294,14 @@ public final class GardenDroneScenarios {
 				helper.fail("the drone never completed the flight — the dirt was left untilled");
 			}
 			helper.succeed();
-		} finally {
-			Config.gardenDroneRange = configuredRange;
 		}
 	}
 
 	/**
 	 * TC-DRONE-001-FUN07 — an empty dock is inert. The station and the drone are two halves: the pad
 	 * on its own must not tend anything, and must say so rather than looking idle-because-finished.
+	 *
+	 * @implements TC-DRONE-001-FUN07 — an empty dock tends nothing and says why
 	 */
 	public static void fun07WithoutDroneNothingHappens(GameTestHelper helper) {
 		withIsolatedZone(() -> {
@@ -303,6 +346,8 @@ public final class GardenDroneScenarios {
 	 * {@code canPlaceItem} needs an empty slot, that killed hopper-fed hoe replacement outright. The
 	 * assertion is on the <b>slot</b>, not on the damage value: "wore down" was never the contract, "frees
 	 * the slot for the next hoe" is.
+	 *
+	 * @implements TC-DRONE-001-FUN08 — the hoe's last point is spent and the slot frees up
 	 */
 	public static void fun08HoeBreaksOnItsLastUse(GameTestHelper helper) {
 		withIsolatedZone(() -> {
@@ -334,6 +379,8 @@ public final class GardenDroneScenarios {
 	 * <p>Without this, FUN08 alone would stay green if the threshold were over-corrected the other way and
 	 * the station started destroying hoes one use early. A one-sided boundary test cannot tell "breaks at
 	 * the right moment" from "breaks too eagerly".
+	 *
+	 * @implements TC-DRONE-001-FUN09 — the hoe is not destroyed one use early
 	 */
 	public static void fun09HoeSurvivesUntilItsLastUse(GameTestHelper helper) {
 		withIsolatedZone(() -> {
@@ -371,6 +418,8 @@ public final class GardenDroneScenarios {
 	 * drone must still be on its way home; with the pause removed the leg would already have ended by
 	 * that tick and the station would be parked or outbound on the next errand — so deleting the pause
 	 * turns this red instead of leaving it quietly green.
+	 *
+	 * @implements TC-DRONE-001-FUN10 — the drone stands on the tile it worked before flying home
 	 */
 	public static void fun10StandsOnTheTileBeforeFlyingHome(GameTestHelper helper) {
 		withIsolatedZone(() -> {
@@ -416,6 +465,10 @@ public final class GardenDroneScenarios {
 	 * Rooted dirt also asserts the tilling policy: it is soil the tag accepts but
 	 * {@code isTillable} refuses, so a drone that "fixed" planting by tilling foreign soil flat
 	 * would fail the second assertion.
+	 *
+	 * @implements TC-DRONE-001-FUN11 — any {@code #minecraft:supports_crops} soil is a planting spot
+	 * (MOD-538: Farmer's Delight rich soil farmland joins the tag by datapack, the gametest mods do
+	 * the same with rooted dirt)
 	 */
 	public static void fun11PlantsOnTaggedSoil(GameTestHelper helper) {
 		withIsolatedZone(() -> {

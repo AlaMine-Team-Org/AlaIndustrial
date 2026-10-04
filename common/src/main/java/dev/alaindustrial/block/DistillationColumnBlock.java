@@ -15,6 +15,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import dev.alaindustrial.client.ServerBalance;
+import dev.alaindustrial.core.tooltip.HasMachineTooltip;
+import dev.alaindustrial.core.tooltip.MachineTooltipSpec;
+import java.util.List;
 
 /**
  * The Distillation Column's segment/base block (MOD-251, round 3 — hand-built multiblock). The
@@ -31,7 +35,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
  * <p>No {@code FACING}: the tower is rotationally symmetric, its port layout is vertical — see
  * {@link DistillationColumnBlockEntity}. {@code lit} drives the glowing-windows model.
  */
-public class DistillationColumnBlock extends AbstractMachineBlock {
+public class DistillationColumnBlock extends AbstractMachineBlock implements HasMachineTooltip {
 	public static final BooleanProperty LIT = BlockStateProperties.LIT;
 	/** {@code false} = a lone segment blank; {@code true} = the assembled tower's base (master). */
 	public static final BooleanProperty FORMED = BooleanProperty.create("formed");
@@ -232,5 +236,15 @@ public class DistillationColumnBlock extends AbstractMachineBlock {
 		// machineTicker, not humMachineTicker: the column ships silent by deliberate decision
 		// (design session 2026-08-09, recorded in docs/SOUND_TRACKING.md).
 		return machineTicker(level);
+	}
+
+	/** Hover tooltip of this block's item (MOD-716, ADR-040). */
+	@Override
+	public MachineTooltipSpec machineTooltip() {
+		return new MachineTooltipSpec(MachineTooltipSpec.Tier.LV,
+				List.of(MachineTooltipSpec.stat("energy_input", ServerBalance::machineEuPerTickEffective),
+						MachineTooltipSpec.stat("duration_ticks",
+								() -> ServerBalance.scaledDuration(ServerBalance.distillationColumnDuration()))),
+				List.of(MachineTooltipSpec.stat("buffer", ServerBalance::machineBuffer)));
 	}
 }

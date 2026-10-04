@@ -15,20 +15,21 @@ import dev.alaindustrial.client.screen.MaceratorScreen;
 import dev.alaindustrial.client.screen.PolymerizerScreen;
 import dev.alaindustrial.client.screen.SawmillScreen;
 import dev.alaindustrial.client.screen.GalvanicBathScreen;
+import dev.alaindustrial.client.screen.GuiRect;
 import dev.alaindustrial.client.screen.ThermalCentrifugeScreen;
 import dev.alaindustrial.client.screen.VulcanizerScreen;
 
 /**
  * Loader-neutral click targets for opening machine recipe categories from a machine GUI.
  *
- * <p>The screens live in common while REI/JEI integrations live per loader. Keeping the hitboxes here
+ * <p>The screens live in common while REI/JEI integrations live per loader. Keeping the targets here
  * prevents Fabric and NeoForge recipe-viewer integrations from drifting when the GUI atlas changes.
+ *
+ * <p>Every rectangle is the screen's own {@code PROGRESS_AREA} (MOD-716, CLI-5): the screen that draws the
+ * arrow states where it is clickable, so moving the arrow is one edit in one file. No number lives here.
  */
 public final class MachineRecipeViewerTargets {
 	private MachineRecipeViewerTargets() {
-	}
-
-	public record GuiRect(int x, int y, int width, int height) {
 	}
 
 	public record Target(
@@ -38,27 +39,26 @@ public final class MachineRecipeViewerTargets {
 	}
 
 	public static final List<Target> ALL = List.of(
-			new Target(MaceratorScreen.class, ModRecipes.MACERATION, new GuiRect(82, 38, 25, 9)),
-			new Target(ElectricFurnaceScreen.class, ModRecipes.SMELTING, new GuiRect(82, 38, 25, 9)),
-			new Target(CompressorScreen.class, ModRecipes.COMPRESSING, new GuiRect(81, 34, 25, 18)),
-			new Target(ExtractorScreen.class, ModRecipes.EXTRACTING, new GuiRect(80, 37, 29, 10)),
-			new Target(VulcanizerScreen.class, ModRecipes.VULCANIZING, new GuiRect(79, 31, 25, 9)),
-			// MOD-424: the rect tracks ThermalCentrifugeScreen.PROGRESS — the shared golden arrow at (82,38).
-			new Target(ThermalCentrifugeScreen.class, ModRecipes.CENTRIFUGING, new GuiRect(82, 38, 25, 9)),
+			new Target(MaceratorScreen.class, ModRecipes.MACERATION, MaceratorScreen.PROGRESS_AREA),
+			new Target(ElectricFurnaceScreen.class, ModRecipes.SMELTING, ElectricFurnaceScreen.PROGRESS_AREA),
+			new Target(CompressorScreen.class, ModRecipes.COMPRESSING, CompressorScreen.PROGRESS_AREA),
+			new Target(ExtractorScreen.class, ModRecipes.EXTRACTING, ExtractorScreen.PROGRESS_AREA),
+			new Target(VulcanizerScreen.class, ModRecipes.VULCANIZING, VulcanizerScreen.PROGRESS_AREA),
+			// MOD-424: the shared golden arrow at (82,38).
+			new Target(ThermalCentrifugeScreen.class, ModRecipes.CENTRIFUGING, ThermalCentrifugeScreen.PROGRESS_AREA),
 			// Galvanic Bath (MOD-127): the arrow sits at (86,35), 24x17 — clicking it opens the
 			// bath's recipes in JEI/REI instead of only reporting why it is idle.
-			new Target(GalvanicBathScreen.class, ModRecipes.GALVANIC_BATH, new GuiRect(86, 35, 24, 17)),
+			new Target(GalvanicBathScreen.class, ModRecipes.GALVANIC_BATH, GalvanicBathScreen.PROGRESS_AREA),
 			// Sawmill (MOD-150): one screen, four recipe families (mode-switched). The progress sprite opens
 			// all four categories at once — the loader plugins special-case a sawmill target and pass every
 			// kind in SAWMILL_KINDS in a single click-area registration (mirrors the electric-furnace
 			// SMELTING special-case). The target's own kind is the "primary" (planks) for iteration.
-			// The rect is the saw blade from the machine's own atlas (MOD-215), not the shared arrow —
-			// it must track SawmillScreen.PROGRESS, or the click-area drifts off the sprite.
-			new Target(SawmillScreen.class, ModRecipes.SAWING_PLANKS, new GuiRect(82, 20, 22, 12)),
+			// The rect is the saw blade from the machine's own atlas (MOD-215), not the shared arrow.
+			new Target(SawmillScreen.class, ModRecipes.SAWING_PLANKS, SawmillScreen.PROGRESS_AREA),
 			// Incubator (MOD-118): like the sawmill, one screen with several recipe families — here the
 			// mode comes from the inserted chip rather than a button, but the arrow opens all three the
-			// same way. The rect tracks IncubatorScreen.ARROW_*.
-			new Target(IncubatorScreen.class, ModRecipes.MUTATION_TRANSFORM, new GuiRect(112, 20, 24, 16)));
+			// same way.
+			new Target(IncubatorScreen.class, ModRecipes.MUTATION_TRANSFORM, IncubatorScreen.PROGRESS_AREA));
 
 	/**
 	 * The same, for machines whose recipes are fluid-fed ({@link ModRecipes.FluidKind}). A separate list
@@ -72,13 +72,13 @@ public final class MachineRecipeViewerTargets {
 			GuiRect progressArea) {
 	}
 
-	/** Fluid-fed machines' click targets. Each rect tracks its screen's {@code ARROW_*} constants. */
+	/** Fluid-fed machines' click targets. */
 	public static final List<FluidTarget> FLUID_ALL = List.of(
-			new FluidTarget(PolymerizerScreen.class, ModRecipes.POLYMERIZING, new GuiRect(79, 35, 24, 17)),
+			new FluidTarget(PolymerizerScreen.class, ModRecipes.POLYMERIZING, PolymerizerScreen.PROGRESS_AREA),
 			// MOD-251 round 2: the distillation column — the click target is the tower schematic
 			// in the GUI's centre (the plain arrow is gone).
 			new FluidTarget(dev.alaindustrial.client.screen.DistillationColumnScreen.class,
-					ModRecipes.DISTILLING, new GuiRect(59, 40, 24, 56)));
+					ModRecipes.DISTILLING, dev.alaindustrial.client.screen.DistillationColumnScreen.PROGRESS_AREA));
 
 	/**
 	 * The same again for the multi-component alloying family ({@link ModRecipes.AlloyKind}) — a third
@@ -93,14 +93,15 @@ public final class MachineRecipeViewerTargets {
 	}
 
 	/**
-	 * The alloy smelter's click target. The rect tracks {@code AlloySmelterScreen.PROGRESS}.
+	 * The alloy smelter's click target.
 	 *
 	 * <p>MOD-457 replaced the shared 25×9 arrow with the 42×43 merge arrow, and this rect had been left
 	 * describing the old one — a 225 px² hitbox floating inside a 1806 px² picture. The player aiming at
-	 * the arrow to open the recipe list mostly missed it. It now covers the whole arrow.
+	 * the arrow to open the recipe list mostly missed it. It now covers the arrow, and since MOD-716 the
+	 * screen states it next to the sprite.
 	 */
 	public static final List<AlloyTarget> ALLOY_ALL = List.of(
-			new AlloyTarget(AlloySmelterScreen.class, ModRecipes.ALLOYING, new GuiRect(65, 22, 42, 43)));
+			new AlloyTarget(AlloySmelterScreen.class, ModRecipes.ALLOYING, AlloySmelterScreen.PROGRESS_AREA));
 
 	/**
 	 * And a fourth list for the Canning Machine (MOD-383), which has no {@link ModRecipes.Kind} to key on
@@ -113,9 +114,9 @@ public final class MachineRecipeViewerTargets {
 			GuiRect progressArea) {
 	}
 
-	/** The canning machine's click target. The rect tracks {@code CanningMachineScreen.PROGRESS}. */
+	/** The canning machine's click target. */
 	public static final List<CanningTarget> CANNING_ALL = List.of(
-			new CanningTarget(CanningMachineScreen.class, new GuiRect(74, 33, 31, 10)));
+			new CanningTarget(CanningMachineScreen.class, CanningMachineScreen.PROGRESS_AREA));
 
 	/**
 	 * And a fifth list for machines that have no recipe of any kind (MOD-420) — not even a computed one
@@ -129,23 +130,13 @@ public final class MachineRecipeViewerTargets {
 	}
 
 	/**
-	 * Click targets for the machine-info pages. Both rects were verified by a pixel scan of the
-	 * machine's own atlas rather than copied from another screen:
-	 *
-	 * <ul>
-	 *   <li><b>Geothermal generator</b> — the arrow between the fuel and container slots occupies
-	 *       x 82..91, y 38..44 in {@code textures/gui/container/geothermal_generator.png}. It is baked
-	 *       into the frame (the screen draws no progress sprite of its own), so there is no
-	 *       {@code ARROW_*} constant to track — this rect IS the measurement.</li>
-	 *   <li><b>Energy condenser</b> — the ring gauge, but only its band ABOVE the output slot. The full
-	 *       ring bounding box would swallow the slot at (80,38): a click area covering a slot steals the
-	 *       click, and the player could no longer take the clot out. The rect stops at y 37 for that
-	 *       reason. Geometry tracks {@code EnergyCondenserScreen.CX/CY/FILL_R_OUT}.</li>
-	 * </ul>
+	 * Click targets for the machine-info pages: the geothermal generator's baked-in arrow (a pixel
+	 * measurement of its atlas) and the energy condenser's ring band above its output slot — see each
+	 * screen's {@code PROGRESS_AREA}.
 	 */
 	public static final List<InfoTarget> INFO_ALL = List.of(
-			new InfoTarget(GeothermalGeneratorScreen.class, new GuiRect(82, 38, 10, 7)),
-			new InfoTarget(EnergyCondenserScreen.class, new GuiRect(57, 15, 63, 23)));
+			new InfoTarget(GeothermalGeneratorScreen.class, GeothermalGeneratorScreen.PROGRESS_AREA),
+			new InfoTarget(EnergyCondenserScreen.class, EnergyCondenserScreen.PROGRESS_AREA));
 
 	/** The four sawmill recipe families, in button order — used by REI/JEI to open every mode from the sprite. */
 	public static final List<ModRecipes.Kind> SAWMILL_KINDS = List.of(

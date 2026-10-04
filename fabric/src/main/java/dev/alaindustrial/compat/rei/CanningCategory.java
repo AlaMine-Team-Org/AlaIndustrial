@@ -12,7 +12,7 @@ import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.ItemLike;
 
 /**
  * REI category for the Canning Machine (MOD-383): food + empty can → arrow → canned ration, with the
@@ -23,9 +23,9 @@ import net.minecraft.world.level.block.Block;
  */
 public class CanningCategory implements DisplayCategory<CanningDisplay> {
 	private final Component title;
-	private final Block icon;
+	private final ItemLike icon;
 
-	public CanningCategory(Block icon, Component title) {
+	public CanningCategory(ItemLike icon, Component title) {
 		this.icon = icon;
 		this.title = title;
 	}

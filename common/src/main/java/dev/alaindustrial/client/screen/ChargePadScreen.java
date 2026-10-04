@@ -19,7 +19,7 @@ import net.minecraft.world.entity.player.Inventory;
  * as the absence of a measurement. The dash is also what the L3 frame captures, since the shot stand
  * opens the screen from beside the plate rather than on it.
  */
-public class ChargePadScreen extends MachineScreen<ChargePadMenu> {
+public class ChargePadScreen extends LayoutMachineScreen<ChargePadMenu> {
 	private static final Identifier TEXTURE = Industrialization.id("textures/gui/container/charge_pad.png");
 
 	/**
@@ -37,13 +37,11 @@ public class ChargePadScreen extends MachineScreen<ChargePadMenu> {
 	/** Stands in for any value the station cannot report right now. */
 	private static final String DASH = "—";
 
-	public ChargePadScreen(ChargePadMenu menu, Inventory inventory, Component title) {
-		super(menu, inventory, title);
-	}
+	/** Atlas and energy bar (MOD-716, CLI-3). */
+	private static final MachineLayout LAYOUT = MachineLayout.of(TEXTURE, EnergyBarSpec.LEFT);
 
-	@Override
-	protected Identifier texture() {
-		return TEXTURE;
+	public ChargePadScreen(ChargePadMenu menu, Inventory inventory, Component title) {
+		super(menu, inventory, title, LAYOUT);
 	}
 
 	@Override
@@ -52,7 +50,6 @@ public class ChargePadScreen extends MachineScreen<ChargePadMenu> {
 		int y = this.topPos;
 
 		blitStaticFrame(graphics);
-		renderEnergyBar(graphics, EnergyBarSpec.LEFT);
 
 		boolean serving = this.menu.isServing();
 		int eta = this.menu.getEtaSeconds();
@@ -75,9 +72,4 @@ public class ChargePadScreen extends MachineScreen<ChargePadMenu> {
 		graphics.text(this.font, text, x + TEXT_X, y + TEXT_ROW_TOP + row * TEXT_ROW_STEP, color, false);
 	}
 
-	@Override
-	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-		super.extractTooltip(graphics, mouseX, mouseY);
-		renderEnergyTooltip(graphics, mouseX, mouseY, EnergyBarSpec.LEFT);
-	}
 }

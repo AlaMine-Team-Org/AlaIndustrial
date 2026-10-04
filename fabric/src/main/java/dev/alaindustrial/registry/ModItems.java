@@ -56,32 +56,10 @@ public final class ModItems {
 	 */
 	private static final Map<String, Item> REGISTERED = registerAll();
 
-	// Powered items: read by the Fabric item-energy capability registration (StackAsEnergyStorage).
-	public static final Item BATTERY = handle("battery");
+	// Read by the item-energy capability gametests and GUI stands; the capability itself is registered
+	// from ItemCapabilityRoster (MOD-707), which needs no handles.
 	public static final Item BATTERY_POUCH = handle("battery_pouch");
-	public static final Item SHIELDING_POUCH = handle("shielding_pouch");
 	public static final Item ENERGY_PACK = handle("energy_pack");
-	public static final Item ELECTRIC_DRILL = handle("electric_drill");
-	public static final Item ELECTRIC_DRILL_DIAMOND_TIP = handle("electric_drill_diamond_tip");
-	public static final Item ELECTRIC_DRILL_NETHERITE_TIP = handle("electric_drill_netherite_tip");
-	public static final Item ELECTRIC_CHAINSAW = handle("electric_chainsaw");
-	public static final Item ELECTRIC_CHAINSAW_DIAMOND_TIP = handle("electric_chainsaw_diamond_tip");
-	public static final Item ELECTRIC_SHOVEL = handle("electric_shovel");
-	public static final Item ELECTRIC_SHOVEL_DIAMOND_TIP = handle("electric_shovel_diamond_tip");
-	public static final Item ELECTRIC_HOE = handle("electric_hoe");
-	public static final Item ELECTRIC_HOE_DIAMOND_TIP = handle("electric_hoe_diamond_tip");
-	public static final Item ELECTRIC_SABER = handle("electric_saber");
-	public static final Item ELECTRIC_BOW = handle("electric_bow");
-	public static final Item ELECTROMAGNET = handle("electromagnet");
-	public static final Item ELECTROMAGNET_ADVANCED = handle("electromagnet_advanced");
-	public static final Item JETPACK = handle("jetpack");
-	public static final Item FLUXWEAVE_HELMET = handle("fluxweave_helmet");
-	public static final Item FLUXWEAVE_CHESTPLATE = handle("fluxweave_chestplate");
-	public static final Item FLUXWEAVE_LEGGINGS = handle("fluxweave_leggings");
-	public static final Item FLUXWEAVE_BOOTS = handle("fluxweave_boots");
-	public static final Item ENERGY_CRYSTAL_BLANK = handle("energy_crystal_blank");
-	public static final Item LAPOTRON_CRYSTAL_BLANK = handle("lapotron_crystal_blank");
-	public static final Item RESONANT_CRYSTAL_BLANK = handle("resonant_crystal_blank");
 	// Capsules: read by the Fabric item-fluid capability registration (CapsuleItemFluidStorage).
 	public static final Item VACUUM_CAPSULE = handle("vacuum_capsule");
 	public static final Item FILLED_VACUUM_CAPSULE = handle("filled_vacuum_capsule");

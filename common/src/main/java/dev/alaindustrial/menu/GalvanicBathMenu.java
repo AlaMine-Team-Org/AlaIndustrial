@@ -6,10 +6,8 @@ import dev.alaindustrial.item.fluid.ItemFluidBridge;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModTags;
 import net.minecraft.world.Container;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
@@ -30,8 +28,7 @@ public final class GalvanicBathMenu extends MachineMenu {
 
 	public GalvanicBathMenu(int syncId, Inventory playerInventory) {
 		super(ModContent.GALVANIC_BATH_MENU.get(), syncId, playerInventory,
-				new SimpleContainer(GalvanicBathBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT),
-				new SimpleContainerData(GalvanicBathBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL,
+				clientStub(GalvanicBathBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT, GalvanicBathBlockEntity.DATA_COUNT),
 				ModContent.GALVANIC_BATH.get());
 	}
 
@@ -67,16 +64,16 @@ public final class GalvanicBathMenu extends MachineMenu {
 
 	/** Tank fill as a permille (0..1000) — the level travels scaled because the channel is a short. */
 	public int getTankPermille() {
-		return data.get(4);
+		return channel(GalvanicBathBlockEntity.Channel.LEVEL_PERMILLE);
 	}
 
 	/** Registry id of the fluid in the tank, or {@link GalvanicBathBlockEntity#FLUID_ID_NONE}. */
 	public int getTankFluidId() {
-		return data.get(5);
+		return channel(GalvanicBathBlockEntity.Channel.FLUID_ID);
 	}
 
 	/** Why the machine is idle, for the screen's status line. */
 	public GalvanicBathStatus getStatus() {
-		return GalvanicBathStatus.byOrdinal(data.get(6));
+		return GalvanicBathStatus.byOrdinal(channel(GalvanicBathBlockEntity.Channel.STATUS));
 	}
 }

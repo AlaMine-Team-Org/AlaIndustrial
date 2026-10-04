@@ -1,6 +1,8 @@
 package dev.alaindustrial.block;
 
+import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.FuelRodAssemblyBlockEntity;
+import dev.alaindustrial.compat.ServerDrops;
 import dev.alaindustrial.core.structure.RoomValidator;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModSounds;
@@ -13,7 +15,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Prediction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -149,6 +150,17 @@ public class FuelRodAssemblyBlock extends BaseEntityBlock implements MachineHumP
 		super(properties);
 		registerDefaultState(defaultBlockState().setValue(RODS, 0).setValue(FUELLED, 0).setValue(WATER, 0)
 				.setValue(UP, false).setValue(DOWN, false).setValue(ACTIVE, false));
+	}
+
+	/**
+	 * The codec Minecraft 26.2 asks every block for ({@code BaseEntityBlock.codec()} is abstract there; 26.3
+	 * removed block codecs): the unit codec of this very instance, as the mod's own block bases answer it
+	 * (MOD-703). No {@code @Override} on purpose: on 26.2 it overrides, on 26.3 it is a method of its own that
+	 * nothing calls, so this source is the same on both lines. 26.2 reads block codecs only in the datagen
+	 * block-list report ({@code BlockTypes.CODEC} -> {@code BlockListReport}, javap).
+	 */
+	protected MapCodec<? extends BaseEntityBlock> codec() {
+		return MapCodec.unit(this);
 	}
 
 	@Override
@@ -324,7 +336,7 @@ public class FuelRodAssemblyBlock extends BaseEntityBlock implements MachineHumP
 			ItemStack removed = assembly.removeRod();
 			if (!removed.isEmpty()) {
 				if (!player.getInventory().add(removed)) {
-					player.drop(removed, false, Prediction.SERVER_ONLY);
+					ServerDrops.drop(player, removed);
 				}
 				level.playSound(null, pos, SoundEvents.ITEM_FRAME_REMOVE_ITEM, SoundSource.BLOCKS, 0.7f, 1.2f);
 				return InteractionResult.SUCCESS;

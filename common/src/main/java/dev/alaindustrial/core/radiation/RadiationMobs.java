@@ -1,6 +1,5 @@
 package dev.alaindustrial.core.radiation;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.registry.ModDamageTypes;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -79,7 +78,7 @@ public final class RadiationMobs {
 	 */
 	public static void sweep(ServerLevel level, List<Vec3> anchors,
 			List<RadiationSources.Source> carriedSources, int radius) {
-		if (!Config.radiationMobsEnabled || anchors.isEmpty()) {
+		if (!RadiationConfig.radiationMobsEnabled || anchors.isEmpty()) {
 			return;
 		}
 		Map<Integer, Mob> found = new LinkedHashMap<>();
@@ -98,7 +97,7 @@ public final class RadiationMobs {
 			int exposure = RadiationSources.exposureAt(level, mob, radius)
 					+ RadiationSources.doseFrom(level, mob, carriedSources, radius);
 			int shielded = RadiationCore.shielded(exposure, RadiationTicker.wornShieldingPieces(mob),
-					Config.radiationShieldPerPiecePercent, 100);
+					RadiationConfig.radiationShieldPerPiecePercent, 100);
 			if (shielded > 0) {
 				expose(level, mob, shielded);
 			}
@@ -116,7 +115,7 @@ public final class RadiationMobs {
 	}
 
 	private static void expose(ServerLevel level, Mob mob, int exposure) {
-		int capacity = Config.radiationDoseCapacity;
+		int capacity = RadiationConfig.radiationDoseCapacity;
 		int next = RadiationCore.addDose(RadiationDose.of(mob), exposure, capacity);
 		RadiationDose.apply(mob, next, capacity, true);
 
@@ -125,13 +124,13 @@ public final class RadiationMobs {
 		// villager visibly suffered from a single thrown ingot and could never transform, which is what
 		// the playtest reported. Now sickness and progress are the same thing.
 		if (RadiationCore.level(next, capacity) >= 1 && !(mob instanceof Cow)) {
-			int symptom = Config.radiationSymptomIntervalTicks * 3;
+			int symptom = RadiationConfig.radiationSymptomIntervalTicks * 3;
 			mob.addEffect(new MobEffectInstance(MobEffects.NAUSEA, symptom, 0, true, true, true));
 			mob.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, symptom, 0, true, true, true));
 			hurt(level, mob);
 		}
 
-		if (next >= RadiationCore.cappedCeiling(capacity, Config.radiationMobConvertPercent)) {
+		if (next >= RadiationCore.cappedCeiling(capacity, RadiationConfig.radiationMobConvertPercent)) {
 			convert(level, mob);
 		}
 	}
@@ -151,15 +150,16 @@ public final class RadiationMobs {
 	 * {@link #HEALTH_FLOOR} of maximum health and the sickness simply persists.
 	 */
 	private static void hurt(ServerLevel level, Mob mob) {
-		long sweep = level.getGameTime() / Math.max(1, Config.radiationTickInterval);
-		int perHit = Math.max(1, Config.radiationMobDamageIntervalTicks / Math.max(1, Config.radiationTickInterval));
+		long sweep = level.getGameTime() / Math.max(1, RadiationConfig.radiationTickInterval);
+		int perHit = Math.max(1,
+				RadiationConfig.radiationMobDamageIntervalTicks / Math.max(1, RadiationConfig.radiationTickInterval));
 		if (sweep % perHit != 0) {
 			return;
 		}
 		if (mob.getHealth() <= mob.getMaxHealth() * HEALTH_FLOOR) {
 			return;
 		}
-		mob.hurtServer(level, ModDamageTypes.radiation(level), Config.radiationDamageSick);
+		mob.hurtServer(level, ModDamageTypes.radiation(level), RadiationConfig.radiationDamageSick);
 	}
 
 	private static void convert(ServerLevel level, Mob mob) {

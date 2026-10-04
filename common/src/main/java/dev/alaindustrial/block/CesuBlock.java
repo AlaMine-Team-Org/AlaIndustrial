@@ -8,6 +8,10 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import dev.alaindustrial.client.ServerBalance;
+import dev.alaindustrial.core.tooltip.HasMachineTooltip;
+import dev.alaindustrial.core.tooltip.MachineTooltipSpec;
+import java.util.List;
 
 /**
  * MV Reinforced Energy Storage. Single-axis IO exactly as the Battery Box (MOD-006): the
@@ -15,7 +19,7 @@ import net.minecraft.world.level.block.state.BlockState;
  * <b>output</b>, and the other four faces are inert — see {@link CesuBlockEntity#energyRoleForFace}.
  * A cable therefore draws an arm only toward front and back, never toward the four sides.
  */
-public class CesuBlock extends HorizontalMachineBlock {
+public class CesuBlock extends HorizontalMachineBlock implements HasMachineTooltip {
 	public CesuBlock(Properties properties) {
 		super(properties);
 	}
@@ -40,5 +44,12 @@ public class CesuBlock extends HorizontalMachineBlock {
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
 			BlockEntityType<T> type) {
 		return machineTicker(level);
+	}
+
+	/** Hover tooltip of this block's item (MOD-716, ADR-040). */
+	@Override
+	public MachineTooltipSpec machineTooltip() {
+		return new MachineTooltipSpec(MachineTooltipSpec.Tier.MV,
+				List.of(MachineTooltipSpec.stat("capacity", ServerBalance::cesuBuffer)), List.of());
 	}
 }

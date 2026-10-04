@@ -3,7 +3,7 @@
 
 The figures come from data/stats.json — the snapshot history written by
 fetch-stats.py — and are computed with exactly the formulas the guide site uses
-in docs/tools/guide_site.js (dailyFrom, the week / previous-week sums, and the
+in docs/tools/wiki/guide_site.js (dailyFrom, the week / previous-week sums, and the
 rule that drops any day that is not over yet). If a number here disagrees with
 the number on the site, this script is wrong.
 

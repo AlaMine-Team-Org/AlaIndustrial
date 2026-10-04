@@ -1,6 +1,6 @@
 package dev.alaindustrial.client.screen;
 
-import dev.alaindustrial.Config;
+import dev.alaindustrial.client.ServerBalance;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.SprinklerBlockEntity;
 import dev.alaindustrial.menu.SprinklerMenu;
@@ -33,7 +33,7 @@ public class SprinklerScreen extends MachineScreen<SprinklerMenu> {
 
 	/** Tank capacity in mB, read from config so the tooltip cannot drift from the block. */
 	private static int tankMb() {
-		return Math.max(1, Config.sprinklerTankMb);
+		return Math.max(1, ServerBalance.sprinklerTankMb());
 	}
 
 	public SprinklerScreen(SprinklerMenu menu, Inventory inventory, Component title) {

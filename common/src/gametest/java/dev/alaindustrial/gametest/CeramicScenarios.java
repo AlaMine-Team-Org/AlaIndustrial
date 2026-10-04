@@ -1,7 +1,7 @@
 package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.Config;
-import dev.alaindustrial.core.ceramic.QuenchPress;
+import dev.alaindustrial.item.QuenchPress;
 import dev.alaindustrial.registry.ModContent;
 import java.util.List;
 import net.minecraft.core.BlockPos;
@@ -27,6 +27,21 @@ import net.minecraft.world.phys.AABB;
  * fail. {@link #SETTLE_TICKS} is well past the two ticks a piston takes.
  */
 public final class CeramicScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(CeramicScenarios::quenchPressSplitsFloatingBriquettes,
+								"ceramic_quench_press_splits_floating_briquettes")
+						.fabricId("CeramicGameTest", "quenchPressSplitsFloatingBriquettes").ticks(100),
+				RosterEntry.of(CeramicScenarios::dryPressPaysNothing, "ceramic_dry_press_pays_nothing")
+						.fabricId("CeramicGameTest", "dryPressPaysNothing").ticks(100),
+				RosterEntry.of(CeramicScenarios::pressWithoutRedstonePaysNothing,
+								"ceramic_press_without_redstone_pays_nothing")
+						.fabricId("CeramicGameTest", "pressWithoutRedstonePaysNothing").ticks(100));
+
+		private Roster() {}
+	}
 
 	/** Where the press sits in the rig: the piston faces east into the water block. */
 	private static final BlockPos PISTON = new BlockPos(1, 2, 2);

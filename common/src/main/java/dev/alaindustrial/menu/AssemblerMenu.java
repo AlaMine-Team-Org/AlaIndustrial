@@ -1,7 +1,7 @@
 package dev.alaindustrial.menu;
 
 import dev.alaindustrial.block.entity.AssemblerBlockEntity;
-import dev.alaindustrial.block.entity.AssemblerBlockEntity.AssemblerStatus;
+import dev.alaindustrial.block.entity.AssemblerStatus;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.item.assembler.AssemblyBlueprintItem;
 import dev.alaindustrial.item.assembler.BlueprintPattern;
@@ -16,7 +16,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jspecify.annotations.Nullable;
@@ -143,8 +142,7 @@ public class AssemblerMenu extends MachineMenu {
 	 */
 	public AssemblerMenu(int syncId, Inventory playerInventory) {
 		super(ModContent.ASSEMBLER_MENU.get(), syncId, playerInventory,
-				new SimpleContainer(AssemblerBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT),
-				new SimpleContainerData(AssemblerBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL,
+				clientStub(AssemblerBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT, AssemblerBlockEntity.DATA_COUNT),
 				ModContent.ASSEMBLER.get());
 		this.assembler = null;
 		this.patternContainer = new SimpleContainer(AssemblerBlockEntity.PATTERN_SLOT_COUNT);
@@ -321,12 +319,12 @@ public class AssemblerMenu extends MachineMenu {
 
 	/** Which blueprint slot the machine is working from, or {@code -1} when the queue is empty. */
 	public int getActiveBlueprintSlot() {
-		return data.get(4);
+		return channel(AssemblerBlockEntity.Channel.ACTIVE_SLOT);
 	}
 
 	/** Why the machine is idle (or {@link AssemblerStatus#READY} when it is not). */
 	public AssemblerStatus getStatus() {
-		return AssemblerStatus.byOrdinal(data.get(5));
+		return AssemblerStatus.byOrdinal(channel(AssemblerBlockEntity.Channel.STATUS));
 	}
 
 	/** What the authoring grid currently resolves to; empty when it resolves to nothing. */

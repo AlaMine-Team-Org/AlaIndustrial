@@ -1,6 +1,7 @@
 package dev.alaindustrial.block.entity;
 
 import java.util.Locale;
+import dev.alaindustrial.core.machine.StatusLine;
 
 /**
  * Why the Recycler is not chewing right now (MOD-145).
@@ -13,7 +14,7 @@ import java.util.Locale;
  * {@code ContainerData} channel), so new states are appended, never inserted. {@link #READY} stays at
  * ordinal 0 because a client menu stub starts its data array at zeroes.
  */
-public enum RecyclerStatus {
+public enum RecyclerStatus implements StatusLine {
 	/** Working, or able to work. Draws no status line. */
 	READY,
 	/** No blades installed — the machine cannot run at all. */
@@ -42,5 +43,17 @@ public enum RecyclerStatus {
 	public static RecyclerStatus byOrdinal(int ordinal) {
 		RecyclerStatus[] all = values();
 		return ordinal >= 0 && ordinal < all.length ? all[ordinal] : READY;
+	}
+
+	/** {@link StatusLine}: the caption's key, which this enum calls {@link #key()}. */
+	@Override
+	public String translationKey() {
+		return key();
+	}
+
+	/** {@link StatusLine}: whether this state holds the machine up (see the interface). */
+	@Override
+	public boolean isBlocking() {
+		return !isSilent();
 	}
 }

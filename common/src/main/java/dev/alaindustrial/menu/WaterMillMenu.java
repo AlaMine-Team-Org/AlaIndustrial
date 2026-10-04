@@ -3,7 +3,6 @@ package dev.alaindustrial.menu;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.block.entity.WaterMillBlockEntity;
 import dev.alaindustrial.registry.ModContent;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.Slot;
@@ -19,9 +18,8 @@ public class WaterMillMenu extends MachineMenu {
 	/** Client side. */
 	public WaterMillMenu(int syncId, Inventory playerInventory) {
 		super(ModContent.WATER_MILL_MENU.get(), syncId, playerInventory,
-				new SimpleContainer(WaterMillBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT),
-				new net.minecraft.world.inventory.SimpleContainerData(WaterMillBlockEntity.DATA_COUNT),
-				ContainerLevelAccess.NULL, ModContent.WATER_MILL.get());
+				clientStub(WaterMillBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT, WaterMillBlockEntity.DATA_COUNT),
+				ModContent.WATER_MILL.get());
 	}
 
 	/**
@@ -32,7 +30,7 @@ public class WaterMillMenu extends MachineMenu {
 	 * {@link WaterMillBlockEntity#DATA_COUNT}. The wind mills split theirs for the same reason.
 	 */
 	public int getProductionRate() {
-		return data.get(4);
+		return channel(WaterMillBlockEntity.Channel.RATE);
 	}
 
 	/**

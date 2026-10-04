@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"key": {
+		"I": "#c:ingots/iron",
+		"R": "#c:dusts/redstone",
+		"E": "alaindustrial:electronic_circuit"
+	},
+	"pattern": [
+		" I ",
+		"RER",
+		" I "
+	],
+	"result": {
+		"id": "alaindustrial:module_blank"
+	}
+}

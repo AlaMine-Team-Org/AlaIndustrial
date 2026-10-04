@@ -16,6 +16,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import dev.alaindustrial.client.ServerBalance;
+import dev.alaindustrial.core.tooltip.HasMachineTooltip;
+import dev.alaindustrial.core.tooltip.MachineTooltipSpec;
+import java.util.List;
 
 /**
  * Menu-less-no-longer LV consumer that supplies demand-driven heat to the block directly above.
@@ -31,7 +35,7 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
  * that the Vulcanizer above it already hisses; the owner revisited that on 2026-09-06. The hiss is
  * exactly what this sound must not be, which is why the coil crackles instead.
  */
-public final class ElectricHeaterBlock extends HorizontalMachineBlock implements MachineHumProvider {
+public final class ElectricHeaterBlock extends HorizontalMachineBlock implements MachineHumProvider, HasMachineTooltip {
 	/** How hot the coils look; see {@link HeaterGlow} for why this is not the usual boolean LIT. */
 	public static final EnumProperty<HeaterGlow> GLOW = EnumProperty.create("glow", HeaterGlow.class);
 
@@ -155,5 +159,14 @@ public final class ElectricHeaterBlock extends HorizontalMachineBlock implements
 		if (random.nextInt(6) == 0) {
 			level.addParticle(ParticleTypes.SMALL_FLAME, px, y, pz, 0.0, 0.008, 0.0);
 		}
+	}
+
+	/** Hover tooltip of this block's item (MOD-716, ADR-040). */
+	@Override
+	public MachineTooltipSpec machineTooltip() {
+		return new MachineTooltipSpec(MachineTooltipSpec.Tier.LV,
+				List.of(MachineTooltipSpec.stat("energy_input", ServerBalance::electricHeaterEuPerTickEffective),
+						MachineTooltipSpec.stat("capacity", ServerBalance::electricHeaterBuffer)),
+				List.of());
 	}
 }

@@ -42,7 +42,7 @@ import org.jspecify.annotations.Nullable;
  * unregisters on {@link #setRemoved()}. Cable transport is a throughput limit owned by the network
  * (tier packetCap per consumer), not an EU-destroying toll — see MOD-009.
  */
-public class CableBlockEntity extends EnergyBlockEntity {
+public class CableBlockEntity extends EnergyBlockEntity implements dev.alaindustrial.core.energy.CableNode {
 	/** Game tick of the most recent committed energy transfer; transient by design. */
 	private long lastEnergyTransferTick = Long.MIN_VALUE;
 
@@ -132,8 +132,8 @@ public class CableBlockEntity extends EnergyBlockEntity {
 	}
 
 	@Override
-	protected void loadAdditional(ValueInput input) {
-		super.loadAdditional(input);
+	protected void loadMachineData(ValueInput input) {
+		super.loadMachineData(input);
 		shockGuard = readShockGuard(input.getStringOr("ShockGuard", ""));
 		breakerInstalled = input.getBooleanOr("Breaker", false);
 		// Default true, mirroring the field: a save from before MOD-276 has neither key and must read

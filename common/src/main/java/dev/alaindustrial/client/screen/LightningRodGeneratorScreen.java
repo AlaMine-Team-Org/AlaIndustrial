@@ -48,13 +48,18 @@ public class LightningRodGeneratorScreen extends MachineScreen<LightningRodGener
 		return TEXTURE;
 	}
 
+	/** The energy bar and its tooltip, drawn by the base (MOD-716). */
+	@Override
+	protected EnergyBarSpec energyBar() {
+		return EnergyBarSpec.LEFT;
+	}
+
 	@Override
 	protected void drawMachineFrame(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
 		int x = this.leftPos;
 		int y = this.topPos;
 
 		blitStaticFrame(graphics);
-		renderEnergyBar(graphics, EnergyBarSpec.LEFT);
 
 		// Capacitor fill, bottom-up. The menu publishes permille, not raw EU: a DataSlot carries 16
 		// bits and a capacitor holds up to 32 000, so the raw number would wrap on the way here.
@@ -65,8 +70,11 @@ public class LightningRodGeneratorScreen extends MachineScreen<LightningRodGener
 					CAP_UV_X, CAP_UV_Y + (CAP_H - fill),
 					CAP_W, fill, TEX_SIZE, TEX_SIZE);
 		}
+	}
 
-		drawStatusText(graphics, x, y);
+	@Override
+	protected void drawFrameText(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+		drawStatusText(graphics, this.leftPos, this.topPos);
 	}
 
 	/** Running: the current output. Otherwise: the reason, so the player can fix it. */
@@ -104,7 +112,6 @@ public class LightningRodGeneratorScreen extends MachineScreen<LightningRodGener
 	@Override
 	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		super.extractTooltip(graphics, mouseX, mouseY);
-		renderEnergyTooltip(graphics, mouseX, mouseY, EnergyBarSpec.LEFT);
 		if (this.isHovering(CAP_X, CAP_BOTTOM - CAP_H, CAP_W, CAP_H, mouseX, mouseY)) {
 			graphics.setTooltipForNextFrame(this.font,
 					Component.translatable("gui.alaindustrial.lightning_rod.capacitor",

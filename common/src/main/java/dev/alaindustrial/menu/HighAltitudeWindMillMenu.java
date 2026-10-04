@@ -3,10 +3,8 @@ package dev.alaindustrial.menu;
 import dev.alaindustrial.block.entity.HighAltitudeWindMillBlockEntity;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.registry.ModContent;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
@@ -21,8 +19,8 @@ public class HighAltitudeWindMillMenu extends MachineMenu implements WindMillRea
 	/** Client side. */
 	public HighAltitudeWindMillMenu(int syncId, Inventory playerInventory) {
 		super(ModContent.HIGH_ALTITUDE_WIND_MILL_MENU.get(), syncId, playerInventory,
-				new SimpleContainer(HighAltitudeWindMillBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT),
-				new SimpleContainerData(HighAltitudeWindMillBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL,
+				clientStub(HighAltitudeWindMillBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT,
+						HighAltitudeWindMillBlockEntity.DATA_COUNT),
 				ModContent.HIGH_ALTITUDE_WIND_MILL.get());
 	}
 
@@ -58,7 +56,7 @@ public class HighAltitudeWindMillMenu extends MachineMenu implements WindMillRea
 	 */
 	@Override
 	public int getProductionRate() {
-		return data.get(HighAltitudeWindMillBlockEntity.RATE_CHANNEL);
+		return channel(HighAltitudeWindMillBlockEntity.Channel.RATE);
 	}
 
 	/** Wind mode: 0 no rotor, 1 roofed, 2 calm, 3 breeze, 4 gale, 5 storm. */

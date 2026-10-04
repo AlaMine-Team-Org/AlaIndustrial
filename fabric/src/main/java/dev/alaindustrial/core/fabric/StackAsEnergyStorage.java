@@ -2,7 +2,7 @@ package dev.alaindustrial.core.fabric;
 
 import dev.alaindustrial.item.energy.CrystalBlankItem;
 import dev.alaindustrial.item.energy.ItemEnergy;
-import dev.alaindustrial.registry.ModItems;
+import dev.alaindustrial.registry.ItemCapabilityRoster;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
@@ -55,10 +55,11 @@ public final class StackAsEnergyStorage implements EnergyStorage {
 	 * that helper is a fluid-specific convenience with no energy equivalent — Team Reborn documents
 	 * {@code EnergyStorage.ITEM} as the item path.
 	 *
-	 * <p><b>The list below must cover every powered item of the mod.</b> It is hand-written, and twice it
-	 * silently fell behind the item list (MOD-372: chainsaw, shovel, hoe and saber were missing while their
-	 * specs promised foreign charging). {@code ItemEnergyCapabilityGameTest.tcXmod001Reg01_*} now derives the
-	 * expected set from {@code ItemEnergy.capacity(stack) > 0} and fails the build on the next omission.
+	 * <p>The items come from {@link ItemCapabilityRoster#energyItems()} — every item of the mod whose class
+	 * implements {@code PoweredItem} (MOD-707), the same roster NeoForge replays. There is no hand-written
+	 * list any more: twice one silently fell behind the items (MOD-372).
+	 * {@code ItemEnergyCapabilityGameTest.tcXmod001Reg01_*} still derives the expected set independently,
+	 * from {@code ItemEnergy.capacity(stack) > 0}.
 	 */
 	public static void register() {
 		EnergyStorage.ITEM.registerForItems((stack, context) -> {
@@ -68,23 +69,7 @@ public final class StackAsEnergyStorage implements EnergyStorage {
 			Item startingItem = context.getItemVariant().getItem();
 			return new DelegatingEnergyStorage(new StackAsEnergyStorage(context),
 					() -> context.getItemVariant().isOf(startingItem) && context.getAmount() > 0);
-		}, ModItems.BATTERY_POUCH, ModItems.SHIELDING_POUCH, ModItems.BATTERY, ModItems.ENERGY_PACK,
-				ModItems.ELECTRIC_DRILL,
-				ModItems.ELECTRIC_DRILL_DIAMOND_TIP, ModItems.ELECTRIC_DRILL_NETHERITE_TIP,
-				ModItems.ELECTRIC_CHAINSAW,
-				ModItems.ELECTRIC_CHAINSAW_DIAMOND_TIP, ModItems.ELECTRIC_SHOVEL,
-				ModItems.ELECTRIC_SHOVEL_DIAMOND_TIP,
-				ModItems.ELECTRIC_HOE, ModItems.ELECTRIC_HOE_DIAMOND_TIP, ModItems.ELECTRIC_SABER,
-				ModItems.ELECTRIC_BOW,
-				ModItems.ELECTROMAGNET,
-				ModItems.ELECTROMAGNET_ADVANCED,
-				ModItems.JETPACK,
-				ModItems.FLUXWEAVE_HELMET, ModItems.FLUXWEAVE_CHESTPLATE, ModItems.FLUXWEAVE_LEGGINGS,
-				ModItems.FLUXWEAVE_BOOTS,
-				// EU crystal BLANKS (MOD-504) — only they have a buffer; the finished crystals hold no
-				// energy and must not appear here. Insert-only, like everything else in this list.
-				ModItems.ENERGY_CRYSTAL_BLANK, ModItems.LAPOTRON_CRYSTAL_BLANK,
-				ModItems.RESONANT_CRYSTAL_BLANK);
+		}, ItemCapabilityRoster.energyItems().toArray(new Item[0]));
 	}
 
 	@Override

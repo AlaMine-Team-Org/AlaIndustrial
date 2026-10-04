@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.core.environment.GeneratorConfig;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
@@ -191,13 +192,13 @@ class ComponentTierTest {
 	 */
 	@Test
 	void knobsAreReadLiveFromConfig() {
-		int original = Config.windMillRotorReinforcedEuPerDamage;
+		int original = GeneratorConfig.windMillRotorReinforcedEuPerDamage;
 		try {
-			Config.windMillRotorReinforcedEuPerDamage = original + 111;
+			GeneratorConfig.windMillRotorReinforcedEuPerDamage = original + 111;
 			assertEquals(original + 111, ComponentTier.WINDMILL_ROTOR_REINFORCED.euPerDamage(),
 					"euPerDamage must follow Config at runtime, not a load-time snapshot");
 		} finally {
-			Config.windMillRotorReinforcedEuPerDamage = original;
+			GeneratorConfig.windMillRotorReinforcedEuPerDamage = original;
 		}
 	}
 }

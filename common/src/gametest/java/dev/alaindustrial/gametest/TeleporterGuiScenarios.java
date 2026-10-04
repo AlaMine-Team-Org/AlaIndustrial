@@ -29,6 +29,42 @@ import net.minecraft.resources.ResourceKey;
  */
 public final class TeleporterGuiScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(TeleporterGuiScenarios::tcTele003Sec01_indexBoundsAreExact,
+								"tc_tele003_sec01_index_bounds_are_exact")
+						.fabricId("TeleporterGuiGameTest", "tcTele003Sec01_indexBoundsAreExact").ticks(20, 40),
+				RosterEntry.of(TeleporterGuiScenarios::tcTele003Sec02_renameClampsName,
+								"tc_tele003_sec02_rename_clamps_name")
+						.fabricId("TeleporterGuiGameTest", "tcTele003Sec02_renameClampsName").ticks(20, 40),
+				RosterEntry.of(TeleporterGuiScenarios::tcTele003Sec04_wireCarriesLegacyLengthNames,
+								"tc_tele003_sec04_wire_carries_legacy_length_names")
+						.fabricId("TeleporterGuiGameTest", "tcTele003Sec04_wireCarriesLegacyLengthNames")
+						.ticks(20, 40),
+				RosterEntry.of(TeleporterGuiScenarios::tcTele003Fun01_listIsImmutable,
+								"tc_tele003_fun01_list_is_immutable")
+						.fabricId("TeleporterGuiGameTest", "tcTele003Fun01_listIsImmutable").ticks(20, 40),
+				RosterEntry.of(TeleporterGuiScenarios::tcTele003Fun02_dedupeByDimAndPos,
+								"tc_tele003_fun02_dedupe_by_dim_and_pos")
+						.fabricId("TeleporterGuiGameTest", "tcTele003Fun02_dedupeByDimAndPos").ticks(20, 40),
+				RosterEntry.of(TeleporterGuiScenarios::tcTele003Fun03_limitIsTheConfiguredOne,
+								"tc_tele003_fun03_limit_is_the_configured_one")
+						.fabricId("TeleporterGuiGameTest", "tcTele003Fun03_limitIsTheConfiguredOne").ticks(20, 40),
+				RosterEntry.of(TeleporterGuiScenarios::tcTele003Fun05_autoNamesTakeTheLowestFreeNumber,
+								"tc_tele003_fun05_auto_names_take_the_lowest_free_number")
+						.fabricId("TeleporterGuiGameTest", "tcTele003Fun05_autoNamesTakeTheLowestFreeNumber")
+						.ticks(20, 40),
+				RosterEntry.of(TeleporterGuiScenarios::tcTele003Sec03_onlyOwnerTogglesPrivacy,
+								"tc_tele003_sec03_only_owner_toggles_privacy")
+						.fabricId("TeleporterGuiGameTest", "tcTele003Sec03_onlyOwnerTogglesPrivacy").ticks(20, 40),
+				RosterEntry.of(TeleporterGuiScenarios::tcTele003Fun04_menuReadsTheHeldRemote,
+								"tc_tele003_fun04_menu_reads_the_held_remote")
+						.fabricId("TeleporterGuiGameTest", "tcTele003Fun04_menuReadsTheHeldRemote").ticks(20, 40));
+
+		private Roster() {}
+	}
+
 	private TeleporterGuiScenarios() {}
 
 	private static final BlockPos STATION = new BlockPos(1, 2, 1);

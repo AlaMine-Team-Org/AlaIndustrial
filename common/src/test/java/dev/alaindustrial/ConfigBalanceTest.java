@@ -3,6 +3,8 @@ package dev.alaindustrial;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import dev.alaindustrial.core.environment.GeneratorConfig;
+import dev.alaindustrial.core.machine.MachineRates;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -18,30 +20,31 @@ class ConfigBalanceTest {
 
 	@Test
 	void generators_powerCurveOrdering() {
-		assertTrue(Config.solarEuPerTick < Config.moonlitEuPerTick, "solar < moonlit");
-		assertTrue(Config.moonlitEuPerTick < Config.daylightEuPerTick, "moonlit < daylight");
-		assertTrue(Config.solarEuPerTick < Config.fuelEuPerTick, "solar < fuel");
-		assertTrue(Config.fuelEuPerTick < Config.geothermalEuPerTick, "fuel < geothermal");
+		assertTrue(GeneratorConfig.solarEuPerTick < GeneratorConfig.moonlitEuPerTick, "solar < moonlit");
+		assertTrue(GeneratorConfig.moonlitEuPerTick < GeneratorConfig.daylightEuPerTick, "moonlit < daylight");
+		assertTrue(GeneratorConfig.solarEuPerTick < GeneratorConfig.fuelEuPerTick, "solar < fuel");
+		assertTrue(GeneratorConfig.fuelEuPerTick < GeneratorConfig.geothermalEuPerTick, "fuel < geothermal");
 	}
 
 	@Test
 	void solar_weakerThanMachineDrain() {
-		assertTrue(Config.solarEuPerTick < Config.machineEuPerTick,
+		assertTrue(GeneratorConfig.solarEuPerTick < Config.machineEuPerTick,
 				"a single T1 solar tick must not outpace a machine's drain");
 	}
 
 	@Test
 	void speedMultiplier_neutralByDefault_isNoOp() {
-		assertEquals(Config.machineEuPerTick, Config.machineEuPerTickEffective(),
+		assertEquals(Config.machineEuPerTick, MachineRates.euPerTick(Config.machineEuPerTick,
+				Config.globalMachineSpeedMultiplier),
 				"default 1.0 speed multiplier must not change EU/t");
-		assertEquals(100, Config.scaledDuration(100),
+		assertEquals(100, MachineRates.duration(100, Config.globalMachineSpeedMultiplier),
 				"default 1.0 speed multiplier must not change duration");
 	}
 
 	/**
 	 * MOD-203: the multiplier used to be exercised at 1.0 only, where it is a no-op by definition —
 	 * so the direction of the scaling was pinned by nothing. A mutant swapping {@code /} for
-	 * {@code *} in {@link Config#scaledDuration} survived the whole suite. Faster machine means
+	 * {@code *} in {@link MachineRates#duration} survived the whole suite. Faster machine means
 	 * FEWER ticks and MORE EU per tick; both literals below are hand-computed from the shipped
 	 * defaults (100 t, 2 EU/t), never from the production formula.
 	 */
@@ -50,15 +53,15 @@ class ConfigBalanceTest {
 		float saved = Config.globalMachineSpeedMultiplier;
 		try {
 			Config.globalMachineSpeedMultiplier = 2.0f;
-			assertEquals(50, Config.scaledDuration(100),
+			assertEquals(50, MachineRates.duration(100, Config.globalMachineSpeedMultiplier),
 					"x2 speed must halve the duration (100 t -> 50 t), not double it");
-			assertEquals(4, Config.machineEuPerTickEffective(),
+			assertEquals(4, MachineRates.euPerTick(Config.machineEuPerTick, Config.globalMachineSpeedMultiplier),
 					"x2 speed must double the per-tick draw (2 -> 4 EU/t)");
 
 			Config.globalMachineSpeedMultiplier = 0.5f;
-			assertEquals(200, Config.scaledDuration(100),
+			assertEquals(200, MachineRates.duration(100, Config.globalMachineSpeedMultiplier),
 					"half speed must double the duration (100 t -> 200 t)");
-			assertEquals(1, Config.machineEuPerTickEffective(),
+			assertEquals(1, MachineRates.euPerTick(Config.machineEuPerTick, Config.globalMachineSpeedMultiplier),
 					"half speed must halve the per-tick draw (2 -> 1 EU/t)");
 		} finally {
 			Config.globalMachineSpeedMultiplier = saved;
@@ -72,24 +75,26 @@ class ConfigBalanceTest {
 	 *
 	 * <p>MOD-203: the first assertion here used to compare
 	 * {@code scaledDuration(dur) * machineEuPerTickEffective()} against
-	 * {@link Config#electricFurnaceVanillaSmeltEu()} — which IS that expression, so it held no matter
+	 * {@code Config.electricFurnaceVanillaSmeltEu()} — which WAS that expression, so it held no matter
 	 * what the production code did. Both cases are now pinned by hand-computed literals, and the x3
 	 * case is the one that matters: separate rounding makes it 33 × 6 = 198, a number the naive
 	 * "100 × 2 × 1" reading cannot produce.
 	 */
 	@Test
 	void electricFurnaceVanillaSmeltEu_roundsEachFactorSeparately() {
-		assertEquals(200, Config.electricFurnaceVanillaSmeltEu(),
+		assertEquals(200, MachineRates.vanillaSmeltEu(Config.electricFurnaceDuration, Config.machineEuPerTick,
+				Config.globalMachineSpeedMultiplier),
 				"canonical vanilla smelt cost on the shipped defaults (100 t x 2 EU/t)");
 
 		float saved = Config.globalMachineSpeedMultiplier;
 		try {
 			Config.globalMachineSpeedMultiplier = 3.0f;
-			assertEquals(33, Config.scaledDuration(Config.electricFurnaceDuration),
+			assertEquals(33, MachineRates.duration(Config.electricFurnaceDuration, Config.globalMachineSpeedMultiplier),
 					"x3: round(100 / 3) = 33 ticks");
-			assertEquals(6, Config.machineEuPerTickEffective(),
+			assertEquals(6, MachineRates.euPerTick(Config.machineEuPerTick, Config.globalMachineSpeedMultiplier),
 					"x3: round(2 * 3) = 6 EU/t");
-			assertEquals(198, Config.electricFurnaceVanillaSmeltEu(),
+			assertEquals(198, MachineRates.vanillaSmeltEu(Config.electricFurnaceDuration, Config.machineEuPerTick,
+					Config.globalMachineSpeedMultiplier),
 					"x3 costs 33 t x 6 EU/t = 198 EU, not the 200 a raw-field multiply would quote");
 		} finally {
 			Config.globalMachineSpeedMultiplier = saved;
@@ -107,6 +112,6 @@ class ConfigBalanceTest {
 	@Test
 	void fuelGenerator_canonicalEightEuPerTick() {
 		// Canon fixed 2026-06-29: code + PERFORMANCE.md agree on 8; concept doc was the outlier.
-		assertEquals(8, Config.fuelEuPerTick);
+		assertEquals(8, GeneratorConfig.fuelEuPerTick);
 	}
 }

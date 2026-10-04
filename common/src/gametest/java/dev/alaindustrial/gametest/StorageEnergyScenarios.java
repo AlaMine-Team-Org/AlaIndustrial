@@ -11,6 +11,7 @@ import dev.alaindustrial.core.energy.EnergyNetwork;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.core.energy.EnergyTransactions;
 import dev.alaindustrial.core.energy.NetworkManager;
+import dev.alaindustrial.core.environment.GeneratorConfig;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModDataComponents;
 import net.minecraft.core.BlockPos;
@@ -48,6 +49,97 @@ import static dev.alaindustrial.gametest.EnergyScenarioSupport.tick;
  */
 public final class StorageEnergyScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(StorageEnergyScenarios::batteryBoxDropCarriesEnergy, "battery_box_drop_carries_energy")
+						.fabricId("BatteryBoxGameTest", "tcBatteryBox001Brk07b_energyCarriedByComponentAt12345")
+						.ticks(20, 40),
+				RosterEntry.of(StorageEnergyScenarios::cascadeChargesEmptyBatteryBoxOverCable,
+								"mod314_cascade_charges_empty_battery_box_over_cable")
+						.fabricId("NetworkGameTest", "tcCable001Nrg06_cascadeChargesEmptyBatteryBoxOverCable")
+						.ticks(60),
+				RosterEntry.of(StorageEnergyScenarios::cascadeStopsAtEquilibrium, "mod314_cascade_stops_at_equilibrium")
+						.fabricId("NetworkGameTest", "tcCable001Nrg09_cascadeStopsAtEquilibrium").ticks(200),
+				RosterEntry.of(StorageEnergyScenarios::cascadeChargesMidBusBatteryBox,
+								"mod314_cascade_charges_mid_bus_battery_box")
+						.fabricId("NetworkGameTest", "tcCable001Nrg10_cascadeChargesMidBusBatteryBox").ticks(100),
+				RosterEntry.of(StorageEnergyScenarios::storageChargesThroughLine, "storage_charges_through_line")
+						.fabricId("NetworkGameTest", "tcCable001Nrg07_storageChargesThroughLine").ticks(100),
+				RosterEntry.of(StorageEnergyScenarios::storageChargesWithCabledOutputFace,
+								"storage_charges_with_cabled_output_face")
+						.fabricId("NetworkGameTest", "mod214_storageChargesWithCabledOutputFace").ticks(100),
+				RosterEntry.of(StorageEnergyScenarios::storageChargesPastIdleProducer,
+								"storage_charges_past_idle_producer")
+						.fabricId("NetworkGameTest", "mod214_storageChargesPastIdleProducer").ticks(200),
+				RosterEntry.of(StorageEnergyScenarios::mod252BaseWithoutLiveGeneratorFeedsMachine,
+								"mod252_base_without_live_generator_feeds_machine")
+						.fabricId("NetworkGameTest", "mod252_baseWithoutLiveGeneratorFeedsMachine").ticks(200),
+				RosterEntry.of(StorageEnergyScenarios::mod255DualRoleBatteryFeedsMachineThroughLine,
+								"mod255_dual_role_battery_feeds_machine_through_line")
+						.fabricId("NetworkGameTest", "mod255_dualRoleBatteryFeedsMachineThroughLine").ticks(200),
+				RosterEntry.of(StorageEnergyScenarios::mod255DualRoleBatteryHoldsChargeWithoutConsumers,
+								"mod255_dual_role_battery_holds_charge_without_consumers")
+						.fabricId("NetworkGameTest", "mod255_dualRoleBatteryHoldsChargeWithoutConsumers").ticks(80),
+				RosterEntry.of(StorageEnergyScenarios::loneStorageSourceSleeps, "lone_storage_source_sleeps")
+						.fabricId("NetworkGameTest", "rNrg09c_loneStorageSourceSleeps").ticks(40),
+				RosterEntry.of(StorageEnergyScenarios::mod009BatteryBoxChargesToFull,
+								"mod009_battery_box_charges_to_full")
+						.fabricId("NetworkGameTest", "mod009_batteryBoxChargesToFull").ticks(60, 80),
+				RosterEntry.of(StorageEnergyScenarios::batteryBoxRateExactLv, "battery_box_rate_exact_lv")
+						.fabricId("BatteryBoxGameTest", "tcBatteryBox001Prf03b_bufferCapsExactLv").ticks(20, 40),
+				RosterEntry.of(StorageEnergyScenarios::batteryBoxAcceptsAndEmits, "battery_box_accepts_and_emits")
+						.fabricId("BatteryBoxGameTest", "tcBatteryBox001Fun01_acceptsAndEmits").ticks(20, 100),
+				RosterEntry.of(StorageEnergyScenarios::batteryBoxChargeSurvivesNbt, "battery_box_charge_survives_nbt")
+						.fabricId("BatteryBoxGameTest", "tcBatteryBox001Per01_chargeSurvivesNbt").ticks(20, 100),
+				RosterEntry.of(StorageEnergyScenarios::machineDropsNoEnergy, "machine_drops_no_energy")
+						.fabricId("BatteryBoxGameTest", "tcBatteryBox001Brk07b_machineDropsNoEnergy").ticks(20, 100),
+				RosterEntry.of(StorageEnergyScenarios::batteryBoxInsertCapsAtCapacity,
+								"battery_box_insert_caps_at_capacity")
+						.fabricId("BatteryBoxGameTest", "tcBatteryBox001Prf01_insertCapsAtCapacity").ticks(20, 100),
+				RosterEntry.of(StorageEnergyScenarios::batteryBoxExtractFromEmptyReturnsZero,
+								"battery_box_extract_from_empty_returns_zero")
+						.fabricId("BatteryBoxGameTest", "tcBatteryBox001Prf02_extractFromEmptyReturnsZero")
+						.ticks(20, 100),
+				RosterEntry.of(StorageEnergyScenarios::batteryBoxNoSelfDrainOver1000Ticks,
+								"battery_box_no_self_drain_over_1000_ticks")
+						.fabricId("BatteryBoxGameTest", "tcBatteryBox001Neg01_noSelfDrainOver1000Ticks")
+						.ticks(20, 100),
+				RosterEntry.of(StorageEnergyScenarios::batteryBoxNoSelfChargeOver1000Ticks,
+								"battery_box_no_self_charge_over_1000_ticks")
+						.fabricId("BatteryBoxGameTest", "tcBatteryBox001Neg02_noSelfChargeOver1000Ticks")
+						.ticks(20, 100),
+				RosterEntry.of(StorageEnergyScenarios::ringTopologyNoHang, "battery_box_ring_topology_no_hang")
+						.fabricId("BatteryBoxGameTest", "tcBatteryBox001Con01_ringTopologyNoHang").ticks(20, 100),
+				RosterEntry.of(StorageEnergyScenarios::breakRejoinCable, "battery_box_break_rejoin_cable")
+						.fabricId("BatteryBoxGameTest", "tcBatteryBox001Con02_breakRejoinCable").ticks(20, 100),
+				RosterEntry.of(StorageEnergyScenarios::faceThroughputCappedUnderExcessSupply,
+								"battery_box_face_throughput_capped_under_excess_supply")
+						.fabricId("BatteryBoxGameTest", "tcBatteryBox001Con04_faceThroughputCappedUnderExcessSupply")
+						.ticks(20, 100),
+				RosterEntry.of(StorageEnergyScenarios::splitsToTwoConsumers, "battery_box_splits_to_two_consumers")
+						.fabricId("BatteryBoxGameTest", "tcBatteryBox001Con05_splitsToTwoConsumers").ticks(20, 100),
+				RosterEntry.of(StorageEnergyScenarios::batteryBoxFullInsertReturnsZero,
+								"battery_box_full_insert_returns_zero")
+						.fabricId("BatteryBoxGameTest", "tcBatteryBox001Net02_fullInsertReturnsZero").ticks(20, 100),
+				RosterEntry.of(StorageEnergyScenarios::batteryBoxEmptyExtractReturnsZero,
+								"battery_box_empty_extract_returns_zero")
+						.fabricId("BatteryBoxGameTest", "tcBatteryBox001Net03_emptyExtractReturnsZero").ticks(20, 100),
+				RosterEntry.of(StorageEnergyScenarios::batteryBoxCraftingRecipeResolves,
+								"battery_box_crafting_recipe_resolves")
+						.fabricId("BatteryBoxGameTest", "tcBatteryBox001Recipe01_craftingRecipeResolves")
+						.ticks(20, 100),
+				RosterEntry.of(StorageEnergyScenarios::batteryBoxConservationPartialConsumer,
+								"battery_box_conservation_partial_consumer")
+						.fabricId("NetworkGameTest", "tcCable001Nrg03b_batteryBoxNotDrainedByPartialConsumer")
+						.ticks(20, 80),
+				RosterEntry.of(StorageEnergyScenarios::batteryBoxDropCarriesEnergyHalfCharge,
+								"battery_box_drop_carries_energy_half_charge")
+						.fabricId("BatteryBoxGameTest", "tcBatteryBox001Brk07_energyCarriedByComponent").ticks(20, 40));
+
+		private Roster() {}
+	}
+
 	private StorageEnergyScenarios() {}
 
 	// ── scenario 0b: battery box carries its EU on drop (data-component seam, MOD-022) ────────────
@@ -62,6 +154,11 @@ public final class StorageEnergyScenarios {
 	 * and {@code ModDataComponents.STORED_ENERGY.get()} must resolve. Before the fix the component was
 	 * unregistered on NeoForge, the loot table failed to parse, and a charged box dropped empty.
 	 * Mirrors the Fabric-side {@code BatteryBoxGameTest.tcBatteryBox001Brk07}.
+	 *
+	 * @implements TC-BATTERYBOX-001-BRK07 — the STORED_ENERGY component carries a 12345 EU charge on
+	 * collectComponents() (the loader's data-component registration seam; the half-charge leg is
+	 * {@link #tcBatteryBox001Brk07_energyCarriedByComponent}). Body: {@link
+	 *     StorageEnergyScenarios#batteryBoxDropCarriesEnergy}.
 	 */
 	public static void batteryBoxDropCarriesEnergy(GameTestHelper helper) {
 		helper.setBlock(DROP, ModContent.BATTERY_BOX.get());
@@ -99,6 +196,13 @@ public final class StorageEnergyScenarios {
 	 * visible in history instead of appearing as one test deleted and an unrelated one added.
 	 *
 	 * <p>Mirrors: NetworkGameTest.tcCable001Nrg06_cascadeChargesEmptyBatteryBoxOverCable
+	 *
+	 * @implements TC-CABLE-001-NRG06 — MOD-314 cascade: a charged BatteryBox connected by cable to an
+	 *     empty one (no generator, no machine) DOES charge it, until the two level out. This case used to
+	 *     assert the opposite, under MOD-070's blanket "storage never sources for another storage sink"
+	 *     rule; that rule stopped battery↔battery washing but also blocked the legitimate "extend the bank
+	 *     with a second box" case, which is the bug MOD-314 fixed. Washing is now prevented by construction
+	 *     (gradient + half step + deadband) instead of by banning the transfer. @covers R-NRG-08
 	 */
 	public static void cascadeChargesEmptyBatteryBoxOverCable(GameTestHelper helper) {
 		helper.setBlock(WASH_SRC, ModContent.BATTERY_BOX.get().defaultBlockState()
@@ -164,6 +268,11 @@ public final class StorageEnergyScenarios {
 	 * total. And the pair starts with a real gap, so the cascade genuinely runs, converges, and only then
 	 * is asked to be quiet: the total is sampled after settling and again much later, and the two must be
 	 * identical. A limit cycle would show up as a total that keeps sliding.
+	 *
+	 * @implements TC-CABLE-001-NRG09 — MOD-314 anti-wash: two BatteryBoxes already at the same fill
+	 *     fraction trade nothing, and the pair's total EU does not shrink. The conservation half is the
+	 *     load-bearing one: a pair that ping-pongs a packet each way ends up looking level while quietly
+	 *     burning MOD-021 loss every lap. @covers R-NRG-08
 	 */
 	public static void cascadeStopsAtEquilibrium(GameTestHelper helper) {
 		for (BlockPos c : EQ_CABLES) {
@@ -260,6 +369,12 @@ public final class StorageEnergyScenarios {
 	 * that list therefore dropped every mid-bus box out of the consumer pass, and it could never fill —
 	 * exactly the bug this task was filed for, preserved for the more common wiring while the end-of-line
 	 * case looked fixed. The guard now excludes only nodes that actually received a cascade allowance.
+	 *
+	 * @implements TC-CABLE-001-NRG10 — MOD-314 regression: a Battery Box with the bus running through it
+	 *     (cable on BOTH faces, so it counts as a storage "source" by face role even while empty) must
+	 *     still be charged by the cascade. The first cut of the fix keyed its self-serve guard on
+	 *     membership of the storage-source list and so silently kept the original bug for this wiring.
+	 *     @covers R-NRG-08
 	 */
 	public static void cascadeChargesMidBusBatteryBox(GameTestHelper helper) {
 		for (BlockPos c : MIDBUS_CABLES) {
@@ -382,6 +497,11 @@ public final class StorageEnergyScenarios {
 	 * wires — the intermediate cable holds real EU while the box fills (direct regression for the in-game
 	 * bug where source→cable→BatteryBox left the cable empty).
 	 * Mirrors: NetworkGameTest.tcCable001Nrg07_storageChargesThroughLine
+	 *
+	 * @implements TC-CABLE-001-NRG07 — MOD-070 storage-through-line: a BatteryBox charged over a
+	 *     multi-cable line pulls its EU THROUGH the wires (not a bypass) — the intermediate cable holds
+	 *     real EU while the box fills. This is the storage analogue of NRG04 and the direct regression for
+	 *     the in-game bug where a source→cable→BatteryBox link left the cable empty. @covers PERFORMANCE.md
 	 */
 	public static void storageChargesThroughLine(GameTestHelper helper) {
 		helper.setBlock(STO_GEN, ModContent.GENERATOR.get());
@@ -498,6 +618,10 @@ public final class StorageEnergyScenarios {
 	 * <p>The fix removes the whole question — the direction is seeded from what WANTS energy, so a source
 	 * holding nothing simply has no say in it. Regression guard: before it, the macerator ends at 0 EU and
 	 * every cable past the dead generator is empty.
+	 *
+	 * @implements MOD-252 (D2) — the hole MOD-214 left: its live-supply set was only filled from the
+	 *     generator branch, so a base running off a charged Battery Box always hit the fallback and an
+	 *     unfuelled generator on the bus went back to cutting the line in two. Body is loader-neutral.
 	 */
 	public static void mod252BaseWithoutLiveGeneratorFeedsMachine(GameTestHelper helper) {
 		// FACING = WEST → IN face at (0,48,1) (air), OUT face on the bus at (2,48,1): a discharging base.
@@ -573,6 +697,11 @@ public final class StorageEnergyScenarios {
 	 *
 	 * <p>Regression guard: before the fix the macerator ends at 0 EU and the far end of the bus is empty
 	 * while the box sits nearly full.
+	 *
+	 * @implements MOD-255 — a Battery Box wired on both its IN and its OUT face into one network used to
+	 *     drink back the EU it had just discharged into the wire: the no-self-churn rule compared positions,
+	 *     and on the line path the supply pool is cable buffers, so it never fired. The charge oscillated
+	 *     between the box and its own cables and the machines past it stayed on 0 EU. Body is loader-neutral.
 	 */
 	public static void mod255DualRoleBatteryFeedsMachineThroughLine(GameTestHelper helper) {
 		// FACING = WEST → IN face on the cable at (1,52,2), OUT face on the cable at (3,52,2). The cable at
@@ -635,6 +764,10 @@ public final class StorageEnergyScenarios {
 	 * The player's words: it must not chase its EU around the loop and burn it on cable loss. With no
 	 * machine there is no deficit to back up, so the storage budget is zero and the box discharges nothing;
 	 * the ring must stay empty and the charge must be exactly what it started at.
+	 *
+	 * @implements MOD-255 — the same both-faces-wired Battery Box with nothing to power must not circulate
+	 *     its charge around the ring and burn it on cable loss: with no machine deficit the storage budget
+	 *     is zero, so it discharges nothing and the wire stays empty.
 	 */
 	public static void mod255DualRoleBatteryHoldsChargeWithoutConsumers(GameTestHelper helper) {
 		helper.setBlock(IDLE_CHURN_BOX, ModContent.BATTERY_BOX.get().defaultBlockState()
@@ -677,6 +810,12 @@ public final class StorageEnergyScenarios {
 	 * MOD-070 audit: a lone storage source (charged BatteryBox with a cabled OUT face) with no consumer and
 	 * no generator must SLEEP, not spin a no-op tick forever, and must not charge the wire.
 	 * Mirrors: NetworkGameTest.rNrg09c_loneStorageSourceSleeps
+	 *
+	 * @implements R-NRG-09 (MOD-070 audit) — a lone storage source (a charged BatteryBox whose OUT face is
+	 *     cabled) with NO consumer and NO generator must sleep, not spin forever. Storage discharges into
+	 *     the line only for a machine deficit, so with no machine it charges nothing; keeping the network
+	 *     awake would run a no-op tick (and an O(cables) scan) every tick indefinitely. Asserts the network
+	 *     is asleep and the cable stays empty. @covers R-NRG-09
 	 */
 	public static void loneStorageSourceSleeps(GameTestHelper helper) {
 		helper.setBlock(LONE_BOX, ModContent.BATTERY_BOX.get().defaultBlockState()
@@ -717,6 +856,13 @@ public final class StorageEnergyScenarios {
 	 * MOD-009: a BatteryBox pre-charged 10 EU short of full charges all the way to exact capacity over a
 	 * 5-cable network (no residual cable-loss term stranding the last packet).
 	 * Mirrors: NetworkGameTest.mod009_batteryBoxChargesToFull
+	 *
+	 * @implements MOD-009 — a BatteryBox charges all the way to 100% over a multi-cable network. The old
+	 *     flat cable-loss term ({@code floor(0.2 × cables)}) was subtracted from the deliverable total,
+	 *     so once the BatteryBox's remaining room fell below that loss the last packet never moved and the
+	 *     buffer stuck at {@code capacity − loss} (e.g. 19998/20000). With transport now a pure throughput
+	 *     limit, the buffer tops off exactly. Pre-charged near full to assert the top-off directly.
+	 * @covers R-NRG-01
 	 */
 	public static void mod009BatteryBoxChargesToFull(GameTestHelper helper) {
 		helper.setBlock(BB_GEN, ModContent.GENERATOR.get());
@@ -760,6 +906,11 @@ public final class StorageEnergyScenarios {
 	 * {@code BatteryBoxGameTest.tcBatteryBox001Prf03/Prf04} which exercise the same invariant via the
 	 * loader-specific capability view.
 	 * Mirrors: BatteryBoxGameTest.tcBatteryBox001Prf03_inputRateCappedAtLv
+	 *
+	 * @implements TC-BATTERYBOX-001-PRF03 — loader-neutral twin of {@link #tcBatteryBox001Prf03_inputRateCappedAtLv}:
+	 * the shared {@code EnergyBuffer} publishes maxInsert == maxExtract == LV.maxVoltage() exactly (the SIDED-view
+	 * check above exercises the same invariant through the Fabric capability). Body: {@link
+	 *     StorageEnergyScenarios#batteryBoxRateExactLv}.
 	 */
 	public static void batteryBoxRateExactLv(GameTestHelper helper) {
 		helper.setBlock(DROP, ModContent.BATTERY_BOX.get());
@@ -797,7 +948,7 @@ public final class StorageEnergyScenarios {
 		helper.setBlock(LINE_CABLE, ModContent.COPPER_CABLE.get());
 		helper.setBlock(LINE_MAC, ModContent.BATTERY_BOX.get().defaultBlockState()
 				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
-		long genStart = Config.generatorBuffer;
+		long genStart = GeneratorConfig.generatorBuffer;
 		if (be(helper, LINE_GEN) instanceof GeneratorBlockEntity gen) {
 			gen.getEnergyStorage().setAmountUntracked(genStart); // no fuel: buffer only goes down
 			gen.setChanged();
@@ -835,6 +986,10 @@ public final class StorageEnergyScenarios {
 	 * This is the NeoForge lane's second check of the data-component seam (the first is
 	 * {@link #batteryBoxDropCarriesEnergy}); here a different charge value exercises the same path.
 	 * Mirrors: BatteryBoxGameTest.tcBatteryBox001Brk07_energyCarriedByComponent
+	 *
+	 * @implements TC-BATTERYBOX-001-BRK07 — stored EU rides the dropped item via the STORED_ENERGY
+	 *     component (what the loot table copies off the broken block entity) and is restored on place.
+	 * @covers R-BRK-07
 	 */
 	public static void batteryBoxDropCarriesEnergyHalfCharge(GameTestHelper helper) {
 		helper.setBlock(DROP, ModContent.BATTERY_BOX.get());
@@ -875,6 +1030,10 @@ public final class StorageEnergyScenarios {
 	 * TC-BATTERYBOX-001-FUN01 — storage both accepts (insert) and emits (extract) EU, and stores up to
 	 * its configured capacity.
 	 * Mirrors: BatteryBoxGameTest.tcBatteryBox001Fun01_acceptsAndEmits
+	 *
+	 * @implements TC-BATTERYBOX-001-FUN01 — storage both accepts (insert) and emits (extract) EU, and
+	 *     stores up to its configured capacity.
+	 * @covers R-NRG-01
 	 */
 	public static void batteryBoxAcceptsAndEmits(GameTestHelper helper) {
 		BatteryBoxBlockEntity bat = placeBatteryBox(helper);
@@ -894,6 +1053,10 @@ public final class StorageEnergyScenarios {
 	 * TC-BATTERYBOX-001-PER01 — stored EU survives an NBT save/load round-trip (the storage drop
 	 * carries its charge — R-BRK-07's prerequisite).
 	 * Mirrors: BatteryBoxGameTest.tcBatteryBox001Per01_chargeSurvivesNbt
+	 *
+	 * @implements TC-BATTERYBOX-001-PER01 — stored EU survives an NBT save/load round-trip (the storage
+	 *     drop carries its charge — R-BRK-07's prerequisite).
+	 * @covers R-PER-01
 	 */
 	public static void batteryBoxChargeSurvivesNbt(GameTestHelper helper) {
 		BatteryBoxBlockEntity bat = placeBatteryBox(helper);
@@ -917,6 +1080,9 @@ public final class StorageEnergyScenarios {
 	 * TC-BATTERYBOX-001-BRK07b — a machine (not storage) does NOT carry EU on its drop (R-BRK-07 second
 	 * half: machines lose their buffer on break).
 	 * Mirrors: BatteryBoxGameTest.tcBatteryBox001Brk07b_machineDropsNoEnergy
+	 *
+	 * @implements TC-BATTERYBOX-001-BRK07b — a machine (not storage) does NOT carry EU on its drop
+	 *     (R-BRK-07 second half: machines lose their buffer on break).
 	 */
 	public static void machineDropsNoEnergy(GameTestHelper helper) {
 		helper.setBlock(SOLO_BOX, ModContent.MACERATOR.get());
@@ -932,6 +1098,10 @@ public final class StorageEnergyScenarios {
 	 * TC-BATTERYBOX-001-PRF01 — insert(100_000, EXECUTE) caps at getCapacity() (20 000 EU from Config),
 	 * not at whatever amount= would have allowed.
 	 * Mirrors: BatteryBoxGameTest.tcBatteryBox001Prf01_insertCapsAtCapacity
+	 *
+	 * @implements TC-BATTERYBOX-001-PRF01 — insert(100_000, EXECUTE) through the TR API caps at
+	 *     getCapacity() (20 000 EU from Config), not at whatever amount= would have allowed.
+	 * @covers R-NRG-01
 	 */
 	public static void batteryBoxInsertCapsAtCapacity(GameTestHelper helper) {
 		BatteryBoxBlockEntity bat = placeBatteryBox(helper);
@@ -960,6 +1130,10 @@ public final class StorageEnergyScenarios {
 	 * TC-BATTERYBOX-001-PRF02 — extract(1_000, EXECUTE) from an empty buffer returns 0 and getAmount()
 	 * stays 0 (does not go negative).
 	 * Mirrors: BatteryBoxGameTest.tcBatteryBox001Prf02_extractFromEmptyReturnsZero
+	 *
+	 * @implements TC-BATTERYBOX-001-PRF02 — extract(1_000, EXECUTE) from an empty buffer returns 0 and
+	 *     getAmount() stays 0 (does not go negative).
+	 * @covers R-NRG-02
 	 */
 	public static void batteryBoxExtractFromEmptyReturnsZero(GameTestHelper helper) {
 		BatteryBoxBlockEntity bat = placeBatteryBox(helper);
@@ -980,6 +1154,10 @@ public final class StorageEnergyScenarios {
 	 * TC-BATTERYBOX-001-NEG01 — a charged battery_box left alone (no neighbours, no load) does not lose
 	 * EU over 1000 server ticks (no passive self-drain in onServerTick).
 	 * Mirrors: BatteryBoxGameTest.tcBatteryBox001Neg01_noSelfDrainOver1000Ticks
+	 *
+	 * @implements TC-BATTERYBOX-001-NEG01 — a charged battery_box left alone (no neighbours, no load)
+	 *     does not lose EU over 1000 server ticks (no passive self-drain in onServerTick).
+	 * @covers R-NRG-13
 	 */
 	public static void batteryBoxNoSelfDrainOver1000Ticks(GameTestHelper helper) {
 		BatteryBoxBlockEntity bat = placeBatteryBox(helper);
@@ -997,6 +1175,9 @@ public final class StorageEnergyScenarios {
 	 * TC-BATTERYBOX-001-NEG02 — an empty battery_box left alone (no neighbours, no source) does not
 	 * gain EU out of nowhere over 1000 server ticks.
 	 * Mirrors: BatteryBoxGameTest.tcBatteryBox001Neg02_noSelfChargeOver1000Ticks
+	 *
+	 * @implements TC-BATTERYBOX-001-NEG02 — an empty battery_box left alone (no neighbours, no source)
+	 *     does not gain EU out of nowhere over 1000 server ticks.
 	 */
 	public static void batteryBoxNoSelfChargeOver1000Ticks(GameTestHelper helper) {
 		BatteryBoxBlockEntity bat = placeBatteryBox(helper);
@@ -1025,6 +1206,12 @@ public final class StorageEnergyScenarios {
 	 * battery_box, and driving it for a bounded number of ticks completes without hanging (no infinite
 	 * loop / stack overflow on cycle discovery).
 	 * Mirrors: BatteryBoxGameTest.tcBatteryBox001Con01_ringTopologyNoHang
+	 *
+	 * @implements TC-BATTERYBOX-001-CON01 — a ring/cyclic cable topology (generator, three cables forming
+	 *     a closed loop back to the generator, one of the loop cables touching the battery_box) charges
+	 *     the battery_box, and driving it for a bounded number of ticks completes without hanging (no
+	 *     infinite loop / stack overflow on cycle discovery).
+	 * @covers R-CON-05
 	 */
 	public static void ringTopologyNoHang(GameTestHelper helper) {
 		helper.setBlock(RING_GEN, ModContent.GENERATOR.get());
@@ -1069,6 +1256,10 @@ public final class StorageEnergyScenarios {
 	 * TC-BATTERYBOX-001-CON02 — removing the only cable stops delivery into the battery_box; replacing
 	 * it resumes flow without player intervention beyond the block placement.
 	 * Mirrors: BatteryBoxGameTest.tcBatteryBox001Con02_breakRejoinCable
+	 *
+	 * @implements TC-BATTERYBOX-001-CON02 — removing the only cable stops delivery into the
+	 *     battery_box; replacing it resumes flow without player intervention beyond the block placement.
+	 * @covers R-CON-04, R-CON-09
 	 */
 	public static void breakRejoinCable(GameTestHelper helper) {
 		helper.setBlock(BRJ_GEN, ModContent.GENERATOR.get());
@@ -1130,6 +1321,11 @@ public final class StorageEnergyScenarios {
 	 * cable into the battery_box's single input face; the face-level rate cap holds: charge never grows
 	 * by more than the LV rate in a single tick, even though supply exceeds it.
 	 * Mirrors: BatteryBoxGameTest.tcBatteryBox001Con04_faceThroughputCappedUnderExcessSupply
+	 *
+	 * @implements TC-BATTERYBOX-001-CON04 — five generators (combined well above the 32 EU/t LV rate)
+	 *     feed one cable into the battery_box's single input face; the face-level rate cap holds: charge
+	 *     never grows by more than the LV rate in a single tick, even though supply exceeds it.
+	 * @covers R-NRG-04
 	 */
 	public static void faceThroughputCappedUnderExcessSupply(GameTestHelper helper) {
 		for (BlockPos g : CAP_GENS) {
@@ -1178,6 +1374,10 @@ public final class StorageEnergyScenarios {
 	 * TC-BATTERYBOX-001-CON05 — a charged battery_box's output feeds one cable that branches to two
 	 * macerators; both receive a share of the flow (no "first consumer takes all").
 	 * Mirrors: BatteryBoxGameTest.tcBatteryBox001Con05_splitsToTwoConsumers
+	 *
+	 * @implements TC-BATTERYBOX-001-CON05 — a charged battery_box's output feeds one cable that branches
+	 *     to two macerators; both receive a share of the flow (no "first consumer takes all").
+	 * @covers R-NRG-08, R-CON-01
 	 */
 	public static void splitsToTwoConsumers(GameTestHelper helper) {
 		// SPLIT_CABLE(2,2,1) is +x (EAST) of SPLIT_BOX(1,2,1); the box's output is the face OPPOSITE
@@ -1218,6 +1418,10 @@ public final class StorageEnergyScenarios {
 	 * TC-BATTERYBOX-001-NET02 — a full battery_box's insert(100, EXECUTE) returns 0; a full buffer
 	 * accepts nothing more.
 	 * Mirrors: BatteryBoxGameTest.tcBatteryBox001Net02_fullInsertReturnsZero
+	 *
+	 * @implements TC-BATTERYBOX-001-NET02 — a full battery_box's insert(100, EXECUTE) through the TR API
+	 *     returns 0; a full buffer accepts nothing more.
+	 * @covers R-NRG-01
 	 */
 	public static void batteryBoxFullInsertReturnsZero(GameTestHelper helper) {
 		BatteryBoxBlockEntity bat = placeBatteryBox(helper);
@@ -1238,6 +1442,10 @@ public final class StorageEnergyScenarios {
 	 * TC-BATTERYBOX-001-NET03 — an empty battery_box's extract(100, EXECUTE) returns 0; an empty buffer
 	 * emits nothing.
 	 * Mirrors: BatteryBoxGameTest.tcBatteryBox001Net03_emptyExtractReturnsZero
+	 *
+	 * @implements TC-BATTERYBOX-001-NET03 — an empty battery_box's extract(100, EXECUTE) through the TR
+	 *     API returns 0; an empty buffer emits nothing.
+	 * @covers R-NRG-02
 	 */
 	public static void batteryBoxEmptyExtractReturnsZero(GameTestHelper helper) {
 		BatteryBoxBlockEntity bat = placeBatteryBox(helper);
@@ -1259,6 +1467,10 @@ public final class StorageEnergyScenarios {
 	 * (MOD-152: pattern is {@code PBP/CRC/PBP}, with two {@code alaindustrial:battery} items in the
 	 * middle of the top and bottom rows). Guards against a silently skipped recipe.
 	 * Mirrors: BatteryBoxGameTest.tcBatteryBox001Recipe01_craftingRecipeResolves
+	 *
+	 * @implements TC-BATTERYBOX-001-RECIPE01 — the shaped crafting recipe resolves and yields a
+	 *     battery_box (MOD-152: pattern is {@code PBP/CRC/PBP}, with two {@code alaindustrial:battery}
+	 *     items in the middle of the top and bottom rows). Guards against a silently skipped recipe.
 	 */
 	public static void batteryBoxCraftingRecipeResolves(GameTestHelper helper) {
 		ServerLevel level = helper.getLevel();

@@ -13,9 +13,12 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.redstone.Orientation;
+import dev.alaindustrial.client.ServerBalance;
+import dev.alaindustrial.core.tooltip.HasMachineTooltip;
+import dev.alaindustrial.core.tooltip.MachineTooltipSpec;
 
 /** Externally heated two-input LV machine that vulcanizes raw rubber with sulfur dust. */
-public final class VulcanizerBlock extends LitMachineBlock {
+public final class VulcanizerBlock extends LitMachineBlock implements HasMachineTooltip {
 	public VulcanizerBlock(Properties properties) {
 		super(properties);
 	}
@@ -54,5 +57,13 @@ public final class VulcanizerBlock extends LitMachineBlock {
 					SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.25F,
 					0.9F + random.nextFloat() * 0.2F, false);
 		}
+	}
+
+	/** Hover tooltip of this block's item (MOD-716, ADR-040). */
+	@Override
+	public MachineTooltipSpec machineTooltip() {
+		return MachineTooltipSpec.processing(ServerBalance::machineEuPerTickEffective,
+				() -> ServerBalance.scaledDuration(ServerBalance.vulcanizerDuration()),
+				ServerBalance::machineBuffer);
 	}
 }

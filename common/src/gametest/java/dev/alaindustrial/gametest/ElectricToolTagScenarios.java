@@ -1,6 +1,7 @@
 package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -43,6 +44,27 @@ import net.minecraft.world.item.enchantment.Enchantments;
  */
 public final class ElectricToolTagScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(ElectricToolTagScenarios::fun01TipMembershipTags, "electric_tool_tip_membership_tags")
+						.fabricId("ElectricToolTagsGameTest", "tcEtool001Fun01_tipMembershipTags").ticks(20, 40),
+				RosterEntry.of(ElectricToolTagScenarios::fun02TipEnchantmentAccepted,
+								"electric_tool_tip_enchantment_accepted")
+						.fabricId("ElectricToolTagsGameTest", "tcEtool001Fun02_tipEnchantmentAccepted").ticks(20, 40),
+				RosterEntry.of(ElectricToolTagScenarios::fun03BaseMembershipTags, "electric_tool_base_membership_tags")
+						.fabricId("ElectricToolTagsGameTest", "tcEtool001Fun03_baseMembershipTags").ticks(20, 40),
+				RosterEntry.of(ElectricToolTagScenarios::fun04BaseEnchantmentAccepted,
+								"electric_tool_base_enchantment_accepted")
+						.fabricId("ElectricToolTagsGameTest", "tcEtool001Fun04_baseEnchantmentAccepted").ticks(20, 40),
+				RosterEntry.of(ElectricToolTagScenarios::fun05EnergyCaseRosterIsHonest,
+								"electric_tool_energy_case_roster")
+						.fabricId("ElectricToolTagsGameTest", "tcEtool001Fun05_energyCaseRosterIsHonest")
+						.ticks(20, 40));
+
+		private Roster() {}
+	}
+
 	private ElectricToolTagScenarios() {}
 
 	/** {@code #c:tools/mining_tool} — the cross-mod convention tag; it has no {@code ItemTags} constant. */
@@ -54,6 +76,9 @@ public final class ElectricToolTagScenarios {
 	 * it upgrades. Deleting a line from any of the five tag JSONs reddens this.
 	 *
 	 * <p>Mirrors: ElectricToolTagsGameTest.tcEtool001Fun01_tipMembershipTags
+	 *
+	 * @implements TC-ETOOL-001-FUN01 — each diamond-tipped upgrade sits in the same membership tags as its
+	 *     base tool (pickaxes / axes / hoes, plus the drill's cluster-harvest and c:mining_tool entries).
 	 */
 	public static void fun01TipMembershipTags(GameTestHelper helper) {
 		Item drillTip = ModContent.ELECTRIC_DRILL_DIAMOND_TIP.get();
@@ -85,6 +110,9 @@ public final class ElectricToolTagScenarios {
 	 * spears) is used for the drill and the hoe instead.
 	 *
 	 * <p>Mirrors: ElectricToolTagsGameTest.tcEtool001Fun02_tipEnchantmentAccepted
+	 *
+	 * @implements TC-ETOOL-001-FUN02 — the enchanting table's filter accepts each upgrade for its base
+	 *     tool's enchantments, and rejects the ones from another domain (negative control).
 	 */
 	public static void fun02TipEnchantmentAccepted(GameTestHelper helper) {
 		ServerLevel level = helper.getLevel();
@@ -140,6 +168,10 @@ public final class ElectricToolTagScenarios {
 	 * shape is identical per tool and a failure names the item it tripped over.
 	 *
 	 * <p>Mirrors: ElectricToolTagsGameTest.tcEtool001Fun03_baseMembershipTags
+	 *
+	 * @implements TC-ETOOL-001-FUN03 — the BASE chainsaw, shovel and hoe sit in #minecraft:axes /
+	 *     #minecraft:shovels / #minecraft:hoes; the shovel's tag membership was asserted by nothing at all
+	 *     before, because it is the one tool of the line with no upgrade (MOD-364).
 	 */
 	public static void fun03BaseMembershipTags(GameTestHelper helper) {
 		assertInTag(helper, ModContent.ELECTRIC_CHAINSAW.get(), ItemTags.AXES,
@@ -169,6 +201,9 @@ public final class ElectricToolTagScenarios {
 	 * {@code melee_weapon}, so {@code looting} must reject all three, chainsaw included.
 	 *
 	 * <p>Mirrors: ElectricToolTagsGameTest.tcEtool001Fun04_baseEnchantmentAccepted
+	 *
+	 * @implements TC-ETOOL-001-FUN04 — the enchanting table's filter accepts each BASE tool for
+	 *     efficiency/unbreaking/mending/fortune/silk_touch and rejects protection and looting (MOD-364).
 	 */
 	public static void fun04BaseEnchantmentAccepted(GameTestHelper helper) {
 		ServerLevel level = helper.getLevel();
@@ -211,21 +246,13 @@ public final class ElectricToolTagScenarios {
 	 * and why eighteen otherwise-green tests depend on it.
 	 *
 	 * <p>Mirrors: ElectricToolTagsGameTest.tcEtool001Fun05_energyCaseRosterIsHonest
+	 *
+	 * @implements TC-ETOOL-001-FUN05 — the ToolCase table driving the eighteen shared EU tests is audited
+	 *     against the real items: right tool per suite, numbers agreeing with ItemEnergy and the TOOL
+	 *     component, fixtures able to fail, no two cases collapsed onto one tool (MOD-364).
 	 */
 	public static void fun05EnergyCaseRosterIsHonest(GameTestHelper helper) {
 		ElectricToolEnergyScenarios.energyCaseRosterIsHonest(helper);
-	}
-
-	/**
-	 * TC-ETOOL-001-FUN06 (MOD-226) — every right-click tool of the line carries the block transformer its
-	 * domain names, in its BAKED default components. See
-	 * {@link ElectricToolEnergyScenarios#rightClickRosterDeclaresTransformer} for why the source-level
-	 * gate alone cannot see a delayed component that never resolved.
-	 *
-	 * <p>Mirrors: ElectricToolTagsGameTest.tcEtool001Fun06_rightClickRosterDeclaresTransformer
-	 */
-	public static void fun06RightClickRosterDeclaresTransformer(GameTestHelper helper) {
-		ElectricToolEnergyScenarios.rightClickRosterDeclaresTransformer(helper);
 	}
 
 	private static Holder<Enchantment> enchantment(ServerLevel level, ResourceKey<Enchantment> key) {

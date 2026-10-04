@@ -16,6 +16,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import dev.alaindustrial.client.ServerBalance;
+import dev.alaindustrial.core.tooltip.HasMachineTooltip;
+import dev.alaindustrial.core.tooltip.MachineTooltipSpec;
+import java.util.List;
 
 /**
  * The Garden Drone Station dock (MOD-277): a low plate the drone lands on.
@@ -30,7 +34,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * the outline the player sees matches what they walk on. The drone above it has no collision at all —
  * it is drawn by the block entity's renderer, not an entity.
  */
-public class GardenDroneStationBlock extends AbstractMachineBlock implements MachineHumProvider {
+public class GardenDroneStationBlock extends AbstractMachineBlock implements MachineHumProvider, HasMachineTooltip {
 	/** Four-pixel dock plate; the drone parks on top of it. */
 	private static final VoxelShape SHAPE = Block.box(0, 0, 0, 16, 4, 16);
 
@@ -109,5 +113,14 @@ public class GardenDroneStationBlock extends AbstractMachineBlock implements Mac
 				Mth.lerp(travel, pos.getX(), target.getX()) + 0.5,
 				Mth.lerp(travel, pos.getY(), target.getY()) + 0.5,
 				Mth.lerp(travel, pos.getZ(), target.getZ()) + 0.5);
+	}
+
+	/** Hover tooltip of this block's item (MOD-716, ADR-040). */
+	@Override
+	public MachineTooltipSpec machineTooltip() {
+		return new MachineTooltipSpec(MachineTooltipSpec.Tier.LV,
+				List.of(MachineTooltipSpec.stat("garden_drone_action_cost", ServerBalance::gardenDroneEuPerAction)),
+				List.of(MachineTooltipSpec.stat("garden_drone_range", ServerBalance::gardenDroneRange),
+						MachineTooltipSpec.stat("capacity", ServerBalance::gardenDroneBuffer)));
 	}
 }

@@ -1,7 +1,7 @@
 package dev.alaindustrial.gametest.neoforge;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.gametest.PoweredItemCatalog;
+import dev.alaindustrial.item.ToolConfig;
 import dev.alaindustrial.item.wearable.EnergyPackItem;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.registry.neoforge.ModItemsNeoForge;
@@ -81,13 +81,13 @@ public final class ItemEnergyCapabilityScenarios {
 	public static void fun02PackChargesForeignItem(GameTestHelper helper) {
 		Player player = helper.makeMockPlayer(GameType.SURVIVAL);
 		ItemStack pack = new ItemStack(ModItemsNeoForge.ENERGY_PACK.get());
-		ItemEnergy.set(pack, Config.energyPackBuffer);
+		ItemEnergy.set(pack, ToolConfig.energyPackBuffer);
 		player.getInventory().setItem(0, new ItemStack(Items.APPLE));
 
 		long moved = EnergyPackItem.chargeStep(pack, player);
 
 		// The stand-in's own limits are far above this, so the pack's per-step budget is what caps it.
-		long budget = Config.energyPackOutputRate * 20L;
+		long budget = ToolConfig.energyPackOutputRate * 20L;
 		if (moved != budget) {
 			helper.fail("the pack must hand its whole step budget (" + budget
 					+ " EU) to a foreign energy item, moved " + moved);
@@ -95,7 +95,7 @@ public final class ItemEnergyCapabilityScenarios {
 		if (ForeignEnergyItemStandIn.storedEnergy(player.getInventory().getItem(0)) != budget) {
 			helper.fail("the EU must land in the foreign item's own energy storage");
 		}
-		if (ItemEnergy.get(pack) != Config.energyPackBuffer - budget) {
+		if (ItemEnergy.get(pack) != ToolConfig.energyPackBuffer - budget) {
 			helper.fail("the pack must be debited exactly what the foreign item took");
 		}
 		helper.succeed();
@@ -118,7 +118,7 @@ public final class ItemEnergyCapabilityScenarios {
 					+ " proves nothing. Found: " + PoweredItemCatalog.idsOf(powered));
 			return;
 		}
-		List<String> broken = new ArrayList<>();
+		List<String> broken = new ArrayList<>(PoweredItemCatalog.rosterItemsWithoutBuffer());
 		for (Item item : powered) {
 			player.getInventory().setItem(0, new ItemStack(item));
 			EnergyHandler handler = handlerInSlotZero(player);

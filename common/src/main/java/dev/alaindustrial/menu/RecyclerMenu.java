@@ -5,10 +5,8 @@ import dev.alaindustrial.block.entity.RecyclerBlockEntity;
 import dev.alaindustrial.block.entity.RecyclerStatus;
 import dev.alaindustrial.core.waste.WasteFraction;
 import dev.alaindustrial.registry.ModContent;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
@@ -42,8 +40,7 @@ public class RecyclerMenu extends MachineMenu {
 	/** Client side. */
 	public RecyclerMenu(int syncId, Inventory playerInventory) {
 		super(ModContent.RECYCLER_MENU.get(), syncId, playerInventory,
-				new SimpleContainer(RecyclerBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT),
-				new SimpleContainerData(RecyclerBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL,
+				clientStub(RecyclerBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT, RecyclerBlockEntity.DATA_COUNT),
 				ModContent.RECYCLER.get());
 	}
 
@@ -83,26 +80,26 @@ public class RecyclerMenu extends MachineMenu {
 
 	/** Mass collected by the batch so far, in slag units. */
 	public int batchMass() {
-		return data.get(RecyclerBlockEntity.DATA_BATCH_MASS);
+		return channel(RecyclerBlockEntity.Channel.BATCH_MASS);
 	}
 
 	/** Mass held by one graded fraction. */
 	public int fractionMass(WasteFraction fraction) {
 		return switch (fraction) {
-			case MINERAL -> data.get(RecyclerBlockEntity.DATA_MINERAL);
-			case METAL -> data.get(RecyclerBlockEntity.DATA_METAL);
-			case COMBUSTIBLE -> data.get(RecyclerBlockEntity.DATA_COMBUSTIBLE);
+			case MINERAL -> channel(RecyclerBlockEntity.Channel.MINERAL);
+			case METAL -> channel(RecyclerBlockEntity.Channel.METAL);
+			case COMBUSTIBLE -> channel(RecyclerBlockEntity.Channel.COMBUSTIBLE);
 			case OTHER -> 0;
 		};
 	}
 
 	/** Ash sitting in the bin. */
 	public int ashCount() {
-		return data.get(RecyclerBlockEntity.DATA_ASH);
+		return channel(RecyclerBlockEntity.Channel.ASH);
 	}
 
 	/** Why the machine is idle — works on both sides, read from synced data. */
 	public RecyclerStatus getStatus() {
-		return RecyclerStatus.byOrdinal(data.get(RecyclerBlockEntity.DATA_STATUS));
+		return RecyclerStatus.byOrdinal(channel(RecyclerBlockEntity.Channel.STATUS));
 	}
 }

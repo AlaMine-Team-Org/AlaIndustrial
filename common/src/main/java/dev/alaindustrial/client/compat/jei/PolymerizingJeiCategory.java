@@ -17,7 +17,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluid;
 
 /**
@@ -31,11 +31,11 @@ final class PolymerizingJeiCategory implements IRecipeCategory<RecipeHolder<Poly
 	private final IDrawable icon;
 	private final IDrawable arrow;
 
-	PolymerizingJeiCategory(IRecipeHolderType<PolymerizingRecipe> recipeType, Block iconBlock,
+	PolymerizingJeiCategory(IRecipeHolderType<PolymerizingRecipe> recipeType, ItemLike iconItem,
 			Component title, IGuiHelper guiHelper) {
 		this.recipeType = recipeType;
 		this.title = title;
-		this.icon = guiHelper.createDrawableItemLike(iconBlock);
+		this.icon = guiHelper.createDrawableItemLike(iconItem);
 		this.arrow = guiHelper.getRecipeArrow();
 	}
 

@@ -33,12 +33,19 @@ public class AlloySmelterScreen extends ProgressMachineScreen<AlloySmelterMenu> 
 			65, 22,           // dest x/y in the 176×166 frame
 			false);           // no min-1px
 
-	public AlloySmelterScreen(AlloySmelterMenu menu, Inventory inventory, Component title) {
-		super(menu, inventory, title, PROGRESS);
-	}
+	/**
+	 * Click area of the recipe viewers (MOD-716). MOD-457 sized it to the 42x43 merge arrow; the sprite in
+	 * {@link #PROGRESS} is 45 wide, so its last three columns are not clickable. Kept exactly as shipped — a
+	 * wider area would be a change of behaviour, not of structure.
+	 */
+	public static final GuiRect PROGRESS_AREA = new GuiRect(PROGRESS.destX(), PROGRESS.destY(), 42,
+			PROGRESS.spriteH());
 
-	@Override
-	protected Identifier texture() {
-		return TEXTURE;
+	/** Atlas, energy bar and progress sprite: the whole declared frame (MOD-716, CLI-3). */
+	private static final MachineLayout LAYOUT = MachineLayout.of(TEXTURE, EnergyBarSpec.LEFT)
+			.withProgress(PROGRESS);
+
+	public AlloySmelterScreen(AlloySmelterMenu menu, Inventory inventory, Component title) {
+		super(menu, inventory, title, LAYOUT);
 	}
 }

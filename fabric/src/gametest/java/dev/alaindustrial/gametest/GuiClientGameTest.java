@@ -1,5 +1,6 @@
 package dev.alaindustrial.gametest;
 
+import dev.alaindustrial.compat.L3Chunks;
 import dev.alaindustrial.gametest.visual.ShotRecorder;
 import dev.alaindustrial.gametest.visual.VisualWorld;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
@@ -40,6 +41,13 @@ import net.minecraft.world.level.gamerules.GameRules;
  *   <li>MOD-546  — {@link RendererStands#checkEnergyCondenserCrystal}  — the condenser crystal draws, and hides below tier I
  *   <li>MOD-424  — {@link RendererStands#checkThermalCentrifugeRotor}  — the centrifuge rotor draws AND turns, and stops
  *       dead when the redstone signal goes away
+ *   <li>MOD-703  — {@link CrumblingStand#checkChestCrumbling}           — the break cracks of a renderer-only block
+ *       reach the frame
+ *   <li>MOD-716  — {@link BerQuadStands#shoot}                         — baseline frames of the hand-built BER quads
+ *   <li>MOD-716  — {@link OverlayInputStands#shoot}                    — a click on a screen's own control under each
+ *       open overlay: whether it is claimed, what it changes, the drawing order
+ *   <li>MOD-716  — {@link StatusLocaleGuiStands#shoot}                 — six hand-drawn blocking status lines in de_de
+ *       and ru_ru
  *   <li>MOD-354  — {@link WaterMillGuiStand#checkWaterMillStatusRow}   — the water mill's GUI status row draws, and draws
  *       a different label per state
  *   <li>MOD-371  — {@link WindMillGuiStand#checkWindMillStatusRows}   — the same row on all three wind mills; no blank
@@ -51,6 +59,8 @@ import net.minecraft.world.level.gamerules.GameRules;
  *       no line may begin with a combining mark; mid-word breaks are counted, not enforced
  *   <li>MOD-513  — {@link GuideBookRecordStand#check}                  — the login delivers the server's archive
  *       record, the book's first page draws it, and a late or malformed value is handled
+ *   <li>MOD-706  — {@link HudStackStand#check}                         — the HUD layers stack in their registered
+ *       order: the Energy Pack readout stays legible over the teleport fade (a picture for review)
  * </ul>
  *
  * <p>Screenshots land in {@code build/run/clientGameTest/screenshots/}.
@@ -79,7 +89,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
                 .create()) {
             configureVisualTestClient(context, singleplayer);
             ShotRecorder.begin(context);
-            singleplayer.getConnection().waitForChunksRender();
+            L3Chunks.waitRender(singleplayer);
 
             if (System.getProperty("alaindustrial.overlayonly") != null) {
                 NetworkOverlayStand.check(context, singleplayer);
@@ -102,12 +112,15 @@ public class GuiClientGameTest implements FabricClientGameTest {
                 WorldBlockStands.checkActiveIdleTextures(context, singleplayer); // R-VIS-01
                 WorldBlockStands.checkCableConnectivity(context, singleplayer);  // R-CON-03
                 WorldBlockStands.checkEnergyPackWorn(context, singleplayer);     // MOD-065 worn model
+                HudStackStand.check(context, singleplayer);                      // MOD-706 HUD layer stack
                 RendererStands.checkWaterMillWheel(context, singleplayer);       // MOD-024 BER visual regression
                 RendererStands.checkWindMillRotor(context, singleplayer);        // MOD-232 BER visual regression
                 RendererStands.checkIncubatorDome(context, singleplayer);        // MOD-118 BER visual regression
                 RendererStands.checkEnergyCondenserCrystal(context, singleplayer);   // MOD-393 BER visual regression
                 RendererStands.checkThermalCentrifugeRotor(context, singleplayer); // MOD-424 BER visual regression
                 RendererStands.checkWorkstationScreens(context, singleplayer); // MOD-483 BER visual regression
+                CrumblingStand.checkChestCrumbling(context, singleplayer);      // MOD-703 BER crumbling overlay
+                BerQuadStands.shoot(context, singleplayer);                      // MOD-716 BER quad baseline
                 NetworkOverlayStand.check(context, singleplayer);                // MOD-665 analyzer trace reaches the frame
                 TeleporterCapsuleStand.checkGlassFromInside(context, singleplayer); // MOD-632 door glass from inside
                 StorageModuleStands.checkStorageModuleSeams(context, singleplayer); // MOD-287 connected textures
@@ -119,6 +132,10 @@ public class GuiClientGameTest implements FabricClientGameTest {
 
             // ── GUI screenshots (always runs) ─────────────────────────────────────────
             MachineGuiStands.shootGuiScreenshots(context);
+            // MOD-716 batch 0: a click on a screen's own control under each open overlay (CLI-2 baseline) …
+            OverlayInputStands.shoot(context);
+            // … and six hand-drawn status lines, blocking, in de_de and ru_ru (CLI-3 baseline; restores en_us).
+            StatusLocaleGuiStands.shoot(context);
 
             // ── MOD-483: the skill wheel. Not a menu, so ScreensClientGameTest never sees it ──
             SkillTreeGuiStand.shootSkillTree(context);

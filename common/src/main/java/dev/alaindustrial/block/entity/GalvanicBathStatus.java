@@ -1,12 +1,14 @@
 package dev.alaindustrial.block.entity;
 
+import dev.alaindustrial.core.machine.StatusLine;
+
 /**
  * Why the Galvanic Bath is not running, projected to the screen over a {@code ContainerData} channel
  * (MOD-127). Mirrors {@link VulcanizerStatus}: the machine has four independent reasons to idle
  * (fibre, silver, water, blocked output) and "no matching recipe" would be a misleading label for
  * three of them — most of all for water, which is not part of the recipe at all.
  */
-public enum GalvanicBathStatus {
+public enum GalvanicBathStatus implements StatusLine {
 	/** Everything needed is present; the machine is plating. */
 	READY,
 	/** No fibre, or less than one operation's worth. */
@@ -30,5 +32,11 @@ public enum GalvanicBathStatus {
 	/** Translation key for the screen's status line. */
 	public String translationKey() {
 		return "gui.alaindustrial.galvanic_bath.status." + name().toLowerCase(java.util.Locale.ROOT);
+	}
+
+	/** {@link StatusLine}: whether this state holds the machine up (see the interface). */
+	@Override
+	public boolean isBlocking() {
+		return this != READY;
 	}
 }

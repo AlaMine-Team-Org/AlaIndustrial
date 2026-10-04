@@ -10,8 +10,6 @@ import dev.alaindustrial.block.entity.ElectricFurnaceBlockEntity;
 import dev.alaindustrial.block.entity.ExtractorBlockEntity;
 import dev.alaindustrial.block.entity.GalvanicBathBlockEntity;
 import dev.alaindustrial.block.entity.GeothermalGeneratorBlockEntity;
-import dev.alaindustrial.block.entity.IncubatorBlockEntity;
-import dev.alaindustrial.block.entity.KokSagyzRootBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
 import dev.alaindustrial.block.entity.PolymerizerBlockEntity;
 import dev.alaindustrial.block.entity.PumpBlockEntity;
@@ -19,7 +17,9 @@ import dev.alaindustrial.block.entity.SolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.SprinklerBlockEntity;
 import dev.alaindustrial.core.fluid.FluidAmounts;
 import dev.alaindustrial.core.fluid.FluidHolder;
+import dev.alaindustrial.core.machine.MachineRates;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -28,8 +28,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.FarmlandBlock;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.TagValueInput;
 
@@ -40,10 +38,60 @@ import net.minecraft.world.level.storage.TagValueInput;
  */
 public final class PersistenceScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(PersistenceScenarios::rPer01_maceratorNbtRoundTrip,
+								"persistence_r_per01_macerator_nbt_round_trip")
+						.fabricId("PersistenceGameTest", "rPer01_maceratorNbtRoundTrip").ticks(20, 40),
+				RosterEntry.of(PersistenceScenarios::rPer01_furnaceNbtRoundTrip,
+								"persistence_r_per01_furnace_nbt_round_trip")
+						.fabricId("PersistenceGameTest", "rPer01_furnaceNbtRoundTrip").ticks(20, 40),
+				RosterEntry.of(PersistenceScenarios::rPer01_geothermalFluidNbtRoundTrip,
+								"persistence_r_per01_geothermal_fluid_nbt_round_trip")
+						.fabricId("PersistenceGameTest", "rPer01_geothermalFluidNbtRoundTrip").ticks(20, 40),
+				RosterEntry.of(PersistenceScenarios::rPer01_solarEvolveNbtRoundTrip,
+								"persistence_r_per01_solar_evolve_nbt_round_trip")
+						.fabricId("PersistenceGameTest", "rPer01_solarEvolveNbtRoundTrip").ticks(20, 40),
+				RosterEntry.of(PersistenceScenarios::tcMach003Per01_compressorNbtRoundTrip,
+								"persistence_tc_mach003_per01_compressor_nbt_round_trip")
+						.fabricId("PersistenceGameTest", "tcMach003Per01_compressorNbtRoundTrip").ticks(20, 40),
+				RosterEntry.of(PersistenceScenarios::tcMach004Per01_extractorNbtRoundTrip,
+								"persistence_tc_mach004_per01_extractor_nbt_round_trip")
+						.fabricId("PersistenceGameTest", "tcMach004Per01_extractorNbtRoundTrip").ticks(20, 40),
+				RosterEntry.of(PersistenceScenarios::tcEFurn001Per01_furnaceFreezeThenResume,
+								"persistence_tc_efurn001_per01_furnace_freeze_then_resume")
+						.fabricId("PersistenceGameTest", "tcEFurn001Per01_furnaceFreezeThenResume").ticks(20, 40),
+				RosterEntry.of(PersistenceScenarios::tcPump001Per01_pumpTankNbtRoundTrip,
+								"persistence_tc_pump001_per01_pump_tank_nbt_round_trip")
+						.fabricId("PersistenceGameTest", "tcPump001Per01_pumpTankNbtRoundTrip").ticks(20, 40),
+				RosterEntry.of(PersistenceScenarios::tcPump001Per02_pumpTankEmptyNbtRoundTrip,
+								"persistence_tc_pump001_per02_pump_tank_empty_nbt_round_trip")
+						.fabricId("PersistenceGameTest", "tcPump001Per02_pumpTankEmptyNbtRoundTrip").ticks(20, 40),
+				RosterEntry.of(PersistenceScenarios::tcCable001Per01_bufferNbtRoundTrip,
+								"persistence_tc_cable001_per01_buffer_nbt_round_trip")
+						.fabricId("PersistenceGameTest", "tcCable001Per01_bufferNbtRoundTrip").ticks(20, 40),
+				RosterEntry.of(PersistenceScenarios::tcCable001Per02_legacyMachineKeysIgnoredOnLoad,
+								"persistence_tc_cable001_per02_legacy_machine_keys_ignored_on_load")
+						.fabricId("PersistenceGameTest", "tcCable001Per02_legacyMachineKeysIgnoredOnLoad")
+						.ticks(20, 40),
+				RosterEntry.of(PersistenceScenarios::mod556_tankKeysUnchangedAfterSelfSave,
+								"persistence_mod556_tank_keys_unchanged_after_self_save")
+						.fabricId("PersistenceGameTest", "mod556Per01_tankKeysUnchangedAfterSelfSave").ticks(20, 40),
+				RosterEntry.of(PersistenceScenarios::mod556_preRefactorSavesStillLoad,
+								"persistence_mod556_pre_refactor_saves_still_load")
+						.fabricId("PersistenceGameTest", "mod556Per02_preRefactorSavesStillLoad").ticks(20, 40),
+				RosterEntry.of(PersistenceScenarios::mod556_dataVersionMatchesTheLadder,
+								"persistence_mod556_data_version_matches_the_ladder")
+						.fabricId("PersistenceGameTest", "mod556Per03_dataVersionMatchesTheLadder").ticks(20, 40));
+
+		private Roster() {}
+	}
+
 	private PersistenceScenarios() {}
 
 
-	private static final BlockPos POS = new BlockPos(1, 2, 1);
+	static final BlockPos POS = new BlockPos(1, 2, 1);
 
 	/**
 	 * @implements R-PER-01 — macerator NBT round-trip preserves energy + progress + input count.
@@ -276,7 +324,7 @@ public final class PersistenceScenarios {
 		be.setItem(ElectricFurnaceBlockEntity.INPUT_SLOT, new ItemStack(Items.RAW_IRON, 4));
 
 		// Run partway (~50%), then cut power.
-		int halfTicks = Config.scaledDuration(Config.electricFurnaceDuration) / 2;
+		int halfTicks = MachineRates.duration(Config.electricFurnaceDuration, Config.globalMachineSpeedMultiplier) / 2;
 		for (int i = 0; i < halfTicks; i++) {
 			be.serverTick(level, abs, level.getBlockState(abs));
 		}
@@ -454,8 +502,8 @@ public final class PersistenceScenarios {
 	// -- MOD-556: the tank now saves itself; the bytes on disk must not have moved ----------------
 
 	/** Second/third probe positions inside the 8^3 rig, so each machine gets its own block. */
-	private static final BlockPos POS_B = new BlockPos(3, 2, 1);
-	private static final BlockPos POS_C = new BlockPos(5, 2, 1);
+	static final BlockPos POS_B = new BlockPos(3, 2, 1);
+	static final BlockPos POS_C = new BlockPos(5, 2, 1);
 
 	/**
 	 * @implements R-PER-01 -- every machine tank still writes the exact key pair it wrote before
@@ -705,84 +753,6 @@ public final class PersistenceScenarios {
 		if (!untouched.getItem(BatteryBoxBlockEntity.DISCHARGE_SLOT).is(Items.REDSTONE)) {
 			helper.fail("a current-version save was migrated anyway: discharge="
 					+ untouched.getItem(BatteryBoxBlockEntity.DISCHARGE_SLOT));
-			return;
-		}
-		helper.succeed();
-	}
-
-	// -- MOD-645: a world saved on MC 26.2 opens on 26.3 ------------------------------------------
-
-	/**
-	 * @implements R-PER-01 -- hand-built 26.2 tags ({@code {Name[, Properties]}} — the shape
-	 *     {@code BlockState.CODEC} wrote before 26.3 replaced it with a string-or-{@code {id}}
-	 *     pair) load into the two block entities that persist a BlockState, and a re-save writes
-	 *     the 26.3 shape. Nothing here came from the current save path: this is the "a 26.2 world
-	 *     opens" guarantee, in the spirit of {@link #mod556_preRefactorSavesStillLoad}.
-	 * @covers R-PER-01
-	 *
-	 * <p>Without the legacy branch of the tolerant codec ({@code LegacyBlockStates}) the decode
-	 * fails and the reader's default kicks in: the incubator's dome quietly degrades to plain
-	 * glass and a sand-rooted kok-sagyz root forgets its sand growth bonus. The re-save assertion
-	 * pins the one-way migration: after one load+save the legacy shape is gone for good, so the
-	 * branch never fires again for that block.
-	 */
-	public static void mod645_mc262BlockStateTagsStillLoad(GameTestHelper helper) {
-		ServerLevel level = helper.getLevel();
-		RegistryAccess registries = level.registryAccess();
-		BlockPos abs = helper.absolutePos(POS);
-
-		// 1. Incubator dome: {Name} only — the on-disk shape of every real 26.2 save (dumped from
-		// the dev worlds: no Properties key, glass blocks carry none).
-		helper.setBlock(POS, ModContent.INCUBATOR.get());
-		CompoundTag dome = new CompoundTag();
-		dome.putString("Name", "minecraft:pink_stained_glass");
-		CompoundTag incubatorTag = new CompoundTag();
-		incubatorTag.put("DomeSource", dome);
-		IncubatorBlockEntity incubator = new IncubatorBlockEntity(abs, level.getBlockState(abs));
-		incubator.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, incubatorTag));
-		if (!incubator.domeSource().is(Blocks.STAINED_GLASS.pink())) {
-			helper.fail("a 26.2 DomeSource tag did not come back: " + incubator.domeSource());
-			return;
-		}
-
-		// 2. The re-save writes the 26.3 shape: a default state encodes as its plain registry name
-		// (a string tag), and the legacy compound is gone for good.
-		CompoundTag resaved = incubator.saveCustomOnly(registries);
-		if (!"minecraft:pink_stained_glass".equals(resaved.getStringOr("DomeSource", "<not a string>"))) {
-			helper.fail("a re-saved dome must write the 26.3 string shape, got: " + resaved.get("DomeSource"));
-			return;
-		}
-
-		// 3. Kok-sagyz root soil: {Name} only again — sand is the whole point (groundPercent keys
-		// the growth bonus on it, and playerDestroy hands the block back).
-		BlockPos absB = helper.absolutePos(POS_B);
-		helper.setBlock(POS_B, ModContent.KOK_SAGYZ_ROOT.get());
-		CompoundTag soilTag = new CompoundTag();
-		CompoundTag sand = new CompoundTag();
-		sand.putString("Name", "minecraft:sand");
-		soilTag.put("soil", sand);
-		KokSagyzRootBlockEntity sandyRoot = new KokSagyzRootBlockEntity(absB, level.getBlockState(absB));
-		sandyRoot.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, soilTag));
-		if (!sandyRoot.soil().is(Blocks.SAND)) {
-			helper.fail("a 26.2 soil tag did not come back: " + sandyRoot.soil());
-			return;
-		}
-
-		// 4. And with Properties: farmland is a valid rootable soil (SUPPORTS_CROPS) and carries
-		// moisture — the legacy branch must apply properties, not just the block name.
-		BlockPos absC = helper.absolutePos(POS_C);
-		helper.setBlock(POS_C, ModContent.KOK_SAGYZ_ROOT.get());
-		CompoundTag moistTag = new CompoundTag();
-		CompoundTag farmland = new CompoundTag();
-		farmland.putString("Name", "minecraft:farmland");
-		CompoundTag properties = new CompoundTag();
-		properties.putString("moisture", "7");
-		farmland.put("Properties", properties);
-		moistTag.put("soil", farmland);
-		KokSagyzRootBlockEntity moistRoot = new KokSagyzRootBlockEntity(absC, level.getBlockState(absC));
-		moistRoot.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, moistTag));
-		if (!moistRoot.soil().is(Blocks.FARMLAND) || moistRoot.soil().getValue(FarmlandBlock.MOISTURE) != 7) {
-			helper.fail("a 26.2 soil tag with Properties lost its properties: " + moistRoot.soil());
 			return;
 		}
 		helper.succeed();

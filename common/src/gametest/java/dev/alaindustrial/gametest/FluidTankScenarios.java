@@ -9,6 +9,7 @@ import dev.alaindustrial.item.fluid.ItemFluid;
 import dev.alaindustrial.item.fluid.VanillaBucketDeposit;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModDataComponents;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentMap;
@@ -43,6 +44,47 @@ import net.minecraft.world.phys.Vec3;
  */
 public final class FluidTankScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(FluidTankScenarios::tcFluidTank001Fun02_glassWallStopsAClick,
+								"tc_fluid_tank001_fun02_glass_wall_stops_a_click")
+						.fabricId("FluidTankGameTest", "tcFluidTank001Fun02_glassWallStopsAClick").ticks(20, 40),
+				RosterEntry.of(FluidTankScenarios::tcFluidTank001Dat01_contentsCodecRoundTrips,
+								"tc_fluid_tank001_dat01_contents_codec_round_trips")
+						.fabricId("FluidTankGameTest", "tcFluidTank001Dat01_contentsCodecRoundTrips").ticks(20, 40),
+				RosterEntry.of(FluidTankScenarios::tcFluidTank001Per01_nbtAndComponentRoundTrip,
+								"tc_fluid_tank001_per01_nbt_and_component_round_trip")
+						.fabricId("FluidTankGameTest", "tcFluidTank001Per01_nbtAndComponentRoundTrip").ticks(20, 40),
+				RosterEntry.of(FluidTankScenarios::tcFluidTank001Safe01_filledItemIsAtomicAndUnstackable,
+								"tc_fluid_tank001_safe01_filled_item_is_atomic_and_unstackable")
+						.fabricId("FluidTankGameTest", "tcFluidTank001Safe01_filledItemIsAtomicAndUnstackable")
+						.ticks(20, 40),
+				RosterEntry.of(FluidTankScenarios::tcFluidTank001Bva01_componentAmountClampsToCapacity,
+								"tc_fluid_tank001_bva01_component_amount_clamps_to_capacity")
+						.fabricId("FluidTankGameTest", "tcFluidTank001Bva01_componentAmountClampsToCapacity")
+						.ticks(20, 40),
+				RosterEntry.of(FluidTankScenarios::tcFluidTank002Fun01_advancedGradeHoldsTwiceAsMuch,
+								"fluid_tank_tc_fluid_tank002_fun01_advanced_grade_holds_twice_as_much")
+						.fabricId("FluidTankGameTest", "tcFluidTank002Fun01_advancedGradeHoldsTwiceAsMuch")
+						.ticks(20, 40),
+				RosterEntry.of(FluidTankScenarios::tcFluidTank001Per02_placingAFilledTankKeepsItsContents,
+								"tc_fluid_tank001_per02_placing_a_filled_tank_keeps_its_contents")
+						.fabricId("FluidTankGameTest", "tcFluidTank001Per02_placingAFilledTankKeepsItsContents")
+						.ticks(20, 40),
+				RosterEntry.of(FluidTankScenarios::tcFluidTank001Fun01_bucketAndCapsuleUseRealClickRouting,
+								"tc_fluid_tank001_fun01_bucket_and_capsule_use_real_click_routing")
+						.fabricId("FluidTankGameTest", "tcFluidTank001Fun01_bucketAndCapsuleUseRealClickRouting")
+						.ticks(20, 40),
+				RosterEntry.of(FluidTankScenarios::tcFluidTank001Fun03_modFluidBucketRoundTripsAndMobBucketIsRefused,
+								"tc_fluid_tank001_fun03_mod_fluid_bucket_round_trips_and_mob_bucket_is_refused")
+						.fabricId("FluidTankGameTest",
+								"tcFluidTank001Fun03_modFluidBucketRoundTripsAndMobBucketIsRefused")
+						.ticks(20, 40));
+
+		private Roster() {}
+	}
+
 	private FluidTankScenarios() {}
 
 	private static final BlockPos POS = new BlockPos(1, 2, 1);
@@ -65,6 +107,9 @@ public final class FluidTankScenarios {
 	 * a wrong lookup there — or a block entity bound to the wrong block — shows up here and nowhere
 	 * else. Filling past the brim is what proves it: the tank accepts exactly its own capacity and
 	 * stops, so a tier-two tank that silently kept the tier-one number fails on the amount.
+	 *
+	 * @implements TC-FLUIDTANK-002-FUN01 — the advanced grade holds twice as much, and takes that
+	 *     number from the block it is placed in (MOD-612).
 	 */
 	public static void tcFluidTank002Fun01_advancedGradeHoldsTwiceAsMuch(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.FLUID_TANK.get());

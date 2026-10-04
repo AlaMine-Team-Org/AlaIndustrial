@@ -1,7 +1,6 @@
 package dev.alaindustrial.client.skill;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import dev.alaindustrial.Config;
 import dev.alaindustrial.network.NetworkDispatcher;
 import dev.alaindustrial.network.SkillActionPayload;
 import dev.alaindustrial.skill.SkillBranch;
@@ -178,7 +177,8 @@ public final class SkillTreeScreen extends Screen {
 		super.extractBackground(g, mouseX, mouseY, partialTick);
 		SkillBuild build = SkillClientCache.current();
 		PlayerModStats stats = PlayerStatsClientCache.current();
-		int points = SkillPoints.earned(stats);
+		int points = SkillPoints.forLevel(MasteryReadout.level(stats.euUsefulConsumedTotal(),
+				stats.euProducedTotal(), stats.highestLevelReached()));
 
 		SkillTexture.nineSlice(g, SkillTexture.PANEL_U, 0, SkillTexture.PIECE,
 				SkillTexture.PANEL_BORDER, panelX, panelY, panelW, panelH);
@@ -215,9 +215,10 @@ public final class SkillTreeScreen extends Screen {
 					panelX + PAD + 4, panelY + 7, HOVER_RING);
 		}
 
-		int level = SkillPoints.level(stats);
-		double progress = LevelMath.progressToNext(stats.xp(Config.euPerXp, Config.euPerXpGenerated),
-				level, Config.xpLevelOneCost, Config.levelXpMultiplier);
+		int level = MasteryReadout.level(stats.euUsefulConsumedTotal(), stats.euProducedTotal(),
+				stats.highestLevelReached());
+		double progress = MasteryReadout.progress(
+				MasteryReadout.xp(stats.euUsefulConsumedTotal(), stats.euProducedTotal()), level);
 		int barX = ax0;
 		int barW = ax1 - ax0;
 		int barY = panelY + xpY;
@@ -551,7 +552,9 @@ public final class SkillTreeScreen extends Screen {
 	 */
 	private void buy(SkillWheelLayout.Placed node) {
 		SkillBuild build = SkillClientCache.current();
-		int points = SkillPoints.earned(PlayerStatsClientCache.current());
+		PlayerModStats stats = PlayerStatsClientCache.current();
+		int points = SkillPoints.forLevel(MasteryReadout.level(stats.euUsefulConsumedTotal(),
+				stats.euProducedTotal(), stats.highestLevelReached()));
 		if (!build.canBuy(node.branch(), node.slot(), points)) {
 			// A refused click used to be silent, which reads as a broken screen rather than a refusal.
 			playClick(SoundEvents.NOTE_BLOCK_DIDGERIDOO.value());

@@ -1,5 +1,6 @@
 package dev.alaindustrial.block;
 
+import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.FluidPipeBlockEntity;
 import dev.alaindustrial.core.fluid.FluidLookup;
@@ -51,6 +52,12 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * one difference that lives in {@link #family()}: a pipe joins only pipes of its own family and reaches
  * only for ports that serve it ({@link PipeFamily#portFamily}), and its segment holds only its own
  * family's fluid. So a water line and a steam line can be laid side by side and never mix.
+ *
+ * <p><b>The 26.2 block-codec seam (MOD-703).</b> Minecraft 26.2 requires every block to name a codec
+ * ({@code BlockBehaviour.codec()} is abstract there); 26.3 removed block codecs. {@link #codec()} answers it
+ * once for every subclass, so no subclass carries a {@code CODEC} of its own and their sources are the same
+ * on both lines. It has no {@code @Override} on purpose: on 26.2 it overrides, on 26.3 it is a method of its
+ * own that nothing calls.
  */
 public class FluidPipeBlock extends BaseEntityBlock {
 	/** True while the segment holds fluid — drives the visible core, not the colour. */
@@ -299,5 +306,14 @@ public class FluidPipeBlock extends BaseEntityBlock {
 		}
 		return (world, pos, blockState, entity) ->
 				((FluidPipeBlockEntity) entity).serverTick(world, pos, blockState);
+	}
+
+	/**
+	 * The codec Minecraft 26.2 asks every block for: the unit codec of this very instance. 26.2 reads block
+	 * codecs only in the datagen block-list report ({@code BlockTypes.CODEC} → {@code BlockListReport},
+	 * javap), so nothing at run time decodes a block through it.
+	 */
+	protected MapCodec<? extends BaseEntityBlock> codec() {
+		return MapCodec.unit(this);
 	}
 }

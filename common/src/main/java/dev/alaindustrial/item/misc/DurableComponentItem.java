@@ -1,6 +1,6 @@
 package dev.alaindustrial.item.misc;
 
-import dev.alaindustrial.Config;
+import dev.alaindustrial.client.ServerBalance;
 import dev.alaindustrial.core.machine.ComponentRepair;
 import dev.alaindustrial.registry.ModDataComponents;
 import java.util.function.Consumer;
@@ -67,7 +67,7 @@ public class DurableComponentItem extends Item {
 		// (4/4 reads as spent; "0 left" reads as an error). The limit is read live — an operator who
 		// raises it mid-world must see the new headroom on components already in a chest.
 		adder.accept(Component.translatable("item.alaindustrial.component.repairs",
-						done, Math.max(done, ComponentRepair.maxRepairs(Config.repairBenchMaxDamageDecayPercent)))
+						done, Math.max(done, ComponentRepair.maxRepairs(ServerBalance.repairBenchMaxDamageDecayPercent())))
 				.withStyle(ChatFormatting.GRAY));
 	}
 }

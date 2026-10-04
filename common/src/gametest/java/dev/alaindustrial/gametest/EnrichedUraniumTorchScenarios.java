@@ -17,6 +17,19 @@ import net.minecraft.world.level.block.Blocks;
  */
 public final class EnrichedUraniumTorchScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(EnrichedUraniumTorchScenarios::torchesEmitVanillaTorchLight,
+								"torch_torches_emit_vanilla_torch_light")
+						.fabricId("EnrichedUraniumTorchGameTest", "torchesEmitVanillaTorchLight").ticks(20, 40),
+				RosterEntry.of(EnrichedUraniumTorchScenarios::wallTorchDropsStandingTorch,
+								"torch_wall_torch_drops_standing_torch")
+						.fabricId("EnrichedUraniumTorchGameTest", "wallTorchDropsStandingTorch").ticks(20, 40));
+
+		private Roster() {}
+	}
+
 	private EnrichedUraniumTorchScenarios() {}
 
 

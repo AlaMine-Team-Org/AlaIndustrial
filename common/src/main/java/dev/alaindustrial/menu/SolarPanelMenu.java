@@ -3,10 +3,8 @@ package dev.alaindustrial.menu;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.block.entity.SolarPanelBlockEntity;
 import dev.alaindustrial.registry.ModContent;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
@@ -20,8 +18,8 @@ public class SolarPanelMenu extends MachineMenu {
 	/** Client side. */
 	public SolarPanelMenu(int syncId, Inventory playerInventory) {
 		super(ModContent.SOLAR_PANEL_MENU.get(), syncId, playerInventory,
-				new SimpleContainer(SolarPanelBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT),
-				new SimpleContainerData(SolarPanelBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL, ModContent.SOLAR_PANEL.get());
+				clientStub(SolarPanelBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT, SolarPanelBlockEntity.DATA_COUNT),
+				ModContent.SOLAR_PANEL.get());
 	}
 
 	@Override
@@ -55,12 +53,12 @@ public class SolarPanelMenu extends MachineMenu {
 
 	/** Evolution progress on a permille scale (0..1000); ≥1 as soon as any progress accrues. */
 	public int getEvolveProgress() {
-		return data.get(4);
+		return channel(SolarPanelBlockEntity.Channel.EVOLVE_PERMILLE);
 	}
 
 	/** Evolution denominator (constant 1000) — permille scale, kept short-safe for DataSlot sync. */
 	public int getEvolveMax() {
-		return data.get(5);
+		return channel(SolarPanelBlockEntity.Channel.EVOLVE_MAX);
 	}
 
 	/**
@@ -69,11 +67,11 @@ public class SolarPanelMenu extends MachineMenu {
 	 */
 	public void injectSolarTestData(int energy, int capacity, int production, int mode,
 			int evolveProgress, int evolveMax) {
-		data.set(0, energy);
-		data.set(1, capacity);
-		data.set(2, production);
-		data.set(3, mode);
-		data.set(4, evolveProgress);
-		data.set(5, evolveMax);
+		data.set(SolarPanelBlockEntity.Channel.ENERGY.ordinal(), energy);
+		data.set(SolarPanelBlockEntity.Channel.CAPACITY.ordinal(), capacity);
+		data.set(SolarPanelBlockEntity.Channel.PROGRESS.ordinal(), production);
+		data.set(SolarPanelBlockEntity.Channel.MAX_PROGRESS.ordinal(), mode);
+		data.set(SolarPanelBlockEntity.Channel.EVOLVE_PERMILLE.ordinal(), evolveProgress);
+		data.set(SolarPanelBlockEntity.Channel.EVOLVE_MAX.ordinal(), evolveMax);
 	}
 }

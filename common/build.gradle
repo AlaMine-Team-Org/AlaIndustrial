@@ -187,6 +187,12 @@ pitest {
                      // relation it guards — advanced reaches further, only advanced pulls experience —
                      // is what a wrong config edit would break silently.
                      'dev.alaindustrial.item.tool.MagnetTier',
+                     // MOD-707: the electric tools' energy catalog, same shape as MagnetTier
+                     // (ElectricToolTierTest).
+                     'dev.alaindustrial.item.tool.ElectricToolTier',
+                     // MOD-707: the electric mining tools' EU and speed rule, the one place it is stated
+                     // (ElectricMiningRuleTest).
+                     'dev.alaindustrial.item.tool.ElectricMiningRule',
                      // MOD-665: the Network Analyzer fixes kept their arithmetic Minecraft-free so L1
                      // could pin it (AnalyzerTotalsTest, PayloadBudgetTest, ScanThrottleTest,
                      // AnalyzerClickTest, OverlayMathTest).
@@ -214,6 +220,10 @@ pitest {
                      'dev.alaindustrial.item.energy.CrystalTier',
                      'dev.alaindustrial.item.material.TemperedIronToolStats',
                      'dev.alaindustrial.item.misc.TooltipKeys',
+                     // MOD-710 (ADR-034): the powered-tool knob holder. Minecraft-free like every holder and,
+                     // like TemperedIronToolStats, listed in pitest_check.py's NO_MUTABLE_BYTECODE: knob
+                     // fields with constant initialisers leave PIT nothing to mutate.
+                     'dev.alaindustrial.item.ToolConfig',
                      // MOD-315: the scythe's bonus-seed chance formula. Lifted out of the (nested,
                      // and therefore L1-unreachable) ScytheItem.Profile precisely so it could be
                      // unit-tested, so it is added here with the class rather than a release later.
@@ -242,6 +252,9 @@ pitest {
                      // MOD-668: when the charging station chimes "all charged". MC-free rule class,
                      // added with the class and its L1 suite (ChargePadChimeTest).
                      'dev.alaindustrial.block.entity.ChargePadChime',
+                     // MOD-692: whether a block's energy counters run. MC-free rule class, added with
+                     // the class and its L1 suite (StatsCounterGateTest).
+                     'dev.alaindustrial.block.entity.StatsCounterGate',
                      // MOD-672: the cable arm's reach into the assembled teleporter. MC-free so its
                      // L1 suite (TeleporterCableArmTest) can re-measure the model and pin it.
                      'dev.alaindustrial.block.TeleporterCableArm',
@@ -290,6 +303,15 @@ pitest {
                      'dev.alaindustrial.block.entity.IncubatorStatus',
                      'dev.alaindustrial.mutation.MutationGrade',
                      'dev.alaindustrial.mutation.MutationRoll',
+                     // MOD-695: server->client config sync. The snapshot's wire format and the client's
+                     // copy of the server balance are Minecraft-free so L1 can round-trip every knob and
+                     // prove the local Config is never written (ServerBalanceTest, KnobSnapshotTest); the
+                     // two readouts carry the characterization tests (MasteryReadoutTest,
+                     // PointAllowanceTest). Added here with the classes, not a release later.
+                     'dev.alaindustrial.KnobSnapshot',
+                     'dev.alaindustrial.client.ServerBalance',
+                     'dev.alaindustrial.client.skill.MasteryReadout',
+                     'dev.alaindustrial.client.screen.teleporter.PointAllowance',
                      // MOD-324: seven MC-free classes that no glob here reached, so their mutants were
                      // never counted at all — the `targetClasses` side of the same "code added, list not
                      // updated" defect as the incubator trio above. Four of them already carried a
@@ -314,6 +336,17 @@ pitest {
                      'dev.alaindustrial.block.entity.Overclockable',
                      // MOD-679: the battery drawer marker, the same members-less shape as Overclockable.
                      'dev.alaindustrial.block.entity.BatteryFed',
+                     // MOD-712: the no-upgrade-panel marker, members-less like BatteryFed.
+                     'dev.alaindustrial.block.entity.NoUpgradePanel',
+                     // MOD-712 (BE-7): the base GUI channel names, a constants-only enum (NO_MUTABLE_BYTECODE).
+                     'dev.alaindustrial.block.entity.machine.MachineChannels',
+                     // MOD-712 (BE-7): the channel builder, Minecraft-free on purpose; SyncChannelsTest.
+                     'dev.alaindustrial.block.entity.machine.SyncChannels*',
+                     // MOD-713 (batch 1f): the reactor console's channel names and widths; ReactorChannelsTest.
+                     'dev.alaindustrial.block.entity.reactor.ReactorChannels',
+                     // MOD-709: the demo stand's zone contract (one method, no default). Same shape as
+                     // Overclockable: a pure interface, targeted here and listed in NO_MUTABLE_BYTECODE.
+                     'dev.alaindustrial.command.demo.DemoZone',
                      // MOD-439: the wind-mill readout contract (mode + rate) the shared T2 screen is
                      // written against. Same shape as Overclockable: a pure interface, targeted here and
                      // listed in NO_MUTABLE_BYTECODE, so a future default method is mutated, not lost.
@@ -334,8 +367,16 @@ pitest {
                      // mod that belongs to five machines rather than one. Listed WITH its L1 suite
                      // (ProcessingMachineStatusTest), same as the two above.
                      'dev.alaindustrial.block.entity.ProcessingMachineStatus',
+                     // MOD-714: the assembler's status enum, moved out of AssemblerBlockEntity into its own
+                     // MC-free file; listed WITH its L1 suite (AssemblerStatusTest).
+                     'dev.alaindustrial.block.entity.AssemblerStatus',
                      'dev.alaindustrial.client.compat.FluidOutputViewerModel',
                      'dev.alaindustrial.client.compat.RecipeViewerLayout',
+                     // MOD-716: the screens' recipe-viewer click area, a plain record; L1 suite GuiRectTest.
+                     'dev.alaindustrial.client.screen.GuiRect',
+                     // MOD-716: the cable grades' tooltip description, built from CableType alone (MC-free);
+                     // L1 suite CableTooltipTest.
+                     'dev.alaindustrial.block.CableTooltip',
                      // MOD-125: the shared readout formatter (compact magnitudes, duration parts). Pure
                      // string/arithmetic work with no Minecraft on it, listed here WITH the class and
                      // its L1 suite (ReadoutFormatTest) rather than a release later.
@@ -354,6 +395,11 @@ pitest {
                      // per-knob getter/setter lambdas with reflection, which deleted most of that
                      // mutable bytecode. Read the current number off the report, never off this line.
                      'dev.alaindustrial.Config',
+                     // MOD-710: Config's file mechanism (schema, migrations, knob registry, reader and
+                     // writer) moved into its own package with the same L1 suites behind it (ConfigFileTest,
+                     // ConfigSchemaTest, ConfigSnapshotTest, ConfigGoldenFileTest, ...). Plain Gson and
+                     // Minecraft-free, so it mutates exactly as it did while it lived inside Config.
+                     'dev.alaindustrial.config.*',
                      // MOD-483: the skill tree's rules and the wheel's coordinate maths are
                      // Minecraft-free on purpose and covered by L1 tests, so they mutate like the core.
                      'dev.alaindustrial.skill.*',
@@ -406,20 +452,22 @@ pitest {
             'dev.alaindustrial.core.monitor.MonitorNetwork',
             'dev.alaindustrial.core.monitor.MonitorNetworkManager',
             'dev.alaindustrial.core.monitor.StockTally',
-            // MOD-590: the quench press. Every operation it has takes a ServerLevel/BlockPos and works
-            // on ItemEntity, so L1 cannot construct a single call — its mutants would all be
-            // NO_COVERAGE. The behaviour is covered where it actually lives, in the both-lane game
-            // tests (CeramicScenarios): the press pays more than a hand quench, and an unpowered or
-            // waterless press pays nothing at all.
-            'dev.alaindustrial.core.ceramic.QuenchPress',
-            // MOD-226: how long a stack burns in the generator and the iron furnace, on 26.3. Every
-            // member takes a ServerLevel, a BlockEntity or an ItemStack and the whole body is the
-            // LootContext that resolving a cooking_fuel burn time needs, so `common/`'s Minecraft-free
-            // test classpath cannot construct one call and all of its mutants would be NO_COVERAGE.
-            // There is barely anything to mutate either — one component check and one delegation, no
-            // branch of its own. What the two machines then DO with the number (the buffer-full pause,
-            // the smelts-per-fuel scaling) lives in them and is covered by their game tests.
-            'dev.alaindustrial.core.FurnaceFuel',
+            // MOD-715 batch 1: the network core's node interfaces. Every operation names a Minecraft
+            // type (Level, BlockPos, Direction) or a type that does (FluidTank), so L1 cannot call
+            // them; their only body is CableNode.lineBuffer's one-line default. The networks that ask
+            // them are covered in the both-lane game tests and the L1.5 goldens.
+            'dev.alaindustrial.core.energy.CableNode',
+            'dev.alaindustrial.core.energy.DirectPushSource',
+            'dev.alaindustrial.core.fluid.FluidPipeNode',
+            'dev.alaindustrial.core.item.ItemPipeNode',
+            // MOD-715 batch 6: the tick's live endpoints (LineEndpoints, resolved through EnergyPort lookups
+            // keyed by BlockPos). MC-typed; the goldens and the energy gametests pin it inside the network.
+            // Its two batch-4/6 neighbours, DischargePlan and LineView, left this list in batch 8: generic
+            // over the position type, they run at L1 (DischargePlanTest, EnergyLineDistributorCoreTest).
+            'dev.alaindustrial.core.energy.LineEndpoints',
+            // MOD-715 batch 2 moved QuenchPress, CanningRules, GuideBookGiver, CropMaturity, BladeTier,
+            // WasteClassifier and WorldHeatSources out of core (to item / item.misc / block.entity):
+            // outside the core.* glob, so their exclusions left this list with them.
             // MOD-596: the per-world "already greeted" flag. It is a SavedData subclass whose whole
             // surface is Codec/SavedDataType/setDirty — net.minecraft types common/'s test classpath
             // does not carry, so every mutant of it would be a guaranteed NO_COVERAGE. There is also
@@ -451,14 +499,6 @@ pitest {
             // family, covered by the both-lane SteamPipeScenarios game tests.
             'dev.alaindustrial.block.SteamPipeBlock',
             'dev.alaindustrial.block.ReinforcedSteamPipeBlock',
-            // MOD-145: the Recycler's two Minecraft-coupled waste classes. WasteClassifier reads
-            // ItemStack/ItemTags/SoundType and BladeTier compares against registered items, so both
-            // reference net.minecraft types that common/'s test classpath does not carry — their
-            // mutants would be guaranteed NO_COVERAGE. The rule they exist for is mutated instead,
-            // in SlagGrade (MC-free, covered by SlagGradeTest); the classification chain itself is
-            // covered by the machine's game tests.
-            'dev.alaindustrial.core.waste.WasteClassifier',
-            'dev.alaindustrial.core.waste.BladeTier',
             // MOD-483: two skill-tree classes that the `dev.alaindustrial.skill.*` target glob sweeps in
             // but PIT cannot mutate here. PlayerSkills is the attachment's codec form (Codec, MapCodec,
             // StreamCodec, RegistryFriendlyByteBuf) and SkillStore is the server-side accessor seam over
@@ -493,12 +533,6 @@ pitest {
             'dev.alaindustrial.client.render.WorkstationGeometry',
             'dev.alaindustrial.client.render.RadiantSolarPanelGeometry',
             'dev.alaindustrial.client.render.UpgradeTableGeometry',
-            // MOD-383: CanningRules answers "may this stack go in the machine", which means it reads
-            // ItemStack / Items / DataComponents.FOOD — Minecraft types common's L1 classpath does not
-            // have, so every mutant here would be a guaranteed NO_COVERAGE. The arithmetic it delegates
-            // to (CanningMath) is deliberately Minecraft-free and stays IN the run, covered by
-            // CanningMathTest; the predicate itself is covered by the L2 gametests instead.
-            'dev.alaindustrial.core.food.CanningRules',
             // MOD-468: the reactor room's world adapter — it resolves BlockState/Level to ask
             // "what shell block stands here". The geometry it delegates to (RoomScan) is deliberately
             // Minecraft-free and stays IN the run, covered by RoomScanTest; this half is covered by the
@@ -558,13 +592,12 @@ pitest {
             'dev.alaindustrial.core.environment.SolarSky',
             'dev.alaindustrial.core.environment.WindMillClearance',
             'dev.alaindustrial.core.environment.WindMillInterference',
-            // Refactor pass round 2 (2026-07): three MC-coupled classes extracted from EnergyNetwork
-            // (#7) + a new sky cache (#13). Same shape as the entries above — they reference
-            // Level/BlockPos/Direction and cannot be instantiated in :common's MC-free pitest runtime.
-            // Their behaviour is covered by :neoforge:test (L1.5 EnergyLineDistributorTest) and the
-            // Fabric L2 gametests (NetworkGameTest, SolarPanelGameTest).
+            // Refactor pass round 2 (2026-07): MC-coupled classes extracted from EnergyNetwork (#7) + a new
+            // sky cache (#13). Same shape as the entries above — they reference Level/BlockPos/Direction and
+            // cannot be instantiated in :common's MC-free pitest runtime. Covered by the Fabric L2 gametests
+            // (NetworkGameTest, SolarPanelGameTest). Their sibling EnergyLineDistributor left this list in
+            // MOD-715 batch 8: generic over the position type, it runs at L1 (EnergyLineDistributorCoreTest).
             'dev.alaindustrial.core.energy.EnergyTopologyCache',
-            'dev.alaindustrial.core.energy.EnergyLineDistributor',
             'dev.alaindustrial.core.environment.SolarSkyCache',
             // Extracted from EnergyNetwork in the round-3 audit pass (#10): a read-only introspection
             // view that only delegates to the MC-coupled EnergyNetwork (List<BlockPos> accessors). Same
@@ -589,14 +622,11 @@ pitest {
             //     null-guard / extract-then-insert control flow that needs live ports.
             //   - GuideBookState: extends net.minecraft SavedData + uses UUIDUtil codec — 4 direct
             //     net.minecraft imports, MC-only by construction.
-            //   - guide.GuideBookGiver: mutates a player Inventory (net.minecraft.world.entity.player)
-            //     and queries MinecraftServer — 4 direct net.minecraft imports, MC-only.
             // These belong to the future NeoForge L1.5 pitest lane (MOD-110 follow-up) which DOES have
             // the MC jar on its test classpath.
             'dev.alaindustrial.core.fluid.FluidTank',
             'dev.alaindustrial.core.fluid.FluidMover',
             'dev.alaindustrial.core.GuideBookState',
-            'dev.alaindustrial.core.guide.GuideBookGiver',
             // MOD-513: the archive record's server bridge — both methods take a ServerPlayer and read its
             // level seed and GameProfile, then hand a payload to the loader dispatcher. MC-only by
             // construction; the arithmetic lives in ArchiveRecord (under core.*, L1: ArchiveRecordTest),
@@ -655,7 +685,6 @@ pitest {
             // mentions: MOD-110 phase 2 proved that lane impossible (FML's ClassLoadingGuardian
             // intercepts classloading) and deleted its config. These exclusions are permanent under the
             // current architecture, and their behaviour is covered by L2 gametests on both loaders.
-            'dev.alaindustrial.core.crop.CropMaturity',
             'dev.alaindustrial.core.fluid.FluidNetwork',
             'dev.alaindustrial.core.fluid.FluidNetworkManager',
             // MOD-662: the pipe families and the one-off steam-line migration. Both read the world
@@ -663,7 +692,6 @@ pitest {
             // the migration's seven cases and the wave are covered by SteamPipeScenarios on both lanes.
             'dev.alaindustrial.core.fluid.PipeFamily',
             'dev.alaindustrial.core.fluid.SteamLineMigration',
-            'dev.alaindustrial.core.heat.WorldHeatSources',
             // MOD-628: MC-coupled TRANSITIVELY, like PlayerStatsClientCache above. Since the tab strip
             // moved to client.screen.tabs, ReactorTabPage is an empty interface that only extends the
             // shared TabPage, so its file names no Minecraft type — but every member it has is TabPage's,
@@ -730,7 +758,7 @@ pitest {
     // NOTE: mutationThreshold/coverageThreshold are NOT set here. In gradle-pitest-plugin 1.19.0
     // the PIT-side `mutationThreshold` is only used for an early-exit heuristic, not a hard build
     // gate — the build can pass even with coverage below the floor. The real ratchet gate lives
-    // in docs/tools/pitest_check.py (Python validator wired into the CI pitest job, NOT into
+    // in docs/tools/testing/pitest_check.py (Python validator wired into the CI pitest job, NOT into
     // checkAll — pitest needs a prior :common:pitest run and is too slow for pre-commit). It reads
     // this task's mutations.xml and fails the build when the killed-mutant rate drops below
     // pitest_mutation_threshold in gradle.properties. MOD-136.

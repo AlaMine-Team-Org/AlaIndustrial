@@ -10,7 +10,9 @@ import dev.alaindustrial.BuildInfo;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.command.demo.DemoStand;
+import dev.alaindustrial.compat.ServerDrops;
 import dev.alaindustrial.core.energy.NetworkManager;
+import dev.alaindustrial.network.ConfigSync;
 import dev.alaindustrial.stats.LevelMath;
 import dev.alaindustrial.stats.PlayerModStats;
 import dev.alaindustrial.stats.PlayerStatsStore;
@@ -22,7 +24,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
-import net.minecraft.util.Prediction;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.core.BlockPos;
@@ -92,7 +93,7 @@ public final class AlaCommandCommon {
 									new net.minecraft.world.item.ItemStack(dev.alaindustrial.registry.ModContent.GUIDE_BOOK.get());
 							Component name = book.getDisplayName();
 							if (!player.addItem(book)) {
-								player.drop(book, false, Prediction.SERVER_ONLY);
+								ServerDrops.drop(player, book);
 							}
 							ctx.getSource().sendSuccess(() -> Component.translatable(
 									"commands.give.success.single", 1, name, player.getDisplayName()), false);
@@ -116,7 +117,8 @@ public final class AlaCommandCommon {
 		return Commands.literal("config")
 				.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
 				.then(Commands.literal("reload").executes(ctx -> {
-					Config.LoadResult result = Config.reload();
+					// MOD-695: the re-read balance goes to every connected client as well.
+					Config.LoadResult result = ConfigSync.reloadAndBroadcast(ctx.getSource().getServer());
 					switch (result) {
 						case LOADED -> ctx.getSource().sendSuccess(() -> Component.literal(
 								"Reloaded config/alaindustrial.json.").withStyle(HEADER), true);

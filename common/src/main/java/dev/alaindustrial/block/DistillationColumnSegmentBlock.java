@@ -1,5 +1,6 @@
 package dev.alaindustrial.block;
 
+import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.DistillationColumnBlockEntity;
 import dev.alaindustrial.block.entity.DistillationColumnSegmentBlockEntity;
 import net.minecraft.core.BlockPos;
@@ -35,6 +36,12 @@ import net.minecraft.world.phys.BlockHitResult;
  * hook fires the base's destruction with the drop (loot table + {@code copy_components}); the
  * base's removal hook then clears the remaining segments droplessly. Creative intent travels via
  * the base's suppression handshake, the dome's exact pattern.
+ *
+ * <p><b>The 26.2 block-codec seam (MOD-703).</b> Minecraft 26.2 requires every block to name a codec
+ * ({@code BlockBehaviour.codec()} is abstract there); 26.3 removed block codecs. {@link #codec()} answers it
+ * once for every subclass, so no subclass carries a {@code CODEC} of its own and their sources are the same
+ * on both lines. It has no {@code @Override} on purpose: on 26.2 it overrides, on 26.3 it is a method of its
+ * own that nothing calls.
  */
 public abstract class DistillationColumnSegmentBlock extends BaseEntityBlock {
 	public static final BooleanProperty LIT = BlockStateProperties.LIT;
@@ -159,5 +166,14 @@ public abstract class DistillationColumnSegmentBlock extends BaseEntityBlock {
 		}
 		return super.updateShape(state, level, ticks, pos, directionToNeighbour, neighbourPos,
 				neighbourState, random);
+	}
+
+	/**
+	 * The codec Minecraft 26.2 asks every block for: the unit codec of this very instance. 26.2 reads block
+	 * codecs only in the datagen block-list report ({@code BlockTypes.CODEC} → {@code BlockListReport},
+	 * javap), so nothing at run time decodes a block through it.
+	 */
+	protected MapCodec<? extends BaseEntityBlock> codec() {
+		return MapCodec.unit(this);
 	}
 }

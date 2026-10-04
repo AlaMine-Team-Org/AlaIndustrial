@@ -4,10 +4,8 @@ import dev.alaindustrial.block.entity.CesuBlockEntity;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.registry.ModContent;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
@@ -32,8 +30,8 @@ public class CesuMenu extends MachineMenu {
 	/** Client side. */
 	public CesuMenu(int syncId, Inventory playerInventory) {
 		super(ModContent.CESU_MENU.get(), syncId, playerInventory,
-				new SimpleContainer(CesuBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT),
-				new SimpleContainerData(CesuBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL, ModContent.CESU.get());
+				clientStub(CesuBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT, CesuBlockEntity.DATA_COUNT),
+				ModContent.CESU.get());
 	}
 
 	@Override
@@ -61,13 +59,13 @@ public class CesuMenu extends MachineMenu {
 	 */
 	@Override
 	public int getEnergy() {
-		return data.get(CesuBlockEntity.DATA_ENERGY_SCALED) * CesuBlockEntity.SYNC_SCALE;
+		return channel(CesuBlockEntity.Channel.ENERGY) * CesuBlockEntity.SYNC_SCALE;
 	}
 
 	/** Capacity — scaled for the same reason as {@link #getEnergy()}. */
 	@Override
 	public int getCapacity() {
-		return data.get(CesuBlockEntity.DATA_CAPACITY_SCALED) * CesuBlockEntity.SYNC_SCALE;
+		return channel(CesuBlockEntity.Channel.CAPACITY) * CesuBlockEntity.SYNC_SCALE;
 	}
 
 	/**
@@ -76,12 +74,12 @@ public class CesuMenu extends MachineMenu {
 	 * risking an overflow in the multiplication.
 	 */
 	public int getChargePercent() {
-		int cap = data.get(CesuBlockEntity.DATA_CAPACITY_SCALED);
-		return cap > 0 ? data.get(CesuBlockEntity.DATA_ENERGY_SCALED) * 100 / cap : 0;
+		int cap = channel(CesuBlockEntity.Channel.CAPACITY);
+		return cap > 0 ? channel(CesuBlockEntity.Channel.ENERGY) * 100 / cap : 0;
 	}
 
 	/** Per-tick output cap (EU/t) this store can emit from its output face. */
 	public int getOutputRate() {
-		return data.get(4);
+		return channel(CesuBlockEntity.Channel.OUTPUT_CAP);
 	}
 }

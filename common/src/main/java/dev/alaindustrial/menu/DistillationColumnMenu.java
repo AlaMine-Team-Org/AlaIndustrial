@@ -3,10 +3,8 @@ package dev.alaindustrial.menu;
 import dev.alaindustrial.block.entity.DistillationColumnBlockEntity;
 import dev.alaindustrial.block.entity.DistillationColumnStatus;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import dev.alaindustrial.registry.ModContent;
@@ -28,9 +26,9 @@ public class DistillationColumnMenu extends MachineMenu {
 	/** Client side. */
 	public DistillationColumnMenu(int syncId, Inventory playerInventory) {
 		super(ModContent.DISTILLATION_COLUMN_MENU.get(), syncId, playerInventory,
-				new SimpleContainer(DistillationColumnBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT),
-				new SimpleContainerData(DistillationColumnBlockEntity.DATA_COUNT),
-				ContainerLevelAccess.NULL, ModContent.DISTILLATION_COLUMN.get());
+				clientStub(DistillationColumnBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT,
+						DistillationColumnBlockEntity.DATA_COUNT),
+				ModContent.DISTILLATION_COLUMN.get());
 	}
 
 	@Override
@@ -81,46 +79,46 @@ public class DistillationColumnMenu extends MachineMenu {
 	}
 
 	public int getOilPermille() {
-		return data.get(DistillationColumnBlockEntity.CH_OIL_PERMILLE);
+		return channel(DistillationColumnBlockEntity.Channel.OIL_PERMILLE);
 	}
 
 	public int getDieselPermille() {
-		return data.get(DistillationColumnBlockEntity.CH_DIESEL_PERMILLE);
+		return channel(DistillationColumnBlockEntity.Channel.DIESEL_PERMILLE);
 	}
 
 	public int getFuelOilPermille() {
-		return data.get(DistillationColumnBlockEntity.CH_FUEL_OIL_PERMILLE);
+		return channel(DistillationColumnBlockEntity.Channel.FUEL_OIL_PERMILLE);
 	}
 
 	public int getOilFluidId() {
-		return data.get(DistillationColumnBlockEntity.CH_OIL_FLUID_ID);
+		return channel(DistillationColumnBlockEntity.Channel.OIL_FLUID_ID);
 	}
 
 	public int getDieselFluidId() {
-		return data.get(DistillationColumnBlockEntity.CH_DIESEL_FLUID_ID);
+		return channel(DistillationColumnBlockEntity.Channel.DIESEL_FLUID_ID);
 	}
 
 	public int getFuelOilFluidId() {
-		return data.get(DistillationColumnBlockEntity.CH_FUEL_OIL_FLUID_ID);
+		return channel(DistillationColumnBlockEntity.Channel.FUEL_OIL_FLUID_ID);
 	}
 
 	/** The synced idle diagnosis for the status line. */
 	public DistillationColumnStatus getStatus() {
-		return DistillationColumnStatus.byOrdinal(data.get(DistillationColumnBlockEntity.CH_STATUS));
+		return DistillationColumnStatus.byOrdinal(channel(DistillationColumnBlockEntity.Channel.STATUS));
 	}
 
 	/** Warm-up as permille of the configured warm-up window (0 cold .. 1000 hot). */
 	public int getHeatPermille() {
-		return data.get(DistillationColumnBlockEntity.CH_HEAT_PERMILLE);
+		return channel(DistillationColumnBlockEntity.Channel.HEAT_PERMILLE);
 	}
 
 	/** Coke fouling 0..{@link DistillationColumnBlockEntity#FOULING_MAX} (round 2). */
 	public int getFouling() {
-		return data.get(DistillationColumnBlockEntity.CH_FOULING);
+		return channel(DistillationColumnBlockEntity.Channel.FOULING);
 	}
 
 	/** Whether a Rectification Section stands on the real tower (round 2). */
 	public boolean hasSection() {
-		return data.get(DistillationColumnBlockEntity.CH_SECTION) != 0;
+		return channel(DistillationColumnBlockEntity.Channel.SECTION) != 0;
 	}
 }

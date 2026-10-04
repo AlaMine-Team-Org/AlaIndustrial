@@ -1,15 +1,16 @@
 package dev.alaindustrial.gametest;
 
-import dev.alaindustrial.Config;
+import static dev.alaindustrial.gametest.GameTestDrops.countDrops;
+
 import dev.alaindustrial.item.tool.ScytheItem;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -18,8 +19,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.StemBlock;
 import net.minecraft.world.level.block.TorchflowerCropBlock;
-
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
@@ -44,6 +43,56 @@ import net.minecraft.world.phys.Vec3;
  */
 public final class ScytheScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(ScytheScenarios::fun01ClearsFoliageKeepsSolids, "scythe_clears_foliage_keeps_solids")
+						.fabricId("ScytheGameTest", "fun01_clearsFoliageKeepsSolids").ticks(20, 40),
+				RosterEntry.of(ScytheScenarios::neg01ShiftCropModeKeepsDecor, "scythe_shift_crop_mode_keeps_decor")
+						.fabricId("ScytheGameTest", "neg01_shiftCropModeKeepsDecor").ticks(20, 40),
+				RosterEntry.of(ScytheScenarios::prf01DurabilityPerBlock, "scythe_durability_per_block")
+						.fabricId("ScytheGameTest", "prf01_durabilityPerBlock").ticks(20, 40),
+				RosterEntry.of(ScytheScenarios::prf03DurabilityOnInstantBlock, "scythe_durability_on_instant_block")
+						.fabricId("ScytheGameTest", "prf03_durabilityOnInstantBlock").ticks(20, 40),
+				RosterEntry.of(ScytheScenarios::prf02CreativeNoDurability, "scythe_creative_no_durability")
+						.fabricId("ScytheGameTest", "prf02_creativeNoDurability").ticks(20, 40),
+				RosterEntry.of(ScytheScenarios::bva01StopsAtMaxBlocks, "scythe_stops_at_max_blocks")
+						.fabricId("ScytheGameTest", "bva01_stopsAtMaxBlocks").ticks(20, 40),
+				RosterEntry.of(ScytheScenarios::neg02KeepsCropsAndWater, "scythe_keeps_crops_and_water")
+						.fabricId("ScytheGameTest", "neg02_keepsCropsAndWater").ticks(20, 40),
+				RosterEntry.of(ScytheScenarios::fun02CropModeHarvestsMature, "scythe_crop_mode_harvests_mature")
+						.fabricId("ScytheGameTest", "fun02_cropModeHarvestsMature").ticks(20, 40),
+				RosterEntry.of(ScytheScenarios::neg03CropModeKeepsImmature, "scythe_crop_mode_keeps_immature")
+						.fabricId("ScytheGameTest", "neg03_cropModeKeepsImmature").ticks(20, 40),
+				RosterEntry.of(ScytheScenarios::neg04CropModeKeepsFoliage, "scythe_crop_mode_keeps_foliage")
+						.fabricId("ScytheGameTest", "neg04_cropModeKeepsFoliage").ticks(20, 40),
+				RosterEntry.of(ScytheScenarios::fun03CropModeHarvestsCaneStalk, "scythe_crop_mode_harvests_cane_stalk")
+						.fabricId("ScytheGameTest", "fun03_cropModeHarvestsCaneStalk").ticks(20, 40),
+				RosterEntry.of(ScytheScenarios::neg05CropModeKeepsLoneCactus, "scythe_crop_mode_keeps_lone_cactus")
+						.fabricId("ScytheGameTest", "neg05_cropModeKeepsLoneCactus").ticks(20, 40),
+				RosterEntry.of(ScytheScenarios::neg06CropModeKeepsStem, "scythe_crop_mode_keeps_stem")
+						.fabricId("ScytheGameTest", "neg06_cropModeKeepsStem").ticks(20, 40),
+				RosterEntry.of(ScytheScenarios::fun06CropModeHarvestsTorchflowerAtMaxAge,
+								"scythe_crop_mode_harvests_torchflower")
+						.fabricId("ScytheGameTest", "fun06_cropModeHarvestsTorchflowerAtMaxAge").ticks(20, 40),
+				RosterEntry.of(ScytheScenarios::neg08CropModeKeepsImmatureTorchflower,
+								"scythe_crop_mode_keeps_immature_torchflower")
+						.fabricId("ScytheGameTest", "neg08_cropModeKeepsImmatureTorchflower").ticks(20, 40),
+				RosterEntry.of(ScytheScenarios::con02NetheriteFireResistant, "scythe_netherite_fire_resistant")
+						.fabricId("ScytheGameTest", "con02_netheriteFireResistant").ticks(20, 40),
+				RosterEntry.of(ScytheScenarios::fun04CropBonusAbsentOnZeroChanceTier,
+								"scythe_crop_bonus_absent_on_zero_tier")
+						.fabricId("ScytheGameTest", "fun04_cropBonusAbsentOnZeroChanceTier").ticks(20, 40),
+				RosterEntry.of(ScytheScenarios::fun05CropBonusAlwaysDropsAtFullChance,
+								"scythe_crop_bonus_always_at_full_chance")
+						.fabricId("ScytheGameTest", "fun05_cropBonusAlwaysDropsAtFullChance").ticks(20, 40),
+				RosterEntry.of(ScytheScenarios::neg07CropBonusSkipsNonCropBlock,
+								"scythe_crop_bonus_skips_non_crop_block")
+						.fabricId("ScytheGameTest", "neg07_cropBonusSkipsNonCropBlock").ticks(20, 40));
+
+		private Roster() {}
+	}
+
 	private ScytheScenarios() {
 	}
 
@@ -55,6 +104,8 @@ public final class ScytheScenarios {
 	/**
 	 * A wood scythe right-clicked on a grass patch clears every {@code scythe_harvestable} block in its
 	 * box while leaving a solid stone block (in the same box) and a grass block outside the box intact.
+	 *
+	 * @implements TC-SCYTHE-001-FUN01 — clears foliage in the box, keeps solids and blocks outside it.
 	 */
 	public static void fun01ClearsFoliageKeepsSolids(GameTestHelper helper) {
 		ServerPlayer player = makeSurvivalPlayer(helper);
@@ -99,6 +150,8 @@ public final class ScytheScenarios {
 	 * With shift held the scythe enters crop mode, so decorative foliage (not a crop) is left alone and
 	 * the swing returns PASS (no crop target present). Guards the crop-protection side of decor under
 	 * crop mode (MOD-098): a farmer shift-clicking over grass clears nothing.
+	 *
+	 * @implements TC-SCYTHE-001-NEG01 — shift (crop mode) over plain decor returns PASS and clears nothing.
 	 */
 	public static void neg01ShiftCropModeKeepsDecor(GameTestHelper helper) {
 		ServerPlayer player = makeSurvivalPlayer(helper);
@@ -122,6 +175,8 @@ public final class ScytheScenarios {
 	 * Each broken foliage block costs one durability (MOD-098: flat 1/block in either mode, regardless
 	 * of hardness). Uses leaves here; {@link #prf03DurabilityOnInstantBlock} covers the hardness-0 case
 	 * (grass) that used to be free.
+	 *
+	 * @implements TC-SCYTHE-001-PRF01 — durability drops by exactly the number of blocks broken (leaves).
 	 */
 	public static void prf01DurabilityPerBlock(GameTestHelper helper) {
 		ServerPlayer player = makeSurvivalPlayer(helper);
@@ -151,6 +206,8 @@ public final class ScytheScenarios {
 	 * The MOD-098 bug fix: short grass (hardness 0) used to be free under vanilla tool rules, so a
 	 * scythe never wore clearing it. Now every broken block costs 1, so a box of {@code N} grass blocks
 	 * must cost exactly {@code N} durability.
+	 *
+	 * @implements TC-SCYTHE-001-PRF03 — durability is spent on hardness-0 (instant) blocks too (MOD-098 fix).
 	 */
 	public static void prf03DurabilityOnInstantBlock(GameTestHelper helper) {
 		ServerPlayer player = makeSurvivalPlayer(helper);
@@ -177,7 +234,11 @@ public final class ScytheScenarios {
 
 	// ── PRF02: creative / instabuild spends no durability ──────────────────────────────────────────
 
-	/** A creative player clears the area but the tool takes no durability damage. */
+	/**
+	 * A creative player clears the area but the tool takes no durability damage.
+	 *
+	 * @implements TC-SCYTHE-001-PRF02 — creative / instabuild spends no durability.
+	 */
 	public static void prf02CreativeNoDurability(GameTestHelper helper) {
 		ServerPlayer player = makeSurvivalPlayer(helper);
 		player.setGameMode(GameType.CREATIVE);
@@ -205,7 +266,11 @@ public final class ScytheScenarios {
 
 	// ── BVA01: never breaks more than the tier's max-blocks cap ────────────────────────────────────
 
-	/** A dense area larger than the cap breaks exactly {@code maxBlocks} blocks and no more. */
+	/**
+	 * A dense area larger than the cap breaks exactly {@code maxBlocks} blocks and no more.
+	 *
+	 * @implements TC-SCYTHE-001-BVA01 — never breaks more than the tier's max-blocks cap.
+	 */
 	public static void bva01StopsAtMaxBlocks(GameTestHelper helper) {
 		ServerPlayer player = makeSurvivalPlayer(helper);
 		// Fill the whole stone-tier 3×3×3 box (27 cells) with leaves — leaves need no support, so a solid
@@ -249,7 +314,11 @@ public final class ScytheScenarios {
 
 	// ── NEG02: crops and water are not harvested in decor mode ────────────────────────────────────
 
-	/** Wheat and water are excluded from the decor tag and must survive an AOE over them (plain click). */
+	/**
+	 * Wheat and water are excluded from the decor tag and must survive an AOE over them (plain click).
+	 *
+	 * @implements TC-SCYTHE-001-NEG02 — crops and water are not harvested in decor mode.
+	 */
 	public static void neg02KeepsCropsAndWater(GameTestHelper helper) {
 		ServerPlayer player = makeSurvivalPlayer(helper);
 		platform(helper);
@@ -272,6 +341,8 @@ public final class ScytheScenarios {
 	/**
 	 * Shift + right-click (crop mode) over a patch of mature wheat harvests every mature wheat block in
 	 * the box. Each mature crop also costs 1 durability, same rule as decor mode.
+	 *
+	 * @implements TC-SCYTHE-002-FUN01 — crop mode (shift) harvests mature crops.
 	 */
 	public static void fun02CropModeHarvestsMature(GameTestHelper helper) {
 		ServerPlayer player = makeSurvivalPlayer(helper);
@@ -310,6 +381,8 @@ public final class ScytheScenarios {
 	/**
 	 * Crop mode never breaks a crop that is not yet mature. A box of age-0 wheat is left entirely
 	 * untouched by a shift-click, so young plants keep growing — the AOE-sickle promise.
+	 *
+	 * @implements TC-SCYTHE-002-NEG01 — crop mode keeps immature crops.
 	 */
 	public static void neg03CropModeKeepsImmature(GameTestHelper helper) {
 		ServerPlayer player = makeSurvivalPlayer(helper);
@@ -346,6 +419,8 @@ public final class ScytheScenarios {
 	 * Crop mode does not touch decorative foliage: a grass block inside the box survives a shift-click.
 	 * Only the two modes' target sets differ; this pins that crop mode is a strict subset (crops), not a
 	 * superset.
+	 *
+	 * @implements TC-SCYTHE-002-NEG02 — crop mode keeps decorative foliage.
 	 */
 	public static void neg04CropModeKeepsFoliage(GameTestHelper helper) {
 		ServerPlayer player = makeSurvivalPlayer(helper);
@@ -372,6 +447,8 @@ public final class ScytheScenarios {
 	 * fill the box; after a shift-click the top of each column is gone and the base remains, so the
 	 * crop can regrow. Guards MOD-098 decision 1 (leave the base growing) and the bug fix that the
 	 * naive version broke the base too.
+	 *
+	 * @implements TC-SCYTHE-002-FUN02 — crop mode harvests the stalk above a sugar-cane base, keeps the base.
 	 */
 	public static void fun03CropModeHarvestsCaneStalk(GameTestHelper helper) {
 		ServerPlayer player = makeSurvivalPlayer(helper);
@@ -416,6 +493,8 @@ public final class ScytheScenarios {
 	 * A single cactus block sitting on sand (its base, nothing above it) is never a harvest target:
 	 * the stalk rule requires the same block below, and below a lone cactus is sand. Breaking it would
 	 * kill the crop. Guards the base-protection side of the cactus/cane rule.
+	 *
+	 * @implements TC-SCYTHE-002-NEG03 — crop mode keeps a lone cactus base (no stalk above it).
 	 */
 	public static void neg05CropModeKeepsLoneCactus(GameTestHelper helper) {
 		ServerPlayer player = makeSurvivalPlayer(helper);
@@ -441,6 +520,8 @@ public final class ScytheScenarios {
 	 * the box must survive a shift-click. Guards the explicit {@code StemBlock} guard in
 	 * {@code isCropTarget}, which sits before the AGE fallback precisely because a ripe stem carries
 	 * AGE at max and would otherwise be caught there (the MOD-098 decision-2 bug).
+	 *
+	 * @implements TC-SCYTHE-002-NEG04 — crop mode keeps melon/pumpkin stems even when ripe.
 	 */
 	public static void neg06CropModeKeepsStem(GameTestHelper helper) {
 		ServerPlayer player = makeSurvivalPlayer(helper);
@@ -475,6 +556,8 @@ public final class ScytheScenarios {
 	 * {@code CropMaturity} trusted {@code CropBlock#isMaxAge}, which is unreachable for this crop, so it
 	 * was never harvestable by the scythe or the drone. The fix reads the AGE property's own top value
 	 * instead, same as every other tagged crop.
+	 *
+	 * @implements TC-SCYTHE-002-FUN03 — crop mode harvests torchflower_crop at its real max age (MOD-325).
 	 */
 	public static void fun06CropModeHarvestsTorchflowerAtMaxAge(GameTestHelper helper) {
 		ServerPlayer player = makeSurvivalPlayer(helper);
@@ -496,7 +579,7 @@ public final class ScytheScenarios {
 		}
 		// The wood tier's bonusSeedChance is 0 (see fun04), so this stays exact: no bonus roll can add a
 		// second seed on top of the loot table's deterministic one.
-		int seeds = countDrops(helper, Items.TORCHFLOWER_SEEDS);
+		int seeds = countDrops(helper, CLICK, Items.TORCHFLOWER_SEEDS);
 		if (seeds != 1) {
 			helper.fail("torchflower_crop's loot table is deterministic (exactly 1 seed) — expected 1, got "
 					+ seeds);
@@ -511,6 +594,8 @@ public final class ScytheScenarios {
 	 * Crop mode never breaks an immature {@code torchflower_crop} ({@code age = 0}). Pins the other half
 	 * of MOD-325: the AGE-property fallback must gate on the real top value (1), not silently harvest
 	 * every age once the {@code CropBlock}-specific short-circuit is gone.
+	 *
+	 * @implements TC-SCYTHE-002-NEG05 — crop mode keeps immature torchflower_crop (MOD-325).
 	 */
 	public static void neg08CropModeKeepsImmatureTorchflower(GameTestHelper helper) {
 		ServerPlayer player = makeSurvivalPlayer(helper);
@@ -535,7 +620,10 @@ public final class ScytheScenarios {
 	// ── CON02: only the netherite tier is fire-resistant ───────────────────────────────────────────
 
 	/** The netherite scythe carries DAMAGE_RESISTANT (survives lava) like vanilla netherite gear; the
-	 * diamond tier does not. Guards the per-tier {@code fireResistant()} against regression. */
+	 * diamond tier does not. Guards the per-tier {@code fireResistant()} against regression.
+	 *
+	 * @implements TC-SCYTHE-001-CON02 — only the netherite tier is fire-resistant.
+	 */
 	public static void con02NetheriteFireResistant(GameTestHelper helper) {
 		boolean netherite = new ItemStack(ModContent.SCYTHE_NETHERITE.get())
 				.has(net.minecraft.core.component.DataComponents.DAMAGE_RESISTANT);
@@ -573,12 +661,14 @@ public final class ScytheScenarios {
 	 * It asserts through a zero-chance tier, whose effective chance is {@code 0 × multiplier} — zero
 	 * for every possible value of the global knob. So even if the runner batches this body alongside
 	 * the scenario that mutates that shared static, this assertion still holds.
+	 *
+	 * @implements TC-SCYTHE-003-FUN01 — a 0 %-bonus tier (wood) yields the loot table only.
 	 */
 	public static void fun04CropBonusAbsentOnZeroChanceTier(GameTestHelper helper) {
 		ServerPlayer player = makeSurvivalPlayer(helper);
 		int harvested = harvestRepeatedly(helper, player, ModContent.SCYTHE_WOOD.get());
 
-		int seeds = countDrops(helper, Items.WHEAT_SEEDS);
+		int seeds = countDrops(helper, CLICK, Items.WHEAT_SEEDS);
 		if (seeds > BONUS_DECISION_THRESHOLD) {
 			helper.fail("wood scythe (0 % bonus) dropped " + seeds + " seeds from " + harvested
 					+ " plants — above the no-bonus threshold of " + BONUS_DECISION_THRESHOLD
@@ -594,23 +684,21 @@ public final class ScytheScenarios {
 	 * loot table alone can produce. See {@link #fun04CropBonusAbsentOnZeroChanceTier} for why the
 	 * assertion is a threshold and how wide the margin is.
 	 *
-	 * <p>The multiplier is restored in a {@code finally}: it is a global static, and leaving it raised
-	 * would silently change the yield of every scenario that runs after this one.
+	 * <p>The multiplier is held by a {@code ConfigOverrides.sync()} handle: it is a global static, and
+	 * leaving it raised would silently change the yield of every scenario that runs after this one.
+	 *
+	 * @implements TC-SCYTHE-003-FUN02 — at a guaranteed chance every crop yields one extra seed.
 	 */
 	public static void fun05CropBonusAlwaysDropsAtFullChance(GameTestHelper helper) {
 		ServerPlayer player = makeSurvivalPlayer(helper);
 
-		double previous = Config.scytheBonusSeedMultiplier;
 		// Large enough that any non-zero tier clamps to 1.0; iron ships at 0.12.
-		Config.scytheBonusSeedMultiplier = 1000.0;
 		int harvested;
-		try {
+		try (ConfigOverrides o = ConfigOverrides.sync().set("scytheBonusSeedMultiplier", 1000.0)) {
 			harvested = harvestRepeatedly(helper, player, ModContent.SCYTHE_IRON.get());
-		} finally {
-			Config.scytheBonusSeedMultiplier = previous;
 		}
 
-		int seeds = countDrops(helper, Items.WHEAT_SEEDS);
+		int seeds = countDrops(helper, CLICK, Items.WHEAT_SEEDS);
 		// A guaranteed bonus contributes exactly one seed per plant on top of the loot roll, so the
 		// total cannot fall to the no-bonus population without the bonus path being skipped.
 		if (seeds < BONUS_DECISION_THRESHOLD) {
@@ -633,6 +721,8 @@ public final class ScytheScenarios {
 	 * result), and quietly double a crop that has no seed at all — the same would then hold for
 	 * cactus, berry bushes and {@code pitcher_crop}. Cane stands in for that whole excluded family
 	 * because it is the one whose loot table makes an exact count possible.
+	 *
+	 * @implements TC-SCYTHE-003-NEG01 — a non-CropBlock crop (sugar cane) never gets the bonus.
 	 */
 	public static void neg07CropBonusSkipsNonCropBlock(GameTestHelper helper) {
 		ServerPlayer player = makeSurvivalPlayer(helper);
@@ -647,15 +737,11 @@ public final class ScytheScenarios {
 			}
 		}
 
-		double previous = Config.scytheBonusSeedMultiplier;
-		Config.scytheBonusSeedMultiplier = 1000.0;
-		try {
+		try (ConfigOverrides o = ConfigOverrides.sync().set("scytheBonusSeedMultiplier", 1000.0)) {
 			useScytheShift(helper, player, ModContent.SCYTHE_IRON.get());
-		} finally {
-			Config.scytheBonusSeedMultiplier = previous;
 		}
 
-		int canes = countDrops(helper, Items.SUGAR_CANE);
+		int canes = countDrops(helper, CLICK, Items.SUGAR_CANE);
 		if (canes != stalks) {
 			helper.fail("sugar cane is not a CropBlock and must get no bonus: harvested " + stalks
 					+ " stalks but " + canes + " canes dropped (expected exactly " + stalks + ")");
@@ -716,24 +802,6 @@ public final class ScytheScenarios {
 			}
 		}
 		return harvested;
-	}
-
-	/**
-	 * Total count of {@code item} lying around the rig. The radius mirrors
-	 * {@code TrellisScenarios.countDrops}, where both extremes were tried and rejected on the NeoForge
-	 * lane: a wider box reaches into the neighbouring gametest and counts its drops (green on Fabric,
-	 * whose layout is sparser — a loader-specific false pass), while {@code getBounds()} is too tight
-	 * for code-registered structures and returns zero.
-	 */
-	private static int countDrops(GameTestHelper helper, Item item) {
-		AABB box = new AABB(helper.absolutePos(CLICK)).inflate(2.0);
-		int total = 0;
-		for (ItemEntity entity : helper.getLevel().getEntitiesOfClass(ItemEntity.class, box)) {
-			if (entity.getItem().is(item)) {
-				total += entity.getItem().getCount();
-			}
-		}
-		return total;
 	}
 
 	// ── helpers ────────────────────────────────────────────────────────────────────────────────────

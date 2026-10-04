@@ -35,9 +35,11 @@ final class CubeMesh {
 	/**
 	 * Corner picks per face, in the vanilla winding — the same order {@code FaceInfo} feeds the block
 	 * bakery, so a face drawn here is visible from exactly the side it would be as part of a block
-	 * model. Each entry is three bits: X, Y, Z, set meaning the {@code to} extent.
+	 * model. Each entry is three bits: X, Y, Z, set meaning the {@code to} extent. Package-visible for
+	 * {@link QuadEmitter#cubeFace}, so a renderer drawing a box face by hand reads this table instead of
+	 * writing its own (MOD-716).
 	 */
-	private static final int[][] FACE_CORNERS = {
+	static final int[][] FACE_CORNERS = {
 			{0b110, 0b100, 0b000, 0b010}, // north — z at from
 			{0b111, 0b101, 0b100, 0b110}, // east  — x at to
 			{0b011, 0b001, 0b101, 0b111}, // south — z at to
@@ -46,7 +48,8 @@ final class CubeMesh {
 			{0b001, 0b000, 0b100, 0b101}, // down  — y at from
 	};
 
-	private static final float[][] FACE_NORMALS = {
+	/** Outward normal per face, in the order of {@link #FACE_CORNERS}. */
+	static final float[][] FACE_NORMALS = {
 			{0.0F, 0.0F, -1.0F}, {1.0F, 0.0F, 0.0F}, {0.0F, 0.0F, 1.0F},
 			{-1.0F, 0.0F, 0.0F}, {0.0F, 1.0F, 0.0F}, {0.0F, -1.0F, 0.0F},
 	};

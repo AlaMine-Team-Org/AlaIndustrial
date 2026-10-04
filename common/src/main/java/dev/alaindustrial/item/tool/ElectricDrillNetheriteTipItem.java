@@ -12,6 +12,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.Tool;
 import net.minecraft.world.level.block.Block;
+import dev.alaindustrial.item.energy.PoweredToolTooltip;
 
 /**
  * Netherite-Tipped Electric Drill (MOD-534) — the third and last tier of the drill line: the same
@@ -34,16 +35,15 @@ import net.minecraft.world.level.block.Block;
  * <li><b>Attack damage 7</b> (modifier 6.0 + the player's 1.0 base) against 6 on both tiers below —
  * matching the step vanilla gives netherite over diamond. Attack speed is untouched, and attacking
  * still spends no EU.</li>
- * <li><b>A 15 000 EU buffer</b> ({@code Config.electricDrillNetheriteTipBuffer}) against the 10 000 the
- * first two tiers share. This is the one difference that reaches outside the class: {@code ItemEnergy}
- * dispatches capacity on {@code instanceof}, so its branch for this class has to sit <b>before</b> the
- * {@code ElectricDrillItem} branch it would otherwise be swallowed by.</li>
+ * <li><b>A 15 000 EU buffer</b> ({@code ToolConfig.electricDrillNetheriteTipBuffer}) against the 10 000 the
+ * first two tiers share — the one {@code PoweredItem} answer this class overrides
+ * ({@link #toolTier}); since MOD-707 no branch order anywhere decides it.</li>
  * </ul>
  *
  * <h2>What is deliberately NOT changed</h2>
- * The per-block cost stays at {@code Config.electricDrillEuPerBlock} (50) and the intake stays at the LV
- * ceiling ({@code Config.electricDrillInputRate}, 32) — inherited through the same {@code instanceof}
- * chain with no branch of their own. So the upgrade buys ~300 blocks per charge instead of ~200 without
+ * The per-block cost stays at {@code ToolConfig.electricDrillEuPerBlock} (50) and the intake stays at the LV
+ * ceiling ({@code ToolConfig.electricDrillInputRate}, 32) — inherited from {@code ElectricDrillItem}
+ * with no override of their own. So the upgrade buys ~300 blocks per charge instead of ~200 without
  * charging any more per block: the player never pays more EU for the same work, and the cost of the tier
  * sits in its recipe (netherite) rather than in a running penalty. Torch placement (MOD-089) and its
  * 5 EU keep working unchanged, and the tool still never breaks.
@@ -104,5 +104,17 @@ public class ElectricDrillNetheriteTipItem extends ElectricDrillDiamondTipItem {
 	@Override
 	protected String messageKeyPrefix() {
 		return "item.alaindustrial.electric_drill_netherite_tip";
+	}
+
+	/** The one energy number of its own — half again the buffer of the two tiers below (MOD-534). */
+	@Override
+	protected ElectricToolTier toolTier() {
+		return ElectricToolTier.DRILL_NETHERITE_TIP;
+	}
+
+	/** Usage, then the charge (MOD-716, ADR-040). */
+	@Override
+	public PoweredToolTooltip toolTooltip() {
+		return DrillTooltips.of("electric_drill_netherite_tip");
 	}
 }

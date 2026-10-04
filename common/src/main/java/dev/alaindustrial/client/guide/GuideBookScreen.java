@@ -1,19 +1,17 @@
 package dev.alaindustrial.client.guide;
 
-import com.mojang.blaze3d.Blaze3D;
 import dev.alaindustrial.client.screen.GuiStyle;
 import dev.alaindustrial.client.guide.GuideContent.Book;
 import dev.alaindustrial.client.guide.GuideContent.Entry;
 import dev.alaindustrial.client.guide.GuideContent.Page;
 import dev.alaindustrial.client.guide.GuideContent.Tab;
-import java.net.URI;
+import dev.alaindustrial.compat.client.Links;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
-import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -375,15 +373,7 @@ public final class GuideBookScreen extends Screen {
 	}
 
 	private void openWiki() {
-		// 26.3 opens links through SDL rather than through a per-OS Util.getPlatform() handler, and both
-		// the opener and the confirmation screen now take a URI instead of a String.
-		URI url = URI.create(wikiUrl());
-		this.minecraft.setScreenAndShow(new ConfirmLinkScreen(confirmed -> {
-			if (confirmed) {
-				Blaze3D.openUri(url);
-			}
-			this.minecraft.setScreenAndShow(this);
-		}, url, true));
+		Links.confirmAndOpen(this.minecraft, this, wikiUrl());
 	}
 
 	/** Locale-aware wiki landing page (ru for Russian clients, en otherwise). */

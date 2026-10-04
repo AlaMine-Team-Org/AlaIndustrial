@@ -21,5 +21,6 @@ public final class ClientDisconnectReset {
 		TeleportFadeHud.reset(); // MOD-106
 		ArchiveRecordClient.reset(); // MOD-513
 		NetworkOverlayRenderer.clear(); // MOD-665
+		ServerBalance.reset(); // MOD-695
 	}
 }

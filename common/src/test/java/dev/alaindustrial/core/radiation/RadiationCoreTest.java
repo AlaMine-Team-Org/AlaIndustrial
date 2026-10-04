@@ -3,7 +3,6 @@ package dev.alaindustrial.core.radiation;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import dev.alaindustrial.Config;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -63,14 +62,14 @@ class RadiationCoreTest {
 	 */
 	@Test
 	void sourceWeakerThanDecayNeverAccumulates() {
-		int decay = Config.radiationTickInterval;
-		assertTrue(Config.radiationDoseHighPerItem > decay,
+		int decay = RadiationConfig.radiationTickInterval;
+		assertTrue(RadiationConfig.radiationDoseHighPerItem > decay,
 				"one refined-uranium item must outpace the decay, or fuel in the pockets does nothing");
-		assertTrue(Config.radiationDoseMediumPerItem > decay,
+		assertTrue(RadiationConfig.radiationDoseMediumPerItem > decay,
 				"one uranium ingot must outpace the decay");
-		assertTrue(Config.radiationDoseLowPerItem > decay,
+		assertTrue(RadiationConfig.radiationDoseLowPerItem > decay,
 				"one piece of ore must outpace the decay, or the low tier is decoration");
-		assertTrue(Config.radiationRodDosePerTick > decay,
+		assertTrue(RadiationConfig.radiationRodDosePerTick > decay,
 				"a fuelled rod must outpace the decay");
 
 		// The arithmetic itself, independent of the numbers: a sweep that adds exactly the decay leaves
@@ -93,7 +92,7 @@ class RadiationCoreTest {
 	@Test
 	void shieldingAgainstARodIsCapped() {
 		assertEquals(50, RadiationCore.shielded(1000, 4, 25, 95), "5 % gets through in the open core");
-		assertTrue(RadiationCore.shielded(1000, 4, 25, Config.radiationRodShieldCapPercent) > 0,
+		assertTrue(RadiationCore.shielded(1000, 4, 25, RadiationConfig.radiationRodShieldCapPercent) > 0,
 				"the shipped cap must leave something through, or the suit ends the mechanic");
 	}
 
@@ -125,8 +124,9 @@ class RadiationCoreTest {
 	/** Raw ore may make a miner queasy and must never do more than that. */
 	@Test
 	void lowTierStaysInsideTheFirstBand() {
-		int ceiling = RadiationCore.cappedCeiling(Config.radiationDoseCapacity, Config.radiationLowDoseCapPercent);
-		assertTrue(RadiationCore.level(ceiling, Config.radiationDoseCapacity) <= 1,
+		int ceiling = RadiationCore.cappedCeiling(RadiationConfig.radiationDoseCapacity,
+				RadiationConfig.radiationLowDoseCapPercent);
+		assertTrue(RadiationCore.level(ceiling, RadiationConfig.radiationDoseCapacity) <= 1,
 				"ore alone must never reach the band that damages the player");
 	}
 
@@ -248,7 +248,7 @@ class RadiationCoreTest {
 		// a vein. What arithmetic answers is whether "warmer" still works as the player walks, and the
 		// bands are what make it work: they follow the CONFIGURED radius rather than fixed distances,
 		// so shortening the reach shrinks the ladder instead of collapsing it onto one rung.
-		int radius = Config.geigerOreRadius;
+		int radius = RadiationConfig.geigerOreRadius;
 		assertEquals(3, RadiationCore.oreStep(0.0, radius), "standing on the vein is the top grade");
 		assertEquals(3, RadiationCore.oreStep(radius / 4.0, radius));
 		assertEquals(2, RadiationCore.oreStep(radius / 4.0 + 0.1, radius));
@@ -266,7 +266,7 @@ class RadiationCoreTest {
 		// it shared radiationSourceRadius, so it first spoke at the distance where the dose had already
 		// started climbing. Measured in game — three blocks from a chest of uranium, taking damage, one
 		// click a second. A detector has to speak in a band where the dose is still exactly zero.
-		assertTrue(Config.geigerRadius > Config.radiationSourceRadius,
+		assertTrue(RadiationConfig.geigerRadius > RadiationConfig.radiationSourceRadius,
 				"a counter that only hears as far as radiation reaches cannot warn about anything");
 	}
 
@@ -315,7 +315,7 @@ class RadiationCoreTest {
 	@Test
 	void aFreshReadingSurvivesAMissedSweep() {
 		// One missed sweep must not stutter the sound: the window is two sweeps, not one.
-		int interval = Config.radiationTickInterval;
+		int interval = RadiationConfig.radiationTickInterval;
 		assertTrue(RadiationCore.readingWentStale(1000, 1000 - 2L * interval - 1, interval));
 		assertTrue(!RadiationCore.readingWentStale(1000, 1000 - interval, interval),
 				"a reading one sweep old must still be alive");
@@ -328,7 +328,7 @@ class RadiationCoreTest {
 		// The point of the whole mechanism: the sweep has early exits (radiation switched off in the
 		// config, a creative player), and each of them leaves the last reading behind. Without an age
 		// the counter would rattle forever.
-		int interval = Config.radiationTickInterval;
+		int interval = RadiationConfig.radiationTickInterval;
 		long takenAt = 500;
 		assertTrue(!RadiationCore.readingWentStale(takenAt, takenAt, interval));
 		assertTrue(RadiationCore.readingWentStale(takenAt + 10L * interval, takenAt, interval),

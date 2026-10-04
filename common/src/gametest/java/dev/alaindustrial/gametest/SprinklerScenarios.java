@@ -1,10 +1,12 @@
 package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.SprinklerBlock;
 import dev.alaindustrial.block.entity.SprinklerBlockEntity;
 import dev.alaindustrial.core.fluid.FluidHolder;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.level.block.Blocks;
@@ -25,6 +27,29 @@ import net.minecraft.world.level.block.Blocks;
  * the config or the L1 lane can see that — only a clock can.
  */
 public final class SprinklerScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(SprinklerScenarios::fun01SpraysOncePerIntervalAndPays,
+								"sprinkler_sprays_once_per_interval_and_pays")
+						.fabricId("SprinklerGameTest", "tcSprink001Fun01_spraysOncePerIntervalAndPays").ticks(400)
+						.environment(Industrialization.id("config_overrides")),
+				RosterEntry.of(SprinklerScenarios::fun02HangingReachesTheFieldBelow,
+								"sprinkler_hanging_reaches_the_field_below")
+						.fabricId("SprinklerGameTest", "tcSprink001Fun02_hangingReachesTheFieldBelow").ticks(300)
+						.environment(Industrialization.id("config_overrides_2")),
+				RosterEntry.of(SprinklerScenarios::con01TankBelowPriceNeverFires,
+								"sprinkler_tank_below_price_never_fires")
+						.fabricId("SprinklerGameTest", "tcSprink001Con01_tankBelowPriceNeverFires").ticks(300)
+						.environment(Industrialization.id("config_overrides_3")),
+				RosterEntry.of(SprinklerScenarios::con02NothingToWaterCostsNothing,
+								"sprinkler_nothing_to_water_costs_nothing")
+						.fabricId("SprinklerGameTest", "tcSprink001Con02_nothingToWaterCostsNothing").ticks(300)
+						.environment(Industrialization.id("config_overrides_4")));
+
+		private Roster() {}
+	}
 
 	private SprinklerScenarios() {
 	}
@@ -48,31 +73,21 @@ public final class SprinklerScenarios {
 	private static final int WATCHED_INTERVALS = 4;
 	private static final int REQUIRED_SPRAYS = 3;
 
-	/**
-	 * Runs with the spray radius pinned to one block.
-	 *
-	 * <p>Gametests share one world and the shipped radius is 4, which reaches out of this rig and into
-	 * whatever scenario the server laid out next door — the sprinkler would then fertilise a
-	 * neighbour's crops, spend solution nobody asked it to, and make CON02 fail (or, worse, pass for
-	 * the wrong reason). Radius 1 keeps every target inside the cell this scenario built. Same trick,
-	 * same reason as {@code GardenDroneScenarios.withIsolatedZone}.
-	 *
-	 * <p>The restore has to happen INSIDE the sequence: a {@code finally} around the sequence
-	 * <em>builder</em> would put the radius back before a single tick had run. It is therefore the
-	 * FIRST statement of each scenario's closing step, so an assertion that fails still restores.
-	 *
-	 * <p><b>Known gap, deliberately not engineered around:</b> a scenario that never reaches its
-	 * closing step — a timeout — leaves the radius at 1 for the rest of the run. That is survivable
-	 * here and only here: nothing outside this suite reads {@code sprinklerRange}, and every scenario
-	 * in it sets the same value, so the worst case is that other sprinkler scenarios keep running
-	 * isolated. A key with readers elsewhere would need the two-phase treatment instead (one writer,
-	 * both positions inside one scenario).
-	 */
-	private static int pinRadius() {
-		int configured = Config.sprinklerRange;
-		Config.sprinklerRange = 1;
-		return configured;
-	}
+	// Every scenario below runs with the spray radius pinned to one block:
+	// ConfigOverrides.forTest(helper).set("sprinklerRange", 1).
+	//
+	// Gametests share one world and the shipped radius is 4, which reaches out of this rig and into
+	// whatever scenario the server laid out next door — the sprinkler would then fertilise a
+	// neighbour's crops, spend solution nobody asked it to, and make CON02 fail (or, worse, pass for
+	// the wrong reason). Radius 1 keeps every target inside the cell this scenario built. Same trick,
+	// same reason as GardenDroneScenarios.withIsolatedZone.
+	//
+	// The override outlives the sequence builder, so it is held by the test's forTest handle: the radius
+	// goes back when the test ENDS — passed, failed or timed out — with no restore written in the
+	// scenarios. The four scenarios pin the same knob, so each runs in its own ConfigOverrides test
+	// environment (batch): two holders of one key in one batch would be refused by the handle's owner
+	// registry, and before MOD-710 they silently restored each other's value. The environment of each
+	// scenario is named at its call and listed in ArchitectureRules.FOR_TEST_USERS.
 
 	private static SprinklerBlockEntity place(GameTestHelper helper, BlockPos pos, boolean hanging) {
 		helper.setBlock(pos, ModContent.SPRINKLER.get().defaultBlockState()
@@ -113,9 +128,13 @@ public final class SprinklerScenarios {
 	 * <p>Eight crops surround the block so the zone cannot run out of targets mid-count — wheat maxes
 	 * out after two or three bonemeals, and a single plant would stop being a valid target long before
 	 * the interval count was done, turning a cadence test into a crop-capacity test.
+	 *
+	 * @implements TC-SPRINK-001-FUN01 — the spray happens about once per configured interval and is
+	 * charged to the tank each time. The one test that can see a machine which sleeps between
+	 * attempts and so honours 41× its configured interval.
 	 */
 	public static void fun01SpraysOncePerIntervalAndPays(GameTestHelper helper) {
-		int configuredRadius = pinRadius();
+		ConfigOverrides.forTest(helper).set("sprinklerRange", 1); // environment alaindustrial:config_overrides
 		SprinklerBlockEntity be = place(helper, SPRINKLER, false);
 		fill(be, Config.sprinklerTankMb);
 		for (int dx = -1; dx <= 1; dx++) {
@@ -133,7 +152,6 @@ public final class SprinklerScenarios {
 				.thenExecuteFor(interval * WATCHED_INTERVALS, () -> {
 				})
 				.thenExecute(() -> {
-					Config.sprinklerRange = configuredRadius;
 					long spent = before - be.tank.amount;
 					long sprays = spent / pricePerSpray();
 					if (spent % pricePerSpray() != 0) {
@@ -166,9 +184,12 @@ public final class SprinklerScenarios {
 	 * A spray is the only thing that can move a tank, so "the hung one paid and the standing one did
 	 * not" is exactly the zone question and nothing else; "the crop grew" would also be answered by
 	 * vanilla's own random tick.
+	 *
+	 * @implements TC-SPRINK-001-FUN02 — a hanging sprinkler reaches three blocks down and a standing
+	 * one does not, which is the whole point of the ceiling mount.
 	 */
 	public static void fun02HangingReachesTheFieldBelow(GameTestHelper helper) {
-		int configuredRadius = pinRadius();
+		ConfigOverrides.forTest(helper).set("sprinklerRange", 1); // environment alaindustrial:config_overrides_2
 		SprinklerBlockEntity hung = place(helper, HANGING, true);
 		SprinklerBlockEntity stood = place(helper, STANDING_HIGH, false);
 		fill(hung, Config.sprinklerTankMb);
@@ -182,7 +203,6 @@ public final class SprinklerScenarios {
 				.thenExecuteFor(Math.max(1, Config.sprinklerIntervalTicks) * 2, () -> {
 				})
 				.thenExecute(() -> {
-					Config.sprinklerRange = configuredRadius;
 					if (hung.tank.amount >= hungBefore) {
 						helper.fail("a hanging sprinkler spent nothing on the crop three blocks below it — "
 								+ "it did not reach, so ceiling mounting waters the ceiling again");
@@ -212,9 +232,13 @@ public final class SprinklerScenarios {
 	 * <p>{@code price − 1} rather than zero on purpose: an empty tank cannot lose anything, so
 	 * "unchanged" would be true no matter what the code did. One millibucket short is the smallest
 	 * amount that makes the refusal a real decision.
+	 *
+	 * @implements TC-SPRINK-001-CON01 — a tank one millibucket short of a spray never fires. Asserted
+	 * on the tank rather than on a crop: vanilla grows wheat on its own random tick, so "the crop did
+	 * not grow" was a coin flip that went red in CI minutes after passing here.
 	 */
 	public static void con01TankBelowPriceNeverFires(GameTestHelper helper) {
-		int configuredRadius = pinRadius();
+		ConfigOverrides.forTest(helper).set("sprinklerRange", 1); // environment alaindustrial:config_overrides_3
 		SprinklerBlockEntity be = place(helper, SPRINKLER, false);
 		long stocked = pricePerSpray() - 1;
 		fill(be, stocked);
@@ -224,7 +248,6 @@ public final class SprinklerScenarios {
 				.thenExecuteFor(Math.max(1, Config.sprinklerIntervalTicks) * 2, () -> {
 				})
 				.thenExecute(() -> {
-					Config.sprinklerRange = configuredRadius;
 					if (be.tank.amount != stocked) {
 						helper.fail("a sprinkler one millibucket short of a spray spent "
 								+ (stocked - be.tank.amount) + " mB anyway — the price is not a gate");
@@ -239,9 +262,12 @@ public final class SprinklerScenarios {
 	 * <p>The demand-driven half of the contract, and the half a careless rewrite breaks first: paying
 	 * per attempt instead of per landed spray drains a tank over an empty field, and the only symptom
 	 * is a player wondering where the solution went.
+	 *
+	 * @implements TC-SPRINK-001-CON02 — a zone with nothing to grow costs nothing, so a finished
+	 * field does not quietly drain the tank.
 	 */
 	public static void con02NothingToWaterCostsNothing(GameTestHelper helper) {
-		int configuredRadius = pinRadius();
+		ConfigOverrides.forTest(helper).set("sprinklerRange", 1); // environment alaindustrial:config_overrides_4
 		SprinklerBlockEntity be = place(helper, SPRINKLER, false);
 		fill(be, Config.sprinklerTankMb);
 		long before = be.tank.amount;
@@ -250,7 +276,6 @@ public final class SprinklerScenarios {
 				.thenExecuteFor(Math.max(1, Config.sprinklerIntervalTicks) * 3, () -> {
 				})
 				.thenExecute(() -> {
-					Config.sprinklerRange = configuredRadius;
 					if (be.tank.amount != before) {
 						helper.fail("a sprinkler over an empty zone spent " + (before - be.tank.amount)
 								+ " mB on nothing");

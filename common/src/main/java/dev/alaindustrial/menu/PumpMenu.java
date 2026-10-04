@@ -3,10 +3,8 @@ package dev.alaindustrial.menu;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.block.entity.PumpBlockEntity;
 import dev.alaindustrial.registry.ModContent;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 
 /** Menu for the pump: fluid-bucket input + empty-bucket output. Mirrors the geothermal generator menu,
@@ -22,8 +20,8 @@ public class PumpMenu extends MachineMenu {
 	/** Client side. */
 	public PumpMenu(int syncId, Inventory playerInventory) {
 		super(ModContent.PUMP_MENU.get(), syncId, playerInventory,
-				new SimpleContainer(PumpBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT),
-				new SimpleContainerData(PumpBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL, ModContent.PUMP.get());
+				clientStub(PumpBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT, PumpBlockEntity.DATA_COUNT),
+				ModContent.PUMP.get());
 	}
 
 	@Override
@@ -39,12 +37,12 @@ public class PumpMenu extends MachineMenu {
 
 	/** Tank fill permille (0..1000) — sync channel 4. */
 	public int getFluidPermille() {
-		return data.get(4);
+		return channel(PumpBlockEntity.Channel.LEVEL_PERMILLE);
 	}
 
 	/** Permille denominator (1000) — sync channel 5. */
 	public int getFluidPermilleMax() {
-		return data.get(5);
+		return channel(PumpBlockEntity.Channel.PERMILLE_MAX);
 	}
 
 	/**
@@ -52,7 +50,7 @@ public class PumpMenu extends MachineMenu {
 	 * (-1) when empty. MOD-099: replaces the old 0/1/2 = none/lava/water encoding so any fluid resolves.
 	 */
 	public int getFluidRegistryId() {
-		return data.get(6);
+		return channel(PumpBlockEntity.Channel.FLUID_ID);
 	}
 
 }

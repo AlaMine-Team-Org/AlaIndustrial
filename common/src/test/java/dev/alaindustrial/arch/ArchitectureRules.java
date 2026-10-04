@@ -3,9 +3,14 @@ package dev.alaindustrial.arch;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 
+import com.tngtech.archunit.base.DescribedPredicate;
+import com.tngtech.archunit.core.domain.JavaAccess;
 import com.tngtech.archunit.core.domain.JavaClass;
 import com.tngtech.archunit.core.domain.JavaCodeUnit;
+import com.tngtech.archunit.core.domain.JavaFieldAccess;
+import com.tngtech.archunit.core.domain.JavaMethod;
 import com.tngtech.archunit.core.domain.JavaMethodCall;
+import com.tngtech.archunit.core.domain.JavaMethodReference;
 import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
@@ -13,6 +18,17 @@ import com.tngtech.archunit.lang.ArchCondition;
 import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.lang.ConditionEvents;
 import com.tngtech.archunit.lang.SimpleConditionEvent;
+import com.tngtech.archunit.library.freeze.FreezingArchRule;
+import dev.alaindustrial.Config;
+import dev.alaindustrial.block.entity.NoUpgradePanel;
+import dev.alaindustrial.config.Knob;
+import dev.alaindustrial.core.machine.MachineRates;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * Architectural boundaries of {@code common/}, enforced against the compiled bytecode (MOD-308).
@@ -79,6 +95,16 @@ public class ArchitectureRules {
 					+ "class loads there, while Fabric shows no symptom at all");
 
 	/**
+	 * The packages allowed to depend on client types (see {@link #clientTypesStayInsideClientPackages}):
+	 * the client tree, the client mixins, and the client half of the version facades (MOD-703, ADR-036).
+	 */
+	static final String[] CLIENT_TYPE_HOSTS = {
+		"dev.alaindustrial.client..",
+		"dev.alaindustrial.mixin.client..",
+		"dev.alaindustrial.compat.client..",
+	};
+
+	/**
 	 * Client-only Minecraft types stay inside the client packages (MOD-435).
 	 *
 	 * <p>A dedicated server ships without {@code net.minecraft.client}, {@code com.mojang.blaze3d} and
@@ -117,12 +143,19 @@ public class ArchitectureRules {
 	 * (the stands that do touch client types) lives in {@code fabric/src/gametest}, outside this
 	 * subproject and outside this rule.
 	 *
+	 * <p><b>The version facades of {@code compat.client} are hosts too (MOD-703, ADR-036).</b> A facade
+	 * whose signature carries a client type ({@code PoseStack}, {@code SubmitNodeCollector}, {@code Screen},
+	 * {@code InputConstants.Type}) lives in {@code dev.alaindustrial.compat.client} — inside the one facade
+	 * package, and still client-only: it is reached only from client code. The rest of
+	 * {@code dev.alaindustrial.compat} stays server-safe; {@code ArchitectureRulesNegativeControl} proves the
+	 * host list admits {@code compat.client} and nothing else under {@code compat}.
+	 *
 	 * <p>A fluent rule, so the {@code satisfied}/{@code violated} inversion trap described on
 	 * {@link #useUnorderedCollections()} does not apply here.
 	 */
 	@ArchTest
 	static final ArchRule clientTypesStayInsideClientPackages = noClasses()
-			.that().resideOutsideOfPackages("dev.alaindustrial.client..", "dev.alaindustrial.mixin.client..")
+			.that().resideOutsideOfPackages(CLIENT_TYPE_HOSTS)
 			.should().dependOnClassesThat().resideInAnyPackage("net.minecraft.client..",
 					"com.mojang.blaze3d..", "com.mojang.renderpearl..")
 			.because("a dedicated server has no client classes: a top-level reference to one from "
@@ -240,6 +273,9 @@ public class ArchitectureRules {
 		"dev.alaindustrial.core.fluid..",
 		"dev.alaindustrial.core.item..",
 		"dev.alaindustrial.core.net..",
+		// MOD-715: the monitor wall's node bookkeeping joins the shared network frame; its panel and
+		// container order decides which panels go dark when the cards run out (ADR-006).
+		"dev.alaindustrial.core.monitor..",
 		"dev.alaindustrial.network..",
 		"dev.alaindustrial.stats..",
 		"dev.alaindustrial.client.dashboard..",
@@ -272,11 +308,45 @@ public class ArchitectureRules {
 					+ "(see docs/adr/ADR-006-ordered-collections-in-core.md)");
 
 	/**
+	 * The packages the core layer may not reach (ADR-039). {@code registry} is the root of the build —
+	 * everything may be reached from it, it from nothing but the loader entry points and the client
+	 * manifests; {@code block} is the layer above the core.
+	 */
+	static final String[] ABOVE_THE_CORE = {"dev.alaindustrial.block..", "dev.alaindustrial.registry.."};
+
+	/**
+	 * The core layer rule itself, unfrozen: no class in {@code core} depends on a block or the registry.
+	 * Kept separate from its frozen form so the negative control can prove it sees violations at all.
+	 */
+	static final ArchRule CORE_LAYER = noClasses()
+			.that().resideInAPackage("dev.alaindustrial.core..")
+			.should().dependOnClassesThat().resideInAnyPackage(ABOVE_THE_CORE)
+			.because("core is the lowest layer of game logic (coding.md §3, ADR-039): a core class that "
+					+ "names a block or the registry has to change for every new block, and drags the block "
+					+ "layer into everything that only wanted the core. Declare an interface in core "
+					+ "(CableNode, FluidPipeNode, StorageEndpoint, EnergyPortHost) and implement it in the block");
+
+	/**
+	 * {@link #CORE_LAYER} under {@link FreezingArchRule} (MOD-715, ADR-039): today's violations are a
+	 * baseline in {@code common/src/test/archunit-store}, a new one fails, and — because the store refuses
+	 * updates ({@code archunit.properties}) — so does a fixed one until the baseline is shrunk on purpose:
+	 * <pre>
+	 * JAVA_TOOL_OPTIONS="-Darchunit.freeze.store.default.allowStoreUpdate=true"
+	 *   ./gradlew :common:test --tests dev.alaindustrial.arch.ArchitectureRules
+	 * </pre>
+	 * The baseline only shrinks; the network kernels are not in it (pinned by the negative control). The
+	 * store is keyed by this rule's description, {@code because} text included: rewording it means writing
+	 * the store anew, with {@code allowStoreCreation=true} next to {@code allowStoreUpdate=true}.
+	 */
+	@ArchTest
+	static final ArchRule coreDoesNotDependOnBlocksOrRegistry = FreezingArchRule.freeze(CORE_LAYER);
+
+	/**
 	 * A machine must derive its drain and its operation length through the INSTANCE helpers
-	 * ({@code effectiveEuPerTick} / {@code effectiveDuration}), never through the static
-	 * {@code Config} shortcuts.
+	 * ({@code effectiveEuPerTick} / {@code effectiveDuration}), never through the static tariff formula
+	 * ({@code MachineRates}, MOD-710; its {@code Config} delegates are gone since batch 4b).
 	 *
-	 * <p>{@code Config.machineEuPerTickEffective()} and {@code Config.scaledDuration()} are static: they
+	 * <p>{@code MachineRates.euPerTick}/{@code duration} are static: they
 	 * do not know which block asked, so they cannot see the overclocker chips in its upgrade panel
 	 * (MOD-392). A machine calling them from its tick silently ignores the upgrade — the player spent
 	 * the resources and nothing happened. This is not hypothetical: the assembler ignored the global
@@ -293,9 +363,399 @@ public class ArchitectureRules {
 			.that().resideInAPackage("dev.alaindustrial.block.entity..")
 			.and().doNotHaveSimpleName("MachineBlockEntity")
 			.should(callStaticRateShortcutOutsideConstructor())
-			.because("the static Config shortcuts cannot see a machine's overclocker chips: call "
+			.because("the static tariff shortcuts cannot see a machine's overclocker chips: call "
 					+ "effectiveEuPerTick(base) / effectiveDuration(base) instead. Seeding from a "
 					+ "constructor stays allowed — there is no inventory to read a chip from yet");
+
+	/**
+	 * Client code reads the balance through {@code ServerBalance}, never from {@code Config} (MOD-695).
+	 *
+	 * <p>On a dedicated server the client's {@code Config} holds the PLAYER's own file, which is usually
+	 * the untouched default; the server's numbers arrive in {@code ConfigSyncPayload} and live in
+	 * {@code ServerBalance}. A tooltip or a screen that reads {@code Config.someKnob} shows a number the
+	 * server does not play by — the mastery level, the teleporter's free points, every tooltip figure
+	 * did exactly that until MOD-695. {@code ServerBalance} itself is the one exemption: its accessors
+	 * fall back to the local value while no snapshot has arrived.
+	 *
+	 * <p>Two shapes count as a read, both seen in the bytecode: a GET of a field carrying {@code @Knob} in
+	 * ANY holder ({@code Config} or a per-subsystem holder of ADR-034, MOD-710), and a call to a holder
+	 * method that itself reads one. No holder declares such a shortcut since MOD-710 batch 4b inlined the
+	 * tariff delegates into {@code MachineRates}; the arm stays as the guard against a new one. A holder
+	 * method that reads no knob — a pure formula — stays allowed: fed the server's numbers, it is the one
+	 * formula both sides share.
+	 */
+	@ArchTest
+	static final ArchRule clientReadsBalanceThroughServerBalance = noClasses()
+			.that().resideInAPackage("dev.alaindustrial.client..")
+			.and().doNotHaveFullyQualifiedName("dev.alaindustrial.client.ServerBalance")
+			.should(readBalanceKnobsFromConfig())
+			.because("on a dedicated server Config holds the player's own file, not the server's balance: "
+					+ "read the knob through dev.alaindustrial.client.ServerBalance, which holds the "
+					+ "server's snapshot (MOD-695)");
+
+	/**
+	 * An item's own tooltip reads the balance through {@code ServerBalance} too (MOD-695).
+	 * {@code Item#appendHoverText} lives in item code, outside {@code client..}, but it runs on the client:
+	 * a knob read there from {@code Config} is the player's own file on a dedicated server, and the tooltip
+	 * disagreed with the machine tooltips and screens (the mutation chip's cost, the soul vessel's
+	 * thresholds). Scoped to the tooltip bodies — the method and the lambdas javac lifts out of it — so the
+	 * same class may keep reading {@code Config} in its server-side logic.
+	 */
+	@ArchTest
+	static final ArchRule itemTooltipsReadBalanceThroughServerBalance = noClasses()
+			.that().resideOutsideOfPackage("dev.alaindustrial.client..")
+			.should(readBalanceKnobsFromConfigIn(ArchitectureRules::isTooltipBody, "in an item tooltip"))
+			.because("appendHoverText runs on the client, whose Config is the player's own file on a "
+					+ "dedicated server: read the knob through dev.alaindustrial.client.ServerBalance (MOD-695)");
+
+	/**
+	 * {@code appendHoverText} itself, or a lambda javac lifted out of it. ArchUnit 1.x already attributes
+	 * a lambda's accesses to the declaring method, so the second arm is a guard for an importer that does
+	 * not; the negative control proves a read inside the lambda is reported either way.
+	 *
+	 * <p>MOD-716 (ADR-040): a block's {@code machineTooltip()} and a powered item's {@code toolTooltip()} are
+	 * tooltip bodies as well — declared in block and item code, read on the client.
+	 */
+	static boolean isTooltipBody(JavaCodeUnit codeUnit) {
+		String name = codeUnit.getName();
+		for (String body : TOOLTIP_BODIES) {
+			if (body.equals(name) || name.startsWith("lambda$" + body + "$")) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/** Methods whose body builds a tooltip that is shown on the client. */
+	private static final List<String> TOOLTIP_BODIES = List.of("appendHoverText", "machineTooltip", "toolTooltip");
+
+	/** Name of the knob annotation, taken from the class so a move is a compile error, not a blind rule. */
+	private static final String KNOB_ANNOTATION = Knob.class.getName();
+
+	/**
+	 * A GET of a {@code @Knob} field of {@code Config}, or a call/reference to a knob holder's method
+	 * that performs one. Reports {@code satisfied}: consumed by {@code noClasses().should(…)}, so the
+	 * inversion described on {@link #useUnorderedCollections()} applies, and
+	 * {@code ArchitectureRulesNegativeControl} proves it on a fixture pair.
+	 */
+	static ArchCondition<JavaClass> readBalanceKnobsFromConfig() {
+		return readBalanceKnobsFromConfigIn(codeUnit -> true, "");
+	}
+
+	/** {@link #readBalanceKnobsFromConfig()} restricted to the code units {@code scope} accepts. */
+	static ArchCondition<JavaClass> readBalanceKnobsFromConfigIn(Predicate<JavaCodeUnit> scope, String where) {
+		return new ArchCondition<>(("read a balance knob from Config " + where).strip()) {
+			@Override
+			public void check(JavaClass item, ConditionEvents events) {
+				for (JavaCodeUnit codeUnit : item.getCodeUnits()) {
+					if (!scope.test(codeUnit)) {
+						continue;
+					}
+					for (JavaFieldAccess access : codeUnit.getFieldAccesses()) {
+						if (readsKnob(access)) {
+							events.add(SimpleConditionEvent.satisfied(item, access.getTargetOwner().getSimpleName()
+									+ "." + access.getName() + " read in " + codeUnit.getFullName()
+									+ " — use ServerBalance."
+									+ access.getName() + "()"));
+						}
+					}
+					for (JavaMethodCall call : codeUnit.getMethodCallsFromSelf()) {
+						call.getTarget().resolveMember().filter(ArchitectureRules::readsKnobItself)
+								.ifPresent(target -> events.add(SimpleConditionEvent.satisfied(item,
+										target.getOwner().getSimpleName() + "." + target.getName() + "() called in "
+												+ codeUnit.getFullName()
+												+ " — it reads a knob; use the ServerBalance twin")));
+					}
+					for (JavaMethodReference reference : codeUnit.getMethodReferencesFromSelf()) {
+						reference.getTarget().resolveMember().filter(ArchitectureRules::readsKnobItself)
+								.ifPresent(target -> events.add(SimpleConditionEvent.satisfied(item,
+										"a reference to " + target.getOwner().getSimpleName() + "." + target.getName()
+												+ " in " + codeUnit.getFullName() + " — it reads a knob")));
+					}
+				}
+			}
+		};
+	}
+
+	/**
+	 * A GET of a field annotated {@code @Knob}, whichever holder declares it. The annotation, not the owner,
+	 * decides: a knob moved out of {@code Config} by the per-subsystem split (ADR-034) must stay covered
+	 * without an edit here — an owner test against the string {@code "dev.alaindustrial.Config"} would have
+	 * gone blind on the first slice.
+	 */
+	private static boolean readsKnob(JavaFieldAccess access) {
+		return access.getAccessType() == JavaFieldAccess.AccessType.GET
+				&& access.getTarget().resolveMember().map(field -> field.isAnnotatedWith(KNOB_ANNOTATION))
+						.orElse(false);
+	}
+
+	/** Class names of every knob holder the registry scans ({@code Config} and the per-subsystem holders). */
+	private static final Set<String> KNOB_HOLDERS = Config.REGISTRY.holders().stream()
+			.map(Class::getName).collect(Collectors.toCollection(LinkedHashSet::new));
+
+	/** A class the knob registry scans ({@code Config} or a per-subsystem holder, ADR-034). */
+	static DescribedPredicate<JavaClass> isKnobHolder() {
+		return DescribedPredicate.describe("are knob holders", javaClass -> KNOB_HOLDERS.contains(javaClass.getName()));
+	}
+
+	/** The classes {@link #energyKernelsReadNoKnobHolder} covers, nested classes included. */
+	static final String ENERGY_KERNELS = "dev\\.alaindustrial\\.core\\.energy\\."
+			+ "(EnergyNetwork|DischargePlan|DirectAdjacencyDistributor|EnergyLineDistributor|LineView)(\\$.*)?";
+
+	/**
+	 * The energy kernels take the balance they read as a value (MOD-710 batch 5, CORE-10): {@code NetworkBalance},
+	 * read from {@code Config} by {@code NetworkManager.balance()} and handed in. A kernel that reads a knob
+	 * holder itself is back to a hidden global: an L1 test of it would have to mutate {@code Config}, and a
+	 * tick pass could see two values of one knob. {@code NetworkManager} is the boundary and stays outside.
+	 */
+	@ArchTest
+	static final ArchRule energyKernelsReadNoKnobHolder = noClasses()
+			.that().haveNameMatching(ENERGY_KERNELS)
+			.should().dependOnClassesThat(isKnobHolder())
+			.because("the energy algorithms get their knobs in NetworkBalance, built by NetworkManager once per "
+					+ "tick pass (MOD-710, CORE-10): read a new one there and pass it in");
+
+	/**
+	 * A knob holder: a class the registry scans, or any class that declares a {@code @Knob} field — the
+	 * annotation decides here too, so the negative control can prove the shortcut arm on a fixture holder.
+	 */
+	private static boolean declaresKnobs(JavaClass owner) {
+		return KNOB_HOLDERS.contains(owner.getFullName())
+				|| owner.getFields().stream().anyMatch(field -> field.isAnnotatedWith(KNOB_ANNOTATION));
+	}
+
+	/** A method of a knob holder whose own body reads a knob. */
+	private static boolean readsKnobItself(JavaMethod method) {
+		if (!declaresKnobs(method.getOwner())) {
+			return false;
+		}
+		for (JavaFieldAccess access : method.getFieldAccesses()) {
+			if (readsKnob(access)) {
+				return true;
+			}
+		}
+		// One level of delegation: a shortcut that reads its knobs itself is caught above, but one could
+		// delegate to another shortcut instead.
+		for (JavaMethodCall call : method.getMethodCallsFromSelf()) {
+			if (call.getTarget().resolveMember().filter(target -> !target.equals(method)
+					&& declaresKnobs(target.getOwner())
+					&& target.getFieldAccesses().stream().anyMatch(ArchitectureRules::readsKnob)).isPresent()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/** Prefix of the loader-neutral gametest scenarios' class names, {@code ConfigOverrides} included (MOD-710). */
+	private static final String GAMETEST_CLASSES = "dev.alaindustrial.gametest.";
+
+	/** That package and its subpackages, as an ArchUnit package identifier. */
+	static final String GAMETEST_PACKAGE = GAMETEST_CLASSES + ".";
+
+	/** The one class through which a gametest may change a balance knob. */
+	static final String CONFIG_OVERRIDES = GAMETEST_CLASSES + "ConfigOverrides";
+
+	/**
+	 * A gametest changes a balance knob only through {@code ConfigOverrides} (MOD-710, CFG-3).
+	 *
+	 * <p>A scenario that writes {@code Config.<knob> = …} itself has no owner and no guaranteed restore:
+	 * five hand-written save/finally idioms existed, a timeout skipped every one of them, and two
+	 * scenarios fighting over one knob restored each other's values in the wrong order (the MOD-469
+	 * leak). {@code ConfigOverrides.sync()} restores in {@code close()}; {@code forTest(helper)} restores
+	 * when the test ends however it ends, and its owner registry refuses a second holder of one key.
+	 *
+	 * <p>The rule reads the SET of a field annotated {@code @Knob}, whatever class holds it, so a knob
+	 * that moves to a per-subsystem holder (ADR-034) stays covered without an edit here. A compound
+	 * {@code Config.x += 1} is a GET and a SET and is caught by the SET. {@code ConfigOverrides} itself
+	 * is inside the package and NOT exempted: it writes through the knob's reflected {@code Field}, so a
+	 * bytecode write from it would be a defect too.
+	 *
+	 * <p><b>Scope.</b> {@code :common}'s test runtime classpath carries the {@code gametest} source set's
+	 * output, so every class under {@code dev.alaindustrial.gametest..} of {@code common/src/gametest}
+	 * is imported here, and {@code ArchitectureRulesNegativeControl} floors that the import is not blind.
+	 * The loaders' own gametest source sets ({@code fabric/src/gametest}, {@code neoforge/src/gametest})
+	 * are outside this subproject and review-only; neither holds a direct write today. L1 tests that set
+	 * a knob are outside the rule too ({@code DoNotIncludeTests}).
+	 *
+	 * <p>A {@code noClasses().should(…)} rule: the condition reports {@code satisfied} per write, see
+	 * {@link #useUnorderedCollections()} for the inversion, and the negative control proves it on a
+	 * violator and a clean twin.
+	 */
+	@ArchTest
+	static final ArchRule gametestsWriteKnobsOnlyThroughConfigOverrides = noClasses()
+			.that().resideInAPackage(GAMETEST_PACKAGE)
+			.should(writeAKnobField())
+			.because("a direct write to a Config knob has no owner and no restore on a timeout, and two "
+					+ "scenarios on one knob restore each other's value in the wrong order: use "
+					+ "ConfigOverrides.sync() inside one call or ConfigOverrides.forTest(helper) across ticks "
+					+ "(MOD-710)");
+
+	/**
+	 * The scenarios that may hold a knob ACROSS TICKS with {@code ConfigOverrides.forTest(helper)}, each
+	 * with the gametest environment it runs in and why (MOD-710; modelled on the lane-parity gate's
+	 * {@code LOADER_ONLY}). Key: {@code <declaring class>.<method>}; value: environment, then the reason.
+	 *
+	 * <p>A held override is visible to every scenario ticking in the same gametest batch, and the owner
+	 * registry stops a second WRITER but never a reader (the MOD-469 incident was a reader). So a
+	 * multi-tick holder runs in a {@code alaindustrial:config_overrides[_N]} environment: the game batches
+	 * tests by environment and runs the batches one after another. Two holders of ONE knob may not share a
+	 * batch, hence the numbered environments. The environment is named here and wired by hand in both
+	 * lanes — Fabric {@code @GameTest(environment = …)} with {@code data/alaindustrial/test_environment/
+	 * <name>.json}, NeoForge {@code NeoForgeGameTests.registerInEnvironment}.
+	 *
+	 * <p>Adding an entry is a decision: prefer {@code ConfigOverrides.sync()} inside one synchronous call.
+	 * {@code ArchitectureRulesNegativeControl} fails on an entry nobody calls any more.
+	 */
+	static final Map<String, String> FOR_TEST_USERS = Map.ofEntries(
+			Map.entry(GAMETEST_CLASSES + "OilScenarios.fun05BurnSpreadsAcrossPool",
+					"alaindustrial:config_overrides — holds oilBurns for a 120-tick burn; shares its knob with "
+							+ "neg02, which therefore sits in config_overrides_2"),
+			Map.entry(GAMETEST_CLASSES + "OilScenarios.neg02LavaNeighbourNeverIgnites",
+					"alaindustrial:config_overrides_2 — holds oilBurns for a 90-tick observation window"),
+			Map.entry(GAMETEST_CLASSES + "OilScenarios.fun11SootOnlyWhereOilBurntOut",
+					"alaindustrial:config_overrides — holds oilSootChance until the fires burn out"),
+			Map.entry(GAMETEST_CLASSES + "SprinklerScenarios.fun01SpraysOncePerIntervalAndPays",
+					"alaindustrial:config_overrides — pins sprinklerRange while a real-tick sequence runs"),
+			Map.entry(GAMETEST_CLASSES + "SprinklerScenarios.fun02HangingReachesTheFieldBelow",
+					"alaindustrial:config_overrides_2 — pins sprinklerRange; one sprinkler scenario per batch"),
+			Map.entry(GAMETEST_CLASSES + "SprinklerScenarios.con01TankBelowPriceNeverFires",
+					"alaindustrial:config_overrides_3 — pins sprinklerRange; one sprinkler scenario per batch"),
+			Map.entry(GAMETEST_CLASSES + "SprinklerScenarios.con02NothingToWaterCostsNothing",
+					"alaindustrial:config_overrides_4 — pins sprinklerRange; one sprinkler scenario per batch"),
+			Map.entry(GAMETEST_CLASSES + "ConfigOverridesScenarios.restoredWhenTheOwningTestEnds",
+					"alaindustrial:config_overrides — self-test of the end-of-test restore; holds a knob no other "
+							+ "scenario reads for five ticks"),
+			Map.entry(GAMETEST_CLASSES + "ConfigOverridesScenarios.secondOwnerIsRefusedNamingTheFirst",
+					"the lane's default environment (Fabric minecraft:default, NeoForge alaindustrial:empty_env) — "
+							+ "self-test, one synchronous body on knobs no other scenario reads"),
+			Map.entry(GAMETEST_CLASSES + "ConfigOverridesScenarios.restoredAfterATimeout",
+					"the lane's default environment (Fabric minecraft:default, NeoForge alaindustrial:empty_env) — "
+							+ "self-test, one synchronous body on a knob no other scenario reads"));
+
+	/**
+	 * Only the scenarios of {@link #FOR_TEST_USERS} may call {@code ConfigOverrides.forTest}: a held
+	 * override outside a dedicated environment is a reader trap (see the list's javadoc).
+	 */
+	@ArchTest
+	static final ArchRule forTestIsHeldOnlyByTheListedScenarios = noClasses()
+			.that().resideInAPackage(GAMETEST_PACKAGE)
+			.and().doNotHaveFullyQualifiedName(CONFIG_OVERRIDES)
+			.should(callForTestOutside(CONFIG_OVERRIDES, FOR_TEST_USERS.keySet()))
+			.because("a knob held across ticks is visible to every scenario in the same gametest batch: only the "
+					+ "scenarios of ArchitectureRules.FOR_TEST_USERS, each in its own alaindustrial:config_overrides "
+					+ "environment, may use ConfigOverrides.forTest — prefer ConfigOverrides.sync() (MOD-710)");
+
+	/** The content manifest's aggregator and the package of its domain files (MOD-711, batch 3). */
+	static final String CONTENT_MANIFEST = "dev.alaindustrial.registry.ContentManifest";
+	static final String CONTENT_DOMAINS = "dev.alaindustrial.registry.content";
+
+	/**
+	 * A content domain initialises on its own (MOD-711, batch 3): no class of {@code registry.content}
+	 * touches a static member of the aggregator {@code ContentManifest}, and no domain file
+	 * ({@code *Content}) touches a member of another domain file.
+	 *
+	 * <p>{@code ContentManifest} builds its four lists by reading every domain's {@code DOMAIN} field, so it
+	 * initialises the domains from inside its own static initialiser. A domain that read
+	 * {@code ContentManifest.ITEMS} back — or called a method that does — would re-enter a class whose
+	 * initialisation is in progress on the same thread: the JVM hands out the half-built class and the list
+	 * is {@code null}, a crash on the first lane at best. A domain that named another domain's constant
+	 * would start that domain's initialiser inside its own, while its own block collection is open
+	 * ({@code ContentDeclarations.beginBlocks()} refuses that at run time; this rule refuses it at build
+	 * time). The nested records ({@code ContentManifest.BlockDef} and the like) are separate classes and stay
+	 * allowed: building one does not initialise the aggregator.
+	 */
+	@ArchTest
+	static final ArchRule contentDomainsInitialiseOnTheirOwn = noClasses()
+			.that().resideInAPackage(CONTENT_DOMAINS + "..")
+			.should().accessTargetWhere(startsAnotherManifestInitialiser(CONTENT_MANIFEST, CONTENT_DOMAINS))
+			.because("ContentManifest initialises the domains while building its lists: a domain that reads the "
+					+ "aggregator back sees a half-built class, and one that names another domain starts its "
+					+ "initialiser inside its own (MOD-711). Declare the entry in its own domain file");
+
+	/**
+	 * An access to a member of {@code aggregator}, or of a domain class ({@code *Content} directly in
+	 * {@code domainPackage}) other than the accessing class itself. Parametrised so the negative control
+	 * can aim the same predicate at a fixture package.
+	 */
+	static DescribedPredicate<JavaAccess<?>> startsAnotherManifestInitialiser(String aggregator,
+			String domainPackage) {
+		return DescribedPredicate.describe("a member of " + aggregator + " or of another domain file of "
+				+ domainPackage, access -> {
+					JavaClass target = access.getTargetOwner();
+					if (target.getFullName().equals(aggregator)) {
+						return true;
+					}
+					return target.getPackageName().equals(domainPackage) && target.getSimpleName().endsWith("Content")
+							&& !target.equals(access.getOriginOwner());
+				});
+	}
+
+	/**
+	 * A SET of a {@code @Knob}-annotated field, in a method, a constructor, an initializer or a lambda.
+	 * Reports {@code satisfied} — consumed by {@code noClasses().should(…)}, so the inversion described on
+	 * {@link #useUnorderedCollections()} applies.
+	 */
+	static ArchCondition<JavaClass> writeAKnobField() {
+		return new ArchCondition<>("write a @Knob field") {
+			@Override
+			public void check(JavaClass item, ConditionEvents events) {
+				for (JavaCodeUnit codeUnit : item.getCodeUnits()) {
+					for (JavaFieldAccess access : codeUnit.getFieldAccesses()) {
+						if (access.getAccessType() == JavaFieldAccess.AccessType.SET && access.getTarget()
+								.resolveMember().map(field -> field.isAnnotatedWith(KNOB_ANNOTATION)).orElse(false)) {
+							events.add(SimpleConditionEvent.satisfied(item, access.getTargetOwner().getSimpleName()
+									+ "." + access.getName() + " written in " + codeUnit.getFullName()
+									+ " — hold it with ConfigOverrides.sync() or forTest(helper)"));
+						}
+					}
+				}
+			}
+		};
+	}
+
+	/**
+	 * A call to, or a method reference of, {@code <ownerFullName>.forTest} from a code unit whose
+	 * {@code <class>.<method>} is not in {@code allowed}. A lambda javac lifted out of a method is
+	 * attributed to that method. Reports {@code satisfied}: {@code noClasses().should(…)} inverts it.
+	 */
+	static ArchCondition<JavaClass> callForTestOutside(String ownerFullName, Set<String> allowed) {
+		return new ArchCondition<>("call " + ownerFullName + ".forTest outside the allow-list") {
+			@Override
+			public void check(JavaClass item, ConditionEvents events) {
+				for (JavaCodeUnit codeUnit : item.getCodeUnits()) {
+					String caller = forTestCaller(codeUnit);
+					if (allowed.contains(caller)) {
+						continue;
+					}
+					for (JavaMethodCall call : codeUnit.getMethodCallsFromSelf()) {
+						if (isForTest(call.getTargetOwner().getFullName(), call.getName(), ownerFullName)) {
+							events.add(SimpleConditionEvent.satisfied(item, call.getDescription()
+									+ " — " + caller + " is not in ArchitectureRules.FOR_TEST_USERS"));
+						}
+					}
+					for (JavaMethodReference reference : codeUnit.getMethodReferencesFromSelf()) {
+						if (isForTest(reference.getTargetOwner().getFullName(), reference.getName(), ownerFullName)) {
+							events.add(SimpleConditionEvent.satisfied(item, reference.getDescription()
+									+ " — " + caller + " is not in ArchitectureRules.FOR_TEST_USERS"));
+						}
+					}
+				}
+			}
+		};
+	}
+
+	private static boolean isForTest(String targetOwner, String name, String ownerFullName) {
+		return ownerFullName.equals(targetOwner) && "forTest".equals(name);
+	}
+
+	/** {@code <declaring class>.<method>}, with a javac-lifted lambda attributed to the method it came from. */
+	static String forTestCaller(JavaCodeUnit codeUnit) {
+		String name = codeUnit.getName();
+		if (name.startsWith("lambda$")) {
+			name = name.substring("lambda$".length(), name.lastIndexOf('$'));
+		}
+		return codeUnit.getOwner().getFullName() + "." + name;
+	}
 
 	/**
 	 * Unordered-collection uses order-sensitive code may not contain.
@@ -386,30 +846,47 @@ public class ArchitectureRules {
 		};
 	}
 
-	/** The static {@code Config} rate shortcuts, called from anywhere but a constructor. */
+	/**
+	 * The static tariff formula, called from anywhere but a constructor: {@code MachineRates.euPerTick} /
+	 * {@code MachineRates.duration} (MOD-710 batch 4, the one place the formula lives; batch 4b removed the
+	 * {@code Config} delegates that called it). Owners are compared by class NAME taken from the class
+	 * itself, so moving the formula again is a compile error here, not a rule that silently matches nothing
+	 * (CFG-6: the old condition compared the owner with the string {@code "Config"}).
+	 *
+	 * <p>A class implementing {@code NoUpgradePanel} is not checked: it has no chips to ignore. The electric
+	 * heater bills its heat tick from the static formula on purpose, with the chip count of the machine
+	 * above passed in (MOD-392); it called the delegate {@code electricHeaterEuPerTickEffective}, which this
+	 * condition never listed, until batch 4b inlined it into {@code MachineRates.euPerTick}. The marker is
+	 * the structural reason, so the exemption needs no list of names (MOD-710 batch 4b).
+	 */
 	static ArchCondition<JavaClass> callStaticRateShortcutOutsideConstructor() {
-		return new ArchCondition<>("call a static Config rate shortcut outside a constructor") {
+		return new ArchCondition<>("call a static tariff shortcut (MachineRates) outside a constructor") {
 			@Override
 			public void check(JavaClass item, ConditionEvents events) {
+				if (item.isAssignableTo(NoUpgradePanel.class)) {
+					return; // no upgrade panel, so no overclocker chip a static call could miss
+				}
 				for (JavaCodeUnit codeUnit : item.getCodeUnits()) {
 					if ("<init>".equals(codeUnit.getName())) {
 						continue; // constructor seeding: no inventory exists yet, so no chip to read
 					}
 					for (JavaMethodCall call : codeUnit.getMethodCallsFromSelf()) {
-						if (!"Config".equals(call.getTargetOwner().getSimpleName())) {
-							continue;
-						}
+						String owner = call.getTargetOwner().getFullName();
 						String name = call.getName();
-						if ("machineEuPerTickEffective".equals(name) || "scaledDuration".equals(name)) {
-							events.add(SimpleConditionEvent.satisfied(item,
-									"Config." + name + "() in " + codeUnit.getFullName()
-											+ " — static, so it cannot see the overclocker chips"));
+						if (RATE_SHORTCUTS.getOrDefault(owner, Set.of()).contains(name)) {
+							String shortcut = call.getTargetOwner().getSimpleName() + "." + name + "()";
+							events.add(SimpleConditionEvent.satisfied(item, shortcut + " in " + codeUnit.getFullName()
+									+ " — static, so it cannot see the overclocker chips"));
 						}
 					}
 				}
 			}
 		};
 	}
+
+	/** Owner class name → the static tariff methods {@link #callStaticRateShortcutOutsideConstructor()} reports. */
+	private static final Map<String, Set<String>> RATE_SHORTCUTS = Map.of(
+			MachineRates.class.getName(), Set.of("euPerTick", "duration"));
 
 	static ArchCondition<JavaClass> notCallFromStaticInitializer(String ownerSimpleName,
 			String methodName) {

@@ -2,17 +2,39 @@ package dev.alaindustrial.arch;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
+import static dev.alaindustrial.arch.ArchitectureRules.callForTestOutside;
 import static dev.alaindustrial.arch.ArchitectureRules.callStaticRateShortcutOutsideConstructor;
+import static dev.alaindustrial.arch.ArchitectureRules.forTestCaller;
 import static dev.alaindustrial.arch.ArchitectureRules.notCallFromStaticInitializer;
+import static dev.alaindustrial.arch.ArchitectureRules.readBalanceKnobsFromConfig;
+import static dev.alaindustrial.arch.ArchitectureRules.readBalanceKnobsFromConfigIn;
+import static dev.alaindustrial.arch.ArchitectureRules.startsAnotherManifestInitialiser;
 import static dev.alaindustrial.arch.ArchitectureRules.useUnorderedCollections;
+import static dev.alaindustrial.arch.ArchitectureRules.writeAKnobField;
+import static dev.alaindustrial.arch.VersionedApiRules.callAFacadeOnlyMember;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.tngtech.archunit.base.DescribedPredicate;
+import com.tngtech.archunit.core.domain.JavaClass;
 import com.tngtech.archunit.core.domain.JavaClasses;
+import com.tngtech.archunit.core.domain.JavaCodeUnit;
+import com.tngtech.archunit.core.domain.JavaMethodCall;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.core.importer.ImportOption;
+import com.tngtech.archunit.core.importer.Location;
+import com.tngtech.archunit.core.importer.Locations;
 import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.lang.EvaluationResult;
+import dev.alaindustrial.Config;
+import dev.alaindustrial.arch.VersionedApiRules.FacadeOnlyMember;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -105,6 +127,82 @@ class ArchitectureRulesNegativeControl {
 		assertFalse(report.contains("OrderedCollectionUser"), report);
 	}
 
+	/**
+	 * MOD-711: {@code contentDomainsInitialiseOnTheirOwn} can fail, and for the right reason. In the fixture
+	 * package {@code manifest}, {@code AggregatorReaderContent} reads the aggregator's list back and
+	 * {@code NeighbourReaderContent} names another domain's constant — both reported; {@code CleanContent}
+	 * builds the aggregator's nested record and reads only its own constants — not reported, and neither is
+	 * {@code Aggregator} itself, whose own members are not an access to "another" class.
+	 */
+	@Test
+	void contentDomainRuleFailsOnAggregatorAndNeighbourReadsOnly() {
+		String manifest = FIXTURE_PACKAGE + ".manifest";
+		String report = evaluateExpectingViolation(noClasses()
+				.that().resideInAPackage(manifest)
+				.should().accessTargetWhere(startsAnotherManifestInitialiser(manifest + ".Aggregator", manifest)));
+
+		assertTrue(report.contains("AggregatorReaderContent"), report);
+		assertTrue(report.contains("NeighbourReaderContent"), report);
+		assertFalse(report.contains("CleanContent"), report);
+	}
+
+	/**
+	 * MOD-703, batch 13 — {@code versionedApiIsCalledOnlyThroughItsFacade}: outside the facade package the
+	 * condition reports the overload listed by its first parameter, the member listed by name alone and a method
+	 * reference to it ({@code ApiCallViolator}); the facade's own calls ({@code compat.StandInFacade}), work done
+	 * through the facade and the overload both lines share ({@code FacadeUser}) are not reported. The stand-in
+	 * plays the Minecraft owners, which this lane's classpath does not carry; the rule is composed the way the
+	 * production one is — outside the facade package, the same condition.
+	 */
+	@Test
+	void facadeOnlyMemberConditionFailsOutsideTheFacadeOnly() {
+		String facade = FIXTURE_PACKAGE + ".facade";
+		String api = facade + ".StandInApi";
+		String standInFacade = facade + ".compat.StandInFacade";
+		List<FacadeOnlyMember> members = List.of(
+				new FacadeOnlyMember(Set.of(api), "turn", api + "$Quaternion", standInFacade),
+				new FacadeOnlyMember(Set.of(), "grow", null, standInFacade));
+		String report = evaluateExpectingViolation(noClasses()
+				.that().resideInAnyPackage(facade + "..")
+				.and().resideOutsideOfPackages(facade + ".compat")
+				.should(callAFacadeOnlyMember(members)));
+
+		assertTrue(report.contains("StandInApi.turn in " + facade + ".ApiCallViolator.listedOverload("), report);
+		assertTrue(report.contains("StandInApi.grow in " + facade + ".ApiCallViolator.listedByName("), report);
+		assertTrue(report.contains("a reference to StandInApi.grow in " + facade + ".ApiCallViolator.reference("),
+				report);
+		assertFalse(report.contains("FacadeUser"), report);
+		assertFalse(report.contains("StandInFacade."), report);
+	}
+
+	/**
+	 * MOD-703, batch 13 — the production list of {@code versionedApiIsCalledOnlyThroughItsFacade} is no
+	 * tautology on the line this lane runs on: every facade it names exists and calls at least one of the
+	 * members listed for it (26.3: {@code PoseStack.rotate(Quaternionfc)}, the trio with a {@code BonemealSource},
+	 * {@code drop(ItemStack, boolean, Prediction)}; 26.2: {@code mulPose(Quaternionfc)}, the trio without it,
+	 * {@code drop(ItemStack, boolean)}). A member renamed by the next Minecraft version, or an owner spelled
+	 * wrong, leaves its facade calling nothing on the list, and this goes red naming the facade.
+	 */
+	@Test
+	void everyFacadeOfTheVersionedApiRuleCallsOneOfItsMembers() {
+		Map<String, List<FacadeOnlyMember>> byFacade = new TreeMap<>();
+		for (FacadeOnlyMember member : VersionedApiRules.FACADE_ONLY_MEMBERS) {
+			byFacade.computeIfAbsent(member.facade(), facade -> new java.util.ArrayList<>()).add(member);
+		}
+		assertEquals(Set.of("dev.alaindustrial.compat.Bonemeal", "dev.alaindustrial.compat.ServerDrops",
+				"dev.alaindustrial.compat.client.Poses"), byFacade.keySet());
+		for (Map.Entry<String, List<FacadeOnlyMember>> entry : byFacade.entrySet()) {
+			assertTrue(productionClasses.contain(entry.getKey()), entry.getKey() + " is not a production class");
+			JavaClass facade = productionClasses.get(entry.getKey());
+			boolean callsOne = facade.getCodeUnits().stream()
+					.flatMap(codeUnit -> codeUnit.getMethodCallsFromSelf().stream())
+					.anyMatch(call -> entry.getValue().stream().anyMatch(member -> member.matches(
+							call.getTargetOwner(), call.getName(), call.getTarget().getRawParameterTypes())));
+			assertTrue(callsOne, entry.getKey() + " calls none of the members listed for it in "
+					+ "VersionedApiRules.FACADE_ONLY_MEMBERS — the ban on them would be a tautology on this line");
+		}
+	}
+
 	@Test
 	void unorderedCollectionsConditionStaysGreenOnOrderedIdioms() {
 		assertNoViolation(noClasses()
@@ -118,11 +216,16 @@ class ArchitectureRulesNegativeControl {
 				.that().resideInAPackage(FIXTURE_PACKAGE)
 				.should(callStaticRateShortcutOutsideConstructor()));
 
+		assertTrue(report.contains("MachineRates.euPerTick() in"), report);
 		assertTrue(report.contains("StaticRateShortcutViolator.drainPerTick("), report);
+		assertTrue(report.contains("MachineRates.duration() in"), report);
+		assertTrue(report.contains("StaticRateShortcutViolator.durationTicks("), report);
 		// The constructor of the SAME class calls a shortcut too, and must not be reported: seeding
 		// from <init> is the allowed case, and a rule that flagged it would be red on every machine.
 		assertFalse(report.contains("StaticRateShortcutViolator.<init>("), report);
 		assertFalse(report.contains("ConstructorSeededMachine"), report);
+		// A machine without an upgrade panel has no chip to miss (MOD-710 batch 4b, the electric heater).
+		assertFalse(report.contains("NoPanelRateReader"), report);
 	}
 
 	@Test
@@ -130,6 +233,45 @@ class ArchitectureRulesNegativeControl {
 		assertNoViolation(noClasses()
 				.that().haveSimpleName("ConstructorSeededMachine")
 				.should(callStaticRateShortcutOutsideConstructor()));
+	}
+
+	@Test
+	void staticRateShortcutConditionStaysGreenWithoutAnUpgradePanel() {
+		assertNoViolation(noClasses()
+				.that().haveSimpleName("NoPanelRateReader")
+				.should(callStaticRateShortcutOutsideConstructor()));
+	}
+
+	/**
+	 * MOD-703: the host list of {@code clientTypesStayInsideClientPackages} admits the client facades of
+	 * {@code dev.alaindustrial.compat.client} and nothing else under {@code dev.alaindustrial.compat}.
+	 *
+	 * <p>The rule's real targets ({@code net.minecraft.client..}, {@code com.mojang.blaze3d..}) are not on
+	 * this lane's classpath, so a fixture cannot reference them (see the backend probe below for why a
+	 * counterfeit is worse than none). What this control pins is the other half of the rule — WHO may hold a
+	 * client type — with the real {@link ArchitectureRules#CLIENT_TYPE_HOSTS} and a stand-in target: a class
+	 * in {@code compat.fixture} (inside the facade package, outside its client half) must be reported, the
+	 * same use from {@code compat.client.fixture} must not. Widen the host list to all of {@code compat} and
+	 * the first assertion goes red; drop {@code compat.client} and the second does.
+	 */
+	@Test
+	void clientTypeHostsAdmitCompatClientAndNotTheRestOfCompat() {
+		// The stand-in lives OUTSIDE compat, so the rule always has a class to check even if the host list
+		// were widened to all of compat — the failure is then the assertion below, not an empty rule.
+		String standIn = FIXTURE_PACKAGE + ".clientstandin";
+		JavaClasses facadeFixtures = new ClassFileImporter().importPackages(standIn,
+				"dev.alaindustrial.compat.fixture", "dev.alaindustrial.compat.client.fixture");
+		assertTrue(facadeFixtures.contain("dev.alaindustrial.compat.client.fixture.ClientFacadeFixture"),
+				"the compat fixtures must be on the test classpath, or this control is vacuous");
+		EvaluationResult result = noClasses()
+				.that().resideOutsideOfPackages(ArchitectureRules.CLIENT_TYPE_HOSTS)
+				.should().dependOnClassesThat().resideInAnyPackage(standIn + "..")
+				.evaluate(facadeFixtures);
+		assertTrue(result.hasViolation(), "a client type used under compat outside compat.client must be "
+				+ "a violation of the host list, and nothing was reported");
+		String report = result.getFailureReport().toString();
+		assertTrue(report.contains("FacadeOutsideClientSubpackage"), report);
+		assertFalse(report.contains("ClientFacadeFixture"), report);
 	}
 
 	/**
@@ -193,6 +335,121 @@ class ArchitectureRulesNegativeControl {
 						+ " — so the real rule is blind too, and its green means nothing");
 	}
 
+	/**
+	 * MOD-715 — the frozen core layer rule is only as good as its unfrozen condition. It must SEE the
+	 * violations its baseline holds (a condition that matched nothing would freeze an empty store and stay
+	 * green forever), and it must find none in the network kernels batch 1 cleaned: those are out of the
+	 * baseline for good, so a block reference creeping back into one of them is red here even before the
+	 * store notices it as "new".
+	 */
+	@Test
+	void theCoreLayerRuleSeesTheBaselineAndTheNetworkKernelsAreClean() {
+		assertTrue(ArchitectureRules.CORE_LAYER.evaluate(productionClasses).hasViolation(),
+				"the core layer rule found no core class depending on block/registry — today's baseline is"
+						+ " not empty, so the rule is blind and its frozen green means nothing");
+		JavaClasses kernels = productionClasses.that(DescribedPredicate.describe("network kernels",
+				(JavaClass c) -> NETWORK_KERNELS.contains(topLevelName(c))));
+		assertEquals(NETWORK_KERNELS, new TreeSet<>(kernels.stream().map(c -> topLevelName(c)).toList()),
+				"every network kernel must be imported, or the check below is vacuous");
+		EvaluationResult result = ArchitectureRules.CORE_LAYER.evaluate(kernels);
+		assertFalse(result.hasViolation(), () -> "a network kernel names a block or the registry again "
+				+ "(MOD-715 batch 1 took them out): " + result.getFailureReport());
+	}
+
+	/** The name of {@code c}'s top-level class, so a kernel's nested classes count as the kernel. */
+	private static String topLevelName(JavaClass c) {
+		String name = c.getName();
+		int nested = name.indexOf('$');
+		return nested < 0 ? name : name.substring(0, nested);
+	}
+
+	/** The network kernels batch 1 of MOD-715 cut loose from {@code block}/{@code registry}. */
+	private static final Set<String> NETWORK_KERNELS = new TreeSet<>(Set.of(
+			"dev.alaindustrial.core.energy.NetworkManager",
+			"dev.alaindustrial.core.energy.EnergyNetwork",
+			"dev.alaindustrial.core.energy.EnergyTopologyCache",
+			"dev.alaindustrial.core.energy.DirectAdjacencyDistributor",
+			"dev.alaindustrial.core.fluid.FluidNetwork",
+			"dev.alaindustrial.core.fluid.FluidNetworkManager",
+			"dev.alaindustrial.core.item.ItemNetwork",
+			"dev.alaindustrial.core.item.ItemNetworkManager"));
+
+	/**
+	 * The fixture package together with {@code Config} itself (MOD-695): the knob condition reads the
+	 * {@code @Knob} annotation on the target field and the field reads INSIDE the target method, which
+	 * needs {@code Config}'s own bytecode in the import rather than a bare classpath stub.
+	 */
+	private static JavaClasses fixturesWithConfig() {
+		Set<Location> locations = new LinkedHashSet<>(Locations.ofPackage(FIXTURE_PACKAGE));
+		locations.addAll(Locations.ofClass(Config.class));
+		return new ClassFileImporter().importLocations(locations);
+	}
+
+	@Test
+	void balanceKnobConditionFailsOnEveryShapeItClaimsToSee() {
+		ArchRule rule = noClasses().that().resideInAPackage(FIXTURE_PACKAGE).should(readBalanceKnobsFromConfig());
+		EvaluationResult result = rule.evaluate(fixturesWithConfig());
+		assertTrue(result.hasViolation(), "rule '" + rule.getDescription() + "' must fail on the fixture package");
+		String report = result.getFailureReport().toString();
+
+		assertTrue(report.contains("ConfigKnobReader.fieldRead("), report);
+		// a knob of a per-subsystem holder (ADR-034) is a balance knob too: the annotation decides, not the owner
+		assertTrue(report.contains("SubsystemKnobHolder.fixtureKnob read in"), report);
+		assertTrue(report.contains("ConfigKnobReader.holderFieldRead("), report);
+		assertTrue(report.contains("ConfigKnobReader.shortcutCall("), report);
+		assertTrue(report.contains("ConfigKnobReader.shortcutReference("), report);
+		// Reading the knob through ServerBalance and handing it to a pure holder formula is the fix.
+		assertFalse(report.contains("ServerBalanceKnobReader"), report);
+	}
+
+	/**
+	 * MOD-710 batch 5: the predicate behind {@code energyKernelsReadNoKnobHolder} sees a dependency on a knob
+	 * holder — on the fixture that reads {@code Config} — and the kernel name pattern matches the real kernels.
+	 */
+	@Test
+	void knobHolderPredicateSeesAConfigReader() {
+		EvaluationResult result = noClasses().that().haveSimpleName("ConfigKnobReader")
+				.should().dependOnClassesThat(ArchitectureRules.isKnobHolder()).evaluate(fixturesWithConfig());
+		assertTrue(result.hasViolation(), "a class that reads Config must depend on a knob holder");
+		for (String kernel : List.of("EnergyNetwork", "DischargePlan", "DirectAdjacencyDistributor",
+				"EnergyLineDistributor", "LineView")) {
+			assertTrue(("dev.alaindustrial.core.energy." + kernel).matches(ArchitectureRules.ENERGY_KERNELS), kernel);
+		}
+	}
+
+	@Test
+	void balanceKnobConditionStaysGreenOnServerBalanceReads() {
+		EvaluationResult result = noClasses().that().haveSimpleName("ServerBalanceKnobReader")
+				.should(readBalanceKnobsFromConfig()).evaluate(fixturesWithConfig());
+		assertFalse(result.hasViolation(), () -> result.getFailureReport().toString());
+	}
+
+	@Test
+	void tooltipKnobConditionFailsOnTheTooltipBodyOnly() {
+		ArchRule rule = noClasses().that().resideInAPackage(FIXTURE_PACKAGE)
+				.should(readBalanceKnobsFromConfigIn(ArchitectureRules::isTooltipBody, "in an item tooltip"));
+		EvaluationResult result = rule.evaluate(fixturesWithConfig());
+		assertTrue(result.hasViolation(), "rule '" + rule.getDescription() + "' must fail on the fixture package");
+		String report = result.getFailureReport().toString();
+
+		assertTrue(report.contains("TooltipKnobReader.appendHoverText("), report);
+		// The read inside the lambda must be caught too. ArchUnit 1.x attributes a lambda's accesses to the
+		// method that declares it (the server run showed no lambda$ code unit in the report), so the lambda's
+		// knob is reported against appendHoverText itself.
+		assertTrue(report.contains("Config.teleporterMaxPoints read in "
+				+ FIXTURE_PACKAGE + ".TooltipKnobReader.appendHoverText("), report);
+		assertTrue(report.contains("Config.euPerXp read in "
+				+ FIXTURE_PACKAGE + ".TooltipKnobReader.appendHoverText("), report);
+		// MOD-716: the owner-declared block tooltip is scoped in too.
+		assertTrue(report.contains("Config.euPerXp read in "
+				+ FIXTURE_PACKAGE + ".TooltipKnobReader.machineTooltip("), report);
+		assertTrue(report.contains("Config.teleporterMaxPoints read in "
+				+ FIXTURE_PACKAGE + ".TooltipKnobReader.toolTooltip("), report);
+		// The clean class reads Config too, but outside its tooltip; and the other fixtures have no tooltip.
+		assertFalse(report.contains("TooltipBalanceReader"), report);
+		assertFalse(report.contains("ConfigKnobReader"), report);
+	}
+
 	@Test
 	void eagerRegistrationConditionFailsOnStaticInitializerOnly() {
 		String report = evaluateExpectingViolation(classes()
@@ -208,5 +465,93 @@ class ArchitectureRulesNegativeControl {
 		assertNoViolation(classes()
 				.that().haveSimpleName("LazyRegistrationUser")
 				.should(notCallFromStaticInitializer("Registry", "register")));
+	}
+
+	/**
+	 * MOD-710 — {@code gametestsWriteKnobsOnlyThroughConfigOverrides}: the condition fails on a plain
+	 * assignment, a compound assignment and a write in a lambda, and stays quiet on a class that only
+	 * reads a knob or writes through a reflected field (how {@code ConfigOverrides} writes).
+	 */
+	@Test
+	void knobWriteConditionFailsOnEveryShapeItClaimsToSee() {
+		ArchRule rule = noClasses().that().resideInAPackage(FIXTURE_PACKAGE).should(writeAKnobField());
+		EvaluationResult result = rule.evaluate(fixturesWithConfig());
+		assertTrue(result.hasViolation(), "rule '" + rule.getDescription() + "' must fail on the fixture package");
+		String report = result.getFailureReport().toString();
+
+		assertTrue(report.contains("Config.euPerXp written in " + FIXTURE_PACKAGE + ".KnobWriter.assign("), report);
+		assertTrue(report.contains("SubsystemKnobHolder.fixtureKnob written in " + FIXTURE_PACKAGE
+				+ ".KnobWriter.assignInHolder("), report);
+		// A compound assignment is a GET and a SET; the SET is what is reported.
+		assertTrue(report.contains("Config.euPerXp written in " + FIXTURE_PACKAGE + ".KnobWriter.compound("), report);
+		// ArchUnit attributes a lambda's accesses to the declaring method or to the lifted lambda; either way the
+		// write inside it must be reported.
+		assertTrue(report.contains("Config.teleporterMaxPoints written in " + FIXTURE_PACKAGE + ".KnobWriter."),
+				report);
+		assertFalse(report.contains("KnobReaderOnly"), report);
+	}
+
+	@Test
+	void knobWriteConditionStaysGreenOnReadsAndReflectedWrites() {
+		EvaluationResult result = noClasses().that().haveSimpleName("KnobReaderOnly")
+				.should(writeAKnobField()).evaluate(fixturesWithConfig());
+		assertFalse(result.hasViolation(), () -> result.getFailureReport().toString());
+	}
+
+	/**
+	 * MOD-710 — {@code forTestIsHeldOnlyByTheListedScenarios}: a call or a method reference of {@code forTest}
+	 * from a method outside the allow-list is reported, the same call from a listed method is not. The real
+	 * owner takes a Minecraft type the test classpath lacks, so the fixture's {@code ForTestHolder} stands in
+	 * for it and the owner name is a parameter of the condition.
+	 */
+	@Test
+	void forTestConditionFailsOffTheAllowListOnly() {
+		Set<String> allowed = Set.of(FIXTURE_PACKAGE + ".ForTestCallerOnList.hold");
+		String report = evaluateExpectingViolation(noClasses()
+				.that().resideInAPackage(FIXTURE_PACKAGE)
+				.and().doNotHaveSimpleName("ForTestHolder")
+				.should(callForTestOutside(FIXTURE_PACKAGE + ".ForTestHolder", allowed)));
+
+		assertTrue(report.contains("ForTestCallerOffList.hold("), report);
+		assertTrue(report.contains("ForTestCallerOffList.reference(")
+				|| report.contains("ForTestCallerOffList.lambda$reference"), report);
+		assertFalse(report.contains("ForTestCallerOnList"), report);
+	}
+
+	@Test
+	void forTestConditionStaysGreenForAListedCaller() {
+		assertNoViolation(noClasses()
+				.that().haveSimpleName("ForTestCallerOnList")
+				.should(callForTestOutside(FIXTURE_PACKAGE + ".ForTestHolder",
+						Set.of(FIXTURE_PACKAGE + ".ForTestCallerOnList.hold"))));
+	}
+
+	/**
+	 * MOD-710 — the two gametest rules are only as good as their import. Floor: the production import
+	 * contains the gametest source set's classes (the test runtime classpath carries them), so a write there
+	 * WOULD be seen; and the allow-list is exactly the set of real {@code ConfigOverrides.forTest} callers —
+	 * an entry nobody calls any more (the scenario moved or was deleted) is stale and fails here, the way a
+	 * stale {@code LOADER_ONLY} entry fails the lane-parity gate. A new caller outside the list is already
+	 * red in {@code forTestIsHeldOnlyByTheListedScenarios}.
+	 */
+	@Test
+	void theForTestAllowListIsExactlyTheRealCallers() {
+		assertTrue(productionClasses.contain(ArchitectureRules.CONFIG_OVERRIDES),
+				"the gametest source set must be on the test classpath, or both gametest rules are vacuous");
+		assertTrue(productionClasses.contain("dev.alaindustrial.gametest.OilScenarios"),
+				"the scenario classes must be imported, or the knob-write rule is vacuous");
+		Set<String> callers = new TreeSet<>();
+		for (JavaClass javaClass : productionClasses) {
+			for (JavaCodeUnit codeUnit : javaClass.getCodeUnits()) {
+				for (JavaMethodCall call : codeUnit.getMethodCallsFromSelf()) {
+					if (ArchitectureRules.CONFIG_OVERRIDES.equals(call.getTargetOwner().getFullName())
+							&& "forTest".equals(call.getName())) {
+						callers.add(forTestCaller(codeUnit));
+					}
+				}
+			}
+		}
+		assertEquals(new TreeSet<>(ArchitectureRules.FOR_TEST_USERS.keySet()), callers,
+				"ArchitectureRules.FOR_TEST_USERS must list exactly the methods that call ConfigOverrides.forTest");
 	}
 }

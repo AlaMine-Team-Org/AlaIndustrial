@@ -1,10 +1,11 @@
 package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
-import dev.alaindustrial.core.energy.EnergyRole;
+import dev.alaindustrial.block.entity.machine.SyncChannels;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.core.machine.ComponentRepair;
 import dev.alaindustrial.core.machine.ComponentTier;
+import dev.alaindustrial.core.machine.MachineRates;
 import dev.alaindustrial.core.machine.RepairStatus;
 import dev.alaindustrial.item.misc.DurableComponentItem;
 import dev.alaindustrial.menu.ComponentRepairBenchMenu;
@@ -64,17 +65,6 @@ public class ComponentRepairBenchBlockEntity extends MachineBlockEntity
 	/** Machine-slot count (indices before the upgrade block) — the client menu stub sizes its container from this (MOD-439). */
 	public static final int SLOT_COUNT = 2;
 
-	/** Eight-wide data — see the class javadoc. Hides {@link MachineBlockEntity#DATA_COUNT} (MOD-235). */
-	public static final int DATA_COUNT = 8;
-	/** Channel carrying the {@link RepairStatus} code the screen turns into its status line. */
-	public static final int STATUS_CHANNEL = 4;
-	/** EU one repair of the loaded grade costs; 0 with nothing loaded. */
-	public static final int COST_CHANNEL = 5;
-	/** Percent of the original ceiling one repair burns. */
-	public static final int DECAY_CHANNEL = 6;
-	/** The configured repair allowance. */
-	public static final int MAX_REPAIRS_CHANNEL = 7;
-
 	/**
 	 * Balance figures the screen prints, published from the SERVER rather than read from the client's
 	 * own {@link Config}.
@@ -106,7 +96,7 @@ public class ComponentRepairBenchBlockEntity extends MachineBlockEntity
 	public ComponentRepairBenchBlockEntity(BlockPos pos, BlockState state) {
 		super(ModContent.COMPONENT_REPAIR_BENCH_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT,
 				Config.machineBuffer, EnergyTier.LV.maxVoltage(), 0L);
-		this.maxProgress = Config.scaledDuration(defaultDuration());
+		this.maxProgress = MachineRates.duration(defaultDuration(), Config.globalMachineSpeedMultiplier);
 	}
 
 	/** The bench's own tariff — four times the shared machine rate, like the alloy smelter (MOD-384). */
@@ -270,12 +260,6 @@ public class ComponentRepairBenchBlockEntity extends MachineBlockEntity
 		return !target.isEmpty() && !repairable(target);
 	}
 
-	/** Consumer: every face accepts energy except the inert FACING front (R-NRG-03). */
-	@Override
-	public EnergyRole energyRoleForFace(Direction worldFace) {
-		return facingAwareRole(worldFace, EnergyRole.IN);
-	}
-
 	/** Swapping the component restarts the operation (TC-MACH-001-FUN04 semantics). */
 	@Override
 	protected boolean resetProgressOnInputChange() {
@@ -283,46 +267,22 @@ public class ComponentRepairBenchBlockEntity extends MachineBlockEntity
 	}
 
 	/**
-	 * Eight-wide data: the shared base 0..3, the {@link RepairStatus} code on channel 4, and the three
-	 * balance figures the tooltip prints on 5..7.
+	 * GUI sync channels (MOD-712, BE-7): the base four, the {@link RepairStatus} code, and the cost, decay
+	 * percent and repairs-left of the component on the bench; all four take a write.
 	 */
-	private final ContainerData benchData = new ContainerData() {
-		@Override
-		public int get(int index) {
-			return switch (index) {
-				case STATUS_CHANNEL -> status.code();
-				case COST_CHANNEL -> syncedCost;
-				case DECAY_CHANNEL -> syncedDecayPercent;
-				case MAX_REPAIRS_CHANNEL -> syncedMaxRepairs;
-				default -> ComponentRepairBenchBlockEntity.this.dataAccess.get(index);
-			};
-		}
+	public enum Channel { ENERGY, CAPACITY, PROGRESS, MAX_PROGRESS, STATUS, COST, DECAY, MAX_REPAIRS }
 
-		@Override
-		public void set(int index, int value) {
-			switch (index) {
-				case STATUS_CHANNEL -> status = RepairStatus.byCode(value);
-				case COST_CHANNEL -> syncedCost = value;
-				case DECAY_CHANNEL -> syncedDecayPercent = value;
-				case MAX_REPAIRS_CHANNEL -> syncedMaxRepairs = value;
-				default -> ComponentRepairBenchBlockEntity.this.dataAccess.set(index, value);
-			}
-		}
-
-		@Override
-		public int getCount() {
-			return DATA_COUNT;
-		}
-	};
+	/** Width of {@link #getDataAccess()}, which the menu's client stub sizes itself from (MOD-235). */
+	public static final int DATA_COUNT = Channel.values().length;
 
 	@Override
-	public ContainerData getDataAccess() {
-		return benchData;
-	}
-
-	@Override
-	public Component getDisplayName() {
-		return Component.translatable("block.alaindustrial.component_repair_bench");
+	protected SyncChannels createChannels() {
+		return channels(Channel.class)
+				.readWrite(Channel.STATUS, () -> status.code(), value -> status = RepairStatus.byCode(value))
+				.readWrite(Channel.COST, () -> syncedCost, value -> syncedCost = value)
+				.readWrite(Channel.DECAY, () -> syncedDecayPercent, value -> syncedDecayPercent = value)
+				.readWrite(Channel.MAX_REPAIRS, () -> syncedMaxRepairs, value -> syncedMaxRepairs = value)
+				.build();
 	}
 
 	@Override

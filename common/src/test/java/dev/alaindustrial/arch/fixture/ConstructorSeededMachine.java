@@ -1,6 +1,7 @@
 package dev.alaindustrial.arch.fixture;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.core.machine.MachineRates;
 
 /**
  * Clean counterpart of {@link StaticRateShortcutViolator} (MOD-435): the static shortcut is called
@@ -11,7 +12,7 @@ public final class ConstructorSeededMachine {
 	private final int maxProgress;
 
 	ConstructorSeededMachine() {
-		this.maxProgress = Config.scaledDuration(200);
+		this.maxProgress = MachineRates.duration(200, Config.globalMachineSpeedMultiplier);
 	}
 
 	int progressCeiling() {

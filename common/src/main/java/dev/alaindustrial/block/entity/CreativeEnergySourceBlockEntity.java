@@ -1,5 +1,6 @@
 package dev.alaindustrial.block.entity;
 
+import dev.alaindustrial.block.entity.machine.SyncChannels;
 import dev.alaindustrial.core.energy.DirectAdjacencyDistributor;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
@@ -9,12 +10,10 @@ import dev.alaindustrial.menu.CreativeEnergySourceMenu;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -72,11 +71,11 @@ import net.minecraft.world.level.storage.ValueOutput;
  * duplication in MOD-492; there is nothing to debit here, but the shape of that bug is worth not
  * rebuilding.
  */
-public class CreativeEnergySourceBlockEntity extends MachineBlockEntity implements MenuProvider {
+public class CreativeEnergySourceBlockEntity extends MachineBlockEntity implements MenuProvider, NoUpgradePanel {
 
 	/** Slot 0 — any powered item dropped in here fills up. */
 	public static final int CHARGE_SLOT = 0;
-	/** Machine slots; no upgrade panel is appended (see {@link #hasUpgradePanel()}). */
+	/** Machine slots; no upgrade panel is appended (see {@link NoUpgradePanel}). */
 	public static final int MACHINE_SLOTS = 1;
 
 	/**
@@ -93,45 +92,24 @@ public class CreativeEnergySourceBlockEntity extends MachineBlockEntity implemen
 	/** Output on placement — the MV preset, enough to drive early machines without swamping a test. */
 	public static final int DEFAULT_OUTPUT = 128;
 
-	/** Sync channel: 1 when the source is switched on. */
-	public static final int DATA_ENABLED = MachineBlockEntity.DATA_COUNT;
-	/** Sync channel: current output limit in EU/tick. Fits a signed short — {@link #MAX_OUTPUT} is 8192. */
-	public static final int DATA_OUTPUT = MachineBlockEntity.DATA_COUNT + 1;
-
-	/**
-	 * Six-wide data. Both indices are written as offsets from the base constant rather than as literals
-	 * so they move by themselves if the machine family ever grows a channel — the collision MOD-458 hit
-	 * with a hard-coded 4 was invisible to every gate.
-	 */
-	public static final int DATA_COUNT = MachineBlockEntity.DATA_COUNT + 2;
-
 	private boolean enabled = true;
 	private int outputLimit = DEFAULT_OUTPUT;
+	/**
+	 * GUI sync channels (MOD-712, BE-7): the base four, the on/off flag and the output limit; both take a
+	 * write (the limit is clamped on the way in).
+	 */
+	public enum Channel { ENERGY, CAPACITY, PROGRESS, MAX_PROGRESS, ENABLED, OUTPUT }
 
-	private final ContainerData sourceData = new ContainerData() {
-		@Override
-		public int get(int index) {
-			return switch (index) {
-				case DATA_ENABLED -> enabled ? 1 : 0;
-				case DATA_OUTPUT -> outputLimit;
-				default -> dataAccess.get(index);
-			};
-		}
+	/** Width of {@link #getDataAccess()}, which the menu's client stub sizes itself from (MOD-235). */
+	public static final int DATA_COUNT = Channel.values().length;
 
-		@Override
-		public void set(int index, int value) {
-			switch (index) {
-				case DATA_ENABLED -> enabled = value != 0;
-				case DATA_OUTPUT -> outputLimit = clampOutput(value);
-				default -> dataAccess.set(index, value);
-			}
-		}
-
-		@Override
-		public int getCount() {
-			return DATA_COUNT;
-		}
-	};
+	@Override
+	protected SyncChannels createChannels() {
+		return channels(Channel.class)
+				.readWrite(Channel.ENABLED, () -> enabled ? 1 : 0, value -> enabled = value != 0)
+				.readWrite(Channel.OUTPUT, () -> outputLimit, value -> outputLimit = clampOutput(value))
+				.build();
+	}
 
 	public CreativeEnergySourceBlockEntity(BlockPos pos, BlockState state) {
 		// Capacity == MAX_OUTPUT, so the energy bar reads as "how much of the instrument's range is
@@ -285,11 +263,8 @@ public class CreativeEnergySourceBlockEntity extends MachineBlockEntity implemen
 
 	// --- inventory -----------------------------------------------------------------------------
 
-	/** No overclocker can make an infinite source faster; a panel that does nothing is a lie. */
-	@Override
-	public boolean hasUpgradePanel() {
-		return false;
-	}
+	// No upgrade panel (NoUpgradePanel): no overclocker can make an infinite source faster, and a panel
+	// that does nothing is a lie.
 
 	/** A creative instrument earns nobody statistics — see the task's decision 11. */
 	@Override
@@ -333,11 +308,6 @@ public class CreativeEnergySourceBlockEntity extends MachineBlockEntity implemen
 	// --- sync + persistence --------------------------------------------------------------------
 
 	@Override
-	public ContainerData getDataAccess() {
-		return sourceData;
-	}
-
-	@Override
 	protected void saveAdditional(ValueOutput output) {
 		super.saveAdditional(output);
 		output.putBoolean("Enabled", enabled);
@@ -345,18 +315,13 @@ public class CreativeEnergySourceBlockEntity extends MachineBlockEntity implemen
 	}
 
 	@Override
-	protected void loadAdditional(ValueInput input) {
-		super.loadAdditional(input);
+	protected void loadMachineData(ValueInput input) {
+		super.loadMachineData(input);
 		enabled = input.getBooleanOr("Enabled", true);
 		outputLimit = clampOutput(input.getIntOr("Output", DEFAULT_OUTPUT));
 	}
 
 	// --- menu ----------------------------------------------------------------------------------
-
-	@Override
-	public Component getDisplayName() {
-		return Component.translatable("block.alaindustrial.creative_energy_source");
-	}
 
 	@Override
 	public AbstractContainerMenu createMenu(int syncId, Inventory playerInventory, Player player) {

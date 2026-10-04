@@ -30,6 +30,11 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import org.jspecify.annotations.Nullable;
+import dev.alaindustrial.client.ServerBalance;
+import dev.alaindustrial.core.tooltip.HasMachineTooltip;
+import dev.alaindustrial.core.tooltip.MachineTooltipSpec;
+import dev.alaindustrial.core.upgrade.OverclockMath;
+import java.util.List;
 
 /**
  * The Upgrade Table (MOD-482): two casings stacked become the bench that fits permanent upgrades onto
@@ -52,7 +57,7 @@ import org.jspecify.annotations.Nullable;
  * it onto the module while the table works; it is a separate group in the model source, so the static
  * halves do not carry it.
  */
-public class UpgradeTableBlock extends HorizontalMachineBlock {
+public class UpgradeTableBlock extends HorizontalMachineBlock implements HasMachineTooltip {
 
 	/** Loose casing, lower half or upper half. See {@link WorkstationPart}. */
 	public static final EnumProperty<WorkstationPart> PART =
@@ -290,5 +295,30 @@ public class UpgradeTableBlock extends HorizontalMachineBlock {
 
 	private static boolean isPartner(BlockState state, WorkstationPart part) {
 		return state.getBlock() instanceof UpgradeTableBlock && state.getValue(PART) == part.partner();
+	}
+
+	/** Hover tooltip of this block's item (MOD-716, ADR-040). */
+	@Override
+	public MachineTooltipSpec machineTooltip() {
+		return new MachineTooltipSpec(MachineTooltipSpec.Tier.LV,
+				List.of(MachineTooltipSpec.note("tooltip.alaindustrial.upgrade_table.assemble",
+						MachineTooltipSpec.Tone.GRAY)),
+				List.of(MachineTooltipSpec.note("tooltip.alaindustrial.upgrade_table.purpose",
+								MachineTooltipSpec.Tone.GRAY),
+						// What the table really runs with no overclocker in it: the same speed knob the machine
+						// applies through ProcessingCycle, so a retuned server does not show the base 8 EU/t.
+						MachineTooltipSpec.stat("upgrade_table.cost",
+								() -> OverclockMath.euPerTick(ServerBalance.upgradeTableEuPerTick(),
+										ServerBalance.globalMachineSpeedMultiplier(),
+										ServerBalance.overclockerEuFactor(), 0),
+								UpgradeTableBlock::costSeconds)));
+	}
+
+	/** One operation's length in seconds: a whole number when it is one, else one decimal. */
+	private static String costSeconds() {
+		int ticks = ServerBalance.scaledDuration(ServerBalance.upgradeTableDuration());
+		return ticks % 20 == 0
+				? Integer.toString(ticks / 20)
+				: String.format(java.util.Locale.ROOT, "%.1f", ticks / 20f);
 	}
 }

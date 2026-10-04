@@ -42,6 +42,48 @@ import net.minecraft.world.level.ItemLike;
  */
 public final class RecipeCoverageScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(RecipeCoverageScenarios::tcRecie01_macerationRecipesAllLoad,
+								"tc_recie01_maceration_recipes_all_load")
+						.fabricId("RecipeCoverageGameTest", "tcRecie01_macerationRecipesAllLoad").ticks(20, 40),
+				RosterEntry.of(RecipeCoverageScenarios::tcRecie02_smeltingRecipesAllLoad,
+								"tc_recie02_smelting_recipes_all_load")
+						.fabricId("RecipeCoverageGameTest", "tcRecie02_smeltingRecipesAllLoad").ticks(20, 40),
+				RosterEntry.of(RecipeCoverageScenarios::tcRecie03_compressingRecipesAllLoad,
+								"tc_recie03_compressing_recipes_all_load")
+						.fabricId("RecipeCoverageGameTest", "tcRecie03_compressingRecipesAllLoad").ticks(20, 40),
+				RosterEntry.of(RecipeCoverageScenarios::tcRecie04_extractingRecipesAllLoad,
+								"tc_recie04_extracting_recipes_all_load")
+						.fabricId("RecipeCoverageGameTest", "tcRecie04_extractingRecipesAllLoad").ticks(20, 40),
+				RosterEntry.of(RecipeCoverageScenarios::tcRecie11_distillingRecipeFamilyRegistered,
+								"tc_recie11_distilling_recipe_family_registered")
+						.fabricId("RecipeCoverageGameTest", "tcRecie11_distillingRecipeFamilyRegistered")
+						.ticks(20, 40),
+				RosterEntry.of(RecipeCoverageScenarios::tcRecie12_electricFurnaceCategoryListsEachSmeltOnce,
+								"tc_recie12_electric_furnace_category_lists_each_smelt_once")
+						.fabricId("RecipeCoverageGameTest", "tcRecie12_electricFurnaceCategoryListsEachSmeltOnce")
+						.ticks(20, 40),
+				RosterEntry.of(RecipeCoverageScenarios::tcRecie05_machineCasingResolves,
+								"tc_recie05_machine_casing_resolves")
+						.fabricId("RecipeCoverageGameTest", "tcRecie05_machineCasingResolves").ticks(20, 40),
+				RosterEntry.of(RecipeCoverageScenarios::tcRecie06_maceratorResolves, "tc_recie06_macerator_resolves")
+						.fabricId("RecipeCoverageGameTest", "tcRecie06_maceratorResolves").ticks(20, 40),
+				RosterEntry.of(RecipeCoverageScenarios::tcRecie07_extractorResolves, "tc_recie07_extractor_resolves")
+						.fabricId("RecipeCoverageGameTest", "tcRecie07_extractorResolves").ticks(20, 40),
+				RosterEntry.of(RecipeCoverageScenarios::tcRecie08_compressorResolves, "tc_recie08_compressor_resolves")
+						.fabricId("RecipeCoverageGameTest", "tcRecie08_compressorResolves").ticks(20, 40),
+				RosterEntry.of(RecipeCoverageScenarios::tcRecie09_silverPlateBlockResolves,
+								"tc_recie09_silver_plate_block_resolves")
+						.fabricId("RecipeCoverageGameTest", "tcRecie09_silverPlateBlockResolves").ticks(20, 40),
+				RosterEntry.of(RecipeCoverageScenarios::tcRecie10_temperedIronPlateBlockResolves,
+								"tc_recie10_tempered_iron_plate_block_resolves")
+						.fabricId("RecipeCoverageGameTest", "tcRecie10_temperedIronPlateBlockResolves").ticks(20, 40));
+
+		private Roster() {}
+	}
+
 	private RecipeCoverageScenarios() {}
 
 	/** A typical kind ships ≈ 10–30 recipes; the lower bound guards "all recipes silently gone". */

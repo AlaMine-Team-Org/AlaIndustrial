@@ -3,7 +3,9 @@ package dev.alaindustrial.gametest;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.block.entity.GeneratorBlockEntity;
+import dev.alaindustrial.core.environment.GeneratorConfig;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
@@ -39,6 +41,66 @@ import static dev.alaindustrial.gametest.AlaGameTestHelper.drive;
  * <p>Numbers come from {@link Config} (canon), never hard-coded.
  */
 public final class GeneratorScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(GeneratorScenarios::tcGen001Fun01_coalRaisesBuffer, "tc_gen001_fun01_coal_raises_buffer")
+						.fabricId("GeneratorGameTest", "tcGen001Fun01_coalRaisesBuffer").ticks(20, 40),
+				RosterEntry.of(GeneratorScenarios::tcGen001Per01_stateSurvivesNbtRoundTrip,
+								"tc_gen001_per01_state_survives_nbt_round_trip")
+						.fabricId("GeneratorGameTest", "tcGen001Per01_stateSurvivesNbtRoundTrip").ticks(20, 40),
+				RosterEntry.of(GeneratorScenarios::tcGen001Neg04_lavaBucketRejected,
+								"tc_gen001_neg04_lava_bucket_rejected")
+						.fabricId("GeneratorGameTest", "tcGen001Neg04_lavaBucketRejected").ticks(20, 40),
+				RosterEntry.of(GeneratorScenarios::tcGen001Neg04b_menuSlotRejectsLavaBucket,
+								"tc_gen001_neg04b_menu_slot_rejects_lava_bucket")
+						.fabricId("GeneratorGameTest", "tcGen001Neg04b_menuSlotRejectsLavaBucket").ticks(20, 40),
+				RosterEntry.of(GeneratorScenarios::tcGen001Fun03_coalBlockBurnsLonger,
+								"tc_gen001_fun03_coal_block_burns_longer")
+						.fabricId("GeneratorGameTest", "tcGen001Fun03_coalBlockBurnsLonger").ticks(20, 40),
+				RosterEntry.of(GeneratorScenarios::tcGen001Neg02_nonFuelProducesNoEu,
+								"tc_gen001_neg02_non_fuel_produces_no_eu")
+						.fabricId("GeneratorGameTest", "tcGen001Neg02_nonFuelProducesNoEu").ticks(20, 40),
+				RosterEntry.of(GeneratorScenarios::tcGen001Neg02b_fuelSlotRejectsNonFuel,
+								"tc_gen001_neg02b_fuel_slot_rejects_non_fuel")
+						.fabricId("GeneratorGameTest", "tcGen001Neg02b_fuelSlotRejectsNonFuel").ticks(20, 40),
+				RosterEntry.of(GeneratorScenarios::tcGen001Per02_breakDropsFuelNoDupe,
+								"tc_gen001_per02_break_drops_fuel_no_dupe")
+						.fabricId("GeneratorGameTest", "tcGen001Per02_breakDropsFuelNoDupe").ticks(20, 40),
+				RosterEntry.of(GeneratorScenarios::tcGen001Con01_pairwiseNeighbours,
+								"tc_gen001_con01_pairwise_neighbours")
+						.fabricId("GeneratorGameTest", "tcGen001Con01_pairwiseNeighbours").ticks(20, 40),
+				RosterEntry.of(GeneratorScenarios::tcGen001Phy02_hitboxIsFullCube,
+								"tc_gen001_phy02_hitbox_is_full_cube")
+						.fabricId("GeneratorGameTest", "tcGen001Phy02_hitboxIsFullCube").ticks(20, 40),
+				RosterEntry.of(GeneratorScenarios::tcGen001Prf02_packetCappedAtLv,
+								"tc_gen001_prf02_packet_capped_at_lv")
+						.fabricId("GeneratorGameTest", "tcGen001Prf02_packetCappedAtLv").ticks(20, 40),
+				RosterEntry.of(GeneratorScenarios::tcGen001Sta01_litStateTracksBurning,
+								"tc_gen001_sta01_lit_state_tracks_burning")
+						.fabricId("GeneratorGameTest", "tcGen001Sta01_litStateTracksBurning").ticks(20, 40),
+				RosterEntry.of(GeneratorScenarios::tcGen001Fun02_bufferCapsAtMax, "tc_gen001_fun02_buffer_caps_at_max")
+						.fabricId("GeneratorGameTest", "tcGen001Fun02_bufferCapsAtMax").ticks(20, 100),
+				RosterEntry.of(GeneratorScenarios::tcGen001Fun04_pushesToAdjacentConsumer,
+								"tc_gen001_fun04_pushes_to_adjacent_consumer")
+						.fabricId("GeneratorGameTest", "tcGen001Fun04_pushesToAdjacentConsumer").ticks(20, 100),
+				RosterEntry.of(GeneratorScenarios::tcGen001Neg01_rejectsExternalEu,
+								"tc_gen001_neg01_rejects_external_eu")
+						.fabricId("GeneratorGameTest", "tcGen001Neg01_rejectsExternalEu").ticks(20, 100),
+				RosterEntry.of(GeneratorScenarios::tcGen001Neg03_fullBufferPausesBurn,
+								"tc_gen001_neg03_full_buffer_pauses_burn")
+						.fabricId("GeneratorGameTest", "tcGen001Neg03_fullBufferPausesBurn").ticks(20, 100),
+				RosterEntry.of(GeneratorScenarios::tcGen001Neg05_fullAdjacentConsumerDoesNotDrainGenerator,
+								"tc_gen001_neg05_full_adjacent_consumer_does_not_drain_generator")
+						.fabricId("GeneratorGameTest", "tcGen001Neg05_fullAdjacentConsumerDoesNotDrainGenerator")
+						.ticks(20, 100),
+				RosterEntry.of(GeneratorScenarios::tcGen001Prf01_ratePerTickMatchesConfig,
+								"tc_gen001_prf01_rate_per_tick_matches_config")
+						.fabricId("GeneratorGameTest", "tcGen001Prf01_ratePerTickMatchesConfig").ticks(20, 100));
+
+		private Roster() {}
+	}
 
 	private GeneratorScenarios() {}
 
@@ -259,7 +321,7 @@ public final class GeneratorScenarios {
 	}
 
 	/**
-	 * @implements TC-GEN-001-PRF01 — generation rate equals {@code Config.fuelEuPerTick} (canon 8 EU/t).
+	 * @implements TC-GEN-001-PRF01 — generation rate equals {@code GeneratorConfig.fuelEuPerTick} (canon 8 EU/t).
 	 * @covers R-NRG-04
 	 */
 	public static void tcGen001Prf01_ratePerTickMatchesConfig(GameTestHelper helper) {
@@ -269,8 +331,8 @@ public final class GeneratorScenarios {
 		gen.getEnergyStorage().setAmountUntracked(0);  // measure one clean tick from empty
 		drive(gen, helper, 1);
 		long made = gen.getEnergyStorage().getAmount();
-		if (made != Config.fuelEuPerTick) {
-			helper.fail("EU/t expected " + Config.fuelEuPerTick + " but measured " + made);
+		if (made != GeneratorConfig.fuelEuPerTick) {
+			helper.fail("EU/t expected " + GeneratorConfig.fuelEuPerTick + " but measured " + made);
 		}
 		helper.succeed();
 	}

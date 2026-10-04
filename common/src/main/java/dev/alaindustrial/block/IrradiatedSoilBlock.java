@@ -1,6 +1,6 @@
 package dev.alaindustrial.block;
 
-import dev.alaindustrial.Config;
+import dev.alaindustrial.core.reactor.ReactorConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -62,7 +62,7 @@ public class IrradiatedSoilBlock extends Block {
 	 */
 	@Override
 	protected void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-		int chance = Math.max(1, Config.reactorFalloutDecayChancePercent);
+		int chance = Math.max(1, ReactorConfig.reactorFalloutDecayChancePercent);
 		if (level.getFluidState(pos.above()).is(net.minecraft.world.level.material.Fluids.WATER)) {
 			chance = Math.min(100, chance * 2);
 		}
@@ -85,6 +85,6 @@ public class IrradiatedSoilBlock extends Block {
 			return 0;
 		}
 		int intensity = state.getValue(INTENSITY);
-		return Math.max(0, Config.reactorFalloutDosePerBlock) * intensity / MAX_INTENSITY;
+		return Math.max(0, ReactorConfig.reactorFalloutDosePerBlock) * intensity / MAX_INTENSITY;
 	}
 }

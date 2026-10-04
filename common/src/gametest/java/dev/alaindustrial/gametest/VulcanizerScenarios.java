@@ -1,15 +1,18 @@
 package dev.alaindustrial.gametest;
 
+import static dev.alaindustrial.gametest.AlaGameTestHelper.drive;
+
 import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.ElectricHeaterBlockEntity;
-import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.block.entity.VulcanizerBlockEntity;
 import dev.alaindustrial.block.entity.VulcanizerStatus;
 import dev.alaindustrial.core.heat.HeatSource;
-import dev.alaindustrial.core.heat.WorldHeatSources;
+import dev.alaindustrial.block.entity.WorldHeatSources;
+import dev.alaindustrial.core.machine.MachineRates;
 import dev.alaindustrial.registry.ModContent;
 import java.util.Arrays;
+import java.util.List;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -33,6 +36,69 @@ import net.minecraft.world.level.storage.TagValueInput;
  * recipe registration, block entities and demand-driven heater behaviour cannot drift by loader.
  */
 public final class VulcanizerScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(VulcanizerScenarios::fun01HeatLevelsScaleOutput, "vulcanizer_heat_levels_scale_output")
+						.fabricId("VulcanizerGameTest", "tcVulc001Fun01_heatLevelsScaleOutput").ticks(700),
+				RosterEntry.of(VulcanizerScenarios::fun02AllPassiveHeatSourcesResolve,
+								"vulcanizer_all_passive_heat_sources_resolve")
+						.fabricId("VulcanizerGameTest", "tcVulc001Fun02_allPassiveHeatSourcesResolve").ticks(20, 40),
+				RosterEntry.of(VulcanizerScenarios::neg01NoHeatNoWork, "vulcanizer_no_heat_no_work")
+						.fabricId("VulcanizerGameTest", "tcVulc001Neg01_noHeatNoWork").ticks(20, 40),
+				RosterEntry.of(VulcanizerScenarios::neg02NoPowerNoWork, "vulcanizer_no_power_no_work")
+						.fabricId("VulcanizerGameTest", "tcVulc001Neg02_noPowerNoWork").ticks(300),
+				RosterEntry.of(VulcanizerScenarios::neg03InactiveHeatSourcesResolveAsNone,
+								"vulcanizer_inactive_heat_sources_resolve_as_none")
+						.fabricId("VulcanizerGameTest", "tcVulc001Neg03_inactiveHeatSourcesResolveAsNone")
+						.ticks(20, 40),
+				RosterEntry.of(VulcanizerScenarios::neg04PartialSulfurBatchDoesNotWork,
+								"vulcanizer_partial_sulfur_batch_does_not_work")
+						.fabricId("VulcanizerGameTest", "tcVulc001Neg04_partialSulfurBatchDoesNotWork").ticks(300),
+				RosterEntry.of(VulcanizerScenarios::con01OutputJamFreezesBothConsumers,
+								"vulcanizer_output_jam_freezes_both_consumers")
+						.fabricId("VulcanizerGameTest", "tcVulc001Con01_outputJamFreezesBothConsumers").ticks(20, 40),
+				RosterEntry.of(VulcanizerScenarios::con02HeaterIsDemandDriven, "vulcanizer_heater_is_demand_driven")
+						.fabricId("VulcanizerGameTest", "tcVulc001Con02_heaterIsDemandDriven").ticks(20, 40),
+				RosterEntry.of(VulcanizerScenarios::con03HeaterTariffIsAtomicAtThreshold,
+								"vulcanizer_heater_tariff_is_atomic_at_threshold")
+						.fabricId("VulcanizerGameTest", "tcVulc001Con03_heaterTariffIsAtomicAtThreshold")
+						.ticks(20, 40),
+				RosterEntry.of(VulcanizerScenarios::reg01HeatUpgradeFinishesBatchAtCapturedTier,
+								"vulcanizer_heat_upgrade_finishes_batch_at_captured_tier")
+						.fabricId("VulcanizerGameTest", "tcVulc001Reg01_heatUpgradeFinishesBatchAtCapturedTier")
+						.ticks(300),
+				RosterEntry.of(VulcanizerScenarios::fun04ColdHeaterProducesNothingUntilWarm,
+								"electric_heater_cold_produces_nothing_until_warm")
+						.fabricId("VulcanizerGameTest", "tcEheat001Fun04_coldHeaterProducesNothingUntilWarm")
+						.ticks(700),
+				RosterEntry.of(VulcanizerScenarios::fun05IdleHeaterCoolsAtHalfRate,
+								"electric_heater_idle_cools_at_half_rate")
+						.fabricId("VulcanizerGameTest", "tcEheat001Fun05_idleHeaterCoolsAtHalfRate").ticks(400),
+				RosterEntry.of(VulcanizerScenarios::fun06LoneHeaterNeverWarmsAndSpendsNothing,
+								"electric_heater_lone_never_warms")
+						.fabricId("VulcanizerGameTest", "tcEheat001Fun06_loneHeaterNeverWarms").ticks(500),
+				RosterEntry.of(VulcanizerScenarios::reg02AutomationKeepsInputsSeparated,
+								"vulcanizer_automation_keeps_inputs_separated")
+						.fabricId("VulcanizerGameTest", "tcVulc001Reg02_automationKeepsInputsSeparated").ticks(20, 40),
+				RosterEntry.of(VulcanizerScenarios::reg03HeatDowngradeRestartsCycle,
+								"vulcanizer_heat_downgrade_restarts_cycle")
+						.fabricId("VulcanizerGameTest", "tcVulc001Reg03_heatDowngradeRestartsCycle").ticks(300),
+				RosterEntry.of(VulcanizerScenarios::sta01RoundTripPreservesInFlightCycle,
+								"vulcanizer_round_trip_preserves_in_flight_cycle")
+						.fabricId("VulcanizerGameTest", "tcVulc001Sta01_roundTripPreservesInFlightCycle")
+						.ticks(20, 40),
+				RosterEntry.of(VulcanizerScenarios::fun03RubberProductionAdvancement,
+								"vulcanizer_rubber_production_advancement")
+						.fabricId("VulcanizerGameTest", "tcVulc001Fun03_rubberProductionAdvancement").ticks(300),
+				RosterEntry.of(VulcanizerScenarios::tcHeater002Fun01_soundFollowsSpendingNotHeat,
+								"vulcanizer_tc_heater002_fun01_sound_follows_spending_not_heat")
+						.fabricId("VulcanizerGameTest", "tcHeater002Fun01_soundFollowsSpendingNotHeat").ticks(20, 200));
+
+		private Roster() {}
+	}
+
 	private static final BlockPos MACHINE = new BlockPos(1, 2, 1);
 	private static final BlockPos HEAT = MACHINE.below();
 	private static final long AMPLE_EU = 800L;
@@ -74,11 +140,7 @@ public final class VulcanizerScenarios {
 	}
 
 	private static int operationTicks() {
-		return Config.scaledDuration(Config.vulcanizerDuration) + 2;
-	}
-
-	private static void drive(MachineBlockEntity be, GameTestHelper helper, int ticks) {
-		AlaGameTestHelper.drive(be, helper, ticks);
+		return MachineRates.duration(Config.vulcanizerDuration, Config.globalMachineSpeedMultiplier) + 2;
 	}
 
 	private static void passiveHeat(GameTestHelper helper, Block block) {
@@ -312,7 +374,7 @@ public final class VulcanizerScenarios {
 			return;
 		}
 
-		int cost = Config.electricHeaterEuPerTickEffective();
+		int cost = MachineRates.euPerTick(Config.electricHeaterEuPerTick, Config.globalMachineSpeedMultiplier);
 		poweredHeater(helper, cost - 1L);
 		be.onHeatNeighbourChanged();
 		if (be.heatSource() != HeatSource.NONE) {
@@ -383,7 +445,7 @@ public final class VulcanizerScenarios {
 		stock(be, 1);
 		ElectricHeaterBlockEntity heater = hotHeater(helper, be);
 		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
-		int cost = Config.electricHeaterEuPerTickEffective();
+		int cost = MachineRates.euPerTick(Config.electricHeaterEuPerTick, Config.globalMachineSpeedMultiplier);
 
 		drive(be, helper, 1);
 		if (be.getDataAccess().get(2) != 1 || heater.getEnergyStorage().getAmount() != heaterEu() - cost) {
@@ -405,7 +467,7 @@ public final class VulcanizerScenarios {
 
 	/** The electric heater accepts the exact tariff, commits it once, and rejects a second draw. */
 	public static void con03HeaterTariffIsAtomicAtThreshold(GameTestHelper helper) {
-		int cost = Config.electricHeaterEuPerTickEffective();
+		int cost = MachineRates.euPerTick(Config.electricHeaterEuPerTick, Config.globalMachineSpeedMultiplier);
 		VulcanizerBlockEntity be = placeMachine(helper);
 		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		stock(be, 1);
@@ -574,7 +636,8 @@ public final class VulcanizerScenarios {
 				helper.absolutePos(MACHINE), helper.getLevel().getBlockState(helper.absolutePos(MACHINE)));
 		restored.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, tag));
 
-		if (restored.getEnergyStorage().getAmount() != 321L - Config.machineEuPerTickEffective()
+		if (restored.getEnergyStorage().getAmount() != 321L - MachineRates.euPerTick(Config.machineEuPerTick,
+				Config.globalMachineSpeedMultiplier)
 				|| restored.getDataAccess().get(2) != 1 || restored.cycleHeatLevel() != 1
 				|| !holdsOperations(restored, 3)) {
 			helper.fail("in-flight vulcanizer cycle did not round-trip");
@@ -623,6 +686,8 @@ public final class VulcanizerScenarios {
 	 *
 	 * <p>Asserted on the blockstate rather than on the sound, because the blockstate is what the client
 	 * reads: {@code MachineHumProvider#isWorking} is handed nothing else.
+	 *
+	 * @implements TC-HEATER-002-FUN01 — the heater's sound flag follows spending, its light temperature.
 	 */
 	public static void tcHeater002Fun01_soundFollowsSpendingNotHeat(GameTestHelper helper) {
 		VulcanizerBlockEntity machine = placeMachine(helper);

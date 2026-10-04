@@ -28,7 +28,7 @@ public final class ScytheBonus {
 	 * disable the mechanic silently instead of reading as a clean "off".
 	 *
 	 * @param tierChance the tier's shipped chance (0..1), from {@code ScytheItem.Profile}
-	 * @param multiplier the server's global multiplier, {@code Config.scytheBonusSeedMultiplier}
+	 * @param multiplier the server's global multiplier, {@code ToolConfig.scytheBonusSeedMultiplier}
 	 * @return a probability in {@code 0..1}, never negative and never NaN
 	 */
 	public static double effectiveChance(float tierChance, double multiplier) {

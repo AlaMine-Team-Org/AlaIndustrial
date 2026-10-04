@@ -1,24 +1,19 @@
 package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
-import dev.alaindustrial.core.energy.EnergyRole;
+import dev.alaindustrial.block.entity.machine.SyncChannels;
 import dev.alaindustrial.core.energy.EnergyTier;
-import dev.alaindustrial.core.waste.BladeTier;
 import dev.alaindustrial.core.waste.SlagGrade;
-import dev.alaindustrial.core.waste.WasteClassifier;
 import dev.alaindustrial.core.waste.WasteFraction;
 import dev.alaindustrial.block.RecyclerBlock;
 import dev.alaindustrial.menu.RecyclerMenu;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModTags;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -52,16 +47,6 @@ public class RecyclerBlockEntity extends MachineBlockEntity implements MenuProvi
 	public static final int BLADE_SLOT = 3;
 	/** Machine inventory size — goes into {@code super(...)} AND sizes the menu's client stub (MOD-439). */
 	public static final int SLOT_COUNT = 4;
-
-	/** Base channels plus batch mass, three fractions, ash count and the status line. */
-	public static final int DATA_COUNT = MachineBlockEntity.DATA_COUNT + 6;
-	public static final int DATA_BATCH_MASS = 4;
-	public static final int DATA_MINERAL = 5;
-	public static final int DATA_METAL = 6;
-	public static final int DATA_COMBUSTIBLE = 7;
-	public static final int DATA_ASH = 8;
-	public static final int DATA_STATUS = 9;
-
 	/** Above this share of a full ash bin the machine drags before it stops entirely. */
 	private static final float ASH_SLOWDOWN_SHARE = 0.75f;
 	private static final float ASH_SLOWDOWN_FACTOR = 1.5f;
@@ -289,11 +274,6 @@ public class RecyclerBlockEntity extends MachineBlockEntity implements MenuProvi
 	}
 
 	@Override
-	public EnergyRole energyRoleForFace(Direction worldFace) {
-		return facingAwareRole(worldFace, EnergyRole.IN);
-	}
-
-	@Override
 	protected boolean resetProgressOnInputChange() {
 		return true;
 	}
@@ -308,54 +288,36 @@ public class RecyclerBlockEntity extends MachineBlockEntity implements MenuProvi
 	}
 
 	@Override
-	protected void loadAdditional(ValueInput input) {
-		super.loadAdditional(input);
+	protected void loadMachineData(ValueInput input) {
+		super.loadMachineData(input);
 		massMineral = input.getIntOr("MassMineral", 0);
 		massMetal = input.getIntOr("MassMetal", 0);
 		massCombustible = input.getIntOr("MassCombustible", 0);
 		massOther = input.getIntOr("MassOther", 0);
 	}
 
-	/** Ten-wide data: the four base channels plus the batch, its three fractions, ash and status. */
-	private final ContainerData recyclerData = new ContainerData() {
-		@Override
-		public int get(int index) {
-			return switch (index) {
-				case DATA_BATCH_MASS -> batchMass();
-				case DATA_MINERAL -> massMineral;
-				case DATA_METAL -> massMetal;
-				case DATA_COMBUSTIBLE -> massCombustible;
-				case DATA_ASH -> items.get(ASH_SLOT).getCount();
-				case DATA_STATUS -> status.ordinal();
-				default -> RecyclerBlockEntity.super.dataAccess.get(index);
-			};
-		}
-
-		@Override
-		public void set(int index, int value) {
-			switch (index) {
-				case DATA_MINERAL -> massMineral = value;
-				case DATA_METAL -> massMetal = value;
-				case DATA_COMBUSTIBLE -> massCombustible = value;
-				case DATA_STATUS -> status = RecyclerStatus.byOrdinal(value);
-				default -> RecyclerBlockEntity.super.dataAccess.set(index, value);
-			}
-		}
-
-		@Override
-		public int getCount() {
-			return DATA_COUNT;
-		}
-	};
-
-	@Override
-	public ContainerData getDataAccess() {
-		return recyclerData;
+	/**
+	 * GUI sync channels (MOD-712, BE-7): the base four, the batch mass (derived), its three fractions, the
+	 * ash count (derived) and the {@link RecyclerStatus} ordinal; the fractions and the status take a write.
+	 */
+	public enum Channel {
+		ENERGY, CAPACITY, PROGRESS, MAX_PROGRESS,
+		BATCH_MASS, MINERAL, METAL, COMBUSTIBLE, ASH, STATUS
 	}
 
+	/** Width of {@link #getDataAccess()}, which the menu's client stub sizes itself from (MOD-235). */
+	public static final int DATA_COUNT = Channel.values().length;
+
 	@Override
-	public Component getDisplayName() {
-		return Component.translatable("block.alaindustrial.recycler");
+	protected SyncChannels createChannels() {
+		return channels(Channel.class)
+				.read(Channel.BATCH_MASS, () -> batchMass())
+				.readWrite(Channel.MINERAL, () -> massMineral, value -> massMineral = value)
+				.readWrite(Channel.METAL, () -> massMetal, value -> massMetal = value)
+				.readWrite(Channel.COMBUSTIBLE, () -> massCombustible, value -> massCombustible = value)
+				.read(Channel.ASH, () -> items.get(ASH_SLOT).getCount())
+				.readWrite(Channel.STATUS, () -> status.ordinal(), value -> status = RecyclerStatus.byOrdinal(value))
+				.build();
 	}
 
 	@Override

@@ -21,7 +21,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.ItemLike;
 
 /**
  * JEI category for the Alloy Smelter (MOD-064) — the JEI counterpart of the REI {@code AlloyingCategory}.
@@ -36,11 +36,11 @@ final class AlloyingJeiCategory implements IRecipeCategory<RecipeHolder<Alloying
 	private final IDrawable icon;
 	private final IDrawable arrow;
 
-	AlloyingJeiCategory(IRecipeHolderType<AlloyingRecipe> recipeType, Block iconBlock,
+	AlloyingJeiCategory(IRecipeHolderType<AlloyingRecipe> recipeType, ItemLike iconItem,
 			Component title, IGuiHelper guiHelper) {
 		this.recipeType = recipeType;
 		this.title = title;
-		this.icon = guiHelper.createDrawableItemLike(iconBlock);
+		this.icon = guiHelper.createDrawableItemLike(iconItem);
 		this.arrow = guiHelper.getRecipeArrow();
 	}
 

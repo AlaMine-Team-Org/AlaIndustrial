@@ -1,6 +1,5 @@
 package dev.alaindustrial.client.screen.teleporter;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.client.hud.TeleportNotice;
 import dev.alaindustrial.client.screen.GuiStyle;
 import dev.alaindustrial.client.screen.TeleporterRemoteScreen;
@@ -41,7 +40,6 @@ import org.jspecify.annotations.Nullable;
  * lamps come from {@link TeleportStationsPayload}, which the server builds without loading a chunk.
  */
 public final class StationsTabPage implements TabPage {
-
 	// Header and list well, panel-relative.
 	private static final int HEADER_Y = 21;
 	private static final int CONTENT_LEFT = 8;
@@ -213,7 +211,7 @@ public final class StationsTabPage implements TabPage {
 		PageText.scaled(graphics, font, Component.translatable("gui.alaindustrial.teleporter_remote.stations.bound"),
 				x + CONTENT_LEFT, y + HEADER_Y, SMALL, GuiStyle.TEXT_DIM);
 		Component count = Component.translatable("gui.alaindustrial.teleporter_remote.stations.count", points.size(),
-				Config.teleporterMaxPoints);
+				PointAllowance.max());
 		PageText.scaled(graphics, font, count, x + CONTENT_RIGHT - Math.round(font.width(count) * SMALL), y + HEADER_Y,
 				SMALL, GuiStyle.TEXT_DIM);
 
@@ -224,7 +222,7 @@ public final class StationsTabPage implements TabPage {
 
 		TeleportStationsPayload snapshot = menu.stations();
 		int selected = menu.getSelected();
-		int free = Math.max(0, Config.teleporterMaxPoints - points.size());
+		int free = PointAllowance.free(points.size());
 		for (int row = 0; row < ROWS; row++) {
 			int index = scroll + row;
 			int rowTop = y + LIST_TOP + row * ROW_H;

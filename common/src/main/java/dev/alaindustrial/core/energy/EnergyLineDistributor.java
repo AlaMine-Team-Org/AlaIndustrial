@@ -6,49 +6,44 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import java.util.function.UnaryOperator;
 
 /**
- * The per-tick distribution kernel of an {@link EnergyNetwork}. Extracted from {@code EnergyNetwork}
- * so the segment-to-segment flow math (MOD-070) sits in a small, focused class rather than being
- * scattered across ~300 lines of the 760-line façade. The pure delivery/loss arithmetic itself
- * already lives in {@link EnergyShare}/{@link EnergyServe}; this class orchestrates WHO pulls from
- * WHERE, in what order, at what time.
+ * The per-tick distribution kernel of an {@link EnergyNetwork}. Extracted from {@code EnergyNetwork} so the
+ * segment-to-segment flow math (MOD-070) sits in a small, focused class rather than being scattered across ~300
+ * lines of the 760-line façade. The pure delivery/loss arithmetic itself already lives in {@link EnergyShare}/
+ * {@link EnergyServe}; this class orchestrates WHO pulls from WHERE, in what order, at what time.
  *
  * <p>A new instance is constructed per {@link EnergyNetwork#tick()} pass and bound to that network's
  * topology + buffer lookups. The two-state-mutating fields that survive across ticks (round-robin
  * cursor, line-full flag, telemetry) live in {@link EnergyNetwork}; the kernel itself is stateless
  * beyond what the constructor captures.
  *
- * <p>MC-coupled: reads the live cable buffer at a position through a {@link Function} supplied by
- * the façade (the actual {@code level.getBlockEntity} stays there). This keeps the kernel close to
- * the runtime path it has always run on, while letting the topology/BFS half live in
- * {@link EnergyTopologyCache}.
+ * <p>Minecraft-free and generic over the position type {@code P} (MOD-715, batch 8): it reaches every position
+ * through the {@link LineView}, a neighbour as a numbered face, so the network runs it on {@code BlockPos} and
+ * an L1 test on a toy grid. It needs no position order of its own: the cables it sweeps arrive ordered, and
+ * the rest goes in list or face order. Package-private — part of the {@code EnergyNetwork} implementation.
  *
- * <p>Package-private — part of the {@code EnergyNetwork} implementation; not a public API.
+ * @param <P> the position type of a cable or an endpoint
  */
-final class EnergyLineDistributor {
+final class EnergyLineDistributor<P> {
 	/**
 	 * A live producer endpoint resolved for this tick: its pos (for self-churn checks), its storage, and
 	 * the host whose buffer that storage is — its own pos unless it is a multiblock cell lending a core's
 	 * port (MOD-608), in which case the per-source packet cap is shared with every cell of that host.
 	 */
-	record LiveProducer(BlockPos pos, EnergyPort storage, BlockPos host) {
+	record LiveProducer<P>(P pos, EnergyPort storage, P host) {
 		/** An ordinary producer: its own host. Cable buffers and storage sources are always this. */
-		LiveProducer(BlockPos pos, EnergyPort storage) {
+		LiveProducer(P pos, EnergyPort storage) {
 			this(pos, storage, pos);
 		}
 	}
 
 	/** A live consumer endpoint resolved for this tick: its pos, storage and free room. */
-	record LiveConsumer(BlockPos pos, EnergyPort storage, long room) {
+	record LiveConsumer<P>(P pos, EnergyPort storage, long room) {
 	}
-
-	private static final Direction[] DIRECTIONS = Direction.values();
 
 	/**
 	 * How much more of a forked buffer goes to the branch that leads toward a waiting machine (MOD-254 /
@@ -65,10 +60,13 @@ final class EnergyLineDistributor {
 	 */
 	private static final int SINK_ADJACENT_POTENTIAL = 1;
 
-	private final Predicate<BlockPos> isCable;
-	private final Function<BlockPos, EnergyBuffer> cableBufferAt;
-	private final Function<BlockPos, Integer> consumerDistance;
-	private final Function<BlockPos, Integer> flowPotential;
+	/** The steps to a position's neighbours, numbered: face {@code i} is the same side everywhere. */
+	private final List<UnaryOperator<P>> faces;
+	private final int faceCount;
+	private final Predicate<P> isCable;
+	private final Function<P, EnergyBuffer> cableBufferAt;
+	private final Function<P, Integer> consumerDistance;
+	private final Function<P, Integer> flowPotential;
 	/**
 	 * Distance to the nearest waiting machine, or {@code null} when none is waiting (MOD-254). Used ONLY to
 	 * weigh a fork: of two cables entitled to pull from the same buffer, the one whose machine distance is
@@ -76,8 +74,8 @@ final class EnergyLineDistributor {
 	 * whether a cable may be filled at all — that stays {@link #flowPotential}, which is seeded from every
 	 * waiting endpoint (narrowing it is exactly the reachability defect MOD-252 fixed).
 	 */
-	private final Function<BlockPos, Integer> machinePotential;
-	private final List<BlockPos> propagationOrder;
+	private final Function<P, Integer> machinePotential;
+	private final List<P> propagationOrder;
 	/**
 	 * Can the endpoint at this position DRAW energy through the face pointing in this direction (MOD-255)?
 	 * The kernel finds the cables an endpoint touches by pure adjacency, which says nothing about whether
@@ -86,79 +84,35 @@ final class EnergyLineDistributor {
 	 * discharging into (R-NRG-03 is enforced on the direct path by {@link DirectAdjacencyDistributor}, and
 	 * this is its cabled twin).
 	 */
-	private final BiPredicate<BlockPos, Direction> canDrawFace;
+	private final LineView.FaceGate<P> canDrawFace;
 	/** Can the source at this position FEED energy through the face pointing this way (MOD-255)? Mirror of {@link #canDrawFace}. */
-	private final BiPredicate<BlockPos, Direction> canFeedFace;
+	private final LineView.FaceGate<P> canFeedFace;
 
 	/**
 	 * The cables the downhill rule cannot reach, farthest from the source first, and the field that gives
 	 * them a direction (MOD-318). Empty by default: a caller that has no stranded segments — every fixture
 	 * in the L1.5 suite, and any network in fallback mode — gets exactly the pre-MOD-318 behaviour.
 	 */
-	private final List<BlockPos> strandedOrder;
-	private final Function<BlockPos, Integer> strandedProducerDistance;
-
-	EnergyLineDistributor(
-			EnergyTopologyCache topology,
-			Function<BlockPos, EnergyBuffer> cableBufferAt,
-			Function<BlockPos, Integer> consumerDistance,
-			Function<BlockPos, Integer> flowPotential,
-			Function<BlockPos, Integer> machinePotential,
-			List<BlockPos> propagationOrder,
-			BiPredicate<BlockPos, Direction> canDrawFace,
-			BiPredicate<BlockPos, Direction> canFeedFace,
-			List<BlockPos> strandedOrder,
-			Function<BlockPos, Integer> strandedProducerDistance) {
-		this(topology::contains, cableBufferAt, consumerDistance, flowPotential, machinePotential,
-				propagationOrder, canDrawFace, canFeedFace, strandedOrder, strandedProducerDistance);
-	}
+	private final List<P> strandedOrder;
+	private final Function<P, Integer> strandedProducerDistance;
 
 	/**
-	 * Predicate-based constructor for tests and other callers that want to drive the kernel against a
-	 * synthetic cable graph without spinning up a full {@link EnergyTopologyCache} (which requires a
-	 * live {@link ServerLevel}). All behavioural methods read topology only through the captured
-	 * {@code isCable} predicate, so a hand-rolled {@code Set::contains} over fake positions exercises
-	 * the same code path.
+	 * A kernel bound to one tick of one line ({@link LineView}): the network's own view, or a synthetic graph
+	 * in a test — every behavioural method reads the topology only through the view.
 	 */
-	EnergyLineDistributor(
-			Predicate<BlockPos> isCable,
-			Function<BlockPos, EnergyBuffer> cableBufferAt,
-			Function<BlockPos, Integer> consumerDistance,
-			Function<BlockPos, Integer> flowPotential,
-			Function<BlockPos, Integer> machinePotential,
-			List<BlockPos> propagationOrder,
-			BiPredicate<BlockPos, Direction> canDrawFace,
-			BiPredicate<BlockPos, Direction> canFeedFace,
-			List<BlockPos> strandedOrder,
-			Function<BlockPos, Integer> strandedProducerDistance) {
-		this.strandedOrder = strandedOrder;
-		this.strandedProducerDistance = strandedProducerDistance;
-		this.isCable = isCable;
-		this.cableBufferAt = cableBufferAt;
-		this.consumerDistance = consumerDistance;
-		this.flowPotential = flowPotential;
-		this.machinePotential = machinePotential;
-		this.propagationOrder = propagationOrder;
-		this.canDrawFace = canDrawFace;
-		this.canFeedFace = canFeedFace;
-	}
-
-	/**
-	 * How much EU storage sources are allowed to discharge into the line this tick <em>as backup power</em>:
-	 * the machine demand generators fall short of, never less than zero (MOD-070 backup-power rule).
-	 * Shared with {@link EnergyNetwork#tick()}, which needs the same number to decide whether a dual-role
-	 * storage node is discharging — and therefore must not also be served from the line this tick
-	 * (MOD-255). Kept in one place because two copies of this expression would drift and silently
-	 * decouple the two decisions.
-	 *
-	 * <p>Since MOD-314 this is no longer the ONLY reason storage discharges: when this budget is zero
-	 * (machines absent or already covered) a fuller store may still feed an emptier one through the
-	 * cascade. The two are mutually exclusive by construction — see
-	 * {@link #chargeAndPropagateLine(List, List, long, long, long, EnergyPort.Txn, int, Map)} — so this
-	 * number still answers "is backup power flowing", just not "is any storage discharging".
-	 */
-	static long storageBudget(long machineDemand, long genSupply) {
-		return Math.max(0L, machineDemand - genSupply);
+	EnergyLineDistributor(LineView<P> view) {
+		this.faces = view.faces();
+		this.faceCount = faces.size();
+		this.strandedOrder = view.strandedOrder();
+		this.strandedProducerDistance = view.strandedProducerDistance();
+		this.isCable = view.isCable();
+		this.cableBufferAt = view.cableBufferAt();
+		this.consumerDistance = view.consumerDistance();
+		this.flowPotential = view.flowPotential();
+		this.machinePotential = view.machinePotential();
+		this.propagationOrder = view.propagationOrder();
+		this.canDrawFace = view.canDrawFace();
+		this.canFeedFace = view.canFeedFace();
 	}
 
 	/**
@@ -175,7 +129,7 @@ final class EnergyLineDistributor {
 	 * @param producerCursor the round-robin rotation offset for {@link #serveClass}'s pull across the
 	 *     line supply pool; bounded by the pool size, re-applied modulo inside.
 	 */
-	long serveConsumersFromLine(List<LiveConsumer> consumers, long packetCap, double lossPerBlock,
+	long serveConsumersFromLine(List<LiveConsumer<P>> consumers, long packetCap, double lossPerBlock,
 			EnergyPort.Txn tx, int producerCursor) {
 		if (consumers.isEmpty()) {
 			return 0L;
@@ -191,21 +145,21 @@ final class EnergyLineDistributor {
 		// the line never advances. Tested per direction rather than off the endpoint's cached side because
 		// the endpoint cache keeps only ONE side per position — a machine with two working input faces
 		// would otherwise lose half its draw.
-		Set<BlockPos> touched = new LinkedHashSet<>();
-		for (LiveConsumer m : consumers) {
-			for (Direction dir : DIRECTIONS) {
-				BlockPos np = m.pos().relative(dir);
-				if (isCable.test(np) && canDrawFace.test(m.pos(), dir)) {
+		Set<P> touched = new LinkedHashSet<>();
+		for (LiveConsumer<P> m : consumers) {
+			for (int face = 0; face < faceCount; face++) {
+				P np = faces.get(face).apply(m.pos());
+				if (isCable.test(np) && canDrawFace.test(m.pos(), face)) {
 					touched.add(np);
 				}
 			}
 		}
-		List<LiveProducer> lineSupply = new ArrayList<>();
+		List<LiveProducer<P>> lineSupply = new ArrayList<>();
 		long[] lineTotal = {0L};
-		for (BlockPos pos : touched) {
+		for (P pos : touched) {
 			EnergyBuffer buf = cableBufferAt.apply(pos);
 			if (buf != null && buf.getAmount() > 0) {
-				lineSupply.add(new LiveProducer(pos, buf));
+				lineSupply.add(new LiveProducer<>(pos, buf));
 				lineTotal[0] += buf.getAmount();
 			}
 		}
@@ -217,64 +171,30 @@ final class EnergyLineDistributor {
 
 	/**
 	 * Stage 2 of {@link EnergyNetwork#tick()}: push existing line energy one hop toward consumers,
-	 * then charge the producer-adjacent cables from producers. Returns the EU actually drawn from
-	 * producers into the line (so the caller can dock it from the supply left for storage sinks).
-	 * Loss-free between cables — the resistive cost is charged once, per consumer, on delivery
-	 * (stage 1); charging it again per hop would break the MOD-021 numbers ({@code floor(0.02·1)=0}
-	 * per hop ≠ {@code floor(0.02·32·10)=6}).
+	 * then charge the producer-adjacent cables from producers. Returns the EU actually drawn out of storage
+	 * sources into the line this tick, whichever channel drew it (MOD-665): the Network Analyzer needs it to
+	 * count energy that passes THROUGH a store only once across the networks the store bridges. Generator
+	 * draw is not included. Loss-free between cables — the resistive cost is charged once, per consumer, on
+	 * delivery (stage 1); charging it again per hop would break the MOD-021 numbers
+	 * ({@code floor(0.02·1)=0} per hop ≠ {@code floor(0.02·32·10)=6}).
+	 *
+	 * <p><b>Storage discharges through exactly one of three channels per tick, never two (ADR-004)</b>, in
+	 * the order of {@code plan}: backup power (machines are short), the cascade (MOD-314, a fuller store
+	 * topping up an emptier one) and the feed (MOD-353, a store trickling into a sink the cascade refuses).
+	 * Each one {@code return}s so the next cannot also run. The exclusivity is not stylistic: each stage
+	 * starts a fresh per-source {@code fromThis} budget inside {@link #chargeLineFrom}, so two stages in one
+	 * tick would let a single store inject 2 × {@code packetCap} and quietly break the tier ceiling. It is
+	 * stated in two places on purpose — here, and in {@link DischargePlan}, which refuses to exist with two
+	 * channels open — because a future fourth channel will be added at exactly one of them. A caller with no
+	 * cascade or feed to consider passes {@link DischargePlan#backupOnly}.
 	 *
 	 * @param rotation the network's per-tick rotation offset, forwarded to {@link #chargeLineFrom} so the
 	 *     source sweep does not start at the same source (and the same face) every tick, and to
 	 *     {@link #propagateLineOneHop} so the indivisible remainder of a forked buffer does not land on the
 	 *     same branch every tick — see MOD-254.
 	 */
-	/**
-	 * Cascade-free overload: the line stage as it behaved before MOD-314. Kept because most callers —
-	 * every scenario in the L1.5 distributor suite that is about generators, machines, loss or
-	 * propagation — have no opinion about the storage→storage cascade, and threading an empty map
-	 * through them would add noise without adding coverage. Scenarios that ARE about the cascade pass
-	 * allowances explicitly.
-	 */
-	long chargeAndPropagateLine(List<LiveProducer> generators, List<LiveProducer> storageSources,
-			long machineDemand, long genSupply, long packetCap, EnergyPort.Txn tx, int rotation) {
-		return chargeAndPropagateLine(generators, storageSources, machineDemand, genSupply, packetCap, tx,
-				rotation, null);
-	}
-
-	long chargeAndPropagateLine(List<LiveProducer> generators, List<LiveProducer> storageSources,
-			long machineDemand, long genSupply, long packetCap, EnergyPort.Txn tx, int rotation,
-			Map<BlockPos, Long> cascadeAllowances) {
-		return chargeAndPropagateLine(generators, storageSources, machineDemand, genSupply, packetCap, tx,
-				rotation, cascadeAllowances, java.util.Map.of());
-	}
-
-	/**
-	 * Full form with the MOD-353 feed stage.
-	 *
-	 * <p><b>Storage discharges through exactly one of three stages per tick, never two.</b> They are
-	 * ordered by how strong the claim on the energy is, and each one {@code return}s so the next cannot
-	 * also run:
-	 * <ol>
-	 *   <li><b>backup power</b> — machines are asking and generators fall short;</li>
-	 *   <li><b>cascade</b> (MOD-314) — no machine demand, but another store is proportionally emptier;</li>
-	 *   <li><b>feed</b> (MOD-353) — neither of the above, and a non-cascade sink (Teleporter, Charging
-	 *       Station) is waiting.</li>
-	 * </ol>
-	 *
-	 * <p>The exclusivity is not stylistic. Each stage starts a fresh per-source {@code fromThis} budget
-	 * inside {@link #chargeLineFrom}, so two stages in one tick would let a single store inject
-	 * 2 × {@code packetCap} and quietly break the tier ceiling this class documents. The caller
-	 * independently guarantees the same thing by only computing the later allowances when the earlier
-	 * stages are closed; stating it in both places is deliberate, because a future fourth stage will be
-	 * added at exactly one of them.
-	 *
-	 * <p>Returns the EU drawn out of storage sources into the line this tick, whichever stage drew it
-	 * (MOD-665): the Network Analyzer needs it to count energy that passes THROUGH a store only once
-	 * across the networks the store bridges. Generator draw is not included.
-	 */
-	long chargeAndPropagateLine(List<LiveProducer> generators, List<LiveProducer> storageSources,
-			long machineDemand, long genSupply, long packetCap, EnergyPort.Txn tx, int rotation,
-			Map<BlockPos, Long> cascadeAllowances, Map<BlockPos, Long> feedAllowances) {
+	long chargeAndPropagateLine(List<LiveProducer<P>> generators, List<LiveProducer<P>> storageSources,
+			DischargePlan<P> plan, long packetCap, EnergyPort.Txn tx, int rotation) {
 		propagateLineOneHop(packetCap, tx, rotation);
 		// MOD-318 — top up the segments the downhill rule cannot reach. THE POSITION OF THIS CALL IS
 		// LOAD-BEARING: it must sit after the sweep and BEFORE the sources recharge the line.
@@ -294,11 +214,11 @@ final class EnergyLineDistributor {
 		// Storage discharges into the line ONLY to cover the machine demand generators fall short of
 		// (backup power). When generators already cover it, storageBudget is 0 and no battery bleeds into
 		// the wires — this closes the dual-role wash the audit flagged.
-		long storageBudget = storageBudget(machineDemand, genSupply);
+		long storageBudget = plan.backupBudget();
 		if (storageBudget > 0 && !storageSources.isEmpty()) {
 			long drawn = chargeLineFrom(storageSources, packetCap, storageBudget, tx, rotation);
-			// Backup power and cascade are mutually exclusive, and the caller has already guaranteed it
-			// (EnergyNetwork only computes allowances when this budget is 0). Returning here states the
+			// Backup power and cascade are mutually exclusive, and the plan has already guaranteed it
+			// (DischargePlan opens a later channel only when this budget is 0). Returning here states the
 			// same invariant at the point it protects: two storage stages in one tick would each start a
 			// fresh per-source `fromThis`, letting one battery inject 2 × packetCap and quietly break the
 			// tier ceiling this class documents on chargeLineFrom.
@@ -309,26 +229,26 @@ final class EnergyLineDistributor {
 		// single scalar would let a donor that is NOT proportionally fuller spend a budget opened by one
 		// that is — washing energy backwards while looking like a cascade. Iterating `storageSources`
 		// rather than the map keeps the order the topology fixed (MOD-304).
-		if (cascadeAllowances != null && !cascadeAllowances.isEmpty()) {
-			long drawn = 0;
-			for (LiveProducer donor : storageSources) {
-				Long allowance = cascadeAllowances.get(donor.pos());
-				if (allowance != null && allowance > 0) {
-					drawn += chargeLineFrom(List.of(donor), packetCap, allowance, tx, rotation);
-				}
-			}
-			return drawn;
+		if (!plan.cascadeAllowances().isEmpty()) {
+			return chargeLineByAllowance(storageSources, plan.cascadeAllowances(), packetCap, tx, rotation);
 		}
 		// MOD-353: stage three — a store trickling into a sink the cascade refuses. Reached only when the
 		// two stages above moved nothing, so the "one source ≤ packetCap per tick" invariant holds.
 		// Per-donor budgets for the same reason the cascade uses them: a single shared scalar would let a
 		// donor below its own reserve spend an allowance opened by one that is above it.
-		if (feedAllowances == null || feedAllowances.isEmpty()) {
-			return 0L;
-		}
+		return chargeLineByAllowance(storageSources, plan.feedAllowances(), packetCap, tx, rotation);
+	}
+
+	/**
+	 * Let each donor in {@code storageSources} charge the line with at most its own allowance — the cascade's
+	 * and the feed's per-donor budgets (MOD-314, MOD-353). Iterates the sources, not the map, so the order
+	 * the topology fixed is kept (MOD-304). Returns the EU drawn.
+	 */
+	private long chargeLineByAllowance(List<LiveProducer<P>> storageSources, Map<P, Long> allowances,
+			long packetCap, EnergyPort.Txn tx, int rotation) {
 		long drawn = 0;
-		for (LiveProducer donor : storageSources) {
-			Long allowance = feedAllowances.get(donor.pos());
+		for (LiveProducer<P> donor : storageSources) {
+			Long allowance = allowances.get(donor.pos());
 			if (allowance != null && allowance > 0) {
 				drawn += chargeLineFrom(List.of(donor), packetCap, allowance, tx, rotation);
 			}
@@ -368,33 +288,33 @@ final class EnergyLineDistributor {
 	 * draws its sparks from (MOD-665). Read after the tick: a generator refilled from outside between two
 	 * network ticks, such as a reactor outlet, is empty whenever it is looked at and yet feeds every tick.
 	 */
-	private final Set<BlockPos> fed = new LinkedHashSet<>();
+	private final Set<P> fed = new LinkedHashSet<>();
 
-	Set<BlockPos> fed() {
+	Set<P> fed() {
 		return fed;
 	}
 
-	private long chargeLineFrom(List<LiveProducer> sources, long packetCap, long totalBudget,
+	private long chargeLineFrom(List<LiveProducer<P>> sources, long packetCap, long totalBudget,
 			EnergyPort.Txn tx, int rotation) {
 		int sourceCount = sources.size();
 		if (sourceCount == 0) {
 			return 0;
 		}
 		long drawn = 0;
-		Map<BlockPos, Long> drawnByHost = new LinkedHashMap<>();
+		Map<P, Long> drawnByHost = new LinkedHashMap<>();
 		for (int s = 0; s < sourceCount; s++) {
 			if (drawn >= totalBudget) {
 				break;
 			}
-			LiveProducer prod = sources.get(Math.floorMod(rotation + s, sourceCount));
+			LiveProducer<P> prod = sources.get(Math.floorMod(rotation + s, sourceCount));
 			long fromThis = drawnByHost.getOrDefault(prod.host(), 0L); // per-host throughput, capped at packetCap
-			for (int d = 0; d < DIRECTIONS.length; d++) {
+			for (int d = 0; d < faceCount; d++) {
 				if (fromThis >= packetCap || drawn >= totalBudget) {
 					break;
 				}
-				Direction dir = DIRECTIONS[Math.floorMod(rotation + d, DIRECTIONS.length)];
-				BlockPos np = prod.pos().relative(dir);
-				if (!isCable.test(np) || !canFeedFace.test(prod.pos(), dir)) {
+				int face = Math.floorMod(rotation + d, faceCount);
+				P np = faces.get(face).apply(prod.pos());
+				if (!isCable.test(np) || !canFeedFace.test(prod.pos(), face)) {
 					continue;
 				}
 				EnergyBuffer buf = cableBufferAt.apply(np);
@@ -442,7 +362,7 @@ final class EnergyLineDistributor {
 	 * seam that is fatal rather than merely unfair — the seam on a source's own cable is exactly where the
 	 * line forks toward the demand on either side, so one branch received the source's entire output and the
 	 * other stayed dead at 0 EU forever. Which branch won was decided by {@code HashMap} bucket order over
-	 * absolute {@link BlockPos}, i.e. by where in the world the player happened to build: the same base
+	 * absolute {@code BlockPos}, i.e. by where in the world the player happened to build: the same base
 	 * worked or starved depending on its coordinates.
 	 *
 	 * <p>Now each donor collects every neighbour entitled to pull from it and splits its buffer between
@@ -462,10 +382,10 @@ final class EnergyLineDistributor {
 		if (propagationOrder.isEmpty()) {
 			return;
 		}
-		EnergyBuffer[] claimants = new EnergyBuffer[DIRECTIONS.length];
-		long[] free = new long[DIRECTIONS.length];
-		boolean[] machineWard = new boolean[DIRECTIONS.length];
-		for (BlockPos pos : propagationOrder) {
+		EnergyBuffer[] claimants = new EnergyBuffer[faceCount];
+		long[] free = new long[faceCount];
+		boolean[] machineWard = new boolean[faceCount];
+		for (P pos : propagationOrder) {
 			EnergyBuffer donor = cableBufferAt.apply(pos);
 			if (donor == null || donor.getAmount() <= 0) {
 				continue;
@@ -477,8 +397,8 @@ final class EnergyLineDistributor {
 			int pFrom = pFromBoxed;
 			Integer machineFrom = machinePotential.apply(pos);
 			int n = 0;
-			for (Direction dir : DIRECTIONS) {
-				BlockPos np = pos.relative(dir);
+			for (int face = 0; face < faceCount; face++) {
+				P np = faces.get(face).apply(pos);
 				Integer pTo = flowPotential.apply(np);
 				if (pTo == null || pTo >= pFrom) {
 					continue; // only push strictly downstream (lower potential = closer to demand)
@@ -527,7 +447,7 @@ final class EnergyLineDistributor {
 	 * order re-created the original 100 %:0 % starvation instead of merely rounding unfairly. A donor holding
 	 * fewer EU than it has claimants floors every proportional share to zero, so the ENTIRE buffer is
 	 * remainder — and one solar panel injecting {@code solarEuPerTick = 1} into the middle of a symmetric bus
-	 * is exactly that case. With a fixed scan the first {@link Direction} constant always won and the other
+	 * is exactly that case. With a fixed scan the first {@code Direction} constant always won and the other
 	 * branch sat at 0 EU forever; rotating the base 90° swapped which machine starved, i.e. the build-orientation
 	 * dependence MOD-254 exists to remove, surviving in the rounding path. So the remainder is dealt ONE EU at a
 	 * time, round-robin from a per-tick rotating start: no claimant can take a second EU while another that
@@ -626,9 +546,9 @@ final class EnergyLineDistributor {
 	 * @param producerDistance BFS distance to the nearest supplying producer; {@code null} off the field.
 	 *     Only cables carry an entry, so a non-null answer doubles as the "is a cable" test.
 	 */
-	void fillStrandedOneHop(List<BlockPos> strandedOrder, Function<BlockPos, Integer> producerDistance,
+	void fillStrandedOneHop(List<P> strandedOrder, Function<P, Integer> producerDistance,
 			long packetCap, EnergyPort.Txn tx) {
-		for (BlockPos pos : strandedOrder) {
+		for (P pos : strandedOrder) {
 			EnergyBuffer to = cableBufferAt.apply(pos);
 			if (to == null) {
 				continue;
@@ -639,11 +559,11 @@ final class EnergyLineDistributor {
 			if (room <= 0 || toDistance == null) {
 				continue;
 			}
-			for (Direction dir : DIRECTIONS) {
+			for (int face = 0; face < faceCount; face++) {
 				if (room <= 0) {
 					break;
 				}
-				BlockPos np = pos.relative(dir);
+				P np = faces.get(face).apply(pos);
 				Integer fromDistance = producerDistance.apply(np);
 				if (fromDistance == null || fromDistance >= toDistance) {
 					continue; // only pull from strictly closer to the source
@@ -689,7 +609,7 @@ final class EnergyLineDistributor {
 	 * its cable at zero forever, while the network reported full generators and a healthy demand.
 	 * A terminal cable owes its packet too; it just owes it to a consumer rather than to another cable.
 	 */
-	private boolean donorStillOwedDownhill(BlockPos donorPos) {
+	private boolean donorStillOwedDownhill(P donorPos) {
 		Integer donorPotential = flowPotential.apply(donorPos);
 		if (donorPotential == null) {
 			return false;
@@ -697,8 +617,8 @@ final class EnergyLineDistributor {
 		if (donorPotential <= SINK_ADJACENT_POTENTIAL) {
 			return true;
 		}
-		for (Direction dir : DIRECTIONS) {
-			BlockPos np = donorPos.relative(dir);
+		for (int face = 0; face < faceCount; face++) {
+			P np = faces.get(face).apply(donorPos);
 			Integer p = flowPotential.apply(np);
 			if (p == null || p >= donorPotential) {
 				continue;
@@ -719,7 +639,7 @@ final class EnergyLineDistributor {
 	 *
 	 * @param producerCursor the round-robin rotation offset; bounded by the producer pool size.
 	 */
-	private long serveClass(List<LiveConsumer> cls, List<LiveProducer> liveProducers,
+	private long serveClass(List<LiveConsumer<P>> cls, List<LiveProducer<P>> liveProducers,
 			long[] remainingSupply, long packetCap, double lossPerBlock, EnergyPort.Txn tx, int producerCursor) {
 		if (cls.isEmpty() || remainingSupply[0] <= 0) {
 			return 0L;
@@ -744,7 +664,7 @@ final class EnergyLineDistributor {
 			if (want <= 0) {
 				continue;
 			}
-			LiveConsumer c = cls.get(i);
+			LiveConsumer<P> c = cls.get(i);
 			long pulled = pullRoundRobin(liveProducers, want, c.pos(), tx, producerCursor);
 			if (pulled <= 0) {
 				continue;
@@ -787,12 +707,12 @@ final class EnergyLineDistributor {
 	 * {@code producerCursor + k} can overflow into the negatives near {@link Integer#MAX_VALUE} and
 	 * {@code %} would keep that sign and index out of range.
 	 */
-	private long pullRoundRobin(List<LiveProducer> liveProducers, long want, BlockPos consumerPos,
+	private long pullRoundRobin(List<LiveProducer<P>> liveProducers, long want, P consumerPos,
 			EnergyPort.Txn tx, int producerCursor) {
 		long pulled = 0;
 		int n = liveProducers.size();
 		for (int k = 0; k < n && pulled < want; k++) {
-			LiveProducer prod = liveProducers.get(Math.floorMod(producerCursor + k, n));
+			LiveProducer<P> prod = liveProducers.get(Math.floorMod(producerCursor + k, n));
 			if (prod.pos().equals(consumerPos)) {
 				continue; // no self-churn: a storage sink must not pull from itself
 			}
@@ -813,9 +733,9 @@ final class EnergyLineDistributor {
 	 * insert-simulate, restore surplus without the rate cap instead of via {@code insert}. Guarded by
 	 * gametest {@code NetworkGameTest#tcCable001Nrg03_generatorNotDrainedByPartialConsumer}.
 	 */
-	private void returnRoundRobin(List<LiveProducer> liveProducers, long surplus, BlockPos consumerPos,
+	private void returnRoundRobin(List<LiveProducer<P>> liveProducers, long surplus, P consumerPos,
 			EnergyPort.Txn tx) {
-		for (LiveProducer prod : liveProducers) {
+		for (LiveProducer<P> prod : liveProducers) {
 			if (surplus <= 0) {
 				break;
 			}

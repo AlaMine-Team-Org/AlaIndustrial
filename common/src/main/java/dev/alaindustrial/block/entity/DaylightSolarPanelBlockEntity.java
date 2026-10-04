@@ -1,20 +1,20 @@
 package dev.alaindustrial.block.entity;
 
-import dev.alaindustrial.Config;
+import dev.alaindustrial.block.entity.machine.EvolutionHelper;
+import dev.alaindustrial.block.entity.machine.SyncChannels;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.core.environment.GeneratorConfig;
 import dev.alaindustrial.core.environment.SolarSky;
 import dev.alaindustrial.core.environment.SolarSkyCache;
 import dev.alaindustrial.menu.DaylightSolarPanelMenu;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -25,11 +25,11 @@ import net.minecraft.world.level.storage.ValueOutput;
 
 /**
  * LV Daylight Solar Panel — the day branch's second rung. Day, under open sky, in the Overworld:
- * {@link Config#daylightEuPerTick}; rain/thunder: 0, snow: a floored trickle (MOD-003). Buffer
- * {@link Config#solarBuffer}, LV output.
+ * {@link GeneratorConfig#daylightEuPerTick}; rain/thunder: 0, snow: a floored trickle (MOD-003). Buffer
+ * {@link GeneratorConfig#solarBuffer}, LV output.
  *
  * <p>Evolution (MOD-602): with a {@linkplain ModContent#RESONANCE_CHIP resonance chip} in its slot,
- * the panel banks active day-time and, at {@link Config#solarEvolveTicks}, becomes the Mirror
+ * the panel banks active day-time and, at {@link GeneratorConfig#solarEvolveTicks}, becomes the Mirror
  * Concentrator — carrying its stored energy and consuming one chip. The same chip serves the night
  * branch: by this rung the panel already knows which branch it is, so a second line of crafting
  * would buy the player nothing.
@@ -45,7 +45,7 @@ public class DaylightSolarPanelBlockEntity extends AbstractGeneratorBlockEntity 
 	/** One evolution-chip slot (MOD-602); the client menu stub sizes its container from this. */
 	public static final int SLOT_COUNT = 1;
 
-	/** Caches the sky/weather verdict for {@link Config#solarSkySampleTicks} ticks to avoid a per-tick column scan. */
+	/** Caches the sky/weather verdict for {@link GeneratorConfig#solarSkySampleTicks} ticks to avoid a per-tick column scan. */
 	private final SolarSkyCache skyCache = new SolarSkyCache();
 
 	/** Mode codes shared with the screen. */
@@ -56,11 +56,12 @@ public class DaylightSolarPanelBlockEntity extends AbstractGeneratorBlockEntity 
 	public static final int MODE_DAY_SNOW = 4;
 
 	private int evolveProgress;
-	/** Which chip the counter above belongs to; see {@link MachineBlockEntity#saveEvolveChip}. */
-	private int evolveChip = EVOLVE_CHIP_NONE;
+	/** Which chip the counter above belongs to; see {@link EvolutionHelper#saveEvolveChip}. */
+	private int evolveChip = EvolutionHelper.EVOLVE_CHIP_NONE;
 
 	public DaylightSolarPanelBlockEntity(BlockPos pos, BlockState state) {
-		super(ModContent.DAYLIGHT_SOLAR_PANEL_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT, Config.solarBuffer, MAX_EXTRACT);
+		super(ModContent.DAYLIGHT_SOLAR_PANEL_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT,
+				GeneratorConfig.solarBuffer, MAX_EXTRACT);
 	}
 
 	/**
@@ -75,7 +76,7 @@ public class DaylightSolarPanelBlockEntity extends AbstractGeneratorBlockEntity 
 
 	@Override
 	protected int produce(Level level, BlockPos pos, BlockState state) {
-		// Sample sky access + weather on a cadence (Config.solarSkySampleTicks); cached to avoid the
+		// Sample sky access + weather on a cadence (GeneratorConfig.solarSkySampleTicks); cached to avoid the
 		// per-tick column scan above the panel.
 		skyCache.sample(level, pos);
 		SolarSky.Access sky = level.dimension().equals(Level.OVERWORLD)
@@ -89,11 +90,11 @@ public class DaylightSolarPanelBlockEntity extends AbstractGeneratorBlockEntity 
 		boolean resonanceChip = chip.is(ModContent.RESONANCE_CHIP.get());
 		// The counter belongs to the chip that earned it (MOD-601): pull the chip out and that run is
 		// abandoned rather than banked for the next one.
-		int chipNow = evolveChipOf(chip);
+		int chipNow = EvolutionHelper.evolveChipOf(chip);
 		if (chipNow != evolveChip) {
 			// An UNATTRIBUTED counter is adopted, not cleared — that is the state of a save written
 			// before the marker existed, and of a counter seeded by a test rig.
-			if (evolveChip != EVOLVE_CHIP_NONE) {
+			if (evolveChip != EvolutionHelper.EVOLVE_CHIP_NONE) {
 				evolveProgress = 0;
 			}
 			evolveChip = chipNow;
@@ -101,7 +102,7 @@ public class DaylightSolarPanelBlockEntity extends AbstractGeneratorBlockEntity 
 		}
 		if (resonanceChip && overworldSky && bright) {
 			evolveProgress++;
-			if (evolveProgress >= Config.solarEvolveTicks) {
+			if (evolveProgress >= GeneratorConfig.solarEvolveTicks) {
 				evolveInto(level, pos, ModContent.RADIANT_SOLAR_PANEL.get());
 				return 0; // this block entity is gone after the transform
 			}
@@ -112,7 +113,7 @@ public class DaylightSolarPanelBlockEntity extends AbstractGeneratorBlockEntity 
 		int production = 0;
 		int mode = MODE_NIGHT;
 		if (overworldSky && bright) {
-			production = Config.daylightEuPerTick;
+			production = GeneratorConfig.daylightEuPerTick;
 			mode = MODE_DAY;
 			switch (skyCache.weather()) {
 				case RAIN -> {
@@ -122,13 +123,13 @@ public class DaylightSolarPanelBlockEntity extends AbstractGeneratorBlockEntity 
 				}
 				case SNOW -> {
 					// Snow dims the panel to a floored trickle (≥1 EU/t), same rule as the T1 panel.
-					production = Math.max(1, Math.round(production * Config.solarSnowFactor));
+					production = Math.max(1, Math.round(production * GeneratorConfig.solarSnowFactor));
 					mode = MODE_DAY_SNOW;
 				}
 				case NONE -> {
 					if (sky == SolarSky.Access.PARTIAL) {
 						// Light filtered through a translucent block (leaves, cobweb): reduced output (MOD-004).
-						production = Math.round(production * Config.solarTransparentFactor);
+						production = Math.round(production * GeneratorConfig.solarTransparentFactor);
 						mode = MODE_DAY_PARTIAL;
 					}
 				}
@@ -158,7 +159,7 @@ public class DaylightSolarPanelBlockEntity extends AbstractGeneratorBlockEntity 
 		// Consume a single chip and carry the rest over (MOD-211), the way the T1 panel does.
 		ItemStack remainder = items.get(CHIP_SLOT).copy();
 		remainder.shrink(1);
-		evolveInto(level, pos, target, java.util.Map.of(CHIP_SLOT, remainder));
+		EvolutionHelper.evolveInto(this, items, level, pos, target, java.util.Map.of(CHIP_SLOT, remainder));
 	}
 
 	@Override
@@ -172,43 +173,22 @@ public class DaylightSolarPanelBlockEntity extends AbstractGeneratorBlockEntity 
 	}
 
 	/**
-	 * Six-wide data — hides {@link MachineBlockEntity#DATA_COUNT} so this name means THIS machine's
-	 * width for the bridge below and for the menu's client stub.
+	 * GUI sync channels (MOD-712, BE-7): the base four, then the evolution progress in permille and its
+	 * denominator, both read-only — see {@link SolarPanelBlockEntity.Channel} for why not raw ticks.
 	 */
-	public static final int DATA_COUNT = 6;
+	public enum Channel { ENERGY, CAPACITY, PROGRESS, MAX_PROGRESS, EVOLVE_PERMILLE, EVOLVE_MAX }
 
-	/**
-	 * Six-wide data: base 0..3 plus evolution progress (4) and denominator (5), both on a permille
-	 * scale. See {@link SolarPanelBlockEntity} for why raw ticks cannot travel on a {@code DataSlot}.
-	 */
-	private final ContainerData solarData = new ContainerData() {
-		@Override
-		public int get(int index) {
-			return switch (index) {
-				case 4 -> evolveProgress <= 0 ? 0
-						: Math.max(1, (int) Math.min((long) evolveProgress * 1000 / Config.solarEvolveTicks, 1000));
-				case 5 -> 1000;
-				default -> DaylightSolarPanelBlockEntity.this.dataAccess.get(index);
-			};
-		}
-
-		@Override
-		public void set(int index, int value) {
-			// Channels 4/5 are derived, server-authoritative projections; nothing writes them back.
-			if (index != 4 && index != 5) {
-				DaylightSolarPanelBlockEntity.this.dataAccess.set(index, value);
-			}
-		}
-
-		@Override
-		public int getCount() {
-			return DATA_COUNT;
-		}
-	};
+	/** Width of {@link #getDataAccess()}, which the menu's client stub sizes itself from (MOD-235). */
+	public static final int DATA_COUNT = Channel.values().length;
 
 	@Override
-	public ContainerData getDataAccess() {
-		return solarData;
+	protected SyncChannels createChannels() {
+		return channels(Channel.class)
+				.read(Channel.EVOLVE_PERMILLE, () -> evolveProgress <= 0 ? 0
+						: Math.max(1, (int) Math.min((long) evolveProgress * 1000 / GeneratorConfig.solarEvolveTicks,
+								1000)))
+				.read(Channel.EVOLVE_MAX, () -> 1000)
+				.build();
 	}
 
 	/** Raw accumulated evolution counter in ticks, persisted in NBT. Channel 4 carries only a permille projection. */
@@ -222,11 +202,6 @@ public class DaylightSolarPanelBlockEntity extends AbstractGeneratorBlockEntity 
 	}
 
 	@Override
-	public Component getDisplayName() {
-		return Component.translatable("block.alaindustrial.daylight_solar_panel");
-	}
-
-	@Override
 	public AbstractContainerMenu createMenu(int syncId, Inventory inventory, Player player) {
 		return new DaylightSolarPanelMenu(syncId, inventory, this,
 				ContainerLevelAccess.create(getLevel(), getBlockPos()));
@@ -235,14 +210,14 @@ public class DaylightSolarPanelBlockEntity extends AbstractGeneratorBlockEntity 
 	@Override
 	protected void saveAdditional(ValueOutput output) {
 		super.saveAdditional(output);
-		saveEvolve(output, evolveProgress);
-		saveEvolveChip(output, evolveChip);
+		EvolutionHelper.saveEvolve(output, evolveProgress);
+		EvolutionHelper.saveEvolveChip(output, evolveChip);
 	}
 
 	@Override
-	protected void loadAdditional(ValueInput input) {
-		super.loadAdditional(input);
-		evolveProgress = loadEvolve(input);
-		evolveChip = loadEvolveChip(input);
+	protected void loadMachineData(ValueInput input) {
+		super.loadMachineData(input);
+		evolveProgress = EvolutionHelper.loadEvolve(input);
+		evolveChip = EvolutionHelper.loadEvolveChip(input);
 	}
 }

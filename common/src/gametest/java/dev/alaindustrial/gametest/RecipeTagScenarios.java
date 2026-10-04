@@ -40,6 +40,20 @@ import net.minecraft.world.item.crafting.RecipeHolder;
  */
 public final class RecipeTagScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(RecipeTagScenarios::consumedCommonTagsAreNonEmpty, "consumed_common_tags_are_non_empty")
+						.fabricId("RecipeTagGameTest", "tcTags01_consumedCommonTagsAreNonEmpty").ticks(20, 40),
+				RosterEntry.of(RecipeTagScenarios::everyModRecipeIngredientResolves,
+								"every_mod_recipe_ingredient_resolves")
+						.fabricId("RecipeTagGameTest", "tcTags02_everyModRecipeIngredientResolves").ticks(20, 40),
+				RosterEntry.of(RecipeTagScenarios::referencedForeignTagsResolve, "referenced_foreign_tags_resolve")
+						.fabricId("RecipeTagGameTest", "tcTags03_referencedForeignTagsResolve").ticks(20, 40));
+
+		private Roster() {}
+	}
+
 	private RecipeTagScenarios() {}
 
 	/**

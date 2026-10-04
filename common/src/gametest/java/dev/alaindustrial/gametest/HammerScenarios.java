@@ -25,6 +25,21 @@ import net.minecraft.world.item.crafting.CraftingRecipe;
  */
 public final class HammerScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(HammerScenarios::fun01HammerStaysWithOneDamage, "hammer_stays_with_one_damage")
+						.fabricId("HammerGameTest", "fun01_hammerStaysWithOneDamage").ticks(20, 40),
+				RosterEntry.of(HammerScenarios::prf01ExactlyOneDamagePerPlate, "hammer_exactly_one_damage_per_plate")
+						.fabricId("HammerGameTest", "prf01_exactlyOneDamagePerPlate").ticks(20, 40),
+				RosterEntry.of(HammerScenarios::neg01LastDurabilityBreaks, "hammer_last_durability_breaks")
+						.fabricId("HammerGameTest", "neg01_lastDurabilityBreaks").ticks(20, 40),
+				RosterEntry.of(HammerScenarios::con01Durability128, "hammer_durability_128")
+						.fabricId("HammerGameTest", "con01_durability128").ticks(20, 40));
+
+		private Roster() {}
+	}
+
 	private HammerScenarios() {}
 
 	/** The remainder of the hammer slot after crafting one plate from {@code hammer} + one iron ingot. */
@@ -39,7 +54,11 @@ public final class HammerScenarios {
 		return remainder.get(0);
 	}
 
-	/** FUN01: a fresh hammer stays in the grid after a plate craft and comes back with exactly 1 damage. */
+	/**
+	 * FUN01: a fresh hammer stays in the grid after a plate craft and comes back with exactly 1 damage.
+	 *
+	 * @implements TC-HAMMER-001-FUN01 — a fresh hammer stays in the grid and comes back with 1 damage.
+	 */
 	public static void fun01HammerStaysWithOneDamage(GameTestHelper helper) {
 		ItemStack back = craftOnce(new ItemStack(ModContent.FORGE_HAMMER.get()));
 		if (back.isEmpty() || !back.is(ModContent.FORGE_HAMMER.get())) {
@@ -51,7 +70,11 @@ public final class HammerScenarios {
 		helper.succeed();
 	}
 
-	/** PRF01: mid-life, one craft raises the hammer's damage by exactly 1 (not 0, not more). */
+	/**
+	 * PRF01: mid-life, one craft raises the hammer's damage by exactly 1 (not 0, not more).
+	 *
+	 * @implements TC-HAMMER-001-PRF01 — one craft raises the hammer's damage by exactly 1 (mid-life).
+	 */
 	public static void prf01ExactlyOneDamagePerPlate(GameTestHelper helper) {
 		ItemStack hammer = new ItemStack(ModContent.FORGE_HAMMER.get());
 		hammer.setDamageValue(50);
@@ -62,7 +85,11 @@ public final class HammerScenarios {
 		helper.succeed();
 	}
 
-	/** NEG01: on its last durability point the hammer breaks — the plate is made, the grid slot stays empty. */
+	/**
+	 * NEG01: on its last durability point the hammer breaks — the plate is made, the grid slot stays empty.
+	 *
+	 * @implements TC-HAMMER-001-NEG01 — on its last point the hammer breaks: plate made, grid slot empty.
+	 */
 	public static void neg01LastDurabilityBreaks(GameTestHelper helper) {
 		ItemStack hammer = new ItemStack(ModContent.FORGE_HAMMER.get());
 		hammer.setDamageValue(hammer.getMaxDamage() - 1); // next damage breaks it
@@ -73,7 +100,11 @@ public final class HammerScenarios {
 		helper.succeed();
 	}
 
-	/** CON01: the Forge Hammer's durability is 128 (the balance number in docs/PERFORMANCE.md). */
+	/**
+	 * CON01: the Forge Hammer's durability is 128 (the balance number in docs/PERFORMANCE.md).
+	 *
+	 * @implements TC-HAMMER-001-CON01 — the Forge Hammer's durability is 128 (PERFORMANCE.md).
+	 */
 	public static void con01Durability128(GameTestHelper helper) {
 		int max = new ItemStack(ModContent.FORGE_HAMMER.get()).getMaxDamage();
 		if (max != 128) {

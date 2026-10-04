@@ -21,7 +21,7 @@ import net.minecraft.world.entity.player.Inventory;
  * bar takes the yellow tile — this is the day branch, and the colour is the only thing on the
  * screen that says so.
  */
-public class DaylightSolarPanelScreen extends MachineScreen<DaylightSolarPanelMenu> {
+public class DaylightSolarPanelScreen extends LayoutMachineScreen<DaylightSolarPanelMenu> {
 
     private static final Identifier TEXTURE =
             Industrialization.id("textures/gui/container/daylight_solar_panel.png");
@@ -42,13 +42,11 @@ public class DaylightSolarPanelScreen extends MachineScreen<DaylightSolarPanelMe
     private static final float EVO_UV_X     = 176.0F;
     private static final float EVO_UV_Y_DAY = 48.0F;
 
-    public DaylightSolarPanelScreen(DaylightSolarPanelMenu menu, Inventory inventory, Component title) {
-        super(menu, inventory, title);
-    }
+    /** Atlas and energy bar (MOD-716, CLI-3). */
+    private static final MachineLayout LAYOUT = MachineLayout.of(TEXTURE, EnergyBarSpec.LEFT);
 
-    @Override
-    protected Identifier texture() {
-        return TEXTURE;
+    public DaylightSolarPanelScreen(DaylightSolarPanelMenu menu, Inventory inventory, Component title) {
+        super(menu, inventory, title, LAYOUT);
     }
 
     @Override
@@ -63,7 +61,6 @@ public class DaylightSolarPanelScreen extends MachineScreen<DaylightSolarPanelMe
         // Energy bar fill (bottom-up) via the shared MachineScreen helper
         int capacity = this.menu.getCapacity();
         int energy   = this.menu.getEnergy();
-        renderEnergyBar(graphics, EnergyBarSpec.LEFT);
 
         // Sun indicator — blit yellow 7×7 tile when daylight is available
         int mode = this.menu.getMode();
@@ -121,4 +118,5 @@ public class DaylightSolarPanelScreen extends MachineScreen<DaylightSolarPanelMe
         };
         return Component.translatable("gui.alaindustrial.solar_panel.mode." + key);
     }
+
 }

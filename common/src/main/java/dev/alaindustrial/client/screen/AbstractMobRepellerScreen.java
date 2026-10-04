@@ -89,10 +89,15 @@ public abstract class AbstractMobRepellerScreen<T extends MobRepellerMenu> exten
 		return mx >= bx && mx < bx + BUTTON_W && my >= by && my < by + BUTTON_H;
 	}
 
+	/** The energy bar and its tooltip, drawn by the base (MOD-716). */
+	@Override
+	protected EnergyBarSpec energyBar() {
+		return EnergyBarSpec.LEFT;
+	}
+
 	@Override
 	protected void drawMachineFrame(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
 		blitStaticFrame(graphics);
-		renderEnergyBar(graphics, EnergyBarSpec.LEFT);
 	}
 
 	/** The wordless "a Soul Vessel goes here" answer, drawn while the slot is empty. */
@@ -102,9 +107,9 @@ public abstract class AbstractMobRepellerScreen<T extends MobRepellerMenu> exten
 				new ItemStack(ModContent.SOUL_VESSEL.get()));
 	}
 
+	/** Under both panels, so an open statistics panel covers the dome button and the status (MOD-693). */
 	@Override
-	public void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-		super.extractContents(graphics, mouseX, mouseY, partialTick);
+	protected void drawUnderPanels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		if (this.menu.isPanelOpen()) {
 			return; // the modal upgrade panel owns this area
 		}
@@ -188,7 +193,7 @@ public abstract class AbstractMobRepellerScreen<T extends MobRepellerMenu> exten
 	@Override
 	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		super.extractTooltip(graphics, mouseX, mouseY);
-		if (!this.menu.isPanelOpen() && overButton(mouseX, mouseY)) {
+		if (frameAcceptsInput(mouseX, mouseY) && overButton(mouseX, mouseY)) {
 			graphics.setTooltipForNextFrame(this.font,
 					Component.translatable(domeShown()
 							? "gui.alaindustrial.mob_repeller.dome.hide"
@@ -199,7 +204,9 @@ public abstract class AbstractMobRepellerScreen<T extends MobRepellerMenu> exten
 
 	@Override
 	public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
-		if (event.button() == InputConstants.MOUSE_BUTTON_LEFT && !this.menu.isPanelOpen() && overButton(event.x(), event.y())
+		// The open statistics panel is modal: the button it covers must not toggle the dome (MOD-693).
+		if (event.button() == InputConstants.MOUSE_BUTTON_LEFT && frameAcceptsInput(event.x(), event.y())
+				&& overButton(event.x(), event.y())
 				&& this.minecraft != null && this.minecraft.gameMode != null) {
 			this.minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId,
 					MobRepellerMenu.BUTTON_TOGGLE_DOME);

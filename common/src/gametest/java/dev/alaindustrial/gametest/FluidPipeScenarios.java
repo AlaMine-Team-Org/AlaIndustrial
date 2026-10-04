@@ -8,19 +8,58 @@ import dev.alaindustrial.core.fluid.FluidNetwork;
 import dev.alaindustrial.core.fluid.FluidNetworkManager;
 import dev.alaindustrial.core.item.PipeFaceMode;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
+import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.Vec3;
 
 /**
  * Cross-loader MOD-151 fluid-pipe scenarios: a source tank, two pipe segments, a destination tank.
  * Both tanks are the mod's own, so every transfer crosses the real fluid-port seam on each loader.
  */
 public final class FluidPipeScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(FluidPipeScenarios::transfersBetweenTanks, "fluid_pipe_transfers_between_tanks")
+						.fabricId("FluidPipeGameTest", "mod151TransfersBetweenTanks").ticks(20, 60),
+				RosterEntry.of(FluidPipeScenarios::segmentsHoldFluidInTransit,
+								"fluid_pipe_segments_hold_fluid_in_transit")
+						.fabricId("FluidPipeGameTest", "mod151SegmentsHoldFluidInTransit").ticks(20, 60),
+				RosterEntry.of(FluidPipeScenarios::reEnabledPipeLinkRejoinsNetwork,
+								"fluid_pipe_reenabled_link_rejoins_network")
+						.fabricId("FluidPipeGameTest", "mod151ReEnabledPipeLinkRejoinsNetwork").ticks(20, 40),
+				RosterEntry.of(FluidPipeScenarios::segmentRefusesASecondFluid,
+								"fluid_pipe_segment_refuses_second_fluid")
+						.fabricId("FluidPipeGameTest", "mod151SegmentRefusesASecondFluid").ticks(20, 40),
+				RosterEntry.of(FluidPipeScenarios::brokenSegmentLosesItsContentsWithoutDuplicating,
+								"fluid_pipe_broken_segment_loses_contents")
+						.fabricId("FluidPipeGameTest", "mod151BrokenSegmentLosesItsContents").ticks(20, 60),
+				RosterEntry.of(FluidPipeScenarios::advancedLineCarriesTwiceAndABasicSegmentSlowsIt,
+								"fluid_pipe_advanced_carries_twice")
+						.fabricId("FluidPipeGameTest", "mod675AdvancedLineCarriesTwice").ticks(20, 100),
+				RosterEntry.of(FluidPipeScenarios::advancedPipeObeysSurvivesExplosionLikeTheBasicOne,
+								"fluid_pipe_advanced_obeys_survives_explosion")
+						.fabricId("FluidPipeGameTest", "mod689AdvancedPipeObeysExplosions").ticks(20, 40));
+
+		private Roster() {}
+	}
+
 	private FluidPipeScenarios() {
 	}
 
@@ -289,5 +328,84 @@ public final class FluidPipeScenarios {
 			return;
 		}
 		helper.succeed();
+	}
+
+	/** Seeds rolled per pipe at {@link #MID_RADIUS}; enough that a 1-in-4 survival must lose some drops. */
+	private static final int EXPLOSION_SEEDS = 32;
+	/** {@code survives_explosion} keeps a drop with chance {@code 1 / radius}: one in four here. */
+	private static final float MID_RADIUS = 4.0F;
+	/** A radius no drop survives, short of a random draw of exactly zero. */
+	private static final float HUGE_RADIUS = 1.0E9F;
+
+	/**
+	 * MOD-689: the advanced pipe's loot table obeys {@code survives_explosion} exactly as the basic
+	 * pipe's does. Each pipe's own table is rolled with {@link LootContextParams#EXPLOSION_RADIUS} — the
+	 * parameter an explosion adds — from the same fixed seed, so the two drops must match seed for seed;
+	 * a huge radius must leave both empty. A table whose condition the codec silently skipped (the 26.2
+	 * line) drops the advanced pipe every time and fails here.
+	 */
+	public static void advancedPipeObeysSurvivesExplosionLikeTheBasicOne(GameTestHelper helper) {
+		helper.setBlock(PIPE_A, ModContent.FLUID_PIPE.get());
+		helper.setBlock(PIPE_B, ModContent.FLUID_PIPE_ADVANCED.get());
+		int basicLost = 0;
+		for (long seed = 0; seed < EXPLOSION_SEEDS; seed++) {
+			int basic = explosionDrops(helper, PIPE_A, MID_RADIUS, seed);
+			int advanced = explosionDrops(helper, PIPE_B, MID_RADIUS, seed);
+			if (basic < 0 || advanced < 0) {
+				return;
+			}
+			if (basic != advanced) {
+				helper.fail("MOD-689 at explosion radius " + MID_RADIUS + ", seed " + seed + " the basic pipe dropped "
+						+ basic + " and the advanced one " + advanced + " — the advanced table ignores survives_explosion");
+				return;
+			}
+			if (basic == 0) {
+				basicLost++;
+			}
+		}
+		if (basicLost == 0) {
+			helper.fail("MOD-689 rig: the basic pipe survived all " + EXPLOSION_SEEDS + " rolls at radius " + MID_RADIUS
+					+ " — the explosion radius never reached survives_explosion");
+			return;
+		}
+		int basicHuge = explosionDrops(helper, PIPE_A, HUGE_RADIUS, 1L);
+		int advancedHuge = explosionDrops(helper, PIPE_B, HUGE_RADIUS, 1L);
+		if (basicHuge != 0 || advancedHuge != 0) {
+			helper.fail("MOD-689 at explosion radius " + HUGE_RADIUS + " nothing should survive; the basic pipe dropped "
+					+ basicHuge + ", the advanced one " + advancedHuge);
+			return;
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * How many of its own item the pipe at {@code relative} drops when its loot table is rolled for an
+	 * explosion of {@code radius} with a fixed {@code seed}; -1 after failing the test.
+	 */
+	private static int explosionDrops(GameTestHelper helper, BlockPos relative, float radius, long seed) {
+		ServerLevel level = helper.getLevel();
+		BlockPos abs = helper.absolutePos(relative);
+		BlockState state = level.getBlockState(abs);
+		Optional<ResourceKey<LootTable>> key = state.getBlock().getLootTable();
+		if (key.isEmpty()) {
+			helper.fail("MOD-689 " + state.getBlock() + " has no loot table");
+			return -1;
+		}
+		LootTable table = level.getServer().reloadableRegistries().getLootTable(key.get());
+		LootParams params = new LootParams.Builder(level)
+				.withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(abs))
+				.withParameter(LootContextParams.TOOL, ItemStack.EMPTY)
+				.withParameter(LootContextParams.BLOCK_STATE, state)
+				.withOptionalParameter(LootContextParams.BLOCK_ENTITY, level.getBlockEntity(abs))
+				.withParameter(LootContextParams.EXPLOSION_RADIUS, radius)
+				.create(LootContextParamSets.BLOCK);
+		List<ItemStack> drops = table.getRandomItems(params, RandomSource.create(seed));
+		int count = 0;
+		for (ItemStack stack : drops) {
+			if (stack.is(state.getBlock().asItem())) {
+				count += stack.getCount();
+			}
+		}
+		return count;
 	}
 }

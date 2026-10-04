@@ -1,15 +1,14 @@
 package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
-import dev.alaindustrial.core.energy.EnergyRole;
+import dev.alaindustrial.block.entity.machine.SyncChannels;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.core.machine.MachineRates;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
 import dev.alaindustrial.recipe.ProcessingRecipeInput;
 import dev.alaindustrial.registry.ModRecipes;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.Containers;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -55,27 +54,6 @@ public abstract class AbstractProcessingMachineBlockEntity extends MachineBlockE
 	protected static final int OUTPUT_SLOT = 1;
 	/** Machine-slot count — input + output — shared by every processing machine; the client menu stubs size their container from it (MOD-439). */
 	public static final int SLOT_COUNT = 2;
-
-	/**
-	 * {@link ProcessingMachineStatus} ordinal — the family's readout channel (MOD-458), appended after the
-	 * base 0..3.
-	 */
-	public static final int DATA_STATUS = MachineBlockEntity.DATA_COUNT;
-
-	/**
-	 * Five-wide data — hides {@link MachineBlockEntity#DATA_COUNT} so this name is the single source of
-	 * width for the bridge below AND for every client menu stub in the family (MOD-235).
-	 *
-	 * <p>Widened here rather than in {@link MachineBlockEntity} on purpose: five menus outside this family
-	 * (the generators, the solar panels, the mob repeller) size their stubs from the base constant and
-	 * would otherwise inherit a channel nothing ever fills.
-	 *
-	 * <p><b>A subclass that appends its own channels must offset them from this constant, not from a
-	 * literal</b> — {@link SawmillBlockEntity#DATA_MODE} does. Nothing checks the semantics of an index:
-	 * {@code MenuDataWidthScenarios} compares channel <em>counts</em>, so two machines claiming index 4
-	 * would leave every gate green and merely feed the sawmill's mode buttons a status ordinal.
-	 */
-	public static final int DATA_COUNT = MachineBlockEntity.DATA_COUNT + 1;
 
 	/**
 	 * How many consecutive unpaid evaluations it takes before an empty buffer is reported as
@@ -162,7 +140,7 @@ public abstract class AbstractProcessingMachineBlockEntity extends MachineBlockE
 			EnergyTier tier, long buffer, int defaultDuration) {
 		super(type, pos, state, tier, SLOT_COUNT, buffer, EnergyTier.LV.maxVoltage(), 0L);
 		this.defaultDuration = defaultDuration;
-		this.maxProgress = Config.scaledDuration(defaultDuration);
+		this.maxProgress = MachineRates.duration(defaultDuration, Config.globalMachineSpeedMultiplier);
 	}
 
 
@@ -287,44 +265,29 @@ public abstract class AbstractProcessingMachineBlockEntity extends MachineBlockE
 	}
 
 	/**
-	 * Five-wide bridge: 0..3 delegate to the shared machine data, {@link #DATA_STATUS} carries the
-	 * diagnosis. Exposed to subclasses so one that appends further channels delegates <em>here</em> and
-	 * not to {@code dataAccess} — routing round this bridge would drop the status silently.
+	 * GUI sync channels of the processing family (MOD-712, BE-7): the base four, then the diagnosis
+	 * ({@link ProcessingMachineStatus} ordinal, MOD-458). A machine of the family with channels of its own
+	 * (the sawmill's mode) declares an enum that starts with these five and binds them on
+	 * {@link #processingChannels}.
 	 */
-	protected final ContainerData processingData = new ContainerData() {
-		@Override
-		public int get(int index) {
-			return index == DATA_STATUS ? status.ordinal() : dataAccess.get(index);
-		}
+	public enum Channel { ENERGY, CAPACITY, PROGRESS, MAX_PROGRESS, STATUS }
 
-		@Override
-		public void set(int index, int value) {
-			// The diagnosis is derived and server-authoritative; only the base channels take a write.
-			if (index < DATA_STATUS) {
-				dataAccess.set(index, value);
-			}
-		}
+	/** Width of the family's channels; every client stub in it sizes itself from this (MOD-235). */
+	public static final int DATA_COUNT = Channel.values().length;
 
-		@Override
-		public int getCount() {
-			return DATA_COUNT;
-		}
-	};
+	/** A channel builder over {@code type} with the base four and the family's {@code STATUS} bound. */
+	protected final <C extends Enum<C>> SyncChannels.Builder<C> processingChannels(Class<C> type) {
+		return channels(type).inherit(Channel.STATUS, () -> status.ordinal(), null);
+	}
 
 	@Override
-	public ContainerData getDataAccess() {
-		return processingData;
+	protected SyncChannels createChannels() {
+		return processingChannels(Channel.class).build();
 	}
 
 	@Override
 	protected boolean isOutputSlot(int slot) {
 		return slot == OUTPUT_SLOT;
-	}
-
-	/** Consumer: every face accepts energy except the inert FACING front (R-NRG-03). */
-	@Override
-	public EnergyRole energyRoleForFace(Direction worldFace) {
-		return facingAwareRole(worldFace, EnergyRole.IN);
 	}
 
 	@Override

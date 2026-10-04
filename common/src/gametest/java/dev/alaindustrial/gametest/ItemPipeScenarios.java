@@ -37,6 +37,77 @@ import java.util.List;
  * seam while the pipe graph and face policy remain loader-neutral.
  */
 public final class ItemPipeScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(ItemPipeScenarios::transfersBetweenChests, "item_pipe_transfers_between_chests")
+						.fabricId("ItemPipeGameTest", "mod104TransfersBetweenChests").ticks(20, 40),
+				RosterEntry.of(ItemPipeScenarios::disabledFaceBlocksTransfer, "item_pipe_disabled_face_blocks_transfer")
+						.fabricId("ItemPipeGameTest", "mod104DisabledFaceBlocksTransfer").ticks(20, 40),
+				RosterEntry.of(ItemPipeScenarios::disabledPipeLinkBlocksTransfer,
+								"item_pipe_disabled_link_blocks_transfer")
+						.fabricId("ItemPipeGameTest", "mod104DisabledPipeLinkBlocksTransfer").ticks(20, 40),
+				RosterEntry.of(ItemPipeScenarios::reEnabledPipeLinkRejoinsNetwork,
+								"item_pipe_reenabled_link_rejoins_network")
+						.fabricId("ItemPipeGameTest", "mod282ReEnabledPipeLinkRejoinsNetwork").ticks(20, 40),
+				RosterEntry.of(ItemPipeScenarios::disabledPipeLinkSplitsNetwork,
+								"item_pipe_disabled_link_splits_network")
+						.fabricId("ItemPipeGameTest", "mod282DisabledPipeLinkSplitsNetwork").ticks(20, 40),
+				RosterEntry.of(ItemPipeScenarios::wrenchCycleRestoresPipeLink, "item_pipe_wrench_cycle_restores_link")
+						.fabricId("ItemPipeGameTest", "mod282WrenchCycleRestoresPipeLink").ticks(20, 40),
+				RosterEntry.of(ItemPipeScenarios::skipsFullTargetsAndFillsFreeOne, "item_pipe_skips_full_targets")
+						.fabricId("ItemPipeGameTest", "mod178SkipsFullTargetsAndFillsFreeOne").ticks(20, 40),
+				RosterEntry.of(ItemPipeScenarios::insertsIntoMachine, "item_pipe_inserts_into_machine")
+						.fabricId("ItemPipeGameTest", "mod108InsertsIntoMachine").ticks(20, 40),
+				RosterEntry.of(ItemPipeScenarios::respectsTransferInterval, "item_pipe_respects_transfer_interval")
+						.fabricId("ItemPipeGameTest", "mod108RespectsTransferInterval").ticks(20, 40),
+				RosterEntry.of(ItemPipeScenarios::transfersBetweenVanillaChests, "item_pipe_vanilla_chests")
+						.fabricId("ItemPipeGameTest", "mod108TransfersBetweenVanillaChests").ticks(20, 40),
+				RosterEntry.of(ItemPipeScenarios::wrenchDismantlesOwnBlocks, "wrench_dismantles_own_blocks")
+						.fabricId("ItemPipeGameTest", "mod108WrenchDismantlesOwnBlocks").ticks(20, 40),
+				RosterEntry.of(ItemPipeScenarios::distributesOneSourceToTwoFurnaces,
+								"item_pipe_distributes_one_source_to_two_furnaces")
+						.fabricId("ItemPipeGameTest", "mod115DistributesOneSourceToTwoFurnaces").ticks(20, 60),
+				RosterEntry.of(ItemPipeScenarios::distributesToTwoFurnacesAcrossRebuilds,
+								"item_pipe_distributes_across_rebuilds")
+						.fabricId("ItemPipeGameTest", "mod115DistributesToTwoFurnacesAcrossRebuilds").ticks(20, 60),
+				RosterEntry.of(ItemPipeScenarios::distributesOreAndCoalToTwoIronFurnaces,
+								"item_pipe_ore_and_coal_to_two_iron_furnaces")
+						.fabricId("ItemPipeGameTest", "mod115DistributesOreAndCoalToTwoIronFurnaces").ticks(20, 60),
+				RosterEntry.of(ItemPipeScenarios::feedsBothFurnacesWithinOneInterval,
+								"item_pipe_feeds_both_furnaces_in_one_interval")
+						.fabricId("ItemPipeGameTest", "mod115FeedsBothFurnacesWithinOneInterval").ticks(20, 60),
+				RosterEntry.of(ItemPipeScenarios::frontFaceIsNotAnEndpoint, "pipe_front_face_not_an_endpoint")
+						.fabricId("ItemPipeGameTest", "mod234FrontFaceIsNotAnEndpoint").ticks(20, 40),
+				RosterEntry.of(ItemPipeScenarios::mod405ConfiguredChestPairStillTransfers,
+								"item_pipe_mod405_configured_chest_pair_still_transfers")
+						.fabricId("ItemPipeGameTest", "mod405ConfiguredChestPairStillTransfers").ticks(20, 100),
+				RosterEntry.of(ItemPipeScenarios::mod405TwoNeutralChestsMoveNothing,
+								"item_pipe_mod405_two_neutral_chests_move_nothing")
+						.fabricId("ItemPipeGameTest", "mod405TwoNeutralChestsMoveNothing").ticks(300),
+				RosterEntry.of(ItemPipeScenarios::mod408ExtractPlusInsertStillTransfers,
+								"item_pipe_mod408_extract_plus_insert_still_transfers")
+						.fabricId("ItemPipeGameTest", "mod408ExtractPlusInsertStillTransfers").ticks(20, 100),
+				RosterEntry.of(ItemPipeScenarios::mod408ExtractWithoutInsertMovesNothing,
+								"item_pipe_mod408_extract_without_insert_moves_nothing")
+						.fabricId("ItemPipeGameTest", "mod408ExtractWithoutInsertMovesNothing").ticks(300),
+				RosterEntry.of(ItemPipeScenarios::mod408UnconfiguredLineStillFeedsAMachine,
+								"item_pipe_mod408_unconfigured_line_still_feeds_a_machine")
+						.fabricId("ItemPipeGameTest", "mod408UnconfiguredLineStillFeedsAMachine").ticks(100),
+				RosterEntry.of(ItemPipeScenarios::tcPipe002Fun01_advancedMovesMore,
+								"item_pipe_tc_pipe002_fun01_advanced_moves_more")
+						.fabricId("ItemPipeGameTest", "tcPipe002Fun01_advancedMovesMore").ticks(20, 40),
+				RosterEntry.of(ItemPipeScenarios::tcPipe002Con01_weakestSegmentThrottlesTheLine,
+								"item_pipe_tc_pipe002_con01_weakest_segment_throttles")
+						.fabricId("ItemPipeGameTest", "tcPipe002Con01_weakestSegmentThrottlesTheLine").ticks(20, 40),
+				RosterEntry.of(ItemPipeScenarios::tcPipe002Con02_tooltipDescribesItsOwnGrade,
+								"item_pipe_tc_pipe002_con02_tooltip_describes_own_grade")
+						.fabricId("ItemPipeGameTest", "tcPipe002Con02_tooltipDescribesItsOwnGrade").ticks(20, 40));
+
+		private Roster() {}
+	}
+
 	private ItemPipeScenarios() { }
 
 	private static final BlockPos SOURCE = new BlockPos(1, 2, 1);
@@ -714,6 +785,8 @@ public final class ItemPipeScenarios {
 	 * is still a valid port — so the pipe connected, rendered its terminal, registered an endpoint and
 	 * moved nothing for ever. From the outside the build looked right, which cost the owner a session
 	 * of debugging. The geometry has to tell the truth: no slots on that face, no connection.
+	 *
+	 * @implements TC-PIPE-001-REG05 — a pipe refuses a machine face that offers no slots.
 	 */
 	public static void frontFaceIsNotAnEndpoint(GameTestHelper helper) {
 		BlockPos machine = new BlockPos(1, 2, 1);
@@ -749,6 +822,8 @@ public final class ItemPipeScenarios {
 	 *
 	 * <p>Drives far more ticks than one transfer interval on purpose: the churn only shows up once the
 	 * cursors have rotated, so a single-interval check would pass on the broken build too.
+	 *
+	 * @implements MOD-405 — two unconfigured (NEUTRAL) chests must not shuttle items back and forth.
 	 */
 	public static void mod405TwoNeutralChestsMoveNothing(GameTestHelper helper) {
 		helper.setBlock(SOURCE, ModContent.IRON_CHEST.get());
@@ -791,6 +866,8 @@ public final class ItemPipeScenarios {
 	 * The counter-control for the test above, and the reason it cannot be "fixed" by simply refusing
 	 * chest-to-chest: the layout the spec documents — EXTRACT on one end, INSERT on the other — must
 	 * keep working. Here each endpoint holds a single role, so there is no loop to refuse.
+	 *
+	 * @implements MOD-405 — and the documented EXTRACT/INSERT layout still transfers.
 	 */
 	public static void mod405ConfiguredChestPairStillTransfers(GameTestHelper helper) {
 		if (!build(helper)) {
@@ -818,6 +895,8 @@ public final class ItemPipeScenarios {
 	 *
 	 * <p>Now one configured face makes every NEUTRAL face passive, so this line waits for a real
 	 * destination instead of inventing one.
+	 *
+	 * @implements MOD-408 — EXTRACT with no INSERT anywhere moves nothing.
 	 */
 	public static void mod408ExtractWithoutInsertMovesNothing(GameTestHelper helper) {
 		helper.setBlock(SOURCE, ModContent.IRON_CHEST.get());
@@ -855,7 +934,11 @@ public final class ItemPipeScenarios {
 		helper.succeed();
 	}
 
-	/** The same rig with the destination actually set — the documented layout still works. */
+	/**
+	 * The same rig with the destination actually set — the documented layout still works.
+	 *
+	 * @implements MOD-408 — and the configured EXTRACT/INSERT pair still transfers.
+	 */
 	public static void mod408ExtractPlusInsertStillTransfers(GameTestHelper helper) {
 		if (!build(helper)) {
 			return;
@@ -878,6 +961,8 @@ public final class ItemPipeScenarios {
 	 * The automatic mode survives for a line nobody configured: chest → machine with every face left
 	 * alone still feeds the machine. This is the counter-control that stops MOD-408 from being
 	 * "NEUTRAL does nothing" — it only steps aside once a real role exists somewhere on the network.
+	 *
+	 * @implements MOD-408 — an unconfigured line still feeds a machine automatically.
 	 */
 	public static void mod408UnconfiguredLineStillFeedsAMachine(GameTestHelper helper) {
 		BlockPos chestPos = new BlockPos(1, 2, 1);
@@ -954,6 +1039,8 @@ public final class ItemPipeScenarios {
 	 * <p>The relation is asserted alongside the numbers on purpose: a config edit that lowers the
 	 * advanced grade below the basic one is the regression worth catching, and two tests pinned to
 	 * literals would both go on passing through it.
+	 *
+	 * @implements TC-PIPE-002-FUN01 — the advanced grade moves its own, larger batch.
 	 */
 	public static void tcPipe002Fun01_advancedMovesMore(GameTestHelper helper) {
 		int basic = movedInOneInterval(helper, ModContent.ITEM_PIPE.get(), ModContent.ITEM_PIPE.get());
@@ -984,6 +1071,8 @@ public final class ItemPipeScenarios {
 	 * <p>This is the rule a player meets in a build, and it is the reason the advanced pipe is visibly
 	 * thicker: a line capped by one forgotten segment has to be findable by eye. Asserted in both
 	 * orders, because "the weakest wins" must not depend on which end of the line the odd segment is at.
+	 *
+	 * @implements TC-PIPE-002-CON01 — one basic segment throttles an otherwise advanced line.
 	 */
 	public static void tcPipe002Con01_weakestSegmentThrottlesTheLine(GameTestHelper helper) {
 		int expected = PipeTier.BASIC.itemsPerTransfer();
@@ -1017,6 +1106,8 @@ public final class ItemPipeScenarios {
 	 *
 	 * <p>Both grades are asserted, and on the key AND the number: a "fix" that merely swaps one
 	 * hardcoded prefix for the other, or one hardcoded knob for the other, leaves this red.
+	 *
+	 * @implements TC-PIPE-002-CON02 — each grade's tooltip quotes its own keys and its own rate.
 	 */
 	public static void tcPipe002Con02_tooltipDescribesItsOwnGrade(GameTestHelper helper) {
 		if (!tooltipMatchesGrade(helper, ModContent.ITEM_PIPE_ADVANCED.get().asItem(), PipeTier.ADVANCED)) {

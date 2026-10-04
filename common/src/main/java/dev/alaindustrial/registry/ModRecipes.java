@@ -11,6 +11,10 @@ import dev.alaindustrial.recipe.FluidRecipeInput;
 import dev.alaindustrial.recipe.FluidOutputRecipe;
 import dev.alaindustrial.recipe.PolymerizingRecipe;
 import dev.alaindustrial.recipe.ProcessingRecipeInput;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.IntFunction;
 import java.util.function.IntSupplier;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -37,102 +41,66 @@ import net.minecraft.world.level.block.Block;
  * an {@link net.minecraft.world.item.crafting.Ingredient} so it can be an item or a tag (R-15).
  *
  * <p>MOD-022 facade: NeoForge freezes the {@code RECIPE_TYPE}/{@code RECIPE_SERIALIZER} registries before
- * mod construction, so each {@link Kind}'s type/serializer are bound lazily per loader — Fabric via the
+ * mod construction, so each family's type/serializer are bound lazily per loader — Fabric via the
  * eager {@link #init()} below, NeoForge via a {@code DeferredRegister} (see {@code ModRecipesNeoForge}) —
  * and read through {@code Supplier}s in the accessors.
+ *
+ * <p><b>One list (MOD-708).</b> Every {@link RecipeFamily} is declared through {@link #family}, which
+ * appends it to {@link #families()} in declaration order — the registration order of both loaders. A new
+ * family is that one declaration; {@link #kinds()}, {@link #fluidKinds()} and {@link #alloyKinds()} (the
+ * lists the recipe viewers replay) are derived from it.
  */
 public final class ModRecipes {
 	private ModRecipes() {
 	}
 
-	/**
-	 * One machine recipe family: its {@link RecipeType}, {@link RecipeSerializer}, default EU cost and
-	 * the block that works it.
-	 */
-	public static final class Kind {
-		private final String id;
-		private final int defaultEnergy;
-		/** Read lazily: Config values are reloadable, so a captured int would go stale. */
-		private final IntSupplier euPerTick;
-		/** Read lazily: the {@link ModContent} slot is rebound by whichever loader registered it. */
-		private final Supplier<Block> station;
-		private Supplier<RecipeType<AlaProcessingRecipe>> type = () -> {
-			throw new IllegalStateException("ModRecipes.Kind type read before its loader bound it");
-		};
-		private Supplier<RecipeSerializer<AlaProcessingRecipe>> serializer = () -> {
-			throw new IllegalStateException("ModRecipes.Kind serializer read before its loader bound it");
-		};
+	/** Every family in declaration order. Declared first: the {@link #family} calls below append to it. */
+	private static final List<RecipeFamily<?>> FAMILIES = new ArrayList<>();
 
+	private static <F extends RecipeFamily<?>> F family(F family) {
+		FAMILIES.add(family);
+		return family;
+	}
+
+	/** Every recipe family, in registration order — the list both loaders register and Fabric syncs. */
+	public static List<RecipeFamily<?>> families() {
+		return Collections.unmodifiableList(FAMILIES);
+	}
+
+	/** The families of class {@code type}, in registration order. */
+	private static <F> F[] only(Class<?> type, IntFunction<F[]> array) {
+		List<Object> matching = new ArrayList<>();
+		for (RecipeFamily<?> family : FAMILIES) {
+			if (type.isInstance(family)) {
+				matching.add(family);
+			}
+		}
+		return matching.toArray(array.apply(0));
+	}
+
+	// ── Charge-carrying crafting recipe (MOD-083) ────────────────────────────────────────────────
+	//
+	// Unlike the machine families below this is a CRAFTING recipe: the type is vanilla's, so only a
+	// serializer is registered. Declared first because it is registered first on both loaders.
+
+	/** Registry path of the charge-carrying crafting serializer — also its {@code "type"} in JSON. */
+	public static final String CHARGED_CRAFT_ID = "crafting_shaped_charge_transfer";
+
+	public static final ChargedCraft CHARGED_CRAFT = family(new ChargedCraft(CHARGED_CRAFT_ID));
+
+	/**
+	 * One item-processing family: the positional {@link ProcessingRecipeInput} and the single
+	 * {@link AlaProcessingRecipe} class every such machine shares. Id, energy, station, draw, type and
+	 * serializer are {@link MachineRecipeFamily}'s.
+	 */
+	public static final class Kind extends MachineRecipeFamily<ProcessingRecipeInput, AlaProcessingRecipe, Kind> {
 		private Kind(String id, int defaultEnergy, Supplier<Block> station) {
 			this(id, defaultEnergy, station, () -> Config.machineEuPerTick);
 		}
 
 		private Kind(String id, int defaultEnergy, Supplier<Block> station, IntSupplier euPerTick) {
-			this.id = id;
-			this.defaultEnergy = defaultEnergy;
-			this.station = station;
-			this.euPerTick = euPerTick;
-		}
-
-		public String id() {
-			return id;
-		}
-
-		public int defaultEnergy() {
-			return defaultEnergy;
-		}
-
-		/**
-		 * The block that works this family — what a recipe viewer shows as the category icon and
-		 * registers as the crafting station (MOD-558).
-		 *
-		 * <p><b>Why it lives on the kind.</b> The pair "family → machine" used to be written out once
-		 * per viewer: a {@code MACHINES} table in the REI plugin and one in each of the two JEI
-		 * plugins. Three hand-kept lists of the same fact, none of which the compiler could compare —
-		 * and the JEI ones ran from a static initialiser, so a family missing from one of them took
-		 * the whole viewer down rather than one category (MOD-146: the fermenter shipped a release
-		 * cycle with no Ala Industrial recipe cards at all on NeoForge). Declared here, next to the
-		 * family itself, the viewers replay {@link #kinds()} and there is no second list to forget.
-		 * A new family cannot be added without naming its station: the constructor demands one.
-		 */
-		public Supplier<Block> station() {
-			return station;
-		}
-
-		/** What the machine working this family draws per tick. Almost every machine shares one rate. */
-		public int euPerTick() {
-			return Math.max(1, euPerTick.getAsInt());
-		}
-
-		/**
-		 * Base processing time of a recipe of this family costing {@code energy} EU — the number the
-		 * recipe viewers print. It has to divide by <em>this family's</em> rate: the incubator draws
-		 * four times what the other machines do, and the shared rate made its 15 seconds read as 60.
-		 * The global speed multiplier is a runtime balance knob and deliberately not applied — the
-		 * viewer shows the recipe's intrinsic time.
-		 */
-		public int ticksFor(int energy) {
-			return Math.max(1, energy / euPerTick());
-		}
-
-		public RecipeType<AlaProcessingRecipe> type() {
-			return type.get();
-		}
-
-		public RecipeSerializer<AlaProcessingRecipe> serializer() {
-			return serializer.get();
-		}
-
-		/** Bind this kind's type + serializer suppliers. Called once per loader during its registration. */
-		public void bind(Supplier<RecipeType<AlaProcessingRecipe>> typeSupplier,
-				Supplier<RecipeSerializer<AlaProcessingRecipe>> serializerSupplier) {
-			this.type = typeSupplier;
-			this.serializer = serializerSupplier;
-		}
-
-		/** A per-machine cached lookup (mirrors vanilla {@code AbstractFurnaceBlockEntity.quickCheck}). */
-		public RecipeManager.CachedCheck<ProcessingRecipeInput, AlaProcessingRecipe> newCheck() {
-			return RecipeManager.createCheck(type.get());
+			super(id, defaultEnergy, station, euPerTick,
+					AlaProcessingRecipe::mapCodec, AlaProcessingRecipe::streamCodec);
 		}
 	}
 
@@ -140,50 +108,48 @@ public final class ModRecipes {
 	// maceration JSON sets `energy: 300` (= maceratorDuration × machineEuPerTick), so this default
 	// is never active. It is kept aligned with the actual recipe energy on purpose so the
 	// recipe_check.py validator does not flag a stale-looking fallback (MOD-134).
-	public static final Kind MACERATION = new Kind("maceration", 300, () -> ModContent.MACERATOR.get());
-	public static final Kind SMELTING = new Kind("smelting", 200, () -> ModContent.ELECTRIC_FURNACE.get());
-	public static final Kind COMPRESSING = new Kind("compressing", 260, () -> ModContent.COMPRESSOR.get());
-	public static final Kind EXTRACTING = new Kind("extracting", 240, () -> ModContent.EXTRACTOR.get());
-	public static final Kind VULCANIZING = new Kind("vulcanizing", 400, () -> ModContent.VULCANIZER.get());
+	public static final Kind MACERATION = family(new Kind("maceration", 300, () -> ModContent.MACERATOR.get()));
+	public static final Kind SMELTING = family(new Kind("smelting", 200, () -> ModContent.ELECTRIC_FURNACE.get()));
+	public static final Kind COMPRESSING = family(new Kind("compressing", 260, () -> ModContent.COMPRESSOR.get()));
+	public static final Kind EXTRACTING = family(new Kind("extracting", 240, () -> ModContent.EXTRACTOR.get()));
+	public static final Kind VULCANIZING = family(new Kind("vulcanizing", 400, () -> ModContent.VULCANIZER.get()));
 	// Galvanic Bath (MOD-127): fibre + silver dust → flux thread. Two item inputs like the Vulcanizer;
 	// the water the bath also consumes is a fixed config cost, not a recipe field (see the block entity).
 	public static final Kind GALVANIC_BATH =
-			new Kind("galvanic_bath", 1000, () -> ModContent.GALVANIC_BATH.get());
+			family(new Kind("galvanic_bath", 1000, () -> ModContent.GALVANIC_BATH.get()));
 	// Thermal Centrifuge (MOD-424): the second doubling step on an ore, after the macerator's. Carries its
 	// own draw (4 EU/t against the shared 2), so the kind must be told — energy / euPerTick is what the
 	// recipe viewers print as the operation's length, and a wrong divisor here shows players a wrong time.
-	public static final Kind CENTRIFUGING = new Kind("centrifuging", 800,
-			() -> ModContent.THERMAL_CENTRIFUGE.get(), () -> Config.thermalCentrifugeEuPerTick);
+	public static final Kind CENTRIFUGING = family(new Kind("centrifuging", 800,
+			() -> ModContent.THERMAL_CENTRIFUGE.get(), () -> Config.thermalCentrifugeEuPerTick));
 	// Sawmill (MOD-150): one Kind per cutting mode (planks/sticks/slabs/stairs). defaultEnergy 160 =
 	// sawmillDuration (80) × machineEuPerTick (2); every shipped sawing JSON sets energy: 160 explicitly.
-	public static final Kind SAWING_PLANKS = new Kind("sawing_planks", 160, () -> ModContent.SAWMILL.get());
-	public static final Kind SAWING_STICKS = new Kind("sawing_sticks", 160, () -> ModContent.SAWMILL.get());
-	public static final Kind SAWING_SLABS = new Kind("sawing_slabs", 160, () -> ModContent.SAWMILL.get());
-	public static final Kind SAWING_STAIRS = new Kind("sawing_stairs", 160, () -> ModContent.SAWMILL.get());
+	public static final Kind SAWING_PLANKS = family(new Kind("sawing_planks", 160, () -> ModContent.SAWMILL.get()));
+	public static final Kind SAWING_STICKS = family(new Kind("sawing_sticks", 160, () -> ModContent.SAWMILL.get()));
+	public static final Kind SAWING_SLABS = family(new Kind("sawing_slabs", 160, () -> ModContent.SAWMILL.get()));
+	public static final Kind SAWING_STAIRS = family(new Kind("sawing_stairs", 160, () -> ModContent.SAWMILL.get()));
 
 	// Incubator (MOD-118): one kind per mutation mode, selected by the chip in the machine.
 	// Splitting by type (rather than a "kind" field inside one type) matches how the sawmill models
 	// its cutting modes, and it comes with per-mode recipe-viewer categories for free.
 	// The incubator is the one machine with its own draw (8 EU/t against the shared 2), so these three
 	// carry it: energy / euPerTick is what the recipe viewers show as the operation's length.
-	public static final Kind MUTATION_TRANSFORM = new Kind("mutation_transform", 2400,
-			() -> ModContent.INCUBATOR.get(), () -> Config.incubatorEuPerTick);
-	public static final Kind MUTATION_DUPLICATE = new Kind("mutation_duplicate", 4000,
-			() -> ModContent.INCUBATOR.get(), () -> Config.incubatorEuPerTick);
-	public static final Kind MUTATION_CREATE = new Kind("mutation_create", 8000,
-			() -> ModContent.INCUBATOR.get(), () -> Config.incubatorEuPerTick);
+	public static final Kind MUTATION_TRANSFORM = family(new Kind("mutation_transform", 2400,
+			() -> ModContent.INCUBATOR.get(), () -> Config.incubatorEuPerTick));
+	public static final Kind MUTATION_DUPLICATE = family(new Kind("mutation_duplicate", 4000,
+			() -> ModContent.INCUBATOR.get(), () -> Config.incubatorEuPerTick));
+	public static final Kind MUTATION_CREATE = family(new Kind("mutation_create", 8000,
+			() -> ModContent.INCUBATOR.get(), () -> Config.incubatorEuPerTick));
 
 	// Fermenter (MOD-146): organic waste → biomass. The water it drinks and the biofuel it brews are
 	// fixed config costs rather than recipe fields — the mod has no recipe family that mixes items and
 	// fluids on one side, and the Galvanic Bath already set this precedent rather than inventing one.
 	// 1200 = fermenterDuration (600) × machineEuPerTick (2); every shipped fermenting JSON says so.
-	public static final Kind FERMENTING = new Kind("fermenting", 1200, () -> ModContent.FERMENTER.get());
+	public static final Kind FERMENTING = family(new Kind("fermenting", 1200, () -> ModContent.FERMENTER.get()));
 
-	private static final Kind[] ALL = {MACERATION, SMELTING, COMPRESSING, EXTRACTING, VULCANIZING,
-			GALVANIC_BATH, CENTRIFUGING, SAWING_PLANKS, SAWING_STICKS, SAWING_SLABS, SAWING_STAIRS,
-			MUTATION_TRANSFORM, MUTATION_DUPLICATE, MUTATION_CREATE, FERMENTING};
+	private static final Kind[] ALL = only(Kind.class, Kind[]::new);
 
-	/** All recipe families, in registration order (used by both loaders' registration). */
+	/** The item-processing families, in registration order — the list the recipe viewers replay. */
 	public static Kind[] kinds() {
 		return ALL;
 	}
@@ -192,75 +158,13 @@ public final class ModRecipes {
 	 * One fluid-input recipe family. The recipe type is generic because polymerizing produces an item,
 	 * while distilling produces fluid stacks; each family owns codec factories for its concrete recipe.
 	 */
-	public static final class FluidKind<R extends Recipe<FluidRecipeInput>> {
-		private final String id;
-		private final int defaultEnergy;
-		/** Read lazily: the {@link ModContent} slot is rebound by whichever loader registered it. */
-		private final Supplier<Block> station;
-		private final Function<FluidKind<R>, MapCodec<R>> mapCodecFactory;
-		private final Function<FluidKind<R>, StreamCodec<RegistryFriendlyByteBuf, R>> streamCodecFactory;
-		private Supplier<RecipeType<R>> type = () -> {
-			throw new IllegalStateException("ModRecipes.FluidKind type read before its loader bound it");
-		};
-		private Supplier<RecipeSerializer<R>> serializer = () -> {
-			throw new IllegalStateException("ModRecipes.FluidKind serializer read before its loader bound it");
-		};
-
+	public static final class FluidKind<R extends Recipe<FluidRecipeInput>>
+			extends MachineRecipeFamily<FluidRecipeInput, R, FluidKind<R>> {
+		/** The fluid machines share the processing-machine rate. */
 		private FluidKind(String id, int defaultEnergy, Supplier<Block> station,
 				Function<FluidKind<R>, MapCodec<R>> mapCodecFactory,
 				Function<FluidKind<R>, StreamCodec<RegistryFriendlyByteBuf, R>> streamCodecFactory) {
-			this.id = id;
-			this.defaultEnergy = defaultEnergy;
-			this.station = station;
-			this.mapCodecFactory = mapCodecFactory;
-			this.streamCodecFactory = streamCodecFactory;
-		}
-
-		public String id() {
-			return id;
-		}
-
-		public int defaultEnergy() {
-			return defaultEnergy;
-		}
-
-		/** The block that works this family — see {@link Kind#station()} (MOD-558). */
-		public Supplier<Block> station() {
-			return station;
-		}
-
-		/** What the machine working this family draws per tick — the shared processing-machine rate. */
-		public int euPerTick() {
-			return Math.max(1, Config.machineEuPerTick);
-		}
-
-		/** Base processing time of a recipe costing {@code energy} EU — the number the recipe viewers print. */
-		public int ticksFor(int energy) {
-			return Math.max(1, energy / euPerTick());
-		}
-
-		public RecipeType<R> type() {
-			return type.get();
-		}
-
-		public RecipeSerializer<R> serializer() {
-			return serializer.get();
-		}
-
-		/** Bind this family's type + serializer suppliers. Called once per loader during its registration. */
-		public void bind(Supplier<RecipeType<R>> typeSupplier,
-				Supplier<RecipeSerializer<R>> serializerSupplier) {
-			this.type = typeSupplier;
-			this.serializer = serializerSupplier;
-		}
-
-		/** A cached lookup for the machine (mirrors {@link Kind#newCheck()}). */
-		public RecipeManager.CachedCheck<FluidRecipeInput, R> newCheck() {
-			return RecipeManager.createCheck(type.get());
-		}
-
-		private RecipeSerializer<R> createSerializer() {
-			return new RecipeSerializer<>(mapCodecFactory.apply(this), streamCodecFactory.apply(this));
+			super(id, defaultEnergy, station, () -> Config.machineEuPerTick, mapCodecFactory, streamCodecFactory);
 		}
 	}
 
@@ -270,101 +174,32 @@ public final class ModRecipes {
 	//
 	// Codec factories receive their already-created FluidKind when registration runs. They therefore
 	// never read a not-yet-assigned ModRecipes static during this class's own initialization.
-	public static final FluidKind<PolymerizingRecipe> POLYMERIZING = new FluidKind<>(
+	public static final FluidKind<PolymerizingRecipe> POLYMERIZING = family(new FluidKind<>(
 			"polymerizing", 400, () -> ModContent.POLYMERIZER.get(),
 			kind -> PolymerizingRecipe.mapCodec(kind),
-			kind -> PolymerizingRecipe.streamCodec(kind));
-	public static final FluidKind<FluidOutputRecipe> DISTILLING = new FluidKind<>(
+			kind -> PolymerizingRecipe.streamCodec(kind)));
+	public static final FluidKind<FluidOutputRecipe> DISTILLING = family(new FluidKind<>(
 			"distilling", 400, () -> ModContent.DISTILLATION_COLUMN.get(),
 			kind -> FluidOutputRecipe.mapCodec(kind),
-			kind -> FluidOutputRecipe.streamCodec(kind));
+			kind -> FluidOutputRecipe.streamCodec(kind)));
 
-	private static final FluidKind<?>[] FLUID_ALL = {POLYMERIZING, DISTILLING};
+	private static final FluidKind<?>[] FLUID_ALL = only(FluidKind.class, FluidKind<?>[]::new);
 
-	/** All fluid-input recipe families, in registration order (used by both loaders' registration). */
+	/** The fluid-input families, in registration order — the list the recipe viewers replay. */
 	public static FluidKind<?>[] fluidKinds() {
 		return FLUID_ALL;
 	}
 
 	/**
-	 * One multi-input alloying family (MOD-064). A third family type next to {@link Kind} and
-	 * {@link FluidKind} rather than a generalization of either: {@link Kind} is fixed to
-	 * {@link AlaProcessingRecipe} and its positional {@link ProcessingRecipeInput}, and thirteen shipped
-	 * families depend on that. Adding a sibling costs one small class and touches none of them — the same
-	 * trade {@link FluidKind} made for MOD-019.
+	 * One multi-input alloying family (MOD-064): an unordered three-slot {@link AlloyRecipeInput}, with its
+	 * own draw. The third {@link MachineRecipeFamily} next to {@link Kind} and {@link FluidKind}.
 	 */
-	public static final class AlloyKind<R extends Recipe<AlloyRecipeInput>> {
-		private final String id;
-		private final int defaultEnergy;
-		/** Read lazily: Config values are reloadable, so a captured int would go stale. */
-		private final IntSupplier euPerTick;
-		/** Read lazily: the {@link ModContent} slot is rebound by whichever loader registered it. */
-		private final Supplier<Block> station;
-		private final Function<AlloyKind<R>, MapCodec<R>> mapCodecFactory;
-		private final Function<AlloyKind<R>, StreamCodec<RegistryFriendlyByteBuf, R>> streamCodecFactory;
-		private Supplier<RecipeType<R>> type = () -> {
-			throw new IllegalStateException("ModRecipes.AlloyKind type read before its loader bound it");
-		};
-		private Supplier<RecipeSerializer<R>> serializer = () -> {
-			throw new IllegalStateException("ModRecipes.AlloyKind serializer read before its loader bound it");
-		};
-
+	public static final class AlloyKind<R extends Recipe<AlloyRecipeInput>>
+			extends MachineRecipeFamily<AlloyRecipeInput, R, AlloyKind<R>> {
 		private AlloyKind(String id, int defaultEnergy, Supplier<Block> station, IntSupplier euPerTick,
 				Function<AlloyKind<R>, MapCodec<R>> mapCodecFactory,
 				Function<AlloyKind<R>, StreamCodec<RegistryFriendlyByteBuf, R>> streamCodecFactory) {
-			this.id = id;
-			this.defaultEnergy = defaultEnergy;
-			this.station = station;
-			this.euPerTick = euPerTick;
-			this.mapCodecFactory = mapCodecFactory;
-			this.streamCodecFactory = streamCodecFactory;
-		}
-
-		public String id() {
-			return id;
-		}
-
-		public int defaultEnergy() {
-			return defaultEnergy;
-		}
-
-		/** The block that works this family — see {@link Kind#station()} (MOD-558). */
-		public Supplier<Block> station() {
-			return station;
-		}
-
-		/** What the smelter draws per tick — its own rate, not the shared processing-machine one. */
-		public int euPerTick() {
-			return Math.max(1, euPerTick.getAsInt());
-		}
-
-		/** Base processing time of a recipe costing {@code energy} EU — the number the recipe viewers print. */
-		public int ticksFor(int energy) {
-			return Math.max(1, energy / euPerTick());
-		}
-
-		public RecipeType<R> type() {
-			return type.get();
-		}
-
-		public RecipeSerializer<R> serializer() {
-			return serializer.get();
-		}
-
-		/** Bind this family's type + serializer suppliers. Called once per loader during its registration. */
-		public void bind(Supplier<RecipeType<R>> typeSupplier,
-				Supplier<RecipeSerializer<R>> serializerSupplier) {
-			this.type = typeSupplier;
-			this.serializer = serializerSupplier;
-		}
-
-		/** A cached lookup for the machine (mirrors {@link Kind#newCheck()}). */
-		public RecipeManager.CachedCheck<AlloyRecipeInput, R> newCheck() {
-			return RecipeManager.createCheck(type.get());
-		}
-
-		private RecipeSerializer<R> createSerializer() {
-			return new RecipeSerializer<>(mapCodecFactory.apply(this), streamCodecFactory.apply(this));
+			super(id, defaultEnergy, station, euPerTick, mapCodecFactory, streamCodecFactory);
 		}
 	}
 
@@ -373,14 +208,14 @@ public final class ModRecipes {
 	// step with the real cost on purpose so recipe_check.py does not flag a stale-looking default (MOD-134).
 	// The smelter is one of the few machines with its own draw (8 EU/t against the shared 2), so the kind
 	// carries it: energy / euPerTick is what the recipe viewers show as the operation's length.
-	public static final AlloyKind<AlloyingRecipe> ALLOYING = new AlloyKind<>(
+	public static final AlloyKind<AlloyingRecipe> ALLOYING = family(new AlloyKind<>(
 			"alloying", 1200, () -> ModContent.ALLOY_SMELTER.get(), () -> Config.alloySmelterEuPerTick,
 			kind -> AlloyingRecipe.mapCodec(kind),
-			kind -> AlloyingRecipe.streamCodec(kind));
+			kind -> AlloyingRecipe.streamCodec(kind)));
 
-	private static final AlloyKind<?>[] ALLOY_ALL = {ALLOYING};
+	private static final AlloyKind<?>[] ALLOY_ALL = only(AlloyKind.class, AlloyKind<?>[]::new);
 
-	/** All alloying recipe families, in registration order (used by both loaders' registration). */
+	/** The alloying families, in registration order — the list the recipe viewers replay. */
 	public static AlloyKind<?>[] alloyKinds() {
 		return ALLOY_ALL;
 	}
@@ -389,132 +224,38 @@ public final class ModRecipes {
 	 *  display serializer to rebuild a display's kind from its synced id (see {@code AlaProcessingDisplay}). */
 	public static Kind byId(String id) {
 		for (Kind kind : ALL) {
-			if (kind.id.equals(id)) {
+			if (kind.id().equals(id)) {
 				return kind;
 			}
 		}
 		return null;
 	}
 
-	/** Build the {@link RecipeType} instance both loaders register for {@code kind}. */
-	public static RecipeType<AlaProcessingRecipe> createType(Kind kind) {
-		Identifier id = Industrialization.id(kind.id);
-		return new RecipeType<AlaProcessingRecipe>() {
-			@Override
-			public String toString() {
-				return id.toString();
-			}
-		};
-	}
-
-	/** Build the {@link RecipeSerializer} instance both loaders register for {@code kind}. */
-	public static RecipeSerializer<AlaProcessingRecipe> createSerializer(Kind kind) {
-		return new RecipeSerializer<>(AlaProcessingRecipe.mapCodec(kind), AlaProcessingRecipe.streamCodec(kind));
-	}
-
-	/** Build the {@link RecipeType} instance both loaders register for {@code kind} (MOD-019). */
-	public static <R extends Recipe<FluidRecipeInput>> RecipeType<R> createType(FluidKind<R> kind) {
-		Identifier id = Industrialization.id(kind.id);
-		return new RecipeType<R>() {
-			@Override
-			public String toString() {
-				return id.toString();
-			}
-		};
-	}
-
-	/** Build the family-specific serializer from the codec factories owned by {@code kind}. */
-	public static <R extends Recipe<FluidRecipeInput>> RecipeSerializer<R> createSerializer(FluidKind<R> kind) {
-		return kind.createSerializer();
-	}
-
-	/** Build the {@link RecipeType} instance both loaders register for {@code kind} (MOD-064). */
-	public static <R extends Recipe<AlloyRecipeInput>> RecipeType<R> createType(AlloyKind<R> kind) {
-		Identifier id = Industrialization.id(kind.id);
-		return new RecipeType<R>() {
-			@Override
-			public String toString() {
-				return id.toString();
-			}
-		};
-	}
-
-	/** Build the family-specific serializer from the codec factories owned by {@code kind}. */
-	public static <R extends Recipe<AlloyRecipeInput>> RecipeSerializer<R> createSerializer(AlloyKind<R> kind) {
-		return kind.createSerializer();
-	}
-
 	/**
 	 * Fabric registration: the {@code RECIPE_TYPE}/{@code RECIPE_SERIALIZER} registries stay writable during
-	 * init, so register each kind eagerly and bind it to constant suppliers. NeoForge instead uses a
-	 * {@code DeferredRegister} (see {@code ModRecipesNeoForge}).
+	 * init, so every family is registered eagerly, in {@link #families()} order, and bound to constant
+	 * suppliers. NeoForge replays the same list through a {@code DeferredRegister} (see
+	 * {@code ModRecipesNeoForge}).
 	 */
 	public static void init() {
-		bindChargedCraft(Registry.register(BuiltInRegistries.RECIPE_SERIALIZER,
-				Industrialization.id(CHARGED_CRAFT_ID), createChargedCraftSerializer()));
-		for (Kind kind : ALL) {
-			Identifier id = Industrialization.id(kind.id);
-			RecipeType<AlaProcessingRecipe> type = Registry.register(BuiltInRegistries.RECIPE_TYPE, id, createType(kind));
-			RecipeSerializer<AlaProcessingRecipe> serializer =
-					Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, id, createSerializer(kind));
-			kind.bind(() -> type, () -> serializer);
-		}
-		for (FluidKind<?> kind : FLUID_ALL) {
-			registerFluid(kind);
-		}
-		for (AlloyKind<?> kind : ALLOY_ALL) {
-			registerAlloy(kind);
+		for (RecipeFamily<?> family : FAMILIES) {
+			register(family);
 		}
 	}
 
-	// ── Charge-carrying crafting recipe (MOD-083) ────────────────────────────────────────────────
-	//
-	// Unlike everything above this is a CRAFTING recipe: the type is vanilla's, so only a serializer is
-	// registered. It still goes through this facade because the two loaders register serializers
-	// differently (Fabric eagerly, NeoForge through a DeferredRegister), and the recipe class needs one
-	// place to read its serializer back from.
-
-	/** Registry path of the charge-carrying crafting serializer — also its {@code "type"} in JSON. */
-	public static final String CHARGED_CRAFT_ID = "crafting_shaped_charge_transfer";
-
-	private static Supplier<RecipeSerializer<ChargedCraftRecipe>> chargedCraft = () -> {
-		throw new IllegalStateException("ModRecipes charged-craft serializer read before its loader bound it");
-	};
-
-	/** Build the serializer instance both loaders register. */
-	public static RecipeSerializer<ChargedCraftRecipe> createChargedCraftSerializer() {
-		return new RecipeSerializer<>(ChargedCraftRecipe.MAP_CODEC, ChargedCraftRecipe.STREAM_CODEC);
-	}
-
-	/** Bind the registered serializer; called once per loader during its registration. */
-	public static void bindChargedCraft(RecipeSerializer<ChargedCraftRecipe> serializer) {
-		chargedCraft = () -> serializer;
-	}
-
-	/** Bind the registered serializer lazily (NeoForge hands out a holder, not the instance). */
-	public static void bindChargedCraft(Supplier<RecipeSerializer<ChargedCraftRecipe>> serializer) {
-		chargedCraft = serializer;
+	private static <R extends Recipe<?>> void register(RecipeFamily<R> family) {
+		Identifier id = Industrialization.id(family.id());
+		RecipeType<R> type = family.createType()
+				.map(created -> Registry.register(BuiltInRegistries.RECIPE_TYPE, id, created))
+				.orElse(null);
+		RecipeSerializer<R> serializer =
+				Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, id, family.createSerializer());
+		family.bind(type == null ? RecipeFamily.noType(family.id()) : () -> type, () -> serializer);
 	}
 
 	/** The serializer every {@link ChargedCraftRecipe} reports as its own. */
 	public static RecipeSerializer<ChargedCraftRecipe> chargedCraftSerializer() {
-		return chargedCraft.get();
-	}
-
-	private static <R extends Recipe<FluidRecipeInput>> void registerFluid(FluidKind<R> kind) {
-		Identifier id = Industrialization.id(kind.id);
-		RecipeType<R> type = Registry.register(BuiltInRegistries.RECIPE_TYPE, id, createType(kind));
-		RecipeSerializer<R> serializer =
-				Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, id, createSerializer(kind));
-		kind.bind(() -> type, () -> serializer);
-	}
-
-	private static <R extends Recipe<AlloyRecipeInput>> void registerAlloy(AlloyKind<R> kind) {
-		Identifier id = Industrialization.id(kind.id);
-		RecipeType<R> type = Registry.register(BuiltInRegistries.RECIPE_TYPE, id, createType(kind));
-		RecipeSerializer<R> serializer =
-				Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, id, createSerializer(kind));
-		kind.bind(() -> type, () -> serializer);
+		return CHARGED_CRAFT.serializer();
 	}
 
 	/**

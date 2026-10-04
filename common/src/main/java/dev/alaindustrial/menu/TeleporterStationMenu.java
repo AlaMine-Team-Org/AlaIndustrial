@@ -28,13 +28,7 @@ public class TeleporterStationMenu extends AbstractContainerMenu {
 	/** Toggle privacy. Only this one button exists, so the id needs no encoding. */
 	public static final int BUTTON_TOGGLE_PRIVACY = 0;
 
-	/** Fill of the jump fund, 0..1000 — see the class note on why this is not raw EU. */
-	public static final int DATA_ENERGY_PERMILLE = 0;
-	/** 1 = private, 0 = public. */
-	public static final int DATA_PRIVATE = 1;
-	/** 1 = the viewing player owns this station (the toggle is theirs to press). */
-	public static final int DATA_IS_OWNER = 2;
-	public static final int DATA_SIZE = 3;
+	public static final int DATA_SIZE = TeleporterBlockEntity.StationChannel.values().length;
 
 	/** Player-inventory grid, matching the texture's slot frames. */
 	private static final int INV_X = 8, INV_Y = 105, HOTBAR_Y = 163;
@@ -85,21 +79,21 @@ public class TeleporterStationMenu extends AbstractContainerMenu {
 
 	/** Jump-fund fill as permille (0..1000) — what the bar draws. */
 	public int getEnergyPermille() {
-		return data.get(DATA_ENERGY_PERMILLE);
+		return data.get(TeleporterBlockEntity.StationChannel.ENERGY_PERMILLE.ordinal());
 	}
 
 	public boolean isPrivate() {
-		return data.get(DATA_PRIVATE) != 0;
+		return data.get(TeleporterBlockEntity.StationChannel.PRIVATE.ordinal()) != 0;
 	}
 
 	/** True when the viewing player may work the toggle. */
 	public boolean isOwner() {
-		return data.get(DATA_IS_OWNER) != 0;
+		return data.get(TeleporterBlockEntity.StationChannel.IS_OWNER.ordinal()) != 0;
 	}
 
 	/**
 	 * The privacy toggle. Ownership is re-checked here, on the server, from the block entity — the
-	 * {@code DATA_IS_OWNER} flag only greys the button out on the client, and a client that ignores
+	 * {@code IS_OWNER} flag only greys the button out on the client, and a client that ignores
 	 * it gets nowhere.
 	 */
 	@Override

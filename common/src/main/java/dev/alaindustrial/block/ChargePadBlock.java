@@ -20,6 +20,10 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import dev.alaindustrial.client.ServerBalance;
+import dev.alaindustrial.core.tooltip.HasMachineTooltip;
+import dev.alaindustrial.core.tooltip.MachineTooltipSpec;
+import java.util.List;
 
 /**
  * The Charging Station (MOD-274) — a low plate that tops up everything powered on whoever stands on it.
@@ -37,7 +41,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * the plate's visual height: {@code getEntityInsideCollisionShape} is deliberately left at its default
  * full cube, so standing on a 4px plate counts as being inside it.
  */
-public class ChargePadBlock extends AbstractMachineBlock implements MachineHumProvider {
+public class ChargePadBlock extends AbstractMachineBlock implements MachineHumProvider, HasMachineTooltip {
 
 	/** What the indicator shows; see {@link ChargePadState} for why this is not the usual boolean LIT. */
 	public static final EnumProperty<ChargePadState> STATE =
@@ -168,5 +172,14 @@ public class ChargePadBlock extends AbstractMachineBlock implements MachineHumPr
 		level.addParticle(ParticleTypes.ELECTRIC_SPARK,
 				cx + Math.cos(rim) * 0.42, pos.getY() + 0.28, cz + Math.sin(rim) * 0.42,
 				0.0, 0.005, 0.0);
+	}
+
+	/** Hover tooltip of this block's item (MOD-716, ADR-040). */
+	@Override
+	public MachineTooltipSpec machineTooltip() {
+		return new MachineTooltipSpec(MachineTooltipSpec.Tier.LV,
+				List.of(MachineTooltipSpec.stat("capacity", ServerBalance::chargePadBuffer)),
+				List.of(MachineTooltipSpec.stat("energy_input", ServerBalance::chargePadInputRate),
+						MachineTooltipSpec.stat("energy_output", ServerBalance::chargePadOutputRate)));
 	}
 }

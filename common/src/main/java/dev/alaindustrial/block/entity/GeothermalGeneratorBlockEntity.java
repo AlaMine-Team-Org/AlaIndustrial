@@ -1,8 +1,8 @@
 package dev.alaindustrial.block.entity;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.core.energy.EnergyPort;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.core.environment.GeneratorConfig;
 import dev.alaindustrial.core.fluid.FluidAmounts;
 import dev.alaindustrial.core.fluid.FluidHolder;
 import dev.alaindustrial.core.fluid.FluidPort;
@@ -12,7 +12,6 @@ import dev.alaindustrial.menu.GeothermalGeneratorMenu;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -34,7 +33,8 @@ import net.minecraft.world.level.storage.ValueOutput;
  *   <li>the legacy lava-bucket item slot, kept as a compatibility filler.</li>
  * </ul>
  * Each tick, when {@code lavaTicks} is low and the tank holds ≥1 bucket, it drains 1 bucket from the
- * tank and adds {@link Config#geothermalBurnTicks} burn ticks. Produces {@link Config#geothermalEuPerTick}
+ * tank and adds {@link GeneratorConfig#geothermalBurnTicks} burn ticks. Produces {@link
+ * GeneratorConfig#geothermalEuPerTick}
  * EU/t while lava remains; buffer 4000, LV output (32). Built on {@link AbstractGeneratorBlockEntity};
  * {@code progress}/{@code maxProgress} expose the lava-tick level.
  *
@@ -63,14 +63,15 @@ public class GeothermalGeneratorBlockEntity extends AbstractGeneratorBlockEntity
 			this::setChanged);
 
 	public GeothermalGeneratorBlockEntity(BlockPos pos, BlockState state) {
-		super(ModContent.GEOTHERMAL_GENERATOR_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT, Config.geothermalBuffer,
+		super(ModContent.GEOTHERMAL_GENERATOR_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT,
+				GeneratorConfig.geothermalBuffer,
 				EnergyTier.LV.maxVoltage());
 		this.maxProgress = tankCapacity();
 	}
 
 	/** Tank holds ~10 buckets' worth of burn ticks (config-driven). */
 	private static int tankCapacity() {
-		return 10 * Config.geothermalBurnTicks;
+		return 10 * GeneratorConfig.geothermalBurnTicks;
 	}
 
 	/**
@@ -92,7 +93,7 @@ public class GeothermalGeneratorBlockEntity extends AbstractGeneratorBlockEntity
 
 	/** The burn reserve ({@code lavaTicks}) expressed in mB — same derivation as the GUI lava-gauge tooltip. */
 	private long lavaFuelMb() {
-		int burnTicks = Math.max(1, Config.geothermalBurnTicks);
+		int burnTicks = Math.max(1, GeneratorConfig.geothermalBurnTicks);
 		return (long) lavaTicks * FluidAmounts.BUCKET / burnTicks;
 	}
 
@@ -155,13 +156,13 @@ public class GeothermalGeneratorBlockEntity extends AbstractGeneratorBlockEntity
 		// independent of the energy buffer: lavaTicks is an intermediate store, not EU. EU generation is
 		// gated separately below so lava is never wasted (R-NRG-11). MOD-077: capsule parity — same
 		// all-or-nothing exchange as the bucket, returning an empty capsule instead of an empty bucket.
-		if (lavaTicks + Config.geothermalBurnTicks <= tank) {
+		if (lavaTicks + GeneratorConfig.geothermalBurnTicks <= tank) {
 			ItemStack input = items.get(INPUT_SLOT);
 			ItemStack container = fillerContainer(input);
 			if (!container.isEmpty() && canReturn(container)) {
 				input.shrink(1);
 				putReturn(container);
-				lavaTicks += Config.geothermalBurnTicks;
+				lavaTicks += GeneratorConfig.geothermalBurnTicks;
 			}
 		}
 
@@ -169,14 +170,14 @@ public class GeothermalGeneratorBlockEntity extends AbstractGeneratorBlockEntity
 		// This is the generator consuming its OWN fuel, so it bypasses the tank's canExtract guard
 		// (which is false to stop neighbours pulling lava back out) by mutating the tank directly.
 		// produce() runs outside any transaction, so a direct field update is the correct internal path.
-		if (lavaTicks + Config.geothermalBurnTicks <= tank
+		if (lavaTicks + GeneratorConfig.geothermalBurnTicks <= tank
 				&& fluidTank.amount >= FluidAmounts.BUCKET
 				&& fluidTank.fluid.is(Fluids.LAVA)) {
 			fluidTank.amount -= FluidAmounts.BUCKET;
 			if (fluidTank.amount == 0) {
 				fluidTank.fluid = FluidHolder.EMPTY;
 			}
-			lavaTicks += Config.geothermalBurnTicks;
+			lavaTicks += GeneratorConfig.geothermalBurnTicks;
 			setChanged();
 		}
 
@@ -185,7 +186,7 @@ public class GeothermalGeneratorBlockEntity extends AbstractGeneratorBlockEntity
 		int made = 0;
 		if (lavaTicks > 0 && energy.getAmount() < energy.getCapacity()) {
 			lavaTicks--;
-			made = Config.geothermalEuPerTick;
+			made = GeneratorConfig.geothermalEuPerTick;
 		}
 		this.progress = lavaTicks;
 		this.maxProgress = tank;
@@ -231,11 +232,6 @@ public class GeothermalGeneratorBlockEntity extends AbstractGeneratorBlockEntity
 	}
 
 	@Override
-	public Component getDisplayName() {
-		return Component.translatable("block.alaindustrial.geothermal_generator");
-	}
-
-	@Override
 	public AbstractContainerMenu createMenu(int syncId, Inventory inventory, Player player) {
 		return new GeothermalGeneratorMenu(syncId, inventory, this,
 				ContainerLevelAccess.create(getLevel(), getBlockPos()));
@@ -250,8 +246,8 @@ public class GeothermalGeneratorBlockEntity extends AbstractGeneratorBlockEntity
 	}
 
 	@Override
-	protected void loadAdditional(ValueInput input) {
-		super.loadAdditional(input);
+	protected void loadMachineData(ValueInput input) {
+		super.loadMachineData(input);
 		lavaTicks = input.getIntOr("LavaTicks", 0);
 		// MOD-028: prefer the new mB-valued key; fall back to the legacy Fabric v0.1.0 droplet-valued
 		// "FluidTank" key, converting ÷81 (81000 droplets/bucket ÷ 81 = 1000 mB/bucket, exact — machine

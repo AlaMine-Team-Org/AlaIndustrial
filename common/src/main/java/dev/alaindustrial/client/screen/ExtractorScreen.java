@@ -1,8 +1,8 @@
 package dev.alaindustrial.client.screen;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.core.machine.StatusLine;
 import dev.alaindustrial.menu.ExtractorMenu;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
@@ -26,21 +26,28 @@ public class ExtractorScreen extends ProgressMachineScreen<ExtractorMenu> {
 			80, 39,          // dest x/y in the 176×166 frame
 			true);           // min-1px — the narrow chevrons benefit from immediate feedback at progress=1
 
+	/**
+	 * Click area of the recipe viewers (MOD-716): the chevrons' columns, padded two pixels above and below — the
+	 * 6-px-tall sprite alone would be a hard target.
+	 */
+	public static final GuiRect PROGRESS_AREA = new GuiRect(PROGRESS.destX(), PROGRESS.destY() - 2,
+			PROGRESS.spriteW(), PROGRESS.spriteH() + 4);
+
+	/** Atlas, energy bar, progress sprite and status row: the whole screen (MOD-716, CLI-3). */
+	private static final MachineLayout LAYOUT = MachineLayout.of(TEXTURE, EnergyBarSpec.LEFT)
+			.withProgress(PROGRESS)
+			.withStatus(MachineLayout.StatusBand.STANDARD);
+
 	public ExtractorScreen(ExtractorMenu menu, Inventory inventory, Component title) {
-		super(menu, inventory, title, PROGRESS);
+		super(menu, inventory, title, LAYOUT);
 	}
 
-	@Override
-	protected Identifier texture() {
-		return TEXTURE;
-	}
 	/**
 	 * Status row (MOD-458) — the family's shared "why am I idle" caption: no recipe, a partial batch, a
 	 * blocked output, or a buffer that has stayed empty long enough to mean something.
 	 */
 	@Override
-	public void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-		super.extractContents(graphics, mouseX, mouseY, partialTick);
-		drawProcessingStatus(graphics, this.menu.getStatus(), STATUS_ROW_Y);
+	protected StatusLine status() {
+		return this.menu.getStatus();
 	}
 }

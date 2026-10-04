@@ -7,8 +7,10 @@ import dev.alaindustrial.core.fluid.FluidAmounts;
 import dev.alaindustrial.core.fluid.FluidHolder;
 import dev.alaindustrial.core.fluid.FluidLookup;
 import dev.alaindustrial.core.fluid.FluidPort;
+import dev.alaindustrial.core.machine.MachineRates;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModTags;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.RegistryAccess;
@@ -45,6 +47,35 @@ import static dev.alaindustrial.gametest.AlaGameTestHelper.drive;
  */
 public final class PolymerizerScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(PolymerizerScenarios::fun01OilBecomesRawRubber, "polymerizer_oil_becomes_raw_rubber")
+						.fabricId("PolymerizerGameTest", "tcPoly001Fun01_oilBecomesRawRubber").ticks(400),
+				RosterEntry.of(PolymerizerScenarios::fun02BucketFillsTank, "polymerizer_bucket_fills_tank")
+						.fabricId("PolymerizerGameTest", "tcPoly001Fun02_bucketFillsTank").ticks(20, 60),
+				RosterEntry.of(PolymerizerScenarios::neg01NoPowerNoOutput, "polymerizer_no_power_no_output")
+						.fabricId("PolymerizerGameTest", "tcPoly001Neg01_noPowerNoOutput").ticks(400),
+				RosterEntry.of(PolymerizerScenarios::neg02BelowRecipeVolumeIsInert,
+								"polymerizer_below_recipe_volume_is_inert")
+						.fabricId("PolymerizerGameTest", "tcPoly001Neg02_belowRecipeVolumeIsInert").ticks(400),
+				RosterEntry.of(PolymerizerScenarios::con01FullOutputKeepsOil, "polymerizer_full_output_keeps_oil")
+						.fabricId("PolymerizerGameTest", "tcPoly001Con01_fullOutputKeepsOil").ticks(400),
+				RosterEntry.of(PolymerizerScenarios::reg01TankRefusesNonOil, "polymerizer_tank_refuses_non_oil")
+						.fabricId("PolymerizerGameTest", "tcPoly001Reg01_tankRefusesNonOil").ticks(20, 60),
+				RosterEntry.of(PolymerizerScenarios::reg02TankRefusesFlowingOil, "polymerizer_tank_refuses_flowing_oil")
+						.fabricId("PolymerizerGameTest", "tcPoly001Reg02_tankRefusesFlowingOil").ticks(20, 60),
+				RosterEntry.of(PolymerizerScenarios::con03NeighbourFillsThroughFluidPort,
+								"polymerizer_neighbour_fills_through_fluid_port")
+						.fabricId("PolymerizerGameTest", "tcPoly001Con03_neighbourFillsThroughFluidPort")
+						.ticks(20, 60),
+				RosterEntry.of(PolymerizerScenarios::sta01NbtRoundTripPreservesTank,
+								"polymerizer_nbt_round_trip_preserves_tank")
+						.fabricId("PolymerizerGameTest", "tcPoly001Sta01_nbtRoundTripPreservesTank").ticks(20, 60));
+
+		private Roster() {}
+	}
+
 	private PolymerizerScenarios() {
 	}
 
@@ -54,7 +85,7 @@ public final class PolymerizerScenarios {
 
 	/** Ticks to drive: one full operation plus slack for the scaled-duration knob. */
 	private static int driveTicks() {
-		return Config.scaledDuration(Config.polymerizerDuration) + 20;
+		return MachineRates.duration(Config.polymerizerDuration, Config.globalMachineSpeedMultiplier) + 20;
 	}
 
 	private static PolymerizerBlockEntity place(GameTestHelper helper) {
@@ -78,7 +109,12 @@ public final class PolymerizerScenarios {
 
 	// ── FUN01: a stocked, powered machine makes raw rubber and drinks exactly one recipe volume ──────
 
-	/** One bucket of oil + EU → one raw rubber, and the tank ends empty (not merely lower). */
+	/**
+	 * One bucket of oil + EU → one raw rubber, and the tank ends empty (not merely lower).
+	 *
+	 * @implements TC-POLY-001-FUN01 — one bucket of oil plus EU yields one raw rubber and leaves the
+	 * tank empty, with its fluid identity cleared.
+	 */
 	public static void fun01OilBecomesRawRubber(GameTestHelper helper) {
 		PolymerizerBlockEntity be = place(helper);
 		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
@@ -106,7 +142,12 @@ public final class PolymerizerScenarios {
 
 	// ── FUN02: a filled container in the fill slot is emptied into the tank ──────────────────────────
 
-	/** An oil bucket in the fill slot moves 1000 mB into the tank and drops an empty bucket below it. */
+	/**
+	 * An oil bucket in the fill slot moves 1000 mB into the tank and drops an empty bucket below it.
+	 *
+	 * @implements TC-POLY-001-FUN02 — an oil bucket in the fill slot is emptied into the tank and the
+	 * empty bucket drops into the slot below.
+	 */
 	public static void fun02BucketFillsTank(GameTestHelper helper) {
 		PolymerizerBlockEntity be = place(helper);
 		be.setItem(PolymerizerBlockEntity.FILL_INPUT_SLOT, new ItemStack(ModContent.OIL_BUCKET.get()));
@@ -135,7 +176,11 @@ public final class PolymerizerScenarios {
 
 	// ── NEG01: no EU, no product ────────────────────────────────────────────────────────────────────
 
-	/** A full tank with an empty energy buffer produces nothing and consumes no oil. */
+	/**
+	 * A full tank with an empty energy buffer produces nothing and consumes no oil.
+	 *
+	 * @implements TC-POLY-001-NEG01 — no EU: no product, no oil consumed, progress pinned at 0.
+	 */
 	public static void neg01NoPowerNoOutput(GameTestHelper helper) {
 		PolymerizerBlockEntity be = place(helper);
 		be.getEnergyStorage().setAmountUntracked(0L);
@@ -164,6 +209,9 @@ public final class PolymerizerScenarios {
 	 * 999 mB is one millibucket short of the recipe: no recipe matches, so the machine neither produces
 	 * nor nibbles at the tank. Guards the "partial consumption" failure mode, where a machine drains what
 	 * it has and hands back nothing.
+	 *
+	 * @implements TC-POLY-001-NEG02 — 999 mB is one millibucket short of the recipe: nothing is
+	 * produced and nothing is nibbled off the tank.
 	 */
 	public static void neg02BelowRecipeVolumeIsInert(GameTestHelper helper) {
 		PolymerizerBlockEntity be = place(helper);
@@ -189,6 +237,9 @@ public final class PolymerizerScenarios {
 	 * With the result slot full the machine may not complete: the oil stays in the tank and the output
 	 * stack keeps its count. This is the item/fluid dupe-and-void guard (R-CON-*) — a machine that
 	 * consumed its input and then failed to place the result would silently destroy a bucket of oil.
+	 *
+	 * @implements TC-POLY-001-CON01 — a full result slot freezes the operation: the oil stays in the
+	 * tank and the output stack keeps its count (no dupe, no void).
 	 */
 	public static void con01FullOutputKeepsOil(GameTestHelper helper) {
 		PolymerizerBlockEntity be = place(helper);
@@ -212,7 +263,11 @@ public final class PolymerizerScenarios {
 
 	// ── REG01: the tank takes oil and refuses everything else ───────────────────────────────────────
 
-	/** Water is refused by the tank's insert filter; oil is accepted. */
+	/**
+	 * Water is refused by the tank's insert filter; oil is accepted.
+	 *
+	 * @implements TC-POLY-001-REG01 — the tank accepts oil and refuses water.
+	 */
 	public static void reg01TankRefusesNonOil(GameTestHelper helper) {
 		PolymerizerBlockEntity be = place(helper);
 
@@ -240,6 +295,8 @@ public final class PolymerizerScenarios {
 	 * The {@code c:oil} tag names the flowing variant as well (the pump's world search needs it), but a
 	 * tank must not hold it: it is single-variant, so a partial amount of flowing oil could never be
 	 * topped up by ordinary oil and would strand the machine below the recipe volume for good.
+	 *
+	 * @implements TC-POLY-001-REG02 — the tank takes source oil and refuses the flowing variant.
 	 */
 	public static void reg02TankRefusesFlowingOil(GameTestHelper helper) {
 		PolymerizerBlockEntity be = place(helper);
@@ -267,6 +324,9 @@ public final class PolymerizerScenarios {
 	 * Insert through {@code FluidLookup} — the same path a pump or a foreign pipe takes — rather than
 	 * touching {@code fluidTank} directly, so the loader's block fluid capability is part of the test.
 	 * See the class doc for what this does and does not prove per loader.
+	 *
+	 * @implements TC-POLY-001-CON03 — a neighbour fills the tank through the published fluid port
+	 * (the path a pump or a foreign pipe takes), not by touching the tank field.
 	 */
 	public static void con03NeighbourFillsThroughFluidPort(GameTestHelper helper) {
 		PolymerizerBlockEntity be = place(helper);
@@ -291,7 +351,11 @@ public final class PolymerizerScenarios {
 
 	// ── STA01: the tank and the progress survive a save/load round-trip ─────────────────────────────
 
-	/** NBT round-trip preserves the tank's volume and fluid identity plus energy and progress. */
+	/**
+	 * NBT round-trip preserves the tank's volume and fluid identity plus energy and progress.
+	 *
+	 * @implements TC-POLY-001-STA01 — tank volume, fluid identity, energy and progress survive NBT.
+	 */
 	public static void sta01NbtRoundTripPreservesTank(GameTestHelper helper) {
 		ServerLevel level = helper.getLevel();
 		RegistryAccess registries = level.registryAccess();

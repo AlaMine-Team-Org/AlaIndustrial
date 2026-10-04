@@ -10,7 +10,7 @@ package dev.alaindustrial.core.machine;
  * {@link #jobIntact()} — so the line printed on the screen and the arrow drawn next to it cannot
  * contradict each other: both come from this one value.
  */
-public enum ToolUpgradeStatus {
+public enum ToolUpgradeStatus implements StatusLine {
 	/** Nothing in the tool slot. */
 	NO_TOOL,
 	/** A tool is loaded, but no module to fit. */
@@ -66,5 +66,11 @@ public enum ToolUpgradeStatus {
 	/** Lang key for the line the screen prints. */
 	public String translationKey() {
 		return "gui.alaindustrial.upgrade_table." + name().toLowerCase(java.util.Locale.ROOT);
+	}
+
+	/** {@link StatusLine}: whether this state holds the machine up (see the interface). */
+	@Override
+	public boolean isBlocking() {
+		return !canWork();
 	}
 }

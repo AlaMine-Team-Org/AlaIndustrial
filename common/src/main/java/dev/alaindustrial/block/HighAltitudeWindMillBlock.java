@@ -1,6 +1,7 @@
 package dev.alaindustrial.block;
 
 import dev.alaindustrial.block.entity.HighAltitudeWindMillBlockEntity;
+import dev.alaindustrial.block.entity.machine.MachineChannels;
 import dev.alaindustrial.registry.ModSounds;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
@@ -68,6 +69,6 @@ public class HighAltitudeWindMillBlock extends HorizontalMachineBlock implements
 	@Override
 	public boolean isWorking(Level level, BlockPos pos, BlockState state) {
 		return level.getBlockEntity(pos) instanceof HighAltitudeWindMillBlockEntity mill
-				&& mill.getDataAccess().get(2) > 0;
+				&& mill.getDataAccess().get(MachineChannels.PROGRESS.ordinal()) > 0;
 	}
 }

@@ -2,6 +2,7 @@ package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.core.structure.RoomScan;
 import java.util.Locale;
+import dev.alaindustrial.core.machine.StatusLine;
 
 /**
  * What the Reactor Controller's screen is reporting about its room (MOD-468, stage 1).
@@ -18,7 +19,7 @@ import java.util.Locale;
  * {@code saveAdditional} stores the box, the heat and the throttle — not this), so a renumbering is
  * visible only to a client talking to a server built from other code, and never to a saved world.
  */
-public enum ReactorRoomStatus {
+public enum ReactorRoomStatus implements StatusLine {
 	/** The room is sealed, sized and has a way in. Stage 1's definition of success. */
 	FORMED,
 	/** The controller faces no interior: buried, in the floor or ceiling, in an edge, or turned around. */
@@ -80,5 +81,11 @@ public enum ReactorRoomStatus {
 			case SECOND_CONTROLLER -> SECOND_CONTROLLER;
 			case TOO_MUCH_GLASS -> TOO_MUCH_GLASS;
 		};
+	}
+
+	/** {@link StatusLine}: whether this state holds the machine up (see the interface). */
+	@Override
+	public boolean isBlocking() {
+		return needsAttention();
 	}
 }

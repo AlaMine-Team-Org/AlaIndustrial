@@ -4,6 +4,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.GardenDroneStationBlockEntity;
+import dev.alaindustrial.compat.client.ModelSubmit;
+import dev.alaindustrial.compat.client.Poses;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -372,8 +374,8 @@ public final class GardenDroneBlockEntityRenderer<T extends GardenDroneStationBl
 		poseStack.pushPose();
 		poseStack.translate(0.5F + state.offsetX, state.restHeight + state.offsetY + state.bob,
 				0.5F + state.offsetZ);
-		poseStack.rotate(Axis.XP.rotation(state.tiltX));
-		poseStack.rotate(Axis.ZP.rotation(state.tiltZ));
+		Poses.rotate(poseStack, Axis.XP.rotation(state.tiltX));
+		Poses.rotate(poseStack, Axis.ZP.rotation(state.tiltZ));
 		poseStack.scale(DRONE_SCALE, DRONE_SCALE, DRONE_SCALE);
 
 		ModelSubmit.withCrumbling(collector, hullModel, Unit.INSTANCE, poseStack, state.lightCoords,

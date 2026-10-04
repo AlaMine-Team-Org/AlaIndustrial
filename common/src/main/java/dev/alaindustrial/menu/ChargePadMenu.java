@@ -3,11 +3,9 @@ package dev.alaindustrial.menu;
 import dev.alaindustrial.block.entity.ChargePadBlockEntity;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.registry.ModContent;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -34,13 +32,12 @@ public class ChargePadMenu extends MachineMenu {
 
 	/**
 	 * Client side. The dummy container is empty — exactly the station's zero slots, with no upgrade block
-	 * appended, matching {@link ChargePadBlockEntity#hasUpgradePanel()}. Sizing it any wider would push
-	 * {@code baseSlotCount()} out of step with the server and misalign every slot index.
+	 * appended, matching the {@code NoUpgradePanel} marker on {@link ChargePadBlockEntity}. Sizing it any
+	 * wider would push {@code baseSlotCount()} out of step with the server and misalign every slot index.
 	 */
 	public ChargePadMenu(int syncId, Inventory playerInventory) {
-		super(ModContent.CHARGE_PAD_MENU.get(), syncId, playerInventory, new SimpleContainer(0),
-				new SimpleContainerData(ChargePadBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL,
-				ModContent.CHARGE_PAD.get());
+		super(ModContent.CHARGE_PAD_MENU.get(), syncId, playerInventory,
+				clientStub(0, ChargePadBlockEntity.DATA_COUNT), ModContent.CHARGE_PAD.get());
 	}
 
 	/** The station has none — see the class doc. */
@@ -48,15 +45,6 @@ public class ChargePadMenu extends MachineMenu {
 	protected void addMachineSlots() {
 	}
 
-	/**
-	 * No panel. Must answer the same as {@link ChargePadBlockEntity#hasUpgradePanel()}: the slot indices
-	 * are derived from it on both sides, and the block entity's answer also decides whether the plate has
-	 * an inventory at all.
-	 */
-	@Override
-	public boolean hasUpgradePanel() {
-		return false;
-	}
 
 	/**
 	 * Shift-click does nothing, said out loud.
@@ -79,17 +67,17 @@ public class ChargePadMenu extends MachineMenu {
 
 	/** EU per tick currently flowing into whoever stands on the plate. */
 	public int getRateEuPerTick() {
-		return data.get(ChargePadBlockEntity.DATA_RATE);
+		return channel(ChargePadBlockEntity.Channel.RATE);
 	}
 
 	/** How many carried items are taking charge right now. */
 	public int getItemsCharging() {
-		return data.get(ChargePadBlockEntity.DATA_ITEMS);
+		return channel(ChargePadBlockEntity.Channel.ITEMS);
 	}
 
 	/** Seconds until the visitor's gear is full, or 0 when there is nothing to report. */
 	public int getEtaSeconds() {
-		return data.get(ChargePadBlockEntity.DATA_ETA);
+		return channel(ChargePadBlockEntity.Channel.ETA);
 	}
 
 	/**

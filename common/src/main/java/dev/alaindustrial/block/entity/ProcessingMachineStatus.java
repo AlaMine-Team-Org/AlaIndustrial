@@ -1,6 +1,7 @@
 package dev.alaindustrial.block.entity;
 
 import java.util.Locale;
+import dev.alaindustrial.core.machine.StatusLine;
 
 /**
  * Why a one-input processing machine — Compressor, Macerator, Extractor, Electric Furnace, Sawmill —
@@ -21,7 +22,7 @@ import java.util.Locale;
  * that does not deliberately set a status reads back. Anything but a silent state there would print a
  * status line over screenshots that are meant to show the machine saying nothing.
  */
-public enum ProcessingMachineStatus {
+public enum ProcessingMachineStatus implements StatusLine {
 	/** Working, or able to work. Deliberately draws no status line. */
 	READY,
 	/**

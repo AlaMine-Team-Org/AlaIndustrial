@@ -592,6 +592,10 @@ public final class ModContent {
 	// Electromagnet (MOD-132) — EU item in any inventory slot that draws loose drops toward the carrier.
 	public static Supplier<Item> ELECTROMAGNET = unbound("ELECTROMAGNET");
 	public static Supplier<Item> ELECTROMAGNET_ADVANCED = unbound("ELECTROMAGNET_ADVANCED");
+	/** Blank module (MOD-592): the common base every item module is crafted from. */
+	public static Supplier<Item> MODULE_BLANK = unbound("MODULE_BLANK");
+	/** Magnet filter module (MOD-592): decides what the electromagnet pulls. */
+	public static Supplier<Item> MAGNET_FILTER_MODULE = unbound("MAGNET_FILTER_MODULE");
 	// Jetpack (MOD-148) — worn EU flight device (chest slot): thrust on held jump, glide when drained.
 	public static Supplier<Item> JETPACK = unbound("JETPACK");
 	// Vacuum Capsule (MOD-063) — a stackable fluid container: empty (×64) exchanges with the
@@ -985,6 +989,8 @@ public final class ModContent {
 			unbound("LIGHTNING_ROD_GENERATOR_MENU");
 	public static Supplier<MenuType<CreativeEnergySourceMenu>> CREATIVE_ENERGY_SOURCE_MENU =
 			unbound("CREATIVE_ENERGY_SOURCE_MENU");
+	/** Electromagnet screen (MOD-592): module slots and the filter cells. */
+	public static Supplier<MenuType<dev.alaindustrial.menu.MagnetMenu>> MAGNET_MENU = unbound("MAGNET_MENU");
 	public static Supplier<MenuType<IronChestMenu>> IRON_CHEST_MENU = unbound("IRON_CHEST_MENU");
 	// MOD-287 — one menu class, four registered sizes: the client builds its menu from
 	// (syncId, Inventory) alone, so the row count has to travel in the menu type itself.
@@ -1057,9 +1063,9 @@ public final class ModContent {
 	 * loader's {@code init()}. Empty when the facade is fully populated. Detection is by identity (see
 	 * {@link #verifyAllBound()}), so it is safe to call before NeoForge {@code RegisterEvent}s fire.
 	 *
-	 * <p>Exposed (rather than only the throwing {@link #verifyAllBound()}) so a loader still mid-migration
-	 * — the NeoForge side until Phase 4 populates every registry — can <i>report</i> the gap without
-	 * aborting load.
+	 * <p>Exposed (rather than only the throwing {@link #verifyAllBound()}) so a caller can <i>report</i> the
+	 * gap without aborting load; today the only caller is {@link #verifyAllBound()} itself, which both
+	 * loaders run at the end of their init.
 	 */
 	public static List<String> unboundHandles() {
 		List<String> unbound = new ArrayList<>();

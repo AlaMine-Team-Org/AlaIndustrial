@@ -157,13 +157,15 @@ public class TeleporterStationScreen extends AbstractContainerScreen<TeleporterS
 	 */
 	@Override
 	public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
-		if (event.button() == InputConstants.MOUSE_BUTTON_LEFT && this.menu.isOwner() && isOverLock(event.x(), event.y())) {
+		if (event.button() == InputConstants.MOUSE_BUTTON_LEFT && this.menu.isOwner()
+				&& isOverLock(event.x(), event.y())) {
 			unlocked = !unlocked;
 			this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(
 					unlocked ? SoundEvents.IRON_TRAPDOOR_OPEN : SoundEvents.IRON_TRAPDOOR_CLOSE, 1.0F));
 			return true;
 		}
-		if (event.button() == InputConstants.MOUSE_BUTTON_LEFT && canToggle() && isOverPrivacyButton(event.x(), event.y())) {
+		if (event.button() == InputConstants.MOUSE_BUTTON_LEFT && canToggle()
+				&& isOverPrivacyButton(event.x(), event.y())) {
 			this.minecraft.gameMode.handleInventoryButtonClick(
 					this.menu.containerId, TeleporterStationMenu.BUTTON_TOGGLE_PRIVACY);
 			this.minecraft.getSoundManager().play(

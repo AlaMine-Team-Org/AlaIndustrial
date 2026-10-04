@@ -7,12 +7,12 @@
 		"K": "alaindustrial:choke_reinforced",
 		"C": "alaindustrial:advanced_circuit",
 		"I": "alaindustrial:invar_reinforced_plate",
-		"B": "alaindustrial:reinforced_bearing"
+		"M": "alaindustrial:module_blank"
 	},
 	"pattern": [
 		"TDT",
-		"KCK",
-		"IBI"
+		"KMK",
+		"ICI"
 	],
 	"result": {
 		"id": "alaindustrial:drill_column_module"

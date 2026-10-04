@@ -1,11 +1,11 @@
 package dev.alaindustrial.block.entity;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.block.FuelRodAssemblyBlock;
 import dev.alaindustrial.core.fluid.FluidHolder;
 import dev.alaindustrial.core.fluid.FluidPort;
 import dev.alaindustrial.core.fluid.FluidPortHost;
 import dev.alaindustrial.core.fluid.FluidTank;
+import dev.alaindustrial.core.reactor.ReactorConfig;
 import dev.alaindustrial.core.structure.FuelRodMath;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.ContainerHelper;
@@ -183,7 +183,7 @@ public class FuelRodAssemblyBlockEntity extends BlockEntity implements FluidPort
 	 * @return {@code true} if this column contributed to this tick
 	 */
 	public boolean burn(long eu) {
-		long perRod = ReactorCore.rodEnergy(Config.reactorEuPerRod, Config.reactorRodBurnTicks);
+		long perRod = ReactorCore.rodEnergy(ReactorConfig.reactorEuPerRod, ReactorConfig.reactorRodBurnTicks);
 		if (eu <= 0 || perRod <= 0 || !hasFuel()) {
 			return false;
 		}
@@ -275,7 +275,7 @@ public class FuelRodAssemblyBlockEntity extends BlockEntity implements FluidPort
 	 * appearing inside a column nothing was plumbed to reads as a bug however useful it is. Plumb the
 	 * columns you want cooled.
 	 */
-	public final FluidTank waterTank = new FluidTank(Config.reactorColumnWaterCapacity,
+	public final FluidTank waterTank = new FluidTank(ReactorConfig.reactorColumnWaterCapacity,
 			fluid -> fluid.is(Fluids.WATER), fluid -> false, this::onTankChanged);
 
 	/**
@@ -283,7 +283,7 @@ public class FuelRodAssemblyBlockEntity extends BlockEntity implements FluidPort
 	 * the inside, the outside may only take it away. When it is full the column stops boiling and
 	 * cooling stops with it — which is what makes the exhaust line load-bearing rather than decorative.
 	 */
-	public final FluidTank steamTank = new FluidTank(Config.reactorColumnSteamCapacity,
+	public final FluidTank steamTank = new FluidTank(ReactorConfig.reactorColumnSteamCapacity,
 			fluid -> false, fluid -> true, this::onTankChanged);
 
 	/**
@@ -484,6 +484,26 @@ public class FuelRodAssemblyBlockEntity extends BlockEntity implements FluidPort
 		tank.fluid = clamped == 0 ? FluidHolder.EMPTY
 				: FluidHolder.of(water ? Fluids.WATER : ModContent.STEAM.get());
 		onTankChanged();
+	}
+
+	/** Water in this column, in mB — what the reactor controller reads instead of the tank itself (MOD-713). */
+	public long waterAmount() {
+		return waterTank.amount;
+	}
+
+	/** What this column's water tank holds at most, in mB. */
+	public long waterCapacity() {
+		return waterTank.capacity;
+	}
+
+	/** Steam in this column, in mB. */
+	public long steamAmount() {
+		return steamTank.amount;
+	}
+
+	/** What this column's steam tank holds at most, in mB. */
+	public long steamCapacity() {
+		return steamTank.capacity;
 	}
 
 	private void onTankChanged() {

@@ -12,7 +12,7 @@ import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.ItemLike;
 
 /**
  * Reusable REI category for {@link FluidOutputDisplay}.
@@ -23,9 +23,9 @@ import net.minecraft.world.level.block.Block;
 public final class FluidOutputCategory implements DisplayCategory<FluidOutputDisplay> {
 	private final CategoryIdentifier<FluidOutputDisplay> identifier;
 	private final Component title;
-	private final Block icon;
+	private final ItemLike icon;
 
-	public FluidOutputCategory(CategoryIdentifier<FluidOutputDisplay> identifier, Block icon, Component title) {
+	public FluidOutputCategory(CategoryIdentifier<FluidOutputDisplay> identifier, ItemLike icon, Component title) {
 		this.identifier = identifier;
 		this.icon = icon;
 		this.title = title;

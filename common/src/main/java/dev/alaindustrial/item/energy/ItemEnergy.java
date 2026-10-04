@@ -1,20 +1,7 @@
 package dev.alaindustrial.item.energy;
 
-import dev.alaindustrial.item.tool.ElectricChainsawItem;
-import dev.alaindustrial.item.tool.ElectricDrillItem;
-import dev.alaindustrial.item.tool.ElectricDrillNetheriteTipItem;
-import dev.alaindustrial.item.tool.ElectricHoeItem;
-import dev.alaindustrial.item.tool.ElectricBowItem;
-import dev.alaindustrial.item.tool.ElectricSaberItem;
-import dev.alaindustrial.item.tool.ElectricShovelItem;
-import dev.alaindustrial.item.tool.MagnetItem;
-import dev.alaindustrial.item.wearable.EnergyPackItem;
 import dev.alaindustrial.skill.SkillEnergy;
-import dev.alaindustrial.item.wearable.FluxweaveArmorItem;
-import dev.alaindustrial.item.wearable.JetpackItem;
 
-import dev.alaindustrial.Config;
-import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.registry.ModDataComponents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -33,7 +20,8 @@ import org.jspecify.annotations.Nullable;
  * <li>An absent component reads as 0 EU, and writing 0 removes the component — a drained item and a
  * freshly crafted one are component-identical (no "same-looking but unequal" stacks).</li>
  * <li>Values are clamped to {@code [0, capacity(stack)]} on every write.</li>
- * <li>{@link #capacity} resolves per item type; non-powered items report 0 and ignore writes.</li>
+ * <li>{@link #capacity} is the item's own {@link PoweredItem#energyCapacity} (MOD-707); items that do
+ * not implement {@link PoweredItem} report 0 and ignore writes.</li>
  * </ul>
  */
 public final class ItemEnergy {
@@ -48,55 +36,7 @@ public final class ItemEnergy {
 	 * energy into or out of a whole stack must go through {@link #stackAdd} and friends.
 	 */
 	public static long capacity(ItemStack stack) {
-		if (stack.getItem() instanceof CrystalBlankItem blank) {
-			return blank.tier().capacity();
-		}
-		if (stack.getItem() instanceof PouchItem) {
-			return Config.lvPouchBuffer;
-		}
-		if (stack.getItem() instanceof BatteryItem) {
-			return Config.batteryBuffer;
-		}
-		if (stack.getItem() instanceof EnergyPackItem) {
-			return Config.energyPackBuffer;
-		}
-		// MOD-534: the netherite tip is the one drill tier with a buffer of its own, and it is a subclass
-		// of ElectricDrillItem — so this branch MUST stay above the base one, which would otherwise
-		// swallow it and hand back the 10 000 shared by the two tiers below. Only capacity differs;
-		// inputRate and the per-block cost are deliberately inherited from the base drill below.
-		if (stack.getItem() instanceof ElectricDrillNetheriteTipItem) {
-			return Config.electricDrillNetheriteTipBuffer;
-		}
-		if (stack.getItem() instanceof ElectricDrillItem) {
-			return Config.electricDrillBuffer;
-		}
-		if (stack.getItem() instanceof ElectricChainsawItem) {
-			return Config.electricChainsawBuffer;
-		}
-		if (stack.getItem() instanceof ElectricShovelItem) {
-			return Config.electricShovelBuffer;
-		}
-		if (stack.getItem() instanceof ElectricHoeItem) {
-			return Config.electricHoeBuffer;
-		}
-		if (stack.getItem() instanceof ElectricSaberItem) {
-			return Config.electricSaberBuffer;
-		}
-		if (stack.getItem() instanceof ElectricBowItem) {
-			return Config.electricBowBuffer;
-		}
-		if (stack.getItem() instanceof MagnetItem magnet) {
-			return magnet.tier().buffer();
-		}
-		if (stack.getItem() instanceof JetpackItem) {
-			return Config.jetpackBuffer;
-		}
-		// One branch for all four armour pieces (MOD-127): they share a buffer, and the class carries
-		// its ArmorType, so four classes would only mean four copies of this and of the hook below.
-		if (stack.getItem() instanceof FluxweaveArmorItem) {
-			return Config.fluxweaveBuffer;
-		}
-		return 0L;
+		return stack.getItem() instanceof PoweredItem powered ? powered.energyCapacity(stack) : 0L;
 	}
 
 	/**
@@ -105,46 +45,7 @@ public final class ItemEnergy {
 	 * cannot be force-fed at a big charger's rate. 0 for items without a buffer.
 	 */
 	public static long inputRate(ItemStack stack) {
-		if (stack.getItem() instanceof CrystalBlankItem blank) {
-			return blank.tier().inputRate();
-		}
-		if (stack.getItem() instanceof PouchItem) {
-			return EnergyTier.LV.maxVoltage();
-		}
-		if (stack.getItem() instanceof BatteryItem) {
-			return Config.batteryInputRate;
-		}
-		if (stack.getItem() instanceof EnergyPackItem) {
-			return Config.energyPackInputRate;
-		}
-		if (stack.getItem() instanceof ElectricDrillItem) {
-			return Config.electricDrillInputRate;
-		}
-		if (stack.getItem() instanceof ElectricChainsawItem) {
-			return Config.electricChainsawInputRate;
-		}
-		if (stack.getItem() instanceof ElectricShovelItem) {
-			return Config.electricShovelInputRate;
-		}
-		if (stack.getItem() instanceof ElectricHoeItem) {
-			return Config.electricHoeInputRate;
-		}
-		if (stack.getItem() instanceof ElectricSaberItem) {
-			return Config.electricSaberInputRate;
-		}
-		if (stack.getItem() instanceof ElectricBowItem) {
-			return Config.electricBowInputRate;
-		}
-		if (stack.getItem() instanceof MagnetItem magnet) {
-			return magnet.tier().inputRate();
-		}
-		if (stack.getItem() instanceof JetpackItem) {
-			return Config.jetpackInputRate;
-		}
-		if (stack.getItem() instanceof FluxweaveArmorItem) {
-			return Config.fluxweaveInputRate;
-		}
-		return 0L;
+		return stack.getItem() instanceof PoweredItem powered ? powered.energyInputRate(stack) : 0L;
 	}
 
 	/** Stored EU (absent component = 0), clamped to the item's capacity. */
@@ -164,29 +65,10 @@ public final class ItemEnergy {
 		} else {
 			stack.set(ModDataComponents.POUCH_ENERGY.get(), clamped);
 		}
-		if (stack.getItem() instanceof EnergyPackItem) {
-			// The pack looks different when dead (red light, pale cells), and the worn model is chosen by
-			// its EQUIPPABLE asset — so the visual follows the charge from the one place charge changes.
-			EnergyPackItem.refreshWornAsset(stack, clamped);
-		}
-		if (stack.getItem() instanceof JetpackItem) {
-			// Same contract as the pack: the worn model follows the charge from the single write point.
-			JetpackItem.refreshWornAsset(stack, clamped);
-		}
-		if (stack.getItem() instanceof FluxweaveArmorItem) {
-			// The armour swaps BOTH its worn asset and its attribute modifiers with the charge, so the
-			// active bonuses can never disagree with the number in the tooltip.
-			FluxweaveArmorItem.refreshWorn(stack, clamped);
-		}
-		if (stack.getItem() instanceof ElectricSaberItem) {
-			// Same contract as the armour: damage, attack speed and reach follow the charge from the one
-			// place charge changes, so the tooltip can never promise a hit the weapon cannot land.
-			ElectricSaberItem.refreshAttributes(stack, clamped);
-		}
-		if (stack.getItem() instanceof ElectricBowItem) {
-			// Same contract again: the charged flag the client draws from follows the charge from the one
-			// place charge changes, so the lit bow and the powered shot can never disagree.
-			ElectricBowItem.refreshCharged(stack, clamped);
+		if (stack.getItem() instanceof PoweredItem powered) {
+			// A model, attribute or flag that follows the charge (pack, jetpack, Fluxweave armour, sabre,
+			// bow) is refreshed by the item itself, from the one place charge changes.
+			powered.onChargeChanged(stack, clamped);
 		}
 	}
 

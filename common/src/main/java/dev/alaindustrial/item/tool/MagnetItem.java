@@ -1,8 +1,13 @@
 package dev.alaindustrial.item.tool;
 
+import dev.alaindustrial.item.ToolConfig;
+import dev.alaindustrial.item.energy.EnergyBar;
+import dev.alaindustrial.item.energy.PoweredItem;
 import dev.alaindustrial.item.energy.ItemEnergy;
+import dev.alaindustrial.item.module.ItemModules;
+import dev.alaindustrial.item.module.ModuleHost;
+import dev.alaindustrial.menu.MagnetMenu;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.registry.ModDataComponents;
 import java.util.List;
@@ -14,6 +19,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ExperienceOrb;
@@ -21,6 +27,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
@@ -38,7 +45,7 @@ import org.jspecify.annotations.Nullable;
  * Charge lives in the shared {@code pouch_energy} component through {@link ItemEnergy}; the magnet
  * registers its own capacity/input-rate there, so the Battery Box charge slot and a worn Energy Pack
  * top it up with no changes on their side. Each item actually nudged costs
- * {@link Config#magnetEuPerItem} EU — an idle scan (nothing in range) is free, which is the honest
+ * {@link ToolConfig#magnetEuPerItem} EU — an idle scan (nothing in range) is free, which is the honest
  * tariff every reference tech mod converges on. At 0 EU the magnet does nothing (like a flat drill
  * mines at hand speed); a creative/spectating owner pays nothing (the rule lives in
  * {@link ItemEnergy#spend}, MOD-081).
@@ -48,7 +55,7 @@ import org.jspecify.annotations.Nullable;
  * gate sits above in {@code ItemStack.inventoryTick}) and fires for a stack in <em>any</em> slot —
  * hotbar, main inventory and the off-hand (26.2 ticks the off-hand through the equipment path). The
  * magnet does not filter by {@code slot}, so it works wherever the player keeps it. The scan is
- * throttled to once every {@link Config#magnetScanIntervalTicks} ticks and capped at
+ * throttled to once every {@link ToolConfig#magnetScanIntervalTicks} ticks and capped at
  * {@link #MAX_ITEMS_PER_SCAN} entities per pass so a chest-worth of drops cannot lag the server.
  *
  * <h2>What it will not pull (MVP safety)</h2>
@@ -68,8 +75,19 @@ import org.jspecify.annotations.Nullable;
  * on, so a freshly crafted magnet works out of the box; disabling stores {@code false}). A player can
  * therefore carry the magnet switched off next to farms/sorters without it hoovering their items — the
  * single most-requested magnet ergonomic across mods.
+ *
+ * <h2>Screen and modules (MOD-592)</h2>
+ * A plain right-click opens the magnet's own screen ({@link MagnetMenu}): charge, the on/off switch,
+ * the module slots ({@link MagnetTier#moduleSlots}) and, once a filter module is fitted, its sixteen
+ * sample cells. The modules live on this stack in {@link ItemModules}. A magnet with no modules pulls
+ * everything, exactly as before the slots existed. Destroyed (lava, cactus, void) the magnet drops its
+ * modules rather than taking them with it.
+ *
+ * <h2>Stuck drops (MOD-592)</h2>
+ * A drop that stops getting closer is let go for a while ({@link MagnetStuckTracker}), so a drop behind
+ * a wall does not cost EU every tick for nothing.
  */
-public class MagnetItem extends Item {
+public class MagnetItem extends Item implements ModuleHost, PoweredItem {
 
 	/** Which grade this magnet is — reach, buffer, tariffs and whether it reaches experience. */
 	private final MagnetTier tier;
@@ -112,7 +130,7 @@ public class MagnetItem extends Item {
 		if (!(entity instanceof Player player)) {
 			return;
 		}
-		if (level.getGameTime() % Config.magnetScanIntervalTicks == 0) {
+		if (level.getGameTime() % ToolConfig.magnetScanIntervalTicks == 0) {
 			magnetStep(stack, player, level);
 		}
 	}
@@ -134,8 +152,11 @@ public class MagnetItem extends Item {
 		double range = tier.range();
 		Vec3 target = pullTarget(player);
 		AABB box = player.getBoundingBox().inflate(range);
+		MagnetFilter filter = filterOf(stack);
+		long now = level.getGameTime();
 		List<ItemEntity> items = level.getEntitiesOfClass(ItemEntity.class, box,
-				item -> canPull(item, target, range * range));
+				item -> canPull(item, target, range * range) && passesFilter(filter, item)
+						&& !MagnetStuckTracker.isReleased(item, now));
 		boolean free = ItemEnergy.free(player);
 		int pulled = 0;
 		for (ItemEntity item : items) {
@@ -159,7 +180,7 @@ public class MagnetItem extends Item {
 	 * <p><b>Only the orbs vanilla is not already collecting.</b> {@code ExperienceOrb.followNearbyPlayer}
 	 * seeks a player within 8 blocks and drops the target past {@code distanceToSqr > 64} — read out of
 	 * the 26.2 sources, not assumed. Inside that ring the orb is already on its way for free, so paying
-	 * EU there would buy the player nothing; {@link Config#magnetVanillaOrbReach} is that ring.
+	 * EU there would buy the player nothing; {@link ToolConfig#magnetVanillaOrbReach} is that ring.
 	 *
 	 * <p>Shares {@link #MAX_ITEMS_PER_SCAN} with the item pass through {@code alreadyPulled}: a mob
 	 * grinder can drop hundreds of orbs at once, and the cap is there so one scan cannot stall the tick.
@@ -170,7 +191,7 @@ public class MagnetItem extends Item {
 			return 0;
 		}
 		double range = tier.range();
-		double vanilla = Config.magnetVanillaOrbReach;
+		double vanilla = ToolConfig.magnetVanillaOrbReach;
 		Vec3 target = pullTarget(player);
 		AABB box = player.getBoundingBox().inflate(range);
 		List<ExperienceOrb> orbs = level.getEntitiesOfClass(ExperienceOrb.class, box,
@@ -208,7 +229,7 @@ public class MagnetItem extends Item {
 			return false;
 		}
 		double range = tier.range();
-		double vanilla = Config.magnetVanillaOrbReach;
+		double vanilla = ToolConfig.magnetVanillaOrbReach;
 		Vec3 target = pullTarget(player);
 		if (!canPullOrb(orb, target, range * range, vanilla * vanilla) || !applyPull(orb, target)) {
 			return false;
@@ -233,7 +254,7 @@ public class MagnetItem extends Item {
 	 * Pull one specific item — the per-item core of {@link #magnetStep}, factored out so it is the single
 	 * source of truth for "should this item be pulled, and what does it cost". Applies the full gate:
 	 * enabled, charged (or a creative/free owner), the item passes {@link #canPull}, and there is enough
-	 * EU; on success it nudges the item and spends {@link Config#magnetEuPerItem}. Returns whether it
+	 * EU; on success it nudges the item and spends {@link ToolConfig#magnetEuPerItem}. Returns whether it
 	 * pulled.
 	 *
 	 * <p>Exposed so gametests can drive it deterministically on a <em>detached</em> {@link ItemEntity}
@@ -253,11 +274,64 @@ public class MagnetItem extends Item {
 		}
 		double range = tier.range();
 		Vec3 target = pullTarget(player);
-		if (!canPull(item, target, range * range) || !applyPull(item, target)) {
+		long now = player.level().getGameTime();
+		if (!canPull(item, target, range * range) || !passesFilter(filterOf(magnet), item)
+				|| MagnetStuckTracker.isReleased(item, now)) {
+			return false;
+		}
+		double distance = Math.sqrt(item.distanceToSqr(target.x, target.y, target.z));
+		if (!applyPull(item, target)) {
 			return false;
 		}
 		ItemEnergy.spend(magnet, tier.euPerItem(), player);
+		MagnetStuckTracker.recordPull(item, distance, now);
 		return true;
+	}
+
+	/** Whether {@code item} gets through the fitted filter; no filter lets everything through. */
+	private static boolean passesFilter(@Nullable MagnetFilter filter, ItemEntity item) {
+		return filter == null || filter.passes(item.getItem());
+	}
+
+	/**
+	 * The settings of the filter module fitted on {@code magnet}, or {@code null} when none is. Only one
+	 * filter can be fitted ({@link #acceptsModule}), so the first found is the only one.
+	 */
+	@Nullable
+	public static MagnetFilter filterOf(ItemStack magnet) {
+		for (ItemStack module : ItemModules.of(magnet).slots()) {
+			if (module.getItem() instanceof MagnetFilterModuleItem) {
+				return MagnetFilter.of(module);
+			}
+		}
+		return null;
+	}
+
+	// --- module slots (MOD-592) ------------------------------------------------------------------
+
+	@Override
+	public int moduleSlots(ItemStack host) {
+		return tier.moduleSlots();
+	}
+
+	/** Only magnet modules, and one filter per magnet — a second one would only contradict the first. */
+	@Override
+	public boolean acceptsModule(ItemStack host, ItemModules fitted, int slot, ItemStack module) {
+		if (!(module.getItem() instanceof MagnetFilterModuleItem) || slot < 0 || slot >= moduleSlots(host)) {
+			return false;
+		}
+		for (int i = 0; i < fitted.slots().size(); i++) {
+			if (i != slot && fitted.slots().get(i).getItem() instanceof MagnetFilterModuleItem) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/** A magnet destroyed as a dropped item gives its modules back instead of taking them with it. */
+	@Override
+	public void onDestroyed(ItemEntity itemEntity) {
+		ItemUtils.onContainerDestroyed(itemEntity, ItemModules.fitted(itemEntity.getItem()).stream());
 	}
 
 	/** The point pulled items are drawn toward — the player's body centre (matches {@code ExperienceOrb}). */
@@ -294,23 +368,28 @@ public class MagnetItem extends Item {
 		return true;
 	}
 
-	// --- toggle: shift-right-click flips the on/off flag (absent component = on) ---
+	// --- right-click: plain opens the magnet's screen, shift flips the on/off flag ---
 
 	@Override
 	public InteractionResult use(Level level, Player player, InteractionHand hand) {
 		ItemStack stack = player.getItemInHand(hand);
-		// Only shift-right-click toggles; a plain right-click passes through (no interference).
 		if (!player.isShiftKeyDown()) {
-			return InteractionResult.PASS;
+			// MOD-592: the screen with the module slots. Nothing travels in the open packet: the menu
+			// finds the magnet in the player's hand on both sides (MagnetMenu#heldMagnetSlot).
+			if (player instanceof ServerPlayer serverPlayer) {
+				serverPlayer.openMenu(new SimpleMenuProvider(
+						(syncId, inventory, p) -> new MagnetMenu(syncId, inventory),
+						stack.getHoverName()));
+			}
+			return InteractionResult.SUCCESS;
 		}
 		boolean nowEnabled = !isEnabled(stack);
 		if (level instanceof ServerLevel) {
 			setEnabled(stack, nowEnabled);
 			if (player instanceof ServerPlayer serverPlayer) {
+				// Derived from this item's own id, like the tooltip: the advanced magnet has its own lines.
 				serverPlayer.sendSystemMessage(
-						Component.translatable(nowEnabled
-								? "item.alaindustrial.electromagnet.toggled_on"
-								: "item.alaindustrial.electromagnet.toggled_off")
+						Component.translatable(getDescriptionId() + (nowEnabled ? ".toggled_on" : ".toggled_off"))
 								.withStyle(nowEnabled ? ChatFormatting.GREEN : ChatFormatting.GRAY),
 						true);
 			}
@@ -358,13 +437,19 @@ public class MagnetItem extends Item {
 				.withStyle(enabled ? ChatFormatting.GREEN : ChatFormatting.GRAY));
 		adder.accept(Component.translatable(base + ".charge",
 				ItemEnergy.get(stack), ItemEnergy.capacity(stack)).withStyle(ChatFormatting.GOLD));
-		// Numbers come from the tier for the same reason: Config.magnetRange is the BASIC grade's knob.
+		// Numbers come from the tier for the same reason: ToolConfig.magnetRange is the BASIC grade's knob.
 		adder.accept(Component.translatable(base + ".desc", tier.range(), tier.euPerItem())
 				.withStyle(ChatFormatting.DARK_GRAY));
 		if (tier.pullsExperience()) {
 			adder.accept(Component.translatable(base + ".experience", tier.euPerOrb())
 					.withStyle(ChatFormatting.DARK_GRAY));
 		}
+		// MOD-592: what is fitted, by name, so the tooltip answers "does this one have a filter".
+		for (ItemStack module : ItemModules.fitted(stack)) {
+			adder.accept(Component.literal(" + ").append(module.getHoverName()).withStyle(ChatFormatting.DARK_AQUA));
+		}
+		adder.accept(Component.translatable(base + ".open_hint",
+				tier.moduleSlots()).withStyle(ChatFormatting.DARK_GRAY));
 	}
 
 	// --- item bar shows the EU charge in the LV tier colour (numbers are in the tooltip) ---
@@ -376,15 +461,22 @@ public class MagnetItem extends Item {
 
 	@Override
 	public int getBarWidth(ItemStack stack) {
-		long capacity = ItemEnergy.capacity(stack);
-		if (capacity <= 0) {
-			return 0;
-		}
-		return (int) Math.min(MAX_BAR_WIDTH, MAX_BAR_WIDTH * ItemEnergy.get(stack) / capacity);
+		return EnergyBar.width(stack, MAX_BAR_WIDTH);
 	}
 
 	@Override
 	public int getBarColor(ItemStack stack) {
-		return EnergyTier.LV.color();
+		return EnergyBar.color(EnergyTier.LV);
+	}
+
+	/** MOD-707: this item's EU buffer, read by {@code ItemEnergy.capacity} through {@link PoweredItem}. */
+	@Override
+	public long energyCapacity(ItemStack stack) {
+		return tier().buffer();
+	}
+
+	@Override
+	public long energyInputRate(ItemStack stack) {
+		return tier().inputRate();
 	}
 }

@@ -6,7 +6,7 @@ import java.util.Locale;
  * Loader-neutral heat classification used by externally heated machines.
  *
  * <p>This enum deliberately has no Minecraft types, so its level/output contract stays usable from
- * L1 tests. {@link WorldHeatSources} is the thin world-facing adapter.
+ * L1 tests. {@code block.entity.WorldHeatSources} is the thin world-facing adapter.
  */
 public enum HeatSource {
 	NONE(0, -1),

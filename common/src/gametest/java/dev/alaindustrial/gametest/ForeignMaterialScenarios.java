@@ -50,6 +50,21 @@ import net.minecraft.world.item.crafting.RecipeType;
  */
 public final class ForeignMaterialScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(ForeignMaterialScenarios::tags04ForeignItemReachesOurTags,
+								"foreign_material_reaches_our_tags")
+						.fabricId("RecipeTagGameTest", "tcTags04_foreignItemReachesOurTags").ticks(20, 40),
+				RosterEntry.of(ForeignMaterialScenarios::tags05MaceratorGrindsForeignOre, "foreign_ore_is_macerated")
+						.fabricId("RecipeTagGameTest", "tcTags05_maceratorGrindsForeignOre").ticks(20, 100),
+				RosterEntry.of(ForeignMaterialScenarios::tags06ForeignIngotFeedsOurCraft,
+								"foreign_ingot_feeds_our_craft")
+						.fabricId("RecipeTagGameTest", "tcTags06_foreignIngotFeedsOurCraft").ticks(20, 40));
+
+		private Roster() {}
+	}
+
 	private ForeignMaterialScenarios() {
 	}
 

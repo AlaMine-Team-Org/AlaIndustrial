@@ -1,13 +1,14 @@
 package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
-import dev.alaindustrial.core.energy.EnergyRole;
+import dev.alaindustrial.block.entity.machine.SyncChannels;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.core.fluid.FluidAmounts;
 import dev.alaindustrial.core.fluid.FluidHolder;
 import dev.alaindustrial.core.fluid.FluidPort;
 import dev.alaindustrial.core.fluid.FluidPortHost;
 import dev.alaindustrial.core.fluid.FluidTank;
+import dev.alaindustrial.core.machine.MachineRates;
 import dev.alaindustrial.item.fluid.ItemFluidBridge;
 import dev.alaindustrial.menu.PolymerizerMenu;
 import dev.alaindustrial.recipe.FluidRecipeInput;
@@ -17,13 +18,11 @@ import dev.alaindustrial.registry.ModRecipes;
 import dev.alaindustrial.registry.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -96,7 +95,7 @@ public class PolymerizerBlockEntity extends MachineBlockEntity implements Overcl
 		// its operation (400 EU) fits in the 800 EU buffer.
 		super(ModContent.POLYMERIZER_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT,
 				Config.machineBuffer, EnergyTier.LV.maxVoltage(), 0L);
-		this.maxProgress = Config.scaledDuration(Config.polymerizerDuration);
+		this.maxProgress = MachineRates.duration(Config.polymerizerDuration, Config.globalMachineSpeedMultiplier);
 	}
 
 	/**
@@ -108,12 +107,6 @@ public class PolymerizerBlockEntity extends MachineBlockEntity implements Overcl
 	private static boolean isOil(FluidHolder fluid) {
 		return !fluid.isEmpty() && fluid.fluid().defaultFluidState().is(ModTags.Fluids.C_OIL)
 				&& PolymerizingRecipe.isSourceFluid(fluid.fluid());
-	}
-
-	/** Consumer: every face accepts energy except the inert FACING front (R-NRG-03). */
-	@Override
-	public EnergyRole energyRoleForFace(Direction worldFace) {
-		return facingAwareRole(worldFace, EnergyRole.IN);
 	}
 
 
@@ -180,49 +173,23 @@ public class PolymerizerBlockEntity extends MachineBlockEntity implements Overcl
 	}
 
 	/**
-	 * Six-wide data — hides {@link MachineBlockEntity#DATA_COUNT} so {@code PolymerizerBlockEntity.DATA_COUNT}
-	 * names this machine's width for both the bridge below and {@code PolymerizerMenu}'s client stub (MOD-235).
-	 */
-	public static final int DATA_COUNT = 6;
-
-	/**
-	 * Base channels 0..3 (energy/capacity/progress/maxProgress) plus the tank fill as a permille (4) and the
-	 * held fluid's registry id (5). Both extra channels are derived, server-authoritative projections of the
-	 * tank; nothing writes them back.
+	 * GUI sync channels (MOD-712, BE-7): the base four, the tank fill in permille and the held fluid's
+	 * registry id; both read-only.
 	 *
-	 * <p><b>Every channel must fit a signed 16-bit short</b> — {@code ClientboundContainerSetDataPacket}
-	 * writes each value with {@code writeShort}, so a larger value silently arrives truncated. That is why
-	 * the tank level travels as a permille (0..1000) rather than raw mB (10000 would still fit, but the
-	 * permille keeps the screen independent of the capacity), and why the fluid's colour is not sent at all:
-	 * a packed ARGB is 32 bits. {@code PolymerizerScreen} derives texture, tint and name from channel 5.
+	 * Every channel is a signed short on the wire (see {@link SyncChannels}), so a tank travels as a
+	 * permille and a fluid as its registry id; the screen derives texture, tint and name from the id.
 	 */
-	private final ContainerData polymerizerData = new ContainerData() {
-		@Override
-		public int get(int index) {
-			return switch (index) {
-				case 4 -> fluidTank.amount <= 0 ? 0
-						: Math.max(1, (int) Math.min(fluidTank.amount * 1000L / TANK_CAPACITY, 1000));
-				case 5 -> fluidTank.fluidSyncId();
-				default -> PolymerizerBlockEntity.this.dataAccess.get(index);
-			};
-		}
+	public enum Channel { ENERGY, CAPACITY, PROGRESS, MAX_PROGRESS, LEVEL_PERMILLE, FLUID_ID }
 
-		@Override
-		public void set(int index, int value) {
-			if (index != 4 && index != 5) {
-				PolymerizerBlockEntity.this.dataAccess.set(index, value);
-			}
-		}
-
-		@Override
-		public int getCount() {
-			return DATA_COUNT;
-		}
-	};
+	/** Width of {@link #getDataAccess()}, which the menu's client stub sizes itself from (MOD-235). */
+	public static final int DATA_COUNT = Channel.values().length;
 
 	@Override
-	public ContainerData getDataAccess() {
-		return polymerizerData;
+	protected SyncChannels createChannels() {
+		return channels(Channel.class)
+				.read(Channel.LEVEL_PERMILLE, () -> SyncChannels.permille(fluidTank.amount, TANK_CAPACITY))
+				.read(Channel.FLUID_ID, () -> fluidTank.fluidSyncId())
+				.build();
 	}
 
 	/**
@@ -254,11 +221,6 @@ public class PolymerizerBlockEntity extends MachineBlockEntity implements Overcl
 	}
 
 	@Override
-	public Component getDisplayName() {
-		return Component.translatable("block.alaindustrial.polymerizer");
-	}
-
-	@Override
 	public AbstractContainerMenu createMenu(int syncId, Inventory inventory, Player player) {
 		return new PolymerizerMenu(syncId, inventory, this, ContainerLevelAccess.create(getLevel(), getBlockPos()));
 	}
@@ -272,8 +234,8 @@ public class PolymerizerBlockEntity extends MachineBlockEntity implements Overcl
 	}
 
 	@Override
-	protected void loadAdditional(ValueInput input) {
-		super.loadAdditional(input);
+	protected void loadMachineData(ValueInput input) {
+		super.loadMachineData(input);
 		// Clamped to the tank's own capacity (TANK_CAPACITY, the value it was built with), invariant
 		// upheld both ways, and a save whose fluid id no longer resolves (its mod was removed) drops the
 		// contents rather than keeping a phantom amount the machine could never consume.

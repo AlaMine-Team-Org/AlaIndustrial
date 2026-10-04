@@ -5,6 +5,7 @@ import dev.alaindustrial.block.AdvancedFluidPipeBlock;
 import dev.alaindustrial.block.FluidPipeBlock;
 import dev.alaindustrial.block.ReinforcedFluidPipeBlock;
 import dev.alaindustrial.block.ReinforcedSteamPipeBlock;
+import dev.alaindustrial.client.ServerBalance;
 import dev.alaindustrial.core.fluid.PipeFamily;
 import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
@@ -75,7 +76,7 @@ public class FluidPipeBlockItem extends BlockItem {
 		}
 		// The grade's own segment (MOD-675) — read from the block, so each grade quotes its own knob.
 		int perTick = getBlock() instanceof FluidPipeBlock pipe
-				? pipe.segmentCapacity() : Math.max(1, Config.fluidPipeSegmentBuffer);
+				? pipe.segmentCapacity() : Math.max(1, ServerBalance.fluidPipeSegmentBuffer());
 		// Buckets per second, to one decimal: 50 mB/t → 1.0 B/s. Players think in buckets.
 		String bucketsPerSecond = String.format(java.util.Locale.ROOT, "%.1f", perTick * 20 / 1000.0D);
 		adder.accept(Component.translatable("item.alaindustrial.fluid_pipe.tech.rate",

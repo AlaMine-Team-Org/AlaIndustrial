@@ -1,6 +1,8 @@
 package dev.alaindustrial;
 
+import dev.alaindustrial.network.ConfigSync;
 import java.nio.file.Path;
+import net.minecraft.server.MinecraftServer;
 import net.neoforged.fml.loading.FMLPaths;
 
 /**
@@ -13,7 +15,7 @@ import net.neoforged.fml.loading.FMLPaths;
  *
  * <p>Reload parity (MOD-100, absorbs MOD-041): Fabric re-reads on {@code END_DATA_PACK_RELOAD}; NeoForge
  * re-reads via an {@code OnDatapackSyncEvent} listener wired in {@code IndustrializationNeoForge} that calls
- * {@link #reload()} on {@code /reload} (guarded to the all-players sync, not per-join). The startup load stays
+ * {@link #reload(MinecraftServer)} on {@code /reload} (guarded to the all-players sync, not per-join). The startup load stays
  * here in {@link #register()} so an absent file is written before the first tick.
  */
 final class NeoForgeConfigLoader {
@@ -31,8 +33,9 @@ final class NeoForgeConfigLoader {
 		Config.reload();
 	}
 
-	/** Re-read the config on a datapack {@code /reload}, matching Fabric's behaviour. */
-	static void reload() {
-		Config.reload();
+	/** Re-read the config on a datapack {@code /reload}, matching Fabric's behaviour, and re-send the balance
+	 * to every client connected to {@code server} (MOD-695; {@code null} = no server running, nothing sent). */
+	static void reload(MinecraftServer server) {
+		ConfigSync.reloadAndBroadcast(server);
 	}
 }

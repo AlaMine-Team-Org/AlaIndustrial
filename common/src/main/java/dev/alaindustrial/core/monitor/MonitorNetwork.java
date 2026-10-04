@@ -6,6 +6,8 @@ import dev.alaindustrial.block.entity.MonitorCoreBlockEntity;
 import dev.alaindustrial.block.entity.MonitorPanelBlockEntity;
 import dev.alaindustrial.block.entity.SmartWireBlockEntity;
 import dev.alaindustrial.core.energy.PosOrder;
+import dev.alaindustrial.core.net.GraphNetwork;
+import dev.alaindustrial.core.net.NodeSet;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
@@ -25,15 +27,16 @@ import net.minecraft.world.level.block.entity.BlockEntity;
  * the containers regardless of how many panels read the result — the naive shape, where every panel
  * looks for itself, multiplies the same work by the size of the wall.
  */
-public final class MonitorNetwork {
+public final class MonitorNetwork implements GraphNetwork<MonitorNetwork, BlockPos> {
 
 	private static final Comparator<BlockPos> POS_ORDER =
 			(a, b) -> PosOrder.compare(a.getX(), a.getY(), a.getZ(), b.getX(), b.getY(), b.getZ());
 
 	private final ServerLevel level;
-	private final Set<BlockPos> nodes = new LinkedHashSet<>();
+	/** The nodes and the "sort them into roles again" flag (MOD-715, batch 11). */
+	private final NodeSet<BlockPos> nodeSet = new NodeSet<>();
+	private final Set<BlockPos> nodes = nodeSet.nodes();
 
-	private boolean dirty = true;
 	private final List<BlockPos> cores = new ArrayList<>();
 	private final List<BlockPos> panels = new ArrayList<>();
 	private final List<BlockPos> containers = new ArrayList<>();
@@ -44,30 +47,37 @@ public final class MonitorNetwork {
 		this.level = level;
 	}
 
+	@Override
 	public Set<BlockPos> nodes() {
 		return nodes;
 	}
 
+	@Override
 	public void addNode(BlockPos pos) {
-		nodes.add(pos.immutable());
+		nodeSet.add(pos.immutable());
 		markDirty();
 	}
 
+	@Override
 	public void removeNode(BlockPos pos) {
-		nodes.remove(pos);
+		nodeSet.remove(pos);
 		markDirty();
 	}
 
+	@Override
 	public void absorb(MonitorNetwork other) {
-		nodes.addAll(other.nodes);
+		nodeSet.absorb(other.nodeSet);
 		markDirty();
 	}
 
+	/** Re-sort the nodes on the next tick and scan at once rather than at the end of the interval. */
+	@Override
 	public void markDirty() {
-		dirty = true;
+		nodeSet.markDirty();
 		cooldown = 0;
 	}
 
+	@Override
 	public boolean isAwake() {
 		return !nodes.isEmpty();
 	}
@@ -80,10 +90,10 @@ public final class MonitorNetwork {
 	 * of several hundred panels.
 	 */
 	private void refreshIfDirty() {
-		if (!dirty) {
+		if (!nodeSet.isDirty()) {
 			return;
 		}
-		dirty = false;
+		nodeSet.clearDirty();
 		cores.clear();
 		panels.clear();
 		containers.clear();
@@ -117,14 +127,15 @@ public final class MonitorNetwork {
 		containers.sort(POS_ORDER);
 	}
 
-	/** Run one scan if the interval has elapsed. */
-	public void tick() {
+	/** Run one scan if the interval has elapsed. Nothing is transported, so the frame's telemetry gets 0. */
+	@Override
+	public long tick() {
 		refreshIfDirty();
 		if (panels.isEmpty()) {
-			return;
+			return 0L;
 		}
 		if (--cooldown > 0) {
-			return;
+			return 0L;
 		}
 		cooldown = Math.max(1, Config.monitorScanIntervalTicks);
 
@@ -132,11 +143,11 @@ public final class MonitorNetwork {
 		// each claim the same panels, so the wall refuses to run rather than working twice over.
 		if (cores.size() != 1) {
 			publishAll(MonitorReadout.NO_CORE);
-			return;
+			return 0L;
 		}
 		if (!(level.getBlockEntity(cores.getFirst()) instanceof MonitorCoreBlockEntity core)) {
 			publishAll(MonitorReadout.NO_CORE);
-			return;
+			return 0L;
 		}
 
 		// The watched types, deduplicated: two panels showing the same item are one demand on the
@@ -197,6 +208,7 @@ public final class MonitorNetwork {
 				panel.publish(MonitorReadout.OK, tally.total(type));
 			}
 		}
+		return 0L;
 	}
 
 	/**
