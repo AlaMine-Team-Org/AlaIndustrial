@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "alaindustrial:raw_rubber",
+    {
+      "id": "techreborn:rubber",
+      "required": false
+    }
+  ]
+}

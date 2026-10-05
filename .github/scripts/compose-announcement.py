@@ -23,6 +23,9 @@ REPO = "AlaMine-Team-Org/AlaIndustrial"
 CF_FILES = "https://www.curseforge.com/minecraft/mc-mods/ala-industrial/files"
 MODRINTH_VERSION = "https://modrinth.com/mod/ala-industrial/version/"
 EMBED_DESCRIPTION_LIMIT = 4096
+SHORTENED_NOTE = "_Shortened for Discord: the full notes are on the release page._"
+BOLD_LEAD = re.compile(r"\*\*(.+?)\*\*")
+FIRST_SENTENCE = re.compile(r"(.+?[.!?])(?:\s|$)")
 COUNT_SENTENCE = re.compile(r"^\d+ updates? in this release\.\s*")
 TAG = re.compile(r"^v(\d+\.\d+\.\d+)-mc(\d+(?:\.\d+)*)$")
 
@@ -55,6 +58,15 @@ def parse_changelog(text: str) -> tuple[str, list[tuple[str, list[str]]]]:
     return intro, [(name, [" ".join(b) for b in bullets]) for name, bullets in sections]
 
 
+def lead(bullet: str) -> str:
+    """The headline of an entry: its bold opening, or else its first sentence."""
+    m = BOLD_LEAD.match(bullet)
+    if m:
+        return f"**{m.group(1)}**"
+    m = FIRST_SENTENCE.match(bullet)
+    return m.group(1) if m else bullet
+
+
 def minecraft_of(tag: str) -> str:
     m = TAG.match(tag)
     if not m:
@@ -76,23 +88,32 @@ def compose(version: str, lines: list[tuple[str, str]]) -> dict:
         return " ".join(b.split())
 
     everywhere = set.intersection(*({key(b) for _, bs in secs for b in bs} for _, _, secs in parsed))
-    out: list[str] = []
-    if intro:
-        out += [intro, ""]
-    for name, bullets in parsed[0][2]:
-        shared = [b for b in bullets if key(b) in everywhere]
-        if shared:
-            out += [f"**{name}**", *(f"- {b}" for b in shared), ""]
-    if len(parsed) > 1:
-        for tag, _, secs in parsed:
-            own = [(name, b) for name, bs in secs for b in bs if key(b) not in everywhere]
-            if own:
-                out.append(f"**Only on Minecraft {minecraft_of(tag)}**")
-                out += [f"- {b}" if name in ("New",) else f"- {name}: {b}" for name, b in own]
-                out.append("")
-    description = "\n".join(out).strip()
+
+    def body(shown) -> str:
+        out: list[str] = []
+        if intro:
+            out += [intro, ""]
+        for name, bullets in parsed[0][2]:
+            shared = [b for b in bullets if key(b) in everywhere]
+            if shared:
+                out += [f"**{name}**", *(f"- {shown(b)}" for b in shared), ""]
+        if len(parsed) > 1:
+            for tag, _, secs in parsed:
+                own = [(name, b) for name, bs in secs for b in bs if key(b) not in everywhere]
+                if own:
+                    out.append(f"**Only on Minecraft {minecraft_of(tag)}**")
+                    out += [f"- {shown(b)}" if name in ("New",) else f"- {name}: {shown(b)}" for name, b in own]
+                    out.append("")
+        return "\n".join(out).strip()
+
+    # A release with many detailed entries does not fit one embed. Rather than refuse to announce
+    # it, keep every entry and show its headline only; the title links to the full notes.
+    description = body(lambda b: b)
     if len(description) > EMBED_DESCRIPTION_LIMIT:
-        raise ValueError(f"post is {len(description)} chars, Discord allows {EMBED_DESCRIPTION_LIMIT}")
+        description = body(lead) + "\n\n" + SHORTENED_NOTE
+    if len(description) > EMBED_DESCRIPTION_LIMIT:
+        raise ValueError(f"post is {len(description)} chars even with headlines only, "
+                         f"Discord allows {EMBED_DESCRIPTION_LIMIT}")
 
     downloads = []
     for tag, _, _ in parsed:

@@ -11,6 +11,7 @@ import dev.alaindustrial.recipe.AlaProcessingRecipe;
 import dev.alaindustrial.recipe.ProcessingRecipeInput;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModRecipes;
+import dev.alaindustrial.registry.ModTags;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -219,9 +220,18 @@ public final class VulcanizerBlockEntity extends MachineBlockEntity
 
 	@Override
 	public boolean canPlaceItem(int slot, ItemStack stack) {
+		return acceptsInput(slot, stack);
+	}
+
+	/**
+	 * What each input slot takes — the one rule for automation and for the menu's slots alike (MOD-746),
+	 * so the two cannot drift. The rubber slot never takes the mod's own finished rubber: that would be a
+	 * loop the electric heater triples.
+	 */
+	public static boolean acceptsInput(int slot, ItemStack stack) {
 		return switch (slot) {
-			case RAW_RUBBER_SLOT -> stack.is(ModContent.RAW_RUBBER.get());
-			case SULFUR_SLOT -> stack.is(ModContent.SULFUR_DUST.get());
+			case RAW_RUBBER_SLOT -> stack.is(ModTags.Items.VULCANIZABLE_RUBBERS);
+			case SULFUR_SLOT -> stack.is(ModTags.Items.C_SULFUR_DUSTS);
 			default -> false;
 		};
 	}

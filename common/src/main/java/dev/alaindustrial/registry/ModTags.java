@@ -182,6 +182,14 @@ public final class ModTags {
 				TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "ingots"));
 
 		/**
+		 * Any mod's sulfur dust ({@code c:dusts/sulfur}) — the Vulcanizer's sulfur slot (MOD-746). The
+		 * recipe already read this tag, but the slot accepted only the mod's own dust, so another mod's
+		 * sulfur showed in the recipe viewer and could not be put in.
+		 */
+		public static final TagKey<Item> C_SULFUR_DUSTS =
+				TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "dusts/sulfur"));
+
+		/**
 		 * Every grade of wind mill rotor (MOD-385) — what the three wind mills' rotor slot accepts.
 		 *
 		 * <p>A tag rather than a list of {@code ModContent} comparisons: the check lives in
@@ -237,6 +245,15 @@ public final class ModTags {
 		 * later one that happens to also cover them.
 		 */
 		public static final TagKey<Item> SHOCK_INSULATING = key("shock_insulating");
+
+		/**
+		 * What the Vulcanizer's rubber slot accepts (MOD-746): the mod's raw rubber, plus another mod's
+		 * finished rubber (Tech Reborn's, as an optional entry). The mod's OWN finished rubber is left out
+		 * on purpose: it would loop through the machine, and with the electric heater one rubber would
+		 * become three, forever. The shared {@code c:rubbers} tag does carry it — that tag is for other
+		 * mods to read, and nothing of ours accepts it as an input.
+		 */
+		public static final TagKey<Item> VULCANIZABLE_RUBBERS = key("vulcanizable_rubbers");
 
 		private static TagKey<Item> key(String path) {
 			return TagKey.create(Registries.ITEM, Industrialization.id(path));

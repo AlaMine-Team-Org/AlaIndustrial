@@ -78,6 +78,26 @@ check("single title", post["title"] == "Ala Industrial 0.1.183 — Minecraft 26.
 check("single no own", "Only on" not in post["description"], post["description"])
 check("single entries", post["description"].count("The Mob Repeller pings.") == 1, post["description"])
 
+# A release too long for one embed is announced by headlines, never refused: every entry stays,
+# as its bold opening or its first sentence, and a note points at the full notes.
+LONG_TAIL = " ".join(["This sentence only pads the entry so the whole post cannot fit."] * 9)
+LONG = "### Fixed\n\n" + "".join(
+    (f"- **Entry {i} is bold.** {LONG_TAIL}\n" if i % 2 else f"- Entry {i} is plain. {LONG_TAIL}\n")
+    for i in range(1, 13))
+LONG_263 = ("v0.1.183-mc26.3", changelog("v0.1.183-mc26.3", 12, LONG))
+LONG_262 = ("v0.1.183-mc26.2", changelog("v0.1.183-mc26.2", 12, LONG))
+post = mod.compose("0.1.183", [LONG_263, LONG_262])
+d = post["description"]
+check("long fits", len(d) <= mod.EMBED_DESCRIPTION_LIMIT, str(len(d)))
+check("long keeps every entry", all(f"Entry {i} is " in d for i in range(1, 13)), d)
+check("long bold lead", "- **Entry 1 is bold.**\n" in d, d)
+check("long plain lead", "- Entry 2 is plain.\n" in d, d)
+check("long drops the padding", "only pads the entry" not in d, d)
+check("long note", d.endswith(mod.SHORTENED_NOTE), d[-120:])
+check("short has no note", mod.SHORTENED_NOTE not in mod.compose("0.1.183", [LINE_263, LINE_262])["description"])
+sentence = "On Minecraft 26.3 the pipe is washed away. Before, it stood."
+check("version inside a sentence", mod.lead(sentence) == "On Minecraft 26.3 the pipe is washed away.", mod.lead(sentence))
+
 # Refusals: a tag of another version, and nothing to announce.
 for name, args in (("foreign tag", ("0.1.184", [LINE_263])), ("empty", ("0.1.183", []))):
     try:
