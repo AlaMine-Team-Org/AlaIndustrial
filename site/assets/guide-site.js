@@ -450,12 +450,26 @@
           out.push({
             date: new Date(Date.parse(d1) - (g - 1) * 86400000).toISOString().slice(0, 10),
             v: Math.max(0, Math.round(per)),
-            est: gap > 1 || partial,
+            est: gap > 1,
+            partial,
           });
         }
       }
       return out;
     };
+
+    /* The collector's own per-day rows (MOD-749), when the file has them: Modrinth
+       by exact calendar day, CurseForge with its catch-up batches spread back over
+       the week they belong to. The site draws them as they are, so the Telegram
+       report, which reads the same rows, cannot disagree with the chart. A row is
+       [date, modrinth, curseforge or null, flags]; "e" = CurseForge estimated,
+       "g" = Modrinth shared over a missed snapshot. */
+    const fromDaily = rows => rows.map(([date, mr, cf, flags]) => ({
+      date,
+      v: Math.max(0, mr + (cf === null ? 0 : cf)),
+      est: (flags || '').length > 0 && cf !== null,
+      partial: cf === null,
+    }));
 
     /* The longer the range, the coarser the bucket: two years by day would be 700
        columns one pixel wide. The day threshold is 90 and not 45, so that the two
@@ -472,6 +486,7 @@
         out.push({
           date: slice[0].date, end: slice[slice.length - 1].date,
           v: slice.reduce((s, d) => s + d.v, 0), est: slice.some(d => d.est),
+          partial: slice.some(d => d.partial),
         });
       }
       return { data: out, unit: size === 7 ? L.per_week : L.per_month };
@@ -535,12 +550,16 @@
           ? fmtDate(d.date) + ' — ' + fmtDate(d.end) : fmtDate(d.date)) +
           '</th><td>' + nf.format(d.v) + '</td></tr>').join('') + '</tbody></table></div>';
 
-      /* Footnote explaining the asterisk, shown only while the visible range
-         actually contains such days. */
+      /* Footnotes for the two marks, each shown only while the visible range
+         actually contains such days: "*" = Modrinth alone, "≈" = CurseForge's
+         share estimated. */
       const note = document.getElementById('st-note');
       if (note) {
-        note.textContent = L.partial_note || '';
-        note.hidden = !L.partial_note || !data.some(d => d.est);
+        const lines = [];
+        if (L.partial_note && data.some(d => d.partial)) lines.push(L.partial_note);
+        if (L.est_note && data.some(d => d.est)) lines.push(L.est_note);
+        note.textContent = lines.join('\n');
+        note.hidden = !lines.length;
       }
 
       const svg = host.querySelector('svg');
@@ -562,7 +581,8 @@
           mLine.setAttribute('y1', PT); mLine.setAttribute('y2', PT + ih);
           mDot.setAttribute('x', cx - 4.5); mDot.setAttribute('y', y(d.v) - 4.5);
           tip.innerHTML = (d.end && d.end !== d.date ? fmtDate(d.date) + ' — ' + fmtDate(d.end) : fmtDate(d.date)) +
-                          '<br><b>' + nf.format(d.v) + '</b> ' + plural(d.v) + (d.est ? ' *' : '');
+                          '<br>' + (d.est ? '≈ ' : '') + '<b>' + nf.format(d.v) + '</b> ' + plural(d.v) +
+                          (d.partial ? ' *' : '');
           /* Measure against the element the tooltip is positioned inside (.st-chart)
              rather than the chart container: they differ by the header height, which
              pushed the tooltip onto the range buttons. */
@@ -587,7 +607,8 @@
       const t = data.totals || {};
       const total = (t.modrinth || 0) + (t.curseforge || 0);
       if (!total) return;
-      const all = dailyFrom(data.series || []);
+      const all = Array.isArray(data.daily) && data.daily.length
+        ? fromDaily(data.daily) : dailyFrom(data.series || []);
       /* Snapshots are dated with the day they close, so the newest one is always
          yesterday and the chart ends there. Should a row for the current day turn
          up anyway — a hand-edited file, an older collector — it is still filling
