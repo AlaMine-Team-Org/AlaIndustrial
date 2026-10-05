@@ -380,7 +380,7 @@
 <a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="18 ページ">18</span></a>
 <div class="group-title">アイテム</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="29 ページ">29</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="30 ページ">30</span></a>
 <a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="30 ページ">30</span></a>
   </aside>
   <main class="content" id="main-content">
@@ -419,7 +419,7 @@
 
 <p>エネルギーを受け取るのは<strong>下半分だけ</strong>で、しかも側面と背面のみです。プレイヤーが向き合う正面は電気的に不活性で、ケーブルが画面を横切ってアームを伸ばさないようになっています。未組み立ての筐体と上半分はエネルギーをまったく受け取らず、ケーブルも接続されません。</p>
 
-<p>ワークステーションは機械ではなく蓄電装置として宣言されており、共有の送電網では稼働中の機械の<strong>後</strong>に配電されます。そうでなければ 128 EU/FE/t の要求が、同じケーブル上の LV 機械から電力を奪ってしまいます。</p>
+<p>ワークステーションは蓄電装置ではなく消費機器です。共有の送電網では稼働中の機械と<strong>同列</strong>に配電されます。電力が足りないときは、ケーブルがそれぞれの要求量に応じてワークステーションと機械に分け、ネットワークアナライザーはワークステーションを消費機器として表示し、それを経由して隣の送電網へ辿ることはありません。</p>
 
 <p><strong>ワークステーションは立っているだけで電力を消費します。</strong>MV 系統に対して 6 EU/FE/t はわずかですが、放置された拠点なら消灯させるには十分です。充電がなければ画面は開かず、ファンは止まり、モニターは畳まれます。</p>
 
