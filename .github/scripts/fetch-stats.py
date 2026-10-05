@@ -468,6 +468,11 @@ def main() -> int:
     history: dict = {}
     try:
         history = fetch_modrinth_history()
+        # Say what the analytics gave: an empty answer (a token without the analytics
+        # scope, a changed endpoint) is otherwise indistinguishable from success — the
+        # old endpoint returned 404 for weeks and only a WARN on backfill showed it.
+        print(f"INFO  modrinth analytics: {len(history)} day(s)"
+              + (f", {min(history)}..{max(history)}" if history else ""))
         series = backfill(series, history, now.date().isoformat())
     except SOURCE_ERRORS as exc:
         print(f"WARN  backfill skipped: {exc}", file=sys.stderr)
