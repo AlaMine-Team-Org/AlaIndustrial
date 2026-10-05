@@ -179,6 +179,25 @@ def main() -> int:
     daily = module.build_daily(series, {}, "2026-10-06")
     check("unknown CurseForge stays null", daily[-1][2] is None and daily[-1][3] == "", str(daily[-1]))
 
+    print("Modrinth analytics answer is parsed slice by slice (POST /v3/analytics)")
+    answer = {"metrics": [
+        [{"source_project": "ACLWFBlU", "metric_kind": "downloads", "downloads": 70}],
+        [],
+        [{"source_project": "ACLWFBlU", "metric_kind": "downloads", "downloads": 64},
+         {"source_project": "other", "metric_kind": "downloads", "downloads": 9},
+         {"source_project": "ACLWFBlU", "metric_kind": "views", "views": 300}],
+    ], "project_events": []}
+    parsed = module.parse_modrinth_history(answer, datetime.date(2026, 10, 1))
+    check("days from the start, empty slice is zero, other rows ignored",
+          parsed == {"2026-10-01": 70, "2026-10-02": 0, "2026-10-03": 64}, str(parsed))
+    lead = module.parse_modrinth_history({"metrics": [[], []] + answer["metrics"]},
+                                         datetime.date(2026, 9, 29))
+    check("leading empty days dropped", min(lead) == "2026-10-01", str(lead))
+    hole = module.backfill([["2026-10-01", 100, 50], ["2026-10-04", 200, 80]],
+                           {"2026-09-30": 30, "2026-10-01": 70, "2026-10-02": 40}, "2026-10-05")
+    check("backfill restores only before the first snapshot",
+          [row[0] for row in hole] == ["2026-09-30", "2026-10-01", "2026-10-04"], str(hole))
+
     print("the CurseForge site source refuses a paging loop")
     import json as _json
 

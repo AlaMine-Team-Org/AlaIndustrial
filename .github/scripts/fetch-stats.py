@@ -95,25 +95,58 @@ def fetch_modrinth() -> dict:
     }
 
 
-def fetch_modrinth_history() -> dict:
-    """Day-by-day Modrinth downloads, oldest first, as {date: downloads}.
+def post_json(url: str, body: dict, headers: dict | None = None):
+    req = urllib.request.Request(url, data=json.dumps(body).encode("utf-8"), method="POST",
+                                 headers={"User-Agent": UA, "Content-Type": "application/json",
+                                          **(headers or {})})
+    with urllib.request.urlopen(req, timeout=TIMEOUT) as resp:
+        return json.load(resp)
 
-    Needs MODRINTH_TOKEN with the analytics scope. The endpoint lives on v3 and is
-    absent from the published OpenAPI document; it answers
-    {project_id: {unix_seconds: downloads}} at resolution_minutes=1440.
+
+#: First day the analytics query asks for. Modrinth caps one answer at 1024 slices, so a
+#: daily query from here covers well past 2028.
+MODRINTH_HISTORY_START = datetime.date(2026, 1, 1)
+
+
+def fetch_modrinth_history() -> dict:
+    """Day-by-day Modrinth downloads, as {date: downloads} for closed UTC days.
+
+    Needs MODRINTH_TOKEN with the analytics scope. Modrinth's analytics overhaul replaced
+    the old GET /v3/analytics/downloads (404 since then — found 2026-10-05) with one
+    POST /v3/analytics: a time range cut into slices of `resolution.minutes`, the metrics
+    to return, and the projects. The answer's `metrics` is one list per slice, oldest
+    first; a slice with no downloads is an empty list.
     """
     token = os.environ.get("MODRINTH_TOKEN", "").strip()
     if not token:
         return {}
-    url = ("https://api.modrinth.com/v3/analytics/downloads"
-           '?project_ids=%5B%22' + MODRINTH_ID + '%22%5D&resolution_minutes=1440'
-           "&start_date=2026-01-01T00:00:00Z")
-    data = get_json(url, {"Authorization": token})
-    buckets = data.get(MODRINTH_ID, {})
-    return {
-        datetime.datetime.fromtimestamp(int(ts), datetime.timezone.utc).date().isoformat(): int(n)
-        for ts, n in buckets.items()
+    today = datetime.datetime.now(datetime.timezone.utc).date()
+    start = MODRINTH_HISTORY_START
+    body = {
+        "time_range": {"start": f"{start.isoformat()}T00:00:00Z",
+                       "end": f"{today.isoformat()}T00:00:00Z",
+                       "resolution": {"minutes": 1440}},
+        "return_metrics": {"project_downloads": {"bucket_by": []}},
+        "project_ids": [MODRINTH_ID],
     }
+    data = post_json("https://api.modrinth.com/v3/analytics", body, {"Authorization": token})
+    return parse_modrinth_history(data, start)
+
+
+def parse_modrinth_history(data: dict, start: datetime.date) -> dict:
+    """{date: downloads} from a POST /v3/analytics answer whose slices start at `start`."""
+    out = {}
+    for index, slice_ in enumerate(data["metrics"]):
+        day = (start + datetime.timedelta(days=index)).isoformat()
+        downloads = sum(int(row.get("downloads", 0)) for row in slice_
+                        if row.get("metric_kind") == "downloads"
+                        and row.get("source_project") == MODRINTH_ID)
+        # The query starts on a fixed date long before the project existed: the empty
+        # days before its first download are not history, and restoring them would
+        # draw months of zeros at the start of the chart.
+        if out or downloads:
+            out[day] = downloads
+    return out
 
 
 def backfill(series: list, history: dict, today: str) -> list:
@@ -134,10 +167,15 @@ def backfill(series: list, history: dict, today: str) -> list:
     if not history:
         return series
     known = {row[0] for row in series}
+    # Only the days BEFORE the first snapshot. A hole in the middle of the series is a
+    # missed collection, which the site already shares over the gap; filling it from
+    # analytics would put a counter on a different basis between two snapshot counters
+    # and draw a jump on either side (MOD-749).
+    first = min(known) if known else today
     restored, running = [], 0
     for date in sorted(history):
         running += history[date]
-        if date not in known and date < today:
+        if date not in known and date < today and date < first:
             restored.append([date, running, None])
     return sorted(series + restored, key=lambda row: row[0])
 
