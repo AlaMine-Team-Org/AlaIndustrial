@@ -1,21 +1,21 @@
 package dev.alaindustrial.client.compat.jei;
 
 import dev.alaindustrial.Industrialization;
-import dev.alaindustrial.client.compat.CanningExchange;
 import dev.alaindustrial.client.compat.MachineRecipeViewerTargets;
 import dev.alaindustrial.client.compat.RecipeCategoryTitle;
+import dev.alaindustrial.client.compat.RecipeViewerForm;
 import dev.alaindustrial.client.compat.RecipeViewerInfo;
+import dev.alaindustrial.client.screen.GuiRect;
 import dev.alaindustrial.client.screen.MachineScreen;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
-import dev.alaindustrial.recipe.AlloyingRecipe;
-import dev.alaindustrial.recipe.FluidOutputRecipe;
-import dev.alaindustrial.recipe.PolymerizingRecipe;
+import dev.alaindustrial.recipe.ChargedCraftRecipe;
 import dev.alaindustrial.recipe.VanillaSmeltingMirror;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModRecipes;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EnumMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +30,6 @@ import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.ItemStack;
@@ -78,37 +77,17 @@ public class AlaJeiPlugin implements IModPlugin {
 			registration.addRecipeCategories(new AlaProcessingJeiCategory(AlaJeiRecipeTypes.byKind(kind),
 					block, RecipeCategoryTitle.of(kind, block.getName()), guiHelper));
 		}
-		// MOD-019: the Polymerizer's fluid → item family. A single family, so the plain block name titles
-		// it. Its card layout is unlike the processing one, so it is registered by hand — but the block
-		// still comes from the family, not from a second mention of it here.
-		Block polymerizer = ModRecipes.POLYMERIZING.station().get();
-		registration.addRecipeCategories(new PolymerizingJeiCategory(AlaJeiRecipeTypes.POLYMERIZING,
-				polymerizer, polymerizer.getName(), guiHelper));
-		// MOD-064: the alloy smelter. A single family, so the plain block name titles it.
-		Block alloySmelter = ModRecipes.ALLOYING.station().get();
-		registration.addRecipeCategories(new AlloyingJeiCategory(AlaJeiRecipeTypes.ALLOYING,
-				alloySmelter, alloySmelter.getName(), guiHelper));
-		// MOD-251: the distillation column's fluid → two-fluids family (the MOD-257 contract,
-		// registered now that the real workstation exists).
-		Block column = ModRecipes.DISTILLING.station().get();
-		registration.addRecipeCategories(new FluidOutputJeiCategory(AlaJeiRecipeTypes.DISTILLING,
-				column, column.getName(), guiHelper));
-		// MOD-383: the canning machine. No recipe type at all — the cards are computed from the item
-		// registry (CanningExchange), so the title comes from its own lang key rather than a block name,
-		// and the block cannot come from a recipe family because it has none.
-		registration.addRecipeCategories(new CanningJeiCategory(AlaJeiRecipeTypes.CANNING,
-				ModContent.CANNING_MACHINE.get(), RecipeCategoryTitle.canning(), guiHelper));
-		// MOD-420: machines with no recipe of any kind. Its own category rather than JEI's built-in
-		// ingredient info, because a click area opens a category unfocused — see MachineInfoJeiCategory.
-		registration.addRecipeCategories(new MachineInfoJeiCategory(AlaJeiRecipeTypes.MACHINE_INFO,
-				ModContent.GEOTHERMAL_GENERATOR.get(),
-				Component.translatable("jei.alaindustrial.category.machine_info"), guiHelper));
+		// MOD-716: the special recipe forms (polymerizing, alloying, distilling, canning, the page forms), each
+		// declared once in RecipeViewerForm and drawn by its JeiRecipeForms binding, in JEI's own tab order.
+		for (RecipeViewerForm form : JeiRecipeForms.TAB_ORDER) {
+			registration.addRecipeCategories(JeiRecipeForms.of(form).category().apply(guiHelper));
+		}
 	}
 
 	@Override
 	public void registerRecipes(IRecipeRegistration registration) {
 		Collection<RecipeHolder<?>> recipes = clientSyncedRecipes();
-		// MOD-651: one summary line instead of one per family. docs/tools/jei_smoke_check.py reads it
+		// MOD-651: one summary line instead of one per family. docs/tools/testing/jei_smoke_check.py reads it
 		// (the jei-smoke CI lane), so the `name=count` pairs are a contract, not decoration.
 		Map<String, Integer> counts = new LinkedHashMap<>();
 		for (ModRecipes.Kind kind : ModRecipes.kinds()) {
@@ -122,67 +101,20 @@ public class AlaJeiPlugin implements IModPlugin {
 			counts.put(kind.id(), machineRecipes.size());
 			registration.addRecipes(AlaJeiRecipeTypes.byKind(kind), machineRecipes);
 		}
-		// MOD-019: the Polymerizer's recipes live in their own class, so they are collected separately.
-		List<RecipeHolder<PolymerizingRecipe>> polymerizing = polymerizingRecipes(recipes);
-		counts.put(ModRecipes.POLYMERIZING.id(), polymerizing.size());
-		registration.addRecipes(AlaJeiRecipeTypes.POLYMERIZING, polymerizing);
-		// MOD-064: likewise the alloy smelter's own recipe class.
-		List<RecipeHolder<AlloyingRecipe>> alloying = alloyingRecipes(recipes);
-		counts.put(ModRecipes.ALLOYING.id(), alloying.size());
-		registration.addRecipes(AlaJeiRecipeTypes.ALLOYING, alloying);
-		// MOD-251: likewise the distillation column's own recipe class.
-		List<RecipeHolder<FluidOutputRecipe>> distilling = distillingRecipes(recipes);
-		counts.put(ModRecipes.DISTILLING.id(), distilling.size());
-		registration.addRecipes(AlaJeiRecipeTypes.DISTILLING, distilling);
-		// MOD-383: one canning card per accepted food, derived from the (by now frozen) item registry
-		// rather than from the recipe map — this machine has no recipes to collect.
-		List<CanningExchange.Card> canning = CanningExchange.cards();
-		registration.addRecipes(AlaJeiRecipeTypes.CANNING, canning);
-		// Informational pages (MOD-043): for blocks/items with no crafting recipe — the solar panel
-		// evolution line today — JEI's built-in ingredient info gives a paginated, auto-wrapping page.
-		// Title + lines come from the same loader-neutral source the REI integration uses.
-		for (RecipeViewerInfo.Entry entry : RecipeViewerInfo.solarEvolutionEntries()) {
-			List<Component> description = new ArrayList<>();
-			description.add(RecipeViewerInfo.title(entry));
-			description.addAll(RecipeViewerInfo.buildLines(entry));
-			registration.addIngredientInfo((ItemLike) entry.owner().get(),
-					description.toArray(new Component[0]));
+		// MOD-716: the special forms. The three recipe families join the summary's name=count pairs (in JEI's tab
+		// order, which lists them as before); the canning cards (MOD-383, derived from the item registry) and the
+		// machine-info pages (MOD-420) are counted on their own. The page forms build their lines on every draw
+		// (MOD-695), so a later reload of the server's balance shows through.
+		Map<RecipeViewerForm, Integer> listed = new EnumMap<>(RecipeViewerForm.class);
+		for (RecipeViewerForm form : JeiRecipeForms.TAB_ORDER) {
+			int n = JeiRecipeForms.of(form).addRecipes(registration, recipes);
+			listed.put(form, n);
+			if (form.recipeFamily()) {
+				counts.put(form.id(), n);
+			}
 		}
-
-		// MOD-584: kok sagyz seeds and root — loot-table drops, so no recipe names them as a result.
-		for (RecipeViewerInfo.Entry entry : RecipeViewerInfo.kokSagyzEntries()) {
-			List<Component> description = new ArrayList<>();
-			description.add(RecipeViewerInfo.title(entry));
-			description.addAll(RecipeViewerInfo.buildLines(entry));
-			registration.addIngredientInfo((ItemLike) entry.owner().get(),
-					description.toArray(new Component[0]));
-		}
-		// MOD-600 / MOD-638: the ceramic plate (a hand-built quench press) and soot (burnt-out oil) —
-		// sources no recipe can express.
-		for (RecipeViewerInfo.Entry entry : RecipeViewerInfo.worldMadeEntries()) {
-			List<Component> description = new ArrayList<>();
-			description.add(RecipeViewerInfo.title(entry));
-			description.addAll(RecipeViewerInfo.buildLines(entry));
-			registration.addIngredientInfo((ItemLike) entry.owner().get(),
-					description.toArray(new Component[0]));
-		}
-
-		// MOD-118: the incubator's rarity grades — a second roll on top of every success, which no
-		// recipe card has room for.
-		for (RecipeViewerInfo.Entry entry : RecipeViewerInfo.mutationGradeEntries()) {
-			List<Component> description = new ArrayList<>();
-			description.add(RecipeViewerInfo.title(entry));
-			description.addAll(RecipeViewerInfo.buildLines(entry));
-			registration.addIngredientInfo((ItemLike) entry.owner().get(),
-					description.toArray(new Component[0]));
-		}
-
-		// MOD-420: the geothermal generator and the energy condenser. These go into our own category
-		// rather than addIngredientInfo, because their GUI click areas have to open something focused.
-		List<RecipeViewerInfo.Entry> machineInfo = MachineInfoJeiCategory.pages();
-		registration.addRecipes(AlaJeiRecipeTypes.MACHINE_INFO, machineInfo);
 		Industrialization.LOGGER.info("Registered AlaIndustrial JEI recipes: {}; canning_cards={}; machine_info_pages={}",
-				summary(counts), canning.size(), machineInfo.size());
+				summary(counts), listed.get(RecipeViewerForm.CANNING), listed.get(RecipeViewerForm.MACHINE_INFO));
 	}
 
 	private static String summary(Map<String, Integer> counts) {
@@ -196,16 +128,14 @@ public class AlaJeiPlugin implements IModPlugin {
 		for (ModRecipes.Kind kind : ModRecipes.kinds()) {
 			registration.addCraftingStation(AlaJeiRecipeTypes.byKind(kind), kind.station().get());
 		}
-		registration.addCraftingStation(AlaJeiRecipeTypes.POLYMERIZING, ModRecipes.POLYMERIZING.station().get());
-		registration.addCraftingStation(AlaJeiRecipeTypes.ALLOYING, ModRecipes.ALLOYING.station().get());
-		// MOD-251: the distillation column performs the distilling family.
-		registration.addCraftingStation(AlaJeiRecipeTypes.DISTILLING, ModRecipes.DISTILLING.station().get());
-		// MOD-383: the canning machine works its own (recipe-less) category.
-		registration.addCraftingStation(AlaJeiRecipeTypes.CANNING, ModContent.CANNING_MACHINE.get());
-		// MOD-420: both machine-info pages are "worked at" the machine they describe, so clicking either
-		// block in JEI opens the category — the twin of REI's addWorkstations calls.
-		registration.addCraftingStation(AlaJeiRecipeTypes.MACHINE_INFO, ModContent.GEOTHERMAL_GENERATOR.get());
-		registration.addCraftingStation(AlaJeiRecipeTypes.MACHINE_INFO, ModContent.ENERGY_CONDENSER.get());
+		// MOD-716: each special form is worked at the machines its RecipeViewerForm names (MOD-420: both
+		// machine-info pages at the machine they describe, so clicking either block opens the tab — the twin of
+		// REI's addWorkstations calls).
+		for (RecipeViewerForm form : JeiRecipeForms.TAB_ORDER) {
+			for (ItemLike station : JeiRecipeForms.stations(form)) {
+				registration.addCraftingStation(JeiRecipeForms.of(form).type(), station);
+			}
+		}
 		// MOD-076: the electric furnace also performs vanilla smelting — ElectricFurnaceBlockEntity
 		// falls back to RecipeType.SMELTING when no alaindustrial:smelting recipe matches — so it is a
 		// crafting station for JEI's built-in minecraft:smelting category too (ore smelting,
@@ -222,7 +152,7 @@ public class AlaJeiPlugin implements IModPlugin {
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	public void registerGuiHandlers(IGuiHandlerRegistration registration) {
 		for (MachineRecipeViewerTargets.Target target : MachineRecipeViewerTargets.ALL) {
-			MachineRecipeViewerTargets.GuiRect rect = target.progressArea();
+			GuiRect rect = target.progressArea();
 			// MOD-086: the electric furnace runs vanilla smelting as a fallback (see registerRecipeCatalysts),
 			// so its progress arrow opens both categories at once. addRecipeClickArea takes IRecipeType<?>...,
 			// and IRecipeHolderType extends IRecipeType, so both types fit one call.
@@ -258,38 +188,16 @@ public class AlaJeiPlugin implements IModPlugin {
 						AlaJeiRecipeTypes.byKind(target.kind()));
 			}
 		}
-		// MOD-019: fluid-fed machines carry their own recipe type, so they list separately —
-		// resolved per kind since MOD-251 added a second fluid family (distilling).
-		for (MachineRecipeViewerTargets.FluidTarget target : MachineRecipeViewerTargets.FLUID_ALL) {
-			MachineRecipeViewerTargets.GuiRect rect = target.progressArea();
-			registration.addRecipeClickArea(
-					target.screenClass(),
-					rect.x(), rect.y(), rect.width(), rect.height(),
-					AlaJeiRecipeTypes.byFluidKind(target.kind()));
-		}
-		// MOD-064: the alloy smelter carries its own recipe type too.
-		for (MachineRecipeViewerTargets.AlloyTarget target : MachineRecipeViewerTargets.ALLOY_ALL) {
-			MachineRecipeViewerTargets.GuiRect rect = target.progressArea();
-			registration.addRecipeClickArea(
-					target.screenClass(),
-					rect.x(), rect.y(), rect.width(), rect.height(),
-					AlaJeiRecipeTypes.ALLOYING);
-		}
-		// MOD-383: the canning machine has no recipe kind, so its target list carries only the hitbox.
-		for (MachineRecipeViewerTargets.CanningTarget target : MachineRecipeViewerTargets.CANNING_ALL) {
-			MachineRecipeViewerTargets.GuiRect rect = target.progressArea();
-			registration.addRecipeClickArea(
-					target.screenClass(),
-					rect.x(), rect.y(), rect.width(), rect.height(),
-					AlaJeiRecipeTypes.CANNING);
-		}
-		// MOD-420: machines with no recipe at all open their informational page instead.
-		for (MachineRecipeViewerTargets.InfoTarget target : MachineRecipeViewerTargets.INFO_ALL) {
-			MachineRecipeViewerTargets.GuiRect rect = target.progressArea();
-			registration.addRecipeClickArea(
-					target.screenClass(),
-					rect.x(), rect.y(), rect.width(), rect.height(),
-					AlaJeiRecipeTypes.MACHINE_INFO);
+		// MOD-716: the special forms' click areas (the polymerizer and distillation column, MOD-019/251; the alloy
+		// smelter, MOD-064; the canning machine, MOD-383; the machine-info screens, MOD-420) — each opens its form.
+		for (RecipeViewerForm form : JeiRecipeForms.TAB_ORDER) {
+			for (RecipeViewerForm.ClickArea area : form.clickAreas()) {
+				GuiRect rect = area.rect();
+				registration.addRecipeClickArea(
+						area.screenClass(),
+						rect.x(), rect.y(), rect.width(), rect.height(),
+						JeiRecipeForms.of(form).type());
+			}
 		}
 		// MOD-080: keep JEI's item grid clear of the upgrade panel + gear tab on every machine screen.
 		registration.addGuiContainerHandler((Class) MachineScreen.class, new AlaJeiGuiExtraAreasHandler());
@@ -302,6 +210,9 @@ public class AlaJeiPlugin implements IModPlugin {
 						return screen.extraGuiAreas();
 					}
 				});
+		// MOD-592: drag an item onto a magnet filter cell.
+		registration.addGhostIngredientHandler(dev.alaindustrial.client.screen.MagnetScreen.class,
+				new MagnetFilterGhostHandler());
 	}
 
 	@Override
@@ -314,6 +225,14 @@ public class AlaJeiPlugin implements IModPlugin {
 			hidden.add(new ItemStack(item.get().asItem()));
 		}
 		runtime.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM_STACK, hidden);
+		// MOD-683: report how many charge-transfer crafting recipes JEI itself holds. Our plugin does not
+		// register these — JEI's vanilla plugin builds its crafting category from the recipes the client
+		// was synced — so the count is the only place a missing opt-in (the Fabric recipe-sync list)
+		// becomes visible. docs/tools/testing/jei_smoke_check.py compares it with the recipe files on disk.
+		long charged = runtime.getRecipeManager().createRecipeLookup(RecipeTypes.CRAFTING).get()
+				.filter(holder -> holder.value() instanceof ChargedCraftRecipe)
+				.count();
+		Industrialization.LOGGER.info("AlaIndustrial JEI charged crafts: {}", charged);
 	}
 
 	private static List<RecipeHolder<AlaProcessingRecipe>> recipesFor(Collection<RecipeHolder<?>> recipes,
@@ -323,43 +242,6 @@ public class AlaJeiPlugin implements IModPlugin {
 			if (holder.value() instanceof AlaProcessingRecipe recipe && recipe.kind() == kind) {
 				@SuppressWarnings("unchecked")
 				RecipeHolder<AlaProcessingRecipe> typed = (RecipeHolder<AlaProcessingRecipe>) holder;
-				result.add(typed);
-			}
-		}
-		return result;
-	}
-
-	private static List<RecipeHolder<AlloyingRecipe>> alloyingRecipes(Collection<RecipeHolder<?>> recipes) {
-		List<RecipeHolder<AlloyingRecipe>> result = new ArrayList<>();
-		for (RecipeHolder<?> holder : recipes) {
-			if (holder.value() instanceof AlloyingRecipe) {
-				@SuppressWarnings("unchecked")
-				RecipeHolder<AlloyingRecipe> typed = (RecipeHolder<AlloyingRecipe>) holder;
-				result.add(typed);
-			}
-		}
-		return result;
-	}
-
-	private static List<RecipeHolder<PolymerizingRecipe>> polymerizingRecipes(Collection<RecipeHolder<?>> recipes) {
-		List<RecipeHolder<PolymerizingRecipe>> result = new ArrayList<>();
-		for (RecipeHolder<?> holder : recipes) {
-			if (holder.value() instanceof PolymerizingRecipe) {
-				@SuppressWarnings("unchecked")
-				RecipeHolder<PolymerizingRecipe> typed = (RecipeHolder<PolymerizingRecipe>) holder;
-				result.add(typed);
-			}
-		}
-		return result;
-	}
-
-	/** The distilling family's recipes (MOD-251) — the {@link #polymerizingRecipes} twin. */
-	private static List<RecipeHolder<FluidOutputRecipe>> distillingRecipes(Collection<RecipeHolder<?>> recipes) {
-		List<RecipeHolder<FluidOutputRecipe>> result = new ArrayList<>();
-		for (RecipeHolder<?> holder : recipes) {
-			if (holder.value() instanceof FluidOutputRecipe) {
-				@SuppressWarnings("unchecked")
-				RecipeHolder<FluidOutputRecipe> typed = (RecipeHolder<FluidOutputRecipe>) holder;
 				result.add(typed);
 			}
 		}

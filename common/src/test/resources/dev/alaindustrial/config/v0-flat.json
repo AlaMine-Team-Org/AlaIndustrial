@@ -1,0 +1,8 @@
+{
+  "machineEuPerTick": 5,
+  "globalMachineSpeedMultiplier": 2.5,
+  "mutationSlagChance": 0.5,
+  "reactorBlastFire": false,
+  "cableBuffer": 30,
+  "retiredFlatKnob": 1
+}

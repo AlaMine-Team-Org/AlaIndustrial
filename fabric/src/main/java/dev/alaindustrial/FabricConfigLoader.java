@@ -1,5 +1,6 @@
 package dev.alaindustrial;
 
+import dev.alaindustrial.network.ConfigSync;
 import java.nio.file.Path;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
@@ -21,10 +22,12 @@ final class FabricConfigLoader {
 	}
 
 	/** Load once at startup and re-load on every {@code /reload} (datapack reload). Binds
-	 * {@link Config#configPath} so loader-neutral callers ({@code /ala config reload}) resolve the same file. */
+	 * {@link Config#configPath} so loader-neutral callers ({@code /ala config reload}) resolve the same file.
+	 * A reload also re-sends the balance to every connected client (MOD-695). */
 	static void register() {
 		Config.configPath = FabricConfigLoader::configPath;
 		Config.reload();
-		ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, resources, success) -> Config.reload());
+		ServerLifecycleEvents.END_DATA_PACK_RELOAD.register(
+				(server, resources, success) -> ConfigSync.reloadAndBroadcast(server));
 	}
 }

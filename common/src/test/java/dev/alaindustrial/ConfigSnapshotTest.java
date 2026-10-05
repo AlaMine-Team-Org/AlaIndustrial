@@ -4,6 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import dev.alaindustrial.config.ConfigSchema;
+import dev.alaindustrial.config.KnobEntry;
+import dev.alaindustrial.config.Section;
+import dev.alaindustrial.core.environment.GeneratorConfig;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
@@ -62,6 +66,9 @@ class ConfigSnapshotTest {
 	/** Every registered knob's key, in registry order. */
 	private static final List<String> KEYS = new ArrayList<>();
 
+	/** The declared field behind each key, as the registry resolved it. */
+	private static final Map<String, Field> FIELDS = new LinkedHashMap<>();
+
 	/** Per-knob sentinel: distinct from every other knob's, and from the knob's own default. */
 	private static final Map<String, Object> SENTINELS = new LinkedHashMap<>();
 
@@ -71,9 +78,10 @@ class ConfigSnapshotTest {
 		assertEquals(Config.LoadResult.DEFAULTS_WRITTEN, Config.loadFrom(baseline));
 
 		int index = 0;
-		for (Object entry : registry()) {
-			String key = (String) configFieldValue(entry, "key");
+		for (KnobEntry entry : Config.REGISTRY.entries()) {
+			String key = entry.key();
 			KEYS.add(key);
+			FIELDS.put(key, entry.field());
 			DEFAULTS.put(key, field(key).get(null));
 			SENTINELS.put(key, sentinelFor(key, entry, index++));
 		}
@@ -125,11 +133,10 @@ class ConfigSnapshotTest {
 	@Test
 	void snapshotWritesEveryKnobsLiveValueInItsOwnNumericForm(@TempDir Path dir) throws Exception {
 		Map<String, Object> desired = sentinelsWithBooleans(true);
-		applyAll(desired);
 
 		Path f = dir.resolve("alaindustrial.json");
-		Files.writeString(f, "{}");
-		assertEquals(Config.LoadResult.LOADED, Config.loadFrom(f), "empty file loads (every key absent)");
+		Files.writeString(f, sentinelFile(desired));
+		assertEquals(Config.LoadResult.LOADED, Config.loadFrom(f), "the sentinel file loads and is canonicalized");
 
 		String canonical = Files.readString(f);
 		List<String> missing = new ArrayList<>();
@@ -143,19 +150,18 @@ class ConfigSnapshotTest {
 	}
 
 	/**
-	 * An absent key must keep the knob's <em>current</em> value, not zero it. This is the contract that
-	 * lets an operator hand-trim the file to the two sections they care about, and the one that makes a
-	 * newly added knob harmless on an old file.
+	 * An absent key takes the knob's builtin default — not its current live value, and not 0/false
+	 * (MOD-694, owner decision D8 = 3b). A hand-trimmed file stays legal and a newly added knob stays
+	 * harmless on an old file, while the effective balance never depends on earlier reloads.
 	 */
 	@Test
-	void absentKeysKeepTheLiveValue(@TempDir Path dir) throws Exception {
-		Map<String, Object> desired = sentinelsWithBooleans(true);
-		applyAll(desired);
+	void absentKeysTakeTheBuiltinDefault(@TempDir Path dir) throws Exception {
+		applyAll(sentinelsWithBooleans(true));
 
 		Path f = dir.resolve("alaindustrial.json");
 		Files.writeString(f, "{}");
 		assertEquals(Config.LoadResult.LOADED, Config.loadFrom(f));
-		assertAll(desired, "absent key '%s' must keep its live value, not load 0/false");
+		assertAll(DEFAULTS, "absent key '%s' must take its builtin default, not the live value or 0/false");
 	}
 
 	// --- the registry's own shape -----------------------------------------------------------------
@@ -173,11 +179,11 @@ class ConfigSnapshotTest {
 	@Test
 	void registryOrderIsSortedBySectionThenKey() throws ReflectiveOperationException {
 		List<String> rendered = new ArrayList<>();
-		for (Object entry : registry()) {
-			Config.Section section = (Config.Section) configFieldValue(entry, "section");
+		for (KnobEntry entry : Config.REGISTRY.entries()) {
+			Section section = entry.section();
 			// Zero-padded: a bare ordinal would sort "10 x" before "2 y" and fail on the eleventh
 			// section rather than on a real ordering defect.
-			rendered.add(String.format("%02d %s", section.ordinal(), configFieldValue(entry, "key")));
+			rendered.add(String.format("%02d %s", section.ordinal(), entry.key()));
 		}
 
 		List<String> sorted = new ArrayList<>(rendered);
@@ -195,6 +201,7 @@ class ConfigSnapshotTest {
 	@Test
 	void everyRegistryKeyNamesARealField() throws ReflectiveOperationException {
 		for (String key : KEYS) {
+			assertEquals(key, field(key).getName(), "registry key '" + key + "' must be its field's own name");
 			assertTrue(field(key).getType().isPrimitive(),
 					"registry key '" + key + "' must name a primitive static field");
 		}
@@ -236,7 +243,7 @@ class ConfigSnapshotTest {
 		Path f = dir.resolve("alaindustrial.json");
 		Files.writeString(f, "{ \"windMillRainFactor\": 2.25 }");
 		assertEquals(Config.LoadResult.LOADED, Config.loadFrom(f));
-		assertEquals(2.25f, Config.windMillRainFactor, 0.0f,
+		assertEquals(2.25f, GeneratorConfig.windMillRainFactor, 0.0f,
 				"present float key applies 2.25, not 0.0f and not the 1.5f default");
 	}
 
@@ -263,15 +270,16 @@ class ConfigSnapshotTest {
 	 * compiled defaults, load the file back, and assert every knob is {@code desired} again.
 	 */
 	private static void assertRoundTrip(Path dir, Map<String, Object> desired) throws Exception {
-		applyAll(desired);
-
+		// Since MOD-694 a load starts from the builtin defaults, so the file itself has to carry the
+		// sentinels: a bare "{}" would (correctly) reset every knob instead of snapshotting the live ones.
 		Path f = dir.resolve("alaindustrial.json");
-		Files.writeString(f, "{}");
+		Files.writeString(f, sentinelFile(desired));
 		assertEquals(Config.LoadResult.LOADED, Config.loadFrom(f), "canonicalizing write");
+		assertAll(desired, "knob '%s' was not read from the sentinel file");
 
 		// The wipe: without it the fields would still hold `desired` and a dead load path would pass.
 		applyAll(DEFAULTS);
-		assertEquals(Config.LoadResult.LOADED, Config.loadFrom(f), "read the file back");
+		assertEquals(Config.LoadResult.LOADED, Config.loadFrom(f), "read the canonical file back");
 
 		assertAll(desired, "knob '%s' did not survive the save/load round trip — it is missing from the"
 				+ " registry, or written but never staged");
@@ -285,6 +293,30 @@ class ConfigSnapshotTest {
 			out.put(key, field(key).getType() == boolean.class ? polarity : SENTINELS.get(key));
 		}
 		return out;
+	}
+
+	/**
+	 * A schema-current file holding every knob at {@code values}, each key inside its own section
+	 * object; no {@code builtinDefaults} block, so every value counts as an operator edit and is kept.
+	 */
+	private static String sentinelFile(Map<String, Object> values) {
+		// Assembled by hand: Gson is testRuntimeOnly for :common, so the test source cannot import it.
+		Map<String, StringBuilder> bodies = new LinkedHashMap<>();
+		for (Section section : Section.values()) {
+			bodies.put(section.id, new StringBuilder());
+		}
+		for (KnobEntry entry : Config.REGISTRY.entries()) {
+			StringBuilder body = bodies.get(entry.section().id);
+			if (!body.isEmpty()) {
+				body.append(",\n");
+			}
+			body.append("    \"").append(entry.key()).append("\": ").append(literal(values.get(entry.key())));
+		}
+		StringBuilder file = new StringBuilder("{\n  \"schemaVersion\": ").append(ConfigSchema.VERSION);
+		for (Map.Entry<String, StringBuilder> e : bodies.entrySet()) {
+			file.append(",\n  \"").append(e.getKey()).append("\": {\n").append(e.getValue()).append("\n  }");
+		}
+		return file.append("\n}\n").toString();
 	}
 
 	/** Assign every value in {@code values} to its static field. */
@@ -317,13 +349,13 @@ class ConfigSnapshotTest {
 	 * Today nothing comes close (the largest minimum in the file is 97) — the lift is there so a future
 	 * knob with a big floor does not turn this suite red for a reason that is not a defect.
 	 */
-	private static Object sentinelFor(String key, Object entry, int index)
+	private static Object sentinelFor(String key, KnobEntry entry, int index)
 			throws ReflectiveOperationException {
 		Class<?> type = field(key).getType();
 		if (type == boolean.class) {
 			return null; // booleans get a polarity, not a magnitude — see sentinelsWithBooleans
 		}
-		double min = (Double) configFieldValue(entry, "min");
+		double min = entry.min();
 		double floor = Double.isInfinite(min) ? 0.0 : min;
 		Object compiled = DEFAULTS.get(key);
 
@@ -361,22 +393,12 @@ class ConfigSnapshotTest {
 		return v.toString();
 	}
 
-	/** {@code Config.FIELDS}, read reflectively — the production oracle for which knobs exist. */
-	private static List<?> registry() throws ReflectiveOperationException {
-		Field fields = Config.class.getDeclaredField("FIELDS");
-		fields.setAccessible(true);
-		return (List<?>) fields.get(null);
-	}
-
-	/** Read a field declared on {@code ConfigField} (the shared superclass of every registry entry). */
-	private static Object configFieldValue(Object entry, String name) throws ReflectiveOperationException {
-		Field field = entry.getClass().getSuperclass().getDeclaredField(name);
-		field.setAccessible(true);
-		return field.get(entry);
-	}
-
-	/** The static {@link Config} field named {@code key}. */
-	private static Field field(String key) throws ReflectiveOperationException {
-		return Config.class.getDeclaredField(key);
+	/** The declared field behind {@code key}, as the registry resolved it. */
+	private static Field field(String key) {
+		Field field = FIELDS.get(key);
+		if (field == null) {
+			throw new AssertionError("no registry entry for " + key);
+		}
+		return field;
 	}
 }

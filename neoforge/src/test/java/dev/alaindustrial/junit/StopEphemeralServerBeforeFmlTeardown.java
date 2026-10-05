@@ -40,7 +40,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
  * is worse than leaving it as it was. It is wired ONLY through {@code @ExtendWith} on the test class
  * itself — neither Jupiter's extension auto-detection nor a platform {@code TestExecutionListener}
  * will do (see the paragraph above), so the {@code ephemeral-server-tests-halt-it} rule in
- * {@code docs/tools/arch_check.py} keeps a new test from forgetting the annotation.
+ * {@code docs/tools/arch/arch_check.py} keeps a new test from forgetting the annotation.
  */
 public final class StopEphemeralServerBeforeFmlTeardown implements BeforeAllCallback {
 

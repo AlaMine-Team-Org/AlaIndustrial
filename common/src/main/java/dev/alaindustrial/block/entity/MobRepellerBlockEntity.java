@@ -1,6 +1,7 @@
 package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.block.entity.machine.EvolutionHelper;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.entity.MobRepellerField;
@@ -11,7 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -37,7 +37,7 @@ import net.minecraft.world.level.block.state.BlockState;
  *
  * <p><b>Tier ladder.</b> A full {@link SoulVesselItem Soul Vessel} in the single slot evolves this
  * block into the next tier on the following server tick, consuming the vessel whole —
- * {@link MachineBlockEntity#evolveInto} carries energy and ownership exactly like the solar panel's
+ * {@link EvolutionHelper#evolveInto} carries energy and ownership exactly like the solar panel's
  * chip evolution (MOD-211). The MV/HV subclasses override the four tier hooks and nothing else.
  */
 public class MobRepellerBlockEntity extends MachineBlockEntity implements MenuProvider, BatteryFed {
@@ -99,7 +99,7 @@ public class MobRepellerBlockEntity extends MachineBlockEntity implements MenuPr
 		if (target != null) {
 			ItemStack vessel = items.get(VESSEL_SLOT);
 			if (!vessel.isEmpty() && SoulVesselItem.kills(vessel) >= evolveKillsNeeded()) {
-				evolveInto(level, pos, target, evolutionSlots());
+				EvolutionHelper.evolveInto(this, items, level, pos, target, evolutionSlots());
 				return 0; // this block entity is gone after the transform
 			}
 		}
@@ -171,15 +171,10 @@ public class MobRepellerBlockEntity extends MachineBlockEntity implements MenuPr
 
 	// --- menu ---
 
-	@Override
-	public Component getDisplayName() {
-		return Component.translatable(getBlockState().getBlock().getDescriptionId());
-	}
-
 	/**
 	 * Each tier builds its OWN menu class (LV/MV/HV), because a menu type and its class are a pair the
 	 * compiler must be able to see — a single shared menu class would make the menu↔screen pairing
-	 * indistinguishable (enforced by {@code docs/tools/menu_screen_parity_check.py}).
+	 * indistinguishable (enforced by {@code docs/tools/content/menu_screen_parity_check.py}).
 	 */
 	@Override
 	public AbstractContainerMenu createMenu(int syncId, Inventory inventory, Player player) {

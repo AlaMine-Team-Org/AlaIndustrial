@@ -1,12 +1,10 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.AbstractChestBlockEntity;
 import dev.alaindustrial.block.entity.ShieldingChestBlockEntity;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -32,15 +30,8 @@ import net.minecraft.world.level.block.state.BlockState;
  * class only supplies the codec, block entity and double-window title, like every other chest.
  */
 public class ShieldingChestBlock extends AbstractModChestBlock {
-	public static final MapCodec<ShieldingChestBlock> CODEC = simpleCodec(ShieldingChestBlock::new);
-
 	public ShieldingChestBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

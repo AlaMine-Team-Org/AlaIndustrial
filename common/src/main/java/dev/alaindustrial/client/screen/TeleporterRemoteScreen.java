@@ -1,5 +1,6 @@
 package dev.alaindustrial.client.screen;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.client.hud.TeleportNotice;
 import dev.alaindustrial.client.screen.tabs.SideTabStrip;
@@ -147,7 +148,7 @@ public class TeleporterRemoteScreen extends AbstractContainerScreen<TeleporterRe
 
 	@Override
 	public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
-		if (event.button() == 0) {
+		if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
 			int tab = tabs.tabAt(event.x(), event.y(), this.leftPos, this.topPos, pages.size());
 			if (tab >= 0) {
 				if (tab != selected) {

@@ -32,6 +32,13 @@ public class GeothermalGeneratorScreen extends MachineScreen<GeothermalGenerator
 	// (see GeothermalGeneratorBlockEntity.TANK_CAPACITY); 10 buckets × 1000 mB = 10000 mB.
 	private static final int LAVA_TANK_MB = 10_000;
 
+	/**
+	 * Click area of the recipe viewers (MOD-716): the arrow between the fuel and container slots, x 82..91,
+	 * y 38..44 by a pixel scan of the atlas. It is baked into the frame — this screen draws no progress sprite —
+	 * so the rectangle IS the measurement.
+	 */
+	public static final GuiRect PROGRESS_AREA = new GuiRect(82, 38, 10, 7);
+
 	public GeothermalGeneratorScreen(GeothermalGeneratorMenu menu, Inventory inventory, Component title) {
 		super(menu, inventory, title);
 	}
@@ -39,6 +46,12 @@ public class GeothermalGeneratorScreen extends MachineScreen<GeothermalGenerator
 	@Override
 	protected Identifier texture() {
 		return TEXTURE;
+	}
+
+	/** The energy bar and its tooltip, drawn by the base (MOD-716). */
+	@Override
+	protected EnergyBarSpec energyBar() {
+		return EnergyBarSpec.RIGHT;
 	}
 
 	@Override
@@ -56,8 +69,6 @@ public class GeothermalGeneratorScreen extends MachineScreen<GeothermalGenerator
 			FluidGauge.draw(graphics, Fluids.LAVA, x + LAVA_X, y + LAVA_BOTTOM - lavaFill, LAVA_W, lavaFill);
 		}
 
-		// Energy fill (right bar): blit the segmented orange sprite (bottom-up) via the shared helper.
-		renderEnergyBar(graphics, EnergyBarSpec.RIGHT);
 	}
 
 	/**
@@ -73,8 +84,6 @@ public class GeothermalGeneratorScreen extends MachineScreen<GeothermalGenerator
 	@Override
 	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		super.extractTooltip(graphics, mouseX, mouseY);
-		// Right bar — stored EU / buffer.
-		renderEnergyTooltip(graphics, mouseX, mouseY, EnergyBarSpec.RIGHT);
 		// Left bar — lava burn buffer as millibuckets. Derive mB from the progress/maxProgress ratio
 		// (tank = 10000 mB) so it stays correct even if geothermalBurnTicks changes in config.
 		int maxProgress = this.menu.getMaxProgress();

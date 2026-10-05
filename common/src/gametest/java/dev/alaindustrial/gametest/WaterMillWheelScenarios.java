@@ -3,6 +3,7 @@ package dev.alaindustrial.gametest;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.block.entity.WaterMillBlockEntity;
+import dev.alaindustrial.core.environment.GeneratorConfig;
 import dev.alaindustrial.registry.ModContent;
 import java.util.List;
 import net.minecraft.core.BlockPos;
@@ -22,6 +23,118 @@ import net.minecraft.world.level.block.state.BlockState;
 
 /** L2 coverage for the MOD-024 installable water-wheel component gate. */
 public final class WaterMillWheelScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(WaterMillWheelScenarios::waterMillWheel_progressTracksWaterFaces,
+								"water_mill_wheel_progress_tracks_water_faces")
+						.fabricId("WaterMillWheelGameTest", "waterMillWheel_progressTracksWaterFaces").ticks(20, 40),
+				RosterEntry.of(WaterMillWheelScenarios::waterMillWheel_slotFilterIsDedicated,
+								"water_mill_wheel_slot_filter_is_dedicated")
+						.fabricId("WaterMillWheelGameTest", "waterMillWheel_slotFilterIsDedicated").ticks(20, 40),
+				RosterEntry.of(WaterMillWheelScenarios::waterMill_craftingRecipeResolves,
+								"water_mill_crafting_recipe_resolves")
+						.fabricId("WaterMillWheelGameTest", "waterMill_craftingRecipeResolves").ticks(20, 40),
+				RosterEntry.of(WaterMillWheelScenarios::waterMillWheel_craftingRecipeResolves,
+								"water_mill_wheel_crafting_recipe_resolves")
+						.fabricId("WaterMillWheelGameTest", "waterMillWheel_craftingRecipeResolves").ticks(20, 40),
+				RosterEntry.of(WaterMillWheelScenarios::waterMill_sideBySideInterference,
+								"water_mill_side_by_side_interference")
+						.fabricId("WaterMillWheelGameTest", "waterMill_sideBySideInterference").ticks(20, 40),
+				RosterEntry.of(WaterMillWheelScenarios::waterMill_faceToFaceInterference,
+								"water_mill_face_to_face_interference")
+						.fabricId("WaterMillWheelGameTest", "waterMill_faceToFaceInterference").ticks(20, 40),
+				RosterEntry.of(WaterMillWheelScenarios::waterMill_spacedMillsDoNotInterfere,
+								"water_mill_spaced_mills_do_not_interfere")
+						.fabricId("WaterMillWheelGameTest", "waterMill_spacedMillsDoNotInterfere").ticks(20, 40),
+				RosterEntry.of(WaterMillWheelScenarios::waterMill_backToBackDoNotInterfere,
+								"water_mill_back_to_back_do_not_interfere")
+						.fabricId("WaterMillWheelGameTest", "waterMill_backToBackDoNotInterfere").ticks(20, 40),
+				RosterEntry.of(WaterMillWheelScenarios::waterMill_wallInFrontStallsAndRecovers,
+								"water_mill_wall_in_front_stalls_and_recovers")
+						.fabricId("WaterMillWheelGameTest", "waterMill_wallInFrontStallsAndRecovers").ticks(20, 40),
+				RosterEntry.of(WaterMillWheelScenarios::waterMill_blockAboveFrontAlsoObstructs,
+								"water_mill_block_above_front_also_obstructs")
+						.fabricId("WaterMillWheelGameTest", "waterMill_blockAboveFrontAlsoObstructs").ticks(20, 40),
+				RosterEntry.of(WaterMillWheelScenarios::waterMill_solidRiverBedBelowFrontObstructs,
+								"water_mill_solid_river_bed_below_front_obstructs")
+						.fabricId("WaterMillWheelGameTest", "waterMill_solidRiverBedBelowFrontObstructs")
+						.ticks(20, 40),
+				RosterEntry.of(WaterMillWheelScenarios::waterMill_everyWheelPlaneCellObstructs,
+								"water_mill_every_wheel_plane_cell_obstructs")
+						.fabricId("WaterMillWheelGameTest", "waterMill_everyWheelPlaneCellObstructs").ticks(20, 60),
+				RosterEntry.of(WaterMillWheelScenarios::waterMill_sideBlockObstructs, "water_mill_side_block_obstructs")
+						.fabricId("WaterMillWheelGameTest", "waterMill_sideBlockObstructs").ticks(20, 40),
+				RosterEntry.of(WaterMillWheelScenarios::waterMill_waterBesideWheelIsAllowed,
+								"water_mill_water_beside_wheel_is_allowed")
+						.fabricId("WaterMillWheelGameTest", "waterMill_waterBesideWheelIsAllowed").ticks(20, 40),
+				RosterEntry.of(WaterMillWheelScenarios::waterMill_interferenceClearsWithinScanInterval,
+								"water_mill_interference_clears_within_scan_interval")
+						.fabricId("WaterMillWheelGameTest", "waterMill_interferenceClearsWithinScanInterval")
+						.ticks(20, 40),
+				RosterEntry.of(WaterMillWheelScenarios::waterMill_neighbourWheelRemovalClearsInterference,
+								"water_mill_neighbour_wheel_removal_clears_interference")
+						.fabricId("WaterMillWheelGameTest", "waterMill_neighbourWheelRemovalClearsInterference")
+						.ticks(20, 40),
+				RosterEntry.of(WaterMillWheelScenarios::waterMill_dryMillShowsNoWaterHint,
+								"water_mill_dry_mill_shows_no_water_hint")
+						.fabricId("WaterMillWheelGameTest", "waterMill_dryMillShowsNoWaterHint").ticks(20, 40),
+				RosterEntry.of(WaterMillWheelScenarios::waterMill_stillSourceDoesNotGenerate,
+								"water_mill_still_source_does_not_generate")
+						.fabricId("WaterMillWheelGameTest", "waterMill_stillSourceDoesNotGenerate").ticks(20, 40),
+				RosterEntry.of(WaterMillWheelScenarios::waterMill_energyOnlyFromBackFace,
+								"water_mill_energy_only_from_back_face")
+						.fabricId("WaterMillWheelGameTest", "waterMill_energyOnlyFromBackFace").ticks(20, 40),
+				RosterEntry.of(WaterMillWheelScenarios::waterMill_frontFaceInertForAutomation,
+								"water_mill_front_face_inert_for_automation")
+						.fabricId("WaterMillWheelGameTest", "waterMill_frontFaceInertForAutomation").ticks(20, 40),
+				RosterEntry.of(WaterMillWheelScenarios::waterMill_automationCannotStackSecondWheel,
+								"water_mill_automation_cannot_stack_second_wheel")
+						.fabricId("WaterMillWheelGameTest", "waterMill_automationCannotStackSecondWheel")
+						.ticks(20, 40),
+				RosterEntry.of(WaterMillWheelScenarios::waterMillWheel_noWearWhileDry,
+								"water_mill_wheel_no_wear_while_dry")
+						.fabricId("WaterMillWheelGameTest", "waterMillWheel_noWearWhileDry").ticks(20, 40),
+				RosterEntry.of(WaterMillWheelScenarios::waterMill_productionRateChannelTracksOutput,
+								"water_mill_production_rate_channel_tracks_output")
+						.fabricId("WaterMillWheelGameTest", "waterMill_productionRateChannelTracksOutput")
+						.ticks(20, 40),
+				RosterEntry.of(WaterMillWheelScenarios::waterMill_productionRateChannelFollowsGlobalMultiplier,
+								"water_mill_production_rate_channel_follows_global_multiplier")
+						.fabricId("WaterMillWheelGameTest", "waterMill_productionRateChannelFollowsGlobalMultiplier")
+						.ticks(20, 40),
+				RosterEntry.of(WaterMillWheelScenarios::waterMill_readoutKeepsFloorUnderTinyMultiplier,
+								"water_mill_readout_keeps_floor_under_tiny_multiplier")
+						.fabricId("WaterMillWheelGameTest", "waterMill_readoutKeepsFloorUnderTinyMultiplier")
+						.ticks(20, 40),
+				RosterEntry.of(WaterMillWheelScenarios::waterMillWheel_wearFollowsMechanicalRateNotMultiplier,
+								"water_mill_wheel_wear_follows_mechanical_rate")
+						.fabricId("WaterMillWheelGameTest", "waterMillWheel_wearFollowsMechanicalRateNotMultiplier")
+						.ticks(20, 40),
+				RosterEntry.of(WaterMillWheelScenarios::waterMill_blockNeighboursDoNotDriveWheel,
+								"water_mill_block_neighbours_do_not_drive_wheel")
+						.fabricId("WaterMillWheelGameTest", "waterMill_blockNeighboursDoNotDriveWheel").ticks(20, 40),
+				RosterEntry.of(WaterMillWheelScenarios::waterMill_allFourWheelCellsDrive,
+								"water_mill_all_four_wheel_cells_drive")
+						.fabricId("WaterMillWheelGameTest", "waterMill_allFourWheelCellsDrive").ticks(20, 40),
+				RosterEntry.of(WaterMillWheelScenarios::waterMillWheel_installedWheelEnablesGeneration,
+								"water_mill_wheel_installed_wheel_enables_generation")
+						.fabricId("WaterMillWheelGameTest", "waterMillWheel_installedWheelEnablesGeneration")
+						.ticks(20, 100),
+				RosterEntry.of(WaterMillWheelScenarios::waterMillWheel_missingWheelStopsGeneration,
+								"water_mill_wheel_missing_wheel_stops_generation")
+						.fabricId("WaterMillWheelGameTest", "waterMillWheel_missingWheelStopsGeneration")
+						.ticks(20, 100),
+				RosterEntry.of(WaterMillWheelScenarios::waterMillWheel_wearsOutAndBreaks,
+								"water_mill_wheel_wears_out_and_breaks")
+						.fabricId("WaterMillWheelGameTest", "waterMillWheel_wearsOutAndBreaks").ticks(20, 100),
+				RosterEntry.of(WaterMillWheelScenarios::waterMill_faceToFaceAdjacentObstructed,
+								"water_mill_face_to_face_adjacent_obstructed")
+						.fabricId("WaterMillWheelGameTest", "waterMill_faceToFaceAdjacentObstructed").ticks(20, 100));
+
+		private Roster() {}
+	}
 
 	private WaterMillWheelScenarios() {}
 
@@ -648,7 +761,7 @@ public final class WaterMillWheelScenarios {
 			}
 		}
 		int rate = mill.getDataAccess().get(4);
-		int expectedRate = Config.waterMillEuPerTick * 4;
+		int expectedRate = GeneratorConfig.waterMillEuPerTick * 4;
 		if (rate != expectedRate) {
 			helper.fail("fully driven wheel reported " + rate + " EU/t, expected " + expectedRate);
 		}
@@ -672,9 +785,7 @@ public final class WaterMillWheelScenarios {
 	 * the last figure it produced.
 	 */
 	public static void waterMill_productionRateChannelTracksOutput(GameTestHelper helper) {
-		int savedPerSide = Config.waterMillEuPerTick;
-		try {
-			Config.waterMillEuPerTick = 3;
+		try (ConfigOverrides o = ConfigOverrides.sync().set("waterMillEuPerTick", 3)) {
 			WaterMillBlockEntity mill = placeMillWithWheel(helper, POS, Direction.NORTH);
 			driveOneSide(helper);
 			AlaGameTestHelper.drive(mill, helper, 3);
@@ -689,8 +800,6 @@ public final class WaterMillWheelScenarios {
 			assertMode(helper, mill, "obstructed mill", WaterMillBlockEntity.MODE_OBSTRUCTED);
 			assertRate(helper, mill, "obstructed mill", 0, 0);
 			helper.succeed();
-		} finally {
-			Config.waterMillEuPerTick = savedPerSide;
 		}
 	}
 
@@ -705,11 +814,9 @@ public final class WaterMillWheelScenarios {
 	 * while channel 4 still reads 3.
 	 */
 	public static void waterMill_productionRateChannelFollowsGlobalMultiplier(GameTestHelper helper) {
-		int savedPerSide = Config.waterMillEuPerTick;
-		float savedMultiplier = Config.globalEuRateMultiplier;
-		try {
-			Config.waterMillEuPerTick = 3;
-			Config.globalEuRateMultiplier = 2.0f;
+		try (ConfigOverrides o = ConfigOverrides.sync()) {
+			o.set("waterMillEuPerTick", 3);
+			o.set("globalEuRateMultiplier", 2.0f);
 			WaterMillBlockEntity mill = placeMillWithWheel(helper, POS, Direction.NORTH);
 			driveOneSide(helper);
 			AlaGameTestHelper.drive(mill, helper, 3);
@@ -735,9 +842,6 @@ public final class WaterMillWheelScenarios {
 				return;
 			}
 			helper.succeed();
-		} finally {
-			Config.waterMillEuPerTick = savedPerSide;
-			Config.globalEuRateMultiplier = savedMultiplier;
 		}
 	}
 
@@ -752,11 +856,9 @@ public final class WaterMillWheelScenarios {
 	 * readout). A gentler multiplier collapses them together and proves nothing.
 	 */
 	public static void waterMill_readoutKeepsFloorUnderTinyMultiplier(GameTestHelper helper) {
-		int savedPerSide = Config.waterMillEuPerTick;
-		float savedMultiplier = Config.globalEuRateMultiplier;
-		try {
-			Config.waterMillEuPerTick = 8;
-			Config.globalEuRateMultiplier = 0.05f;
+		try (ConfigOverrides o = ConfigOverrides.sync()) {
+			o.set("waterMillEuPerTick", 8);
+			o.set("globalEuRateMultiplier", 0.05f);
 			WaterMillBlockEntity mill = placeMillWithWheel(helper, POS, Direction.NORTH);
 			driveOneSide(helper);
 			AlaGameTestHelper.drive(mill, helper, 3);
@@ -776,9 +878,6 @@ public final class WaterMillWheelScenarios {
 				return;
 			}
 			helper.succeed();
-		} finally {
-			Config.waterMillEuPerTick = savedPerSide;
-			Config.globalEuRateMultiplier = savedMultiplier;
 		}
 	}
 
@@ -795,13 +894,10 @@ public final class WaterMillWheelScenarios {
 	 * and effective rates are identical and the regression is invisible.
 	 */
 	public static void waterMillWheel_wearFollowsMechanicalRateNotMultiplier(GameTestHelper helper) {
-		int savedPerDamage = Config.waterMillWheelEuPerDamage;
-		int savedPerSide = Config.waterMillEuPerTick;
-		float savedMultiplier = Config.globalEuRateMultiplier;
-		try {
-			Config.waterMillWheelEuPerDamage = 1; // 1 EU of production spends 1 durability point
-			Config.waterMillEuPerTick = 1;        // one driven side → mechanical 1 EU/t, effective 2 EU/t
-			Config.globalEuRateMultiplier = 2.0f;
+		try (ConfigOverrides o = ConfigOverrides.sync()) {
+			o.set("waterMillWheelEuPerDamage", 1); // 1 EU of production spends 1 durability point
+			o.set("waterMillEuPerTick", 1);        // one driven side → mechanical 1 EU/t, effective 2 EU/t
+			o.set("globalEuRateMultiplier", 2.0f);
 			WaterMillBlockEntity mill = placeMillWithWheel(helper, POS, Direction.NORTH);
 			driveOneSide(helper);
 
@@ -832,10 +928,6 @@ public final class WaterMillWheelScenarios {
 				return;
 			}
 			helper.succeed();
-		} finally {
-			Config.waterMillWheelEuPerDamage = savedPerDamage;
-			Config.waterMillEuPerTick = savedPerSide;
-			Config.globalEuRateMultiplier = savedMultiplier;
 		}
 	}
 
@@ -863,9 +955,8 @@ public final class WaterMillWheelScenarios {
 	 * never breaks and the first assertion fails.
 	 */
 	public static void waterMillWheel_wearsOutAndBreaks(GameTestHelper helper) {
-		int savedRate = Config.waterMillWheelEuPerDamage;
-		try {
-			Config.waterMillWheelEuPerDamage = 1; // 1 EU of production spends 1 durability point
+		// 1 EU of production spends 1 durability point
+		try (ConfigOverrides o = ConfigOverrides.sync().set("waterMillWheelEuPerDamage", 1)) {
 			WaterMillBlockEntity mill = placeWithWater(helper); // one driven side → 1 EU/t
 			ItemStack wheel = new ItemStack(ModContent.WATER_MILL_WHEEL.get());
 			wheel.setDamageValue(wheel.getMaxDamage() - 1); // one active tick from breaking
@@ -881,8 +972,6 @@ public final class WaterMillWheelScenarios {
 				helper.fail("water mill kept generating after its wheel broke");
 			}
 			helper.succeed();
-		} finally {
-			Config.waterMillWheelEuPerDamage = savedRate;
 		}
 	}
 
@@ -892,9 +981,7 @@ public final class WaterMillWheelScenarios {
 	 * death, so any spurious wear would break it — it must survive untouched.
 	 */
 	public static void waterMillWheel_noWearWhileDry(GameTestHelper helper) {
-		int savedRate = Config.waterMillWheelEuPerDamage;
-		try {
-			Config.waterMillWheelEuPerDamage = 1;
+		try (ConfigOverrides o = ConfigOverrides.sync().set("waterMillWheelEuPerDamage", 1)) {
 			WaterMillBlockEntity mill = AlaGameTestHelper.place(helper, POS, ModContent.WATER_MILL.get(),
 					WaterMillBlockEntity.class); // no water → MODE_NO_WATER, 0 EU
 			ItemStack wheel = new ItemStack(ModContent.WATER_MILL_WHEEL.get());
@@ -911,8 +998,6 @@ public final class WaterMillWheelScenarios {
 						+ "; expected no wear while dry");
 			}
 			helper.succeed();
-		} finally {
-			Config.waterMillWheelEuPerDamage = savedRate;
 		}
 	}
 }

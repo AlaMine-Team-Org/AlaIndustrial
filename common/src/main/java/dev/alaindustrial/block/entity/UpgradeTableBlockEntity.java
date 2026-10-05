@@ -3,8 +3,10 @@ package dev.alaindustrial.block.entity;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.UpgradeTableBlock;
 import dev.alaindustrial.block.WorkstationPart;
+import dev.alaindustrial.block.entity.machine.SyncChannels;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.core.machine.MachineRates;
 import dev.alaindustrial.core.machine.ToolUpgradeStatus;
 import dev.alaindustrial.item.tool.DrillUpgrades;
 import dev.alaindustrial.item.tool.ElectricDrillItem;
@@ -54,11 +56,6 @@ public class UpgradeTableBlockEntity extends MachineBlockEntity
 	/** Machine-slot count — the client menu stub sizes its container from this (MOD-439). */
 	public static final int SLOT_COUNT = 2;
 
-	/** Five-wide data: the shared base 0..3 plus the status. Hides {@link MachineBlockEntity#DATA_COUNT}. */
-	public static final int DATA_COUNT = 5;
-	/** Channel carrying the {@link ToolUpgradeStatus} code the screen turns into its status line. */
-	public static final int STATUS_CHANNEL = 4;
-
 	/**
 	 * Current status. Transient: recomputed every server tick and delivered to an open screen through
 	 * the menu's {@link ContainerData}, so it is never serialised and never read off a client block
@@ -72,7 +69,7 @@ public class UpgradeTableBlockEntity extends MachineBlockEntity
 	public UpgradeTableBlockEntity(BlockPos pos, BlockState state) {
 		super(ModContent.UPGRADE_TABLE_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT,
 				Config.machineBuffer, EnergyTier.LV.maxVoltage(), 0L);
-		this.maxProgress = Config.scaledDuration(Config.upgradeTableDuration);
+		this.maxProgress = MachineRates.duration(Config.upgradeTableDuration, Config.globalMachineSpeedMultiplier);
 	}
 
 	/** The table's own tariff: fitting an upgrade is heavier work than smelting an ingot. */
@@ -289,32 +286,20 @@ public class UpgradeTableBlockEntity extends MachineBlockEntity
 		return lit ? eased : 1.0F - eased;
 	}
 
-	private final ContainerData tableData = new ContainerData() {
-		@Override
-		public int get(int index) {
-			return index == STATUS_CHANNEL
-					? status.code()
-					: UpgradeTableBlockEntity.this.dataAccess.get(index);
-		}
+	/**
+	 * GUI sync channels (MOD-712, BE-7): the base four, then the {@link ToolUpgradeStatus} code, which takes a
+	 * write.
+	 */
+	public enum Channel { ENERGY, CAPACITY, PROGRESS, MAX_PROGRESS, STATUS }
 
-		@Override
-		public void set(int index, int value) {
-			if (index == STATUS_CHANNEL) {
-				status = ToolUpgradeStatus.byCode(value);
-			} else {
-				UpgradeTableBlockEntity.this.dataAccess.set(index, value);
-			}
-		}
-
-		@Override
-		public int getCount() {
-			return DATA_COUNT;
-		}
-	};
+	/** Width of {@link #getDataAccess()}, which the menu's client stub sizes itself from (MOD-235). */
+	public static final int DATA_COUNT = Channel.values().length;
 
 	@Override
-	public ContainerData getDataAccess() {
-		return tableData;
+	protected SyncChannels createChannels() {
+		return channels(Channel.class)
+				.readWrite(Channel.STATUS, () -> status.code(), value -> status = ToolUpgradeStatus.byCode(value))
+				.build();
 	}
 
 	/**

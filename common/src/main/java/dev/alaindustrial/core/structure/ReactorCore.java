@@ -44,7 +44,7 @@ public final class ReactorCore {
 
 	/**
 	 * Heat produced this tick, before cooling. Same shape as {@link #output}, but the caller passes a
-	 * <em>larger</em> {@code bonusPercent} — see {@code Config.reactorHeatNeighbourBonusPercent}. An
+	 * <em>larger</em> {@code bonusPercent} — see {@code ReactorConfig.reactorHeatNeighbourBonusPercent}. An
 	 * arrangement that doubles the power more than doubles the heat, so density is a trade rather than
 	 * a free win: a packed core reaches the tier ceiling on shallower rods, and pays for it in water.
 	 */
@@ -213,7 +213,7 @@ public final class ReactorCore {
 	 *
 	 * <p>So the alarm is an edge with a rearm floor: it sounds once when the core crosses
 	 * {@code warnPercent} going up, and it cannot sound again until the core has come back down below
-	 * {@code rearmPercent}. Pointing the floor at {@code Config.reactorCoolantTargetPercent} (60) rather
+	 * {@code rearmPercent}. Pointing the floor at {@code ReactorConfig.reactorCoolantTargetPercent} (60) rather
 	 * than inventing a number gives the deadband a meaning the player can act on — the alarm re-arms
 	 * exactly when the coolant loop has done its job, because that target is the temperature the loop
 	 * holds the core at.

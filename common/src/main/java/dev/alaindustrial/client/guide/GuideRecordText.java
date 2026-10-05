@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public final class GuideRecordText {
 
-	/** What the generated book says where the record goes. Must match {@code docs/tools/gen_guide_book.py}. */
+	/** What the generated book says where the record goes. Must match {@code docs/tools/wiki/gen_guide_book.py}. */
 	public static final String TOKEN = "{record}";
 
 	/** Shown in place of the record while the server's value has not arrived. */

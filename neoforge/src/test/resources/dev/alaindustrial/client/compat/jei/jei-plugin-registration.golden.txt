@@ -1,0 +1,65 @@
+# categories, in registration (= tab) order
+category alaindustrial:maceration 150x48 icon=alaindustrial:macerator title={block.alaindustrial.macerator}
+category alaindustrial:smelting 150x48 icon=alaindustrial:electric_furnace title={block.alaindustrial.electric_furnace}
+category alaindustrial:compressing 150x48 icon=alaindustrial:compressor title={block.alaindustrial.compressor}
+category alaindustrial:extracting 150x48 icon=alaindustrial:extractor title={block.alaindustrial.extractor}
+category alaindustrial:vulcanizing 150x48 icon=alaindustrial:vulcanizer title={block.alaindustrial.vulcanizer}
+category alaindustrial:galvanic_bath 150x48 icon=alaindustrial:galvanic_bath title={block.alaindustrial.galvanic_bath}
+category alaindustrial:centrifuging 150x48 icon=alaindustrial:thermal_centrifuge title={block.alaindustrial.thermal_centrifuge}
+category alaindustrial:sawing_planks 150x48 icon=alaindustrial:sawmill title=empty + {block.alaindustrial.sawmill} + literal{: } + {gui.alaindustrial.sawmill.mode.planks}
+category alaindustrial:sawing_sticks 150x48 icon=alaindustrial:sawmill title=empty + {block.alaindustrial.sawmill} + literal{: } + {gui.alaindustrial.sawmill.mode.sticks}
+category alaindustrial:sawing_slabs 150x48 icon=alaindustrial:sawmill title=empty + {block.alaindustrial.sawmill} + literal{: } + {gui.alaindustrial.sawmill.mode.slabs}
+category alaindustrial:sawing_stairs 150x48 icon=alaindustrial:sawmill title=empty + {block.alaindustrial.sawmill} + literal{: } + {gui.alaindustrial.sawmill.mode.stairs}
+category alaindustrial:mutation_transform 150x48 icon=alaindustrial:incubator title=empty + {block.alaindustrial.incubator} + literal{: } + {gui.alaindustrial.incubator.mode.transform}
+category alaindustrial:mutation_duplicate 150x48 icon=alaindustrial:incubator title=empty + {block.alaindustrial.incubator} + literal{: } + {gui.alaindustrial.incubator.mode.duplicate}
+category alaindustrial:mutation_create 150x48 icon=alaindustrial:incubator title=empty + {block.alaindustrial.incubator} + literal{: } + {gui.alaindustrial.incubator.mode.create}
+category alaindustrial:fermenting 150x48 icon=alaindustrial:fermenter title={block.alaindustrial.fermenter}
+category alaindustrial:polymerizing 150x48 icon=alaindustrial:polymerizer title={block.alaindustrial.polymerizer}
+category alaindustrial:alloying 150x48 icon=alaindustrial:alloy_smelter title={block.alaindustrial.alloy_smelter}
+category alaindustrial:distilling 150x48 icon=alaindustrial:distillation_column title={block.alaindustrial.distillation_column}
+category alaindustrial:canning 150x48 icon=alaindustrial:canning_machine title={jei.alaindustrial.category.canning}
+category alaindustrial:machine_info 160x110 icon=alaindustrial:geothermal_generator title={jei.alaindustrial.category.machine_info}
+category alaindustrial:evolution_info 160x110 icon=alaindustrial:alignment_chip_day title={jei.alaindustrial.category.evolution}
+category alaindustrial:plant_info 160x110 icon=alaindustrial:kok_sagyz_seeds title={jei.alaindustrial.category.plant_info}
+# crafting stations by recipe type
+station alaindustrial:alloying alaindustrial:alloy_smelter
+station alaindustrial:canning alaindustrial:canning_machine
+station alaindustrial:centrifuging alaindustrial:thermal_centrifuge
+station alaindustrial:compressing alaindustrial:compressor
+station alaindustrial:distilling alaindustrial:distillation_column
+station alaindustrial:extracting alaindustrial:extractor
+station alaindustrial:fermenting alaindustrial:fermenter
+station alaindustrial:galvanic_bath alaindustrial:galvanic_bath
+station alaindustrial:maceration alaindustrial:macerator
+station alaindustrial:machine_info alaindustrial:geothermal_generator alaindustrial:energy_condenser
+station alaindustrial:mutation_create alaindustrial:incubator
+station alaindustrial:mutation_duplicate alaindustrial:incubator
+station alaindustrial:mutation_transform alaindustrial:incubator
+station alaindustrial:polymerizing alaindustrial:polymerizer
+station alaindustrial:sawing_planks alaindustrial:sawmill
+station alaindustrial:sawing_slabs alaindustrial:sawmill
+station alaindustrial:sawing_stairs alaindustrial:sawmill
+station alaindustrial:sawing_sticks alaindustrial:sawmill
+station alaindustrial:smelting alaindustrial:electric_furnace
+station alaindustrial:vulcanizing alaindustrial:vulcanizer
+station minecraft:smelting alaindustrial:electric_furnace alaindustrial:iron_furnace
+# click areas by screen
+click AlloySmelterScreen 65 22 42 43 -> alaindustrial:alloying
+click CanningMachineScreen 74 33 31 10 -> alaindustrial:canning
+click CompressorScreen 81 34 25 18 -> alaindustrial:compressing
+click DistillationColumnScreen 59 40 24 56 -> alaindustrial:distilling
+click ElectricFurnaceScreen 82 38 25 9 -> alaindustrial:smelting,minecraft:smelting
+click EnergyCondenserScreen 57 15 63 23 -> alaindustrial:machine_info
+click ExtractorScreen 80 37 29 10 -> alaindustrial:extracting
+click GalvanicBathScreen 86 35 24 17 -> alaindustrial:galvanic_bath
+click GeothermalGeneratorScreen 82 38 10 7 -> alaindustrial:machine_info
+click IncubatorScreen 112 20 24 16 -> alaindustrial:mutation_transform,alaindustrial:mutation_duplicate,alaindustrial:mutation_create
+click MaceratorScreen 82 38 25 9 -> alaindustrial:maceration
+click PolymerizerScreen 79 35 24 17 -> alaindustrial:polymerizing
+click SawmillScreen 82 20 22 12 -> alaindustrial:sawing_planks,alaindustrial:sawing_sticks,alaindustrial:sawing_slabs,alaindustrial:sawing_stairs
+click ThermalCentrifugeScreen 82 38 25 9 -> alaindustrial:centrifuging
+click VulcanizerScreen 79 31 25 9 -> alaindustrial:vulcanizing
+# handlers by screen
+addGuiContainerHandler MachineScreen AlaJeiGuiExtraAreasHandler
+addGuiContainerHandler TeleporterRemoteScreen anonymous IGuiContainerHandler
+addGhostIngredientHandler MagnetScreen MagnetFilterGhostHandler

@@ -20,12 +20,13 @@ import net.minecraft.network.chat.MutableComponent;
  * {@code Registries.TEST_FUNCTION} and re-resolves the body from the registry at run time. That registry
  * is a {@code BuiltInRegistries} simple registry
  * ({@code BuiltInRegistries.TEST_FUNCTION = registerSimple(..., BuiltinTestFunctions::bootstrap)}),
- * populated at class-init via {@code TestFunctionLoader.runLoaders} and frozen before any mod code runs.
- * NeoForge's {@code RegisterGameTestsEvent} only exposes the {@code TEST_ENVIRONMENT} and
- * {@code TEST_INSTANCE} registries (verified: {@code RegisterGameTestsEvent} fields + the
- * {@code RegistryDataLoader} call site) — there is no hook to add a {@code TEST_FUNCTION} entry. So the
- * function-key route is a dead end for a mod; a mod must register a {@code GameTestInstance} whose
- * {@code run(GameTestHelper)} owns the body.
+ * populated at class-init via {@code TestFunctionLoader.runLoaders}. This class was written on the belief
+ * that the registry is then closed to mods, because {@code RegisterGameTestsEvent} only exposes the
+ * {@code TEST_ENVIRONMENT} and {@code TEST_INSTANCE} registries. That belief was wrong: NeoForge posts
+ * {@code RegisterEvent} for every built-in registry, {@code TEST_FUNCTION} included, and the MOD-717 D2
+ * spike registered bodies there and ran them as {@code FunctionGameTestInstance}s. Scenarios declared in
+ * the common roster use that route ({@code ScenarioRosterNeoForge}); this class stays for the hand-wired
+ * {@code registerTest} lines until they migrate.
  *
  * <p><b>Why a custom subclass is safe at run time.</b> {@code GameTestServer.evaluateTestsToRun} reads
  * live {@code Holder.Reference<GameTestInstance>} objects straight out of {@code Registries.TEST_INSTANCE}

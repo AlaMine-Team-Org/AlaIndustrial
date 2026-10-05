@@ -1,6 +1,5 @@
 package dev.alaindustrial.core.radiation;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.core.radiation.RadiationSources.Source;
 import dev.alaindustrial.registry.ModTags;
 import java.util.ArrayList;
@@ -44,10 +43,10 @@ public final class RadiationTicker {
 
 	/** Sweep every online player, and the convertible mobs around them, on the configured cadence. */
 	public static void tickAll(MinecraftServer server) {
-		if (!Config.radiationEnabled) {
+		if (!RadiationConfig.radiationEnabled) {
 			return;
 		}
-		if (server.getTickCount() % Math.max(1, Config.radiationTickInterval) != 0) {
+		if (server.getTickCount() % Math.max(1, RadiationConfig.radiationTickInterval) != 0) {
 			return;
 		}
 		Map<ServerLevel, List<ServerPlayer>> byLevel = new HashMap<>();
@@ -62,10 +61,10 @@ public final class RadiationTicker {
 	}
 
 	private static void tickLevel(ServerLevel level, List<ServerPlayer> players) {
-		int radius = Config.radiationSourceRadius;
+		int radius = RadiationConfig.radiationSourceRadius;
 		// Sweeps, not ticks: suit wear is paced in sweeps, and counting the game clock inside a loop that
 		// only runs every radiationTickInterval is the exact mistake that once left mobs undamaged.
-		long sweep = level.getGameTime() / Math.max(1, Config.radiationTickInterval);
+		long sweep = level.getGameTime() / Math.max(1, RadiationConfig.radiationTickInterval);
 		List<Source> carriedSources = new ArrayList<>();
 		List<Vec3> anchors = new ArrayList<>(players.size());
 		for (ServerPlayer player : players) {
@@ -90,21 +89,21 @@ public final class RadiationTicker {
 		if (player.isCreative() || player.isSpectator()) {
 			return;
 		}
-		int capacity = Config.radiationDoseCapacity;
+		int capacity = RadiationConfig.radiationDoseCapacity;
 		int dose = RadiationDose.of(player);
 		int worn = wornShieldingPieces(player);
-		int perPiece = Config.radiationShieldPerPiecePercent;
+		int perPiece = RadiationConfig.radiationShieldPerPiecePercent;
 
 		// What the world radiates at this spot: rods and dropped uranium, both attenuated by distance
 		// and stopped by walls. What is in the player's own pockets gets neither — it is ON them.
 		int rawField = RadiationSources.exposureAt(level, player, radius);
 		int rawLow = RadiationSources.carried(player, ModTags.Items.RADIOACTIVE_LOW)
-				* Config.radiationDoseLowPerItem;
+				* RadiationConfig.radiationDoseLowPerItem;
 		int rawItems = Math.max(0, carried - rawLow);
 
 		// The field is the one source the suit cannot fully answer: its cap sits below 100 on purpose,
 		// so a full suit buys working time inside a live reactor instead of immunity to it.
-		int field = RadiationCore.shielded(rawField, worn, perPiece, Config.radiationRodShieldCapPercent);
+		int field = RadiationCore.shielded(rawField, worn, perPiece, RadiationConfig.radiationRodShieldCapPercent);
 		int items = RadiationCore.shielded(rawItems, worn, perPiece, 100);
 		int lowShielded = RadiationCore.shielded(rawLow, worn, perPiece, 100);
 
@@ -116,7 +115,7 @@ public final class RadiationTicker {
 		// Raw ore has a ceiling read against the dose already carried: no amount of it can push a
 		// queasy miner into the lethal band, which is what keeps an early death from feeling arbitrary.
 		int low = RadiationCore.cappedContribution(dose, lowShielded,
-				RadiationCore.cappedCeiling(capacity, Config.radiationLowDoseCapPercent));
+				RadiationCore.cappedCeiling(capacity, RadiationConfig.radiationLowDoseCapPercent));
 
 		// MOD-483 Respirator. Applied AFTER wearSuit above, deliberately: the suit is charged for
 		// what it stopped, and billing it for the skill's share too would wear it out for protection
@@ -134,8 +133,8 @@ public final class RadiationTicker {
 	 * <p>Runs before the dose does, and for every game mode, because the instrument reports the world
 	 * rather than what the world is doing to you.
 	 *
-	 * <p><b>Its own radius, wider than the hazard's.</b> {@link Config#geigerRadius} is deliberately
-	 * larger than {@link Config#radiationSourceRadius}, so the counter speaks in the band where the
+	 * <p><b>Its own radius, wider than the hazard's.</b> {@link RadiationConfig#geigerRadius} is deliberately
+	 * larger than {@link RadiationConfig#radiationSourceRadius}, so the counter speaks in the band where the
 	 * dose is still zero. Sharing the hazard's radius made the instrument useless as a warning: it
 	 * went quiet right up until the moment the player was already being irradiated.
 	 *
@@ -156,29 +155,31 @@ public final class RadiationTicker {
 		// already started climbing has failed at the one job it has. Everything heard beyond
 		// radiationSourceRadius is pure warning, because out there the dose is exactly zero.
 		// MOD-483 Dosimetrist: the counter reaches further.
-		int geiger = SkillHazard.geigerRadius(Config.geigerRadius, player);
+		int geiger = SkillHazard.geigerRadius(RadiationConfig.geigerRadius, player);
 		// MOD-579: the counter reads the DETECTOR field, where a wall damps instead of deleting. Sharing
 		// exposureAt here made it deaf outside a reactor — no clear line to a single rod through the
 		// housing, so a strict zero — and then slammed to the top of the scale in the doorway.
 		int heard = RadiationSources.detectedAt(level, player, geiger, geiger)
 				+ Math.max(0, carried);
-		int hazard = RadiationCore.geigerStep(heard, Config.geigerFaintThreshold,
-				Config.geigerBusyThreshold, Config.geigerLoudThreshold,
-				Config.geigerOffScaleThreshold);
+		int hazard = RadiationCore.geigerStep(heard, RadiationConfig.geigerFaintThreshold,
+				RadiationConfig.geigerBusyThreshold, RadiationConfig.geigerLoudThreshold,
+				RadiationConfig.geigerOffScaleThreshold);
 		// The ore scan is the expensive half, and above the ceiling it cannot change the answer.
 		int ore = hazard >= 4 ? 0
 				: RadiationCore.oreStep(
-						RadiationSources.nearestOreDistance(level, player, Config.geigerOreRadius),
-						Config.geigerOreRadius);
+						RadiationSources.nearestOreDistance(level, player, RadiationConfig.geigerOreRadius),
+						RadiationConfig.geigerOreRadius);
 		GeigerTicker.setStep(player, hazard, ore);
 		GeigerTicker.setLamp(counter, hazard > 0);
 	}
 
 	/** Dose per sweep from everything in this player's own inventory, containers opened one level. */
 	private static int carriedDose(ServerPlayer player) {
-		return RadiationSources.carried(player, ModTags.Items.RADIOACTIVE_LOW) * Config.radiationDoseLowPerItem
-				+ RadiationSources.carried(player, ModTags.Items.RADIOACTIVE_MEDIUM) * Config.radiationDoseMediumPerItem
-				+ RadiationSources.carried(player, ModTags.Items.RADIOACTIVE_HIGH) * Config.radiationDoseHighPerItem;
+		return RadiationSources.carried(player, ModTags.Items.RADIOACTIVE_LOW) * RadiationConfig.radiationDoseLowPerItem
+				+ RadiationSources.carried(player, ModTags.Items.RADIOACTIVE_MEDIUM)
+						* RadiationConfig.radiationDoseMediumPerItem
+				+ RadiationSources.carried(player, ModTags.Items.RADIOACTIVE_HIGH)
+						* RadiationConfig.radiationDoseHighPerItem;
 	}
 
 	/**
@@ -211,7 +212,7 @@ public final class RadiationTicker {
 	private static void wearSuit(ServerPlayer player, int absorbed, long sweep) {
 		// MOD-483 Careful Wear: one durability point absorbs more dose, so the suit lasts longer.
 		int interval = RadiationCore.wearInterval(absorbed,
-				SkillHazard.dosePerDurability(Config.radiationDosePerSuitDurability, player));
+				SkillHazard.dosePerDurability(RadiationConfig.radiationDosePerSuitDurability, player));
 		if (interval <= 0 || sweep % interval != 0) {
 			return;
 		}

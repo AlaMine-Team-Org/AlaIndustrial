@@ -3,10 +3,8 @@ package dev.alaindustrial.menu;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.block.entity.WindMillBlockEntity;
 import dev.alaindustrial.registry.ModContent;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
@@ -23,8 +21,8 @@ public class WindMillMenu extends MachineMenu {
 	/** Client side. */
 	public WindMillMenu(int syncId, Inventory playerInventory) {
 		super(ModContent.WIND_MILL_MENU.get(), syncId, playerInventory,
-				new SimpleContainer(WindMillBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT),
-				new SimpleContainerData(WindMillBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL, ModContent.WIND_MILL.get());
+				clientStub(WindMillBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT, WindMillBlockEntity.DATA_COUNT),
+				ModContent.WIND_MILL.get());
 	}
 
 	@Override
@@ -73,7 +71,7 @@ public class WindMillMenu extends MachineMenu {
 	 * progress channel, which stays the mechanical rate that drives the rotor's spin speed (MOD-356).
 	 */
 	public int getProductionRate() {
-		return data.get(WindMillBlockEntity.RATE_CHANNEL);
+		return channel(WindMillBlockEntity.Channel.RATE);
 	}
 
 	/** Wind mode: 0 no rotor, 1 roofed, 2 calm, 3 breeze, 4 gale, 5 storm; carried on the maxProgress channel. */
@@ -83,12 +81,12 @@ public class WindMillMenu extends MachineMenu {
 
 	/** Evolution progress on a permille scale (0..1000); ≥1 as soon as any progress accrues. */
 	public int getEvolveProgress() {
-		return data.get(4);
+		return channel(WindMillBlockEntity.Channel.EVOLVE_PERMILLE);
 	}
 
 	/** Evolution denominator (constant 1000) — permille scale, kept short-safe for DataSlot sync. */
 	public int getEvolveMax() {
-		return data.get(5);
+		return channel(WindMillBlockEntity.Channel.EVOLVE_MAX);
 	}
 
 }

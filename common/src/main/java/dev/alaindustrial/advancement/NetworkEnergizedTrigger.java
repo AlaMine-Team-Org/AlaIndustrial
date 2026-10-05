@@ -2,9 +2,9 @@ package dev.alaindustrial.advancement;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.alaindustrial.compat.CriterionPlayer;
 import java.util.Optional;
 import net.minecraft.advancements.predicates.ContextAwarePredicate;
-import net.minecraft.advancements.predicates.entity.EntityPredicate;
 import net.minecraft.advancements.triggers.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -24,10 +24,11 @@ public class NetworkEnergizedTrigger extends SimpleCriterionTrigger<NetworkEnerg
 		trigger(player, instance -> true);
 	}
 
-	public record TriggerInstance(Optional<ContextAwarePredicate> player)
+	public record TriggerInstance(
+			Optional<ContextAwarePredicate> player)
 			implements SimpleCriterionTrigger.SimpleInstance {
 		public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(i -> i.group(
-				EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player)
+				CriterionPlayer.FIELD.forGetter(TriggerInstance::player)
 		).apply(i, TriggerInstance::new));
 	}
 }

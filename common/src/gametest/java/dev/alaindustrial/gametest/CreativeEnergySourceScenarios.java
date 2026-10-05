@@ -4,6 +4,7 @@ import dev.alaindustrial.block.entity.CreativeEnergySourceBlockEntity;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.RegistryAccess;
@@ -38,6 +39,33 @@ import net.minecraft.world.level.storage.TagValueInput;
  * delivers nothing passes just as well against a block that was never placed.
  */
 public final class CreativeEnergySourceScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(CreativeEnergySourceScenarios::bufferHoldsSteadyWhileDelivering,
+								"creative_source_buffer_holds_steady")
+						.fabricId("NetworkGameTest", "it479_bufferHoldsSteadyWhileDelivering").ticks(200),
+				RosterEntry.of(CreativeEnergySourceScenarios::deliversManyTimesItsOwnCapacity,
+								"creative_source_delivers_beyond_capacity")
+						.fabricId("NetworkGameTest", "it479_deliversManyTimesItsOwnCapacity").ticks(200),
+				RosterEntry.of(CreativeEnergySourceScenarios::switchedOffStopsDelivering,
+								"creative_source_switched_off_stops")
+						.fabricId("NetworkGameTest", "it479_switchedOffStopsDelivering").ticks(100),
+				RosterEntry.of(CreativeEnergySourceScenarios::zeroOutputStopsDelivering,
+								"creative_source_zero_output_stops")
+						.fabricId("NetworkGameTest", "it479_zeroOutputStopsDelivering").ticks(100),
+				RosterEntry.of(CreativeEnergySourceScenarios::settingsSurviveReload,
+								"creative_source_settings_survive_reload")
+						.fabricId("NetworkGameTest", "it479_settingsSurviveReload").ticks(40),
+				RosterEntry.of(CreativeEnergySourceScenarios::chargeSlotFillsItemAndRefusesAutomation,
+								"creative_source_charge_slot")
+						.fabricId("NetworkGameTest", "it479_chargeSlotFillsItemAndRefusesAutomation").ticks(100),
+				RosterEntry.of(CreativeEnergySourceScenarios::noRecipeYieldsTheBlock, "creative_source_has_no_recipe")
+						.fabricId("NetworkGameTest", "it479_noRecipeYieldsTheBlock").ticks(40));
+
+		private Roster() {}
+	}
 
 	private CreativeEnergySourceScenarios() {}
 
@@ -113,6 +141,8 @@ public final class CreativeEnergySourceScenarios {
 	 * <p>Both halves are load-bearing. An ordinary generator's buffer swings as it burns and delivers,
 	 * so "unchanged" is the claim; "and the macerator charged" is what stops that claim from being true
 	 * of a block nobody drew from.
+	 *
+	 * @implements IT-479-BUF — the buffer is still at the configured output after a run that charged a consumer.
 	 */
 	public static void bufferHoldsSteadyWhileDelivering(GameTestHelper helper) {
 		EnergyLine line = line(helper);
@@ -143,6 +173,8 @@ public final class CreativeEnergySourceScenarios {
 	 * battery, a full generator, a mis-wired top-up that only runs once — all of them cap out at one
 	 * capacity. The threshold is a multiple of the capacity rather than a number copied from the
 	 * block, so it cannot degenerate into comparing a value with itself.
+	 *
+	 * @implements IT-479-DEL — over a run it hands out several times what its own buffer holds.
 	 */
 	public static void deliversManyTimesItsOwnCapacity(GameTestHelper helper) {
 		EnergyLine line = line(helper);
@@ -172,6 +204,8 @@ public final class CreativeEnergySourceScenarios {
 	/**
 	 * Switching the source off stops delivery — proven against a run that delivered first, so the
 	 * assertion cannot pass on an empty rig.
+	 *
+	 * @implements IT-479-SWI — the switch stops delivery, proven against a run that delivered.
 	 */
 	public static void switchedOffStopsDelivering(GameTestHelper helper) {
 		EnergyLine line = line(helper);
@@ -205,6 +239,8 @@ public final class CreativeEnergySourceScenarios {
 	 * <p>Worth a test of its own because the two are implemented as one condition, and the reason is
 	 * subtle — a face left able to extract while giving nothing keeps the network awake for it and
 	 * seeds its flow field, which is a defect the grid paid for once already.
+	 *
+	 * @implements IT-479-ZER — an output of zero behaves exactly like the switch being off.
 	 */
 	public static void zeroOutputStopsDelivering(GameTestHelper helper) {
 		EnergyLine line = line(helper);
@@ -238,6 +274,8 @@ public final class CreativeEnergySourceScenarios {
 	 *
 	 * <p>Both values are set away from their defaults first: a round-trip test that stores the default
 	 * passes against a block that writes nothing at all and simply re-defaults on load.
+	 *
+	 * @implements IT-479-SET — switch and output survive a save/load round trip.
 	 */
 	public static void settingsSurviveReload(GameTestHelper helper) {
 		ServerLevel level = helper.getLevel();
@@ -267,6 +305,8 @@ public final class CreativeEnergySourceScenarios {
 	 * <p>The second half is the one worth having: the slot is the block's only inventory, and a block
 	 * with no facing gets every one of its slots exposed on all six faces by default — a hopper under
 	 * it would have emptied the player's tool out of a creative-only block.
+	 *
+	 * @implements IT-479-CHA — the charge slot fills an item and is closed to automation on every face.
 	 */
 	public static void chargeSlotFillsItemAndRefusesAutomation(GameTestHelper helper) {
 		CreativeEnergySourceBlockEntity source = placeSource(helper, SOURCE);
@@ -302,6 +342,8 @@ public final class CreativeEnergySourceScenarios {
 	 *
 	 * <p>The acceptance criterion says "no crafting recipe"; asserting it against the loaded recipes is
 	 * the only form of that statement a future edit can break. A comment saying the same thing cannot.
+	 *
+	 * @implements IT-479-NOR — no loaded recipe yields the block.
 	 */
 	public static void noRecipeYieldsTheBlock(GameTestHelper helper) {
 		ServerLevel level = helper.getLevel();

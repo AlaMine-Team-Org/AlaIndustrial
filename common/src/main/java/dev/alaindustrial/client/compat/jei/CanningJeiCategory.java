@@ -18,7 +18,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.ItemLike;
 
 /**
  * JEI category for the Canning Machine (MOD-383) — the JEI counterpart of the REI {@code CanningCategory}.
@@ -35,11 +35,11 @@ final class CanningJeiCategory implements IRecipeCategory<CanningExchange.Card> 
 	private final IDrawable icon;
 	private final IDrawable arrow;
 
-	CanningJeiCategory(IRecipeType<CanningExchange.Card> recipeType, Block iconBlock,
+	CanningJeiCategory(IRecipeType<CanningExchange.Card> recipeType, ItemLike iconItem,
 			Component title, IGuiHelper guiHelper) {
 		this.recipeType = recipeType;
 		this.title = title;
-		this.icon = guiHelper.createDrawableItemLike(iconBlock);
+		this.icon = guiHelper.createDrawableItemLike(iconItem);
 		this.arrow = guiHelper.getRecipeArrow();
 	}
 

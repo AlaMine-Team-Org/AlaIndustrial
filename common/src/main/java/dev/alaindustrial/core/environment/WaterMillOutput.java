@@ -17,7 +17,7 @@ public final class WaterMillOutput {
 	 *
 	 * <p><b>No output cap here, unlike the wind mills.</b> The water mill has no
 	 * {@code *MaxEuPerTick}: its ceiling is structural — four drive cells at
-	 * {@code Config.waterMillEuPerTick} each. At the shipped defaults that is 4 EU/t, and even the
+	 * {@code GeneratorConfig.waterMillEuPerTick} each. At the shipped defaults that is 4 EU/t, and even the
 	 * advanced wheel's ×1.5 only reaches 6 EU/t, far below the LV tier voltage (32) and below a copper
 	 * cable's 12 EU/t throughput. MOD-385 therefore did not introduce a cap for it; the guard that
 	 * matters for this generator is the L2 assertion that the result stays well under the LV limit.
@@ -27,7 +27,7 @@ public final class WaterMillOutput {
 	 * all), whereas rounding gives 3. The ladder stays monotonic under rounding at every cell count.
 	 *
 	 * @param waterSides count of wheel-swept cells carrying a current (any int; clamped to 0..4)
-	 * @param perSide    EU/t produced per driven cell ({@code Config.waterMillEuPerTick})
+	 * @param perSide    EU/t produced per driven cell ({@code GeneratorConfig.waterMillEuPerTick})
 	 * @param wheelFactor the installed wheel grade's output scale (MOD-385;
 	 *                    {@code ComponentTier.outputMultiplier()}, 1.0 for the plain wooden wheel)
 	 */

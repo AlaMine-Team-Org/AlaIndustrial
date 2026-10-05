@@ -1,16 +1,13 @@
 package dev.alaindustrial.client.screen;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.ProcessingMachineStatus;
-import dev.alaindustrial.client.ReadoutFormat;
+import dev.alaindustrial.core.machine.StatusLine;
 import dev.alaindustrial.menu.MachineMenu;
-import dev.alaindustrial.network.MachineStatsPayload;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -19,33 +16,27 @@ import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
+// size-justified: the one base of every machine screen — frame, energy bar and its tooltip, status row,
+// ghost hints, overlay replay; the overlays' drawing and input left for their own classes (MOD-716, from 907).
 /**
- * Shared base for every machine screen. Owns the GUI rendering hooks ({@link #drawMachineFrame},
- * energy bar, slot overlay for the upgrade slots) and delegates the floating upgrade panel
- * (MOD-080) — its drag state, hit-testing and geometry — to an {@link UpgradePanelController}.
+ * Shared base for every machine screen. Owns the GUI rendering hooks ({@link #drawMachineFrame}, the energy
+ * bar, the status row, ghost hints) and replays its overlays.
  *
- * <p><b>Why the controller split.</b> Before this refactor the screen was ~470 lines mixing three
- * concerns: machine rendering (frame + energy bar), slot rendering, and the panel's input + drag +
- * positioning logic. The panel code was the largest of the three (~250 lines) and unrelated to the
- * machine's own look — every edit there meant navigating interleaved rendering constants and drag
- * state. Pulling the state + hit-tests into {@link UpgradePanelController} makes this file about the
- * machine again; the controller owns "where is the panel / what is the user doing to it", and the
- * screen owns "given that, draw the frame and paint the panel overlay".
+ * <p><b>Overlays are a list, not branches (MOD-716, CLI-2).</b> The upgrade panel (MOD-080), the statistics
+ * panel (MOD-125) and the battery drawer (MOD-679) each implement {@link ScreenOverlay}: they draw
+ * themselves, route their own clicks, drags and tooltips, and name the rectangles recipe viewers must keep
+ * clear. Every hook of this class asks the list in one fixed order — handles first, then bodies, the body
+ * drawn last on top and asked for input first — so a new overlay is a class and one entry in
+ * {@link #overlays}, and none of the eight hooks names a concrete controller.
  *
- * <p>The rendering of the panel itself stays here (see {@link #drawPanel}) because it is deeply
- * intertwined with {@link GuiGraphicsExtractor} and per-frame slot iteration — pulling it out would
- * mean passing the graphics + slot list back into the controller and duplicating the slot-paint loop.
- *
- * <p>The controller does NOT do click routing itself — it answers geometry and drag state; the
- * screen's {@code mouseClicked} keeps the close-X / slot / drag dispatch inline so {@link #slotClicked}
- * stays callable without re-exports.
+ * <p>A screen with controls of its own draws them in {@link #drawUnderPanels} (below every overlay) and asks
+ * {@link #frameAcceptsInput} before answering a click, a scroll or a hover.
  */
 public abstract class MachineScreen<T extends MachineMenu> extends AbstractContainerScreen<T> {
 
@@ -64,10 +55,65 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 	protected static final Identifier STATS_PANEL_TEXTURE =
 			Industrialization.id("textures/gui/container/stats_panel.png");
 
+	/** What the overlays may ask of this screen; private, so none of it becomes the screen's public API. */
+	private final OverlayHost host = new OverlayHost() {
+		@Override
+		public MachineMenu menu() {
+			return MachineScreen.this.menu;
+		}
+
+		@Override
+		public int left() {
+			return MachineScreen.this.leftPos;
+		}
+
+		@Override
+		public int top() {
+			return MachineScreen.this.topPos;
+		}
+
+		@Override
+		public int screenWidth() {
+			return MachineScreen.this.width;
+		}
+
+		@Override
+		public int screenHeight() {
+			return MachineScreen.this.height;
+		}
+
+		@Override
+		public Font font() {
+			return MachineScreen.this.font;
+		}
+
+		@Override
+		public boolean hasStatsTab() {
+			return MachineScreen.this.hasStatsTab();
+		}
+
+		@Override
+		public void clickSlot(Slot slot, int button, ContainerInput input) {
+			MachineScreen.this.slotClicked(slot, slot.index, button, input);
+		}
+
+		@Override
+		public List<Component> containerTooltip(ItemStack stack) {
+			return MachineScreen.this.getTooltipFromContainerItem(stack);
+		}
+
+		@Override
+		public void toggleBatteryDrawer() {
+			MachineScreen.this.toggleBatteryDrawer(true);
+		}
+	};
+
 	private UpgradePanelController panel;
 	private StatsPanelController statsPanel;
 	/** The battery drawer's key and geometry (MOD-679); follows whichever energy bar this screen draws. */
-	private final BatteryDrawerController drawer = new BatteryDrawerController();
+	private final BatteryDrawerController drawer = new BatteryDrawerController(host);
+	/** Every overlay, in draw order: handles then bodies follow it, input walks the bodies backwards. */
+	private List<ScreenOverlay> overlays = List.of();
 
 	public MachineScreen(T menu, Inventory inventory, Component title) {
 		super(menu, inventory, title);
@@ -83,8 +129,9 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 		super.init();
 		this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
 		// (Re)build the panel controller — re-clamps the persisted offset to this screen size on resize.
-		this.panel = new UpgradePanelController(this.menu, this.leftPos, this.topPos, this.width, this.height);
-		this.statsPanel = new StatsPanelController(this.menu, this.leftPos, this.topPos, this.width, this.height);
+		this.panel = new UpgradePanelController(host, this.menu, this.leftPos, this.topPos, this.width, this.height);
+		this.statsPanel = new StatsPanelController(host, this.menu, this.leftPos, this.topPos, this.width, this.height);
+		this.overlays = List.of(panel, statsPanel, drawer);
 		// A player who opened the drawer on the last machine finds it open on this one (session memory).
 		if (this.menu.hasBatteryDrawer() && BatteryDrawerController.rememberedOpen && !this.menu.isBatteryDrawerOpen()) {
 			toggleBatteryDrawer(false);
@@ -96,27 +143,30 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 	@Override
 	public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
 		super.extractBackground(graphics, mouseX, mouseY, partialTick);
-		// The drawer goes down BEFORE the frame, so the frame's edge covers its inner end and it reads as
-		// sliding out from behind the machine (MOD-679). Its geometry is the bar from the previous frame.
-		boolean drawerShown = this.menu.hasBatteryDrawer() && drawer.placed();
-		if (drawerShown && this.menu.isBatteryDrawerOpen()) {
-			graphics.blit(RenderPipelines.GUI_TEXTURED, BatteryDrawerController.ATLAS,
-					this.leftPos + drawer.drawerX(), this.topPos + drawer.drawerY(),
-					(float) drawer.drawerU(), (float) BatteryDrawerController.DRAWER_V,
-					BatteryDrawerController.DRAWER_W, BatteryDrawerController.DRAWER_H,
-					BatteryDrawerController.ATLAS_W, BatteryDrawerController.ATLAS_H);
+		// An overlay may sit behind the frame (the drawer slides out from under its edge) or on it (the key).
+		for (ScreenOverlay overlay : overlays) {
+			overlay.drawBehindFrame(graphics, mouseX, mouseY);
 		}
 		drawMachineFrame(graphics, mouseX, mouseY, partialTick);
-		if (drawerShown) {
-			int u = this.menu.isBatteryDrawerOpen() ? BatteryDrawerController.KEY_U_ON
-					: drawer.isOverKey(mouseX, mouseY, this.leftPos, this.topPos)
-							? BatteryDrawerController.KEY_U_HOVER : BatteryDrawerController.KEY_U_OFF;
-			graphics.blit(RenderPipelines.GUI_TEXTURED, BatteryDrawerController.ATLAS,
-					this.leftPos + drawer.keyX(), this.topPos + drawer.keyY(),
-					(float) u, (float) BatteryDrawerController.KEY_V,
-					BatteryDrawerController.KEY_W, BatteryDrawerController.KEY_H,
-					BatteryDrawerController.ATLAS_W, BatteryDrawerController.ATLAS_H);
+		// The energy bar right after the frame: it also tells the battery drawer where it lives (MOD-679).
+		EnergyBarSpec bar = energyBar();
+		if (bar != null) {
+			renderEnergyBar(graphics, bar);
 		}
+		drawFrameText(graphics, mouseX, mouseY);
+		for (ScreenOverlay overlay : overlays) {
+			overlay.drawOnFrame(graphics, mouseX, mouseY);
+		}
+	}
+
+	/**
+	 * Text a frame writes across its own gauges — a status row centred over the whole frame. It is submitted
+	 * AFTER the energy bar on purpose: the GUI render state stacks an element above any earlier one it
+	 * intersects, so a fill blitted after the text would cover the first letters of a long label (the
+	 * lightning rod's no-tip line in fr_fr, it_it, id_id, pl_pl starts inside the bar column). Before the bar
+	 * was declared through {@link #energyBar()} each screen drew its bar first and this text last.
+	 */
+	protected void drawFrameText(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 	}
 
 	/**
@@ -135,6 +185,20 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 		}
 	}
 
+	/**
+	 * This screen's vertical energy bar, or null for a screen without one (MOD-716, CLI-3). The base draws it
+	 * right after {@link #drawMachineFrame} and shows its "X / max EU" tooltip, so a standard machine names its
+	 * bar here instead of calling {@link #renderEnergyBar} and {@link #renderEnergyTooltip} itself.
+	 */
+	protected EnergyBarSpec energyBar() {
+		return null;
+	}
+
+	/** Whether the base shows the bar's tooltip; false for a screen that shows it itself, on its own terms. */
+	protected boolean energyTooltip() {
+		return true;
+	}
+
 	/** Each machine screen draws its own frame + dynamic sprites here (was its {@code extractBackground} body). */
 	protected void drawMachineFrame(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
 	}
@@ -150,12 +214,11 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 	/**
 	 * A generator's output line — or the reason there is no output.
 	 *
-	 * <p>{@code gui.alaindustrial.output} states the rate the generator <em>could</em> deliver, and on a
-	 * full buffer that reads as a plain lie: the block is delivering nothing, and the player sees a
-	 * healthy number next to 8000/8000. On a farm with more generation than the grid consumes — the
-	 * normal state of any solar array — this is what makes idle panels look broken. They are not: the
-	 * grid moves only what something asks for, and a generator whose buffer is full has nowhere to put
-	 * the next EU.
+	 * <p>{@code gui.alaindustrial.output} states the rate the generator <em>could</em> deliver, and on a full buffer
+	 * that reads as a plain lie: the block is delivering nothing, and the player sees a healthy number next to
+	 * 8000/8000. On a farm with more generation than the grid consumes — the normal state of any solar array — this is
+	 * what makes idle panels look broken. They are not: the grid moves only what something asks for, and a generator
+	 * whose buffer is full has nowhere to put the next EU.
 	 *
 	 * <p>So a full buffer says so instead. The moment anything draws the buffer down, the rate returns
 	 * on its own; nothing here changes how much energy moves.
@@ -267,23 +330,20 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 	/** Right edge of the status band — the frame's inner border on a screen with no second gauge. */
 	public static final int STATUS_ROW_RIGHT = 168;
 
-	/** Dark red, matching every other machine's blocking caption. */
-	private static final int STATUS_ROW_COLOUR = 0xFFAA0000;
-
 	/**
-	 * Draw the one-line caption for a {@link ProcessingMachineStatus}, or nothing when the state is a
-	 * silent one. The family's five screens differ only in the row's height, so that is the only parameter.
+	 * Draw the one-line caption for a {@link StatusLine} ({@link ProcessingMachineStatus} on the five screens
+	 * that call it), or nothing when it is not blocking. The row's height is the only parameter.
 	 *
 	 * <p>Lives on the shared machine screen rather than a screen class of its own because the family is
 	 * split across two bases: four of the five extend {@link ProgressMachineScreen}, while the Compressor
 	 * extends this class directly (its converging twin arrows are not the shared progress sprite).
 	 */
-	protected void drawProcessingStatus(GuiGraphicsExtractor graphics, ProcessingMachineStatus status, int y) {
+	protected void drawProcessingStatus(GuiGraphicsExtractor graphics, StatusLine status, int y) {
 		if (!status.isBlocking()) {
 			return;
 		}
 		drawFittedStatus(graphics, Component.translatable(status.translationKey()),
-				y, STATUS_ROW_LEFT, STATUS_ROW_RIGHT, STATUS_ROW_COLOUR);
+				y, STATUS_ROW_LEFT, STATUS_ROW_RIGHT, GuiStyle.STATUS_BLOCKING);
 	}
 
 	/**
@@ -293,11 +353,10 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 	 * <p><b>A status row cannot be truncated</b> — reading the reason is the entire point of it — and there
 	 * is no second line to wrap onto, so scaling is the only approach a future translation cannot re-break.
 	 *
-	 * <p><b>Both band edges are load-bearing and both were got wrong once</b>, in the two screens this
-	 * method was lifted from. Centring across the whole window printed the caption over the energy bar (and,
-	 * on the Thermal Centrifuge, over the rotor gauge on the other side too). Clamping only the left edge
-	 * then pushed long locales out through the right border instead — Russian ran past the frame in the dev
-	 * client. Hence a band, not an origin.
+	 * <p><b>Both band edges are load-bearing and both were got wrong once</b>, in the two screens this method was
+	 * lifted from. Centring across the whole window printed the caption over the energy bar (and, on the Thermal
+	 * Centrifuge, over the rotor gauge on the other side too). Clamping only the left edge then pushed long locales out
+	 * through the right border instead — Russian ran past the frame in the dev client. Hence a band, not an origin.
 	 */
 	protected void drawFittedStatus(GuiGraphicsExtractor graphics, Component label,
 			int y, int bandLeft, int bandRight, int colour) {
@@ -346,9 +405,8 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 	}
 
 	/**
-	 * Draw {@code hint} translucently in the machine's {@code containerSlot} while that slot is empty,
-	 * as the wordless answer to "what goes here". Occupied slots are left alone, so a real item is
-	 * never drawn over.
+	 * Draw {@code hint} translucently in the machine's {@code containerSlot} while that slot is empty, as the wordless
+	 * answer to "what goes here". Occupied slots are left alone, so a real item is never drawn over.
 	 *
 	 * <p>{@code containerSlot} is the block entity's own {@code *_SLOT} constant; the on-screen position
 	 * comes from the resolved {@link Slot} rather than from repeated coordinates, so moving a slot in the
@@ -388,33 +446,73 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 
 	@Override
 	public void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-		panel.finishCloseIfReady();
-		statsPanel.finishCloseIfReady();
+		for (ScreenOverlay overlay : overlays) {
+			overlay.beginFrame();
+		}
 		super.extractContents(graphics, mouseX, mouseY, partialTick);
 		// Above the slots (so a hint is not hidden by the slot art), below the panel (so a dragged
 		// panel covers it like it covers everything else).
 		drawGhostHints(graphics);
-		// MOD-125 draw order: BOTH tabs first, then whichever panels are open. A tab is a handle, a panel
-		// is content, and content wins — otherwise the gear printed over the statistics panel's text (and
-		// the statistics tab over the upgrade panel's art). The upgrade panel keeps a transparent corner
-		// exactly so its own gear still shows through it.
-		if (hasStatsTab()) {
-			drawStatsTab(graphics);
+		// A screen's own controls (mode buttons, tabs, toggles) go under every overlay, so an open or dragged
+		// panel covers them like it covers the slots (MOD-693).
+		drawUnderPanels(graphics, mouseX, mouseY);
+		// MOD-125 draw order: every handle first, then every body. A handle opens something, a body is
+		// content, and content wins — otherwise the gear printed over the statistics panel's text (and the
+		// statistics tab over the upgrade panel's art). The upgrade panel draws its own gear with its body,
+		// into a transparent corner kept for it.
+		for (ScreenOverlay overlay : overlays) {
+			overlay.drawHandle(graphics, mouseX, mouseY);
 		}
-		// Overlay pass — above the GUI's slots, items and labels.
-		if (this.menu.hasUpgradePanel() && this.menu.isPanelOpen()) {
-			drawPanel(graphics, mouseX, mouseY);
+		for (ScreenOverlay overlay : overlays) {
+			overlay.drawBody(graphics, mouseX, mouseY);
 		}
-		// The gear tab is drawn and clickable on every machine that HAS a panel. It sits at a fixed
-		// position anchored to the screen (panel.gearX/gearY take leftPos/topPos), tucked into the
-		// panel's transparent top-left corner when open, so it never covers panel content. A machine
-		// that opted out (MOD-393) shows no gear — a button that opens nothing reads as broken.
-		if (this.menu.hasUpgradePanel()) {
-			drawTabButton(graphics);
-		}
-		if (this.menu.isStatsPanelOpen()) {
-			drawStatsPanel(graphics, mouseX, mouseY);
-		}
+	}
+
+	/**
+	 * A screen's own controls and overlay text, drawn above the slots and ghost hints but below both tabs
+	 * and both panels (MOD-693). Drawing them after {@code super.extractContents} instead printed a mode
+	 * button or a status line over an open statistics panel.
+	 */
+	protected void drawUnderPanels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+	}
+
+	/**
+	 * Whether the point lies on the open statistics panel. The panel is modal over its footprint: a
+	 * screen's own button under it must neither take the click nor show its tooltip (MOD-693).
+	 */
+	protected final boolean isOverOpenStatsPanel(double mx, double my) {
+		return statsPanel.coversPoint(mx, my);
+	}
+
+	/**
+	 * How an open overlay silences this screen's own controls (MOD-716, CLI-2). Each value is the rule one
+	 * family of screens shipped with; the batch that moved them here kept every one of them as it was, and
+	 * bringing them to a single rule is a change of behaviour for the owner to decide (scope MOD-716).
+	 */
+	protected enum OverlayModality {
+		/** Silent while the upgrade panel is open anywhere, or under the open statistics panel. */
+		UPGRADES_OPEN_OR_UNDER_STATS,
+		/** Silent while either panel is open, wherever it is (the creative source's switch and slider). */
+		ANY_PANEL_OPEN,
+		/** Silent while the statistics panel is open, wherever it is (a screen without an upgrade panel). */
+		STATS_PANEL_OPEN
+	}
+
+	/** This screen's rule for {@link #frameAcceptsInput}; the default is the one most screens use. */
+	protected OverlayModality overlayModality() {
+		return OverlayModality.UPGRADES_OPEN_OR_UNDER_STATS;
+	}
+
+	/**
+	 * Whether a click, a scroll or a hover at the point may reach this screen's own controls — the one
+	 * modality check every screen with buttons of its own asks, instead of reading the panel flags itself.
+	 */
+	protected final boolean frameAcceptsInput(double mx, double my) {
+		return switch (overlayModality()) {
+			case UPGRADES_OPEN_OR_UNDER_STATS -> !this.menu.isPanelOpen() && !isOverOpenStatsPanel(mx, my);
+			case ANY_PANEL_OPEN -> !this.menu.isPanelOpen() && !this.menu.isStatsPanelOpen();
+			case STATS_PANEL_OPEN -> !this.menu.isStatsPanelOpen();
+		};
 	}
 
 	/** Skip the upgrade slots in the normal slot pass — they are painted in the panel overlay instead. */
@@ -426,226 +524,6 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 		super.extractSlot(graphics, slot, mouseX, mouseY);
 	}
 
-	private void drawPanel(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-		// Anchor-aware (not the flat PANEL_X constant): a wider GUI overrides panelAnchorX(), and the
-		// hit-boxes, slots and close button already follow it — the background used to be the one piece
-		// that did not, so on the 200px distillation column the panel art sat 24px left of its own slots.
-		int px = this.leftPos + this.menu.panelAnchorX() + panel.panelDX();
-		int py = this.topPos + MachineMenu.PANEL_Y + panel.panelDY();
-		graphics.blit(RenderPipelines.GUI_TEXTURED, UPGRADES_ATLAS, px, py,
-				(float) UpgradePanelController.PANEL_U, (float) UpgradePanelController.PANEL_V,
-				UpgradePanelController.PANEL_W, UpgradePanelController.PANEL_H,
-				UpgradePanelController.ATLAS, UpgradePanelController.ATLAS);
-
-		Slot hovered = upgradeSlotAt(mouseX, mouseY);
-		int upgradeIndex = 0;
-		for (Slot slot : this.menu.slots) {
-			if (!(slot instanceof MachineMenu.UpgradeSlot up) || !up.isActive()) {
-				continue;
-			}
-			int sx = this.leftPos + slot.x;
-			int sy = this.topPos + slot.y;
-			ItemStack item = slot.getItem();
-			if (up.isLocked()) {
-				// Reserved for a MOD-286 module: dim it so the baked hint reads as "later", not "broken".
-				graphics.fill(sx, sy, sx + 16, sy + 16, UpgradePanelController.LOCK_TINT);
-			}
-			if (slot == hovered) {
-				graphics.fill(sx, sy, sx + 16, sy + 16, UpgradePanelController.HOVER_TINT);
-			}
-			if (!item.isEmpty()) {
-				graphics.item(item, sx, sy);
-				graphics.itemDecorations(this.font, item, sx, sy, null);
-				// Light THIS arm's rivet, not a fixed one: the slots are added in panel order, so the
-				// running index maps straight onto IND_XY.
-				if (upgradeIndex < UpgradePanelController.IND_XY.length) {
-					int[] ind = UpgradePanelController.IND_XY[upgradeIndex];
-					graphics.blit(RenderPipelines.GUI_TEXTURED, UPGRADES_ATLAS,
-							px + ind[0], py + ind[1],
-							(float) UpgradePanelController.ACT_U, (float) UpgradePanelController.ACT_V,
-							UpgradePanelController.ACT_W, UpgradePanelController.ACT_H,
-							UpgradePanelController.ATLAS, UpgradePanelController.ATLAS);
-				}
-			}
-			upgradeIndex++;
-		}
-
-		int cx = panel.closeX(this.leftPos);
-		int cy = panel.closeY(this.topPos);
-		boolean flash = System.currentTimeMillis() < panel.closePressUntil();
-		int off = flash ? 1 : 0;
-		graphics.blit(RenderPipelines.GUI_TEXTURED, UPGRADES_ATLAS, cx + off, cy + off,
-				(float) UpgradePanelController.CLOSE_U, (float) UpgradePanelController.CLOSE_V,
-				UpgradePanelController.CLOSE_W, UpgradePanelController.CLOSE_H,
-				UpgradePanelController.ATLAS, UpgradePanelController.ATLAS);
-		if (flash) {
-			graphics.fill(cx + off, cy + off, cx + off + UpgradePanelController.CLOSE_W,
-					cy + off + UpgradePanelController.CLOSE_H, UpgradePanelController.PRESS_DARKEN);
-		}
-	}
-
-	// --- Statistics panel (MOD-125) ---------------------------------------------------------------
-
-	/** Row pitch inside the statistics panel: 8px glyphs with a 3px gutter, the vanilla readout rhythm. */
-	private static final int STAT_ROW_H = 11;
-
-	/**
-	 * Paint the statistics panel.
-	 *
-	 * <p>Drawn with {@code fill} rather than blitted from the atlas: the upgrade panel's art is a cross
-	 * shaped around four slots, and a readout needs a plain rectangle. Building that from the same
-	 * {@link GuiStyle} tones the rest of the mod uses costs four rectangles and keeps the two docks
-	 * looking like one system without a second 159×145 sprite that would have to be redrawn every time a
-	 * row is added.
-	 */
-	private void drawStatsPanel(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-		int px = statsPanel.panelX(this.leftPos);
-		int py = statsPanel.panelY(this.topPos);
-		int pw = StatsPanelController.PANEL_W;
-		int ph = StatsPanelController.PANEL_H;
-
-		// Blitted from its own texture rather than drawn with fill(): the frame is artwork, and artwork
-		// belongs in a PNG an artist can open. Everything below only writes text into it.
-		graphics.blit(RenderPipelines.GUI_TEXTURED, STATS_PANEL_TEXTURE, px, py,
-				0.0F, 0.0F, pw, ph, TEX_SIZE, TEX_SIZE);
-
-		graphics.text(this.font, Component.translatable("gui.alaindustrial.stats.title"),
-				px + 8, py + 7, GuiStyle.TEXT, false);
-
-		// The × itself lives in the panel texture, centred there by construction. Only the press flash is
-		// drawn here — the font's "x" glyph sat low and left of the plate, which is what showed in game.
-		if (System.currentTimeMillis() < statsPanel.closePressUntil()) {
-			int cx = statsPanel.closeX(this.leftPos);
-			int cy = statsPanel.closeY(this.topPos);
-			graphics.fill(cx, cy, cx + StatsPanelController.CLOSE_SIZE, cy + StatsPanelController.CLOSE_SIZE,
-					UpgradePanelController.PRESS_DARKEN);
-		}
-
-		MachineStatsPayload stats = this.menu.stats();
-		if (stats == null) {
-			// Two different silences, and telling them apart is the difference between "wait a moment" and
-			// "this machine will never show you anything until you fit a chip".
-			boolean chipFitted = this.menu.hasStatsChipInPanel();
-			int wrapY = wrappedText(graphics, Component.translatable(chipFitted
-					? "gui.alaindustrial.stats.waiting" : "gui.alaindustrial.stats.no_chip"), px, py + 26);
-			if (!chipFitted) {
-				wrappedText(graphics, Component.translatable("gui.alaindustrial.stats.no_chip_hint"),
-						px, wrapY + 2);
-			}
-			return;
-		}
-
-		int y = py + 26;
-		long[] parts = ReadoutFormat.durationParts(stats.activeTicks());
-		y = statRow(graphics, px, y, "gui.alaindustrial.stats.uptime",
-				Component.translatable("gui.alaindustrial.stats.duration",
-						parts[0], ReadoutFormat.clock(parts[1], parts[2])).getString(),
-				stats.activeTicks(), mouseX, mouseY, false);
-		// Processed count sits with the working time: both answer "what has this machine actually done",
-		// as opposed to the energy block below, which answers "at what cost". Shown only where it can be
-		// non-zero — a generator processes nothing and would just carry a permanent 0.
-		if (stats.itemsProcessed() > 0) {
-			y = statRow(graphics, px, y, "gui.alaindustrial.stats.processed",
-					ReadoutFormat.compact(stats.itemsProcessed()),
-					stats.itemsProcessed(), mouseX, mouseY, false);
-		}
-
-		// Only the rows this block can actually answer. A generator has no "received", a consumer has no
-		// "generated", and a row of zeroes is worse than no row: it invites the player to look for a fault.
-		if (stats.energyGenerated() > 0) {
-			y = statRow(graphics, px, y, "gui.alaindustrial.stats.generated",
-					ReadoutFormat.compact(stats.energyGenerated()) + " EU",
-					stats.energyGenerated(), mouseX, mouseY, true);
-		}
-		if (stats.energyOut() > 0) {
-			y = statRow(graphics, px, y, "gui.alaindustrial.stats.sent",
-					ReadoutFormat.compact(stats.energyOut()) + " EU",
-					stats.energyOut(), mouseX, mouseY, true);
-		}
-		if (stats.energyIn() > 0) {
-			y = statRow(graphics, px, y, "gui.alaindustrial.stats.received",
-					ReadoutFormat.compact(stats.energyIn()) + " EU",
-					stats.energyIn(), mouseX, mouseY, true);
-		}
-		if (stats.energyConsumed() > 0) {
-			y = statRow(graphics, px, y, "gui.alaindustrial.stats.spent",
-					ReadoutFormat.compact(stats.energyConsumed()) + " EU",
-					stats.energyConsumed(), mouseX, mouseY, true);
-		}
-
-		y += 3;
-		graphics.fill(px + 7, y, px + pw - 7, y + 1, GuiStyle.PANEL_LO);
-		y += 4;
-
-		boolean stale = this.menu.statsAreStale();
-		y = statRow(graphics, px, y, "gui.alaindustrial.stats.now",
-				stats.euRate() + " EU/t", stats.euRate(), mouseX, mouseY, false, stale);
-		if (stats.peakEuRate() > 0) {
-			y = statRow(graphics, px, y, "gui.alaindustrial.stats.peak",
-					stats.peakEuRate() + " EU/t", stats.peakEuRate(), mouseX, mouseY, false);
-		}
-
-		y += 3;
-		graphics.fill(px + 7, y, px + pw - 7, y + 1, GuiStyle.PANEL_LO);
-		y += 4;
-
-		y = statRow(graphics, px, y, "gui.alaindustrial.stats.connections",
-				stats.sources() + " / " + stats.sinks(), 0, mouseX, mouseY, false);
-
-		graphics.text(this.font, Component.translatable(stale
-						? "gui.alaindustrial.stats.idle" : "gui.alaindustrial.stats.live"),
-				px + 9, py + ph - 14, GuiStyle.TEXT_DIM, false);
-	}
-
-	/** Inner width available to panel text: the box minus the same gutter on both sides. */
-	private static final int STAT_TEXT_W = StatsPanelController.PANEL_W - 18;
-
-	/**
-	 * Draw a line that may not fit, wrapped at the panel's inner width, and return the y below it.
-	 *
-	 * <p>Needed because the panel is a fixed 159px while its strings are translated into twenty
-	 * languages: the Russian hint for fitting a chip already overflowed it, and German and Turkish
-	 * run longer still. Wrapping is measured, not guessed at authoring time.
-	 */
-	private int wrappedText(GuiGraphicsExtractor graphics, Component text, int px, int y) {
-		for (FormattedCharSequence line : this.font.split(text, STAT_TEXT_W)) {
-			graphics.text(this.font, line, px + 9, y, GuiStyle.TEXT_DIM, false);
-			y += 10;
-		}
-		return y;
-	}
-
-	private int statRow(GuiGraphicsExtractor graphics, int px, int y, String labelKey, String value,
-			long exact, int mouseX, int mouseY, boolean tooltip) {
-		return statRow(graphics, px, y, labelKey, value, exact, mouseX, mouseY, tooltip, false);
-	}
-
-	/**
-	 * One label/value line. The value is right-aligned so the column of numbers can be scanned vertically,
-	 * and an abbreviated figure carries its exact value in a tooltip — the panel has room for "1.2M EU",
-	 * the player checking a build needs the digits.
-	 */
-	private int statRow(GuiGraphicsExtractor graphics, int px, int y, String labelKey, String value,
-			long exact, int mouseX, int mouseY, boolean tooltip, boolean dim) {
-		int pw = StatsPanelController.PANEL_W;
-		int color = dim ? GuiStyle.TEXT_DIM : GuiStyle.TEXT;
-		int valueW = this.font.width(value);
-		int valueX = px + pw - 9 - valueW;
-		// The value is the number the player came for, so the LABEL is what gives way when a translation
-		// is too long for the row: it is ellipsised to whatever space the value leaves, instead of the two
-		// running into each other.
-		int labelRoom = Math.max(0, STAT_TEXT_W - valueW - 4);
-		FormattedCharSequence label = this.font.split(Component.translatable(labelKey), labelRoom)
-				.stream().findFirst().orElse(FormattedCharSequence.EMPTY);
-		graphics.text(this.font, label, px + 9, y, color, false);
-		graphics.text(this.font, Component.literal(value), valueX, y, color, false);
-		if (tooltip && mouseY >= y - 1 && mouseY < y + STAT_ROW_H - 1 && mouseX >= px + 7 && mouseX < px + pw - 7) {
-			graphics.setTooltipForNextFrame(this.font,
-					Component.literal(ReadoutFormat.exact(exact) + " EU"), mouseX, mouseY);
-		}
-		return y + STAT_ROW_H;
-	}
-
 	/**
 	 * Whether this screen shows the statistics tab. Default true. A screen whose machine can never hold a
 	 * statistics chip — no upgrade panel to fit it in — overrides it: the tab would only ever ask for a chip
@@ -655,98 +533,35 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 		return true;
 	}
 
-	private void drawStatsTab(GuiGraphicsExtractor graphics) {
-		int bx = statsPanel.tabX(this.leftPos);
-		int by = statsPanel.tabY(this.topPos);
-		boolean flash = System.currentTimeMillis() < statsPanel.tabPressUntil();
-		int off = flash ? 1 : 0;
-		graphics.blit(RenderPipelines.GUI_TEXTURED, UPGRADES_ATLAS, bx + off, by + off,
-				(float) StatsPanelController.TAB_U, (float) StatsPanelController.TAB_V,
-				StatsPanelController.TAB_W, StatsPanelController.TAB_H,
-				UpgradePanelController.ATLAS, UpgradePanelController.ATLAS);
-		if (flash) {
-			graphics.fill(bx + off, by + off, bx + off + StatsPanelController.TAB_W,
-					by + off + StatsPanelController.TAB_H, UpgradePanelController.PRESS_DARKEN);
-		}
-	}
-
-	private void drawTabButton(GuiGraphicsExtractor graphics) {
-		int bx = panel.gearX(this.leftPos);
-		int by = panel.gearY(this.topPos);
-		boolean flash = System.currentTimeMillis() < panel.gearPressUntil();
-		int off = flash ? 1 : 0;
-		graphics.blit(RenderPipelines.GUI_TEXTURED, UPGRADES_ATLAS, bx + off, by + off,
-				(float) UpgradePanelController.BTN_U, (float) UpgradePanelController.BTN_V,
-				UpgradePanelController.BTN_W, UpgradePanelController.BTN_H,
-				UpgradePanelController.ATLAS, UpgradePanelController.ATLAS);
-		if (flash) {
-			graphics.fill(bx + off, by + off, bx + off + UpgradePanelController.BTN_W,
-					by + off + UpgradePanelController.BTN_H, UpgradePanelController.PRESS_DARKEN);
-		}
-	}
-
 	@Override
 	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-		if (this.menu.hasUpgradePanel() && panel.isOverGear(mouseX, mouseY, this.leftPos, this.topPos)) {
-			int chips = this.menu.installedOverclockerTier();
-			if (chips <= 0) {
-				graphics.setTooltipForNextFrame(this.font,
-						Component.translatable("gui.alaindustrial.upgrades"), mouseX, mouseY);
+		// A handle's tooltip is the whole tooltip; an open body is modal over its footprint and shows only its
+		// own — the top body is asked first.
+		for (ScreenOverlay overlay : overlays) {
+			if (overlay.handleTooltip(graphics, mouseX, mouseY)) {
 				return;
 			}
-			// Relative multipliers only — never an absolute EU/t figure. Config is not synced to the
-			// client, so an absolute number would quietly lie on a server that retuned its balance;
-			// the ratios are pure functions of the chip tier and hold everywhere.
-			double speed = 1.0 / Math.pow(Config.overclockerSpeedFactor, chips);
-			double draw = Math.pow(Config.overclockerEuFactor, chips);
-			List<FormattedCharSequence> lines = new ArrayList<>();
-			lines.addAll(this.font.split(Component.translatable("gui.alaindustrial.upgrades"), 200));
-			lines.addAll(this.font.split(Component.translatable("gui.alaindustrial.upgrades.overclock",
-					chips, String.format(Locale.ROOT, "%.2f", speed),
-					String.format(Locale.ROOT, "%.0f", draw)).withStyle(ChatFormatting.GRAY), 200));
-			graphics.setTooltipForNextFrame(this.font, lines, mouseX, mouseY);
-			return;
 		}
-		if (hasStatsTab() && statsPanel.isOverTab(mouseX, mouseY, this.leftPos, this.topPos)) {
-			graphics.setTooltipForNextFrame(this.font,
-					Component.translatable("gui.alaindustrial.stats.title"), mouseX, mouseY);
-			return;
-		}
-		if (this.menu.hasBatteryDrawer() && drawer.isOverKey(mouseX, mouseY, this.leftPos, this.topPos)) {
-			List<FormattedCharSequence> lines = new ArrayList<>();
-			lines.addAll(this.font.split(Component.translatable("gui.alaindustrial.battery_drawer"), 200));
-			lines.addAll(this.font.split(Component.translatable("gui.alaindustrial.battery_drawer.hint")
-					.withStyle(ChatFormatting.GRAY), 200));
-			graphics.setTooltipForNextFrame(this.font, lines, mouseX, mouseY);
-			return;
-		}
-		if (this.menu.isStatsPanelOpen()
-				&& statsPanel.isOverPanel(mouseX, mouseY, this.leftPos, this.topPos)) {
-			// Modal over its own footprint: the row tooltips are emitted while drawing, and nothing from
-			// the GUI beneath may show through.
-			return;
-		}
-		if (this.menu.isPanelOpen() && panel.isOverPanel(mouseX, mouseY, this.leftPos, this.topPos)) {
-			// Modal: show only the panel's own tooltips, nothing from the GUI beneath it.
-			Slot hovered = upgradeSlotAt(mouseX, mouseY);
-			if (hovered != null && !hovered.getItem().isEmpty()) {
-				ItemStack item = hovered.getItem();
-				graphics.setTooltipForNextFrame(this.font, getTooltipFromContainerItem(item),
-						item.getTooltipImage(), mouseX, mouseY);
+		for (int i = overlays.size() - 1; i >= 0; i--) {
+			if (overlays.get(i).bodyTooltip(graphics, mouseX, mouseY)) {
+				return;
 			}
-			return;
 		}
 		super.extractTooltip(graphics, mouseX, mouseY);
+		// Hovering the energy bar shows the exact buffer as "X / max EU" (R-GUI-14).
+		EnergyBarSpec bar = energyBar();
+		if (bar != null && energyTooltip()) {
+			renderEnergyTooltip(graphics, mouseX, mouseY, bar);
+		}
 	}
 
 	/** Suppress the machine's bar tooltips (energy/fluid) when the mouse is over an open panel. */
 	@Override
 	protected boolean isHovering(int left, int top, int w, int h, double mx, double my) {
-		if (this.menu.isPanelOpen() && panel.isOverPanel(mx, my, this.leftPos, this.topPos)) {
-			return false;
-		}
-		if (this.menu.isStatsPanelOpen() && statsPanel.isOverPanel(mx, my, this.leftPos, this.topPos)) {
-			return false;
+		for (ScreenOverlay overlay : overlays) {
+			if (overlay.coversPoint(mx, my)) {
+				return false;
+			}
 		}
 		return super.isHovering(left, top, w, h, mx, my);
 	}
@@ -763,18 +578,8 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 	 */
 	public List<Rect2i> extraGuiAreas() {
 		List<Rect2i> areas = new ArrayList<>(4);
-		areas.add(panel.gearArea(this.leftPos, this.topPos));
-		if (this.menu.isPanelOpen()) {
-			areas.add(panel.panelArea(this.leftPos, this.topPos));
-		}
-		if (hasStatsTab()) {
-			areas.add(statsPanel.tabArea(this.leftPos, this.topPos));
-		}
-		if (this.menu.isStatsPanelOpen()) {
-			areas.add(statsPanel.panelArea(this.leftPos, this.topPos));
-		}
-		if (this.menu.hasBatteryDrawer() && this.menu.isBatteryDrawerOpen() && drawer.placed()) {
-			areas.add(drawer.drawerArea(this.leftPos, this.topPos));
+		for (ScreenOverlay overlay : overlays) {
+			overlay.addExclusionAreas(areas);
 		}
 		return areas;
 	}
@@ -783,107 +588,49 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 
 	@Override
 	public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
-		int btn = event.button();
-		// The battery key (MOD-679) sits inside the frame, where nothing else answers a click.
-		if (btn == 0 && this.menu.hasBatteryDrawer()
-				&& drawer.isOverKey(event.x(), event.y(), this.leftPos, this.topPos)) {
-			toggleBatteryDrawer(true);
-			return true;
-		}
-		// The gear always toggles the panel (it stays visible in the panel's transparent corner).
-		if (btn == 0 && this.menu.hasUpgradePanel()
-				&& panel.isOverGear(event.x(), event.y(), this.leftPos, this.topPos)) {
-			panel.onGearClick();
-			return true;
-		}
-		// MOD-125: the statistics tab, on every machine that shows one (see hasStatsTab).
-		if (btn == 0 && hasStatsTab() && statsPanel.isOverTab(event.x(), event.y(), this.leftPos, this.topPos)) {
-			statsPanel.onTabClick();
-			return true;
-		}
-		// The statistics panel is modal over its footprint, like the upgrade one, but has nothing to click
-		// inside it except the close button — a readout takes no input.
-		if (this.menu.isStatsPanelOpen()
-				&& statsPanel.isOverPanel(event.x(), event.y(), this.leftPos, this.topPos)) {
-			if (btn == 0 && statsPanel.isOverClose(event.x(), event.y(), this.leftPos, this.topPos)) {
-				statsPanel.onCloseClick();
+		// Handles first (the drawer key, the gear, the statistics tab — they never overlap), then the open
+		// bodies from the top one down: a body is modal over its footprint and takes every click there.
+		for (ScreenOverlay overlay : overlays) {
+			if (overlay.clickHandle(event)) {
 				return true;
 			}
-			// A readout has nothing to click, so the whole surface is a drag handle.
-			if (btn == 0) {
-				statsPanel.beginDrag(event.x(), event.y());
-			}
-			return true;
 		}
-		// The open panel is modal over its footprint: consume every click so nothing beneath reacts.
-		if (this.menu.isPanelOpen() && panel.isOverPanel(event.x(), event.y(), this.leftPos, this.topPos)) {
-			if (btn == 0 && panel.isOverClose(event.x(), event.y(), this.leftPos, this.topPos)) {
-				panel.onCloseClick();
+		for (int i = overlays.size() - 1; i >= 0; i--) {
+			if (overlays.get(i).clickBody(event)) {
 				return true;
 			}
-			MachineMenu.UpgradeSlot slot = (btn == 0 || btn == 1) ? upgradeSlotAt(event.x(), event.y()) : null;
-			if (slot != null) {
-				ContainerInput input = (btn == 0 && event.hasShiftDown())
-						? ContainerInput.QUICK_MOVE : ContainerInput.PICKUP;
-				this.slotClicked(slot, slot.index, btn, input);
-				return true;
-			}
-			if (btn == 0) {
-				panel.beginDrag(event.x(), event.y());
-			}
-			return true;
 		}
 		return super.mouseClicked(event, doubleClick);
 	}
 
 	@Override
 	public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
-		if (panel.dragging() && event.button() == 0) {
-			panel.dragTo(event.x(), event.y(), this.leftPos, this.topPos, this.width, this.height);
-			return true;
-		}
-		if (statsPanel.dragging() && event.button() == 0) {
-			statsPanel.dragTo(event.x(), event.y(), this.leftPos, this.topPos, this.width, this.height);
-			return true;
+		for (ScreenOverlay overlay : overlays) {
+			if (overlay.drag(event)) {
+				return true;
+			}
 		}
 		return super.mouseDragged(event, dragX, dragY);
 	}
 
 	@Override
 	public boolean mouseReleased(MouseButtonEvent event) {
-		if (panel.dragging() && event.button() == 0) {
-			panel.endDrag();
-			return true;
-		}
-		if (statsPanel.dragging() && event.button() == 0) {
-			statsPanel.endDrag();
-			return true;
+		for (ScreenOverlay overlay : overlays) {
+			if (overlay.release(event)) {
+				return true;
+			}
 		}
 		return super.mouseReleased(event);
 	}
 
 	@Override
 	protected boolean hasClickedOutside(double mx, double my, int guiLeft, int guiTop) {
-		if (this.menu.isPanelOpen() && panel.isOverPanel(mx, my, this.leftPos, this.topPos)) {
-			return false;
-		}
-		// The open drawer sticks out of the frame; a click on it is not a click that drops the held stack.
-		if (this.menu.isBatteryDrawerOpen() && drawer.isOverDrawer(mx, my, this.leftPos, this.topPos)) {
-			return false;
-		}
-		return super.hasClickedOutside(mx, my, guiLeft, guiTop);
-	}
-
-	private MachineMenu.UpgradeSlot upgradeSlotAt(double mx, double my) {
-		for (Slot slot : this.menu.slots) {
-			if (slot instanceof MachineMenu.UpgradeSlot up && up.isActive()) {
-				int sx = this.leftPos + slot.x;
-				int sy = this.topPos + slot.y;
-				if (mx >= sx && mx < sx + 16 && my >= sy && my < sy + 16) {
-					return up;
-				}
+		// An open panel or drawer sticks out of the frame; a click on it does not drop the held stack.
+		for (ScreenOverlay overlay : overlays) {
+			if (overlay.keepsClickInside(mx, my)) {
+				return false;
 			}
 		}
-		return null;
+		return super.hasClickedOutside(mx, my, guiLeft, guiTop);
 	}
 }

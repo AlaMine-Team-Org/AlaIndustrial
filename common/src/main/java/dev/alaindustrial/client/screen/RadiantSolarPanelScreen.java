@@ -15,7 +15,7 @@ import net.minecraft.world.entity.player.Inventory;
  * <p>Same service-area blit model as {@link DaylightSolarPanelScreen}: the static background gives
  * borders and tick marks, dynamic fills come from UV x≥176 so the marks show through.
  */
-public class RadiantSolarPanelScreen extends MachineScreen<RadiantSolarPanelMenu> {
+public class RadiantSolarPanelScreen extends LayoutMachineScreen<RadiantSolarPanelMenu> {
 
     private static final Identifier TEXTURE =
             Industrialization.id("textures/gui/container/radiant_solar_panel.png");
@@ -28,13 +28,11 @@ public class RadiantSolarPanelScreen extends MachineScreen<RadiantSolarPanelMenu
     private static final float SUN_UV_X    = 176.0F;
     private static final float SUN_UV_Y    = 65.0F;
 
-    public RadiantSolarPanelScreen(RadiantSolarPanelMenu menu, Inventory inventory, Component title) {
-        super(menu, inventory, title);
-    }
+    /** Atlas and energy bar (MOD-716, CLI-3). */
+    private static final MachineLayout LAYOUT = MachineLayout.of(TEXTURE, EnergyBarSpec.LEFT);
 
-    @Override
-    protected Identifier texture() {
-        return TEXTURE;
+    public RadiantSolarPanelScreen(RadiantSolarPanelMenu menu, Inventory inventory, Component title) {
+        super(menu, inventory, title, LAYOUT);
     }
 
     @Override
@@ -47,7 +45,6 @@ public class RadiantSolarPanelScreen extends MachineScreen<RadiantSolarPanelMenu
 
         int capacity = this.menu.getCapacity();
         int energy   = this.menu.getEnergy();
-        renderEnergyBar(graphics, EnergyBarSpec.LEFT);
 
         int mode = this.menu.getMode();
         boolean sunActive = mode == RadiantSolarPanelBlockEntity.MODE_DAY
@@ -80,4 +77,5 @@ public class RadiantSolarPanelScreen extends MachineScreen<RadiantSolarPanelMenu
         };
         return Component.translatable("gui.alaindustrial.solar_panel.mode." + key);
     }
+
 }

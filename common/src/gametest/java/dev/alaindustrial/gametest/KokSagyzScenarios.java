@@ -1,15 +1,17 @@
 package dev.alaindustrial.gametest;
 
 import static dev.alaindustrial.gametest.AlaGameTestHelper.survivalPlayer;
+import static dev.alaindustrial.gametest.GameTestDrops.countDrops;
 
+import java.util.List;
 import java.util.Optional;
-
 import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.KokSagyzBlock;
 import dev.alaindustrial.block.KokSagyzRootBlock;
 import dev.alaindustrial.block.entity.GardenDroneStationBlockEntity;
-import dev.alaindustrial.core.crop.CropMaturity;
+import dev.alaindustrial.block.entity.CropMaturity;
+import dev.alaindustrial.compat.Bonemeal;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModRecipes;
@@ -22,7 +24,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -30,7 +31,6 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
@@ -58,7 +58,55 @@ import net.minecraft.world.phys.Vec3;
  */
 public final class KokSagyzScenarios {
 
-	/** MOD-584: mixed soil survives sync serialization and the actual player harvest path. */
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(KokSagyzScenarios::mod584SoilPersistsAndRestores, "kok_sagyz_soil_persistence")
+						.fabricId("KokSagyzGameTest", "mod584SoilPersistsAndRestores").ticks(20, 100),
+				RosterEntry.of(KokSagyzScenarios::mod584ShortRootScythe, "kok_sagyz_short_scythe")
+						.fabricId("KokSagyzGameTest", "mod584ShortRootScythe").ticks(20, 100),
+				RosterEntry.of(KokSagyzScenarios::mod584MissingSegmentAndLegacy, "kok_sagyz_missing_segment_legacy")
+						.fabricId("KokSagyzGameTest", "mod584MissingSegmentAndLegacy").ticks(20, 100),
+				RosterEntry.of(KokSagyzScenarios::mod584Trampling, "kok_sagyz_trampling")
+						.fabricId("KokSagyzGameTest", "mod584Trampling").ticks(20, 100),
+				RosterEntry.of(KokSagyzScenarios::mod584GrowthLadder, "kok_sagyz_growth_ladder")
+						.fabricId("KokSagyzGameTest", "mod584GrowthLadder").ticks(20, 100),
+				RosterEntry.of(KokSagyzScenarios::mod537StagesAdvance, "kok_sagyz_stages_advance")
+						.fabricId("KokSagyzGameTest", "mod537_stagesAdvance").ticks(20, 100),
+				RosterEntry.of(KokSagyzScenarios::mod537RootGrowsTwoDeep, "kok_sagyz_root_grows_two_deep")
+						.fabricId("KokSagyzGameTest", "mod537_rootGrowsTwoDeep").ticks(20, 100),
+				RosterEntry.of(KokSagyzScenarios::mod537TipBreakDropsRootAndKeepsFlower,
+								"kok_sagyz_tip_break_drops_root_keeps_flower")
+						.fabricId("KokSagyzGameTest", "mod537_tipBreakDropsRootAndKeepsFlower").ticks(20, 100),
+				RosterEntry.of(KokSagyzScenarios::mod537TipRegrows, "kok_sagyz_tip_regrows_after_harvest")
+						.fabricId("KokSagyzGameTest", "mod537_tipRegrows").ticks(20, 100),
+				RosterEntry.of(KokSagyzScenarios::mod537UpperRootBreakKeepsFlower,
+								"kok_sagyz_upper_root_break_keeps_flower")
+						.fabricId("KokSagyzGameTest", "mod537_upperRootBreakKeepsFlower").ticks(20, 100),
+				RosterEntry.of(KokSagyzScenarios::mod537FlowerBreakGivesNoRoot, "kok_sagyz_flower_break_gives_no_root")
+						.fabricId("KokSagyzGameTest", "mod537_flowerBreakGivesNoRoot").ticks(20, 100),
+				RosterEntry.of(KokSagyzScenarios::mod537PlacementAcceptsAnySingleSoil,
+								"kok_sagyz_placement_accepts_any_single_soil")
+						.fabricId("KokSagyzGameTest", "mod537PlacementAcceptsAnySingleSoil").ticks(20, 100),
+				RosterEntry.of(KokSagyzScenarios::mod537WorldgenFeaturePlantsOnGrass,
+								"kok_sagyz_worldgen_feature_plants_on_grass")
+						.fabricId("KokSagyzGameTest", "mod537_worldgenFeaturePlantsOnGrass").ticks(20, 100),
+				RosterEntry.of(KokSagyzScenarios::mod537MacerationYieldsRubberAndInulin,
+								"kok_sagyz_maceration_yields_rubber_and_inulin")
+						.fabricId("KokSagyzGameTest", "mod537_macerationYieldsRubberAndInulin").ticks(20, 100),
+				RosterEntry.of(KokSagyzScenarios::mod537ScytheHarvestsTip, "kok_sagyz_scythe_harvests_tip")
+						.fabricId("KokSagyzGameTest", "mod537_scytheHarvestsTip").ticks(20, 100),
+				RosterEntry.of(KokSagyzScenarios::mod537DroneCutsFlowerNotRoot, "kok_sagyz_drone_cuts_flower_not_root")
+						.fabricId("KokSagyzGameTest", "mod537_droneCutsFlowerNotRoot").ticks(200));
+
+		private Roster() {}
+	}
+
+	/**
+	 * MOD-584: mixed soil survives sync serialization and the actual player harvest path.
+	 *
+	 * @implements MOD-584 - preserve mixed soil across persistence and harvest.
+	 */
 	public static void mod584SoilPersistsAndRestores(GameTestHelper helper) {
 		soilColumn(helper, Blocks.RED_SAND, Blocks.SAND);
 		helper.setBlock(POS, flower(3));
@@ -88,7 +136,11 @@ public final class KokSagyzScenarios {
 		helper.succeed();
 	}
 
-	/** MOD-584: shallow soil yields one harvestable tip; repeated scythe use cannot duplicate it. */
+	/**
+	 * MOD-584: shallow soil yields one harvestable tip; repeated scythe use cannot duplicate it.
+	 *
+	 * @implements MOD-584 - harvest a shallow tip exactly once.
+	 */
 	public static void mod584ShortRootScythe(GameTestHelper helper) {
 		soilColumn(helper, Blocks.DIRT, Blocks.STONE);
 		helper.setBlock(POS, flower(3));
@@ -102,7 +154,7 @@ public final class KokSagyzScenarios {
 		player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModContent.SCYTHE_WOOD.get()));
 		useOn(helper, player, POS);
 		useOn(helper, player, POS);
-		if (countDrops(helper, ModContent.KOK_SAGYZ_ROOT_ITEM.get()) != 1 || !helper.getBlockState(POS.below()).is(Blocks.DIRT)) {
+		if (countDrops(helper, POS, ModContent.KOK_SAGYZ_ROOT_ITEM.get()) != 1 || !helper.getBlockState(POS.below()).is(Blocks.DIRT)) {
 			helper.fail("Short-tip scythe harvest failed or duplicated the yield"); return;
 		}
 		if (!helper.getBlockState(POS).is(ModContent.KOK_SAGYZ.get())) {
@@ -111,7 +163,11 @@ public final class KokSagyzScenarios {
 		helper.succeed();
 	}
 
-	/** MOD-584: an absent upper segment never appears in the inspection snapshot. */
+	/**
+	 * MOD-584: an absent upper segment never appears in the inspection snapshot.
+	 *
+	 * @implements MOD-584 - inspect missing segments and load legacy roots.
+	 */
 	public static void mod584MissingSegmentAndLegacy(GameTestHelper helper) {
 		fullPlant(helper, 3);
 		ServerPlayer player = survivalPlayer(helper);
@@ -131,6 +187,8 @@ public final class KokSagyzScenarios {
 	 * MOD-584: coming down on the flower costs one stage; crossing it at ground level costs
 	 * nothing, and neither does a sneaking descent. Each leg drives the same public entry the
 	 * {@code entityInside} hook uses, with the entity's own before/after height doing the talking.
+	 *
+	 * @implements MOD-584 - landing on the flower costs one stage; walking and sneaking do not.
 	 */
 	public static void mod584Trampling(GameTestHelper helper) {
 		fullPlant(helper, KokSagyzBlock.AGE_MATURE);
@@ -192,6 +250,8 @@ public final class KokSagyzScenarios {
 	 * tip rather than by how deep it lands. The second claim is the one worth a test: shallow ground
 	 * mints its tip on the FIRST underground step, so pricing by step order would quietly make a
 	 * one-block plot out-yield a full column.
+	 *
+	 * @implements MOD-584 - the growth ladder rises and the tip is priced as a tip at any depth.
 	 */
 	public static void mod584GrowthLadder(GameTestHelper helper) {
 		BlockPos abs = helper.absolutePos(POS);
@@ -279,6 +339,8 @@ public final class KokSagyzScenarios {
 	 * A seed planted on farmland (with a second soil block below it, as {@code canSurvive} demands)
 	 * walks AGE 0 → 3 through one bone-meal step each, and only the mature plant begins to root.
 	 * Mirrors: KokSagyzGameTest.mod537_stagesAdvance
+	 *
+	 * @implements MOD-537 — bone meal walks AGE 0→3 one stage at a time; maturity alone roots not.
 	 */
 	public static void mod537StagesAdvance(GameTestHelper helper) {
 		soilColumn(helper, Blocks.FARMLAND, Blocks.DIRT);
@@ -307,6 +369,8 @@ public final class KokSagyzScenarios {
 	 * {@code kok_sagyz_root[tip=false]}, the second turns the deep soil into {@code tip=true}. A
 	 * third application on the full column must do nothing (nothing left to reach).
 	 * Mirrors: KokSagyzGameTest.mod537_rootGrowsTwoDeep
+	 *
+	 * @implements MOD-537 — the root grows exactly two deep (root[tip=false] then tip=true).
 	 */
 	public static void mod537RootGrowsTwoDeep(GameTestHelper helper) {
 		soilColumn(helper, Blocks.FARMLAND, Blocks.DIRT);
@@ -329,7 +393,7 @@ public final class KokSagyzScenarios {
 		// The full column is done: bone meal on it must be a no-op (isValidBonemealTarget is false,
 		// and growRoot itself must also refuse for the sprinkler's sake).
 		if (ModContent.KOK_SAGYZ.get() instanceof KokSagyzBlock block
-				&& block.isValidBonemealTarget(helper.getLevel(), helper.absolutePos(POS),
+				&& Bonemeal.isValidTarget(block, helper.getLevel(), helper.absolutePos(POS),
 						helper.getBlockState(POS))) {
 			helper.fail("bone meal still considers the full column a valid target");
 			return;
@@ -345,6 +409,8 @@ public final class KokSagyzScenarios {
 	 * with dirt and leaves the plant standing. The root entry of the tip's loot table is
 	 * unconditional, so the count is exact; the 35 % seed chance is deliberately not asserted.
 	 * Mirrors: KokSagyzGameTest.mod537_tipBreakDropsRootAndKeepsFlower
+	 *
+	 * @implements MOD-537 — digging the tip pays 1 root, refills with dirt, keeps the plant.
 	 */
 	public static void mod537TipBreakDropsRootAndKeepsFlower(GameTestHelper helper) {
 		ServerPlayer player = survivalPlayer(helper);
@@ -352,7 +418,7 @@ public final class KokSagyzScenarios {
 
 		player.gameMode.destroyBlock(helper.absolutePos(POS.below(2)));
 
-		int roots = countDrops(helper, ModContent.KOK_SAGYZ_ROOT_ITEM.get());
+		int roots = countDrops(helper, POS, ModContent.KOK_SAGYZ_ROOT_ITEM.get());
 		if (roots != 1) {
 			helper.fail("digging the tip dropped " + roots + " root items, expected exactly 1");
 			return;
@@ -373,6 +439,8 @@ public final class KokSagyzScenarios {
 	 * step into the refilled dirt) and pays out a second time. Two full harvest cycles must yield
 	 * exactly two root items — the plant is a farm, not a one-shot ore.
 	 * Mirrors: KokSagyzGameTest.mod537_tipRegrows
+	 *
+	 * @implements MOD-537 — the tip regrows after a harvest and pays out a second time.
 	 */
 	public static void mod537TipRegrows(GameTestHelper helper) {
 		ServerPlayer player = survivalPlayer(helper);
@@ -389,7 +457,7 @@ public final class KokSagyzScenarios {
 		assertPlantIntact(helper, POS, "tip regrow");
 
 		player.gameMode.destroyBlock(helper.absolutePos(POS.below(2)));
-		int roots = countDrops(helper, ModContent.KOK_SAGYZ_ROOT_ITEM.get());
+		int roots = countDrops(helper, POS, ModContent.KOK_SAGYZ_ROOT_ITEM.get());
 		if (roots != 2) {
 			helper.fail("two harvest cycles dropped " + roots + " root items, expected exactly 2");
 			return;
@@ -410,6 +478,8 @@ public final class KokSagyzScenarios {
 	 * before round 7 that lookup only knew about soil — which was invisible while digging the upper
 	 * root killed the plant outright and no regrowth could ever happen.
 	 * Mirrors: KokSagyzGameTest.mod537_upperRootBreakKeepsFlower
+	 *
+	 * @implements MOD-537 — digging the UPPER root keeps the flower, pays no root item, regrows as an upper root.
 	 */
 	public static void mod537UpperRootBreakKeepsFlower(GameTestHelper helper) {
 		ServerPlayer player = survivalPlayer(helper);
@@ -426,7 +496,7 @@ public final class KokSagyzScenarios {
 			helper.fail("the upper-root hole is " + helper.getBlockState(POS.below()) + ", expected dirt");
 			return;
 		}
-		if (countDrops(helper, ModContent.KOK_SAGYZ_ROOT_ITEM.get()) != 0) {
+		if (countDrops(helper, POS, ModContent.KOK_SAGYZ_ROOT_ITEM.get()) != 0) {
 			helper.fail("digging the upper root paid out a root item — the payoff lives at the tip only");
 			return;
 		}
@@ -461,6 +531,8 @@ public final class KokSagyzScenarios {
 	 * they were dug into, which reads as a bug rather than as death. They now outlive the flower;
 	 * they simply stop regrowing, because regrowth rides the flower's {@code randomTick}.
 	 * Mirrors: KokSagyzGameTest.mod537_flowerBreakGivesNoRoot
+	 *
+	 * @implements MOD-537 — breaking the flower never drops the root item and leaves both roots in the ground.
 	 */
 	public static void mod537FlowerBreakGivesNoRoot(GameTestHelper helper) {
 		ServerPlayer player = survivalPlayer(helper);
@@ -472,7 +544,7 @@ public final class KokSagyzScenarios {
 			helper.fail("the flower survived its own break: " + helper.getBlockState(POS));
 			return;
 		}
-		if (countDrops(helper, ModContent.KOK_SAGYZ_ROOT_ITEM.get()) != 0) {
+		if (countDrops(helper, POS, ModContent.KOK_SAGYZ_ROOT_ITEM.get()) != 0) {
 			helper.fail("breaking the FLOWER dropped a root item — rubber must only come from the tip");
 			return;
 		}
@@ -503,6 +575,8 @@ public final class KokSagyzScenarios {
 	 * {@code canSurvive} path runs — asserting {@code canSurvive} directly would not catch a broken
 	 * item placement.
 	 * Mirrors: KokSagyzGameTest.mod537PlacementAcceptsAnySingleSoil
+	 *
+	 * @implements MOD-537 — one block of any soil is enough: dirt, grass, podzol, mycelium, mud, sand, farmland.
 	 */
 	public static void mod537PlacementAcceptsAnySingleSoil(GameTestHelper helper) {
 		ServerPlayer player = survivalPlayer(helper);
@@ -575,6 +649,8 @@ public final class KokSagyzScenarios {
 	 * the position anywhere in the surrounding 16×16 chunk and {@code heightmap} answers with the
 	 * rig's own roof, so a verdict there would be about the rig, not the mod.
 	 * Mirrors: KokSagyzGameTest.mod537_worldgenFeaturePlantsOnGrass
+	 *
+	 * @implements MOD-537 — the worldgen feature plants a mature flower on grass, the real surface.
 	 */
 	public static void mod537WorldgenFeaturePlantsOnGrass(GameTestHelper helper) {
 		ServerLevel level = helper.getLevel();
@@ -609,6 +685,8 @@ public final class KokSagyzScenarios {
 	 * {@code RecipeManager} rather than a hand-built {@code AlaProcessingRecipe} so a broken JSON or
 	 * a serializer regression fails here instead of silently shipping a dead recipe.
 	 * Mirrors: KokSagyzGameTest.mod537_macerationYieldsRubberAndInulin
+	 *
+	 * @implements MOD-537 — 2× root macerates into 1× raw rubber + 1× inulin secondary, 300 EU.
 	 */
 	public static void mod537MacerationYieldsRubberAndInulin(GameTestHelper helper) {
 		Optional<RecipeHolder<?>> found = helper.getLevel().getServer().getRecipeManager()
@@ -658,6 +736,8 @@ public final class KokSagyzScenarios {
 	 * {@code #alaindustrial:scythe_crops}), so the scythe and the drone never cut a plant whose
 	 * root has not started.
 	 * Mirrors: KokSagyzGameTest.mod537_scytheHarvestsTip
+	 *
+	 * @implements MOD-537 — scythe crop mode digs the tip and leaves the plant standing.
 	 */
 	public static void mod537ScytheHarvestsTip(GameTestHelper helper) {
 		ServerPlayer player = survivalPlayer(helper);
@@ -685,7 +765,7 @@ public final class KokSagyzScenarios {
 			helper.fail("the scythe did not dig the tip: " + helper.getBlockState(POS.below(2)));
 			return;
 		}
-		int roots = countDrops(helper, ModContent.KOK_SAGYZ_ROOT_ITEM.get());
+		int roots = countDrops(helper, POS, ModContent.KOK_SAGYZ_ROOT_ITEM.get());
 		if (roots != 1) {
 			helper.fail("the scythe harvest dropped " + roots + " root items, expected exactly 1");
 			return;
@@ -706,13 +786,13 @@ public final class KokSagyzScenarios {
 	 * that the flower is gone, that no ROOT item was ever minted, and that both root blocks are still
 	 * in the ground where the player left them.
 	 * Mirrors: KokSagyzGameTest.mod537_droneCutsFlowerNotRoot
+	 *
+	 * @implements MOD-537 — the garden drone cuts the flower for seeds and never touches the roots.
 	 */
 	public static void mod537DroneCutsFlowerNotRoot(GameTestHelper helper) {
-		int configuredRange = Config.gardenDroneRange;
-		int configuredFlight = Config.gardenDroneFlightTicksPerBlock;
-		Config.gardenDroneRange = 1;
-		Config.gardenDroneFlightTicksPerBlock = 0;
-		try {
+		try (ConfigOverrides o = ConfigOverrides.sync()) {
+			o.set("gardenDroneRange", 1);
+			o.set("gardenDroneFlightTicksPerBlock", 0);
 			BlockPos stationPos = new BlockPos(1, SOIL, 1);
 			helper.setBlock(stationPos, ModContent.GARDEN_DRONE_STATION.get());
 			GardenDroneStationBlockEntity station =
@@ -753,9 +833,6 @@ public final class KokSagyzScenarios {
 				return;
 			}
 			helper.succeed();
-		} finally {
-			Config.gardenDroneRange = configuredRange;
-			Config.gardenDroneFlightTicksPerBlock = configuredFlight;
 		}
 	}
 
@@ -791,12 +868,16 @@ public final class KokSagyzScenarios {
 	 * One bone-meal step on the flower, via the block's real {@code performBonemeal}: deterministic
 	 * (no chance roll, no light gate) and the exact path the sprinkler rides, so these scenarios
 	 * double as coverage for the sprinkler's growth hook.
+	 *
+	 * <p>Through {@link Bonemeal}, the version facade the sprinkler itself calls (MOD-703): its signature is
+	 * the same on both lines, and where a line's bone-meal methods take a source (26.3), it passes the
+	 * player's — what {@code BoneMealItem} passes, and what these scenarios simulate.
 	 */
 	private static void bonemeal(GameTestHelper helper, BlockPos pos) {
 		ServerLevel level = helper.getLevel();
 		BlockPos abs = helper.absolutePos(pos);
 		BlockState state = level.getBlockState(abs);
-		((KokSagyzBlock) state.getBlock()).performBonemeal(level, RandomSource.create(0L), abs, state);
+		Bonemeal.perform((KokSagyzBlock) state.getBlock(), level, RandomSource.create(0L), abs, state);
 	}
 
 	/** Grows the root column under the flower at {@code pos} one step (bone meal's mature branch). */
@@ -816,18 +897,6 @@ public final class KokSagyzScenarios {
 		if (!upper.is(ModContent.KOK_SAGYZ_ROOT.get()) || upper.getValue(KokSagyzRootBlock.TIP)) {
 			helper.fail("the " + after + " damaged the upper root: " + upper);
 		}
-	}
-
-	/** Total count of {@code item} lying around the column (same box the trellis suite uses). */
-	private static int countDrops(GameTestHelper helper, Item item) {
-		AABB box = new AABB(helper.absolutePos(POS)).inflate(2.0);
-		int total = 0;
-		for (ItemEntity entity : helper.getLevel().getEntitiesOfClass(ItemEntity.class, box)) {
-			if (entity.getItem().is(item)) {
-				total += entity.getItem().getCount();
-			}
-		}
-		return total;
 	}
 
 	/**

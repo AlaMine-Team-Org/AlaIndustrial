@@ -11,7 +11,7 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
  * <p>A thin subclass, exactly like the solar panel family's per-tier menus: the behaviour lives in
  * {@link MobRepellerMenu}, but each menu TYPE needs its own class so a menu↔screen pair stays a
  * compile-time fact (a shared class makes the two indistinguishable — see
- * {@code docs/tools/menu_screen_parity_check.py}).
+ * {@code docs/tools/content/menu_screen_parity_check.py}).
  */
 public class MobRepellerMvMenu extends MobRepellerMenu {
 	/** Server side. */

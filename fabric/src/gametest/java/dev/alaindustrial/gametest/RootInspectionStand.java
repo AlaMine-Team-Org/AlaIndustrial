@@ -2,6 +2,7 @@ package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.block.entity.KokSagyzRootBlockEntity;
 import dev.alaindustrial.client.render.RootInspectionState;
+import dev.alaindustrial.compat.L3Chunks;
 import dev.alaindustrial.gametest.visual.VisualWorld;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestSingleplayerContext;
@@ -50,7 +51,7 @@ public final class RootInspectionStand {
         });
         server.runCommand("tp @p 26.5 100 4.5 180 15");
         VisualWorld.awaitNoScreen(context);
-        singleplayer.getClientLevel().waitForChunksRender();
+        L3Chunks.waitRender(singleplayer);
         context.waitTicks(15);
 
         var off = VisualStandSupport.takeCleanScreenshot(context, "root_inspect_off");

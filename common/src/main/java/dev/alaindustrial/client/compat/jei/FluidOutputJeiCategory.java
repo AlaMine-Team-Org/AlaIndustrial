@@ -18,7 +18,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluid;
 
 /**
@@ -34,11 +34,11 @@ final class FluidOutputJeiCategory implements IRecipeCategory<RecipeHolder<Fluid
 	private final IDrawable icon;
 	private final IDrawable arrow;
 
-	FluidOutputJeiCategory(IRecipeHolderType<FluidOutputRecipe> recipeType, Block iconBlock,
+	FluidOutputJeiCategory(IRecipeHolderType<FluidOutputRecipe> recipeType, ItemLike iconItem,
 			Component title, IGuiHelper guiHelper) {
 		this.recipeType = recipeType;
 		this.title = title;
-		this.icon = guiHelper.createDrawableItemLike(iconBlock);
+		this.icon = guiHelper.createDrawableItemLike(iconItem);
 		this.arrow = guiHelper.getRecipeArrow();
 	}
 

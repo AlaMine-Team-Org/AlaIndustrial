@@ -1,18 +1,22 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.WaterMillBlockEntity;
+import dev.alaindustrial.block.entity.machine.MachineChannels;
 import dev.alaindustrial.registry.ModSounds;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import dev.alaindustrial.client.ServerBalance;
+import dev.alaindustrial.core.environment.WaterMillOutput;
+import dev.alaindustrial.core.tooltip.HasMachineTooltip;
+import dev.alaindustrial.core.tooltip.MachineTooltipSpec;
+import java.util.List;
 
 /**
  * Water mill block — a full-cube LV generator that faces the player on placement. EU leaves through the
@@ -21,16 +25,9 @@ import net.minecraft.world.level.block.state.BlockState;
  * state (production is passive, not fuel-driven), so it extends {@link HorizontalMachineBlock} rather
  * than {@link LitMachineBlock}. The default full-cube shape is inherited (no {@code getShape} override).
  */
-public class WaterMillBlock extends HorizontalMachineBlock implements MachineHumProvider {
-	public static final MapCodec<WaterMillBlock> CODEC = simpleCodec(WaterMillBlock::new);
-
+public class WaterMillBlock extends HorizontalMachineBlock implements MachineHumProvider, HasMachineTooltip {
 	public WaterMillBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override
@@ -83,6 +80,16 @@ public class WaterMillBlock extends HorizontalMachineBlock implements MachineHum
 	@Override
 	public boolean isWorking(Level level, BlockPos pos, BlockState state) {
 		return level.getBlockEntity(pos) instanceof WaterMillBlockEntity mill
-				&& mill.getDataAccess().get(2) > 0;
+				&& mill.getDataAccess().get(MachineChannels.PROGRESS.ordinal()) > 0;
+	}
+
+	/** Hover tooltip of this block's item (MOD-716, ADR-040). */
+	@Override
+	public MachineTooltipSpec machineTooltip() {
+		// The cap: four water faces at full flow.
+		return new MachineTooltipSpec(MachineTooltipSpec.Tier.LV,
+				List.of(MachineTooltipSpec.stat("energy_output_max",
+						() -> WaterMillOutput.euFor(4, ServerBalance.waterMillEuPerTick(), 1.0f))),
+				List.of(MachineTooltipSpec.stat("buffer", ServerBalance::waterMillBuffer)));
 	}
 }

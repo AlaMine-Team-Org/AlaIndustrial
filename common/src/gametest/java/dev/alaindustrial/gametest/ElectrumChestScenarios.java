@@ -5,6 +5,7 @@ import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.block.entity.ElectrumChestBlockEntity;
 import dev.alaindustrial.menu.ElectrumChestMenu;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -31,6 +32,21 @@ import net.minecraft.world.level.block.state.properties.ChestType;
  * still go in, and nothing in the build turns red. Both scenarios below fail in exactly that case.
  */
 public final class ElectrumChestScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(ElectrumChestScenarios::fun01SingleChestWindowScrolls, "electrum_chest_window_scrolls")
+						.fabricId("ElectrumChestGameTest", "tcChest002Fun01_singleChestWindowScrolls").ticks(20, 40),
+				RosterEntry.of(ElectrumChestScenarios::fun02ShiftClickReachesHiddenRows,
+								"electrum_chest_shift_click_hidden_rows")
+						.fabricId("ElectrumChestGameTest", "tcChest002Fun02_shiftClickReachesHiddenRows")
+						.ticks(20, 40),
+				RosterEntry.of(ElectrumChestScenarios::fun03NeverPairsWithGold, "electrum_chest_never_pairs_with_gold")
+						.fabricId("ElectrumChestGameTest", "tcChest002Fun03_neverPairsWithGold").ticks(20, 40));
+
+		private Roster() {}
+	}
 
 	private ElectrumChestScenarios() {}
 
@@ -60,6 +76,8 @@ public final class ElectrumChestScenarios {
 	 * <p>The marked stack sits in the very last row, which no amount of clicking can reach without
 	 * the window sliding: if the menu were built over the block entity directly, or sized from the
 	 * container, this row would either not exist or never move into a visible slot.
+	 *
+	 * @implements TC-CHEST-002-FUN01 — a single electrum chest scrolls a 6-row window over 9 rows.
 	 */
 	public static void fun01SingleChestWindowScrolls(GameTestHelper helper) {
 		placeChest(helper);
@@ -102,6 +120,8 @@ public final class ElectrumChestScenarios {
 	 * visible slots has nowhere to put the diamonds and would report the chest full while a third of
 	 * it is empty — the exact defect the scrolling base exists to prevent, here proven through the
 	 * single chest's own wiring.
+	 *
+	 * @implements TC-CHEST-002-FUN02 — shift-click reaches the rows the window does not show.
 	 */
 	public static void fun02ShiftClickReachesHiddenRows(GameTestHelper helper) {
 		placeChest(helper);
@@ -137,6 +157,8 @@ public final class ElectrumChestScenarios {
 	 *
 	 * <p>Tier isolation comes from block identity, so this is really a guard against a future tier
 	 * being added by copying the block and forgetting that the pair check is {@code state.is(this)}.
+	 *
+	 * @implements TC-CHEST-002-FUN03 — an electrum chest never pairs with the gold tier.
 	 */
 	public static void fun03NeverPairsWithGold(GameTestHelper helper) {
 		BlockPos goldPos = POS.east();

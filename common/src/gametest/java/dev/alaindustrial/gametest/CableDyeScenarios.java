@@ -3,7 +3,6 @@ package dev.alaindustrial.gametest;
 import static dev.alaindustrial.gametest.EnergyScenarioSupport.be;
 import static dev.alaindustrial.gametest.EnergyScenarioSupport.tick;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.block.CableDyeing;
 import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
@@ -11,6 +10,7 @@ import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.GeneratorBlockEntity;
 import dev.alaindustrial.core.energy.CableType;
 import dev.alaindustrial.core.energy.NetworkManager;
+import dev.alaindustrial.core.environment.GeneratorConfig;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModDataComponents;
 import java.util.List;
@@ -19,7 +19,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
@@ -28,6 +31,26 @@ import net.minecraft.world.level.block.Blocks;
  * the grade it was applied to.
  */
 public final class CableDyeScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(CableDyeScenarios::tcDye001Nrg01_dyedLineCarriesEnergy,
+								"tc_dye001_nrg01_dyed_line_carries_energy")
+						.fabricId("NetworkGameTest", "tcDye001Nrg01_dyedLineCarriesEnergy").ticks(80),
+				RosterEntry.of(CableDyeScenarios::tcDye001Per01_colourRoundTripsThroughTheItem,
+								"tc_dye001_per01_colour_round_trips_through_the_item")
+						.fabricId("NetworkGameTest", "tcDye001Per01_colourRoundTripsThroughTheItem").ticks(80),
+				RosterEntry.of(CableDyeScenarios::tcDye001Per02_brokenDyedCableDropsItsColour,
+								"tc_dye001_per02_broken_dyed_cable_drops_its_colour")
+						.fabricId("NetworkGameTest", "tcDye001Per02_brokenDyedCableDropsItsColour").ticks(80),
+				RosterEntry.of(CableDyeScenarios::tcDye001Run01_runStopsAtAnotherGrade,
+								"tc_dye001_run01_run_stops_at_another_grade")
+						.fabricId("NetworkGameTest", "tcDye001Run01_runStopsAtAnotherGrade").ticks(80));
+
+		private Roster() {}
+	}
+
 	private static final BlockPos GENERATOR = new BlockPos(1, 2, 1);
 	private static final BlockPos BOX = new BlockPos(6, 2, 1);
 
@@ -64,7 +87,7 @@ public final class CableDyeScenarios {
 			return;
 		}
 		box.getEnergyStorage().setAmountUntracked(0);
-		generator.getEnergyStorage().setAmountUntracked(Config.generatorBuffer);
+		generator.getEnergyStorage().setAmountUntracked(GeneratorConfig.generatorBuffer);
 		for (int i = 0; i < 40; i++) {
 			NetworkManager.tickAll(helper.getLevel());
 		}
@@ -112,6 +135,55 @@ public final class CableDyeScenarios {
 		if (placed.color() != DyeColor.LIME) {
 			helper.fail("placing a dyed item must dye the segment, got " + placed.color());
 			return;
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * Breaking a dyed insulated segment of each metal drops an item that still carries the colour. The
+	 * drop is rolled through the block's own loot table ({@link Block#getDrops}), the path breaking the
+	 * block takes: the colour reaches the item only through the table's {@code copy_components}
+	 * function, so a table whose function the codec silently skipped (MOD-689, the 26.2 line) drops an
+	 * undyed cable here.
+	 *
+	 * @implements TC-DYE-001-PER02 — a broken dyed insulated cable drops a stack with the same colour.
+	 */
+	public static void tcDye001Per02_brokenDyedCableDropsItsColour(GameTestHelper helper) {
+		Block[] grades = {ModContent.INSULATED_COPPER_CABLE.get(), ModContent.INSULATED_TIN_CABLE.get(),
+				ModContent.INSULATED_GOLD_CABLE.get(), ModContent.INSULATED_ELECTRUM_CABLE.get()};
+		DyeColor[] colours = {DyeColor.RED, DyeColor.LIME, DyeColor.BLUE, DyeColor.YELLOW};
+		BlockPos[] positions = {new BlockPos(1, 2, 1), new BlockPos(3, 2, 1), new BlockPos(5, 2, 1),
+				new BlockPos(3, 2, 3)};
+		ServerLevel level = helper.getLevel();
+		for (int i = 0; i < grades.length; i++) {
+			helper.setBlock(positions[i], grades[i]);
+			if (!cable(helper, positions[i]).setColor(colours[i])) {
+				helper.fail("rig: " + grades[i] + " refused the colour " + colours[i]);
+				return;
+			}
+		}
+		for (int i = 0; i < grades.length; i++) {
+			BlockPos abs = helper.absolutePos(positions[i]);
+			List<ItemStack> drops = Block.getDrops(level.getBlockState(abs), level, abs, level.getBlockEntity(abs));
+			Item item = grades[i].asItem();
+			ItemStack dropped = null;
+			int count = 0;
+			for (ItemStack stack : drops) {
+				if (stack.is(item)) {
+					dropped = stack;
+					count += stack.getCount();
+				}
+			}
+			if (dropped == null || count != 1) {
+				helper.fail(grades[i] + " dropped " + count + "x its own item (expected 1), drops " + drops);
+				return;
+			}
+			DyeColor carried = dropped.get(ModDataComponents.CABLE_COLOR.get());
+			if (carried != colours[i]) {
+				helper.fail("a broken " + colours[i] + " " + grades[i] + " dropped an item coloured " + carried
+						+ " — the loot table lost the colour");
+				return;
+			}
 		}
 		helper.succeed();
 	}

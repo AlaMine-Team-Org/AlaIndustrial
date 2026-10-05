@@ -4,12 +4,15 @@ import dev.alaindustrial.block.DistillationColumnBlock;
 import dev.alaindustrial.block.FuelRodAssemblyBlock;
 import dev.alaindustrial.block.UpgradeTableBlock;
 import dev.alaindustrial.block.entity.FuelRodAssemblyBlockEntity;
+import dev.alaindustrial.block.entity.VulcanizerStatus;
+import dev.alaindustrial.compat.L3Chunks;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.gametest.visual.MenuState;
 import dev.alaindustrial.visual.ShotGroup;
 import dev.alaindustrial.gametest.visual.ShotRecorder;
 import dev.alaindustrial.gametest.visual.VisualWorld;
 import dev.alaindustrial.menu.MachineMenu;
+import dev.alaindustrial.menu.VulcanizerMenu;
 import java.util.List;
 import java.util.Set;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
@@ -40,7 +43,7 @@ import org.slf4j.LoggerFactory;
  *
  * <p><b>Coverage.</b> 17 of the 31 menus in {@code ContentManifest.MENUS} had never been photographed —
  * half the mod's screens shipped with no visual check at all. Every menu now has at least one frame,
- * and {@code docs/tools/menu_shot_parity_check.py} keeps it that way.
+ * and {@code docs/tools/testing/menu_shot_parity_check.py} keeps it that way.
  *
  * <p><b>Honesty.</b> The existing suite builds its screens by calling {@code MenuScreens.create} and
  * pushing numbers straight into the menu's {@code ContainerData}. That proves the screen can draw
@@ -184,7 +187,7 @@ public class ScreensClientGameTest implements FabricClientGameTest {
      * language half the player base reads.
      */
     private static final List<String> LOCALE_SWEEP =
-            List.of("alloy_smelter", "garden_drone_station", "teleporter_station", "gold_chest");
+            List.of("alloy_smelter", "garden_drone_station", "teleporter_station", "gold_chest", "vulcanizer");
 
     private static final String LONG_LOCALE = "ru_ru";
 
@@ -210,11 +213,12 @@ public class ScreensClientGameTest implements FabricClientGameTest {
 
             VisualWorld.quarantine(context, singleplayer);
             ShotRecorder.begin(context);
-            singleplayer.getClientLevel().waitForChunksRender();
+            L3Chunks.waitRender(singleplayer);
 
             buildRig(context, singleplayer);
             captureEveryScreen(context, singleplayer);
             captureRemoteScreen(context, singleplayer);
+            captureMagnetScreen(context, singleplayer);
             captureLocaleSweep(context, singleplayer);
             captureItemRenderContexts(context, singleplayer);
 
@@ -315,7 +319,7 @@ public class ScreensClientGameTest implements FabricClientGameTest {
                     + "would be opened by a player falling out of reach");
         }
         server.runCommand("tp @p " + xOf(0) + ".5 " + BLOCK_Y + " " + STAND_Z + ".5 180 0");
-        singleplayer.getClientLevel().waitForChunksRender();
+        L3Chunks.waitRender(singleplayer);
 
         // The one block in the rig that can stand there looking finished and still be the wrong
         // thing: a Distillation Column blank is the same block id as the tower's base, so waiting on
@@ -421,7 +425,7 @@ public class ScreensClientGameTest implements FabricClientGameTest {
             BlockPos pos = new BlockPos(xOf(i), BLOCK_Y, RIG_Z);
 
             server.runCommand("tp @p " + xOf(i) + ".5 " + BLOCK_Y + " " + STAND_Z + ".5 180 0");
-            singleplayer.getClientLevel().waitForChunksRender();
+            L3Chunks.waitRender(singleplayer);
             VisualWorld.awaitBlockOnClient(context, pos, "alaindustrial:" + screen.blockId());
 
             if (screen.blockId().equals("reactor_controller")) {
@@ -587,11 +591,45 @@ public class ScreensClientGameTest implements FabricClientGameTest {
     }
 
     /**
+     * The electromagnet's own screen (MOD-592), opened from the hand like the remote: an advanced magnet
+     * with a filter module already fitted, so the frame shows every part at once — charge, three module
+     * slots, the filter's cells with samples, and the three buttons in their non-default states.
+     */
+    private static void captureMagnetScreen(ClientGameTestContext context,
+            TestSingleplayerContext singleplayer) {
+        TestServerContext server = singleplayer.getServer();
+        VisualWorld.awaitNoScreen(context);
+
+        server.runCommand("clear @p");
+        server.runCommand("give @p alaindustrial:electromagnet_advanced[alaindustrial:item_modules=[{id:"
+                + "\"alaindustrial:magnet_filter_module\",count:1,components:{\"alaindustrial:magnet_filter\":"
+                + "{cells:[{item:\"minecraft:iron_ingot\"},{item:\"minecraft:oak_sapling\","
+                + "tag:\"minecraft:saplings\"},{item:\"minecraft:diamond\"}],allow_list:true,match:\"tag\"}}}]]");
+        context.runOnClient(mc -> mc.player.getInventory().setSelectedSlot(0));
+        context.waitTicks(5);
+
+        context.runOnClient(mc -> mc.gameMode.useItem(mc.player, InteractionHand.MAIN_HAND));
+        try {
+            context.waitFor(mc -> mc.gui.screen() != null);
+        } catch (RuntimeException | AssertionError e) {
+            throw new AssertionError("[SCREENS] the electromagnet did not open its screen on right-click — "
+                    + "the item's use handler or its screen registration is broken", e);
+        }
+        ShotRecorder.capture("gui_magnet_filter_fitted", ShotGroup.GUI, "magnet",
+                ShotRecorder.rules("R-GUI-01"),
+                "Advanced electromagnet opened from the hand (MOD-592): the charge gauge on the left, three module "
+                        + "slots with the filter in the first, the 4x4 cells holding iron, an oak sapling with a green "
+                        + "category mark and a diamond, and on the right the power, only-these and by-category icons");
+        VisualWorld.awaitNoScreen(context);
+        server.runCommand("clear @p");
+    }
+
+    /**
      * Re-shoots a few screens under a long locale.
      *
      * <p>Switching language reloads the resource packs, which is slow — so this is a sample, not a
-     * sweep of all 31 screens. The four chosen carry the longest labels in the mod: two status lines,
-     * a multi-slot station and the tallest chest.
+     * sweep of all 31 screens. The five chosen carry the longest labels in the mod: status lines
+     * (the Vulcanizer's staged in its longest blocking state), a multi-slot station and the tallest chest.
      */
     private static void captureLocaleSweep(ClientGameTestContext context,
             TestSingleplayerContext singleplayer) {
@@ -608,18 +646,50 @@ public class ScreensClientGameTest implements FabricClientGameTest {
             int index = indexOf(menuId);
             BlockPos pos = new BlockPos(xOf(index), BLOCK_Y, RIG_Z);
             server.runCommand("tp @p " + xOf(index) + ".5 " + BLOCK_Y + " " + STAND_Z + ".5 180 0");
-            singleplayer.getClientLevel().waitForChunksRender();
+            L3Chunks.waitRender(singleplayer);
 
             openByRightClick(context, pos, SCREENS.get(index));
+            String checks = "The same screen under a long locale: labels are NOT clipped, do not overlap the slots and do not "
+                    + "spill outside the window frame";
+            if (menuId.equals("vulcanizer")) {
+                showVulcanizerLongestStatus(context);
+                checks += ". Vulcanizer (MOD-693): the dark-red status line is a BLOCKING one - the longest of its "
+                        + "five in ru_ru - and it stays inside the right frame border, shrunk to fit if it must";
+            }
             ShotRecorder.capture("locale_" + LONG_LOCALE + "_" + menuId, ShotGroup.LOCALE, menuId,
-                    ShotRecorder.rules("R-GUI-01"),
-                    "The same screen under a long locale: labels are NOT clipped, do not overlap the slots and do not "
-                            + "spill outside the window frame");
+                    ShotRecorder.rules("R-GUI-01"), checks);
             VisualWorld.awaitNoScreen(context);
         }
 
         setLocale(context, original);
         ShotRecorder.locale(original);
+    }
+
+    /**
+     * Puts the open Vulcanizer screen into its longest blocking status, "no matching recipe".
+     *
+     * <p>A bare machine would otherwise show "raw rubber required", one of the shorter lines, and the
+     * frame would pass while the longest still escaped the right border. The status is a plain menu
+     * data channel, so it is injected the way the energy bar is for the charge frames; a stand-still
+     * machine does not re-send it, but the adoption is checked rather than assumed.
+     */
+    private static void showVulcanizerLongestStatus(ClientGameTestContext context) {
+        VulcanizerStatus wanted = VulcanizerStatus.NO_RECIPE;
+        context.runOnClient(mc -> {
+            if (mc.gui.screen() instanceof AbstractContainerScreen<?> acs
+                    && acs.getMenu() instanceof VulcanizerMenu menu) {
+                menu.injectTestChannel(5, wanted.ordinal());
+            }
+        });
+        // One tick for the screen to lay the line out against the new status, which is what the frame shows.
+        context.waitTicks(2);
+        VulcanizerStatus shown = context.computeOnClient(mc ->
+                mc.gui.screen() instanceof AbstractContainerScreen<?> acs
+                        && acs.getMenu() instanceof VulcanizerMenu menu ? menu.getStatus() : null);
+        if (shown != wanted) {
+            throw new AssertionError("[SCREENS] the vulcanizer frame must show " + wanted + " but the menu holds "
+                    + shown + " - the status channel moved, or the server overwrote the injected value");
+        }
     }
 
     /**
@@ -690,7 +760,7 @@ public class ScreensClientGameTest implements FabricClientGameTest {
         server.runCommand("fill " + (standX - 3) + " " + BLOCK_Y + " " + (standZ - 3) + " "
                 + (standX + 3) + " " + (BLOCK_Y + 3) + " " + (standZ + 3) + " minecraft:air");
         server.runCommand("tp @p " + standX + ".5 " + BLOCK_Y + " " + standZ + ".5 0 20");
-        singleplayer.getClientLevel().waitForChunksRender();
+        L3Chunks.waitRender(singleplayer);
 
         for (String[] sample : ITEM_SAMPLES) {
             captureOneItem(context, singleplayer, sample[0], sample[1], standX, standZ);

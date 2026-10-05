@@ -3,12 +3,13 @@ package dev.alaindustrial.registry;
 import dev.alaindustrial.block.ChargePadBlock;
 import dev.alaindustrial.block.ChargePadState;
 import dev.alaindustrial.block.ElectricHeaterBlock;
+import dev.alaindustrial.compat.LineBlockProps;
+import java.util.List;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.material.PushReaction;
 
 /**
  * Loader-neutral block-property fragments shared by the Fabric and NeoForge registration files.
@@ -22,14 +23,39 @@ import net.minecraft.world.level.material.PushReaction;
  * per loader, deemed a "cosmetic" duplication not worth centralising. MOD-190 revisits that: the same
  * drift that left a lit generator dark on NeoForge (MOD-157, a {@code litLight} chain divergence) can
  * silently hit any {@code strength}/{@code sound} value too, and {@code loader_parity_check} exists
- * only to catch it after the fact. So the per-block chains now live once in
- * {@link ContentManifest#BLOCK_PROPS}, applied by both loaders via {@link #applyTorch} / the map
- * operators — closing the drift class for the whole block definition, not just the light helper.
- * {@code setId} (Fabric) and {@code requiresCorrectToolForDrops} base still layer per loader.
+ * only to catch it after the fact. So the per-block chains now live once in the manifest — since MOD-711
+ * each in its own {@link ContentManifest.BlockDef} declaration — applied by both loaders via
+ * {@link #applyTorch} / the declared operators — closing the drift class for the whole block definition,
+ * not just the light helper. {@code setId} (Fabric) and {@code requiresCorrectToolForDrops} base still
+ * layer per loader.
  */
 public final class ModBlockProperties {
 	private ModBlockProperties() {
 	}
+
+	/**
+	 * The transport lines flowing fluid washes away (MOD-661): every cable, pipe and the monitoring wire,
+	 * whatever shape it has taken. {@code ContentManifest}'s {@code block(...)} builder applies
+	 * {@link LineBlockProps#washedAwayByFluids} to each of them, so the list is the one place a new
+	 * transport line is declared washable.
+	 *
+	 * <p>The lines decide washing differently, which is why this is a list and not a property value: 26.2
+	 * washes whatever does not block motion, and reads that from the collision box — a straight pipe is
+	 * thin and washed, but one with arms up and down is a full block tall and counted solid — so that line
+	 * forces these blocks non-solid. 26.3 asks the {@code #minecraft:washed_away_by_fluids} tag instead,
+	 * which {@code data/minecraft/tags/block/washed_away_by_fluids.json} fills.
+	 *
+	 * <p>The 26.3 tag lists exactly these ids (16); on 26.2 {@link LineBlockProps#washedAwayByFluids} forces each
+	 * of them non-solid. {@code FluidWashScenarios} asks the line's own mechanism about every mod block and
+	 * fails unless it marks exactly this list (MOD-703), and it keeps its own hand-written copy of the ids,
+	 * washes every one in the world and fails when this list differs from it, so a new washed-away block is
+	 * added to the test on purpose (MOD-726: {@code fluid_pipe_advanced} was missing from the 26.3 tag).
+	 */
+	public static final List<String> WASHED_AWAY_BY_FLUIDS = List.of(
+			"copper_cable", "tin_cable", "gold_cable", "electrum_cable",
+			"insulated_copper_cable", "insulated_tin_cable", "insulated_gold_cable", "insulated_electrum_cable",
+			"item_pipe", "item_pipe_advanced", "fluid_pipe", "fluid_pipe_advanced", "reinforced_fluid_pipe",
+			"steam_pipe", "reinforced_steam_pipe", "smart_wire");
 
 	/**
 	 * Per-state light emission for fuel-burning blocks (MOD-013): a working block ({@code lit=true})
@@ -80,19 +106,19 @@ public final class ModBlockProperties {
 
 	/**
 	 * The vanilla-torch chain (MOD-085) as an operator over an existing {@code Properties} (MOD-190), so
-	 * {@link ContentManifest#BLOCK_PROPS} can apply it to the loader-provided base (Fabric passes a base
+	 * a {@link ContentManifest.BlockDef} can apply it to the loader-provided base (Fabric passes a base
 	 * carrying {@code setId}; NeoForge a bare one). Mirrors {@code Blocks.TORCH} exactly and stays
 	 * loader-neutral — it does NOT call {@code setId}.
 	 *
 	 * <p>No collision, instant break (breaks by hand, no tool gate), light level 14 (identical to the
-	 * vanilla torch), WOOD sound, {@code DESTROY} push reaction (a piston breaks it), no occlusion.
+	 * vanilla torch), WOOD sound, popped by a piston (it breaks rather than moves), no occlusion.
 	 *
 	 * <p>Superseded {@code torchBase()}, removed in MOD-191: once both loaders went through
-	 * {@code BLOCK_PROPS} it had no callers left anywhere in the repo.
+	 * the shared manifest it had no callers left anywhere in the repo.
 	 */
 	public static BlockBehaviour.Properties applyTorch(BlockBehaviour.Properties p) {
-		return p.noCollision().instabreak().lightLevel(state -> 14).sound(SoundType.WOOD)
-				.pushReaction(PushReaction.DESTROY).noOcclusion();
+		return LineBlockProps.popsOnPush(p).noCollision().instabreak().lightLevel(state -> 14)
+				.sound(SoundType.WOOD).noOcclusion();
 	}
 
 	/**

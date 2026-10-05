@@ -37,16 +37,16 @@ public final class WindMillOutput {
 	 * @param openSky       whether the column above the mill is clear to the sky
 	 * @param raining       whether it is raining over the mill
 	 * @param thundering    whether it is a thunderstorm over the mill (implies rain; checked first)
-	 * @param maxBase       base EU/t at the cloud deck ({@code Config.windMillMaxBaseEuPerTick} etc.)
+	 * @param maxBase       base EU/t at the cloud deck ({@code GeneratorConfig.windMillMaxBaseEuPerTick} etc.)
 	 * @param blocksPerBase length of the climb segment per base point — 16 for T1 and the storm branch,
-	 *                      {@code Config.highAltWindMillBlocksPerBase} (8) for the high-altitude branch
-	 * @param maxOutput     final EU/t cap ({@code Config.windMillMaxEuPerTick})
-	 * @param rainFactor    rain weather multiplier ({@code Config.windMillRainFactor})
-	 * @param thunderFactor thunder weather multiplier ({@code Config.windMillThunderFactor})
-	 * @param cloudY        the cloud deck, where the wind peaks ({@code Config.windCloudY})
-	 * @param deadY         where the wind dies out ({@code Config.windDeadY})
-	 * @param ridgeFactor   fraction of full strength at the ridge ({@code Config.windRidgeFactor})
-	 * @param traceFactor   fraction of full strength above {@code deadY} ({@code Config.windTraceFactor})
+	 *                      {@code GeneratorConfig.highAltWindMillBlocksPerBase} (8) for the high-altitude branch
+	 * @param maxOutput     final EU/t cap ({@code GeneratorConfig.windMillMaxEuPerTick})
+	 * @param rainFactor    rain weather multiplier ({@code GeneratorConfig.windMillRainFactor})
+	 * @param thunderFactor thunder weather multiplier ({@code GeneratorConfig.windMillThunderFactor})
+	 * @param cloudY        the cloud deck, where the wind peaks ({@code GeneratorConfig.windCloudY})
+	 * @param deadY         where the wind dies out ({@code GeneratorConfig.windDeadY})
+	 * @param ridgeFactor   fraction of full strength at the ridge ({@code GeneratorConfig.windRidgeFactor})
+	 * @param traceFactor   fraction of full strength above {@code deadY} ({@code GeneratorConfig.windTraceFactor})
 	 * @param rotorFactor   the installed rotor grade's output scale (MOD-385;
 	 *                      {@code ComponentTier.outputMultiplier()}, 1.0 for the plain wooden rotor)
 	 */

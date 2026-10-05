@@ -8,7 +8,6 @@ import dev.alaindustrial.recipe.ProcessingRecipeInput;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModRecipes;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -82,11 +81,6 @@ public final class ElectricFurnaceBlockEntity extends AbstractProcessingMachineB
 			return true;
 		}
 		return vanillaRecipeCheck.getRecipeFor(new SingleRecipeInput(stack), sl).isPresent();
-	}
-
-	@Override
-	public Component getDisplayName() {
-		return Component.translatable("block.alaindustrial.electric_furnace");
 	}
 
 	@Override

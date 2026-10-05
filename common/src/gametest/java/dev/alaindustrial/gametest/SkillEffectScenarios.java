@@ -1,6 +1,6 @@
 package dev.alaindustrial.gametest;
 
-import dev.alaindustrial.Config;
+import dev.alaindustrial.item.ToolConfig;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.item.wearable.EnergyPackItem;
 import dev.alaindustrial.registry.ModContent;
@@ -9,6 +9,7 @@ import dev.alaindustrial.skill.SkillBranch;
 import dev.alaindustrial.skill.SkillBuild;
 import dev.alaindustrial.skill.SkillSlot;
 import dev.alaindustrial.skill.SkillStore;
+import java.util.List;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.GameType;
@@ -32,6 +33,16 @@ import net.minecraft.world.item.ItemStack;
  * The control case writes nothing and runs on both.
  */
 public final class SkillEffectScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(SkillEffectScenarios::withoutSkillsNothingChanges,
+								"mod483_without_skills_nothing_changes")
+						.fabricId("SkillEffectGameTest", "mod483WithoutSkillsNothingChanges").ticks(20, 40));
+
+		private Roster() {}
+	}
 
 	private SkillEffectScenarios() {
 	}
@@ -74,19 +85,19 @@ public final class SkillEffectScenarios {
 		ItemStack drill = fullDrill();
 		long before = ItemEnergy.get(drill);
 
-		ItemEnergy.spend(drill, Config.electricDrillEuPerBlock, player);
+		ItemEnergy.spend(drill, ToolConfig.electricDrillEuPerBlock, player);
 		long fullPrice = before - ItemEnergy.get(drill);
-		helper.assertValueEqual(fullPrice, (long) Config.electricDrillEuPerBlock,
+		helper.assertValueEqual(fullPrice, (long) ToolConfig.electricDrillEuPerBlock,
 				"a drill with no skills pays the listed price");
 
 		grant(player, SkillBranch.ENERGY, SkillSlot.IN);
 		ItemStack second = fullDrill();
 		long start = ItemEnergy.get(second);
-		ItemEnergy.spend(second, Config.electricDrillEuPerBlock, player);
+		ItemEnergy.spend(second, ToolConfig.electricDrillEuPerBlock, player);
 		long discounted = start - ItemEnergy.get(second);
 
 		helper.assertTrue(discounted < fullPrice, "Frugal Stroke must make the action cheaper");
-		long expected = Math.max(1L, Math.ceilDiv(Config.electricDrillEuPerBlock * 90L, 100L));
+		long expected = Math.max(1L, Math.ceilDiv(ToolConfig.electricDrillEuPerBlock * 90L, 100L));
 		helper.assertValueEqual(discounted, expected, "Frugal Stroke is 10% off, rounded up");
 		helper.succeed();
 	}
@@ -134,7 +145,7 @@ public final class SkillEffectScenarios {
 
 		ItemStack drill = fullDrill();
 		long drillBefore = ItemEnergy.get(drill);
-		ItemEnergy.spend(drill, Config.electricDrillEuPerBlock, player);
+		ItemEnergy.spend(drill, ToolConfig.electricDrillEuPerBlock, player);
 
 		long spent = drillBefore - ItemEnergy.get(drill);
 		long refunded = ItemEnergy.get(player.getItemBySlot(EquipmentSlot.CHEST));
@@ -152,9 +163,9 @@ public final class SkillEffectScenarios {
 
 		ItemStack drill = fullDrill();
 		long before = ItemEnergy.get(drill);
-		ItemEnergy.spend(drill, Config.electricDrillEuPerBlock, player);
+		ItemEnergy.spend(drill, ToolConfig.electricDrillEuPerBlock, player);
 
-		helper.assertValueEqual(before - ItemEnergy.get(drill), (long) Config.electricDrillEuPerBlock,
+		helper.assertValueEqual(before - ItemEnergy.get(drill), (long) ToolConfig.electricDrillEuPerBlock,
 				"an unskilled player pays exactly the configured price");
 		helper.succeed();
 	}

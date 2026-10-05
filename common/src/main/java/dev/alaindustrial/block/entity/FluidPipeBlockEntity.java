@@ -2,9 +2,11 @@ package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.FluidPipeBlock;
+import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.core.fluid.FluidHolder;
 import dev.alaindustrial.core.fluid.FluidNetworkManager;
+import dev.alaindustrial.core.fluid.FluidPipeNode;
 import dev.alaindustrial.core.fluid.FluidPort;
 import dev.alaindustrial.core.fluid.FluidPortHost;
 import dev.alaindustrial.core.fluid.FluidTank;
@@ -45,7 +47,7 @@ import net.minecraft.world.level.storage.ValueOutput;
  * <p><b>Transport, not a machine (MOD-400).</b> The segment holds a fluid buffer and nothing else: no
  * item inventory, no processing progress, no upgrade panel, no owner.
  */
-public final class FluidPipeBlockEntity extends EnergyBlockEntity implements FluidPortHost {
+public final class FluidPipeBlockEntity extends EnergyBlockEntity implements FluidPortHost, FluidPipeNode {
 
 	/**
 	 * The segment's live buffer. Public for the same reason the tank block's is: direct drain/fill.
@@ -73,6 +75,18 @@ public final class FluidPipeBlockEntity extends EnergyBlockEntity implements Flu
 	public FluidPipeBlockEntity(BlockPos pos, BlockState state) {
 		super(ModContent.FLUID_PIPE_BE.get(), pos, state, EnergyTier.LV, 0, 0, 0);
 		this.fluidBuffer = new FluidTank(segmentCapacity(state), this::accepts, fluid -> true, this::bufferChanged);
+	}
+
+	/**
+	 * Not an energy block (MOD-691): no face is a port. The zero-capacity buffer is scaffolding inherited
+	 * with the tick and persistence of {@link EnergyBlockEntity}; left on the default {@code BOTH} role it
+	 * made every face a live port, and NeoForge's lookup, which asks {@code energyPort()} directly, turned a
+	 * pipe pressed against a cable into a producer and a consumer of that network — one that then never
+	 * slept. {@code NONE} makes {@link #energyPort} return {@code null} on both loaders, as the sprinkler's does.
+	 */
+	@Override
+	public EnergyRole energyRoleForFace(Direction worldFace) {
+		return EnergyRole.NONE;
 	}
 
 	/** The grade's segment size; the basic knob for a state that is somehow not a pipe. */
@@ -151,8 +165,21 @@ public final class FluidPipeBlockEntity extends EnergyBlockEntity implements Flu
 		return faceMode(side) == PipeFaceMode.DISABLED ? null : fluidBuffer;
 	}
 
+	@Override
 	public PipeFaceMode faceMode(Direction direction) {
 		return PipeFaceMode.values()[(packedFaceModes >>> (direction.ordinal() * 2)) & 3];
+	}
+
+	/** The segment's buffer, as the network core reads it ({@link FluidPipeNode}, MOD-715). */
+	@Override
+	public FluidTank lineBuffer() {
+		return fluidBuffer;
+	}
+
+	/** {@link FluidPipeBlock#shouldConnectTo} for this segment's own position ({@link FluidPipeNode}). */
+	@Override
+	public boolean connects(Direction side) {
+		return FluidPipeBlock.shouldConnectTo(level, worldPosition, side);
 	}
 
 	/** Advance this face one step along the wrench ladder (neutral → extract → insert → disabled). */
@@ -213,8 +240,8 @@ public final class FluidPipeBlockEntity extends EnergyBlockEntity implements Flu
 	}
 
 	@Override
-	protected void loadAdditional(ValueInput input) {
-		super.loadAdditional(input);
+	protected void loadMachineData(ValueInput input) {
+		super.loadMachineData(input);
 		packedFaceModes = input.getIntOr("FaceModes", 0);
 		legacy = !input.getBooleanOr(STEAM_SPLIT_KEY, false);
 		migrationChecked = false;

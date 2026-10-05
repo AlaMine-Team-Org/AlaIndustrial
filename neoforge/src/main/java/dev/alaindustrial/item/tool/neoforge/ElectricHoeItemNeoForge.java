@@ -3,7 +3,6 @@ package dev.alaindustrial.item.tool.neoforge;
 import dev.alaindustrial.item.tool.ElectricHoeItem;
 import net.minecraft.world.item.ItemInstance;
 import net.minecraft.world.item.context.UseOnContext;
-import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.ItemAbility;
 
 /**
@@ -51,10 +50,10 @@ import net.neoforged.neoforge.common.ItemAbility;
  *
  * <p>The sibling {@code ElectricShovelItem} had the same defect through the same mechanism
  * ({@code ShovelItem.useOn} gates on {@code SHOVEL_FLATTEN}/{@code SHOVEL_DOUSE}). It was fixed the same
- * way in MOD-379 — see {@link ElectricShovelItemNeoForge}. That the defect recurred at all is why
- * {@code docs/tools/arch_check.py} now fails the build when an item whose {@code useOn} delegates to a
- * vanilla tool is registered on NeoForge without such a subclass: a javadoc note like this one is not a
- * gate, and it did not stop the second occurrence.
+ * way in MOD-379 — see {@link ElectricShovelItemNeoForge}. That the defect recurred at all is why the
+ * four tools' answers are pinned by a NeoForge gametest ({@code ElectricToolAbilityNeoForgeScenarios},
+ * MOD-704): a javadoc note like this one is not a gate, and it did not stop the second occurrence. Since
+ * MOD-704 the ability set and the probe below live once, in {@link RightClickAbility}.
  */
 public class ElectricHoeItemNeoForge extends ElectricHoeItem {
 
@@ -64,24 +63,12 @@ public class ElectricHoeItemNeoForge extends ElectricHoeItem {
 
 	@Override
 	public boolean canPerformAction(ItemInstance stack, ItemAbility itemAbility) {
-		return ItemAbilities.DEFAULT_HOE_ACTIONS.contains(itemAbility);
+		return RightClickAbility.HOE.canPerform(itemAbility);
 	}
 
-	/**
-	 * The NeoForge answer to "would a hoe convert this block?" (MOD-389). The common implementation reads
-	 * vanilla's {@code HoeItem.TILLABLES}, which is exactly the map this loader patches out of the flow, so
-	 * it would answer for a table nobody consults here — missing every block a mod contributes through
-	 * {@code BlockToolModificationEvent}.
-	 *
-	 * <p>{@code simulate = true} is the whole point of the flag and not a stylistic choice: with
-	 * {@code false}, probing rooted dirt would <b>pop a hanging root</b> before we have decided whether the
-	 * hoe can even pay for the till. The call still routes through the same
-	 * {@code canPerformAction(HOE_TILL)} gate declared above, so it answers for this item, not a generic
-	 * one.
-	 */
+	/** The NeoForge answer to "would a hoe convert this block?" (MOD-389): {@link RightClickAbility#wouldTill}. */
 	@Override
 	protected boolean wouldTill(UseOnContext context) {
-		return context.getLevel().getBlockState(context.getClickedPos())
-				.getToolModifiedState(context, ItemAbilities.HOE_TILL, /*simulate*/ true) != null;
+		return RightClickAbility.wouldTill(context);
 	}
 }

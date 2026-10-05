@@ -3,6 +3,7 @@ package dev.alaindustrial.gametest;
 import dev.alaindustrial.entity.TemperedGearRoll.EquipPlan;
 import dev.alaindustrial.entity.TemperedGearSpawns;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.entity.EntityTypes;
@@ -19,6 +20,22 @@ import net.minecraft.world.item.Items;
  * itself is pinned deterministically in the L1 {@code TemperedGearRollTest}.
  */
 public final class MobSpawnEquipmentScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(MobSpawnEquipmentScenarios::tcMob001_fullPlanEquipsTemperedGear,
+								"mob_spawn_full_plan_equips_tempered_gear")
+						.fabricId("MobSpawnEquipmentGameTest", "tcMob001_fullPlanEquipsTemperedGear").ticks(20, 100),
+				RosterEntry.of(MobSpawnEquipmentScenarios::tcMob002_fillIsNonDestructive,
+								"mob_spawn_fill_is_non_destructive")
+						.fabricId("MobSpawnEquipmentGameTest", "tcMob002_fillIsNonDestructive").ticks(20, 100),
+				RosterEntry.of(MobSpawnEquipmentScenarios::tcMob003_emptyPlanEquipsNothing,
+								"mob_spawn_empty_plan_equips_nothing")
+						.fabricId("MobSpawnEquipmentGameTest", "tcMob003_emptyPlanEquipsNothing").ticks(20, 100));
+
+		private Roster() {}
+	}
 
 	private MobSpawnEquipmentScenarios() {
 	}

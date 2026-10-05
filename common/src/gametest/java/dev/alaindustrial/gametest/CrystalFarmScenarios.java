@@ -6,6 +6,7 @@ import dev.alaindustrial.block.CrystalFarmShellBlock;
 import dev.alaindustrial.block.CrystalSeedbedBlock;
 import dev.alaindustrial.block.entity.CrystalFarmControllerBlockEntity;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -41,6 +42,37 @@ import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
  * {@code RoomFillTest}, where they cost nothing to build.
  */
 public final class CrystalFarmScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(CrystalFarmScenarios::fun01SealedRoomForms, "crystal_farm_fun01_sealed_room_forms")
+						.fabricId("CrystalFarmGameTest", "tcFarm001Fun01_sealedRoomForms").ticks(20, 200),
+				RosterEntry.of(CrystalFarmScenarios::fun02BreachUnformsAndRepaints,
+								"crystal_farm_fun02_breach_unforms_and_repaints")
+						.fabricId("CrystalFarmGameTest", "tcFarm001Fun02_breachUnformsAndRepaints").ticks(20, 200),
+				RosterEntry.of(CrystalFarmScenarios::fun03BreachIsReportedAtTheHole,
+								"crystal_farm_fun03_breach_is_reported_at_the_hole")
+						.fabricId("CrystalFarmGameTest", "tcFarm001Fun03_breachIsReportedAtTheHole").ticks(20, 200),
+				RosterEntry.of(CrystalFarmScenarios::fun04SeedbedKnowsItIsTended,
+								"crystal_farm_fun04_seedbed_knows_it_is_tended")
+						.fabricId("CrystalFarmGameTest", "tcFarm001Fun04_seedbedKnowsItIsTended").ticks(20, 200),
+				RosterEntry.of(CrystalFarmScenarios::fun05ControllerRemovedAnyWayClearsUp,
+								"crystal_farm_fun05_controller_removed_any_way_clears_up")
+						.fabricId("CrystalFarmGameTest", "tcFarm001Fun05_controllerRemovedAnyWayClearsUp")
+						.ticks(20, 200),
+				RosterEntry.of(CrystalFarmScenarios::fun06DoorClosesAfterHandOpen,
+								"crystal_farm_fun06_door_closes_after_hand_open")
+						.fabricId("CrystalFarmGameTest", "tcFarm001Fun06_doorClosesAfterHandOpen").ticks(200),
+				RosterEntry.of(CrystalFarmScenarios::fun07DoorClosesUnderRedstone,
+								"crystal_farm_fun07_door_closes_under_redstone")
+						.fabricId("CrystalFarmGameTest", "tcFarm001Fun07_doorClosesUnderRedstone").ticks(200),
+				RosterEntry.of(CrystalFarmScenarios::fun08DoorWaitsForTheDoorwayToClear,
+								"crystal_farm_fun08_door_waits_for_the_doorway_to_clear")
+						.fabricId("CrystalFarmGameTest", "tcFarm001Fun08_doorWaitsForTheDoorwayToClear").ticks(200));
+
+		private Roster() {}
+	}
 
 	private CrystalFarmScenarios() {}
 

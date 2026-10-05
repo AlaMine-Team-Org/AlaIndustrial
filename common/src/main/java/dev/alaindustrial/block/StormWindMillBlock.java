@@ -1,14 +1,13 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.StormWindMillBlockEntity;
+import dev.alaindustrial.block.entity.machine.MachineChannels;
 import dev.alaindustrial.registry.ModSounds;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -23,15 +22,8 @@ import net.minecraft.world.level.block.state.BlockState;
  * {@link WindMillBlock}; only the entity (generation formula) and the front texture differ.
  */
 public class StormWindMillBlock extends HorizontalMachineBlock implements MachineHumProvider {
-	public static final MapCodec<StormWindMillBlock> CODEC = simpleCodec(StormWindMillBlock::new);
-
 	public StormWindMillBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override
@@ -77,6 +69,6 @@ public class StormWindMillBlock extends HorizontalMachineBlock implements Machin
 	@Override
 	public boolean isWorking(Level level, BlockPos pos, BlockState state) {
 		return level.getBlockEntity(pos) instanceof StormWindMillBlockEntity mill
-				&& mill.getDataAccess().get(2) > 0;
+				&& mill.getDataAccess().get(MachineChannels.PROGRESS.ordinal()) > 0;
 	}
 }

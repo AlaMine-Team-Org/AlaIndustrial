@@ -6,6 +6,7 @@ import dev.alaindustrial.core.fluid.FluidPortHost;
 import dev.alaindustrial.registry.BlockCapabilityRoster;
 import dev.alaindustrial.registry.ContentManifest;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
@@ -70,24 +71,24 @@ public final class BlockCapabilityParityScenarios {
 	private static final BlockPos PROBE = new BlockPos(1, 2, 1);
 
 	/**
-	 * Floor under the sweep size. {@code BLOCK_ENTITIES} holds 46 entries today; 30 still absorbs a
-	 * removal or two while noticing a whole family (the eight cable grades share one entry, so it is
-	 * the machine families that would have to vanish) — an empty or truncated manifest must not pass
-	 * as "nothing to check".
+	 * Floor under the sweep size, counted in placed blocks (every block of every {@code BLOCK_ENTITIES}
+	 * entry since MOD-691, so well above the entry count). 30 still absorbs a removal or two while
+	 * noticing a whole family vanish — an empty or truncated manifest must not pass as "nothing to check".
 	 */
 	private static final int MIN_EXPECTED_BLOCK_ENTITIES = 30;
 
 	/**
 	 * Restated by id, deliberately NOT read from {@link BlockCapabilityRoster#NO_ENERGY_CAPABILITY}
-	 * (see the class doc). All five extend {@code EnergyBlockEntity} with a zero-capacity buffer, so
-	 * their {@code energyPort} is non-null on every face — the interface rule alone would expose them.
+	 * (see the class doc). Block-entity ids, compared with the ids of the roster's definitions: {@code item_pipe} covers both item
+	 * pipes, {@code fluid_pipe} all five fluid and steam pipes. All three implement {@code EnergyPortHost}
+	 * with a zero-capacity buffer and report {@code NONE} on every face (the pipes since MOD-691).
 	 *
 	 * <p>The pipes carry energy scaffolding they never use; the sprinkler (MOD-525) is paid in
-	 * nutrient solution and reports {@code NONE} on every face, so an energy capability there would
-	 * offer the network an endpoint that can neither take nor give.
+	 * nutrient solution, so an energy capability there would offer the network an endpoint that can
+	 * neither take nor give.
 	 */
 	private static final List<String> BLOCKS_NEVER_ENERGY =
-			List.of("item_pipe", "fluid_pipe", "fluid_pipe_advanced", "reinforced_fluid_pipe", "sprinkler");
+			List.of("item_pipe", "fluid_pipe", "sprinkler");
 
 	/**
 	 * For every manifest block entity and every face: energy capability present ⇔ the block entity is
@@ -104,90 +105,34 @@ public final class BlockCapabilityParityScenarios {
 		// roster's set SHRINKING (a pipe dropped -> the loader exposes it -> red). If the set GREW — say
 		// "cesu" added to NO_ENERGY_CAPABILITY — expected and actual would both flip to ABSENT on both
 		// loaders and the sweep would stay green while re-creating the very defect it guards against.
-		if (!Set.copyOf(BLOCKS_NEVER_ENERGY).equals(BlockCapabilityRoster.NO_ENERGY_CAPABILITY)) {
-			helper.fail("MOD-433: BlockCapabilityRoster.NO_ENERGY_CAPABILITY is " + BlockCapabilityRoster.NO_ENERGY_CAPABILITY
+		if (!Set.copyOf(BLOCKS_NEVER_ENERGY).equals(exclusionIds())) {
+			helper.fail("MOD-433: BlockCapabilityRoster.NO_ENERGY_CAPABILITY is " + exclusionIds().stream().sorted().toList()
 					+ " but the sweep's independent restatement is " + BLOCKS_NEVER_ENERGY
-					+ " — the exclusion set is closed: only the two pipes may implement EnergyPortHost without"
-					+ " publishing an energy capability; TC-CAP-PARITY");
+					+ " — the exclusion set is closed: only the item pipe, the fluid pipe (all five of its blocks) and"
+					+ " the sprinkler may implement EnergyPortHost without publishing an energy capability; TC-CAP-PARITY");
+			return;
+		}
+
+		// MOD-691 (REG-7) / MOD-711: a block id can no longer be put in the exclusion (it holds definitions),
+		// but a definition declared as a constant and left out of BLOCK_ENTITIES would still exclude nothing
+		// that is registered. So every member must be an entry of the list the loaders replay.
+		List<String> notListed = exclusionsMissingFromManifest();
+		if (!notListed.isEmpty()) {
+			helper.fail("MOD-691: NO_ENERGY_CAPABILITY holds " + notListed
+					+ ", which is not an entry of ContentManifest.BLOCK_ENTITIES — a definition no loader"
+					+ " registers excludes nothing; TC-CAP-PARITY");
 			return;
 		}
 
 		for (ContentManifest.BlockEntityDef<?> def : ContentManifest.BLOCK_ENTITIES) {
-			Block block = BuiltInRegistries.BLOCK.getValue(Industrialization.id(def.blocks().getFirst()));
-			helper.setBlock(PROBE, block.defaultBlockState());
-			BlockPos abs = helper.absolutePos(PROBE);
-			Level level = helper.getLevel();
-			if (level.getBlockState(abs).getBlock() != block) {
-				helper.fail("MOD-433 could not place `" + def.blocks().getFirst() + "` at the probe position;"
-						+ " the sweep cannot vouch for block entity `" + def.id() + "`; TC-CAP-PARITY");
-				return;
-			}
-			BlockEntity be = level.getBlockEntity(abs);
-			if (be == null || !def.type().isInstance(be)) {
-				helper.fail("MOD-433: `" + def.blocks().getFirst() + "` did not produce a "
-						+ def.type().getSimpleName() + " (got " + (be == null ? "no block entity" : be.getClass().getSimpleName())
-						+ ") — the manifest's block/type pair is broken; TC-CAP-PARITY");
-				return;
-			}
-			checked++;
-
-			boolean excludedPipe = BLOCKS_NEVER_ENERGY.contains(def.id());
-			// Accumulated over the six faces; the side-less lookup below must agree with them (MOD-448).
-			boolean anyFaceEnergy = false;
-			boolean anyFaceFluid = false;
-			for (Direction face : Direction.values()) {
-				boolean expectEnergy = be instanceof EnergyPortHost host
-						&& host.energyPort(face) != null
-						&& !BlockCapabilityRoster.NO_ENERGY_CAPABILITY.contains(def.id());
-				boolean expectFluid = be instanceof FluidPortHost host && host.fluidPort(face) != null;
-				boolean expectItem = be instanceof Container;
-
-				anyFaceEnergy |= expectEnergy;
-				anyFaceFluid |= expectFluid;
-
-				boolean energy = probes.energy().present(level, abs, face);
-				boolean fluid = probes.fluid().present(level, abs, face);
-				boolean item = probes.item().present(level, abs, face);
-
-				// The independent restatement of the exclusion: a pipe must expose no energy on any face,
-				// whatever the roster constant says (see class doc — two oracles on purpose).
-				if (excludedPipe && energy) {
-					violations.add(def.id() + "/" + face.getName()
-							+ ": energy capability present on a pipe (must never be — MOD-433 exclusion)");
+			// MOD-691 (REG-7): every block of the entry, not only the first — the fluid-pipe entry alone
+			// carries five blocks, and the advanced, reinforced and steam grades were never placed here.
+			for (String blockId : def.blocks()) {
+				if (!sweepPlacedBlock(helper, probes, def, blockId, violations)) {
+					return;
 				}
-				if (energy != expectEnergy) {
-					violations.add(def.id() + "/" + face.getName() + ": energy " + present(energy)
-							+ " but energyPort(face) says " + present(expectEnergy));
-				}
-				if (fluid != expectFluid) {
-					violations.add(def.id() + "/" + face.getName() + ": fluid " + present(fluid)
-							+ " but fluidPort(face) says " + present(expectFluid));
-				}
-				if (item != expectItem) {
-					violations.add(def.id() + "/" + face.getName() + ": item " + present(item)
-							+ " but the block entity " + (expectItem ? "is" : "is not") + " a Container");
-				}
+				checked++;
 			}
-			// MOD-448: the same lookup with NO side. Both loader APIs allow it, viewer mods (Jade) ask that
-			// way about every block under the crosshair, and our own fluid HUD reads the tank like this
-			// (TC-FLUID-MOD126). Two things are asserted at once. It must not THROW — before the fix the
-			// loader handed the null straight to energyPort/fluidPort, which dereferenced it (NPE in
-			// FluidPipeBlockEntity.faceMode / EnergyCondenserBlockEntity.energyRoleForFace), and a throw
-			// here fails the scenario on whichever loader regressed. And it must AGREE with the per-face
-			// answers above: present exactly when some face publishes a port, so "no particular side"
-			// cannot quietly become a back door into a block that exposes nothing anywhere.
-			boolean energyNoSide = probes.energy().present(level, abs, null);
-			boolean fluidNoSide = probes.fluid().present(level, abs, null);
-			if (energyNoSide != anyFaceEnergy) {
-				violations.add(def.id() + "/no-side: energy " + present(energyNoSide)
-						+ " but across the six faces it is " + present(anyFaceEnergy) + " (MOD-448)");
-			}
-			if (fluidNoSide != anyFaceFluid) {
-				violations.add(def.id() + "/no-side: fluid " + present(fluidNoSide)
-						+ " but across the six faces it is " + present(anyFaceFluid) + " (MOD-448)");
-			}
-
-			helper.setBlock(PROBE, Blocks.AIR);
 		}
 
 		// Violations before the floor: a concrete offender is more useful than "the sweep looks small".
@@ -205,6 +150,116 @@ public final class BlockCapabilityParityScenarios {
 					+ " test proves nothing; TC-CAP-PARITY");
 		}
 		helper.succeed();
+	}
+
+	/** The ids of {@link BlockCapabilityRoster#NO_ENERGY_CAPABILITY}'s definitions. */
+	private static Set<String> exclusionIds() {
+		Set<String> ids = new LinkedHashSet<>();
+		for (ContentManifest.BlockEntityDef<?> def : BlockCapabilityRoster.NO_ENERGY_CAPABILITY) {
+			ids.add(def.id());
+		}
+		return ids;
+	}
+
+	/**
+	 * MOD-691 (REG-7) / MOD-711: the ids of the members of {@link BlockCapabilityRoster#NO_ENERGY_CAPABILITY}
+	 * that are not an entry of {@link ContentManifest#BLOCK_ENTITIES}, sorted — {@code Set.of} iterates in a
+	 * per-JVM salted order, and the message should read the same every run.
+	 */
+	private static List<String> exclusionsMissingFromManifest() {
+		List<String> missing = new ArrayList<>();
+		for (ContentManifest.BlockEntityDef<?> def : BlockCapabilityRoster.NO_ENERGY_CAPABILITY) {
+			if (!ContentManifest.BLOCK_ENTITIES.contains(def)) {
+				missing.add(def.id());
+			}
+		}
+		missing.sort(null);
+		return missing;
+	}
+
+	/**
+	 * Places one block of {@code def} at the probe, checks its six faces and the side-less lookup against
+	 * the block entity's own ports, adds every mismatch to {@code violations} and clears the probe.
+	 * Returns {@code false} after failing the test when the block could not be placed or produced the
+	 * wrong block entity — the sweep cannot vouch for that entry, so it stops.
+	 */
+	private static boolean sweepPlacedBlock(GameTestHelper helper, Probes probes,
+			ContentManifest.BlockEntityDef<?> def, String blockId, List<String> violations) {
+		Block block = BuiltInRegistries.BLOCK.getValue(Industrialization.id(blockId));
+		helper.setBlock(PROBE, block.defaultBlockState());
+		BlockPos abs = helper.absolutePos(PROBE);
+		Level level = helper.getLevel();
+		if (level.getBlockState(abs).getBlock() != block) {
+			helper.fail("MOD-433 could not place `" + blockId + "` at the probe position;"
+					+ " the sweep cannot vouch for block entity `" + def.id() + "`; TC-CAP-PARITY");
+			return false;
+		}
+		BlockEntity be = level.getBlockEntity(abs);
+		if (be == null || !def.type().isInstance(be)) {
+			helper.fail("MOD-433: `" + blockId + "` did not produce a "
+					+ def.type().getSimpleName() + " (got " + (be == null ? "no block entity" : be.getClass().getSimpleName())
+					+ ") — the manifest's block/type pair is broken; TC-CAP-PARITY");
+			return false;
+		}
+
+		boolean excludedPipe = BLOCKS_NEVER_ENERGY.contains(def.id());
+		// Accumulated over the six faces; the side-less lookup below must agree with them (MOD-448).
+		boolean anyFaceEnergy = false;
+		boolean anyFaceFluid = false;
+		for (Direction face : Direction.values()) {
+			boolean expectEnergy = be instanceof EnergyPortHost host
+					&& host.energyPort(face) != null
+					&& !BlockCapabilityRoster.NO_ENERGY_CAPABILITY.contains(def);
+			boolean expectFluid = be instanceof FluidPortHost host && host.fluidPort(face) != null;
+			boolean expectItem = be instanceof Container;
+
+			anyFaceEnergy |= expectEnergy;
+			anyFaceFluid |= expectFluid;
+
+			boolean energy = probes.energy().present(level, abs, face);
+			boolean fluid = probes.fluid().present(level, abs, face);
+			boolean item = probes.item().present(level, abs, face);
+
+			// The independent restatement of the exclusion: a pipe must expose no energy on any face,
+			// whatever the roster constant says (see class doc — two oracles on purpose).
+			if (excludedPipe && energy) {
+				violations.add(def.id() + "[" + blockId + "]/" + face.getName()
+						+ ": energy capability present on a pipe (must never be — MOD-433 exclusion)");
+			}
+			if (energy != expectEnergy) {
+				violations.add(def.id() + "[" + blockId + "]/" + face.getName() + ": energy " + present(energy)
+						+ " but energyPort(face) says " + present(expectEnergy));
+			}
+			if (fluid != expectFluid) {
+				violations.add(def.id() + "[" + blockId + "]/" + face.getName() + ": fluid " + present(fluid)
+						+ " but fluidPort(face) says " + present(expectFluid));
+			}
+			if (item != expectItem) {
+				violations.add(def.id() + "[" + blockId + "]/" + face.getName() + ": item " + present(item)
+						+ " but the block entity " + (expectItem ? "is" : "is not") + " a Container");
+			}
+		}
+		// MOD-448: the same lookup with NO side. Both loader APIs allow it, viewer mods (Jade) ask that
+		// way about every block under the crosshair, and our own fluid HUD reads the tank like this
+		// (TC-FLUID-MOD126). Two things are asserted at once. It must not THROW — before the fix the
+		// loader handed the null straight to energyPort/fluidPort, which dereferenced it (NPE in
+		// FluidPipeBlockEntity.faceMode / EnergyCondenserBlockEntity.energyRoleForFace), and a throw
+		// here fails the scenario on whichever loader regressed. And it must AGREE with the per-face
+		// answers above: present exactly when some face publishes a port, so "no particular side"
+		// cannot quietly become a back door into a block that exposes nothing anywhere.
+		boolean energyNoSide = probes.energy().present(level, abs, null);
+		boolean fluidNoSide = probes.fluid().present(level, abs, null);
+		if (energyNoSide != anyFaceEnergy) {
+			violations.add(def.id() + "[" + blockId + "]/no-side: energy " + present(energyNoSide)
+					+ " but across the six faces it is " + present(anyFaceEnergy) + " (MOD-448)");
+		}
+		if (fluidNoSide != anyFaceFluid) {
+			violations.add(def.id() + "[" + blockId + "]/no-side: fluid " + present(fluidNoSide)
+					+ " but across the six faces it is " + present(anyFaceFluid) + " (MOD-448)");
+		}
+
+		helper.setBlock(PROBE, Blocks.AIR);
+		return true;
 	}
 
 	private static String present(boolean present) {

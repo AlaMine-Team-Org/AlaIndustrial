@@ -4,11 +4,9 @@ import dev.alaindustrial.block.entity.ElectricHeaterBlockEntity;
 import dev.alaindustrial.block.entity.ElectricHeaterStatus;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.registry.ModContent;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -35,13 +33,12 @@ public class ElectricHeaterMenu extends MachineMenu {
 
 	/**
 	 * Client side. The dummy container is empty — exactly the heater's zero slots, with no upgrade block
-	 * appended, matching {@link ElectricHeaterBlockEntity#hasUpgradePanel()}. Sizing it any wider would
-	 * push {@code baseSlotCount()} out of step with the server and misalign every slot index.
+	 * appended, matching the {@code NoUpgradePanel} marker on {@link ElectricHeaterBlockEntity}. Sizing it
+	 * any wider would push {@code baseSlotCount()} out of step with the server and misalign every slot index.
 	 */
 	public ElectricHeaterMenu(int syncId, Inventory playerInventory) {
-		super(ModContent.ELECTRIC_HEATER_MENU.get(), syncId, playerInventory, new SimpleContainer(0),
-				new SimpleContainerData(ElectricHeaterBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL,
-				ModContent.ELECTRIC_HEATER.get());
+		super(ModContent.ELECTRIC_HEATER_MENU.get(), syncId, playerInventory,
+				clientStub(0, ElectricHeaterBlockEntity.DATA_COUNT), ModContent.ELECTRIC_HEATER.get());
 	}
 
 	/** The heater has none — see the class doc. */
@@ -49,15 +46,6 @@ public class ElectricHeaterMenu extends MachineMenu {
 	protected void addMachineSlots() {
 	}
 
-	/**
-	 * No panel. Must answer the same as {@link ElectricHeaterBlockEntity#hasUpgradePanel()}: the slot
-	 * indices are derived from it on both sides, and the block entity's answer also decides whether the
-	 * heater has an inventory at all.
-	 */
-	@Override
-	public boolean hasUpgradePanel() {
-		return false;
-	}
 
 	/**
 	 * Shift-click does nothing, said out loud — same reasoning as the Charging Station's: the inherited
@@ -71,21 +59,21 @@ public class ElectricHeaterMenu extends MachineMenu {
 
 	/** Warm-up as a percentage, the number the screen prints and the thermometer fills to. */
 	public int getWarmupPercent() {
-		return data.get(ElectricHeaterBlockEntity.DATA_HEAT) / 10;
+		return channel(ElectricHeaterBlockEntity.Channel.HEAT) / 10;
 	}
 
 	/** Warm-up in permille — the finer value, used for the gauge so it moves every few ticks. */
 	public int getWarmupPermille() {
-		return data.get(ElectricHeaterBlockEntity.DATA_HEAT);
+		return channel(ElectricHeaterBlockEntity.Channel.HEAT);
 	}
 
 	/** EU per tick the heater bills while working, including the chips of the machine above. */
 	public int getRateEuPerTick() {
-		return data.get(ElectricHeaterBlockEntity.DATA_RATE);
+		return channel(ElectricHeaterBlockEntity.Channel.RATE);
 	}
 
 	public ElectricHeaterStatus getStatus() {
-		return ElectricHeaterStatus.byOrdinal(data.get(ElectricHeaterBlockEntity.DATA_STATUS));
+		return ElectricHeaterStatus.byOrdinal(channel(ElectricHeaterBlockEntity.Channel.STATUS));
 	}
 
 	/**

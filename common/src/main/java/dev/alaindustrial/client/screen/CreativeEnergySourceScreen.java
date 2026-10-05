@@ -1,5 +1,6 @@
 package dev.alaindustrial.client.screen;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.menu.CreativeEnergySourceMenu;
@@ -337,12 +338,21 @@ public class CreativeEnergySourceScreen extends MachineScreen<CreativeEnergySour
 		}
 	}
 
+	/**
+	 * Both panels silence the switch, the presets and the slider wholesale while open: the statistics one can be
+	 * dragged across this screen, and a click meant for it would otherwise land on a control underneath.
+	 */
+	@Override
+	protected OverlayModality overlayModality() {
+		return OverlayModality.ANY_PANEL_OPEN;
+	}
+
 	@Override
 	public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
 		// Both panels are modal over their footprint and the statistics one can be DRAGGED across this
 		// screen, so a click meant for it would otherwise land on the switch or the slider underneath.
 		// Defer wholesale while either is open, the way the Sawmill defers to the upgrade panel.
-		if (event.button() == 0 && !this.menu.isPanelOpen() && !this.menu.isStatsPanelOpen()) {
+		if (event.button() == InputConstants.MOUSE_BUTTON_LEFT && frameAcceptsInput(event.x(), event.y())) {
 			if (over(event.x(), event.y(), TOGGLE_X, TOGGLE_Y, TOGGLE_W, TOGGLE_H)) {
 				send(CreativeEnergySourceMenu.BUTTON_TOGGLE);
 				return true;
@@ -370,7 +380,7 @@ public class CreativeEnergySourceScreen extends MachineScreen<CreativeEnergySour
 
 	@Override
 	public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
-		if (dragging && event.button() == 0) {
+		if (dragging && event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
 			pendingOutput = stepAtMouse(event.x()) * CreativeEnergySourceMenu.OUTPUT_STEP;
 			dragTicks = DRAG_WATCHDOG_TICKS;
 			return true;
@@ -380,7 +390,7 @@ public class CreativeEnergySourceScreen extends MachineScreen<CreativeEnergySour
 
 	@Override
 	public boolean mouseReleased(MouseButtonEvent event) {
-		if (dragging && event.button() == 0) {
+		if (dragging && event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
 			dragging = false;
 			// The value stays on screen; requestStep arms the timeout that retires it once the server agrees.
 			requestStep(currentStep());
@@ -392,7 +402,7 @@ public class CreativeEnergySourceScreen extends MachineScreen<CreativeEnergySour
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
 		// Ignored mid-drag: the whole contract of the slider is that a drag sends nothing until it ends.
-		if (scrollY != 0 && !dragging && !this.menu.isPanelOpen() && !this.menu.isStatsPanelOpen()
+		if (scrollY != 0 && !dragging && frameAcceptsInput(mouseX, mouseY)
 				&& over(mouseX, mouseY, SLIDER_X, SLIDER_Y, SLIDER_W, SLIDER_H)) {
 			// Reads currentStep(), which is already pending-aware, so a burst of wheel clicks steps from
 			// the value on screen instead of bouncing off whatever the server last confirmed.

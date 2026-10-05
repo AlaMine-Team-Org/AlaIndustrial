@@ -3,10 +3,8 @@ package dev.alaindustrial.menu;
 import dev.alaindustrial.block.entity.LightningRodGeneratorBlockEntity;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.registry.ModContent;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
@@ -26,9 +24,9 @@ public class LightningRodGeneratorMenu extends MachineMenu {
 	/** Client side. */
 	public LightningRodGeneratorMenu(int syncId, Inventory playerInventory) {
 		super(ModContent.LIGHTNING_ROD_GENERATOR_MENU.get(), syncId, playerInventory,
-				new SimpleContainer(LightningRodGeneratorBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT),
-				new SimpleContainerData(LightningRodGeneratorBlockEntity.DATA_COUNT),
-				ContainerLevelAccess.NULL, ModContent.LIGHTNING_ROD_GENERATOR.get());
+				clientStub(LightningRodGeneratorBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT,
+						LightningRodGeneratorBlockEntity.DATA_COUNT),
+				ModContent.LIGHTNING_ROD_GENERATOR.get());
 	}
 
 	@Override
@@ -56,7 +54,7 @@ public class LightningRodGeneratorMenu extends MachineMenu {
 
 	/** Status code; see the {@code MODE_*} constants on the block entity. */
 	public int getMode() {
-		return data.get(LightningRodGeneratorBlockEntity.MODE_CHANNEL);
+		return channel(LightningRodGeneratorBlockEntity.Channel.MODE);
 	}
 
 	/**
@@ -65,6 +63,6 @@ public class LightningRodGeneratorMenu extends MachineMenu {
 	 * 2 carries the capacitor gauge here.
 	 */
 	public int getProductionRate() {
-		return data.get(LightningRodGeneratorBlockEntity.RATE_CHANNEL);
+		return channel(LightningRodGeneratorBlockEntity.Channel.RATE);
 	}
 }

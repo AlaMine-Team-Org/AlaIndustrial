@@ -1,0 +1,16 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "equipment",
+	"key": {
+		"P": "minecraft:paper",
+		"B": "alaindustrial:module_blank"
+	},
+	"pattern": [
+		" P ",
+		"PBP",
+		" P "
+	],
+	"result": {
+		"id": "alaindustrial:magnet_filter_module"
+	}
+}

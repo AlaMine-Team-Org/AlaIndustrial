@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.EnergyCondenserBlockEntity;
+import dev.alaindustrial.compat.client.Poses;
 import dev.alaindustrial.core.machine.RotorSpin;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -153,7 +154,7 @@ public final class EnergyCondenserBlockEntityRenderer
 			// The pivot is the middle of the block on X and Z; its height does not matter, because
 			// a turn about Y leaves everything on that axis where it was.
 			poseStack.translate(0.5F, 0.0F, 0.5F);
-			poseStack.mulPose(Axis.YP.rotation(state.angle));
+			Poses.rotate(poseStack, Axis.YP.rotation(state.angle));
 			poseStack.translate(-0.5F, 0.0F, -0.5F);
 			submit(collector, poseStack, SOLID_TYPE, stage.spin(), sprite);
 			submitOffset(collector, poseStack, stage.spinDown(), sprite, -state.spread);

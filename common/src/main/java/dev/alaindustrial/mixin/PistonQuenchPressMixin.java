@@ -1,6 +1,6 @@
 package dev.alaindustrial.mixin;
 
-import dev.alaindustrial.core.ceramic.QuenchPress;
+import dev.alaindustrial.item.QuenchPress;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;

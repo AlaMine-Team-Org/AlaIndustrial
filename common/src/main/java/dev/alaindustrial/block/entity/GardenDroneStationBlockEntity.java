@@ -2,7 +2,9 @@ package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.KokSagyzBlock;
-import dev.alaindustrial.core.crop.CropMaturity;
+import dev.alaindustrial.block.entity.machine.SyncChannels;
+import dev.alaindustrial.compat.Bonemeal;
+import dev.alaindustrial.compat.LineSounds;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.menu.GardenDroneStationMenu;
@@ -16,10 +18,8 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
@@ -28,7 +28,6 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -47,10 +46,9 @@ import org.jetbrains.annotations.Nullable;
  * The Garden Drone Station (MOD-277): a dock block whose drone tends the farmland around it —
  * tilling, planting, fertilizing and harvesting, one tile per working tick.
  *
- * <p>The drone itself is <b>not an entity</b>. It is drawn by this block entity's renderer, so the
- * server-side state below (target position + phase) is the whole drone: it cannot be lost, killed,
- * duplicated, or stranded in an unloaded chunk. See the OKF spec for why that beats a real entity
- * here.
+ * <p>The drone itself is <b>not an entity</b>. It is drawn by this block entity's renderer, so the server-side state
+ * below (target position + phase) is the whole drone: it cannot be lost, killed, duplicated, or stranded in an unloaded
+ * chunk. See the OKF spec for why that beats a real entity here.
  *
  * <p>Three things are worth knowing before changing this class:
  * <ul>
@@ -87,14 +85,6 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 	 */
 	public static final int HOE_SLOT = DRONE_SLOT + 1;
 	public static final int SLOT_COUNT = HOE_SLOT + 1;
-
-	/** Extra {@link ContainerData} channel: what the station is doing, for the screen's status line. */
-	public static final int DATA_STATUS = 4;
-	/**
-	 * Number of sync channels, stated once (MOD-235). The client menu stub sizes its
-	 * {@code SimpleContainerData} from this same constant, so the two cannot drift apart.
-	 */
-	public static final int DATA_COUNT = 5;
 
 	/**
 	 * Shortest a leg can be, in ticks. Distance alone is not enough: the tile next to the station is a
@@ -175,8 +165,23 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 
 	// ---------------------------------------------------------------- tick
 
+	/**
+	 * EU the station paid in the current tick — set where an action lands, read once the tick is done
+	 * (MOD-692). Session state, never persisted: it is reset at the start of every tick.
+	 */
+	private long euSpentThisTick;
+
 	@Override
 	protected int onServerTick(Level level, BlockPos pos, BlockState state) {
+		euSpentThisTick = 0L;
+		int sleep = runStation(level, pos);
+		// MOD-692: the statistics panel's "now" line is what this tick paid — an action's price on the
+		// tick it lands, 0 on every flight and idle tick.
+		recordEuRate((int) Math.min(Integer.MAX_VALUE, euSpentThisTick));
+		return sleep;
+	}
+
+	private int runStation(Level level, BlockPos pos) {
 		if (!(level instanceof ServerLevel serverLevel)) {
 			return IDLE_SLEEP_TICKS;
 		}
@@ -221,7 +226,7 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 				if (droneJob != null && level.isLoaded(droneTarget)
 						&& applies(level, droneJob, droneTarget)
 						&& apply(level, droneJob, droneTarget)) {
-					energy.drainInternal(Config.gardenDroneEuPerAction);
+					euSpentThisTick = energy.drainInternal(Config.gardenDroneEuPerAction);
 					creditUsefulWork(level, Config.gardenDroneEuPerAction);
 				}
 				// Head home along the same leg length, so the return reads as the same flight reversed —
@@ -353,7 +358,7 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 			case FERTILIZE -> !items.get(FERTILIZER_SLOT).isEmpty()
 					&& CropMaturity.isFertilizable(level, target, state)
 					&& state.getBlock() instanceof BonemealableBlock bonemealable
-					&& bonemealable.isValidBonemealTarget(level, target, state);
+					&& Bonemeal.isValidTarget(bonemealable, level, target, state);
 			case TILL -> isTillable(state)
 					&& level.getBlockState(target.above()).isAir()
 					&& hasUsableHoe();
@@ -437,8 +442,8 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 			return false;
 		}
 		RandomSource random = level.getRandom();
-		if (bonemealable.isBonemealSuccess(level, random, target, state)) {
-			bonemealable.performBonemeal(level, random, target, state);
+		if (Bonemeal.isSuccess(bonemealable, level, random, target, state)) {
+			Bonemeal.perform(bonemealable, level, random, target, state);
 		}
 		items.get(FERTILIZER_SLOT).shrink(1);
 		return true;
@@ -454,7 +459,7 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 		// The listener argument is null rather than a player: vanilla passes the player so they are
 		// EXCLUDED from the packet, having already predicted the sound client-side — a block entity
 		// predicts nothing, so excluding anyone would silence it for whoever stood closest.
-		level.playSound(null, target, SoundEvents.HOE_TILL, SoundSource.BLOCKS, 1.0F, 1.0F);
+		level.playSound(null, target, LineSounds.hoeTill(), SoundSource.BLOCKS, 1.0F, 1.0F);
 		wearHoe(level);
 		return true;
 	}
@@ -772,32 +777,20 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 		return EnergyRole.IN;
 	}
 
-	// ---------------------------------------------------------------- data + persistence
+	/**
+	 * GUI sync channels (MOD-712, BE-7): the base four, then the {@link GardenDroneStatus} ordinal, which
+	 * takes a write.
+	 */
+	public enum Channel { ENERGY, CAPACITY, PROGRESS, MAX_PROGRESS, STATUS }
 
-	private final ContainerData stationData = new ContainerData() {
-		@Override
-		public int get(int index) {
-			return index == DATA_STATUS ? status.ordinal() : dataAccess.get(index);
-		}
-
-		@Override
-		public void set(int index, int value) {
-			if (index == DATA_STATUS) {
-				status = GardenDroneStatus.byOrdinal(value);
-			} else {
-				dataAccess.set(index, value);
-			}
-		}
-
-		@Override
-		public int getCount() {
-			return DATA_COUNT;
-		}
-	};
+	/** Width of {@link #getDataAccess()}, which the menu's client stub sizes itself from (MOD-235). */
+	public static final int DATA_COUNT = Channel.values().length;
 
 	@Override
-	public ContainerData getDataAccess() {
-		return stationData;
+	protected SyncChannels createChannels() {
+		return channels(Channel.class)
+				.readWrite(Channel.STATUS, () -> status.ordinal(), value -> status = GardenDroneStatus.byOrdinal(value))
+				.build();
 	}
 
 	@Override
@@ -815,8 +808,8 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 	}
 
 	@Override
-	protected void loadAdditional(ValueInput input) {
-		super.loadAdditional(input);
+	protected void loadMachineData(ValueInput input) {
+		super.loadMachineData(input);
 		status = GardenDroneStatus.byOrdinal(input.getIntOr("Status", 0));
 		droneTarget = input.read("DroneTarget", BlockPos.CODEC).orElse(null);
 		int job = input.getIntOr("DroneJob", -1);
@@ -829,11 +822,6 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 	}
 
 	// ---------------------------------------------------------------- menu
-
-	@Override
-	public Component getDisplayName() {
-		return Component.translatable("block.alaindustrial.garden_drone_station");
-	}
 
 	@Override
 	public AbstractContainerMenu createMenu(int syncId, Inventory inventory, Player player) {

@@ -45,6 +45,34 @@ import net.minecraft.world.phys.Vec3;
  */
 public final class RtpScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(RtpScenarios::tcTele004Fun01_chipFitsOnceAndIsConsumed,
+								"tc_tele004_fun01_chip_fits_once_and_is_consumed")
+						.fabricId("RtpGameTest", "tcTele004Fun01_chipFitsOnceAndIsConsumed").ticks(20, 40),
+				RosterEntry.of(RtpScenarios::tcTele004Neg01_moduleIsWhatOpensTheGate,
+								"tc_tele004_neg01_module_is_what_opens_the_gate")
+						.fabricId("RtpGameTest", "tcTele004Neg01_moduleIsWhatOpensTheGate").ticks(20, 40),
+				RosterEntry.of(RtpScenarios::tcTele004Fun02_checklistReportsEveryProblem,
+								"tc_tele004_fun02_checklist_reports_every_problem")
+						.fabricId("RtpGameTest", "tcTele004Fun02_checklistReportsEveryProblem").ticks(20, 40),
+				RosterEntry.of(RtpScenarios::tcTele004Nrg01_refusedJumpCostsNothing,
+								"tc_tele004_nrg01_refused_jump_costs_nothing")
+						.fabricId("RtpGameTest", "tcTele004Nrg01_refusedJumpCostsNothing").ticks(20, 40),
+				RosterEntry.of(RtpScenarios::tcTele004Nrg02_chargesExactlyTheFlatPrice,
+								"tc_tele004_nrg02_charges_exactly_the_flat_price")
+						.fabricId("RtpGameTest", "tcTele004Nrg02_chargesExactlyTheFlatPrice").ticks(20, 40),
+				RosterEntry.of(RtpScenarios::tcTele004Sta01_moduleSurvivesAReload,
+								"tc_tele004_sta01_module_survives_a_reload")
+						.fabricId("RtpGameTest", "tcTele004Sta01_moduleSurvivesAReload").ticks(20, 40),
+				RosterEntry.of(RtpScenarios::tcTele004Brk01_dropCarriesTheModule,
+								"tc_tele004_brk01_drop_carries_the_module")
+						.fabricId("RtpGameTest", "tcTele004Brk01_dropCarriesTheModule").ticks(20, 40));
+
+		private Roster() {}
+	}
+
 	private RtpScenarios() {
 	}
 

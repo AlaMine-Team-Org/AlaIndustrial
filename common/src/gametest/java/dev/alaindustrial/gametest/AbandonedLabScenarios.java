@@ -2,12 +2,11 @@ package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.registry.ModContent;
-import dev.alaindustrial.worldgen.AbandonedLabFeature;
+import dev.alaindustrial.worldgen.AbandonedLabPlacer;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.ResourceKey;
@@ -24,13 +23,25 @@ import net.minecraft.world.level.storage.loot.LootTable;
 
 /**
  * L2 suite for the abandoned lab (MOD-513): every approved lab template reaches the game intact on
- * both loaders, carrying everything {@link AbandonedLabFeature} relies on when it places one.
+ * both loaders, carrying everything {@link AbandonedLabPlacer} relies on when it places one.
  *
  * <p>The placement itself — a site on real terrain, the depth, the camouflage — needs a generated
  * world with rock under it, which a gametest does not have; it is checked on real world generation
  * and in the dev client.
  */
 public final class AbandonedLabScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(AbandonedLabScenarios::labTemplatesReachTheGameIntact,
+								"lab_templates_reach_the_game_intact")
+						.fabricId("AbandonedLabGameTest", "labTemplatesReachTheGameIntact").ticks(20, 100),
+				RosterEntry.of(AbandonedLabScenarios::labIsInjectedIntoItsBiomes, "lab_is_injected_into_its_biomes")
+						.fabricId("AbandonedLabGameTest", "labIsInjectedIntoItsBiomes").ticks(20, 100));
+
+		private Roster() {}
+	}
 
 	private AbandonedLabScenarios() {}
 
@@ -53,7 +64,7 @@ public final class AbandonedLabScenarios {
 		MinecraftServer server = helper.getLevel().getServer();
 		StructurePlaceSettings identity = new StructurePlaceSettings();
 		requireLootTable(helper, server, "common");
-		for (String lab : AbandonedLabFeature.LABS) {
+		for (String lab : AbandonedLabPlacer.LABS) {
 			Optional<StructureTemplate> found = server.getStructureManager()
 					.get(Industrialization.id("abandoned_lab/" + lab));
 			if (found.isEmpty()) {
@@ -61,7 +72,7 @@ public final class AbandonedLabScenarios {
 				return;
 			}
 			StructureTemplate template = found.get();
-			AbandonedLabFeature.Shaft shaft = AbandonedLabFeature.Shaft.of(template);
+			AbandonedLabPlacer.Shaft shaft = AbandonedLabPlacer.Shaft.of(template);
 			if (shaft == null || shaft.foot().getY() < 0 || shaft.top() <= shaft.foot().getY()) {
 				helper.fail("lab '" + lab + "' has no entry ladder reaching its top: " + shaft);
 				return;
@@ -105,27 +116,19 @@ public final class AbandonedLabScenarios {
 		ResourceKey<PlacedFeature> lab = ResourceKey.create(Registries.PLACED_FEATURE,
 				Industrialization.id("abandoned_lab"));
 		for (ResourceKey<Biome> biome : List.of(Biomes.PLAINS, Biomes.SNOWY_PLAINS, Biomes.JUNGLE)) {
-			if (!surfaceStructuresOf(helper, biome).stream().anyMatch(feature -> feature.is(lab))) {
+			if (!BiomeFeatureProbe.has(helper, biome, GenerationStep.Decoration.SURFACE_STRUCTURES, lab)) {
 				helper.fail("the abandoned lab is not generated in " + biome.identifier()
 						+ " (surface_structures step)");
 				return;
 			}
 		}
 		for (ResourceKey<Biome> biome : List.of(Biomes.OCEAN, Biomes.RIVER, Biomes.DEEP_DARK)) {
-			if (surfaceStructuresOf(helper, biome).stream().anyMatch(feature -> feature.is(lab))) {
+			if (BiomeFeatureProbe.has(helper, biome, GenerationStep.Decoration.SURFACE_STRUCTURES, lab)) {
 				helper.fail("the abandoned lab is generated in " + biome.identifier() + ", which its tag leaves out");
 				return;
 			}
 		}
 		helper.succeed();
-	}
-
-	/** The biome's features at the surface-structures step; a biome whose list stops short of it has none. */
-	private static HolderSet<PlacedFeature> surfaceStructuresOf(GameTestHelper helper, ResourceKey<Biome> biome) {
-		List<HolderSet<PlacedFeature>> steps = helper.getLevel().registryAccess().lookupOrThrow(Registries.BIOME)
-				.getOrThrow(biome).value().getGenerationSettings().features();
-		int step = GenerationStep.Decoration.SURFACE_STRUCTURES.ordinal();
-		return step < steps.size() ? steps.get(step) : HolderSet.direct();
 	}
 
 	private static void requireLootTable(GameTestHelper helper, MinecraftServer server, String name) {

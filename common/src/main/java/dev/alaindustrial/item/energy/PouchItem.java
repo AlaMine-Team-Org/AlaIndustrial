@@ -1,7 +1,8 @@
 package dev.alaindustrial.item.energy;
 
-import dev.alaindustrial.Config;
+import dev.alaindustrial.compat.ServerDrops;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.item.ToolConfig;
 import dev.alaindustrial.registry.ModDataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -22,7 +23,7 @@ import org.jspecify.annotations.Nullable;
  * Battery Pouch (MOD-052) — the mod's first powered item: a bundle-like carrier with an EU lock.
  * Contents live in {@link ModDataComponents#POUCH_CONTENTS} ({@link PouchContents}, 128 weight),
  * charge in {@link ModDataComponents#POUCH_ENERGY} via {@link ItemEnergy} (2000 EU). While the
- * pouch holds items in a player inventory it drains {@link Config#lvPouchDrainPerSecond} EU/s;
+ * pouch holds items in a player inventory it drains {@link ToolConfig#lvPouchDrainPerSecond} EU/s;
  * at 0 EU both insert and extract are refused (the "lock") until it is recharged in the Battery
  * Box charge slot.
  *
@@ -31,7 +32,7 @@ import org.jspecify.annotations.Nullable;
  * menu sync reconciles any divergence. {@link #use} mutates server-side only (loose hand action,
  * no slot/menu prediction to keep consistent).
  */
-public class PouchItem extends Item {
+public class PouchItem extends Item implements PoweredItem {
 
 	public PouchItem(Properties properties) {
 		super(properties);
@@ -42,7 +43,7 @@ public class PouchItem extends Item {
 	 * amount without restating the handling: the Shielding Pouch (MOD-545) is this item plus lead.
 	 */
 	protected int capacity() {
-		return Config.lvPouchCapacity;
+		return ToolConfig.lvPouchCapacity;
 	}
 
 	// --- extraction: right-click in air -> whole top stack (LIFO, Q-EXT-1) back into inventory ---
@@ -61,7 +62,7 @@ public class PouchItem extends Item {
 		if (level instanceof ServerLevel) {
 			PouchContents.RemoveResult removed = contents.removeTop();
 			setContents(pouch, removed.contents());
-			player.getInventory().placeItemBackInInventory(removed.removed());
+			ServerDrops.placeBackInInventory(player, removed.removed());
 		}
 		playRemove(player);
 		return InteractionResult.SUCCESS;
@@ -191,7 +192,7 @@ public class PouchItem extends Item {
 		if (ItemEnergy.get(stack) <= 0 || contentsOf(stack).isEmpty() || ItemEnergy.free(owner)) {
 			return false;
 		}
-		ItemEnergy.spend(stack, Config.lvPouchDrainPerSecond, owner);
+		ItemEnergy.spend(stack, ToolConfig.lvPouchDrainPerSecond, owner);
 		return true;
 	}
 
@@ -204,16 +205,12 @@ public class PouchItem extends Item {
 
 	@Override
 	public int getBarWidth(ItemStack stack) {
-		long capacity = ItemEnergy.capacity(stack);
-		if (capacity <= 0) {
-			return 0;
-		}
-		return (int) Math.min(MAX_BAR_WIDTH, MAX_BAR_WIDTH * ItemEnergy.get(stack) / capacity);
+		return EnergyBar.width(stack, MAX_BAR_WIDTH);
 	}
 
 	@Override
 	public int getBarColor(ItemStack stack) {
-		return EnergyTier.LV.color();
+		return EnergyBar.color(EnergyTier.LV);
 	}
 
 	/** Bundle-style visual tooltip (grid + weight bar) whenever the pouch holds anything. */
@@ -256,5 +253,16 @@ public class PouchItem extends Item {
 
 	private static void playFail(Player player) {
 		player.playSound(SoundEvents.BUNDLE_INSERT_FAIL, 1.0F, 1.0F);
+	}
+
+	/** MOD-707: this item's EU buffer, read by {@code ItemEnergy.capacity} through {@link PoweredItem}. */
+	@Override
+	public long energyCapacity(ItemStack stack) {
+		return ToolConfig.lvPouchBuffer;
+	}
+
+	@Override
+	public long energyInputRate(ItemStack stack) {
+		return EnergyTier.LV.maxVoltage();
 	}
 }

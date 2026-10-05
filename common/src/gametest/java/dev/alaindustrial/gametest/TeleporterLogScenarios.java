@@ -41,6 +41,36 @@ import net.minecraft.world.phys.Vec3;
  */
 public final class TeleporterLogScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(TeleporterLogScenarios::tcTele007Fun01_bindingWritesALine,
+								"tc_tele007_fun01_binding_writes_a_line")
+						.fabricId("TeleporterLogGameTest", "tcTele007Fun01_bindingWritesALine").ticks(20, 40),
+				RosterEntry.of(TeleporterLogScenarios::tcTele007Fun02_renameAndDeleteWriteLines,
+								"tc_tele007_fun02_rename_and_delete_write_lines")
+						.fabricId("TeleporterLogGameTest", "tcTele007Fun02_renameAndDeleteWriteLines").ticks(20, 40),
+				RosterEntry.of(TeleporterLogScenarios::tcTele007Fun04_jumpAndRefusalLinesCarryTheirNumbers,
+								"tc_tele007_fun04_jump_and_refusal_lines_carry_their_numbers")
+						.fabricId("TeleporterLogGameTest", "tcTele007Fun04_jumpAndRefusalLinesCarryTheirNumbers")
+						.ticks(20, 40),
+				RosterEntry.of(TeleporterLogScenarios::tcTele007Fun05_repeatsMergeAndTheOldestGoes,
+								"tc_tele007_fun05_repeats_merge_and_the_oldest_goes")
+						.fabricId("TeleporterLogGameTest", "tcTele007Fun05_repeatsMergeAndTheOldestGoes")
+						.ticks(20, 40),
+				RosterEntry.of(TeleporterLogScenarios::tcTele007Fun06_readMarkClearsTheBadge,
+								"tc_tele007_fun06_read_mark_clears_the_badge")
+						.fabricId("TeleporterLogGameTest", "tcTele007Fun06_readMarkClearsTheBadge").ticks(20, 40),
+				RosterEntry.of(TeleporterLogScenarios::tcTele007Neg01_noRemoteWritesNothing,
+								"tc_tele007_neg01_no_remote_writes_nothing")
+						.fabricId("TeleporterLogGameTest", "tcTele007Neg01_noRemoteWritesNothing").ticks(20, 40),
+				RosterEntry.of(TeleporterLogScenarios::tcTele007Sta01_logTravelsWithTheItem,
+								"tc_tele007_sta01_log_travels_with_the_item")
+						.fabricId("TeleporterLogGameTest", "tcTele007Sta01_logTravelsWithTheItem").ticks(20, 40));
+
+		private Roster() {}
+	}
+
 	private TeleporterLogScenarios() {
 	}
 

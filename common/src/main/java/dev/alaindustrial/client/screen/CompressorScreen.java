@@ -1,6 +1,7 @@
 package dev.alaindustrial.client.screen;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.core.machine.StatusLine;
 import dev.alaindustrial.menu.CompressorMenu;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -21,7 +22,7 @@ import net.minecraft.world.entity.player.Inventory;
  *   left static arrow  x=81-86, y=34-51 → service sprite u=191-196, v=0-17
  *   right static arrow x=100-105, y=34-51 → service sprite u=210-215, v=0-17
  */
-public class CompressorScreen extends MachineScreen<CompressorMenu> {
+public class CompressorScreen extends LayoutMachineScreen<CompressorMenu> {
     private static final Identifier TEXTURE =
             Industrialization.id("textures/gui/container/compressor.png");
 
@@ -42,13 +43,19 @@ public class CompressorScreen extends MachineScreen<CompressorMenu> {
     private static final int ARR_RIGHT_SU_END = 214;  // right sprite: u of last yellow pixel
     private static final int ARR_SV           = 0;    // sprite v start
 
-    public CompressorScreen(CompressorMenu menu, Inventory inventory, Component title) {
-        super(menu, inventory, title);
-    }
+    /**
+     * Click area of the recipe viewers (MOD-716): both static arrows and the gap between them, border pixels
+     * included — x 81..105, the full arrow height.
+     */
+    public static final GuiRect PROGRESS_AREA = new GuiRect(ARR_LEFT_X, ARR_Y,
+            ARR_RIGHT_LAST_X + 1 - ARR_LEFT_X + 1, ARR_H);
 
-    @Override
-    protected Identifier texture() {
-        return TEXTURE;
+    /** Atlas, energy bar and status row; the twin arrows are drawn below (MOD-716, CLI-3). */
+    private static final MachineLayout LAYOUT = MachineLayout.of(TEXTURE, EnergyBarSpec.LEFT)
+            .withStatus(MachineLayout.StatusBand.STANDARD);
+
+    public CompressorScreen(CompressorMenu menu, Inventory inventory, Component title) {
+        super(menu, inventory, title, LAYOUT);
     }
 
     @Override
@@ -60,8 +67,6 @@ public class CompressorScreen extends MachineScreen<CompressorMenu> {
         // Static frame: full imageWidth × imageHeight visible region.
         blitStaticFrame(graphics);
 
-        // Energy fill: grows bottom-up proportional to stored EU / capacity.
-        renderEnergyBar(graphics, EnergyBarSpec.LEFT);
 
         // Compression arrows: grow from outer edges inward, overlaying static arrow outlines.
         //   Left  fills from x=81 rightward  (outer → inner).
@@ -91,12 +96,6 @@ public class CompressorScreen extends MachineScreen<CompressorMenu> {
         }
     }
 
-    @Override
-    protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-        super.extractTooltip(graphics, mouseX, mouseY);
-        // Hovering the energy bar shows the exact buffer as "X / max EU" (R-GUI-14).
-        renderEnergyTooltip(graphics, mouseX, mouseY, EnergyBarSpec.LEFT);
-    }
 
     /**
      * Status row (MOD-458). The compressor is the machine that made the family need one: its two batch
@@ -104,8 +103,7 @@ public class CompressorScreen extends MachineScreen<CompressorMenu> {
      * arrows, the energy bar — looks exactly the same as an idle machine with nothing to do.
      */
     @Override
-    public void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-        super.extractContents(graphics, mouseX, mouseY, partialTick);
-        drawProcessingStatus(graphics, this.menu.getStatus(), STATUS_ROW_Y);
+    protected StatusLine status() {
+        return this.menu.getStatus();
     }
 }

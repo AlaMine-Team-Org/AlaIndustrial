@@ -1,6 +1,7 @@
 package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.block.entity.GeothermalGeneratorBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
@@ -10,6 +11,7 @@ import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.stats.PlayerModStats;
 import dev.alaindustrial.stats.PlayerStatsStore;
 import dev.alaindustrial.stats.PlayerStatsTracker;
+import java.util.List;
 import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -43,6 +45,44 @@ import net.minecraft.world.level.block.entity.BlockEntity;
  * </ul>
  */
 public final class PlayerStatsScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(PlayerStatsScenarios::xpFromCompletedWork, "player_stats_xp_from_completed_work")
+						.fabricId("PlayerStatsGameTest", "xpFromCompletedWork").ticks(20, 500),
+				RosterEntry.of(PlayerStatsScenarios::noXpFromAbortedWork, "player_stats_no_xp_from_aborted_work")
+						.fabricId("PlayerStatsGameTest", "noXpFromAbortedWork").ticks(20, 60),
+				RosterEntry.of(PlayerStatsScenarios::noXpForCreativeOwner, "player_stats_no_xp_for_creative_owner")
+						.fabricId("PlayerStatsGameTest", "noXpForCreativeOwner").ticks(20, 500),
+				RosterEntry.of(PlayerStatsScenarios::pumpGrantsNoMastery, "player_stats_pump_grants_no_mastery")
+						.fabricId("PlayerStatsGameTest", "pumpGrantsNoMastery").ticks(20, 200),
+				RosterEntry.of(PlayerStatsScenarios::noStatsForNullOwner, "player_stats_no_stats_for_null_owner")
+						.fabricId("PlayerStatsGameTest", "noStatsForNullOwner").ticks(20, 500),
+				RosterEntry.of(PlayerStatsScenarios::noStatsForOfflineOwner, "player_stats_no_stats_for_offline_owner")
+						.fabricId("PlayerStatsGameTest", "noStatsForOfflineOwner").ticks(20, 500),
+				RosterEntry.of(PlayerStatsScenarios::generatorProductionAttributedToOwner,
+								"player_stats_generator_production_attributed")
+						.fabricId("PlayerStatsGameTest", "generatorProductionAttributedToOwner").ticks(20, 500),
+				RosterEntry.of(PlayerStatsScenarios::bufferCapLimitsAttributedProduction,
+								"player_stats_buffer_cap_limits_attribution")
+						.fabricId("PlayerStatsGameTest", "bufferCapLimitsAttributedProduction").ticks(20, 300),
+				RosterEntry.of(PlayerStatsScenarios::modeTransitionsPreserveAndResumeAccrual,
+								"player_stats_mode_transitions_preserve_and_resume")
+						.fabricId("PlayerStatsGameTest", "modeTransitionsPreserveAndResumeAccrual").ticks(1400),
+				RosterEntry.of(PlayerStatsScenarios::flushPlayerSavesTailOnLogout,
+								"player_stats_flush_player_saves_tail_on_logout")
+						.fabricId("PlayerStatsGameTest", "flushPlayerSavesTailOnLogout").ticks(20, 500),
+				RosterEntry.of(PlayerStatsScenarios::activeTicksNotScaledByGeneratorCount,
+								"player_stats_active_ticks_not_scaled_by_generator_count")
+						.fabricId("PlayerStatsGameTest", "activeTicksNotScaledByGeneratorCount").ticks(20, 60),
+				RosterEntry.of(PlayerStatsScenarios::activeTimeAccruesWithFullBuffer,
+								"player_stats_active_time_accrues_with_full_buffer")
+						.fabricId("PlayerStatsGameTest", "activeTimeAccruesWithFullBuffer").ticks(20, 60));
+
+		private Roster() {}
+	}
+
 	private static final BlockPos MAC = new BlockPos(1, 2, 1);
 	private static final BlockPos GEO = new BlockPos(1, 2, 1);
 
@@ -82,7 +122,11 @@ public final class PlayerStatsScenarios {
 		return player;
 	}
 
-	/** A completed macerator operation credits useful EU (the XP source) to its online survival owner. */
+	/**
+	 * A completed macerator operation credits useful EU (the XP source) to its online survival owner.
+	 *
+	 * @implements completed machine operation credits useful EU (XP) to its online survival owner.
+	 */
 	public static void xpFromCompletedWork(GameTestHelper helper) {
 		ServerPlayer player = survivalOwner(helper);
 		if (helper.getLevel().getServer().getPlayerList().getPlayer(player.getUUID()) == null) {
@@ -102,7 +146,11 @@ public final class PlayerStatsScenarios {
 		helper.succeed();
 	}
 
-	/** Pulling the input before completion earns no XP — a redstone abort loop must not farm XP. */
+	/**
+	 * Pulling the input before completion earns no XP — a redstone abort loop must not farm XP.
+	 *
+	 * @implements aborting an operation before completion earns no XP (anti-AFK / redstone-loop guard).
+	 */
 	public static void noXpFromAbortedWork(GameTestHelper helper) {
 		ServerPlayer player = survivalOwner(helper);
 		MaceratorBlockEntity mac = placeMacerator(helper, player.getUUID());
@@ -118,7 +166,11 @@ public final class PlayerStatsScenarios {
 		helper.succeed();
 	}
 
-	/** A creative owner earns nothing — creative EU is free and must not convert to career XP. */
+	/**
+	 * A creative owner earns nothing — creative EU is free and must not convert to career XP.
+	 *
+	 * @implements a creative owner earns no XP (creative EU is free).
+	 */
 	public static void noXpForCreativeOwner(GameTestHelper helper) {
 		PlayerStatsTracker.get().clear();
 		ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper);
@@ -144,6 +196,8 @@ public final class PlayerStatsScenarios {
 	 * be zero. Without that control the test would pass just as green on a pump that never pumped —
 	 * e.g. if the water source failed to place — and would guard nothing. Re-adding
 	 * {@code creditUsefulWork} in {@code PumpBlockEntity} turns it red.
+	 *
+	 * @implements MOD-264 pumping a bucket credits no mastery at all (unattended extraction).
 	 */
 	public static void pumpGrantsNoMastery(GameTestHelper helper) {
 		ServerPlayer player = survivalOwner(helper);
@@ -197,6 +251,8 @@ public final class PlayerStatsScenarios {
 	 * its buffer caps at 4k, so a world scenario cannot reach the 20k EU that buys a single point —
 	 * any XP assertion here would compare zero to zero and pass vacuously. That rule is pinned on the
 	 * L1 lane instead ({@code XpDerivationTest}), where the rates are inputs rather than config.
+	 *
+	 * @implements a running generator credits its owner's career production, but no machine EU.
 	 */
 	public static void generatorProductionAttributedToOwner(GameTestHelper helper) {
 		ServerPlayer player = survivalOwner(helper);
@@ -239,6 +295,8 @@ public final class PlayerStatsScenarios {
 	 * fuel at all, so {@code made} is 0 and the assertion holds even with the whole stats hook deleted.
 	 * That version was written first, mutation-tested, and found to pass against a mutant that credited
 	 * gross production outside the cap gate. This version fails against exactly that mutant.
+	 *
+	 * @implements only EU that fit in the buffer is attributed — never gross production.
 	 */
 	public static void bufferCapLimitsAttributedProduction(GameTestHelper helper) {
 		ServerPlayer player = survivalOwner(helper);
@@ -283,6 +341,8 @@ public final class PlayerStatsScenarios {
 	 * assertion, since {@code helper.fail} throws and would otherwise mask it: part 1 fails with
 	 * "accrued machine EU: 300", part 2 with "accrued generated EU: 4000". Without that second run the
 	 * generator half would have been an unverified claim.
+	 *
+	 * @implements an offline owner accrues nothing (the gate that also neutralises fake players).
 	 */
 	public static void noStatsForOfflineOwner(GameTestHelper helper) {
 		PlayerStatsTracker.get().clear();
@@ -325,7 +385,11 @@ public final class PlayerStatsScenarios {
 		helper.succeed();
 	}
 
-	/** An ownerless machine (structure-placed / demo stand) credits stats to no one. */
+	/**
+	 * An ownerless machine (structure-placed / demo stand) credits stats to no one.
+	 *
+	 * @implements an ownerless machine (structure / demo stand) credits no player.
+	 */
 	public static void noStatsForNullOwner(GameTestHelper helper) {
 		ServerPlayer bystander = survivalOwner(helper);
 		MaceratorBlockEntity mac = placeMacerator(helper, null); // no owner set
@@ -346,6 +410,8 @@ public final class PlayerStatsScenarios {
 	 * candidates #2 (survival resumes accrual) and #4 (mode switch does not reset the attachment) from
 	 * the MOD-156 coverage request — one richer scenario instead of two thin ones, since the middle
 	 * assertion (creative pass changes nothing) is exactly the precondition the resume assertion needs.
+	 *
+	 * @implements gamemode transitions neither wipe career EU nor leave XP accrual stuck off.
 	 */
 	public static void modeTransitionsPreserveAndResumeAccrual(GameTestHelper helper) {
 		ServerPlayer player = survivalOwner(helper);
@@ -391,6 +457,8 @@ public final class PlayerStatsScenarios {
 	 * to drop a moment later ({@code getPlayer(uuid) == null} once they are gone). Asserted on both
 	 * sides: the pending delta must drain AND the attachment must reflect it, so a flushPlayer that
 	 * removed the entry without applying it (losing the tail) would still fail.
+	 *
+	 * @implements a player's logout (flushPlayer) saves their pending tail instead of dropping it.
 	 */
 	public static void flushPlayerSavesTailOnLogout(GameTestHelper helper) {
 		ServerPlayer player = survivalOwner(helper);
@@ -435,6 +503,8 @@ public final class PlayerStatsScenarios {
 	 * bookkeeping internal to {@link PlayerStatsTracker}, and pinning it through generator ticks would
 	 * make the assertion depend on how many blocks happen to fire this tick — exactly the coupling this
 	 * test exists to rule out.
+	 *
+	 * @implements activeTicks counts a tick once, not once per generator that fired in it.
 	 */
 	public static void activeTicksNotScaledByGeneratorCount(GameTestHelper helper) {
 		ServerPlayer player = survivalOwner(helper);
@@ -477,6 +547,8 @@ public final class PlayerStatsScenarios {
 	 * "active in the mod" clock. Before the fix both lived inside the same {@code room > 0} branch, so a
 	 * saturated network — the normal steady state of a mature base — froze the dashboard's uptime readout
 	 * for good. Drives the tracker the way a full-buffer generator tick does: active, but no production.
+	 *
+	 * @implements MOD-156 active time keeps accruing while the buffer is full and no EU is credited.
 	 */
 	public static void activeTimeAccruesWithFullBuffer(GameTestHelper helper) {
 		ServerPlayer player = survivalOwner(helper);

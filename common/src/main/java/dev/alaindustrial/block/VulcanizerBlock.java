@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.VulcanizerBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -8,25 +7,20 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.redstone.Orientation;
+import dev.alaindustrial.client.ServerBalance;
+import dev.alaindustrial.core.tooltip.HasMachineTooltip;
+import dev.alaindustrial.core.tooltip.MachineTooltipSpec;
 
 /** Externally heated two-input LV machine that vulcanizes raw rubber with sulfur dust. */
-public final class VulcanizerBlock extends LitMachineBlock {
-	public static final MapCodec<VulcanizerBlock> CODEC = simpleCodec(VulcanizerBlock::new);
-
+public final class VulcanizerBlock extends LitMachineBlock implements HasMachineTooltip {
 	public VulcanizerBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override
@@ -63,5 +57,13 @@ public final class VulcanizerBlock extends LitMachineBlock {
 					SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.25F,
 					0.9F + random.nextFloat() * 0.2F, false);
 		}
+	}
+
+	/** Hover tooltip of this block's item (MOD-716, ADR-040). */
+	@Override
+	public MachineTooltipSpec machineTooltip() {
+		return MachineTooltipSpec.processing(ServerBalance::machineEuPerTickEffective,
+				() -> ServerBalance.scaledDuration(ServerBalance.vulcanizerDuration()),
+				ServerBalance::machineBuffer);
 	}
 }

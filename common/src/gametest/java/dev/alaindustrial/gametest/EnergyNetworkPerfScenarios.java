@@ -68,6 +68,18 @@ import net.minecraft.world.level.block.Blocks;
  */
 public final class EnergyNetworkPerfScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(EnergyNetworkPerfScenarios::perf01FiftyCableLineTickCost,
+								"energy_network_fifty_cable_tick_cost")
+						.fabricId("NetworkGameTest", "perf01_energyNetworkFiftyCableTickCost").ticks(100),
+				RosterEntry.of(EnergyNetworkPerfScenarios::benchLargeNetworkSmoke, "network_bench_large_network_smoke")
+						.fabricId("NetworkBenchGameTest", "benchLargeNetworkSmoke").ticks(20, 100));
+
+		private Roster() {}
+	}
+
 	private EnergyNetworkPerfScenarios() {
 	}
 

@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
  * L1 unit tests for {@link WindMillOutput#euFor} — the pure "(height, sea level, sky, weather) → EU/t"
  * mapping that backs every wind mill's {@code produce()}. No Minecraft runtime; deterministic.
  *
- * <p>The canonical numbers are {@code Config.windMillMaxBaseEuPerTick = 4},
+ * <p>The canonical numbers are {@code GeneratorConfig.windMillMaxBaseEuPerTick = 4},
  * {@code windMillMaxEuPerTick = 8}, {@code windMillRainFactor = 1.5},
  * {@code windMillThunderFactor = 2.0}, and the MOD-347 altitude profile
  * ({@code windCloudY = 192}, {@code windDeadY = 248}, {@code windRidgeFactor = 0.45},

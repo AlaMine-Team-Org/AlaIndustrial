@@ -6,8 +6,8 @@ import dev.alaindustrial.item.energy.ItemEnergy;
 import net.minecraft.world.item.ItemStack;
 
 /**
- * The save-format ladder for block entities (MOD-556) — the block-entity twin of the config's
- * {@code Config.MIGRATIONS}.
+ * The save-format ladder for block entities (MOD-556) — the block-entity twin of the config file's
+ * ladder in {@link dev.alaindustrial.config.ConfigSchema} ({@code VERSION} plus its migrations).
  *
  * <p><b>Why this exists.</b> Until MOD-556 no block entity wrote a version at all, so a change to a
  * saved layout had to be recognised by guesswork at the point of reading: the Battery Box worked out
@@ -17,7 +17,7 @@ import net.minecraft.world.item.ItemStack;
  * becomes a rung of a ladder that runs exactly once, and the risk a layout change carries for an
  * existing world is finally written down.
  *
- * <p><b>How to add the next hop</b> (deliberately three steps, exactly like the config's):
+ * <p><b>How to add the next hop</b> (deliberately three steps, in the shape of the config file's ladder):
  * <ol>
  *   <li>Write a {@code private static void vNtoVN1(EnergyBlockEntity be)} that repairs the data in
  *       place. It sees the block entity as the PREVIOUS rung left it, so each step only has to know
@@ -38,11 +38,16 @@ import net.minecraft.world.item.ItemStack;
  * it. This is the price of downgrade tolerance, and it is worth paying — the alternative is a mod
  * that destroys a world when the player boots the previous version once.
  *
- * <p><b>Where a step is applied.</b> {@code BlockEntity#loadWithComponents} and
- * {@code #loadCustomOnly} are {@code final} in 26.2 (checked with {@code javap}), so there is no
- * after-the-whole-load hook to hang a generic call on. A block entity whose data a rung touches
- * therefore calls {@link EnergyBlockEntity#migrateLoadedData()} as the LAST statement of its own
- * {@code loadAdditional}, where its fields are populated. Today that is one call site.
+ * <p><b>Where a step is applied.</b> In one place, and nobody has to remember it (MOD-701, ADR-037).
+ * {@code BlockEntity#loadWithComponents} and {@code #loadCustomOnly} are {@code final} in 26.2 (checked
+ * with {@code javap}), so there is no after-the-whole-load hook of the game's to hang a call on;
+ * {@link EnergyBlockEntity} builds its own instead. Its {@code loadAdditional} is {@code final} and runs
+ * a fixed order — read the version and the energy buffer, call the overridable
+ * {@link EnergyBlockEntity#loadMachineData} so the subclass reads its own data, then {@link #migrate} —
+ * which means a rung always sees a fully populated block entity, and a new rung touches this file only.
+ * A subclass that needs to read data overrides {@code loadMachineData}; it cannot override
+ * {@code loadAdditional}, so it cannot skip the ladder. Block entities outside the
+ * {@link EnergyBlockEntity} hierarchy do not carry the version and are not walked.
  */
 public final class BlockEntityDataMigrations {
 

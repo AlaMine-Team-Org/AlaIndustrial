@@ -1,6 +1,6 @@
 package dev.alaindustrial.effect;
 
-import dev.alaindustrial.Config;
+import dev.alaindustrial.core.radiation.RadiationConfig;
 import dev.alaindustrial.core.radiation.RadiationCore;
 import dev.alaindustrial.core.radiation.RadiationDose;
 import dev.alaindustrial.registry.ModDamageTypes;
@@ -47,7 +47,7 @@ public class RadiationEffect extends MobEffect {
 		// Off means off, including for a dose already carried. Returning false REMOVES the effect, so
 		// flipping the switch clears the world instead of leaving everyone who was already irradiated to
 		// keep taking damage from a mechanic the server just turned off.
-		if (!Config.radiationEnabled) {
+		if (!RadiationConfig.radiationEnabled) {
 			return false;
 		}
 		// Only players carry a dose (MOD-470 decision): mobs would turn every reactor into a silent
@@ -55,13 +55,13 @@ public class RadiationEffect extends MobEffect {
 		if (!(mob instanceof Player player) || player.isCreative() || player.isSpectator()) {
 			return true;
 		}
-		int level = RadiationCore.level(RadiationDose.of(player), Config.radiationDoseCapacity);
+		int level = RadiationCore.level(RadiationDose.of(player), RadiationConfig.radiationDoseCapacity);
 		if (level <= 0) {
 			return true;
 		}
 
 		long clock = serverLevel.getGameTime();
-		if (clock % Config.radiationSymptomIntervalTicks == 0) {
+		if (clock % RadiationConfig.radiationSymptomIntervalTicks == 0) {
 			applySymptoms(player, level);
 		}
 		// MOD-483 Tolerance Threshold / Background Shift. Both touch the DAMAGE only: the dose still climbs
@@ -81,7 +81,7 @@ public class RadiationEffect extends MobEffect {
 	 * duration comfortably longer than that cadence, so they never flicker between applications.
 	 */
 	private void applySymptoms(Player player, int level) {
-		int duration = Config.radiationSymptomIntervalTicks * 3;
+		int duration = RadiationConfig.radiationSymptomIntervalTicks * 3;
 		player.addEffect(new MobEffectInstance(MobEffects.NAUSEA, duration, 0, true, false, false));
 		if (level >= 2) {
 			player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, duration, 0, true, false, false));
@@ -103,14 +103,14 @@ public class RadiationEffect extends MobEffect {
 	/** Ticks between hits at a given severity; 0 means this level does not hurt yet. */
 	private static int damageIntervalFor(int level) {
 		return switch (level) {
-			case 2 -> Config.radiationDamageIntervalLevel2;
-			case 3 -> Config.radiationDamageIntervalLevel3;
-			case 4 -> Config.radiationDamageIntervalLevel4;
+			case 2 -> RadiationConfig.radiationDamageIntervalLevel2;
+			case 3 -> RadiationConfig.radiationDamageIntervalLevel3;
+			case 4 -> RadiationConfig.radiationDamageIntervalLevel4;
 			default -> 0;
 		};
 	}
 
 	private static float damageFor(int level) {
-		return level >= 4 ? Config.radiationDamageLethal : Config.radiationDamageSick;
+		return level >= 4 ? RadiationConfig.radiationDamageLethal : RadiationConfig.radiationDamageSick;
 	}
 }

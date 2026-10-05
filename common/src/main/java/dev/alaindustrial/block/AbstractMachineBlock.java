@@ -1,5 +1,6 @@
 package dev.alaindustrial.block;
 
+import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.EnergyBlockEntity;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.registry.ModCriteria;
@@ -26,8 +27,14 @@ import net.minecraft.world.phys.BlockHitResult;
  * Shared base for Industrialization machine blocks: model rendering, a server ticker that drives the
  * {@link MachineBlockEntity}, and right-click to open the block's menu (when its block entity
  * is a {@link MenuProvider}). Non-menu blocks (e.g. {@code CableBlock}) fall through to PASS so
- * vanilla placement still runs — see {@link #useWithoutItem}. Concrete blocks supply their codec +
- * block entity factory.
+ * vanilla placement still runs — see {@link #useWithoutItem}. Concrete blocks supply their block entity
+ * factory.
+ *
+ * <p><b>The 26.2 block-codec seam (MOD-703).</b> Minecraft 26.2 requires every block to name a codec
+ * ({@code BlockBehaviour.codec()} is abstract there); 26.3 removed block codecs. {@link #codec()} answers it
+ * once for every subclass, so no subclass carries a {@code CODEC} of its own and their sources are the same
+ * on both lines. It has no {@code @Override} on purpose: on 26.2 it overrides, on 26.3 it is a method of its
+ * own that nothing calls.
  */
 public abstract class AbstractMachineBlock extends BaseEntityBlock {
 	protected AbstractMachineBlock(Properties properties) {
@@ -164,5 +171,14 @@ public abstract class AbstractMachineBlock extends BaseEntityBlock {
 				energyBlock.serverTick(lvl, pos, st);
 			}
 		};
+	}
+
+	/**
+	 * The codec Minecraft 26.2 asks every block for: the unit codec of this very instance. 26.2 reads block
+	 * codecs only in the datagen block-list report ({@code BlockTypes.CODEC} → {@code BlockListReport},
+	 * javap), so nothing at run time decodes a block through it.
+	 */
+	protected MapCodec<? extends BaseEntityBlock> codec() {
+		return MapCodec.unit(this);
 	}
 }

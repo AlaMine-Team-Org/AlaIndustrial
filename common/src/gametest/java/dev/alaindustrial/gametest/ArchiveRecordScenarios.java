@@ -26,6 +26,19 @@ import net.minecraft.server.level.ServerPlayer;
  */
 public final class ArchiveRecordScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(ArchiveRecordScenarios::recordComesFromTheWorldSeedAndTheProfile,
+								"archive_record_from_seed_and_profile")
+						.fabricId("GuideBookGameTest", "tcGuide002Fun01_recordFromSeedAndProfile").ticks(20, 40),
+				RosterEntry.of(ArchiveRecordScenarios::payloadCarriesTheRecordIntact,
+								"archive_record_payload_round_trip")
+						.fabricId("GuideBookGameTest", "tcGuide002Fun02_payloadRoundTrip").ticks(20, 40));
+
+		private Roster() {}
+	}
+
 	private ArchiveRecordScenarios() {
 	}
 
@@ -34,6 +47,9 @@ public final class ArchiveRecordScenarios {
 	 * profile id: every dimension reports that one seed, the profile id is the player's UUID, asking
 	 * again in another order gives the same answers, and the join hook does not throw for a connection
 	 * that cannot receive the record.
+	 *
+	 * @implements TC-GUIDE-002-FUN01 — the archive record is the pure function of the world seed and
+	 *     the profile id, the same in every dimension and on every call (MOD-513).
 	 */
 	public static void recordComesFromTheWorldSeedAndTheProfile(GameTestHelper helper) {
 		ServerPlayer first = AlaGameTestHelper.mockPlayerInLevel(helper);
@@ -92,6 +108,9 @@ public final class ArchiveRecordScenarios {
 	/**
 	 * TC-GUIDE-002-FUN02 — the payload carries the server's record through its codec unchanged and
 	 * leaves nothing behind; a string longer than the codec's bound is refused while decoding.
+	 *
+	 * @implements TC-GUIDE-002-FUN02 — the record payload survives its codec intact and refuses an
+	 *     oversized string (MOD-513).
 	 */
 	public static void payloadCarriesTheRecordIntact(GameTestHelper helper) {
 		ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper);

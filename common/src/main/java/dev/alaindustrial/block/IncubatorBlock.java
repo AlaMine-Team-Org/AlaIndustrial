@@ -1,10 +1,10 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.IncubatorBlockEntity;
 import dev.alaindustrial.core.energy.EnergyTransactions;
 import dev.alaindustrial.core.fluid.FluidAmounts;
 import dev.alaindustrial.core.fluid.FluidHolder;
+import dev.alaindustrial.core.machine.MachineRates;
 import dev.alaindustrial.item.fluid.BucketFluids;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModParticles;
@@ -24,7 +24,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -34,6 +33,13 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.entity.LivingEntity;
+import dev.alaindustrial.Config;
+import dev.alaindustrial.client.ServerBalance;
+import dev.alaindustrial.core.tooltip.HasMachineTooltip;
+import dev.alaindustrial.core.tooltip.MachineTooltipSpec;
+import dev.alaindustrial.registry.ModRecipes;
+import java.util.List;
+import java.util.function.IntSupplier;
 
 /**
  * The incubator base (MOD-118) — the machine half of the 1x2 multiblock.
@@ -42,17 +48,10 @@ import net.minecraft.world.entity.LivingEntity;
  * the original state is remembered in this block entity, so breaking the multiblock hands the player
  * back exactly the glass they used (and a coloured glass tints the dome for free).
  */
-public class IncubatorBlock extends LitMachineBlock implements MachineHumProvider {
-
-	public static final MapCodec<IncubatorBlock> CODEC = simpleCodec(IncubatorBlock::new);
+public class IncubatorBlock extends LitMachineBlock implements MachineHumProvider, HasMachineTooltip {
 
 	public IncubatorBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	/**
@@ -189,5 +188,32 @@ public class IncubatorBlock extends LitMachineBlock implements MachineHumProvide
 			return;
 		}
 		level.setBlock(above, glass, Block.UPDATE_ALL);
+	}
+
+	/** Hover tooltip of this block's item (MOD-716, ADR-040). */
+	@Override
+	public MachineTooltipSpec machineTooltip() {
+		// Its own draw, four times the machine standard, and three durations instead of one (the chip picks the
+		// mode): the basic line carries the draw and the buffer, the per-mode timings live under [SHIFT].
+		IntSupplier euPerTick = () -> MachineRates.euPerTick(ServerBalance.incubatorEuPerTick(),
+				ServerBalance.globalMachineSpeedMultiplier());
+		return new MachineTooltipSpec(MachineTooltipSpec.Tier.LV,
+				List.of(MachineTooltipSpec.stat("energy_input", euPerTick),
+						MachineTooltipSpec.stat("capacity", ServerBalance::incubatorBuffer)),
+				List.of(MachineTooltipSpec.stat("buffer", ServerBalance::incubatorBuffer),
+						modeLine("transform", ModRecipes.MUTATION_TRANSFORM),
+						modeLine("duplicate", ModRecipes.MUTATION_DUPLICATE),
+						modeLine("create", ModRecipes.MUTATION_CREATE)));
+	}
+
+	/**
+	 * One "Mode — Duration: N ticks" line. Both halves reuse strings every locale already has (the GUI mode
+	 * label and the shared duration line). The number comes from the recipe family, the way the machine and
+	 * the recipe viewers get it ({@code energy / incubatorEuPerTick}): every shipped recipe states its energy,
+	 * so the {@code Config.mutationDuration*} keys would quote a figure nothing else uses.
+	 */
+	private static MachineTooltipSpec.Line modeLine(String mode, ModRecipes.Kind kind) {
+		return MachineTooltipSpec.labelled("gui.alaindustrial.incubator.mode." + mode, "duration_ticks",
+				() -> ServerBalance.scaledDuration(kind.ticksFor(kind.defaultEnergy())));
 	}
 }

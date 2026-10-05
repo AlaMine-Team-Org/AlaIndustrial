@@ -1,9 +1,11 @@
 package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.item.ToolConfig;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.item.tool.ElectricChainsawDiamondTipItem;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
@@ -36,6 +38,39 @@ import static dev.alaindustrial.gametest.AlaGameTestHelper.survivalPlayer;
  */
 public final class ElectricChainsawScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(ElectricChainsawScenarios::fun01DiamondTipSpeedAndTier,
+								"chainsaw_diamond_tip_speed_and_tier")
+						.fabricId("ElectricChainsawGameTest", "tcChainsaw001Fun01_diamondTipSpeedAndTier")
+						.ticks(20, 40),
+				RosterEntry.of(ElectricChainsawScenarios::fun02DiamondTipSilkToggleOnLeaves,
+								"chainsaw_diamond_tip_silk_toggle_leaves")
+						.fabricId("ElectricChainsawGameTest", "tcChainsaw001Fun02_diamondTipSilkToggleOnLeaves")
+						.ticks(20, 40),
+				RosterEntry.of(ElectricChainsawScenarios::fun03BaseChainsawHasNoSilkMode,
+								"chainsaw_base_has_no_silk_mode")
+						.fabricId("ElectricChainsawGameTest", "tcChainsaw001Fun03_baseChainsawHasNoSilkMode")
+						.ticks(20, 40),
+				RosterEntry.of(ElectricChainsawScenarios::fun04ChargeInBatteryBox, "chainsaw_charge_in_battery_box")
+						.fabricId("ElectricChainsawGameTest", "tcChainsaw001Fun04_chargeInBatteryBox").ticks(20, 80),
+				RosterEntry.of(ElectricChainsawScenarios::fun05DrainOnMineBlock, "chainsaw_drain_on_mine_block")
+						.fabricId("ElectricChainsawGameTest", "tcChainsaw001Fun05_drainOnMineBlock").ticks(20, 40),
+				RosterEntry.of(ElectricChainsawScenarios::fun06NoDrainBelowCost, "chainsaw_no_drain_below_cost")
+						.fabricId("ElectricChainsawGameTest", "tcChainsaw001Fun06_noDrainBelowCost").ticks(20, 40),
+				RosterEntry.of(ElectricChainsawScenarios::fun07ZeroHardnessFreeLeavesCost,
+								"chainsaw_zero_hardness_free_leaves_cost")
+						.fabricId("ElectricChainsawGameTest", "tcChainsaw001Fun07_zeroHardnessFreeLeavesCost")
+						.ticks(20, 40),
+				RosterEntry.of(ElectricChainsawScenarios::fun08SpeedAndDrops, "chainsaw_speed_and_drops")
+						.fabricId("ElectricChainsawGameTest", "tcChainsaw001Fun08_speedAndDrops").ticks(20, 40),
+				RosterEntry.of(ElectricChainsawScenarios::per01ChargeRoundTrip, "chainsaw_charge_round_trip")
+						.fabricId("ElectricChainsawGameTest", "tcChainsaw001Per01_chargeRoundTrip").ticks(20, 40));
+
+		private Roster() {}
+	}
+
 	private ElectricChainsawScenarios() {}
 
 	/**
@@ -53,9 +88,9 @@ public final class ElectricChainsawScenarios {
 			new ElectricToolEnergyScenarios.ToolCase(
 					"electric_chainsaw",
 					ModContent.ELECTRIC_CHAINSAW,
-					() -> Config.electricChainsawEuPerBlock,
-					() -> Config.electricChainsawBuffer,
-					() -> Config.electricChainsawInputRate,
+					() -> ToolConfig.electricChainsawEuPerBlock,
+					() -> ToolConfig.electricChainsawBuffer,
+					() -> ToolConfig.electricChainsawInputRate,
 					() -> Blocks.OAK_LOG,
 					() -> Blocks.STONE,
 					() -> Blocks.OAK_LEAVES,
@@ -103,6 +138,10 @@ public final class ElectricChainsawScenarios {
 	 * the chainsaw's third {@code Tool.Rule} is its own invention — vanilla files leaves under
 	 * {@code #mineable/hoe}, so a rebuilt TOOL component that dropped that rule would silently make
 	 * canopy-clearing crawl.
+	 *
+	 * @implements TC-CHAINSAW-001-FUN01 — the diamond-tipped upgrade (MOD-374) cuts at 10.5 on logs and
+	 *     on leaves, strictly faster than the base chainsaw, keeps the axe tier and still drops to hand
+	 *     speed when flat.
 	 */
 	public static void fun01DiamondTipSpeedAndTier(GameTestHelper helper) {
 		Item tip = ModContent.ELECTRIC_CHAINSAW_DIAMOND_TIP.get();
@@ -110,15 +149,15 @@ public final class ElectricChainsawScenarios {
 		BlockState log = Blocks.OAK_LOG.defaultBlockState();
 		BlockState leaves = Blocks.OAK_LEAVES.defaultBlockState();
 
-		float chargedLog = tip.getDestroySpeed(diamondTipChainsaw(Config.electricChainsawBuffer), log);
+		float chargedLog = tip.getDestroySpeed(diamondTipChainsaw(ToolConfig.electricChainsawBuffer), log);
 		if (chargedLog != 10.5f) {
 			helper.fail("a charged diamond-tipped chainsaw must cut oak log at 10.5, got " + chargedLog);
 		}
-		float chargedLeaves = tip.getDestroySpeed(diamondTipChainsaw(Config.electricChainsawBuffer), leaves);
+		float chargedLeaves = tip.getDestroySpeed(diamondTipChainsaw(ToolConfig.electricChainsawBuffer), leaves);
 		if (chargedLeaves != 10.5f) {
 			helper.fail("a charged diamond-tipped chainsaw must cut leaves at 10.5, got " + chargedLeaves);
 		}
-		float baseSpeed = base.getDestroySpeed(chainsaw(Config.electricChainsawBuffer), log);
+		float baseSpeed = base.getDestroySpeed(chainsaw(ToolConfig.electricChainsawBuffer), log);
 		if (!(chargedLog > baseSpeed)) {
 			helper.fail("the upgrade must out-cut the base chainsaw, got " + chargedLog + " vs base " + baseSpeed);
 		}
@@ -128,7 +167,7 @@ public final class ElectricChainsawScenarios {
 		}
 
 		// The tier is unchanged: it is still an axe, not a pickaxe.
-		ItemStack charged = diamondTipChainsaw(Config.electricChainsawBuffer);
+		ItemStack charged = diamondTipChainsaw(ToolConfig.electricChainsawBuffer);
 		assertCorrect(helper, charged, log, "oak_log", true);
 		assertCorrect(helper, charged, Blocks.STONE.defaultBlockState(), "stone", false);
 		helper.succeed();
@@ -143,11 +182,15 @@ public final class ElectricChainsawScenarios {
 	 * {@code inverted} of the very same silk/shears condition). With the mode off, the leaf block is
 	 * guaranteed absent — the sapling is a 5 % roll and is deliberately NOT asserted, because a test
 	 * that depends on a random roll is a test that fails for the wrong reason.
+	 *
+	 * @implements TC-CHAINSAW-001-FUN02 — sneak + right-click toggles the upgrade's Silk Touch mode, and
+	 *     the mode changes the real leaf loot-table drop both ways (leaf block ↔ no leaf block); a plain
+	 *     click is inert.
 	 */
 	public static void fun02DiamondTipSilkToggleOnLeaves(GameTestHelper helper) {
 		ServerLevel level = helper.getLevel();
 		ServerPlayer player = survivalPlayer(helper);
-		ItemStack stack = diamondTipChainsaw(Config.electricChainsawBuffer);
+		ItemStack stack = diamondTipChainsaw(ToolConfig.electricChainsawBuffer);
 		player.setItemInHand(InteractionHand.MAIN_HAND, stack);
 
 		// A freshly crafted chainsaw starts in normal mode — sapling farming keeps working out of the box.
@@ -199,11 +242,14 @@ public final class ElectricChainsawScenarios {
 	 * <p>This is the negative control for the whole feature. Without it, a refactor that moved the
 	 * toggle up into {@link dev.alaindustrial.item.tool.ElectricChainsawItem} would hand every player a
 	 * free silk axe and every assertion in FUN02 would still pass.
+	 *
+	 * @implements TC-CHAINSAW-001-FUN03 — the BASE chainsaw has no Silk Touch mode: sneak-clicking never
+	 *     enchants it and its leaf drops never include the leaf block.
 	 */
 	public static void fun03BaseChainsawHasNoSilkMode(GameTestHelper helper) {
 		ServerLevel level = helper.getLevel();
 		ServerPlayer player = survivalPlayer(helper);
-		ItemStack stack = chainsaw(Config.electricChainsawBuffer);
+		ItemStack stack = chainsaw(ToolConfig.electricChainsawBuffer);
 		player.setItemInHand(InteractionHand.MAIN_HAND, stack);
 
 		if (stack.getItem() instanceof ElectricChainsawDiamondTipItem) {
@@ -230,32 +276,64 @@ public final class ElectricChainsawScenarios {
 
 	// ── MOD-364 — the base tool's EU contract (shared forms, chainsaw parameters) ────────────────────
 
-	/** TC-CHAINSAW-001-FUN04 — accepted by the Battery Box charge slot and charged at its intake rate. */
+	/**
+	 * TC-CHAINSAW-001-FUN04 — accepted by the Battery Box charge slot and charged at its intake rate.
+	 *
+	 * @implements TC-CHAINSAW-001-FUN04 — the base chainsaw is accepted by both Battery Box charge-slot
+	 *     filters and charges there at min(LV ceiling, its own intake rate) (MOD-364).
+	 */
 	public static void fun04ChargeInBatteryBox(GameTestHelper helper) {
 		ElectricToolEnergyScenarios.chargeInBatteryBox(helper, ENERGY);
 	}
 
-	/** TC-CHAINSAW-001-FUN05 — cutting one oak log drains exactly {@code electricChainsawEuPerBlock}. */
+	/**
+	 * TC-CHAINSAW-001-FUN05 — cutting one oak log drains exactly {@code electricChainsawEuPerBlock}.
+	 *
+	 * @implements TC-CHAINSAW-001-FUN05 — cutting one oak log with a charged base chainsaw drains exactly
+	 *     electricChainsawEuPerBlock (MOD-364).
+	 */
 	public static void fun05DrainOnMineBlock(GameTestHelper helper) {
 		ElectricToolEnergyScenarios.drainOnMineBlock(helper, ENERGY);
 	}
 
-	/** TC-CHAINSAW-001-FUN06 — one EU below the cost it cuts for free, at exactly hand speed. */
+	/**
+	 * TC-CHAINSAW-001-FUN06 — one EU below the cost it cuts for free, at exactly hand speed.
+	 *
+	 * @implements TC-CHAINSAW-001-FUN06 — one EU below the per-block cost the chainsaw cuts for free and
+	 *     at exactly hand speed 1.0f on its own domain block (MOD-364).
+	 */
 	public static void fun06NoDrainBelowCost(GameTestHelper helper) {
 		ElectricToolEnergyScenarios.noDrainBelowCost(helper, ENERGY);
 	}
 
-	/** TC-CHAINSAW-001-FUN07 — a torch (hardness 0.0) is free, oak leaves (0.2) are not. */
+	/**
+	 * TC-CHAINSAW-001-FUN07 — a torch (hardness 0.0) is free, oak leaves (0.2) are not.
+	 *
+	 * @implements TC-CHAINSAW-001-FUN07 — a zero-hardness block costs nothing, while oak leaves (0.2) cost
+	 *     the full per-block drain, which is the claim the item's javadoc makes and had no test behind it
+	 *     (MOD-364).
+	 */
 	public static void fun07ZeroHardnessFreeLeavesCost(GameTestHelper helper) {
 		ElectricToolEnergyScenarios.zeroHardnessFreeSoftBlockCosts(helper, ENERGY);
 	}
 
-	/** TC-CHAINSAW-001-FUN08 — 9.0 on logs AND leaves while charged, 1.0f flat, drops kept either way. */
+	/**
+	 * TC-CHAINSAW-001-FUN08 — 9.0 on logs AND leaves while charged, 1.0f flat, drops kept either way.
+	 *
+	 * @implements TC-CHAINSAW-001-FUN08 — 9.0 on logs and on leaves while charged (the third TOOL rule,
+	 *     checked on the BASE tool for the first time), exactly 1.0f one EU below the cost, drops kept
+	 *     either way and refused on a foreign block (MOD-364).
+	 */
 	public static void fun08SpeedAndDrops(GameTestHelper helper) {
 		ElectricToolEnergyScenarios.speedAndDrops(helper, ENERGY);
 	}
 
-	/** TC-CHAINSAW-001-PER01 — charge survives a copy, 0 EU drops the component, writes clamp. */
+	/**
+	 * TC-CHAINSAW-001-PER01 — charge survives a copy, 0 EU drops the component, writes clamp.
+	 *
+	 * @implements TC-CHAINSAW-001-PER01 — charge survives a stack copy, 0 EU removes the component, and
+	 *     writes clamp at capacity (MOD-364).
+	 */
 	public static void per01ChargeRoundTrip(GameTestHelper helper) {
 		ElectricToolEnergyScenarios.chargeRoundTrip(helper, ENERGY);
 	}

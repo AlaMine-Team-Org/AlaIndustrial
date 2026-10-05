@@ -3,10 +3,8 @@ package dev.alaindustrial.menu;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.block.entity.StormWindMillBlockEntity;
 import dev.alaindustrial.registry.ModContent;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
@@ -21,8 +19,8 @@ public class StormWindMillMenu extends MachineMenu implements WindMillReadout {
 	/** Client side. */
 	public StormWindMillMenu(int syncId, Inventory playerInventory) {
 		super(ModContent.STORM_WIND_MILL_MENU.get(), syncId, playerInventory,
-				new SimpleContainer(StormWindMillBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT),
-				new SimpleContainerData(StormWindMillBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL,
+				clientStub(StormWindMillBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT,
+						StormWindMillBlockEntity.DATA_COUNT),
 				ModContent.STORM_WIND_MILL.get());
 	}
 
@@ -58,7 +56,7 @@ public class StormWindMillMenu extends MachineMenu implements WindMillReadout {
 	 */
 	@Override
 	public int getProductionRate() {
-		return data.get(StormWindMillBlockEntity.RATE_CHANNEL);
+		return channel(StormWindMillBlockEntity.Channel.RATE);
 	}
 
 	/** Wind mode: 0 no rotor, 1 roofed, 2 calm, 3 breeze, 4 gale, 5 storm. */

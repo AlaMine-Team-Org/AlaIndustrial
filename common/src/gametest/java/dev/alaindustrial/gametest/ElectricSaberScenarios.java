@@ -3,10 +3,12 @@ package dev.alaindustrial.gametest;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.item.ToolConfig;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.item.tool.ElectricSaberItem;
 import dev.alaindustrial.menu.BatteryBoxMenu;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
@@ -52,6 +54,30 @@ import static dev.alaindustrial.gametest.AlaGameTestHelper.survivalPlayer;
  * green while the saber silently spent no EU in a real game.
  */
 public final class ElectricSaberScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(ElectricSaberScenarios::fun01ChargeInBatteryBox, "saber_charge_in_battery_box")
+						.fabricId("ElectricSaberGameTest", "tcSaber001Fun01_chargeInBatteryBox").ticks(20, 80),
+				RosterEntry.of(ElectricSaberScenarios::fun02DrainOnHit, "saber_drain_on_hit")
+						.fabricId("ElectricSaberGameTest", "tcSaber001Fun02_drainOnHit").ticks(20, 40),
+				RosterEntry.of(ElectricSaberScenarios::fun03NoDrainBelowCost, "saber_no_drain_below_cost")
+						.fabricId("ElectricSaberGameTest", "tcSaber001Fun03_noDrainBelowCost").ticks(20, 40),
+				RosterEntry.of(ElectricSaberScenarios::fun04AttributesFollowCharge, "saber_attributes_follow_charge")
+						.fabricId("ElectricSaberGameTest", "tcSaber001Fun04_attributesFollowCharge").ticks(20, 40),
+				RosterEntry.of(ElectricSaberScenarios::fun05SwitchedOffSpendsNothing,
+								"saber_switched_off_spends_nothing")
+						.fabricId("ElectricSaberGameTest", "tcSaber001Fun05_switchedOffSpendsNothing").ticks(20, 40),
+				RosterEntry.of(ElectricSaberScenarios::fun06CreativeSpendsNothing, "saber_creative_spends_nothing")
+						.fabricId("ElectricSaberGameTest", "tcSaber001Fun06_creativeSpendsNothing").ticks(20, 40),
+				RosterEntry.of(ElectricSaberScenarios::fun07TagsAndEnchants, "saber_tags_and_enchants")
+						.fabricId("ElectricSaberGameTest", "tcSaber001Fun07_tagsAndEnchants").ticks(20, 40),
+				RosterEntry.of(ElectricSaberScenarios::fun08ShockOnlyWhenLive, "saber_shock_only_when_live")
+						.fabricId("ElectricSaberGameTest", "tcSaber001Fun08_shockOnlyWhenLive").ticks(20, 40));
+
+		private Roster() {}
+	}
 
 	private ElectricSaberScenarios() {}
 
@@ -117,6 +143,9 @@ public final class ElectricSaberScenarios {
 	 * {@code mayPlace} and the server-side {@code canPlaceItem}) and charges there at
 	 * {@code min(tier ceiling, its own intake)} — the whole "no changes needed on the charger's side"
 	 * promise of {@link ItemEnergy}.
+	 *
+	 * @implements TC-SABER-001-FUN01 — the saber is accepted by the Battery Box charge slot (both
+	 *     filters) and charges there at min(LV ceiling, its intake rate).
 	 */
 	public static void fun01ChargeInBatteryBox(GameTestHelper helper) {
 		BatteryBoxBlockEntity box = placeBox(helper);
@@ -133,7 +162,7 @@ public final class ElectricSaberScenarios {
 		box.getEnergyStorage().setAmountUntracked(box.getEnergyStorage().getCapacity());
 		box.setItem(BatteryBoxBlockEntity.CHARGE_SLOT, saber(0));
 		box.serverTick(helper.getLevel(), box.getBlockPos(), helper.getLevel().getBlockState(box.getBlockPos()));
-		long expected = Math.min(EnergyTier.LV.maxVoltage(), Config.electricSaberInputRate);
+		long expected = Math.min(EnergyTier.LV.maxVoltage(), ToolConfig.electricSaberInputRate);
 		long gained = ItemEnergy.get(box.getItem(BatteryBoxBlockEntity.CHARGE_SLOT));
 		if (gained != expected) {
 			helper.fail("one tick must move min(LV ceiling, saber intake) = " + expected + " EU, got " + gained);
@@ -141,14 +170,18 @@ public final class ElectricSaberScenarios {
 		helper.succeed();
 	}
 
-	/** FUN02: a landed hit with a live saber drains exactly one hit's worth of EU. */
+	/**
+	 * FUN02: a landed hit with a live saber drains exactly one hit's worth of EU.
+	 *
+	 * @implements TC-SABER-001-FUN02 — a landed hit with a live saber drains exactly one hit's worth of EU.
+	 */
 	public static void fun02DrainOnHit(GameTestHelper helper) {
 		ServerPlayer player = survivalPlayer(helper);
 		LivingEntity target = spawnTarget(helper);
-		ItemStack saber = saber(Config.electricSaberBuffer);
+		ItemStack saber = saber(ToolConfig.electricSaberBuffer);
 
 		hit(saber, target, player);
-		long expected = Config.electricSaberBuffer - Config.electricSaberEuPerHit;
+		long expected = ToolConfig.electricSaberBuffer - ToolConfig.electricSaberEuPerHit;
 		if (ItemEnergy.get(saber) != expected) {
 			helper.fail("one hit must drain exactly electricSaberEuPerHit; expected " + expected
 					+ ", left " + ItemEnergy.get(saber));
@@ -159,11 +192,13 @@ public final class ElectricSaberScenarios {
 	/**
 	 * FUN03: below the per-hit cost nothing is spent and nothing goes negative — the saber has already
 	 * degraded to a plain sword, and a plain sword costs no energy.
+	 *
+	 * @implements TC-SABER-001-FUN03 — below the per-hit cost the saber spends nothing and never goes negative.
 	 */
 	public static void fun03NoDrainBelowCost(GameTestHelper helper) {
 		ServerPlayer player = survivalPlayer(helper);
 		LivingEntity target = spawnTarget(helper);
-		long below = Config.electricSaberEuPerHit - 1;
+		long below = ToolConfig.electricSaberEuPerHit - 1;
 		ItemStack saber = saber(below);
 
 		hit(saber, target, player);
@@ -178,6 +213,9 @@ public final class ElectricSaberScenarios {
 	 * saber crosses the per-hit threshold and step back down when it falls under it. This is the whole
 	 * mechanism behind "the tooltip never lies", so it is asserted on the component rather than on a
 	 * damage number observed in combat.
+	 *
+	 * @implements TC-SABER-001-FUN04 — damage and reach modifiers follow the charge across the per-hit
+	 *     threshold in both directions.
 	 */
 	public static void fun04AttributesFollowCharge(GameTestHelper helper) {
 		ItemStack saber = saber(0);
@@ -186,7 +224,7 @@ public final class ElectricSaberScenarios {
 			helper.fail("a flat saber must carry no reach bonus, got " + reachBonusOf(saber));
 		}
 
-		ItemEnergy.set(saber, Config.electricSaberEuPerHit);
+		ItemEnergy.set(saber, ToolConfig.electricSaberEuPerHit);
 		double liveDamage = damageOf(saber);
 		if (liveDamage <= flatDamage) {
 			helper.fail("a live saber must hit harder than a flat one: " + liveDamage + " vs " + flatDamage);
@@ -196,7 +234,7 @@ public final class ElectricSaberScenarios {
 		}
 
 		// …and back down again: one EU below the threshold is a plain sword once more.
-		ItemEnergy.set(saber, Config.electricSaberEuPerHit - 1);
+		ItemEnergy.set(saber, ToolConfig.electricSaberEuPerHit - 1);
 		if (damageOf(saber) != flatDamage) {
 			helper.fail("dropping under the per-hit cost must restore the flat damage, got " + damageOf(saber));
 		}
@@ -209,11 +247,14 @@ public final class ElectricSaberScenarios {
 	/**
 	 * FUN05: a switched-off saber is inert even on a full buffer — no EU spent, no damage bonus, no
 	 * reach bonus. The flag is the half of the state the player controls, and it must win over charge.
+	 *
+	 * @implements TC-SABER-001-FUN05 — a switched-off saber spends no EU and carries no bonuses even on a
+	 *     full buffer; switching back on restores them immediately.
 	 */
 	public static void fun05SwitchedOffSpendsNothing(GameTestHelper helper) {
 		ServerPlayer player = survivalPlayer(helper);
 		LivingEntity target = spawnTarget(helper);
-		ItemStack saber = saber(Config.electricSaberBuffer);
+		ItemStack saber = saber(ToolConfig.electricSaberBuffer);
 		double liveDamage = damageOf(saber);
 
 		ElectricSaberItem.setEnabled(saber, false);
@@ -228,7 +269,7 @@ public final class ElectricSaberScenarios {
 		}
 
 		hit(saber, target, player);
-		if (ItemEnergy.get(saber) != Config.electricSaberBuffer) {
+		if (ItemEnergy.get(saber) != ToolConfig.electricSaberBuffer) {
 			helper.fail("a switched-off saber must spend no EU, left " + ItemEnergy.get(saber));
 		}
 
@@ -240,15 +281,19 @@ public final class ElectricSaberScenarios {
 		helper.succeed();
 	}
 
-	/** FUN06: a creative attacker spends nothing — EU is tool wear, and creative does not wear tools (MOD-081). */
+	/**
+	 * FUN06: a creative attacker spends nothing — EU is tool wear, and creative does not wear tools (MOD-081).
+	 *
+	 * @implements TC-SABER-001-FUN06 — a creative attacker spends no charge (MOD-081).
+	 */
 	public static void fun06CreativeSpendsNothing(GameTestHelper helper) {
 		ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper);
 		player.getAbilities().instabuild = true;
 		LivingEntity target = spawnTarget(helper);
-		ItemStack saber = saber(Config.electricSaberBuffer);
+		ItemStack saber = saber(ToolConfig.electricSaberBuffer);
 
 		hit(saber, target, player);
-		if (ItemEnergy.get(saber) != Config.electricSaberBuffer) {
+		if (ItemEnergy.get(saber) != ToolConfig.electricSaberBuffer) {
 			helper.fail("a creative attacker must spend no EU, left " + ItemEnergy.get(saber));
 		}
 		helper.succeed();
@@ -261,9 +306,12 @@ public final class ElectricSaberScenarios {
 	 * shortcut in the other cases depends on — {@code hurtEnemy} returns {@code true}, which happens only
 	 * while {@code DataComponents.WEAPON} is present. Without the component vanilla would never call
 	 * {@code postHurtEnemy} and the saber would spend nothing in a real game.
+	 *
+	 * @implements TC-SABER-001-FUN07 — sword identity tags, melee enchantments, and the WEAPON contract
+	 *     that makes the EU hook run at all.
 	 */
 	public static void fun07TagsAndEnchants(GameTestHelper helper) {
-		ItemStack saber = saber(Config.electricSaberBuffer);
+		ItemStack saber = saber(ToolConfig.electricSaberBuffer);
 		assertInTag(helper, saber, ItemTags.SWORDS, "#minecraft:swords");
 		assertInTag(helper, saber, C_MELEE_WEAPON, "#c:tools/melee_weapon");
 		if (saber.get(DataComponents.WEAPON) == null) {
@@ -291,21 +339,23 @@ public final class ElectricSaberScenarios {
 	 * FUN08: the discharge lands only on a live hit. A charged, switched-on saber leaves Slowness on the
 	 * target; a flat one leaves the target clean — the effect is a property of the powered swing, not of
 	 * the weapon.
+	 *
+	 * @implements TC-SABER-001-FUN08 — the electric discharge lands on a live hit and on nothing else.
 	 */
 	public static void fun08ShockOnlyWhenLive(GameTestHelper helper) {
-		if (Config.electricSaberShockSeconds <= 0) {
+		if (ToolConfig.electricSaberShockSeconds <= 0) {
 			helper.fail("this case assumes the shock is enabled (electricSaberShockSeconds > 0)");
 		}
 		ServerPlayer player = survivalPlayer(helper);
 
 		LivingEntity shocked = spawnTarget(helper);
-		hit(saber(Config.electricSaberBuffer), shocked, player);
+		hit(saber(ToolConfig.electricSaberBuffer), shocked, player);
 		if (!shocked.hasEffect(MobEffects.SLOWNESS)) {
 			helper.fail("a live hit must leave Slowness on the target");
 		}
 
 		LivingEntity untouched = helper.spawn(EntityTypes.COW, new BlockPos(4, 2, 2));
-		hit(saber(Config.electricSaberEuPerHit - 1), untouched, player);
+		hit(saber(ToolConfig.electricSaberEuPerHit - 1), untouched, player);
 		if (untouched.hasEffect(MobEffects.SLOWNESS)) {
 			helper.fail("a flat saber must not shock anything");
 		}

@@ -12,6 +12,7 @@ import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.core.energy.NetworkManager;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModDataComponents;
+import java.util.List;
 import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -31,6 +32,44 @@ import net.minecraft.world.level.storage.TagValueInput;
  * break → place.
  */
 public final class TeleporterStationScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(TeleporterStationScenarios::tcTele001Fun02_bufferMatchesConfig,
+								"tc_tele001_fun02_buffer_matches_config")
+						.fabricId("TeleporterStationGameTest", "tcTele001Fun02_bufferMatchesConfig").ticks(20, 40),
+				RosterEntry.of(TeleporterStationScenarios::tcTele001Fun03_hvIntakeRate,
+								"tc_tele001_fun03_hv_intake_rate")
+						.fabricId("TeleporterStationGameTest", "tcTele001Fun03_hvIntakeRate").ticks(20, 40),
+				RosterEntry.of(TeleporterStationScenarios::tcTele001Per01_stateSurvivesNbt,
+								"tc_tele001_per01_state_survives_nbt")
+						.fabricId("TeleporterStationGameTest", "tcTele001Per01_stateSurvivesNbt").ticks(20, 40),
+				RosterEntry.of(TeleporterStationScenarios::tcTele001Per02_defaultsToPrivate,
+								"tc_tele001_per02_defaults_to_private")
+						.fabricId("TeleporterStationGameTest", "tcTele001Per02_defaultsToPrivate").ticks(20, 40),
+				RosterEntry.of(TeleporterStationScenarios::tcTele001Brk07_dropCarriesEnergyAndPrivacyButNotOwner,
+								"tc_tele001_brk07_drop_carries_energy_and_privacy_but_not_owner")
+						.fabricId("TeleporterStationGameTest",
+								"tcTele001Brk07_dropCarriesEnergyAndPrivacyButNotOwner")
+						.ticks(20, 40),
+				RosterEntry.of(TeleporterStationScenarios::tcTele001Sec01_privacyGate, "tc_tele001_sec01_privacy_gate")
+						.fabricId("TeleporterStationGameTest", "tcTele001Sec01_privacyGate").ticks(20, 40),
+				RosterEntry.of(TeleporterStationScenarios::tcTele001Con01_isAStorageSink,
+								"tc_tele001_con01_is_a_storage_sink")
+						.fabricId("TeleporterStationGameTest", "tcTele001Con01_isAStorageSink").ticks(20, 40),
+				RosterEntry.of(TeleporterStationScenarios::tcTele001Con02_doesNotStarveMachines,
+								"tc_tele001_con02_does_not_starve_machines")
+						.fabricId("TeleporterStationGameTest", "tcTele001Con02_doesNotStarveMachines").ticks(20, 40),
+				RosterEntry.of(TeleporterStationScenarios::tcTele001Fun01_acceptsButNeverEmits,
+								"tc_tele001_fun01_accepts_but_never_emits")
+						.fabricId("TeleporterStationGameTest", "tcTele001Fun01_acceptsButNeverEmits").ticks(20, 100),
+				RosterEntry.of(TeleporterStationScenarios::tcTele001Nrg03_frontFaceInert,
+								"tc_tele001_nrg03_front_face_inert")
+						.fabricId("TeleporterStationGameTest", "tcTele001Nrg03_frontFaceInert").ticks(20, 100));
+
+		private Roster() {}
+	}
 
 	private TeleporterStationScenarios() {}
 

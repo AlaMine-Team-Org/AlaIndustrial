@@ -6,6 +6,7 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.WorkstationBlock;
 import dev.alaindustrial.block.WorkstationPart;
 import dev.alaindustrial.block.entity.WorkstationBlockEntity;
+import dev.alaindustrial.compat.client.Poses;
 import dev.alaindustrial.core.machine.RotorSpin;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -165,7 +166,7 @@ public final class WorkstationBlockEntityRenderer
 		// Negated: a blockstate `y` turns the model clockwise seen from above, a positive turn about
 		// +Y goes the other way.
 		poseStack.translate(0.5F, 0.0F, 0.5F);
-		poseStack.mulPose(Axis.YP.rotationDegrees(-state.yaw));
+		Poses.rotate(poseStack, Axis.YP.rotationDegrees(-state.yaw));
 		poseStack.translate(-0.5F, 0.0F, -0.5F);
 
 		if (state.lower) {
@@ -173,7 +174,7 @@ public final class WorkstationBlockEntityRenderer
 				float[] pivot = WorkstationGeometry.FAN_PIVOTS[i];
 				poseStack.pushPose();
 				poseStack.translate(pivot[0] * PIXEL, pivot[1] * PIXEL, pivot[2] * PIXEL);
-				poseStack.mulPose(Axis.ZP.rotation(
+				Poses.rotate(poseStack, Axis.ZP.rotation(
 						state.fanAngle * WorkstationGeometry.FAN_DIRECTION[i]));
 				poseStack.translate(-pivot[0] * PIXEL, -pivot[1] * PIXEL, -pivot[2] * PIXEL);
 				submit(collector, poseStack, type, FANS[i], sprite, state.lightCoords);
@@ -183,7 +184,7 @@ public final class WorkstationBlockEntityRenderer
 			float[] pivot = WorkstationGeometry.MONITORS_PIVOT;
 			poseStack.pushPose();
 			poseStack.translate(pivot[0] * PIXEL, pivot[1] * PIXEL, pivot[2] * PIXEL);
-			poseStack.mulPose(Axis.XP.rotationDegrees(state.tiltDegrees));
+			Poses.rotate(poseStack, Axis.XP.rotationDegrees(state.tiltDegrees));
 			poseStack.translate(-pivot[0] * PIXEL, -pivot[1] * PIXEL, -pivot[2] * PIXEL);
 			submit(collector, poseStack, type, MONITORS, sprite, state.lightCoords);
 			poseStack.popPose();

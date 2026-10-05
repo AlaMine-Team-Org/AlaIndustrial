@@ -1,14 +1,13 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.HighAltitudeWindMillBlockEntity;
+import dev.alaindustrial.block.entity.machine.MachineChannels;
 import dev.alaindustrial.registry.ModSounds;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -23,15 +22,8 @@ import net.minecraft.world.level.block.state.BlockState;
  * {@link WindMillBlock}; only the entity (generation formula) and the front texture differ.
  */
 public class HighAltitudeWindMillBlock extends HorizontalMachineBlock implements MachineHumProvider {
-	public static final MapCodec<HighAltitudeWindMillBlock> CODEC = simpleCodec(HighAltitudeWindMillBlock::new);
-
 	public HighAltitudeWindMillBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override
@@ -77,6 +69,6 @@ public class HighAltitudeWindMillBlock extends HorizontalMachineBlock implements
 	@Override
 	public boolean isWorking(Level level, BlockPos pos, BlockState state) {
 		return level.getBlockEntity(pos) instanceof HighAltitudeWindMillBlockEntity mill
-				&& mill.getDataAccess().get(2) > 0;
+				&& mill.getDataAccess().get(MachineChannels.PROGRESS.ordinal()) > 0;
 	}
 }

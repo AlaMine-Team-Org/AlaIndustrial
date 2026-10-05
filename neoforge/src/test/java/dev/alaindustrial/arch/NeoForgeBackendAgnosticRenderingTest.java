@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
  *
  * <p><b>The package list is duplicated, on purpose and under guard.</b> It cannot be shared: a test
  * class in {@code :common} is not on this module's classpath. So the list is restated here and
- * {@code docs/tools/arch_check.py} (rule {@code backend-package-lists-agree}) fails the build if the
+ * {@code docs/tools/arch/arch_check.py} (rule {@code backend-package-lists-agree}) fails the build if the
  * two ever differ — the drift would otherwise be silent, leaving this zone open while the other looks
  * closed.
  */

@@ -2,7 +2,6 @@ package dev.alaindustrial.item.tool.neoforge;
 
 import dev.alaindustrial.item.tool.ElectricShovelDiamondTipItem;
 import net.minecraft.world.item.ItemInstance;
-import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.ItemAbility;
 
 /**
@@ -35,6 +34,6 @@ public class ElectricShovelDiamondTipItemNeoForge extends ElectricShovelDiamondT
 
 	@Override
 	public boolean canPerformAction(ItemInstance stack, ItemAbility itemAbility) {
-		return ItemAbilities.DEFAULT_SHOVEL_ACTIONS.contains(itemAbility);
+		return RightClickAbility.SHOVEL.canPerform(itemAbility);
 	}
 }

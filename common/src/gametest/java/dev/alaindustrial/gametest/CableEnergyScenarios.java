@@ -13,6 +13,7 @@ import dev.alaindustrial.core.energy.EnergyNetwork;
 import dev.alaindustrial.core.energy.EnergyShare;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.core.energy.NetworkManager;
+import dev.alaindustrial.core.environment.GeneratorConfig;
 import dev.alaindustrial.registry.ModContent;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -40,6 +41,87 @@ import static dev.alaindustrial.gametest.EnergyScenarioSupport.tick;
  */
 public final class CableEnergyScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(CableEnergyScenarios::generatorDeliversDownCable, "generator_delivers_down_cable")
+						.fabricId("NetworkGameTest", "it001_delivery").ticks(20, 200),
+				RosterEntry.of(CableEnergyScenarios::returnRoundRobinNoLeak, "return_round_robin_no_leak")
+						.fabricId("NetworkGameTest", "tcCable001Nrg03_generatorNotDrainedByPartialConsumer")
+						.ticks(20, 40),
+				RosterEntry.of(CableEnergyScenarios::lineAccumulatesInSegments, "line_accumulates_in_segments")
+						.fabricId("NetworkGameTest", "tcCable001Nrg04_lineAccumulatesInSegments").ticks(80),
+				RosterEntry.of(CableEnergyScenarios::breakRetainsAtSource, "break_retains_at_source")
+						.fabricId("NetworkGameTest", "tcCable001Nrg05_breakRetainsAtSource").ticks(100),
+				RosterEntry.of(CableEnergyScenarios::cableGradesCarryTheirOwnBuffer,
+								"cable_grades_carry_their_own_buffer")
+						.fabricId("NetworkGameTest", "tcCable001Nrg08_cableGradesCarryTheirOwnBuffer").ticks(260),
+				RosterEntry.of(CableEnergyScenarios::mixedNetworkTakesLossFromStrongestCable,
+								"mixed_network_takes_loss_from_strongest_cable")
+						.fabricId("NetworkGameTest", "tcCable003Nrg06_mixedNetworkTakesLossFromStrongestCable")
+						.ticks(220),
+				RosterEntry.of(CableEnergyScenarios::inPlaceGradeSwapRebuildsSegment,
+								"in_place_grade_swap_rebuilds_segment")
+						.fabricId("NetworkGameTest", "tcCable003Phy01_inPlaceGradeSwapRebuildsSegment").ticks(40),
+				RosterEntry.of(CableEnergyScenarios::sourceFillsCableWithoutConsumer,
+								"source_fills_cable_without_consumer")
+						.fabricId("NetworkGameTest", "rNrg09b_sourceFillsCableWithoutConsumer").ticks(20, 40),
+				RosterEntry.of(CableEnergyScenarios::mod252FarSourceBehindNearSourceDischarges,
+								"mod252_far_source_behind_near_source_discharges")
+						.fabricId("NetworkGameTest", "mod252_farSourceBehindNearSourceDischarges").ticks(80),
+				RosterEntry.of(CableEnergyScenarios::mod252VerticalSourceGroupsBothDischarge,
+								"mod252_vertical_source_groups_both_discharge")
+						.fabricId("NetworkGameTest", "mod252_verticalSourceGroupsBothDischarge").ticks(160),
+				RosterEntry.of(CableEnergyScenarios::mod252TwoConsumersOnBothSidesOfSource,
+								"mod252_two_consumers_on_both_sides_of_source")
+						.fabricId("NetworkGameTest", "mod252_twoConsumersOnBothSidesOfSource").ticks(160),
+				RosterEntry.of(CableEnergyScenarios::mod252MachineAndStorageOnBothSidesOfSource,
+								"mod252_machine_and_storage_on_both_sides_of_source")
+						.fabricId("NetworkGameTest", "mod252_machineAndStorageOnBothSidesOfSource").ticks(200),
+				RosterEntry.of(CableEnergyScenarios::mod254EverySourceFeedsASaturatedLine,
+								"mod254_every_source_feeds_a_saturated_line")
+						.fabricId("NetworkGameTest", "mod254_everySourceFeedsASaturatedLine").ticks(80),
+				RosterEntry.of(CableEnergyScenarios::mod254ForkFeedsBothBranches, "mod254_fork_feeds_both_branches")
+						.fabricId("NetworkGameTest", "mod254_forkFeedsBothBranches").ticks(200),
+				RosterEntry.of(CableEnergyScenarios::mod021LossOverTenCables, "mod021_loss_over_ten_cables")
+						.fabricId("NetworkGameTest", "tcCable001Nrg02_lossOverTenCables").ticks(80, 100),
+				RosterEntry.of(CableEnergyScenarios::mod253LongCopperLineStillDeliversAndTopsOff,
+								"mod253_long_copper_line_still_delivers_and_tops_off")
+						.fabricId("NetworkGameTest", "mod253_longCopperLineStillDeliversAndTopsOff").ticks(200),
+				RosterEntry.of(CableEnergyScenarios::rNrg08_splitsBetweenEqualConsumers,
+								"splits_between_equal_consumers")
+						.fabricId("NetworkGameTest", "rNrg08_splitsBetweenEqualConsumers").ticks(20, 100),
+				RosterEntry.of(CableEnergyScenarios::rNrg09_idleNetworkSleeps, "idle_network_sleeps")
+						.fabricId("NetworkGameTest", "rNrg09_idleNetworkSleeps").ticks(20, 100),
+				RosterEntry.of(CableEnergyScenarios::rNrg09_networkWakesOnConsumer, "network_wakes_on_consumer")
+						.fabricId("NetworkGameTest", "rNrg09_networkWakesOnConsumer").ticks(20, 100),
+				RosterEntry.of(CableEnergyScenarios::mod009Pri_machineServedBeforeStorage,
+								"mod009_machine_served_before_storage")
+						.fabricId("NetworkGameTest", "mod009Pri_machineServedBeforeStorage").ticks(60),
+				RosterEntry.of(CableEnergyScenarios::tcCable001Nrg02b_noLossOnShortLine, "no_loss_on_short_line")
+						.fabricId("NetworkGameTest", "tcCable001Nrg02b_noLossOnShortLine").ticks(40),
+				RosterEntry.of(CableEnergyScenarios::tcCable001Nrg02c_topsOffExactlyOverLossyLine,
+								"tops_off_exactly_over_lossy_line")
+						.fabricId("NetworkGameTest", "tcCable001Nrg02c_topsOffExactlyOverLossyLine").ticks(40),
+				RosterEntry.of(CableEnergyScenarios::tcCable001Neg02_twoEmptyCablesTenThousandTicksNoPhantomEu,
+								"two_empty_cables_no_phantom_eu")
+						.fabricId("NetworkGameTest", "tcCable001Neg02_twoEmptyCablesTenThousandTicksNoPhantomEu"),
+				RosterEntry.of(CableEnergyScenarios::mod156_lazyPathReregistersAfterReload,
+								"mod156_lazy_path_reregisters_after_reload")
+						.fabricId("NetworkGameTest", "mod156_lazyPathReregistersAfterReload").ticks(100),
+				RosterEntry.of(CableEnergyScenarios::ringNetworkMergesOnClose, "ring_network_merges_on_close")
+						.fabricId("NetworkGameTest", "tcCable001Con04_ringNetworkNoDeadlock").ticks(20, 200),
+				RosterEntry.of(CableEnergyScenarios::diagonalCablesDoNotConnect, "diagonal_cables_do_not_connect")
+						.fabricId("NetworkGameTest", "tcCable001Phy09_diagonalCablesDoNotConnect").ticks(20, 40),
+				RosterEntry.of(CableEnergyScenarios::cableThroughputCappedAtLv, "cable_throughput_capped_at_lv")
+						.fabricId("NetworkGameTest", "tcCable001Nrg01_throughputCappedAtLvVoltage").ticks(40),
+				RosterEntry.of(CableEnergyScenarios::twoGeneratorsSumIntoOneConsumer,
+								"two_generators_sum_into_one_consumer")
+						.fabricId("NetworkGameTest", "tcCable001Con05_twoGeneratorsSumIntoOneConsumer").ticks(40, 60));
+
+		private Roster() {}
+	}
+
 	private CableEnergyScenarios() {}
 
 	// ── scenario 2: generator → cable → macerator (network transport) ─────────────────────────────
@@ -52,6 +134,8 @@ public final class CableEnergyScenarios {
 	 * test was missing: it used to check only that the macerator ended up with EU, which stays green
 	 * even when the consumer is charged off-network with every cable left at 0 — the MOD-070 failure
 	 * mode. {@code assertFlowedThroughCable()} samples the wire itself on every driven tick.
+	 *
+	 * @implements IT-001 — generator delivers EU down a cable to the macerator. @covers R-CON-01,R-CON-05
 	 */
 	public static void generatorDeliversDownCable(GameTestHelper helper) {
 		EnergyLine line = EnergyLine.in(helper)
@@ -77,13 +161,22 @@ public final class CableEnergyScenarios {
 	 * MOD-070 line buffers, conservation is system-wide: gen_drain == mac_gain + cable_buffered + loss
 	 * (loss floors to 0 for a 5 EU flow over this short line).
 	 * Mirrors: NetworkGameTest.tcCable001Nrg03_generatorNotDrainedByPartialConsumer
+	 *
+	 * @implements TC-CABLE-001-NRG03 — a cabled generator is never drained into the void when its only
+	 *     consumer accepts less than a full LV packet. {@code EnergyNetwork.tick} sizes each consumer's
+	 *     demand from a simulated {@code insert} (so {@code room} is already capped by the consumer's
+	 *     {@code maxInsert}); {@code serveClass} therefore never over-pulls, and {@code returnRoundRobin}
+	 *     never receives a surplus to push back into the generator (which publishes {@code maxInsert == 0}
+	 *     and would silently destroy it — the same EU-loss shape fixed in {@code EnergyMover}). This drives
+	 *     a generator whose only consumer has just 5 EU of room (far below the 32 EU packet cap) and asserts
+	 *     the generator loses EXACTLY what the consumer gains — conservation, no void loss. @covers R-NRG-15
 	 */
 	public static void returnRoundRobinNoLeak(GameTestHelper helper) {
 		helper.setBlock(LINE_GEN, ModContent.GENERATOR.get());
 		helper.setBlock(LINE_CABLE, ModContent.COPPER_CABLE.get());
 		helper.setBlock(LINE_MAC, ModContent.MACERATOR.get());
 
-		long genStart = Config.generatorBuffer;
+		long genStart = GeneratorConfig.generatorBuffer;
 		if (be(helper, LINE_GEN) instanceof GeneratorBlockEntity gen) {
 			gen.getEnergyStorage().setAmountUntracked(genStart); // pre-charged, NO fuel: buffer only goes down
 			gen.setChanged();
@@ -161,6 +254,13 @@ public final class CableEnergyScenarios {
 	 * teleport). The intermediate cable holds real EU (>0 mid-line — impossible under the old dead
 	 * buffer), delivery still works, and no cable exceeds the tiny {@code cableBuffer} cap.
 	 * Mirrors: NetworkGameTest.tcCable001Nrg04_lineAccumulatesInSegments
+	 *
+	 * @implements TC-CABLE-001-NRG04 — MOD-070 accumulation: energy flows through the cable buffers
+	 *     segment-to-segment, it does not teleport producer→consumer. After driving a fueled generator
+	 *     down a 5-cable line to a working macerator, the intermediate cable holds real EU (asserts >0
+	 *     mid-line — impossible under the old teleport model where the buffer was dead) while delivery
+	 *     still works, and no cable ever exceeds its tiny {@code cableBuffer} cap (the "no battery from
+	 *     wires" ceiling, enforced per segment). @covers PERFORMANCE.md
 	 */
 	public static void lineAccumulatesInSegments(GameTestHelper helper) {
 		buildFlowLine(helper);
@@ -193,6 +293,13 @@ public final class CableEnergyScenarios {
 	 * <p>Regression guard for the "recoloured copper" bug class: before per-cable parameters, all three
 	 * grades were built with {@code Config.cableBuffer}, so every line here would settle at the same 12 EU
 	 * and the two inequalities below would both fail.
+	 *
+	 * @implements TC-CABLE-001-NRG08 — MOD-219 per-grade throughput: gold carries strictly more EU per
+	 *     tick than copper, and tin strictly less. Since a cable's segment buffer IS its throughput
+	 *     (MOD-070), this drives the same line three times — once per grade — and compares the live EU
+	 *     buffered mid-line. Regression guard for the "recoloured copper" class: before per-cable
+	 *     parameters every grade was built with the one shared {@code cableBuffer}, so all three lines
+	 *     settled at the same number and both inequalities failed. @covers PERFORMANCE.md
 	 */
 	public static void cableGradesCarryTheirOwnBuffer(GameTestHelper helper) {
 		long electrum = fillAndReadMidCable(helper, ModContent.ELECTRUM_CABLE.get());
@@ -253,7 +360,7 @@ public final class CableEnergyScenarios {
 		// the wire. Doubling the fill time and adding a flat margin covers the segment-to-segment walk
 		// (~1 hop/tick) and keeps the helper correct through any future rebalance of the ladder.
 		long fillEu = (long) FLOW_CABLES.length * CableBlock.typeOf(cable.defaultBlockState()).segmentBuffer();
-		int ticks = (int) (2 * fillEu / Math.max(1, Config.fuelEuPerTick)) + 120;
+		int ticks = (int) (2 * fillEu / Math.max(1, GeneratorConfig.fuelEuPerTick)) + 120;
 		driveFlow(helper, ticks);
 		long mid = cableAmount(helper, FLOW_CABLES[2]);
 		// Tear the line down so the next grade starts from a clean network rather than inheriting this
@@ -271,6 +378,13 @@ public final class CableEnergyScenarios {
 	 * MOD-070 break retains at source: after the line fills, removing a middle cable splits the network;
 	 * the source-side half sleeps but keeps the EU buffered in its cables (>0 after the break).
 	 * Mirrors: NetworkGameTest.tcCable001Nrg05_breakRetainsAtSource
+	 *
+	 * @implements TC-CABLE-001-NRG05 — MOD-070 break retains at source: once the line has filled,
+	 *     removing a middle cable splits the network; the source-side half loses its consumer and sleeps,
+	 *     but the EU already buffered in its cables is retained — not voided, not teleported to the now
+	 *     disconnected macerator. Asserts the source-side cables still hold >0 EU after the break (the
+	 *     "the remainder briefly lingers in the wires" criterion; 0 under the old dead-buffer model).
+	 *     @covers PERFORMANCE.md
 	 */
 	public static void breakRetainsAtSource(GameTestHelper helper) {
 		buildFlowLine(helper);
@@ -298,6 +412,12 @@ public final class CableEnergyScenarios {
 	 * capacity — the wire holds energy from a source even with nowhere to deliver it (0 under the old
 	 * "producer-only network sleeps and never charges" behaviour).
 	 * Mirrors: NetworkGameTest.rNrg09b_sourceFillsCableWithoutConsumer
+	 *
+	 * @implements R-NRG-09 (MOD-070) — a source wired to cables with NO consumer still fills the line to
+	 *     its buffer capacity: {@code buildProducerOnly} runs a fuelled generator into one cable, and the
+	 *     cable must hold exactly {@code cableBuffer} EU afterwards (0 under the old "producer-only sleeps
+	 *     immediately, never charges" behaviour). This is why the network then sleeps — the line is full.
+	 * @covers R-NRG-09
 	 */
 	public static void sourceFillsCableWithoutConsumer(GameTestHelper helper) {
 		BlockPos genPos = new BlockPos(1, 2, 1);
@@ -336,6 +456,13 @@ public final class CableEnergyScenarios {
 	 * bounded by the live copper segment buffer, and the receiver gains
 	 * {@code flow - EnergyShare.cableLoss(flow, rate, 10)} EU/tick.
 	 * Mirrors: NetworkGameTest.tcCable001Nrg02_lossOverTenCables
+	 *
+	 * @implements TC-CABLE-001-NRG02 — a 10-cable line loses EU proportional to distance (MOD-021). The
+	 *     generator buffer is pre-charged well above the LV packet cap and the BatteryBox is left empty
+	 *     (unlimited room), so flow is pinned at the live copper segment buffer; each tick the box gains
+	 *     {@code flow - EnergyShare.cableLoss(flow, rate, 10)} EU — strictly less than a lossless line,
+	 *     proving the attenuating toll is active and distance-scaled.
+	 * @covers PERFORMANCE.md
 	 */
 	public static void mod021LossOverTenCables(GameTestHelper helper) {
 		helper.setBlock(LOSS_GEN, ModContent.GENERATOR.get());
@@ -383,6 +510,8 @@ public final class CableEnergyScenarios {
 	/**
 	 * MOD-253 end-to-end regression: fifty real copper segment buffers must attenuate a 12 EU packet
 	 * to 5 EU, never black-hole it, and must still pass the final one-EU BatteryBox top-off.
+	 *
+	 * @implements MOD-253 — a 50-cable copper line still delivers and preserves MOD-009 exact top-off.
 	 */
 	public static void mod253LongCopperLineStillDeliversAndTopsOff(GameTestHelper helper) {
 		// NeoForge runs many minecraft:empty tests in one shared level with closely spaced origins.
@@ -507,6 +636,12 @@ public final class CableEnergyScenarios {
 	 * down — it is a guard on behaviour the cable ladder depends on but does not itself control, so it
 	 * fails loudly if a future version (or a change to how these blocks are registered) starts reusing the
 	 * entity and silently leaves a gold cable transporting on copper's throughput.
+	 *
+	 * @implements TC-CABLE-003-PHY01 — MOD-219 in-place grade swap: replacing a copper cable with a gold
+	 *     one via setBlock (no break first) must rebuild the segment. All cable blocks share one
+	 *     BlockEntityType, so vanilla keeps the old entity across the swap; without the reconcile the
+	 *     segment keeps copper's tier AND copper's 12 EU buffer while everything else reports gold.
+	 *     @covers R-NRG-14
 	 */
 	public static void inPlaceGradeSwapRebuildsSegment(GameTestHelper helper) {
 		BlockPos pos = new BlockPos(2, 2, 1);
@@ -555,6 +690,12 @@ public final class CableEnergyScenarios {
 	 * {@link CableType#strongerThan} altogether. Here the whole path — topology cache → network → packet
 	 * cap — is under test: if the network ignored the gold segment, both lines would deliver exactly the
 	 * same amount, which is precisely how this test fails when the rule is reverted.
+	 *
+	 * @implements TC-CABLE-003-NRG06 — MOD-219 mixed network: splicing ONE gold segment into an otherwise
+	 *     copper 10-cable line makes the whole line pay gold's higher loss (0.03 vs copper's 0.02), so the
+	 *     same run banks strictly less EU than the all-copper baseline. Unlike the unit tests, which rank
+	 *     the grades in isolation, this exercises the real path topology-cache → network → loss term and
+	 *     fails if the cache ever stops consulting the strongest cable. @covers R-NRG-14
 	 */
 	public static void mixedNetworkTakesLossFromStrongestCable(GameTestHelper helper) {
 		// Both lines are built in cells no other scenario touches, at two distinct heights well above the
@@ -661,6 +802,22 @@ public final class CableEnergyScenarios {
 	 * {@link EnergyNetwork} the instant the closing cable registers (tick 0) — union-find merge on
 	 * cycle, no deadlock, no duplicate network.
 	 * Mirrors: NetworkGameTest.tcCable001Con04_ringNetworkNoDeadlock
+	 *
+	 * @implements TC-CABLE-001-CON04 — a ring network (two independent cable arms connecting the same
+	 *     generator to the same macerator, closed into a cycle by a bypass cable joining the two arms
+	 *     directly) delivers EU with no deadlock and no infinite loop: union-find merges the two arms
+	 *     into one network the instant the closing cable is placed (tick 0), and {@link
+	 *     NetworkManager#tickAll} still completes in a bounded number of ticks.
+	 * @covers R-CON-05
+	 *
+	 *     <p>The two arms are built first as two disjoint networks (verified via {@code networkAt(A0) !=
+	 *     networkAt(B0)}); the closing bypass cable is placed last and is cable-to-cable adjacent to both
+	 *     arms (RING_A3 and RING_B3), so the union happens through {@link NetworkManager#register}'s
+	 *     normal adjacency scan — no product change needed, only a rig that actually closes a cable cycle
+	 *     (the prior rig only shared the macerator as a non-cable endpoint, which the union-find graph
+	 *     never sees). {@link NetworkManager#networkCount} is per-{@code ServerLevel}, not per-structure,
+	 *     so a raw count is unusable here — other gametests run concurrently in the same shared level —
+	 *     hence the identity comparison instead of an absolute total.
 	 */
 	public static void ringNetworkMergesOnClose(GameTestHelper helper) {
 		helper.setBlock(RING_GEN, ModContent.GENERATOR.get().defaultBlockState()
@@ -729,6 +886,11 @@ public final class CableEnergyScenarios {
 	 * Two cables touching only at a corner/edge (no shared face) must NOT merge into one network:
 	 * connections are strictly the 6 orthogonal faces, never diagonal.
 	 * Mirrors: NetworkGameTest.tcCable001Phy09_diagonalCablesDoNotConnect
+	 *
+	 * @implements TC-CABLE-001-PHY09 — two cables offset diagonally (shift on both X and Y, touching
+	 *     only at a corner/edge, never a shared face) do NOT form one network: connections are strictly
+	 *     the 6 orthogonal faces, never diagonal.
+	 * @covers R-CON-06
 	 */
 	public static void diagonalCablesDoNotConnect(GameTestHelper helper) {
 		BlockPos a = new BlockPos(1, 2, 1);
@@ -850,6 +1012,13 @@ public final class CableEnergyScenarios {
 	 * EU to the consumer in one network tick; the cable is not destroyed and the surplus is simply not
 	 * transferred (no overvoltage penalty). Catches a regression that removes the per-tick packet cap.
 	 * Mirrors: NetworkGameTest.tcCable001Nrg01_throughputCappedAtLvVoltage
+	 *
+	 * @implements TC-CABLE-001-NRG01 — a generator with an ample pre-charged buffer delivers energy
+	 *     through the cable at a bounded rate: at most the per-cable throughput ({@code cableBuffer}
+	 *     EU/tick, MOD-070 — the segment carries its buffer size, not the tier voltage) reaches the
+	 *     consumer; the surplus is simply not transferred (no overvoltage penalty, R-NRG-04), and the
+	 *     cable is not destroyed.
+	 * @covers R-NRG-04
 	 */
 	public static void cableThroughputCappedAtLv(GameTestHelper helper) {
 		BlockPos genPos = new BlockPos(1, 2, 1);
@@ -900,6 +1069,12 @@ public final class CableEnergyScenarios {
 	 * the LV packet cap) — the delivered EU exceeds what a single generator alone could deliver, proving
 	 * the two sources sum rather than one shadowing the other.
 	 * Mirrors: NetworkGameTest.tcCable001Con05_twoGeneratorsSumIntoOneConsumer
+	 *
+	 * @implements TC-CABLE-001-CON05 — two LV generators (8 EU/t each, {@code GeneratorConfig.fuelEuPerTick})
+	 *     feed one BatteryBox through separate cables joined into one network; the delivered EU sums
+	 *     both sources (bounded by the LV packet cap per consumer, {@link EnergyTier#LV}), it is not
+	 *     dropped or duplicated.
+	 * @covers R-CON-01
 	 */
 	public static void twoGeneratorsSumIntoOneConsumer(GameTestHelper helper) {
 		BlockPos genA = new BlockPos(1, 2, 1);
@@ -939,7 +1114,7 @@ public final class CableEnergyScenarios {
 			return;
 		}
 		long got = be(helper, boxPos) instanceof BatteryBoxBlockEntity bb ? bb.getEnergyStorage().getAmount() : -1;
-		long singleCeiling = Config.fuelEuPerTick * (long) ticks;
+		long singleCeiling = GeneratorConfig.fuelEuPerTick * (long) ticks;
 		if (got <= singleCeiling) {
 			helper.fail("battery_box should receive summed supply from two generators, got only " + got
 					+ " (a single generator alone could not exceed " + singleCeiling + " over " + ticks + ")");
@@ -973,6 +1148,12 @@ public final class CableEnergyScenarios {
 	 * buffer is a one-way meter of what it actually contributed. The oracle is the far generator: with the
 	 * seam it gives up exactly {@code cableBuffer} EU — one fill of its own dead-end segment — and then
 	 * nothing, ever. Both must be draining for this to pass.
+	 *
+	 * @implements MOD-252 — a source must not fence off the sources behind it. The flow field used to be a
+	 *     BFS from the sources, so the midpoint between two of them was a local maximum and the
+	 *     strictly-downhill pull rule could not cross it: the far generator filled its own dead-end segment
+	 *     and stalled at a full buffer forever. Seeded from demand instead, the seam moves to the sinks,
+	 *     where it is harmless. Body is loader-neutral so NeoForge runs the same scenario.
 	 */
 	public static void mod252FarSourceBehindNearSourceDischarges(GameTestHelper helper) {
 		helper.setBlock(ARM_GEN_FAR, ModContent.GENERATOR.get());
@@ -982,7 +1163,7 @@ public final class CableEnergyScenarios {
 		// FACING = NORTH → the IN face is the cable at (3,40,1), i.e. only the NEAR cable touches the box.
 		helper.setBlock(ARM_BOX, ModContent.BATTERY_BOX.get().defaultBlockState()
 				.setValue(HorizontalMachineBlock.FACING, Direction.NORTH));
-		long genStart = Config.generatorBuffer;
+		long genStart = GeneratorConfig.generatorBuffer;
 		for (BlockPos g : new BlockPos[]{ARM_GEN_FAR, ARM_GEN_NEAR}) {
 			if (be(helper, g) instanceof GeneratorBlockEntity gen) {
 				gen.getEnergyStorage().setAmountUntracked(genStart); // no fuel: the buffer can only go down
@@ -1042,6 +1223,10 @@ public final class CableEnergyScenarios {
 	 * <p>Same oracle as the arm case: neither generator has fuel, so its buffer is a one-way meter of what
 	 * it actually contributed. The far source giving up no more than one segment fill ({@code cableBuffer})
 	 * is the signature of the seam.
+	 *
+	 * @implements MOD-252 — the reported shape verbatim: two source groups at different heights on one
+	 *     trunk. Topologically identical to the arm case (the cable graph has no notion of Y), pinned
+	 *     separately because the playtest report was vertical and sameness is an argument, not a gate.
 	 */
 	public static void mod252VerticalSourceGroupsBothDischarge(GameTestHelper helper) {
 		helper.setBlock(VERT_GEN_TOP, ModContent.GENERATOR.get());
@@ -1057,7 +1242,7 @@ public final class CableEnergyScenarios {
 		helper.setBlock(VERT_BOX, ModContent.BATTERY_BOX.get().defaultBlockState()
 				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
 
-		long genStart = Config.generatorBuffer;
+		long genStart = GeneratorConfig.generatorBuffer;
 		for (BlockPos g : new BlockPos[]{VERT_GEN_TOP, VERT_GEN_MID}) {
 			if (be(helper, g) instanceof GeneratorBlockEntity gen) {
 				gen.getEnergyStorage().setAmountUntracked(genStart); // no fuel: the buffer can only go down
@@ -1118,6 +1303,9 @@ public final class CableEnergyScenarios {
 	 * flow field seeded from demand, the generator's own cable becomes the local maximum; that seam is the
 	 * harmless kind, because something is drinking on either side of it. Cheap guard that the reversal did
 	 * not simply move the starvation to the other end of the line.
+	 *
+	 * @implements MOD-252 — two consumers on opposite sides of one generator are both served, so reversing
+	 *     the field did not simply move the starvation to the other end of the line.
 	 */
 	public static void mod252TwoConsumersOnBothSidesOfSource(GameTestHelper helper) {
 		// FACING = EAST → IN face at (2,44,1); FACING = WEST → IN face at (6,44,1).
@@ -1184,6 +1372,12 @@ public final class CableEnergyScenarios {
 	 * <p>The macerator holds ore, so it consumes {@code 2} EU/t against the generator's {@code 8}: its room
 	 * is above zero on every tick (it is latched into the seed set, which is what makes this red without the
 	 * fix) yet it leaves a genuine surplus for the far side. Both ends must end with energy.
+	 *
+	 * @implements MOD-252 (review) — the flow field is seeded by every waiting endpoint, machines and
+	 *     storage sinks alike. Seeding decides reachability, not priority: with machines alone seeding it,
+	 *     one hungry machine fenced off the entire stretch of bus lying past the source, so a Battery Box
+	 *     out there stayed at 0 next to dead cable. MOD-009's ordering lives in the serve pass instead.
+	 *     Body is loader-neutral so NeoForge runs the same scenario.
 	 */
 	public static void mod252MachineAndStorageOnBothSidesOfSource(GameTestHelper helper) {
 		helper.setBlock(MIXED_MAC, ModContent.MACERATOR.get());
@@ -1260,6 +1454,11 @@ public final class CableEnergyScenarios {
 	 * <p>Both generators are pre-charged and UNFUELLED, so each buffer is a one-way meter of what that
 	 * generator actually contributed. The oracle is the pair: each must have given more than one segment
 	 * fill, which no amount of first-tick luck can produce.
+	 *
+	 * @implements MOD-254 (D4) — the line charge rotates its source sweep, so every source on a saturated
+	 *     line injects. Starting at index 0 every tick left whoever came later in the list next to a cable
+	 *     that was already full, permanently, and the network's rotation cursor was both pinned to 0 on a
+	 *     single-producer network and never passed to the charge pass. Body is loader-neutral.
 	 */
 	public static void mod254EverySourceFeedsASaturatedLine(GameTestHelper helper) {
 		// Default FACING (north) keeps each generator's inert front off the bus: the cable is EAST of gen A
@@ -1271,7 +1470,7 @@ public final class CableEnergyScenarios {
 		// single cable segment drained, so its room per tick is exactly one source's packet.
 		helper.setBlock(SAT_BOX, ModContent.BATTERY_BOX.get().defaultBlockState()
 				.setValue(HorizontalMachineBlock.FACING, Direction.NORTH));
-		long genStart = Config.generatorBuffer;
+		long genStart = GeneratorConfig.generatorBuffer;
 		for (BlockPos g : new BlockPos[]{SAT_GEN_A, SAT_GEN_B}) {
 			if (be(helper, g) instanceof GeneratorBlockEntity gen) {
 				gen.getEnergyStorage().setAmountUntracked(genStart); // no fuel: the buffer can only go down
@@ -1324,6 +1523,11 @@ public final class CableEnergyScenarios {
 	 * <p>The oracle is the peak charge each branch's fork-side segment ever carried: with the buffer split
 	 * both peak at their share, while the losing branch of a winner-takes-all sweep reads a flat zero for
 	 * the whole run.
+	 *
+	 * @implements MOD-254 (D3) — a cable buffer claimed by two downstream neighbours is split between them
+	 *     instead of going whole to whichever the sweep reached first. Measures the segments flanking the
+	 *     fork, because two consumers of one class pool their cable buffers on the serve path and would
+	 *     otherwise hide a branch that never carried anything. Body is loader-neutral.
 	 */
 	public static void mod254ForkFeedsBothBranches(GameTestHelper helper) {
 		// FACING = EAST → IN face at (2,68,1); FACING = WEST → IN face at (6,68,1).
@@ -1405,6 +1609,12 @@ public final class CableEnergyScenarios {
 	 * cable's worth of generator output, and with equal capacity and equal room their buffers must
 	 * fill to roughly equal amounts.
 	 * Mirrors: NetworkGameTest.rNrg08_splitsBetweenEqualConsumers
+	 *
+	 * @implements R-NRG-08 — a single network splits its deliverable energy ~proportionally between
+	 * two equal consumers. Two macerators with empty input slots (so they never drain their buffers)
+	 * share one cable's worth of generator output; with equal capacity and equal room their buffers
+	 * must fill to roughly equal amounts.
+	 * @covers R-NRG-08
 	 */
 	public static void rNrg08_splitsBetweenEqualConsumers(GameTestHelper helper) {
 		// Build: generator -> one cable -> two macerators on two different cable faces.
@@ -1469,6 +1679,11 @@ public final class CableEnergyScenarios {
 	 * A producer-only network (generator + one cable, no consumer) sleeps: it has nothing to move,
 	 * so {@link EnergyNetwork#isAwake()} must be false.
 	 * Mirrors: NetworkGameTest.rNrg09_idleNetworkSleeps
+	 *
+	 * @implements R-NRG-09 — a producer-only network (generator + one cable, no consumer) sleeps:
+	 *     it has nothing to move, so {@link EnergyNetwork#isAwake()} must be false. Migrated from the
+	 *     monolith {@code NETWORK_SLEEP} check.
+	 * @covers R-NRG-09
 	 */
 	public static void rNrg09_idleNetworkSleeps(GameTestHelper helper) {
 		buildProducerOnly(helper);
@@ -1487,6 +1702,12 @@ public final class CableEnergyScenarios {
 	 * replacing a cable: the cable's neighbourChanged hook (fired by setBlockAndUpdate) dirties the
 	 * network, which re-discovers the consumer, becomes awake, and delivers EU.
 	 * Mirrors: NetworkGameTest.rNrg09_networkWakesOnConsumer
+	 *
+	 * @implements R-NRG-09 — an asleep producer-only network wakes when a consumer is placed adjacent
+	 *     to the cable WITHOUT replacing a cable: the cable's neighbourChanged hook (fired by
+	 *     setBlockAndUpdate) dirties the network, which re-discovers the consumer, becomes awake, and
+	 *     delivers EU. Migrated from the monolith {@code NETWORK_WAKE} check.
+	 * @covers R-NRG-09
 	 */
 	public static void rNrg09_networkWakesOnConsumer(GameTestHelper helper) {
 		buildProducerOnly(helper);
@@ -1541,6 +1762,11 @@ public final class CableEnergyScenarios {
 	 * the limited generator buffer while the BatteryBox gets only the remainder (here 0). Guards the
 	 * "machines before storage, no BatteryBox starvation" criterion.
 	 * Mirrors: NetworkGameTest.mod009Pri_machineServedBeforeStorage
+	 *
+	 * @implements MOD-009-PRI — with scarce supply, a working machine is served before a storage sink:
+	 *     the macerator fills from the limited generator buffer while the BatteryBox gets only the remainder
+	 *     (here 0). Guards the "machines before storage, no BatteryBox starvation" criterion.
+	 * @covers R-NRG-08
 	 */
 	public static void mod009Pri_machineServedBeforeStorage(GameTestHelper helper) {
 		helper.setBlock(PRI_GEN, ModContent.GENERATOR.get());
@@ -1578,6 +1804,12 @@ public final class CableEnergyScenarios {
 	 * At cable-distance 1 the proportional loss floors to zero even at a full 32 EU packet
 	 * ({@code floor(32 × 0.02 × 1) = 0}), so a consumer one cable away receives the full throughput.
 	 * Mirrors: NetworkGameTest.tcCable001Nrg02b_noLossOnShortLine
+	 *
+	 * @implements TC-CABLE-001-NRG02 (short-line boundary) — at cable-distance 1 the proportional loss
+	 *     floors to zero even at a full 32 EU packet ({@code floor(32 × 0.02 × 1) = 0}), so a consumer one
+	 *     cable away receives the full throughput. Narrowed from distance 2 to 1 in MOD-073: at 0.02 a
+	 *     2-cable hop already loses 1 EU, so only the single-hop case is loss-free.
+	 * @covers PERFORMANCE.md
 	 */
 	public static void tcCable001Nrg02b_noLossOnShortLine(GameTestHelper helper) {
 		helper.setBlock(SHORT_GEN, ModContent.GENERATOR.get());
@@ -1617,6 +1849,12 @@ public final class CableEnergyScenarios {
 	 * <em>exact</em> capacity — the last 1-EU top-off packet floors to zero loss
 	 * ({@code floor(1 × 0.02 × 10) = 0}), so it is delivered, not stranded. Reuses the LOSS_* rig.
 	 * Mirrors: NetworkGameTest.tcCable001Nrg02c_topsOffExactlyOverLossyLine
+	 *
+	 * @implements TC-CABLE-001-NRG02 (top-off guard, anti-MOD-009) — even on a lossy 10-cable line a
+	 *     nearly-full BatteryBox reaches its <em>exact</em> capacity: the last 1-EU top-off packet floors
+	 *     to zero loss ({@code floor(1 × 0.02 × 10) = 0}), so it is delivered, not stranded. A flat
+	 *     per-tick toll (the removed MOD-009 formula) would leave it stuck at {@code capacity − loss}.
+	 * @covers PERFORMANCE.md
 	 */
 	public static void tcCable001Nrg02c_topsOffExactlyOverLossyLine(GameTestHelper helper) {
 		helper.setBlock(LOSS_GEN, ModContent.GENERATOR.get());
@@ -1657,6 +1895,12 @@ public final class CableEnergyScenarios {
 	 * is no NPE walking the network, no EU accumulates "in the air", and the network stays asleep the
 	 * whole time. The 10 000 ticks run inside a single gametest tick, hence the tiny maxTicks.
 	 * Mirrors: NetworkGameTest.tcCable001Neg02_twoEmptyCablesTenThousandTicksNoPhantomEu
+	 *
+	 * @implements TC-CABLE-001-NEG02 — two connected cables with neither a producer nor a consumer:
+	 *     over 10 000 ticks there is no NPE walking the network, no EU accumulates "in the air", and the
+	 *     network stays correctly asleep the whole time (matches {@code rNrg09_idleNetworkSleeps}, but
+	 *     stress-tested over a much longer horizon).
+	 * @covers R-NRG-09
 	 */
 	public static void tcCable001Neg02_twoEmptyCablesTenThousandTicksNoPhantomEu(GameTestHelper helper) {
 		BlockPos a = new BlockPos(1, 2, 1);
@@ -1724,6 +1968,21 @@ public final class CableEnergyScenarios {
 	 * resumes: the network re-forms, the intermediate cable buffer genuinely refills, and the
 	 * BatteryBox keeps gaining EU past its pre-"reload" baseline.
 	 * Mirrors: NetworkGameTest.mod156_lazyPathReregistersAfterReload
+	 *
+	 * @implements MOD-156 — a cable that is still block-loaded but whose network registration was lost
+	 *     (the exact shape of a player relog / chunk reload: a fresh {@link NetworkManager} registry and
+	 *     a fresh {@code registered == false} block entity) re-registers on its own next server tick via
+	 *     {@link CableBlockEntity#ensureRegistered()} in {@link CableBlockEntity#onServerTick}, and energy
+	 *     delivery resumes. Drives generator → cable A → cable B → BatteryBox to a working baseline, then
+	 *     — per-cable, NOT via the level-wide {@link NetworkManager#clear(net.minecraft.server.level.ServerLevel)}
+	 *     (this test region shares its {@code ServerLevel} with every other concurrently-running gametest
+	 *     structure, so a level-wide clear would corrupt their networks too) — removes both cables from the
+	 *     registry with the public {@link NetworkManager#unregister} and resets each
+	 *     entity's {@code registered} flag, reproducing "loaded block, forgotten registration" without
+	 *     touching any other structure's state. Asserts the network re-forms, the intermediate cable buffer
+	 *     genuinely refills (MOD-070 gotcha: energy flows THROUGH the wire, not around it), and the
+	 *     BatteryBox keeps gaining EU past its pre-"reload" baseline.
+	 * @covers R-CON-05, R-NRG-09
 	 */
 	public static void mod156_lazyPathReregistersAfterReload(GameTestHelper helper) {
 		helper.setBlock(RELOG_GEN, ModContent.GENERATOR.get());

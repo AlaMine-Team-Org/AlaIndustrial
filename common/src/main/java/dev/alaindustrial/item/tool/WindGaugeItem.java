@@ -1,6 +1,7 @@
 package dev.alaindustrial.item.tool;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.core.environment.GeneratorConfig;
 import dev.alaindustrial.core.environment.SolarSky;
 import dev.alaindustrial.core.environment.WindFlow;
 import dev.alaindustrial.core.environment.WindProfile;
@@ -90,11 +91,13 @@ public class WindGaugeItem extends Item {
 		boolean openSky = SolarSky.classify(serverLevel, pos) == SolarSky.Access.CLEAR;
 		boolean raining = serverLevel.isRaining();
 		boolean thundering = serverLevel.isThundering();
-		int ridge = WindProfile.ridgeY(serverLevel.getSeaLevel(), Config.windMillMaxBaseEuPerTick,
-				WindProfile.DEFAULT_BLOCKS_PER_BASE, Config.windCloudY);
+		int ridge = WindProfile.ridgeY(serverLevel.getSeaLevel(), GeneratorConfig.windMillMaxBaseEuPerTick,
+				WindProfile.DEFAULT_BLOCKS_PER_BASE, GeneratorConfig.windCloudY);
 		int tenths = WindFlow.readingTenths(pos.getY(), serverLevel.getSeaLevel(), openSky, raining, thundering,
-				ridge, Config.windCloudY, Config.windDeadY, Config.windRidgeFactor, Config.windTraceFactor,
-				Config.windGaugePeakKmh, Config.windMillRainFactor, Config.windMillThunderFactor);
+				ridge, GeneratorConfig.windCloudY, GeneratorConfig.windDeadY, GeneratorConfig.windRidgeFactor,
+				GeneratorConfig.windTraceFactor,
+				GeneratorConfig.windGaugePeakKmh, GeneratorConfig.windMillRainFactor,
+						GeneratorConfig.windMillThunderFactor);
 		serverPlayer.sendOverlayMessage(Component.translatable("gui.alaindustrial.wind_gauge.reading",
 				pos.getY(), WindFlow.format(tenths),
 				Component.translatable(weatherKey(raining, thundering)),
@@ -122,7 +125,7 @@ public class WindGaugeItem extends Item {
 	 * bytecode, not assumed.
 	 */
 	private static void playScanChime(ServerLevel level, BlockPos pos, int tenths) {
-		float full = Math.max(1.0f, Config.windGaugePeakKmh * 10.0f);
+		float full = Math.max(1.0f, GeneratorConfig.windGaugePeakKmh * 10.0f);
 		float span = Math.min(1.0f, tenths / full);
 		// 0.6 .. 1.6 — a full octave and a bit, the range Minecraft pitches read cleanly over.
 		level.playSound(null, pos, SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 0.5F, 0.6F + span);

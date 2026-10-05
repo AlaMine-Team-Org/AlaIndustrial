@@ -1,11 +1,11 @@
 package dev.alaindustrial.block.entity;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.block.SteamNozzleBlock;
 import dev.alaindustrial.core.fluid.FluidHolder;
 import dev.alaindustrial.core.fluid.FluidPort;
 import dev.alaindustrial.core.fluid.FluidPortHost;
 import dev.alaindustrial.core.fluid.FluidTank;
+import dev.alaindustrial.core.reactor.ReactorConfig;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModSounds;
 import net.minecraft.core.BlockPos;
@@ -25,7 +25,7 @@ import net.minecraft.world.level.storage.ValueOutput;
 /**
  * The nozzle's tank and its plume (MOD-468, stage 3).
  *
- * <p>Accepts steam, destroys it at {@code Config.reactorNozzleVentRate} mB a tick, and shows it: a geyser burst
+ * <p>Accepts steam, destroys it at {@code ReactorConfig.reactorNozzleVentRate} mB a tick, and shows it: a geyser burst
  * sized to what it vented and a hiss while it keeps venting (MOD-662). Nothing here can be extracted from: steam that reaches the nozzle
  * is gone, which is the contract the whole loop is balanced against.
  */
@@ -36,7 +36,7 @@ public class SteamNozzleBlockEntity extends BlockEntity implements FluidPortHost
 	 * rate does not stall the columns behind it — but far too small to be used as storage, which is
 	 * what would happen if a player could park steam here waiting for stage 5's turbine.
 	 */
-	public final FluidTank tank = new FluidTank(Config.reactorNozzleBuffer,
+	public final FluidTank tank = new FluidTank(ReactorConfig.reactorNozzleBuffer,
 			fluid -> fluid.is(ModContent.STEAM.get()), fluid -> false, this::setChanged) {
 		/**
 		 * One-way, and it says so. {@code FluidTank} answers both questions with "capacity > 0", which
@@ -113,7 +113,7 @@ public class SteamNozzleBlockEntity extends BlockEntity implements FluidPortHost
 		if (!level.getBlockState(mouth).canBeReplaced()) {
 			return 0;
 		}
-		long vented = Math.min(tank.amount, Config.reactorNozzleVentRate);
+		long vented = Math.min(tank.amount, ReactorConfig.reactorNozzleVentRate);
 		tank.amount -= vented;
 		if (tank.amount == 0) {
 			tank.fluid = FluidHolder.EMPTY;
@@ -150,7 +150,8 @@ public class SteamNozzleBlockEntity extends BlockEntity implements FluidPortHost
 	 *
 	 * <p>Scaled to the flow so a trickle looks like a trickle: the plume is the only readout the exhaust has, and a
 	 * fixed-size burst would report a stalled loop as a healthy one. Batched over
-	 * {@code Config.reactorNozzlePlumeIntervalTicks} because a geyser particle lives a second or more — one a tick
+	 * {@code ReactorConfig.reactorNozzlePlumeIntervalTicks} because a geyser particle lives a second or more — one a
+	 * tick
 	 * would pile into a white wall. A nozzle facing up throws the tall column vanilla geysers throw; one facing
 	 * sideways cannot, since those particles only ever rise, so it breathes puffs out of its mouth instead.
 	 *
@@ -162,11 +163,12 @@ public class SteamNozzleBlockEntity extends BlockEntity implements FluidPortHost
 			plumeTicks = 0;
 			return;
 		}
-		int interval = Math.max(1, Config.reactorNozzlePlumeIntervalTicks);
+		int interval = Math.max(1, ReactorConfig.reactorNozzlePlumeIntervalTicks);
 		if (++plumeTicks < interval) {
 			return;
 		}
-		float share = Math.min(1f, (float) plumeVented / ((long) interval * Math.max(1, Config.reactorNozzleVentRate)));
+		float share = Math.min(1f, (float) plumeVented / ((long) interval * Math.max(1,
+				ReactorConfig.reactorNozzleVentRate)));
 		plumeVented = 0;
 		plumeTicks = 0;
 		plumeBursts++;

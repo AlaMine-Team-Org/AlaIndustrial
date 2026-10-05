@@ -7,7 +7,6 @@ import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
@@ -37,9 +36,9 @@ public final class AlloySmelterMenu extends MachineMenu {
 	/** Client side. */
 	public AlloySmelterMenu(int syncId, Inventory playerInventory) {
 		super(ModContent.ALLOY_SMELTER_MENU.get(), syncId, playerInventory,
-				new SimpleContainer(AlloySmelterBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT),
-				new SimpleContainerData(dev.alaindustrial.block.entity.MachineBlockEntity.DATA_COUNT),
-				ContainerLevelAccess.NULL, ModContent.ALLOY_SMELTER.get());
+				clientStub(AlloySmelterBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT,
+						dev.alaindustrial.block.entity.MachineBlockEntity.DATA_COUNT),
+				ModContent.ALLOY_SMELTER.get());
 	}
 
 	@Override

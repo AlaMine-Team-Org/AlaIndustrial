@@ -45,6 +45,12 @@ public class DistillationColumnScreen extends MachineScreen<DistillationColumnMe
 	private static final int SECTION_U = 200, SECTION_V = 92, SECTION_W = 17, SECTION_H = 17;
 	private static final int SECTION_X = 62, SECTION_Y = 28;
 
+	/**
+	 * Click area of the recipe viewers (MOD-716): the tower schematic in the middle of the frame (MOD-251 round
+	 * 2 — the plain arrow is gone). A measurement of the atlas, not a sprite this screen draws.
+	 */
+	public static final GuiRect PROGRESS_AREA = new GuiRect(59, 40, 24, 56);
+
 	// Fouling gauge: 4x42 interior at (86,48)..(89,89), filling bottom-up; fill sprite (200,48).
 	private static final int FOUL_X = 86, FOUL_TOP = 48, FOUL_W = 4, FOUL_H = 42;
 	private static final int FOUL_U = 200, FOUL_V = 48;
@@ -73,6 +79,12 @@ public class DistillationColumnScreen extends MachineScreen<DistillationColumnMe
 		return TEXTURE;
 	}
 
+	/** The energy bar and its tooltip, drawn by the base (MOD-716). */
+	@Override
+	protected EnergyBarSpec energyBar() {
+		return ENERGY;
+	}
+
 	@Override
 	protected void drawMachineFrame(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
 		int x = this.leftPos;
@@ -88,7 +100,6 @@ public class DistillationColumnScreen extends MachineScreen<DistillationColumnMe
 		drawGauge(graphics, this.menu.getFuelOilFluidId(), this.menu.getFuelOilPermille(),
 				x + FRACTION_X, y + FUEL_OIL_BOTTOM, FRACTION_W, FRACTION_H);
 
-		renderEnergyBar(graphics, ENERGY);
 
 		// The tower schematic: the same three levels inside the silhouette's windows.
 		drawGauge(graphics, this.menu.getDieselFluidId(), this.menu.getDieselPermille(),
@@ -195,7 +206,6 @@ public class DistillationColumnScreen extends MachineScreen<DistillationColumnMe
 	@Override
 	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		super.extractTooltip(graphics, mouseX, mouseY);
-		renderEnergyTooltip(graphics, mouseX, mouseY, ENERGY);
 		gaugeTooltip(graphics, mouseX, mouseY, this.menu.getOilFluidId(), this.menu.getOilPermille(),
 				OIL_X, OIL_BOTTOM, OIL_W, OIL_H, "gui.alaindustrial.distillation_column.tank.oil");
 		gaugeTooltip(graphics, mouseX, mouseY, this.menu.getDieselFluidId(), this.menu.getDieselPermille(),

@@ -4,6 +4,7 @@ import static dev.alaindustrial.gametest.VisualStandSupport.awaitMenuScreen;
 
 import dev.alaindustrial.block.entity.WaterMillBlockEntity;
 import dev.alaindustrial.client.screen.WaterMillScreen;
+import dev.alaindustrial.core.environment.GeneratorConfig;
 import dev.alaindustrial.gametest.visual.ShotRecorder;
 import dev.alaindustrial.menu.MachineMenu;
 import dev.alaindustrial.registry.ModContent;
@@ -102,7 +103,7 @@ public final class WaterMillGuiStand {
      * it is kept out by starting the band to the right of it, not by the row's y range.
      */
     public static void checkWaterMillStatusRow(ClientGameTestContext context) {
-        final int CAP = dev.alaindustrial.Config.waterMillBuffer;
+        final int CAP = dev.alaindustrial.core.environment.GeneratorConfig.waterMillBuffer;
         // One energy level for every frame. The bar is cropped out horizontally, so this is not what makes
         // the gates sound — it keeps the shots comparable by eye, which is what a human reviewing the
         // gallery actually does.
@@ -197,7 +198,8 @@ public final class WaterMillGuiStand {
                         + "screen for water_mill/" + state + " — the screen binding in MenuScreenManifest "
                         + "is missing, so there is nothing to photograph.");
             }
-            menu.injectTestData(energy, dev.alaindustrial.Config.waterMillBuffer, sides, mode);
+            menu.injectTestData(energy, dev.alaindustrial.core.environment.GeneratorConfig.waterMillBuffer, sides,
+		mode);
             menu.injectTestChannel(4, rate);
             // Straight into the client-side SimpleContainer behind slot 0, the same way the solar panel
             // stand injects its chip: the screen reads the slot synchronously, so no server is involved.

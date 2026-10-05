@@ -8,6 +8,7 @@ import dev.alaindustrial.core.fluid.FluidHolder;
 import dev.alaindustrial.core.fluid.FluidLookup;
 import dev.alaindustrial.core.fluid.FluidPort;
 import dev.alaindustrial.core.energy.EnergyTransactions;
+import dev.alaindustrial.core.machine.MachineRates;
 import dev.alaindustrial.registry.ModContent;
 import java.util.List;
 import net.minecraft.core.BlockPos;
@@ -34,6 +35,52 @@ import static dev.alaindustrial.gametest.AlaGameTestHelper.drive;
  */
 public final class DistillationColumnScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(DistillationColumnScenarios::fun01OilSplitsIntoFractions,
+								"distillation_column_oil_splits_into_fractions")
+						.fabricId("DistillationColumnGameTest", "tcDist001Fun01_oilSplitsIntoFractions").ticks(600),
+				RosterEntry.of(DistillationColumnScenarios::fun02WarmupGatesDistillation,
+								"distillation_column_warmup_gates_distillation")
+						.fabricId("DistillationColumnGameTest", "tcDist001Fun02_warmupGatesDistillation").ticks(400),
+				RosterEntry.of(DistillationColumnScenarios::con01FullDieselTankFreezes,
+								"distillation_column_full_diesel_tank_freezes")
+						.fabricId("DistillationColumnGameTest", "tcDist001Con01_fullDieselTankFreezes").ticks(600),
+				RosterEntry.of(DistillationColumnScenarios::fun03DrainSlotBottlesDiesel,
+								"distillation_column_drain_slot_bottles_diesel")
+						.fabricId("DistillationColumnGameTest", "tcDist001Fun03_drainSlotBottlesDiesel").ticks(20, 60),
+				RosterEntry.of(DistillationColumnScenarios::seg01BreakMiddleDegradesTower,
+								"distillation_column_break_middle_degrades_tower")
+						.fabricId("DistillationColumnGameTest", "tcDist001Seg01_breakMiddleDegradesTower").ticks(100),
+				RosterEntry.of(DistillationColumnScenarios::frm01ThreeBlanksFormTheTower,
+								"distillation_column_three_blanks_form_tower")
+						.fabricId("DistillationColumnGameTest", "tcDist001Frm01_threeBlanksFormTheTower")
+						.ticks(20, 60),
+				RosterEntry.of(DistillationColumnScenarios::prt01SegmentPortsMatchLayout,
+								"distillation_column_segment_ports_match_layout")
+						.fabricId("DistillationColumnGameTest", "tcDist001Prt01_segmentPortsMatchLayout")
+						.ticks(20, 60),
+				RosterEntry.of(DistillationColumnScenarios::prt02NullSidePortIsOilTank,
+								"distillation_column_null_side_port_is_oil_tank")
+						.fabricId("DistillationColumnGameTest", "tcDist001Prt02_nullSidePortIsOilTank").ticks(20, 60),
+				RosterEntry.of(DistillationColumnScenarios::sta01NbtRoundTripPreservesTanksAndHeat,
+								"distillation_column_nbt_round_trip")
+						.fabricId("DistillationColumnGameTest", "tcDist001Sta01_nbtRoundTripPreservesTanksAndHeat")
+						.ticks(20, 60),
+				RosterEntry.of(DistillationColumnScenarios::crk01FuelOilCracksIntoDiesel,
+								"distillation_column_fuel_oil_cracks_into_diesel")
+						.fabricId("DistillationColumnGameTest", "tcDist001Crk01_fuelOilCracksIntoDiesel").ticks(700),
+				RosterEntry.of(DistillationColumnScenarios::sec01SectionBoostsDiesel,
+								"distillation_column_section_boosts_diesel")
+						.fabricId("DistillationColumnGameTest", "tcDist001Sec01_sectionBoostsDiesel").ticks(600),
+				RosterEntry.of(DistillationColumnScenarios::fou01FouledStopsUntilCleaned,
+								"distillation_column_fouled_stops_until_cleaned")
+						.fabricId("DistillationColumnGameTest", "tcDist001Fou01_fouledStopsUntilCleaned").ticks(1000));
+
+		private Roster() {}
+	}
+
 	private DistillationColumnScenarios() {
 	}
 
@@ -49,7 +96,7 @@ public final class DistillationColumnScenarios {
 	/** One warm-up plus one full run plus slack for the scaled-duration knob. */
 	private static int driveTicks() {
 		return Config.distillationColumnWarmupTicks
-				+ Config.scaledDuration(Config.distillationColumnDuration) + 30;
+				+ MachineRates.duration(Config.distillationColumnDuration, Config.globalMachineSpeedMultiplier) + 30;
 	}
 
 	/** Raise the full tower (placeTower — helper.setBlock never calls setPlacedBy, MOD-015). */
@@ -70,7 +117,12 @@ public final class DistillationColumnScenarios {
 
 	// ── FUN01: one bucket of crude becomes 700 diesel + 200 fuel oil, the oil tank ends empty ──────
 
-	/** The signature split: 1000 mB oil + EU → 700 mB diesel (top tank) + 200 mB fuel oil (bottom). */
+	/**
+	 * The signature split: 1000 mB oil + EU → 700 mB diesel (top tank) + 200 mB fuel oil (bottom).
+	 *
+	 * @implements TC-DIST-001-FUN01 — 1000 mB crude + EU → 700 mB diesel (top tank) + 200 mB fuel
+	 * oil (bottom tank); the oil tank ends empty with its fluid identity cleared.
+	 */
 	public static void fun01OilSplitsIntoFractions(GameTestHelper helper) {
 		DistillationColumnBlockEntity be = place(helper);
 		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
@@ -98,7 +150,12 @@ public final class DistillationColumnScenarios {
 
 	// ── FUN02: the warm-up gates the first run — EU burns, no oil is consumed while heating ────────
 
-	/** Half a warm-up in: progress still 0, oil untouched, but EU visibly spent (heating is not free). */
+	/**
+	 * Half a warm-up in: progress still 0, oil untouched, but EU visibly spent (heating is not free).
+	 *
+	 * @implements TC-DIST-001-FUN02 — the warm-up gates the first run: EU burns while heating, but
+	 * no oil is consumed and no progress accrues.
+	 */
 	public static void fun02WarmupGatesDistillation(GameTestHelper helper) {
 		DistillationColumnBlockEntity be = place(helper);
 		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
@@ -127,7 +184,12 @@ public final class DistillationColumnScenarios {
 
 	// ── CON01: a full output tank freezes the run — no EU spent, no oil consumed, nothing destroyed ─
 
-	/** With the diesel tank full the column freezes: oil and EU both stay exactly where they were. */
+	/**
+	 * With the diesel tank full the column freezes: oil and EU both stay exactly where they were.
+	 *
+	 * @implements TC-DIST-001-CON01 — a full diesel tank freezes the column: no EU spent, no oil
+	 * consumed, and no half-run delivers the other fraction alone.
+	 */
 	public static void con01FullDieselTankFreezes(GameTestHelper helper) {
 		DistillationColumnBlockEntity be = place(helper);
 		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
@@ -154,7 +216,12 @@ public final class DistillationColumnScenarios {
 
 	// ── FUN03: the drain pair bottles a fraction — empty bucket in, diesel bucket out ───────────────
 
-	/** An empty bucket in the diesel drain slot leaves as a diesel bucket; the tank drops 1000 mB. */
+	/**
+	 * An empty bucket in the diesel drain slot leaves as a diesel bucket; the tank drops 1000 mB.
+	 *
+	 * @implements TC-DIST-001-FUN03 — an empty bucket in the diesel drain slot is bottled into a
+	 * diesel bucket; the tank drops exactly one bucket's volume.
+	 */
 	public static void fun03DrainSlotBottlesDiesel(GameTestHelper helper) {
 		DistillationColumnBlockEntity be = place(helper);
 		be.dieselTank.fluid = FluidHolder.of(ModContent.DIESEL.get());
@@ -179,7 +246,12 @@ public final class DistillationColumnScenarios {
 
 	// ── SEG01 (round 3): breaking a segment DEGRADES the tower — one segment drop, base keeps fluids ─
 
-	/** Destroy the MIDDLE segment: one segment item drops, the base degrades to a blank with tanks intact. */
+	/**
+	 * Destroy the MIDDLE segment: one segment item drops, the base degrades to a blank with tanks intact.
+	 *
+	 * @implements TC-DIST-001-SEG01 — round 3: breaking the MIDDLE segment degrades the tower (one
+	 * segment item drops, the base becomes a blank keeping its tanks, the top becomes a blank).
+	 */
 	public static void seg01BreakMiddleDegradesTower(GameTestHelper helper) {
 		DistillationColumnBlockEntity be = place(helper);
 		fillOil(be, 3 * FluidAmounts.BUCKET);
@@ -226,7 +298,12 @@ public final class DistillationColumnScenarios {
 
 	// ── FRM01 (round 3): three hand-placed blanks self-assemble into the tower ──────────────────────
 
-	/** Stack three blanks, drive assembly: base forms (master), the two above become segments. */
+	/**
+	 * Stack three blanks, drive assembly: base forms (master), the two above become segments.
+	 *
+	 * @implements TC-DIST-001-FRM01 — round 3: three hand-placed blanks self-assemble into the
+	 * formed tower (base master + middle + top), scanning down from any of the three.
+	 */
 	public static void frm01ThreeBlanksFormTheTower(GameTestHelper helper) {
 		ServerLevel level = helper.getLevel();
 		BlockPos absBase = helper.absolutePos(BASE);
@@ -262,7 +339,12 @@ public final class DistillationColumnScenarios {
 
 	// ── PRT01: the port layout is the tower — oil in the middle, diesel on top, fuel oil below ──────
 
-	/** Per-segment ports via FluidLookup: middle accepts oil; top and base give the right fraction. */
+	/**
+	 * Per-segment ports via FluidLookup: middle accepts oil; top and base give the right fraction.
+	 *
+	 * @implements TC-DIST-001-PRT01 — the fixed port layout: the middle segment accepts crude into
+	 * the base's intake, the top exposes diesel, the base exposes fuel oil.
+	 */
 	public static void prt01SegmentPortsMatchLayout(GameTestHelper helper) {
 		DistillationColumnBlockEntity be = place(helper);
 		be.dieselTank.fluid = FluidHolder.of(ModContent.DIESEL.get());
@@ -303,7 +385,11 @@ public final class DistillationColumnScenarios {
 
 	// ── PRT02: fluidPort(null) survives (Jade/WTHIT/foreign pipes probe without a direction) ───────
 
-	/** The task's explicit null contract: master → the oil tank; no NPE anywhere. */
+	/**
+	 * The task's explicit null contract: master → the oil tank; no NPE anywhere.
+	 *
+	 * @implements TC-DIST-001-PRT02 — {@code fluidPort(null)} answers the oil tank, never NPEs.
+	 */
 	public static void prt02NullSidePortIsOilTank(GameTestHelper helper) {
 		DistillationColumnBlockEntity be = place(helper);
 		FluidPort port = be.fluidPort(null);
@@ -316,7 +402,12 @@ public final class DistillationColumnScenarios {
 
 	// ── CRK01 (round 2): the column cracks its own residue — fuel oil in, diesel out ────────────────
 
-	/** 1000 mB fuel oil in the intake + EU → 600 mB diesel; the intake ends empty. */
+	/**
+	 * 1000 mB fuel oil in the intake + EU → 600 mB diesel; the intake ends empty.
+	 *
+	 * @implements TC-DIST-001-CRK01 — cracking (round 2): 1000 mB fuel oil in the intake + EU →
+	 * 600 mB diesel, single result, intake drained.
+	 */
 	public static void crk01FuelOilCracksIntoDiesel(GameTestHelper helper) {
 		DistillationColumnBlockEntity be = place(helper);
 		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
@@ -343,7 +434,12 @@ public final class DistillationColumnScenarios {
 
 	// ── SEC01 (round 2): a Rectification Section on top adds +50 mB diesel per run ──────────────────
 
-	/** With the 4th storey installed: 750 mB diesel + 200 mB fuel oil from one bucket of crude. */
+	/**
+	 * With the 4th storey installed: 750 mB diesel + 200 mB fuel oil from one bucket of crude.
+	 *
+	 * @implements TC-DIST-001-SEC01 — a Rectification Section on the tower adds +50 mB diesel per
+	 * run (losses 10 % → 5 %), fuel oil unchanged.
+	 */
 	public static void sec01SectionBoostsDiesel(GameTestHelper helper) {
 		DistillationColumnBlockEntity be = place(helper);
 		helper.setBlock(BASE.above(3), ModContent.RECTIFICATION_SECTION.get());
@@ -366,7 +462,12 @@ public final class DistillationColumnScenarios {
 
 	// ── FOU01 (round 2): coked up at 100 % — the column stops; a wrench cleaning restarts it ────────
 
-	/** At max fouling nothing runs (no EU, no oil consumed); cleanFouling() yields coal and unblocks. */
+	/**
+	 * At max fouling nothing runs (no EU, no oil consumed); cleanFouling() yields coal and unblocks.
+	 *
+	 * @implements TC-DIST-001-FOU01 — at 100 % fouling the column freezes without consuming
+	 * anything; a wrench cleaning yields 1..3 coal, resets fouling and distilling resumes.
+	 */
 	public static void fou01FouledStopsUntilCleaned(GameTestHelper helper) {
 		DistillationColumnBlockEntity be = place(helper);
 		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
@@ -404,7 +505,12 @@ public final class DistillationColumnScenarios {
 
 	// ── STA01: three tanks + heat survive an NBT round-trip ─────────────────────────────────────────
 
-	/** All three tanks (amount + fluid identity) and the warm-up state survive save/load. */
+	/**
+	 * All three tanks (amount + fluid identity) and the warm-up state survive save/load.
+	 *
+	 * @implements TC-DIST-001-STA01 — all three tanks (amount + fluid identity) and the warm-up heat
+	 * survive an NBT round-trip.
+	 */
 	public static void sta01NbtRoundTripPreservesTanksAndHeat(GameTestHelper helper) {
 		ServerLevel level = helper.getLevel();
 		RegistryAccess registries = level.registryAccess();

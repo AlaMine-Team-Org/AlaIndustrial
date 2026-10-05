@@ -1,9 +1,7 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.core.item.PipeFaceRender;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 /**
@@ -22,15 +20,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  */
 public final class AdvancedFluidPipeBlock extends FluidPipeBlock {
 
-	public static final MapCodec<AdvancedFluidPipeBlock> CODEC = simpleCodec(AdvancedFluidPipeBlock::new);
-
 	public AdvancedFluidPipeBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

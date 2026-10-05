@@ -1,15 +1,13 @@
 package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
-import dev.alaindustrial.core.energy.EnergyRole;
+import dev.alaindustrial.block.entity.machine.SyncChannels;
 import dev.alaindustrial.core.energy.EnergyTier;
-import dev.alaindustrial.menu.TeleporterStationMenu;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModDataComponents;
 import dev.alaindustrial.teleporter.TeleporterRegistry;
 import java.util.UUID;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.network.chat.Component;
@@ -74,15 +72,6 @@ public class TeleporterBlockEntity extends MachineBlockEntity {
 	@Override
 	protected int onServerTick(Level level, BlockPos pos, BlockState state) {
 		return IDLE_SLEEP_TICKS;
-	}
-
-	/**
-	 * Accepts EU on the five working faces; the {@code FACING} front is inert (R-NRG-03), so a cable
-	 * draws no misleading arm toward the station's facade.
-	 */
-	@Override
-	public EnergyRole energyRoleForFace(Direction worldFace) {
-		return facingAwareRole(worldFace, EnergyRole.IN);
 	}
 
 	/**
@@ -220,33 +209,22 @@ public class TeleporterBlockEntity extends MachineBlockEntity {
 	 * so each player's screen can honestly grey out a toggle that is not theirs.
 	 */
 	public ContainerData stationData(UUID viewer) {
-		return new ContainerData() {
-			@Override
-			public int get(int index) {
-				return switch (index) {
-					case TeleporterStationMenu.DATA_ENERGY_PERMILLE -> {
-						long capacity = energy.getCapacity();
-						yield capacity <= 0 ? 0
-								: (int) Math.min(energy.getAmount() * 1000 / capacity, 1000);
-					}
-					case TeleporterStationMenu.DATA_PRIVATE -> isPrivate ? 1 : 0;
-					case TeleporterStationMenu.DATA_IS_OWNER -> isOwner(viewer) ? 1 : 0;
-					default -> 0;
-				};
-			}
-
-			@Override
-			public void set(int index, int value) {
-				// Read-only: the privacy flag changes through the menu button, which re-checks
-				// ownership server-side. A settable data slot would be a client-trusted write.
-			}
-
-			@Override
-			public int getCount() {
-				return TeleporterStationMenu.DATA_SIZE;
-			}
-		};
+		return asContainerData(SyncChannels.standalone(StationChannel.class)
+				.read(StationChannel.ENERGY_PERMILLE, () -> {
+					long capacity = energy.getCapacity();
+					return capacity <= 0 ? 0 : (int) Math.min(energy.getAmount() * 1000 / capacity, 1000);
+				})
+				.read(StationChannel.PRIVATE, () -> isPrivate ? 1 : 0)
+				.read(StationChannel.IS_OWNER, () -> isOwner(viewer) ? 1 : 0)
+				.build());
 	}
+
+	/**
+	 * The station screen's channels (MOD-712, BE-7) — not a machine's: no energy bar, no progress. All three
+	 * are read-only: the privacy flag changes through the menu button, which re-checks ownership server-side;
+	 * a settable channel would be a client-trusted write.
+	 */
+	public enum StationChannel { ENERGY_PERMILLE, PRIVATE, IS_OWNER }
 
 	/**
 	 * The screen's title, carrying the owner's name when there is one.
@@ -363,8 +341,8 @@ public class TeleporterBlockEntity extends MachineBlockEntity {
 	}
 
 	@Override
-	protected void loadAdditional(ValueInput input) {
-		super.loadAdditional(input);
+	protected void loadMachineData(ValueInput input) {
+		super.loadMachineData(input);
 		isPrivate = input.getBooleanOr("Private", true);
 		// Default false: a station saved before MOD-116 simply has no module, which is the truth.
 		hasRtpModule = input.getBooleanOr("RtpModule", false);

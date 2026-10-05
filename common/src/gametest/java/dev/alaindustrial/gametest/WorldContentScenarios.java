@@ -3,6 +3,7 @@ package dev.alaindustrial.gametest;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -22,6 +23,15 @@ import static dev.alaindustrial.gametest.EnergyScenarioSupport.be;
  * as a second copy.
  */
 public final class WorldContentScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(WorldContentScenarios::pumpSourceToTankToSinkToEu, "pump_source_to_tank_to_sink_to_eu")
+						.fabricId("FluidGameTest", "worldContent_pumpSourceToTankToSinkToEu").ticks(100));
+
+		private Roster() {}
+	}
 
 	private WorldContentScenarios() {}
 

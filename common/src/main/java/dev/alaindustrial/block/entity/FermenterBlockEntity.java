@@ -1,13 +1,14 @@
 package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
-import dev.alaindustrial.core.energy.EnergyRole;
+import dev.alaindustrial.block.entity.machine.SyncChannels;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.core.fluid.FluidAmounts;
 import dev.alaindustrial.core.fluid.FluidHolder;
 import dev.alaindustrial.core.fluid.FluidPort;
 import dev.alaindustrial.core.fluid.FluidPortHost;
 import dev.alaindustrial.core.fluid.FluidTank;
+import dev.alaindustrial.core.machine.MachineRates;
 import dev.alaindustrial.item.fluid.ItemFluidBridge;
 import dev.alaindustrial.menu.FermenterMenu;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
@@ -19,13 +20,11 @@ import java.util.List;
 import dev.alaindustrial.skill.SkillMachine;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -125,17 +124,11 @@ public class FermenterBlockEntity extends MachineBlockEntity
 		// EU consumer: maxInsert = tier voltage (so the network sees a consumer), maxExtract = 0.
 		super(ModContent.FERMENTER_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT,
 				Config.machineBuffer, EnergyTier.LV.maxVoltage(), 0L);
-		this.maxProgress = Config.scaledDuration(Config.fermenterDuration);
+		this.maxProgress = MachineRates.duration(Config.fermenterDuration, Config.globalMachineSpeedMultiplier);
 	}
 
 	private static boolean isWater(FluidHolder fluid) {
 		return !fluid.isEmpty() && fluid.fluid() == Fluids.WATER;
-	}
-
-	/** Consumer: every face accepts energy except the inert FACING front (R-NRG-03). */
-	@Override
-	public EnergyRole energyRoleForFace(Direction worldFace) {
-		return facingAwareRole(worldFace, EnergyRole.IN);
 	}
 
 	/**
@@ -290,57 +283,32 @@ public class FermenterBlockEntity extends MachineBlockEntity
 		}
 	}
 
-	/** Nine-wide data: the base four, two gauges with their fluid ids, and the idle reason. */
-	public static final int DATA_COUNT = 9;
-
-	public static final int CH_WATER_PERMILLE = 4;
-	public static final int CH_WATER_FLUID_ID = 5;
-	public static final int CH_BIOFUEL_PERMILLE = 6;
-	public static final int CH_BIOFUEL_FLUID_ID = 7;
-	public static final int CH_STATUS = 8;
-
 	/**
-	 * Channels 4..8 are derived, server-authoritative projections; nothing writes them back.
+	 * GUI sync channels (MOD-712, BE-7): the base four, the water and biofuel gauges in permille with
+	 * their fluids' registry ids, and the idle reason ({@link FermenterStatus} ordinal); all read-only.
+	 * A fluid id above {@link Short#MAX_VALUE} reports as empty rather than as its truncated low 16 bits,
+	 * which would resolve to an unrelated fluid.
 	 *
-	 * <p><b>Every channel must fit a signed 16-bit short</b> — the container-set-data packet writes
-	 * each value with {@code writeShort}, so a larger one silently arrives truncated. Hence permille
-	 * rather than raw mB, and hence a fluid id above {@link Short#MAX_VALUE} reporting as empty rather
-	 * than as its truncated low 16 bits, which would resolve to an unrelated fluid.
+	 * Every channel is a signed short on the wire (see {@link SyncChannels}), so a tank travels as a
+	 * permille and a fluid as its registry id; the screen derives texture, tint and name from the id.
 	 */
-	private final ContainerData fermenterData = new ContainerData() {
-		@Override
-		public int get(int index) {
-			return switch (index) {
-				case CH_WATER_PERMILLE -> permille(waterTank);
-				case CH_WATER_FLUID_ID -> waterTank.fluidSyncId();
-				case CH_BIOFUEL_PERMILLE -> permille(biofuelTank);
-				case CH_BIOFUEL_FLUID_ID -> biofuelTank.fluidSyncId();
-				case CH_STATUS -> status.ordinal();
-				default -> FermenterBlockEntity.this.dataAccess.get(index);
-			};
-		}
-
-		@Override
-		public void set(int index, int value) {
-			if (index < MachineBlockEntity.DATA_COUNT) {
-				FermenterBlockEntity.this.dataAccess.set(index, value);
-			}
-		}
-
-		@Override
-		public int getCount() {
-			return DATA_COUNT;
-		}
-	};
-
-	private static int permille(FluidTank tank) {
-		return tank.amount <= 0 ? 0
-				: Math.max(1, (int) Math.min(tank.amount * 1000L / tank.capacity, 1000));
+	public enum Channel {
+		ENERGY, CAPACITY, PROGRESS, MAX_PROGRESS,
+		WATER_PERMILLE, WATER_FLUID_ID, BIOFUEL_PERMILLE, BIOFUEL_FLUID_ID, STATUS
 	}
 
+	/** Width of {@link #getDataAccess()}, which the menu's client stub sizes itself from (MOD-235). */
+	public static final int DATA_COUNT = Channel.values().length;
+
 	@Override
-	public ContainerData getDataAccess() {
-		return fermenterData;
+	protected SyncChannels createChannels() {
+		return channels(Channel.class)
+				.read(Channel.WATER_PERMILLE, () -> SyncChannels.permille(waterTank.amount, waterTank.capacity))
+				.read(Channel.WATER_FLUID_ID, () -> waterTank.fluidSyncId())
+				.read(Channel.BIOFUEL_PERMILLE, () -> SyncChannels.permille(biofuelTank.amount, biofuelTank.capacity))
+				.read(Channel.BIOFUEL_FLUID_ID, () -> biofuelTank.fluidSyncId())
+				.read(Channel.STATUS, () -> status.ordinal())
+				.build();
 	}
 
 	/**
@@ -381,11 +349,6 @@ public class FermenterBlockEntity extends MachineBlockEntity
 	}
 
 	@Override
-	public Component getDisplayName() {
-		return Component.translatable("block.alaindustrial.fermenter");
-	}
-
-	@Override
 	public AbstractContainerMenu createMenu(int syncId, Inventory inventory, Player player) {
 		return new FermenterMenu(syncId, inventory, this,
 				ContainerLevelAccess.create(getLevel(), getBlockPos()));
@@ -400,8 +363,8 @@ public class FermenterBlockEntity extends MachineBlockEntity
 	}
 
 	@Override
-	protected void loadAdditional(ValueInput input) {
-		super.loadAdditional(input);
+	protected void loadMachineData(ValueInput input) {
+		super.loadMachineData(input);
 		// Each tank reads its fluid back from the stored registry id, never from the machine's expected
 		// contents — hardcoding it is the geothermal generator's save-corruption bug (MOD-261).
 		waterTank.load(input, "Water");

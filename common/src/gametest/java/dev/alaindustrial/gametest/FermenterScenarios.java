@@ -1,9 +1,13 @@
 package dev.alaindustrial.gametest;
 
+import static dev.alaindustrial.gametest.GameTestDrive.drivePowered;
+
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.FermenterBlockEntity;
 import dev.alaindustrial.core.fluid.FluidHolder;
+import dev.alaindustrial.core.machine.MachineRates;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.ItemStack;
@@ -38,17 +42,39 @@ import net.minecraft.world.level.material.Fluids;
  */
 public final class FermenterScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(FermenterScenarios::fun01BrewsBiofuelAndSpendsWater,
+								"fermenter_brews_biofuel_and_spends_water")
+						.fabricId("FermenterGameTest", "tcFerm001Fun01_brewsBiofuelAndSpendsWater").ticks(500),
+				RosterEntry.of(FermenterScenarios::fun02RichTierBrewsMoreThanPoor,
+								"fermenter_rich_tier_brews_more_than_poor")
+						.fabricId("FermenterGameTest", "tcFerm001Fun02_richTierBrewsMoreThanPoor").ticks(900),
+				RosterEntry.of(FermenterScenarios::con01DryTankBlocksWork, "fermenter_dry_tank_blocks_work")
+						.fabricId("FermenterGameTest", "tcFerm001Con01_dryTankBlocksWork").ticks(500),
+				RosterEntry.of(FermenterScenarios::con02FullBiofuelTankStalls, "fermenter_full_biofuel_tank_stalls")
+						.fabricId("FermenterGameTest", "tcFerm001Con02_fullBiofuelTankStalls").ticks(500));
+
+		private Roster() {}
+	}
+
 	private FermenterScenarios() {
 	}
 
 	private static final BlockPos POS = new BlockPos(1, 2, 1);
 
-	/** Far above one batch's cost (600 EU), set directly so the tier packet cap is bypassed. */
+	/**
+	 * Far above one batch's cost (600 EU), set directly so the tier packet cap is bypassed — and set before EVERY
+	 * tick ({@link GameTestDrive#drivePowered}), the way a connected cable keeps the machine fed. One batch costs
+	 * 600 EU while {@code machineBuffer} holds 800 — comfortable, but the same pattern the Galvanic Bath needs,
+	 * and cheap insurance against a future duration change.
+	 */
 	private static final long AMPLE_EU = 8000L;
 
 	/** Ticks to drive: one full batch plus slack for the scaled-duration knob. */
 	private static int driveTicks() {
-		return Config.scaledDuration(Config.fermenterDuration) + 20;
+		return MachineRates.duration(Config.fermenterDuration, Config.globalMachineSpeedMultiplier) + 20;
 	}
 
 	private static FermenterBlockEntity place(GameTestHelper helper) {
@@ -75,30 +101,20 @@ public final class FermenterScenarios {
 		return be;
 	}
 
-	/**
-	 * Drive with the buffer topped up every tick, the way a connected cable keeps it fed. One batch
-	 * costs 600 EU while {@code machineBuffer} holds 800 — comfortable, but the same pattern the
-	 * Galvanic Bath needs, and cheap insurance against a future duration change.
-	 */
-	private static void drivePowered(FermenterBlockEntity be, GameTestHelper helper, int ticks) {
-		for (int i = 0; i < ticks; i++) {
-			be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
-			AlaGameTestHelper.drive(be, helper, 1);
-		}
-	}
-
 	// ── FUN01: a batch brews biofuel and pays for it ────────────────────────────────────────────────
 
 	/**
 	 * Poor-tier organic + water + EU → biofuel in the output tank, water gone from the input tank,
 	 * and the input stack shorter by the recipe's batch size.
+	 *
+	 * @implements TC-FERM-001-FUN01 — a batch brews biofuel, drinks water and eats its input.
 	 */
 	public static void fun01BrewsBiofuelAndSpendsWater(GameTestHelper helper) {
 		// Four poisonous potatoes: the poor tier consumes four per batch.
 		FermenterBlockEntity be = stocked(helper, new ItemStack(Items.POISONOUS_POTATO, 8));
 		long waterBefore = be.waterTank.amount;
 
-		drivePowered(be, helper, driveTicks());
+		drivePowered(be, helper, driveTicks(), AMPLE_EU);
 
 		if (be.biofuelTank.amount <= 0) {
 			helper.fail("a completed batch brewed no biofuel at all");
@@ -130,17 +146,20 @@ public final class FermenterScenarios {
 	 *
 	 * <p>Compares the two yields rather than pinning either number, so a balance pass that retunes
 	 * the config keeps this test meaningful instead of turning it into a copy of {@code Config}.
+	 *
+	 * @implements TC-FERM-001-FUN02 — the rich tier out-yields the poor one at the same cost, which
+	 * is the whole economy of the machine and the one thing no recipe test can see.
 	 */
 	public static void fun02RichTierBrewsMoreThanPoor(GameTestHelper helper) {
 		FermenterBlockEntity poor = stocked(helper, new ItemStack(Items.POISONOUS_POTATO, 16));
-		drivePowered(poor, helper, driveTicks());
+		drivePowered(poor, helper, driveTicks(), AMPLE_EU);
 		int poorEaten = 16 - poor.getItem(FermenterBlockEntity.ORGANIC_SLOT).getCount();
 		long poorYield = poor.biofuelTank.amount;
 
 		// Same block position, rebuilt: one structure per test, so the second run reuses the cell.
 		helper.setBlock(POS, net.minecraft.world.level.block.Blocks.AIR);
 		FermenterBlockEntity rich = stocked(helper, new ItemStack(Items.GOLDEN_CARROT, 16));
-		drivePowered(rich, helper, driveTicks());
+		drivePowered(rich, helper, driveTicks(), AMPLE_EU);
 		int richEaten = 16 - rich.getItem(FermenterBlockEntity.ORGANIC_SLOT).getCount();
 		long richYield = rich.biofuelTank.amount;
 
@@ -166,13 +185,18 @@ public final class FermenterScenarios {
 
 	// ── CON01/CON02: the two gates the recipe system cannot enforce ────────────────────────────────
 
-	/** A dry tank stops the machine: water is a config cost, so nothing else checks it. */
+	/**
+	 * A dry tank stops the machine: water is a config cost, so nothing else checks it.
+	 *
+	 * @implements TC-FERM-001-CON01 — a dry tank blocks the batch; water is a config cost, so
+	 * nothing in the recipe system enforces it.
+	 */
 	public static void con01DryTankBlocksWork(GameTestHelper helper) {
 		FermenterBlockEntity be = place(helper);
 		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
 		be.setItem(FermenterBlockEntity.ORGANIC_SLOT, new ItemStack(Items.POISONOUS_POTATO, 8));
 		// No water at all.
-		drivePowered(be, helper, driveTicks());
+		drivePowered(be, helper, driveTicks(), AMPLE_EU);
 
 		if (be.biofuelTank.amount != 0) {
 			helper.fail("the fermenter brewed " + be.biofuelTank.amount + " mB out of an empty tank");
@@ -183,13 +207,18 @@ public final class FermenterScenarios {
 		helper.succeed();
 	}
 
-	/** A full output tank stalls the batch; nothing is voided and no input is eaten. */
+	/**
+	 * A full output tank stalls the batch; nothing is voided and no input is eaten.
+	 *
+	 * @implements TC-FERM-001-CON02 — a full biofuel tank stalls the machine instead of voiding the
+	 * brew or eating the input.
+	 */
 	public static void con02FullBiofuelTankStalls(GameTestHelper helper) {
 		FermenterBlockEntity be = stocked(helper, new ItemStack(Items.POISONOUS_POTATO, 8));
 		be.biofuelTank.fluid = FluidHolder.of(ModContent.BIOFUEL.get());
 		be.biofuelTank.amount = FermenterBlockEntity.TANK_CAPACITY;
 
-		drivePowered(be, helper, driveTicks());
+		drivePowered(be, helper, driveTicks(), AMPLE_EU);
 
 		if (be.biofuelTank.amount != FermenterBlockEntity.TANK_CAPACITY) {
 			helper.fail("a full tank changed volume: " + be.biofuelTank.amount);

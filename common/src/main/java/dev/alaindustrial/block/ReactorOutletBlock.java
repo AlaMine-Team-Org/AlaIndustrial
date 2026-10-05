@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.ReactorOutletBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.EntityBlock;
@@ -23,15 +22,8 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public class ReactorOutletBlock extends ReactorShellBlock implements EntityBlock {
 
-	public static final MapCodec<ReactorOutletBlock> CODEC = simpleCodec(ReactorOutletBlock::new);
-
 	public ReactorOutletBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	protected MapCodec<? extends ReactorShellBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

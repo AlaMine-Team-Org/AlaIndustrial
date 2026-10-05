@@ -3,7 +3,6 @@ package dev.alaindustrial.gametest;
 import static dev.alaindustrial.gametest.VisualStandSupport.awaitMenuScreen;
 import static dev.alaindustrial.gametest.VisualStandSupport.differingPixelsInBand;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.HighAltitudeWindMillBlockEntity;
 import dev.alaindustrial.block.entity.StormWindMillBlockEntity;
 import dev.alaindustrial.block.entity.WindMillBlockEntity;
@@ -11,6 +10,7 @@ import dev.alaindustrial.client.screen.HighAltitudeWindMillScreen;
 import dev.alaindustrial.client.screen.MachineScreen.EnergyBarSpec;
 import dev.alaindustrial.client.screen.StormWindMillScreen;
 import dev.alaindustrial.client.screen.WindMillScreen;
+import dev.alaindustrial.core.environment.GeneratorConfig;
 import dev.alaindustrial.gametest.visual.ShotRecorder;
 import dev.alaindustrial.menu.MachineMenu;
 import dev.alaindustrial.registry.ModContent;
@@ -178,14 +178,14 @@ public final class WindMillGuiStand {
      */
     public static void checkWindMillStatusRows(ClientGameTestContext context) {
         checkMill(context, "wind_mill", ModContent.WIND_MILL_MENU.get(), "Wind Mill",
-                WindMillScreen.class, Config.windMillBuffer, WindMillScreen.STATUS_TEXT_Y,
-                WindMillBlockEntity.RATE_CHANNEL);
+                WindMillScreen.class, GeneratorConfig.windMillBuffer, WindMillScreen.STATUS_TEXT_Y,
+                WindMillBlockEntity.Channel.RATE.ordinal());
         checkMill(context, "high_altitude_wind_mill", ModContent.HIGH_ALTITUDE_WIND_MILL_MENU.get(),
-                "High Altitude Wind Mill", HighAltitudeWindMillScreen.class, Config.t2WindMillBuffer,
-                HighAltitudeWindMillScreen.STATUS_TEXT_Y, HighAltitudeWindMillBlockEntity.RATE_CHANNEL);
+                "High Altitude Wind Mill", HighAltitudeWindMillScreen.class, GeneratorConfig.t2WindMillBuffer,
+                HighAltitudeWindMillScreen.STATUS_TEXT_Y, HighAltitudeWindMillBlockEntity.Channel.RATE.ordinal());
         checkMill(context, "storm_wind_mill", ModContent.STORM_WIND_MILL_MENU.get(), "Storm Wind Mill",
-                StormWindMillScreen.class, Config.t2WindMillBuffer, StormWindMillScreen.STATUS_TEXT_Y,
-                StormWindMillBlockEntity.RATE_CHANNEL);
+                StormWindMillScreen.class, GeneratorConfig.t2WindMillBuffer, StormWindMillScreen.STATUS_TEXT_Y,
+                StormWindMillBlockEntity.Channel.RATE.ordinal());
     }
 
     /**

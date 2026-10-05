@@ -5,6 +5,8 @@ import com.mojang.math.Axis;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.SprinklerBlock;
 import dev.alaindustrial.block.entity.SprinklerBlockEntity;
+import dev.alaindustrial.compat.client.ModelSubmit;
+import dev.alaindustrial.compat.client.Poses;
 import dev.alaindustrial.core.machine.RotorSpin;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -165,12 +167,12 @@ public final class SprinklerHeadBlockEntityRenderer
 		// drawn the right way up under a ceiling would have its nozzles pointing into the block.
 		poseStack.translate(0.5F, state.hanging ? 1.0F - HEAD_Y : HEAD_Y, 0.5F);
 		if (state.hanging) {
-			poseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
+			Poses.rotate(poseStack, Axis.XP.rotationDegrees(180.0F));
 		}
-		poseStack.mulPose(Axis.YP.rotation(state.angle));
-		collector.submitModel(hubModel, Unit.INSTANCE, poseStack, state.lightCoords,
+		Poses.rotate(poseStack, Axis.YP.rotation(state.angle));
+		ModelSubmit.withCrumbling(collector, hubModel, Unit.INSTANCE, poseStack, state.lightCoords,
 				OverlayTexture.NO_OVERLAY, -1, METAL, sprites, 0, state.breakProgress);
-		collector.submitModel(nozzleModel, Unit.INSTANCE, poseStack, state.lightCoords,
+		ModelSubmit.withCrumbling(collector, nozzleModel, Unit.INSTANCE, poseStack, state.lightCoords,
 				OverlayTexture.NO_OVERLAY, -1, NOZZLE, sprites, 0, state.breakProgress);
 		poseStack.popPose();
 	}

@@ -1,6 +1,7 @@
 package dev.alaindustrial.block.entity;
 
 import java.util.Locale;
+import dev.alaindustrial.core.machine.StatusLine;
 
 /**
  * Why the incubator is not working right now (MOD-234), shown as the status line of its screen.
@@ -14,7 +15,7 @@ import java.util.Locale;
  * <p>Ordinals travel over a {@code ContainerData} channel, so the order is part of the client/server
  * contract of one session only — nothing persists it.
  */
-public enum IncubatorStatus {
+public enum IncubatorStatus implements StatusLine {
 	/** Working, or idle with nothing to complain about — the screen shows the mode name instead. */
 	READY,
 	/** No glass on top: the chamber is open. */

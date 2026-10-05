@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 2,
+  "global": {
+    "globalMachineSpeedMultiplier": 2.5
+  },
+  "machines": {
+    "machineEuPerTick": 5,
+    "mutationSlagChance": 0.5,
+    "reactorBlastFire": false,
+    "retiredKnob": 7
+  },
+  "cables": {
+    "cableBuffer": 10
+  },
+  "builtinDefaults": {
+    "globalMachineSpeedMultiplier": 1.0,
+    "machineEuPerTick": 2,
+    "reactorBlastFire": false,
+    "cableBuffer": 10
+  }
+}

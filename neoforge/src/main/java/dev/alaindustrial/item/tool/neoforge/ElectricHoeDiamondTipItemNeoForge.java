@@ -3,7 +3,6 @@ package dev.alaindustrial.item.tool.neoforge;
 import dev.alaindustrial.item.tool.ElectricHoeDiamondTipItem;
 import net.minecraft.world.item.ItemInstance;
 import net.minecraft.world.item.context.UseOnContext;
-import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.ItemAbility;
 
 /**
@@ -28,19 +27,17 @@ public class ElectricHoeDiamondTipItemNeoForge extends ElectricHoeDiamondTipItem
 
 	@Override
 	public boolean canPerformAction(ItemInstance stack, ItemAbility itemAbility) {
-		return ItemAbilities.DEFAULT_HOE_ACTIONS.contains(itemAbility);
+		return RightClickAbility.HOE.canPerform(itemAbility);
 	}
 
 	/**
-	 * The upgrade's copy of the NeoForge tillability probe (MOD-389) — identical to
-	 * {@link ElectricHoeItemNeoForge#wouldTill} and duplicated for the same reason
-	 * {@code canPerformAction} above is: this class extends the <i>common</i> upgrade, so it inherits
-	 * nothing from the NeoForge base class. Without it the upgrade would fall back to the common
-	 * (vanilla-map) answer on a loader that does not read that map.
+	 * The NeoForge tillability probe (MOD-389), declared again here for the same reason
+	 * {@code canPerformAction} above is: this class extends the <i>common</i> upgrade, so it inherits nothing
+	 * from the NeoForge base class. Without it the upgrade would fall back to the common (vanilla-map)
+	 * answer on a loader that does not read that map. The probe itself is {@link RightClickAbility#wouldTill}.
 	 */
 	@Override
 	protected boolean wouldTill(UseOnContext context) {
-		return context.getLevel().getBlockState(context.getClickedPos())
-				.getToolModifiedState(context, ItemAbilities.HOE_TILL, /*simulate*/ true) != null;
+		return RightClickAbility.wouldTill(context);
 	}
 }

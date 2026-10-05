@@ -2,11 +2,11 @@ package dev.alaindustrial.advancement;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.alaindustrial.compat.CriterionPlayer;
 import dev.alaindustrial.mutation.MutationGrade;
 import java.util.Optional;
 import net.minecraft.advancements.predicates.ContextAwarePredicate;
 import net.minecraft.advancements.predicates.ItemPredicate;
-import net.minecraft.advancements.predicates.entity.EntityPredicate;
 import net.minecraft.advancements.triggers.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -35,11 +35,13 @@ public class MutationCompletedTrigger extends SimpleCriterionTrigger<MutationCom
 		trigger(player, instance -> instance.matches(taken, grade));
 	}
 
-	public record TriggerInstance(Optional<ContextAwarePredicate> player, Optional<ItemPredicate> item,
+	public record TriggerInstance(
+			Optional<ContextAwarePredicate> player,
+			Optional<ItemPredicate> item,
 			Optional<String> grade) implements SimpleCriterionTrigger.SimpleInstance {
 
 		public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(i -> i.group(
-				EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+				CriterionPlayer.FIELD.forGetter(TriggerInstance::player),
 				ItemPredicate.CODEC.optionalFieldOf("item").forGetter(TriggerInstance::item),
 				Codec.STRING.optionalFieldOf("grade").forGetter(TriggerInstance::grade)
 		).apply(i, TriggerInstance::new));

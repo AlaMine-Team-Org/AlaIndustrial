@@ -14,7 +14,7 @@ import org.junit.jupiter.params.provider.CsvSource;
  * L1 measurement of the basin boundary — the denominator {@link OilLakeShape#basinHangsInTheOpen}
  * judges against (MOD-526).
  *
- * <p>{@code OilLakeFeature} refuses a site whose fluid half opens into a cavity over
+ * <p>{@code OilLakePlacer} refuses a site whose fluid half opens into a cavity over
  * {@link OilLakeShape#MAX_OPEN_BASIN_PERCENT} of its boundary, because sealing that much of a cave
  * hall leaves the deposit hanging in it as a stone bowl. A percentage is only as meaningful as what
  * it is a percentage OF, and that quantity is pure geometry: how many cells the fluid half of a
@@ -104,7 +104,7 @@ class OilLakeBasinTest {
 	 * The counter and the feature agree on what a boundary cell is.
 	 *
 	 * <p>{@link OilLakeShape#basinBoundaryCells} exists so this measurement counts exactly the cells
-	 * {@code OilLakeFeature} walks; if it ever grew its own idea of "borders hollow" the pinned
+	 * {@code OilLakePlacer} walks; if it ever grew its own idea of "borders hollow" the pinned
 	 * numbers above would describe a set of cells the game never looks at. Counted here a second
 	 * time, straight off {@link OilLakeShape#bordersHollow}, against the same grid.
 	 */

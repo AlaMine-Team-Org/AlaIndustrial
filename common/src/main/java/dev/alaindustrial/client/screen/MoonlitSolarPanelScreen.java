@@ -16,7 +16,7 @@ import net.minecraft.world.entity.player.Inventory;
  * the sun indicator lights up when the moon is visible (MODE_NIGHT / MODE_NIGHT_PARTIAL).
  * No chip slot and no evolution bar (panel is already evolved).
  */
-public class MoonlitSolarPanelScreen extends MachineScreen<MoonlitSolarPanelMenu> {
+public class MoonlitSolarPanelScreen extends LayoutMachineScreen<MoonlitSolarPanelMenu> {
 
     private static final Identifier TEXTURE =
             Industrialization.id("textures/gui/container/moonlit_solar_panel.png");
@@ -29,13 +29,11 @@ public class MoonlitSolarPanelScreen extends MachineScreen<MoonlitSolarPanelMenu
     private static final float SUN_UV_X    = 176.0F;
     private static final float SUN_UV_Y    = 65.0F;
 
-    public MoonlitSolarPanelScreen(MoonlitSolarPanelMenu menu, Inventory inventory, Component title) {
-        super(menu, inventory, title);
-    }
+    /** Atlas and energy bar (MOD-716, CLI-3). */
+    private static final MachineLayout LAYOUT = MachineLayout.of(TEXTURE, EnergyBarSpec.LEFT);
 
-    @Override
-    protected Identifier texture() {
-        return TEXTURE;
+    public MoonlitSolarPanelScreen(MoonlitSolarPanelMenu menu, Inventory inventory, Component title) {
+        super(menu, inventory, title, LAYOUT);
     }
 
     @Override
@@ -50,7 +48,6 @@ public class MoonlitSolarPanelScreen extends MachineScreen<MoonlitSolarPanelMenu
         // Energy bar fill (bottom-up) via the shared MachineScreen helper
         int capacity = this.menu.getCapacity();
         int energy   = this.menu.getEnergy();
-        renderEnergyBar(graphics, EnergyBarSpec.LEFT);
 
         // Moon indicator — blit yellow 7×7 tile when moonlight is available
         int mode = this.menu.getMode();
@@ -83,4 +80,5 @@ public class MoonlitSolarPanelScreen extends MachineScreen<MoonlitSolarPanelMenu
         };
         return Component.translatable("gui.alaindustrial.solar_panel.mode." + key);
     }
+
 }

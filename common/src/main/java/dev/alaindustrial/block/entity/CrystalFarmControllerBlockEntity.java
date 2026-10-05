@@ -509,8 +509,8 @@ public class CrystalFarmControllerBlockEntity extends EnergyBlockEntity {
 	}
 
 	@Override
-	protected void loadAdditional(ValueInput input) {
-		super.loadAdditional(input);
+	protected void loadMachineData(ValueInput input) {
+		super.loadMachineData(input);
 		boxMinX = input.getIntOr("BoxMinX", 0);
 		boxMinY = input.getIntOr("BoxMinY", 0);
 		boxMinZ = input.getIntOr("BoxMinZ", 0);

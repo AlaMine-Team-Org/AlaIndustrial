@@ -87,13 +87,18 @@ public class ElectricHeaterScreen extends MachineScreen<ElectricHeaterMenu> {
 		return TEXTURE;
 	}
 
+	/** The energy bar and its tooltip, drawn by the base (MOD-716). */
+	@Override
+	protected EnergyBarSpec energyBar() {
+		return EnergyBarSpec.LEFT;
+	}
+
 	@Override
 	protected void drawMachineFrame(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
 		int x = this.leftPos;
 		int y = this.topPos;
 
 		blitStaticFrame(graphics);
-		renderEnergyBar(graphics, EnergyBarSpec.LEFT);
 		renderThermometer(graphics, x, y);
 
 		ElectricHeaterStatus status = this.menu.getStatus();
@@ -158,7 +163,6 @@ public class ElectricHeaterScreen extends MachineScreen<ElectricHeaterMenu> {
 	@Override
 	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		super.extractTooltip(graphics, mouseX, mouseY);
-		renderEnergyTooltip(graphics, mouseX, mouseY, EnergyBarSpec.LEFT);
 		if (isHovering(THERMO_X, THERMO_BOTTOM - THERMO_H, THERMO_W, THERMO_H, mouseX, mouseY)) {
 			graphics.setTooltipForNextFrame(this.font,
 					Component.translatable("gui.alaindustrial.electric_heater.tooltip",

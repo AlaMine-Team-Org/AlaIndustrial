@@ -1,6 +1,7 @@
 package dev.alaindustrial.block.entity;
 
 import java.util.Locale;
+import dev.alaindustrial.core.machine.StatusLine;
 
 /**
  * Why the Thermal Centrifuge is not turning out shavings right now (MOD-424).
@@ -14,7 +15,7 @@ import java.util.Locale;
  * <p><b>The order of the constants is the wire format</b> (the ordinal travels to the screen on a sync
  * channel), so new states must be appended, never inserted.
  */
-public enum ThermalCentrifugeStatus {
+public enum ThermalCentrifugeStatus implements StatusLine {
 	/** Everything is in place; the machine is turning out shavings. Deliberately draws no status line. */
 	READY,
 	/** No redstone signal: the rotor is stopped and the machine spends nothing at all. */

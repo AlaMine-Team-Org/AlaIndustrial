@@ -20,9 +20,4 @@ public final class SkillEffectGameTest {
 	public void mod483RecuperatorRefundsIntoThePack(GameTestHelper helper) {
 		SkillEffectScenarios.recuperatorRefundsIntoThePack(helper);
 	}
-
-	@GameTest
-	public void mod483WithoutSkillsNothingChanges(GameTestHelper helper) {
-		SkillEffectScenarios.withoutSkillsNothingChanges(helper);
-	}
 }

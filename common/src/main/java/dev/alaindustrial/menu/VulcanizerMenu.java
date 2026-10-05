@@ -5,10 +5,8 @@ import dev.alaindustrial.block.entity.VulcanizerStatus;
 import dev.alaindustrial.core.heat.HeatSource;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.world.Container;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
@@ -22,8 +20,7 @@ public final class VulcanizerMenu extends MachineMenu {
 
 	public VulcanizerMenu(int syncId, Inventory inventory) {
 		super(ModContent.VULCANIZER_MENU.get(), syncId, inventory,
-				new SimpleContainer(VulcanizerBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT),
-				new SimpleContainerData(VulcanizerBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL,
+				clientStub(VulcanizerBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT, VulcanizerBlockEntity.DATA_COUNT),
 				ModContent.VULCANIZER.get());
 	}
 
@@ -46,10 +43,10 @@ public final class VulcanizerMenu extends MachineMenu {
 	}
 
 	public HeatSource getHeatSource() {
-		return HeatSource.byOrdinal(data.get(4));
+		return HeatSource.byOrdinal(channel(VulcanizerBlockEntity.Channel.HEAT_SOURCE));
 	}
 
 	public VulcanizerStatus getStatus() {
-		return VulcanizerStatus.byOrdinal(data.get(5));
+		return VulcanizerStatus.byOrdinal(channel(VulcanizerBlockEntity.Channel.STATUS));
 	}
 }

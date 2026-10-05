@@ -3,6 +3,7 @@ package dev.alaindustrial.block.entity;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.DistillationColumnBlock;
 import dev.alaindustrial.block.DistillationColumnSegmentBlock;
+import dev.alaindustrial.block.entity.machine.SyncChannels;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.core.fluid.FluidAmounts;
@@ -10,6 +11,7 @@ import dev.alaindustrial.core.fluid.FluidHolder;
 import dev.alaindustrial.core.fluid.FluidPort;
 import dev.alaindustrial.core.fluid.FluidPortHost;
 import dev.alaindustrial.core.fluid.FluidTank;
+import dev.alaindustrial.core.machine.MachineRates;
 import dev.alaindustrial.item.fluid.DistillationColumnContents;
 import dev.alaindustrial.item.fluid.FluidTankContents;
 import dev.alaindustrial.item.fluid.ItemFluidBridge;
@@ -29,13 +31,11 @@ import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -155,14 +155,14 @@ public class DistillationColumnBlockEntity extends MachineBlockEntity implements
 		// (oil in, diesel out, fuel oil out). One 400 EU run fits the shared 800 EU machineBuffer.
 		super(ModContent.DISTILLATION_COLUMN_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT,
 				Config.machineBuffer, EnergyTier.LV.maxVoltage(), 0L);
-		this.maxProgress = Config.scaledDuration(Config.distillationColumnDuration);
+		this.maxProgress = MachineRates.duration(Config.distillationColumnDuration,
+				Config.globalMachineSpeedMultiplier);
 	}
 
 	/**
-	 * The intake filter: a source fluid tagged {@code c:oil} (fractionation), {@code c:fuel_oil}
-	 * (cracking, round 2) or {@code c:biofuel} (MOD-525 — the organic chain's second crack, into
-	 * nutrient solution). The source-only rule is the polymerizer's: a tank holding a flowing
-	 * variant could never be topped up to a recipe volume.
+	 * The intake filter: a source fluid tagged {@code c:oil} (fractionation), {@code c:fuel_oil} (cracking, round 2) or
+	 * {@code c:biofuel} (MOD-525 — the organic chain's second crack, into nutrient solution). The source-only rule is
+	 * the polymerizer's: a tank holding a flowing variant could never be topped up to a recipe volume.
 	 */
 	private static boolean isFeedstock(FluidHolder fluid) {
 		return !fluid.isEmpty()
@@ -241,31 +241,29 @@ public class DistillationColumnBlockEntity extends MachineBlockEntity implements
 		boolean hasEnergy = energy.getAmount() >= euPerTick;
 		boolean dieselFits = recipe != null && resultFits(recipe, 0, dieselTank, sectionBonus());
 		boolean fuelOilFits = recipe != null && resultFits(recipe, 1, fuelOilTank, 0);
-		boolean canRun = recipe != null && hasEnergy && dieselFits && fuelOilFits && !fouled;
+		boolean ready = recipe != null && dieselFits && fuelOilFits && !fouled;
+		boolean canRun = ready && hasEnergy;
 		// MOD-125/MOD-440: warming and distilling draw the same rate, so the "now" line is one number
-		// whenever the column pays and 0 when it does not. Recorded BEFORE the drain, like every other
-		// machine: recordEuRate flips the buffer's counters on, and the very tick the chip is fitted
-		// must already count its own draw.
+		// whenever the column pays and 0 when it does not. (The buffer's counters are switched by the base
+		// before this tick — MOD-692 — so the tick the chip is fitted already counts its own draw.)
 		recordEuRate(canRun ? euPerTick : 0);
 
-		if (canRun) {
+		if (canRun && heat < warmup) {
+			// Warming: EU burns, no oil is consumed, no progress accrues. One cold start costs roughly one
+			// distillation's worth of EU — the price of intermittent power, and no skill discounts it.
 			energy.drainInternal(euPerTick);
-			if (heat < warmup) {
-				// Warming: EU burns, no oil is consumed, no progress accrues. One cold start costs
-				// roughly one distillation's worth of EU — the deliberate price of intermittent power.
-				heat++;
-				status = DistillationColumnStatus.WARMING;
-			} else {
-				progress++;
-				status = DistillationColumnStatus.WORKING;
-				if (progress >= maxProgress) {
-					progress = 0;
-					consumeOil(recipe.amount());
-					deliver(recipe);
-					recordItemProcessed(); // MOD-125/MOD-440: one completed run
-					fouling = Math.min(FOULING_MAX, fouling + FOULING_PER_RUN);
-					creditUsefulWork(level, (long) euPerTick * maxProgress);
-				}
+			heat++;
+			status = DistillationColumnStatus.WARMING;
+			setChanged();
+		} else if (heat >= warmup && spendOperationEnergy(level, euPerTick, canRun, ready)) {
+			progress++; // a distilling tick: paid, or run on the buffer's remainder (Mechanic skills, MOD-712)
+			status = DistillationColumnStatus.WORKING;
+			if (progress >= maxProgress) {
+				progress = 0;
+				consumeOil(recipe.amount());
+				deliver(recipe);
+				completeOperation(level, (long) euPerTick * maxProgress); // MOD-125/MOD-440 counter, MOD-133 XP
+				fouling = Math.min(FOULING_MAX, fouling + FOULING_PER_RUN);
 			}
 			setChanged();
 		} else {
@@ -315,9 +313,8 @@ public class DistillationColumnBlockEntity extends MachineBlockEntity implements
 	}
 
 	/**
-	 * Whether result #{@code index} (positional: 0 → top/diesel tank, 1 → bottom/fuel-oil tank),
-	 * plus any section bonus on the light fraction, has room in {@code tank}. A recipe with a
-	 * single result trivially "fits" the absent slot.
+	 * Whether result #{@code index} (positional: 0 → top/diesel tank, 1 → bottom/fuel-oil tank), plus any section bonus
+	 * on the light fraction, has room in {@code tank}. A recipe with a single result trivially "fits" the absent slot.
 	 */
 	private static boolean resultFits(FluidOutputRecipe recipe, int index, FluidTank tank, int bonus) {
 		if (index >= recipe.fluidResults().size()) {
@@ -389,75 +386,42 @@ public class DistillationColumnBlockEntity extends MachineBlockEntity implements
 		}
 	}
 
-	// --- GUI sync ---
-
 	/**
-	 * 14 channels: 4 base + 3 tank permilles + 3 fluid ids + status ordinal + heat permille +
-	 * fouling (0..100) + section flag (round 2).
+	 * GUI sync channels (MOD-712, BE-7): the base four, the three tanks in permille, their fluids'
+	 * registry ids, the {@link DistillationColumnStatus} ordinal, the heat in permille, the fouling
+	 * (0..100) and the section flag (round 2); all read-only.
+	 *
+	 * Every channel is a signed short on the wire (see {@link SyncChannels}), so a tank travels as a
+	 * permille and a fluid as its registry id; the screen derives texture, tint and name from the id.
 	 */
-	public static final int DATA_COUNT = 14;
+	public enum Channel {
+		ENERGY, CAPACITY, PROGRESS, MAX_PROGRESS,
+		OIL_PERMILLE, DIESEL_PERMILLE, FUEL_OIL_PERMILLE, OIL_FLUID_ID, DIESEL_FLUID_ID, FUEL_OIL_FLUID_ID,
+		STATUS, HEAT_PERMILLE, FOULING, SECTION
+	}
 
-	/** Channel indices, shared with {@link DistillationColumnMenu}. */
-	public static final int CH_OIL_PERMILLE = 4;
-	public static final int CH_DIESEL_PERMILLE = 5;
-	public static final int CH_FUEL_OIL_PERMILLE = 6;
-	public static final int CH_OIL_FLUID_ID = 7;
-	public static final int CH_DIESEL_FLUID_ID = 8;
-	public static final int CH_FUEL_OIL_FLUID_ID = 9;
-	public static final int CH_STATUS = 10;
-	public static final int CH_HEAT_PERMILLE = 11;
-	public static final int CH_FOULING = 12;
-	public static final int CH_SECTION = 13;
+	/** Width of {@link #getDataAccess()}, which the menu's client stub sizes itself from (MOD-235). */
+	public static final int DATA_COUNT = Channel.values().length;
 
-	/**
-	 * Every channel fits a signed 16-bit short ({@code ClientboundContainerSetDataPacket} writes
-	 * {@code writeShort}): tank levels travel as permille, fluids as registry ids with the
-	 * {@code > Short.MAX_VALUE → NONE} guard, heat as permille of the warm-up.
-	 */
-	private final ContainerData columnData = new ContainerData() {
-		@Override
-		public int get(int index) {
-			return switch (index) {
-				case CH_OIL_PERMILLE -> permille(oilTank);
-				case CH_DIESEL_PERMILLE -> permille(dieselTank);
-				case CH_FUEL_OIL_PERMILLE -> permille(fuelOilTank);
-				case CH_OIL_FLUID_ID -> oilTank.fluidSyncId();
-				case CH_DIESEL_FLUID_ID -> dieselTank.fluidSyncId();
-				case CH_FUEL_OIL_FLUID_ID -> fuelOilTank.fluidSyncId();
-				case CH_STATUS -> status.ordinal();
-				case CH_HEAT_PERMILLE -> heatPermille();
-				case CH_FOULING -> fouling;
-				case CH_SECTION -> sectionPresent ? 1 : 0;
-				default -> DistillationColumnBlockEntity.this.dataAccess.get(index);
-			};
-		}
-
-		@Override
-		public void set(int index, int value) {
-			if (index < MachineBlockEntity.DATA_COUNT) {
-				DistillationColumnBlockEntity.this.dataAccess.set(index, value);
-			}
-		}
-
-		@Override
-		public int getCount() {
-			return DATA_COUNT;
-		}
-	};
-
-	private static int permille(FluidTank tank) {
-		return tank.amount <= 0 ? 0
-				: Math.max(1, (int) Math.min(tank.amount * 1000L / tank.capacity, 1000));
+	@Override
+	protected SyncChannels createChannels() {
+		return channels(Channel.class)
+				.read(Channel.OIL_PERMILLE, () -> SyncChannels.permille(oilTank.amount, oilTank.capacity))
+				.read(Channel.DIESEL_PERMILLE, () -> SyncChannels.permille(dieselTank.amount, dieselTank.capacity))
+				.read(Channel.FUEL_OIL_PERMILLE, () -> SyncChannels.permille(fuelOilTank.amount, fuelOilTank.capacity))
+				.read(Channel.OIL_FLUID_ID, () -> oilTank.fluidSyncId())
+				.read(Channel.DIESEL_FLUID_ID, () -> dieselTank.fluidSyncId())
+				.read(Channel.FUEL_OIL_FLUID_ID, () -> fuelOilTank.fluidSyncId())
+				.read(Channel.STATUS, () -> status.ordinal())
+				.read(Channel.HEAT_PERMILLE, () -> heatPermille())
+				.read(Channel.FOULING, () -> fouling)
+				.read(Channel.SECTION, () -> sectionPresent ? 1 : 0)
+				.build();
 	}
 
 	private int heatPermille() {
 		int warmup = Math.max(1, Config.distillationColumnWarmupTicks);
 		return heat <= 0 ? 0 : Math.max(1, Math.min(heat * 1000 / warmup, 1000));
-	}
-
-	@Override
-	public ContainerData getDataAccess() {
-		return columnData;
 	}
 
 	// --- slots ---
@@ -482,11 +446,6 @@ public class DistillationColumnBlockEntity extends MachineBlockEntity implements
 	}
 
 	@Override
-	public Component getDisplayName() {
-		return Component.translatable("block.alaindustrial.distillation_column");
-	}
-
-	@Override
 	public AbstractContainerMenu createMenu(int syncId, Inventory inventory, Player player) {
 		return new DistillationColumnMenu(syncId, inventory, this,
 				ContainerLevelAccess.create(getLevel(), getBlockPos()));
@@ -508,8 +467,8 @@ public class DistillationColumnBlockEntity extends MachineBlockEntity implements
 	}
 
 	@Override
-	protected void loadAdditional(ValueInput input) {
-		super.loadAdditional(input);
+	protected void loadMachineData(ValueInput input) {
+		super.loadMachineData(input);
 		oilTank.load(input, "Oil");
 		dieselTank.load(input, "Diesel");
 		fuelOilTank.load(input, "FuelOil");

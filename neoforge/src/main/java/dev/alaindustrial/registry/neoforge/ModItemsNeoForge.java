@@ -74,32 +74,10 @@ public final class ModItemsNeoForge {
 	 */
 	private static final Map<String, DeferredItem<Item>> REGISTERED = registerAll();
 
-	// Powered items: read by registerCapabilities (Capabilities.Energy.ITEM).
-	public static final DeferredItem<Item> BATTERY = handle("battery");
+	// Read by the item-energy capability gametests; the capability itself is registered from
+	// ItemCapabilityRoster (MOD-707), which needs no handles.
 	public static final DeferredItem<Item> BATTERY_POUCH = handle("battery_pouch");
-	public static final DeferredItem<Item> SHIELDING_POUCH = handle("shielding_pouch");
 	public static final DeferredItem<Item> ENERGY_PACK = handle("energy_pack");
-	public static final DeferredItem<Item> ELECTRIC_DRILL = handle("electric_drill");
-	public static final DeferredItem<Item> ELECTRIC_DRILL_DIAMOND_TIP = handle("electric_drill_diamond_tip");
-	public static final DeferredItem<Item> ELECTRIC_DRILL_NETHERITE_TIP = handle("electric_drill_netherite_tip");
-	public static final DeferredItem<Item> ELECTRIC_CHAINSAW = handle("electric_chainsaw");
-	public static final DeferredItem<Item> ELECTRIC_CHAINSAW_DIAMOND_TIP = handle("electric_chainsaw_diamond_tip");
-	public static final DeferredItem<Item> ELECTRIC_SHOVEL = handle("electric_shovel");
-	public static final DeferredItem<Item> ELECTRIC_SHOVEL_DIAMOND_TIP = handle("electric_shovel_diamond_tip");
-	public static final DeferredItem<Item> ELECTRIC_HOE = handle("electric_hoe");
-	public static final DeferredItem<Item> ELECTRIC_HOE_DIAMOND_TIP = handle("electric_hoe_diamond_tip");
-	public static final DeferredItem<Item> ELECTRIC_SABER = handle("electric_saber");
-	public static final DeferredItem<Item> ELECTRIC_BOW = handle("electric_bow");
-	public static final DeferredItem<Item> ELECTROMAGNET = handle("electromagnet");
-	public static final DeferredItem<Item> ELECTROMAGNET_ADVANCED = handle("electromagnet_advanced");
-	public static final DeferredItem<Item> JETPACK = handle("jetpack");
-	public static final DeferredItem<Item> FLUXWEAVE_HELMET = handle("fluxweave_helmet");
-	public static final DeferredItem<Item> FLUXWEAVE_CHESTPLATE = handle("fluxweave_chestplate");
-	public static final DeferredItem<Item> FLUXWEAVE_LEGGINGS = handle("fluxweave_leggings");
-	public static final DeferredItem<Item> FLUXWEAVE_BOOTS = handle("fluxweave_boots");
-	public static final DeferredItem<Item> ENERGY_CRYSTAL_BLANK = handle("energy_crystal_blank");
-	public static final DeferredItem<Item> LAPOTRON_CRYSTAL_BLANK = handle("lapotron_crystal_blank");
-	public static final DeferredItem<Item> RESONANT_CRYSTAL_BLANK = handle("resonant_crystal_blank");
 	// Capsules: read by registerCapabilities (Capabilities.Fluid.ITEM).
 	public static final DeferredItem<Item> VACUUM_CAPSULE = handle("vacuum_capsule");
 	public static final DeferredItem<Item> FILLED_VACUUM_CAPSULE = handle("filled_vacuum_capsule");

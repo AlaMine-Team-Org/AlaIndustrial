@@ -1,6 +1,7 @@
 package dev.alaindustrial.client.compat;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.client.ServerBalance;
 import dev.alaindustrial.mutation.MutationGrade;
 import dev.alaindustrial.registry.ModContent;
 import java.util.ArrayList;
@@ -14,14 +15,15 @@ import net.minecraft.world.level.ItemLike;
  * Loader-neutral descriptions shown by recipe viewers (REI on Fabric, JEI on NeoForge) for blocks and
  * items that have no ordinary crafting recipe — foremost the solar panel evolution line.
  *
- * <p>Keeps the description data (which item owns it, lang keys, which {@link Config} values to inject)
+ * <p>Keeps the description data (which item owns it, lang keys, which balance values to inject)
  * in {@code common}, so the Fabric REI integration and the NeoForge JEI integration read the same
  * source and cannot drift. Adding a new evolution line (e.g. a future wind-mill branch) is a new entry
  * returned from a factory method, not duplicated code.
  *
  * <p>Numbers are never hardcoded here: each {@link Line} carries {@link IntSupplier}s that read the
- * live {@link Config} value when {@link #buildLines(Entry)} is called, so a config reload is reflected
- * without rebuilding the entries.
+ * live value when {@link #buildLines(Entry)} is called, so a config reload is reflected without
+ * rebuilding the entries. The values are the SERVER's, read through {@link ServerBalance} (MOD-695): the
+ * local {@link Config} holds the player's own file, which a dedicated server does not play by.
  */
 public final class RecipeViewerInfo {
 	private RecipeViewerInfo() {
@@ -77,13 +79,13 @@ public final class RecipeViewerInfo {
 				new Entry(ModContent.DAYLIGHT_SOLAR_PANEL, "jei.alaindustrial.daylight_solar_panel.title", List.of(
 						Line.of("jei.alaindustrial.daylight_solar_panel.line1"),
 						new Line("jei.alaindustrial.daylight_solar_panel.line2", List.of(
-								() -> Config.daylightEuPerTick)),
+								() -> ServerBalance.daylightEuPerTick())),
 						Line.of("jei.alaindustrial.daylight_solar_panel.line3"))),
 				// Moonlit branch — evolved from the base via a Lunar chip.
 				new Entry(ModContent.MOONLIT_SOLAR_PANEL, "jei.alaindustrial.moonlit_solar_panel.title", List.of(
 						Line.of("jei.alaindustrial.moonlit_solar_panel.line1"),
 						new Line("jei.alaindustrial.moonlit_solar_panel.line2", List.of(
-								() -> Config.moonlitEuPerTick, () -> Config.moonlitWeatherEuPerTick)),
+								() -> ServerBalance.moonlitEuPerTick(), () -> ServerBalance.moonlitWeatherEuPerTick())),
 						Line.of("jei.alaindustrial.moonlit_solar_panel.line3"))));
 	}
 
@@ -92,23 +94,23 @@ public final class RecipeViewerInfo {
 	 * succeeding, but not what happens on top of a success — the second roll that decides how good the
 	 * result is. There is no recipe to hang that on, so it lives here, on the machine itself.
 	 *
-	 * <p>The odds are read live from {@link Config}, as percentages, so a server that retunes them does
+	 * <p>The odds are read live from {@link ServerBalance}, as percentages, so a server that retunes them does
 	 * not leave the page lying.
 	 */
 	public static List<Entry> mutationGradeEntries() {
 		return List.of(new Entry(ModContent.INCUBATOR, "jei.alaindustrial.mutation_grades.title", List.of(
 				Line.of("jei.alaindustrial.mutation_grades.line1"),
 				new Line("jei.alaindustrial.mutation_grades.line2", List.of(
-						() -> percent(1.0 - Config.mutationGradeRare - Config.mutationGradeEpic
-								- Config.mutationGradeLegendary),
-						() -> percent(Config.mutationGradeRare),
-						() -> percent(Config.mutationGradeEpic),
-						() -> percent(Config.mutationGradeLegendary))),
+						() -> percent(1.0 - ServerBalance.mutationGradeRare() - ServerBalance.mutationGradeEpic()
+								- ServerBalance.mutationGradeLegendary()),
+						() -> percent(ServerBalance.mutationGradeRare()),
+						() -> percent(ServerBalance.mutationGradeEpic()),
+						() -> percent(ServerBalance.mutationGradeLegendary()))),
 				new Line("jei.alaindustrial.mutation_grades.line3", List.of(
 						() -> percent(MutationGrade.RARE.geneBonus()),
 						() -> percent(MutationGrade.EPIC.geneBonus()),
 						() -> percent(MutationGrade.LEGENDARY.geneBonus()),
-						() -> percent(Config.mutationChanceCap))),
+						() -> percent(ServerBalance.mutationChanceCap()))),
 				Line.of("jei.alaindustrial.mutation_grades.line4"))));
 	}
 
@@ -133,17 +135,17 @@ public final class RecipeViewerInfo {
 				new Entry(ModContent.GEOTHERMAL_GENERATOR, "block.alaindustrial.geothermal_generator", List.of(
 						Line.of("jei.alaindustrial.geothermal_generator.line1"),
 						new Line("jei.alaindustrial.geothermal_generator.line2", List.of(
-								() -> Config.geothermalEuPerTick,
-								() -> Config.geothermalBurnTicks,
-								() -> Config.geothermalEuPerTick * Config.geothermalBurnTicks)),
+								() -> ServerBalance.geothermalEuPerTick(),
+								() -> ServerBalance.geothermalBurnTicks(),
+								() -> ServerBalance.geothermalEuPerTick() * ServerBalance.geothermalBurnTicks())),
 						Line.of("jei.alaindustrial.geothermal_generator.line3"))),
 				// Condenser: the intake rate, the first threshold, and the one rule that surprises players —
 				// taking the clot clears the whole bank, not the tier's price.
 				new Entry(ModContent.ENERGY_CONDENSER, "block.alaindustrial.energy_condenser", List.of(
 						new Line("jei.alaindustrial.energy_condenser.line1", List.of(
-								() -> Config.condenserInputRate)),
+								() -> ServerBalance.condenserInputRate())),
 						new Line("jei.alaindustrial.energy_condenser.line2", List.of(
-								() -> Config.clotThresholdI / 1000)),
+								() -> ServerBalance.clotThresholdI() / 1000)),
 						Line.of("jei.alaindustrial.energy_condenser.line3"))),
 				// MOD-504: the three finished crystals. They have no recipe of any kind — a full blank
 				// simply turns into one — so without this page the R key answers nothing on them, and the
@@ -187,7 +189,7 @@ public final class RecipeViewerInfo {
 						Line.of("jei.alaindustrial.kok_sagyz_root.line2"),
 						Line.of("jei.alaindustrial.kok_sagyz_root.line3"),
 						new Line("jei.alaindustrial.kok_sagyz_root.line4", List.of(
-								() -> Config.kokSagyzSandGrowthPercent)))));
+								() -> ServerBalance.kokSagyzSandGrowthPercent())))));
 	}
 
 	/**
@@ -210,7 +212,7 @@ public final class RecipeViewerInfo {
 				new Entry(ModContent.SOOT, "item.alaindustrial.soot", List.of(
 						Line.of("jei.alaindustrial.soot.line1"),
 						new Line("jei.alaindustrial.soot.line2", List.of(
-								() -> (int) Math.round(Config.oilSootChance * 100))),
+								() -> (int) Math.round(ServerBalance.oilSootChance() * 100))),
 						Line.of("jei.alaindustrial.soot.line3"))));
 	}
 
@@ -232,7 +234,7 @@ public final class RecipeViewerInfo {
 	}
 
 	/**
-	 * Builds the localised description lines for an entry, substituting the live {@link Config} values
+	 * Builds the localised description lines for an entry, substituting the server's live balance values
 	 * for each line's {@code %s} placeholders.
 	 */
 	public static List<Component> buildLines(Entry entry) {

@@ -2,18 +2,23 @@ package dev.alaindustrial;
 
 import dev.alaindustrial.client.AlaClientConfig;
 import dev.alaindustrial.client.ClientContentManifest;
-import dev.alaindustrial.client.hud.EnergyPackHud;
+import dev.alaindustrial.client.ClientPayloadManifest;
 import dev.alaindustrial.client.tooltip.MachineTooltips;
 import dev.alaindustrial.client.ModKeyMappings;
+import dev.alaindustrial.registry.ModAttachments;
+import dev.alaindustrial.registry.ModPlayerAttachments;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 /**
  * Client entrypoint for Industrialization. Binds machine menus to their screens and registers the
@@ -26,8 +31,6 @@ import net.minecraft.client.gui.screens.MenuScreens;
 public class IndustrializationClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
-		HudElementRegistry.addLast(Industrialization.id("root_inspection"), dev.alaindustrial.client.render.RootInspection::renderHud);
-		HudElementRegistry.addLast(Industrialization.id("concentrator_assembly"), dev.alaindustrial.client.render.ConcentratorSchematicRenderer::renderHud);
 		dev.alaindustrial.client.RootSoilModels.init();
 		initClientConfig();
 		registerFluidRendering();
@@ -37,25 +40,18 @@ public class IndustrializationClient implements ClientModInitializer {
 		registerMenuScreens();
 		registerTooltips();
 		registerHudAndKeys();
+		registerPayloadReceivers();
 		registerParticleProviders();
 		registerBlockColors();
 		registerClientHooks();
 		registerBlockEntityRenderers();
 		registerDevWindowTitle();
-		// MOD-133: client dashboard reads the local player's synced stats attachment through the seam.
-		dev.alaindustrial.stats.PlayerStatsClientCache.bind(() -> {
-			net.minecraft.client.player.LocalPlayer p = net.minecraft.client.Minecraft.getInstance().player;
-			return p == null ? dev.alaindustrial.stats.PlayerModStats.EMPTY
-					: p.getAttachedOrElse(dev.alaindustrial.stats.fabric.FabricPlayerStats.TYPE,
-							dev.alaindustrial.stats.PlayerModStats.EMPTY);
-		});
-		// MOD-483: the skill screen reads the same way — one synced attachment, no packet of its own.
-		dev.alaindustrial.skill.SkillClientCache.bind(() -> {
-			net.minecraft.client.player.LocalPlayer p = net.minecraft.client.Minecraft.getInstance().player;
-			return p == null ? dev.alaindustrial.skill.PlayerSkills.EMPTY
-					: p.getAttachedOrElse(dev.alaindustrial.skill.fabric.FabricPlayerSkills.TYPE,
-							dev.alaindustrial.skill.PlayerSkills.EMPTY);
-		});
+		// MOD-133/MOD-483: the dashboard and the skill screen read the local player's synced attachments
+		// through their client caches — one loop over the shared list (MOD-708).
+		for (ModPlayerAttachments.PlayerAttachmentDef<?> def
+				: ModPlayerAttachments.PLAYER_ATTACHMENTS) {
+			bindClientCache(def);
+		}
 
 		Industrialization.LOGGER.info("Industrialization client initialized.");
 	}
@@ -86,51 +82,31 @@ public class IndustrializationClient implements ClientModInitializer {
 	}
 
 	/**
-	 * Registers oil's fluid model (MOD-238). The vanilla {@code FluidStateModelSet} hard-codes
-	 * water/lava only, so a custom fluid supplies its own {@code FluidModel.Unbaked} per loader —
-	 * here through Fabric's {@code FluidRenderingRegistry}; NeoForge uses
-	 * {@code RegisterFluidModelsEvent}. Overlay and tint are {@code null} exactly like vanilla lava:
-	 * the oil textures carry their colour themselves.
+	 * Registers every fluid model of the shared {@link ClientContentManifest#FLUID_MODELS} (MOD-238,
+	 * MOD-706) through Fabric's {@code FluidRenderingRegistry}; NeoForge replays the same list on its
+	 * {@code RegisterFluidModelsEvent}. A fluid with a flowing form registers the pair, one without (steam)
+	 * the single-fluid overload.
 	 */
+	/** Binds one attachment's client cache: a read that never installs the default (getAttachedOrElse). */
+	private static <T> void bindClientCache(ModPlayerAttachments.PlayerAttachmentDef<T> def) {
+		AttachmentType<T> type = ModAttachments.type(def);
+		def.bindClientCache().accept(() -> {
+			net.minecraft.client.player.LocalPlayer p = net.minecraft.client.Minecraft.getInstance().player;
+			return p == null ? def.empty() : p.getAttachedOrElse(type, def.empty());
+		});
+	}
+
 	private void registerFluidRendering() {
-		registerFluidModel(dev.alaindustrial.registry.ModFluids.OIL,
-				dev.alaindustrial.registry.ModFluids.FLOWING_OIL, "oil");
-		// MOD-251: the two distillation fractions, same registration shape as oil.
-		registerFluidModel(dev.alaindustrial.registry.ModFluids.DIESEL,
-				dev.alaindustrial.registry.ModFluids.FLOWING_DIESEL, "diesel");
-		registerFluidModel(dev.alaindustrial.registry.ModFluids.FUEL_OIL,
-				dev.alaindustrial.registry.ModFluids.FLOWING_FUEL_OIL, "fuel_oil");
-		// MOD-146/MOD-525: the organic chain's two fluids, same registration shape.
-		registerFluidModel(dev.alaindustrial.registry.ModFluids.BIOFUEL,
-				dev.alaindustrial.registry.ModFluids.FLOWING_BIOFUEL, "biofuel");
-		registerFluidModel(dev.alaindustrial.registry.ModFluids.NUTRIENT_SOLUTION,
-				dev.alaindustrial.registry.ModFluids.FLOWING_NUTRIENT_SOLUTION, "nutrient_solution");
-		// MOD-468: steam. Registered through the single-fluid overload — it has no flowing form, and
-		// without a model here every tank and pipe holding it would draw the missing-texture sprite.
-		registerFluidModel(dev.alaindustrial.registry.ModFluids.STEAM, "steam");
-	}
-
-	/** One still+flowing pair → its {@code FluidModel.Unbaked} built from {@code block/<name>_still|_flow}. */
-	private static void registerFluidModel(net.minecraft.world.level.material.FlowingFluid still,
-			net.minecraft.world.level.material.FlowingFluid flowing, String name) {
-		net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderingRegistry.register(still, flowing,
-				fluidModel(name));
-	}
-
-	/** A blockless fluid with no flowing form (steam) → the same model bound to that one fluid. */
-	private static void registerFluidModel(net.minecraft.world.level.material.Fluid fluid, String name) {
-		net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderingRegistry.register(fluid,
-				fluidModel(name));
-	}
-
-	/** One fluid's {@code FluidModel.Unbaked} built from {@code block/<name>_still|_flow}. */
-	private static net.minecraft.client.renderer.block.FluidModel.Unbaked fluidModel(String name) {
-		return new net.minecraft.client.renderer.block.FluidModel.Unbaked(
-				new net.minecraft.client.resources.model.sprite.Material(
-						Industrialization.id("block/" + name + "_still")),
-				new net.minecraft.client.resources.model.sprite.Material(
-						Industrialization.id("block/" + name + "_flow")),
-				null, null);
+		for (ClientContentManifest.FluidModelDef def : ClientContentManifest.FLUID_MODELS) {
+			net.minecraft.world.level.material.Fluid flowing = def.flowingFluid();
+			if (flowing == null) {
+				net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderingRegistry.register(
+						def.stillFluid(), def.model());
+			} else {
+				net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderingRegistry.register(
+						def.stillFluid(), flowing, def.model());
+			}
+		}
 	}
 
 	/**
@@ -178,60 +154,76 @@ public class IndustrializationClient implements ClientModInitializer {
 	}
 
 	/**
-	 * Registers the HUD elements (teleport fade, energy-pack + drill charge readouts), their key
-	 * mappings, and the client-side teleport payload receivers that feed them.
+	 * Registers the key mappings and the HUD layers from the shared {@link ClientContentManifest}
+	 * (MOD-706), plus the client-tick input steps and the world-leave reset. The payloads that feed the
+	 * HUD arrive through {@link #registerPayloadReceivers}.
 	 */
 	private void registerHudAndKeys() {
-		// Energy Pack charge readout (MOD-065): the mod's first HUD element and first key mapping.
-		// The drawing itself is loader-neutral (EnergyPackHud) — Fabric's HudElement and NeoForge's
+		// MOD-706: the key mappings and the HUD layers are ClientContentManifest lists, the same ones the
+		// NeoForge client replays. The drawing is loader-neutral — Fabric's HudElement and NeoForge's
 		// GuiLayer take the same (GuiGraphicsExtractor, DeltaTracker) pair.
-		KeyMappingHelper.registerKeyMapping(ModKeyMappings.TOGGLE_ENERGY_HUD);
-		KeyMappingHelper.registerKeyMapping(ModKeyMappings.TOGGLE_DRILL_HUD);
-		KeyMappingHelper.registerKeyMapping(ModKeyMappings.OPEN_PROFILE);
-		KeyMappingHelper.registerKeyMapping(ModKeyMappings.TOGGLE_STEP_ASSIST); // MOD-133 player dashboard
-		KeyMappingHelper.registerKeyMapping(ModKeyMappings.TOGGLE_DRILL_COLUMN); // MOD-482 column bore
+		for (net.minecraft.client.KeyMapping mapping : ClientContentManifest.KEY_MAPPINGS) {
+			KeyMappingHelper.registerKeyMapping(mapping);
+		}
 		ClientTickEvents.END_CLIENT_TICK.register(client -> ModKeyMappings.handleInput());
 		// Jetpack thrust/glide (MOD-148) — player motion is client-authoritative, so the velocity
 		// change lives in this end-of-tick step; the server burns the EU on its own input view.
 		ClientTickEvents.END_CLIENT_TICK.register(client -> dev.alaindustrial.client.JetpackFlight.clientTick());
-		// Teleport screen fade (MOD-106). Registered first so the readouts below stay legible over it —
-		// and addLast keeps it under vanilla's own overlays, which a jump has no business hiding.
-		HudElementRegistry.addLast(Industrialization.id("teleport_fade"),
-				dev.alaindustrial.client.hud.TeleportFadeHud::render);
-		net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.registerGlobalReceiver(
-				dev.alaindustrial.network.TeleportFadePayload.TYPE,
-				(payload, context) -> context.client().execute(
-						() -> dev.alaindustrial.client.hud.TeleportFadeHud.receive(payload.strength())));
 		// Leaving a world drops the client state that belongs to it (MOD-106 fade, MOD-513 archive record,
 		// MOD-665 analyzer trace) — one shared list, the NeoForge counterpart hangs off LoggingOut.
 		net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents.DISCONNECT.register(
 				(handler, client) -> dev.alaindustrial.client.ClientDisconnectReset.run());
-		net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.registerGlobalReceiver(
-				dev.alaindustrial.network.ArchiveRecordPayload.TYPE,
-				(payload, context) -> context.client().execute(
-						() -> dev.alaindustrial.client.guide.ArchiveRecordClient.receive(payload.record())));
-		net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.registerGlobalReceiver(
-				dev.alaindustrial.network.TeleportNoticePayload.TYPE,
-				(payload, context) -> context.client().execute(
-						() -> dev.alaindustrial.client.hud.TeleportNotice.receive(payload.message())));
-
-		HudElementRegistry.addLast(Industrialization.id("energy_pack_hud"), EnergyPackHud::render);
-		// Electric Drill charge readout (MOD-079) — same toggle/key as the pack, stacks below it.
-		HudElementRegistry.addLast(Industrialization.id("electric_drill_hud"),
-				dev.alaindustrial.client.hud.ElectricDrillHud::render);
+		// In list order, which is drawing order: the readouts stay legible over the teleport fade.
+		for (ClientContentManifest.HudLayerDef def : ClientContentManifest.HUD_LAYERS) {
+			switch (def.placement()) {
+				case LAST -> HudElementRegistry.addLast(Industrialization.id(def.id()), def.renderer()::render);
+			}
+		}
 	}
 
-	/** Registers the green-flame particle provider for the Enriched Uranium Torch (MOD-085). */
+	/**
+	 * Registers one {@code ClientPlayNetworking} receiver per entry of the shared
+	 * {@link ClientPayloadManifest#HANDLERS} (MOD-706) — the client half of every clientbound payload;
+	 * NeoForge reaches the same list from its payload handler. Each entry keeps the hand-off its
+	 * hand-written receiver had: {@code QUEUED} through {@code client().execute}, {@code INLINE} straight
+	 * from the receiver (Fabric already calls it on the client thread; see the manifest's class doc).
+	 */
+	private void registerPayloadReceivers() {
+		ClientPayloadManifest.Registrar registrar = new ClientPayloadManifest.Registrar() {
+			@Override
+			public <T extends CustomPacketPayload> void receiver(ClientPayloadManifest.ClientHandlerDef<T> def) {
+				ClientPlayNetworking.registerGlobalReceiver(def.type(), (payload, context) -> {
+					if (def.dispatch() == ClientPayloadManifest.Dispatch.QUEUED) {
+						context.client().execute(() -> def.receive(payload));
+					} else {
+						def.receive(payload);
+					}
+				});
+			}
+		};
+		for (ClientPayloadManifest.ClientHandlerDef<?> def : ClientPayloadManifest.HANDLERS) {
+			def.bindTo(registrar);
+		}
+	}
+
+	/**
+	 * Registers every particle provider of the shared {@link ClientContentManifest#PARTICLE_PROVIDERS}
+	 * (MOD-085, MOD-706); NeoForge replays the same list on its {@code RegisterParticleProvidersEvent}.
+	 */
 	private void registerParticleProviders() {
-		// MOD-085: green flame particle for the Enriched Uranium Torch. Reuses the vanilla FlameParticle
-		// provider (like soul_fire_flame) — the green colour comes entirely from the particle's own texture
-		// (assets/alaindustrial/particles/enriched_uranium_flame.json), no custom particle class or tint.
-		net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry.getInstance().register(
-				dev.alaindustrial.registry.ModParticles.ENRICHED_URANIUM_FLAME,
-				net.minecraft.client.particle.FlameParticle.Provider::new);
-		net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry.getInstance().register(
-				dev.alaindustrial.registry.ModParticles.NUTRIENT_SPRAY,
-				dev.alaindustrial.client.particle.NutrientSprayParticle.Provider::new);
+		ClientContentManifest.ParticleRegistrar registrar = new ClientContentManifest.ParticleRegistrar() {
+			@Override
+			public <T extends net.minecraft.core.particles.ParticleOptions> void register(
+					net.minecraft.core.particles.ParticleType<T> type,
+					java.util.function.Function<net.minecraft.client.particle.SpriteSet,
+							net.minecraft.client.particle.ParticleProvider<T>> factory) {
+				net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry.getInstance().register(
+						type, factory::apply);
+			}
+		};
+		for (ClientContentManifest.ParticleProviderDef<?> def : ClientContentManifest.PARTICLE_PROVIDERS) {
+			def.bindTo(registrar);
+		}
 	}
 
 	/**

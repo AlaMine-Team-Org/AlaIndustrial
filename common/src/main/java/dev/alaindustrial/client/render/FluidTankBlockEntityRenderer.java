@@ -15,7 +15,6 @@ import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.sprite.SpriteGetter;
 import net.minecraft.client.resources.model.sprite.SpriteId;
@@ -109,91 +108,64 @@ public final class FluidTankBlockEntityRenderer
 	}
 
 	private static void renderGlass(PoseStack.Pose pose, VertexConsumer out, TextureAtlasSprite sprite, int light) {
-		renderGlassFace(pose, out, sprite, light, 0, 0, -1,
+		// Each pane wound both ways: the translucent sheet culls back faces.
+		QuadEmitter quads = new QuadEmitter(pose, out, light).sprite(sprite);
+		quads.quadBothSides(0, 0, -1,
 				GLASS_MIN, GLASS_MIN, GLASS_MIN, GLASS_MAX, GLASS_MIN, GLASS_MIN,
-				GLASS_MAX, GLASS_MAX, GLASS_MIN, GLASS_MIN, GLASS_MAX, GLASS_MIN);
-		renderGlassFace(pose, out, sprite, light, 0, 0, 1,
-				GLASS_MIN, GLASS_MAX, GLASS_MAX, GLASS_MAX, GLASS_MAX, GLASS_MAX,
-				GLASS_MAX, GLASS_MIN, GLASS_MAX, GLASS_MIN, GLASS_MIN, GLASS_MAX);
-		renderGlassFace(pose, out, sprite, light, -1, 0, 0,
-				GLASS_MIN, GLASS_MIN, GLASS_MAX, GLASS_MIN, GLASS_MIN, GLASS_MIN,
-				GLASS_MIN, GLASS_MAX, GLASS_MIN, GLASS_MIN, GLASS_MAX, GLASS_MAX);
-		renderGlassFace(pose, out, sprite, light, 1, 0, 0,
-				GLASS_MAX, GLASS_MAX, GLASS_MAX, GLASS_MAX, GLASS_MAX, GLASS_MIN,
-				GLASS_MAX, GLASS_MIN, GLASS_MIN, GLASS_MAX, GLASS_MIN, GLASS_MAX);
-	}
-
-	private static void renderGlassFace(PoseStack.Pose pose, VertexConsumer out, TextureAtlasSprite sprite,
-			int light, float nx, float ny, float nz,
-			float ax, float ay, float az, float bx, float by, float bz,
-			float cx, float cy, float cz, float dx, float dy, float dz) {
-		quad(pose, out, sprite, -1, light, nx, ny, nz,
-				ax, ay, az, bx, by, bz, cx, cy, cz, dx, dy, dz,
+				GLASS_MAX, GLASS_MAX, GLASS_MIN, GLASS_MIN, GLASS_MAX, GLASS_MIN,
 				0, 1, 1, 1, 1, 0, 0, 0);
-		quad(pose, out, sprite, -1, light, -nx, -ny, -nz,
-				dx, dy, dz, cx, cy, cz, bx, by, bz, ax, ay, az,
-				0, 0, 1, 0, 1, 1, 0, 1);
+		quads.quadBothSides(0, 0, 1,
+				GLASS_MIN, GLASS_MAX, GLASS_MAX, GLASS_MAX, GLASS_MAX, GLASS_MAX,
+				GLASS_MAX, GLASS_MIN, GLASS_MAX, GLASS_MIN, GLASS_MIN, GLASS_MAX,
+				0, 1, 1, 1, 1, 0, 0, 0);
+		quads.quadBothSides(-1, 0, 0,
+				GLASS_MIN, GLASS_MIN, GLASS_MAX, GLASS_MIN, GLASS_MIN, GLASS_MIN,
+				GLASS_MIN, GLASS_MAX, GLASS_MIN, GLASS_MIN, GLASS_MAX, GLASS_MAX,
+				0, 1, 1, 1, 1, 0, 0, 0);
+		quads.quadBothSides(1, 0, 0,
+				GLASS_MAX, GLASS_MAX, GLASS_MAX, GLASS_MAX, GLASS_MAX, GLASS_MIN,
+				GLASS_MAX, GLASS_MIN, GLASS_MIN, GLASS_MAX, GLASS_MIN, GLASS_MAX,
+				0, 1, 1, 1, 1, 0, 0, 0);
 	}
 
 	private static void renderPrism(PoseStack.Pose pose, VertexConsumer out, TextureAtlasSprite sprite,
 			int color, int light, float top) {
+		QuadEmitter quads = new QuadEmitter(pose, out, light).sprite(sprite).color(color);
 		float sideV = Math.max(0.0F, 1.0F - (top - BOTTOM));
-		quad(pose, out, sprite, color, light, 0, 0, -1,
+		quads.quad(0, 0, -1,
 				MIN, BOTTOM, MIN, MAX, BOTTOM, MIN, MAX, top, MIN, MIN, top, MIN,
 				0, 1, 1, 1, 1, sideV, 0, sideV);
-		quad(pose, out, sprite, color, light, 0, 0, 1,
+		quads.quad(0, 0, 1,
 				MIN, top, MAX, MAX, top, MAX, MAX, BOTTOM, MAX, MIN, BOTTOM, MAX,
 				0, sideV, 1, sideV, 1, 1, 0, 1);
-		quad(pose, out, sprite, color, light, -1, 0, 0,
+		quads.quad(-1, 0, 0,
 				MIN, BOTTOM, MAX, MIN, BOTTOM, MIN, MIN, top, MIN, MIN, top, MAX,
 				0, 1, 1, 1, 1, sideV, 0, sideV);
-		quad(pose, out, sprite, color, light, 1, 0, 0,
+		quads.quad(1, 0, 0,
 				MAX, top, MAX, MAX, top, MIN, MAX, BOTTOM, MIN, MAX, BOTTOM, MAX,
 				0, sideV, 1, sideV, 1, 1, 0, 1);
 		// The translucent sheet culls back faces. Submit the four walls in reverse winding as well,
 		// otherwise the wall facing the camera disappears from one side of the tank.
-		quad(pose, out, sprite, color, light, 0, 0, 1,
+		quads.quad(0, 0, 1,
 				MIN, top, MIN, MAX, top, MIN, MAX, BOTTOM, MIN, MIN, BOTTOM, MIN,
 				0, sideV, 1, sideV, 1, 1, 0, 1);
-		quad(pose, out, sprite, color, light, 0, 0, -1,
+		quads.quad(0, 0, -1,
 				MIN, BOTTOM, MAX, MAX, BOTTOM, MAX, MAX, top, MAX, MIN, top, MAX,
 				0, 1, 1, 1, 1, sideV, 0, sideV);
-		quad(pose, out, sprite, color, light, 1, 0, 0,
+		quads.quad(1, 0, 0,
 				MIN, top, MAX, MIN, top, MIN, MIN, BOTTOM, MIN, MIN, BOTTOM, MAX,
 				0, sideV, 1, sideV, 1, 1, 0, 1);
-		quad(pose, out, sprite, color, light, -1, 0, 0,
+		quads.quad(-1, 0, 0,
 				MAX, BOTTOM, MAX, MAX, BOTTOM, MIN, MAX, top, MIN, MAX, top, MAX,
 				0, 1, 1, 1, 1, sideV, 0, sideV);
 		// Keep both windings for the horizontal surface too. The first quad is visible from
 		// inside/below; the second is the actual upward-facing surface seen through the tank lid.
-		quad(pose, out, sprite, color, light, 0, -1, 0,
+		quads.quad(0, -1, 0,
 				MIN, top, MIN, MAX, top, MIN, MAX, top, MAX, MIN, top, MAX,
 				0, 0, 1, 0, 1, 1, 0, 1);
-		quad(pose, out, sprite, color, light, 0, 1, 0,
+		quads.quad(0, 1, 0,
 				MIN, top, MAX, MAX, top, MAX, MAX, top, MIN, MIN, top, MIN,
 				0, 1, 1, 1, 1, 0, 0, 0);
-	}
-
-	private static void quad(PoseStack.Pose pose, VertexConsumer out, TextureAtlasSprite sprite,
-			int color, int light, float nx, float ny, float nz,
-			float ax, float ay, float az, float bx, float by, float bz,
-			float cx, float cy, float cz, float dx, float dy, float dz,
-			float ua, float va, float ub, float vb, float uc, float vc, float ud, float vd) {
-		vertex(pose, out, sprite, color, light, nx, ny, nz, ax, ay, az, ua, va);
-		vertex(pose, out, sprite, color, light, nx, ny, nz, bx, by, bz, ub, vb);
-		vertex(pose, out, sprite, color, light, nx, ny, nz, cx, cy, cz, uc, vc);
-		vertex(pose, out, sprite, color, light, nx, ny, nz, dx, dy, dz, ud, vd);
-	}
-
-	private static void vertex(PoseStack.Pose pose, VertexConsumer out, TextureAtlasSprite sprite,
-			int color, int light, float nx, float ny, float nz,
-			float x, float y, float z, float u, float v) {
-		out.addVertex(pose, x, y, z)
-				.setColor(color)
-				.setUv(sprite.getU(u), sprite.getV(v))
-				.setOverlay(OverlayTexture.NO_OVERLAY)
-				.setLight(light)
-				.setNormal(pose, nx, ny, nz);
 	}
 
 	public static final class State extends BlockEntityRenderState {

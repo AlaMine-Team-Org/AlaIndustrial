@@ -215,7 +215,7 @@ public final class ReactorMeltdown {
 	/**
 	 * Marks a block as about to go: flame, smoke and a hiss, at that block and nowhere else.
 	 *
-	 * <p>Runs on the tick the victim is chosen, {@code Config.reactorMeltWarnTicks} before anything
+	 * <p>Runs on the tick the victim is chosen, {@code ReactorConfig.reactorMeltWarnTicks} before anything
 	 * actually changes.
 	 */
 	public static void telegraph(ServerLevel level, BlockPos at) {

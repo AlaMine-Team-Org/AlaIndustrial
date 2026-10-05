@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.compat.client.Poses;
 import dev.alaindustrial.entity.StockDisplayFrameEntity;
 import java.util.Locale;
 import net.minecraft.client.gui.Font;
@@ -121,8 +122,8 @@ public class StockDisplayFrameRenderer extends ItemFrameRenderer<StockDisplayFra
 			xRot = -90 * direction.getAxisDirection().getStep();
 			yRot = 180.0F;
 		}
-		poseStack.mulPose(Axis.XP.rotationDegrees(xRot));
-		poseStack.mulPose(Axis.YP.rotationDegrees(yRot));
+		Poses.rotate(poseStack, Axis.XP.rotationDegrees(xRot));
+		Poses.rotate(poseStack, Axis.YP.rotationDegrees(yRot));
 
 		// Own frame geometry instead of the (cleared) vanilla frameModel: the same element boxes and
 		// UVs as vanilla models/block/template_item_frame.json, but the border samples the mod's
@@ -148,7 +149,7 @@ public class StockDisplayFrameRenderer extends ItemFrameRenderer<StockDisplayFra
 		// while the count is shown, the item moves up and shrinks to clear the bottom strip.
 		if (!state.item.isEmpty()) {
 			poseStack.pushPose();
-			poseStack.mulPose(Axis.ZP.rotationDegrees(state.rotation * 360.0F / 8.0F));
+			Poses.rotate(poseStack, Axis.ZP.rotationDegrees(state.rotation * 360.0F / 8.0F));
 			if (showCount) {
 				poseStack.translate(0.0F, ITEM_RAISE, 0.0F);
 				poseStack.scale(ITEM_SCALE_WITH_COUNT, ITEM_SCALE_WITH_COUNT, ITEM_SCALE_WITH_COUNT);
@@ -168,7 +169,7 @@ public class StockDisplayFrameRenderer extends ItemFrameRenderer<StockDisplayFra
 		// offset direction as the wall sign's TEXT_OFFSET (verified against StandingSignRenderer).
 		if (showCount) {
 			Font font = this.getFont();
-			poseStack.mulPose(Axis.YP.rotationDegrees(180.0F));
+			Poses.rotate(poseStack, Axis.YP.rotationDegrees(180.0F));
 			poseStack.translate(0.0F, TEXT_Y, 0.03F);
 			poseStack.scale(TEXT_SCALE, -TEXT_SCALE, TEXT_SCALE);
 			FormattedCharSequence text =
@@ -188,94 +189,59 @@ public class StockDisplayFrameRenderer extends ItemFrameRenderer<StockDisplayFra
 	 */
 	private static void renderFrameGeometry(PoseStack.Pose pose, VertexConsumer buffer,
 			TextureAtlasSprite wood, TextureAtlasSprite back, int light) {
+		QuadEmitter quads = new QuadEmitter(pose, buffer, light);
 		// Backboard (3,3,15.5)-(13,13,16): the visible face is north; south sits against the wall.
-		face(pose, buffer, back, light, Direction.NORTH, 3, 3, 15.5F, 13, 13, 16, 3, 3, 13, 13);
-		face(pose, buffer, back, light, Direction.SOUTH, 3, 3, 15.5F, 13, 13, 16, 3, 3, 13, 13);
+		pixelFace(quads, back, Direction.NORTH, 3, 3, 15.5F, 13, 13, 16, 3, 3, 13, 13);
+		pixelFace(quads, back, Direction.SOUTH, 3, 3, 15.5F, 13, 13, 16, 3, 3, 13, 13);
 		// Bottom bar (2,2,15)-(14,3,16).
-		bar(pose, buffer, wood, light, 2, 2, 15, 14, 3, 16,
+		bar(quads, wood, 2, 2, 15, 14, 3, 16,
 				new float[]{2, 13, 14, 14}, new float[]{2, 13, 14, 14},
 				new float[]{2, 15, 14, 16}, new float[]{2, 0, 14, 1},
 				new float[]{15, 13, 16, 14}, new float[]{0, 13, 1, 14});
 		// Top bar (2,13,15)-(14,14,16).
-		bar(pose, buffer, wood, light, 2, 13, 15, 14, 14, 16,
+		bar(quads, wood, 2, 13, 15, 14, 14, 16,
 				new float[]{2, 2, 14, 3}, new float[]{2, 2, 14, 3},
 				new float[]{2, 15, 14, 16}, new float[]{2, 0, 14, 1},
 				new float[]{15, 2, 16, 3}, new float[]{0, 2, 1, 3});
 		// Left bar (2,3,15)-(3,13,16) — no up/down faces in the vanilla template.
-		face(pose, buffer, wood, light, Direction.NORTH, 2, 3, 15, 3, 13, 16, 13, 3, 14, 13);
-		face(pose, buffer, wood, light, Direction.SOUTH, 2, 3, 15, 3, 13, 16, 2, 3, 3, 13);
-		face(pose, buffer, wood, light, Direction.WEST, 2, 3, 15, 3, 13, 16, 15, 3, 16, 13);
-		face(pose, buffer, wood, light, Direction.EAST, 2, 3, 15, 3, 13, 16, 0, 3, 1, 13);
+		pixelFace(quads, wood, Direction.NORTH, 2, 3, 15, 3, 13, 16, 13, 3, 14, 13);
+		pixelFace(quads, wood, Direction.SOUTH, 2, 3, 15, 3, 13, 16, 2, 3, 3, 13);
+		pixelFace(quads, wood, Direction.WEST, 2, 3, 15, 3, 13, 16, 15, 3, 16, 13);
+		pixelFace(quads, wood, Direction.EAST, 2, 3, 15, 3, 13, 16, 0, 3, 1, 13);
 		// Right bar (13,3,15)-(14,13,16).
-		face(pose, buffer, wood, light, Direction.NORTH, 13, 3, 15, 14, 13, 16, 2, 3, 3, 13);
-		face(pose, buffer, wood, light, Direction.SOUTH, 13, 3, 15, 14, 13, 16, 13, 3, 14, 13);
-		face(pose, buffer, wood, light, Direction.WEST, 13, 3, 15, 14, 13, 16, 15, 3, 16, 13);
-		face(pose, buffer, wood, light, Direction.EAST, 13, 3, 15, 14, 13, 16, 0, 3, 1, 13);
+		pixelFace(quads, wood, Direction.NORTH, 13, 3, 15, 14, 13, 16, 2, 3, 3, 13);
+		pixelFace(quads, wood, Direction.SOUTH, 13, 3, 15, 14, 13, 16, 13, 3, 14, 13);
+		pixelFace(quads, wood, Direction.WEST, 13, 3, 15, 14, 13, 16, 15, 3, 16, 13);
+		pixelFace(quads, wood, Direction.EAST, 13, 3, 15, 14, 13, 16, 0, 3, 1, 13);
 	}
 
 	/** A horizontal bar with all six faces (n/s/up/down/w/e UV rects in template order). */
-	private static void bar(PoseStack.Pose pose, VertexConsumer buffer, TextureAtlasSprite sprite, int light,
+	private static void bar(QuadEmitter quads, TextureAtlasSprite sprite,
 			float x1, float y1, float z1, float x2, float y2, float z2,
 			float[] n, float[] s, float[] up, float[] down, float[] w, float[] e) {
-		face(pose, buffer, sprite, light, Direction.NORTH, x1, y1, z1, x2, y2, z2, n[0], n[1], n[2], n[3]);
-		face(pose, buffer, sprite, light, Direction.SOUTH, x1, y1, z1, x2, y2, z2, s[0], s[1], s[2], s[3]);
-		face(pose, buffer, sprite, light, Direction.UP, x1, y1, z1, x2, y2, z2, up[0], up[1], up[2], up[3]);
-		face(pose, buffer, sprite, light, Direction.DOWN, x1, y1, z1, x2, y2, z2, down[0], down[1], down[2], down[3]);
-		face(pose, buffer, sprite, light, Direction.WEST, x1, y1, z1, x2, y2, z2, w[0], w[1], w[2], w[3]);
-		face(pose, buffer, sprite, light, Direction.EAST, x1, y1, z1, x2, y2, z2, e[0], e[1], e[2], e[3]);
+		pixelFace(quads, sprite, Direction.NORTH, x1, y1, z1, x2, y2, z2, n[0], n[1], n[2], n[3]);
+		pixelFace(quads, sprite, Direction.SOUTH, x1, y1, z1, x2, y2, z2, s[0], s[1], s[2], s[3]);
+		pixelFace(quads, sprite, Direction.UP, x1, y1, z1, x2, y2, z2, up[0], up[1], up[2], up[3]);
+		pixelFace(quads, sprite, Direction.DOWN, x1, y1, z1, x2, y2, z2, down[0], down[1], down[2], down[3]);
+		pixelFace(quads, sprite, Direction.WEST, x1, y1, z1, x2, y2, z2, w[0], w[1], w[2], w[3]);
+		pixelFace(quads, sprite, Direction.EAST, x1, y1, z1, x2, y2, z2, e[0], e[1], e[2], e[3]);
 	}
 
 	/**
-	 * One box face with vanilla block-model UV orientation (u left→right on screen, v top→bottom;
-	 * screen right = {@code -faceNormal × up}). Coordinates and UVs in 16ths; vertices are emitted
-	 * counter-clockwise as seen from outside the face.
+	 * One box face in the template's units — coordinates and UVs in 16ths — laid out by
+	 * {@link QuadEmitter#cubeFace} (vanilla block-model corner order and UV rule) and shaded by the side
+	 * it faces, the way a baked block model is.
 	 */
-	private static void face(PoseStack.Pose pose, VertexConsumer buffer, TextureAtlasSprite sprite, int light,
-			Direction dir, float x1, float y1, float z1, float x2, float y2, float z2,
-			float u1, float v1, float u2, float v2) {
+	private static void pixelFace(QuadEmitter quads, TextureAtlasSprite sprite, Direction dir,
+			float x1, float y1, float z1, float x2, float y2, float z2, float u1, float v1, float u2, float v2) {
 		float shade = switch (dir) {
 			case NORTH, SOUTH -> SHADE_NS;
 			case WEST, EAST -> SHADE_WE;
 			case UP -> SHADE_UP;
 			case DOWN -> SHADE_DOWN;
 		};
-		// Corner order: TL, BL, BR, TR (CCW from outside); uv per corner follows.
-		switch (dir) {
-			case NORTH -> quad(pose, buffer, sprite, light, shade, 0, 0, -1,
-					x2, y2, z1, x2, y1, z1, x1, y1, z1, x1, y2, z1, u1, v1, u2, v2);
-			case SOUTH -> quad(pose, buffer, sprite, light, shade, 0, 0, 1,
-					x1, y2, z2, x1, y1, z2, x2, y1, z2, x2, y2, z2, u1, v1, u2, v2);
-			case WEST -> quad(pose, buffer, sprite, light, shade, -1, 0, 0,
-					x1, y2, z1, x1, y1, z1, x1, y1, z2, x1, y2, z2, u1, v1, u2, v2);
-			case EAST -> quad(pose, buffer, sprite, light, shade, 1, 0, 0,
-					x2, y2, z2, x2, y1, z2, x2, y1, z1, x2, y2, z1, u1, v1, u2, v2);
-			case UP -> quad(pose, buffer, sprite, light, shade, 0, 1, 0,
-					x1, y2, z1, x1, y2, z2, x2, y2, z2, x2, y2, z1, u1, v1, u2, v2);
-			case DOWN -> quad(pose, buffer, sprite, light, shade, 0, -1, 0,
-					x1, y1, z2, x1, y1, z1, x2, y1, z1, x2, y1, z2, u1, v1, u2, v2);
-		}
-	}
-
-	/** TL/BL/BR/TR corners; uv rect (u1,v1)-(u2,v2) maps TL→(u1,v1), BR→(u2,v2). All in 16ths. */
-	private static void quad(PoseStack.Pose pose, VertexConsumer buffer, TextureAtlasSprite sprite,
-			int light, float shade, float nx, float ny, float nz,
-			float ax, float ay, float az, float bx, float by, float bz,
-			float cx, float cy, float cz, float dx, float dy, float dz,
-			float u1, float v1, float u2, float v2) {
-		vertex(pose, buffer, ax, ay, az, sprite.getU(u1 / 16), sprite.getV(v1 / 16), light, shade, nx, ny, nz);
-		vertex(pose, buffer, bx, by, bz, sprite.getU(u1 / 16), sprite.getV(v2 / 16), light, shade, nx, ny, nz);
-		vertex(pose, buffer, cx, cy, cz, sprite.getU(u2 / 16), sprite.getV(v2 / 16), light, shade, nx, ny, nz);
-		vertex(pose, buffer, dx, dy, dz, sprite.getU(u2 / 16), sprite.getV(v1 / 16), light, shade, nx, ny, nz);
-	}
-
-	private static void vertex(PoseStack.Pose pose, VertexConsumer buffer, float x, float y, float z,
-			float u, float v, int light, float shade, float nx, float ny, float nz) {
-		buffer.addVertex(pose, x / 16, y / 16, z / 16)
-				.setColor(shade, shade, shade, 1.0F)
-				.setUv(u, v)
-				.setOverlay(OverlayTexture.NO_OVERLAY)
-				.setLight(light)
-				.setNormal(pose, nx, ny, nz);
+		quads.sprite(sprite).shade(shade).cubeFace(dir, x1 / 16, y1 / 16, z1 / 16, x2 / 16, y2 / 16, z2 / 16,
+				u1 / 16, v1 / 16, u2 / 16, v2 / 16);
 	}
 
 	/** Exact below 10 000, then abbreviated: 12345 → "12.3k", 3400000 → "3.4M". */

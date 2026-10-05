@@ -1,28 +1,22 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.CanningMachineBlockEntity;
 import dev.alaindustrial.registry.ModSounds;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import dev.alaindustrial.client.ServerBalance;
+import dev.alaindustrial.core.tooltip.HasMachineTooltip;
+import dev.alaindustrial.core.tooltip.MachineTooltipSpec;
 
-public class CanningMachineBlock extends LitMachineBlock implements MachineHumProvider {
-	public static final MapCodec<CanningMachineBlock> CODEC = simpleCodec(CanningMachineBlock::new);
-
+public class CanningMachineBlock extends LitMachineBlock implements MachineHumProvider, HasMachineTooltip {
 	public CanningMachineBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override
@@ -40,5 +34,13 @@ public class CanningMachineBlock extends LitMachineBlock implements MachineHumPr
 	@Override
 	public Supplier<SoundEvent> humSound() {
 		return ModSounds.CANNING_MACHINE_HUM;
+	}
+
+	/** Hover tooltip of this block's item (MOD-716, ADR-040). */
+	@Override
+	public MachineTooltipSpec machineTooltip() {
+		return MachineTooltipSpec.processing(ServerBalance::machineEuPerTickEffective,
+				() -> ServerBalance.scaledDuration(ServerBalance.canningMachineDuration()),
+				ServerBalance::machineBuffer);
 	}
 }

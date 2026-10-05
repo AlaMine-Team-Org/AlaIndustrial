@@ -1,15 +1,17 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import dev.alaindustrial.client.ServerBalance;
+import dev.alaindustrial.core.tooltip.HasMachineTooltip;
+import dev.alaindustrial.core.tooltip.MachineTooltipSpec;
+import java.util.List;
 
 /**
  * Energy storage block. Single-axis IO (MOD-006): the {@code FACING} (front) face is the energy
@@ -18,16 +20,9 @@ import net.minecraft.world.level.block.state.BlockState;
  * draws an arm only toward the front and back faces, never toward the four sides (which would show
  * a misleading "energy goes here" arm without any EU ever flowing).
  */
-public class BatteryBoxBlock extends HorizontalMachineBlock {
-	public static final MapCodec<BatteryBoxBlock> CODEC = simpleCodec(BatteryBoxBlock::new);
-
+public class BatteryBoxBlock extends HorizontalMachineBlock implements HasMachineTooltip {
 	public BatteryBoxBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override
@@ -53,5 +48,15 @@ public class BatteryBoxBlock extends HorizontalMachineBlock {
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
 			BlockEntityType<T> type) {
 		return machineTicker(level);
+	}
+
+	/** Hover tooltip of this block's item (MOD-716, ADR-040). */
+	@Override
+	public MachineTooltipSpec machineTooltip() {
+		// The tier is a basic line here, after the capacity — it shows before [SHIFT] is pressed.
+		return new MachineTooltipSpec(null,
+				List.of(MachineTooltipSpec.stat("capacity", ServerBalance::batteryBoxBuffer),
+						MachineTooltipSpec.Tier.LV.line()),
+				List.of(MachineTooltipSpec.text("tooltip.alaindustrial.battery_box_io", MachineTooltipSpec.Tone.GRAY)));
 	}
 }

@@ -1,5 +1,6 @@
 package dev.alaindustrial.skill;
 
+import dev.alaindustrial.attachment.PlayerAttachmentAccessor;
 import java.util.function.UnaryOperator;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -14,20 +15,14 @@ import net.minecraft.server.level.ServerPlayer;
  */
 public final class SkillStore {
 
-	/** Loader-bound bridge to the actual attachment get/set on a {@link ServerPlayer}. */
-	public interface Accessor {
-		PlayerSkills get(ServerPlayer player);
-
-		void set(ServerPlayer player, PlayerSkills skills);
-	}
-
-	private static Accessor accessor;
+	/** Loader-bound bridge to the actual attachment get/set — the one accessor each loader writes (MOD-708). */
+	private static PlayerAttachmentAccessor<PlayerSkills> accessor;
 
 	private SkillStore() {
 	}
 
 	/** Called once per loader during init, before any skill is read or written. */
-	public static void bind(Accessor impl) {
+	public static void bind(PlayerAttachmentAccessor<PlayerSkills> impl) {
 		accessor = impl;
 	}
 

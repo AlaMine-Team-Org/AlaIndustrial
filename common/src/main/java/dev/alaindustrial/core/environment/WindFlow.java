@@ -33,7 +33,7 @@ public final class WindFlow {
 	 * @param raining       global rain flag, as the mills read it (not biome precipitation)
 	 * @param thundering    global thunder flag; implies rain, checked first
 	 * @param ridgeY        end of the climb segment — {@link WindProfile#ridgeY} for the T1 branch
-	 * @param peakKmh       clear-weather speed at the cloud deck ({@code Config.windGaugePeakKmh})
+	 * @param peakKmh       clear-weather speed at the cloud deck ({@code GeneratorConfig.windGaugePeakKmh})
 	 */
 	public static int readingTenths(int y, int seaLevel, boolean openSky, boolean raining, boolean thundering,
 			int ridgeY, int cloudY, int deadY, float ridgeFactor, float traceFactor,

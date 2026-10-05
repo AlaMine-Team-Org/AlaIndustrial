@@ -2,7 +2,7 @@ package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.IncubatorBlock;
-import dev.alaindustrial.core.energy.EnergyRole;
+import dev.alaindustrial.block.entity.machine.SyncChannels;
 import dev.alaindustrial.core.fluid.FluidAmounts;
 import dev.alaindustrial.core.fluid.FluidHolder;
 import dev.alaindustrial.core.fluid.FluidPort;
@@ -22,12 +22,10 @@ import java.util.function.DoubleSupplier;
 import dev.alaindustrial.skill.SkillMachine;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -92,23 +90,6 @@ public final class IncubatorBlockEntity extends MachineBlockEntity implements Ov
 				// rather than wait out the idle-sleep window it went to sleep for.
 				wake();
 			});
-
-	/** ContainerData channels beyond the base four; -1 in DATA_MODE means "no chip inserted". */
-	public static final int DATA_MODE = 4;
-	public static final int DATA_CHARGE = 5;
-	public static final int DATA_FORMED = 6;
-	public static final int DATA_STATUS = 7;
-	/**
-	 * Number of {@code ContainerData} channels, and the single place that states it.
-	 *
-	 * <p>Hides {@link MachineBlockEntity#DATA_COUNT} so {@code IncubatorBlockEntity.DATA_COUNT} names
-	 * this machine's own width, for the bridge below and for {@link dev.alaindustrial.menu.IncubatorMenu}'s
-	 * client stub (MOD-235). The two used to be independent literals, and adding {@link #DATA_STATUS}
-	 * to one of them crashed the screen on open with an {@code ArrayIndexOutOfBoundsException}
-	 * (MOD-234) — which is exactly why the width is stated once.
-	 */
-	public static final int DATA_COUNT = 8;
-
 	private final RecipeManager.CachedCheck<ProcessingRecipeInput, AlaProcessingRecipe>[] checks = newChecks();
 
 	/** Remaining irradiation attempts on the ingot currently loaded; 0 means none is loaded. */
@@ -249,19 +230,20 @@ public final class IncubatorBlockEntity extends MachineBlockEntity implements Ov
 		// Running is gated on the roll-independent one — can the slot take a plain result at all —
 		// so nothing the player can see from outside (the lit texture) is a function of a roll that
 		// has not happened yet. The exact outcome is checked only once it exists, below.
-		boolean canWork = formed
+		boolean readyExceptEnergy = formed
 				&& recipe != null
-				&& energy.getAmount() >= euPerTick
 				&& charge > 0
 				&& hasRoomForPlainResult(recipe)
 				&& !(pendingOutcome != null && !hasRoomForOutcome(recipe));
+		boolean canWork = readyExceptEnergy && energy.getAmount() >= euPerTick;
 
 		setStatus(diagnose(mode, recipe, canWork));
 		updateLit(canWork);
 		// MOD-125/MOD-440: the statistics panel's "now" line is this tick's draw, 0 when stopped.
 		recordEuRate(canWork ? euPerTick : 0);
 
-		if (!canWork) {
+		// Paid, or run on what the buffer holds when only the supply is missing (Mechanic skills, MOD-712).
+		if (!spendOperationEnergy(level, euPerTick, canWork, readyExceptEnergy)) {
 			if (recipe == null && progress != 0) {
 				progress = 0;
 				setChanged();
@@ -269,7 +251,6 @@ public final class IncubatorBlockEntity extends MachineBlockEntity implements Ov
 			return IDLE_SLEEP_TICKS;
 		}
 
-		energy.drainInternal(euPerTick);
 		if (progress == 0) {
 			// An attempt begins. The bath is charged once, here, and this attempt keeps the length it
 			// just bought — recomputing it every tick would make a tank that ran dry halfway stretch a
@@ -440,14 +421,12 @@ public final class IncubatorBlockEntity extends MachineBlockEntity implements Ov
 		}
 		items.get(INPUT_SLOT).shrink(1);
 		spendCharge();
-		// MOD-125/MOD-440: the attempt is the operation — the input is processed whatever the dice say.
-		recordItemProcessed();
+		// MOD-125/MOD-440: the attempt is the operation — the input is processed whatever the dice say; only
+		// a success earns its EU as XP (MOD-133).
+		completeOperation(level, outcome == MutationRoll.Outcome.SUCCESS ? euSpent : 0L);
 
 		switch (outcome) {
-			case SUCCESS -> {
-				addTo(OUTPUT_SLOT, gradedResult(recipe));
-				creditUsefulWork(level, euSpent);
-			}
+			case SUCCESS -> addTo(OUTPUT_SLOT, gradedResult(recipe));
 			case SLAG -> addTo(OUTPUT_SLOT, new ItemStack(ModContent.IRRADIATED_SLAG.get()));
 			case FAILURE -> {
 				// The input is gone and nothing takes its place — the honest cost of a miss.
@@ -574,11 +553,6 @@ public final class IncubatorBlockEntity extends MachineBlockEntity implements Ov
 		return slot == OUTPUT_SLOT || slot == ASH_SLOT;
 	}
 
-	@Override
-	public EnergyRole energyRoleForFace(Direction face) {
-		return facingAwareRole(face, EnergyRole.IN);
-	}
-
 	/**
 	 * The base only watches slot 0 for the "input changed" reset, and slot 0 here is the chip — so
 	 * both the input and the chip are handled explicitly. Swapping either restarts the cycle.
@@ -622,45 +596,27 @@ public final class IncubatorBlockEntity extends MachineBlockEntity implements Ov
 		return value;
 	}
 
-	// ---------------------------------------------------------------- data + persistence
+	/**
+	 * GUI sync channels (MOD-712, BE-7): the base four, the chip's {@link IncubatorMode} (-1 with no chip;
+	 * derived, read-only), the fuel charge, the dome flag and the {@link IncubatorStatus} ordinal (these
+	 * three take a write).
+	 */
+	public enum Channel { ENERGY, CAPACITY, PROGRESS, MAX_PROGRESS, MODE, CHARGE, FORMED, STATUS }
 
-	private final ContainerData incubatorData = new ContainerData() {
-		@Override
-		public int get(int index) {
-			return switch (index) {
-				case DATA_MODE -> {
-					IncubatorMode mode = activeMode();
-					yield mode == null ? -1 : mode.ordinal();
-				}
-				case DATA_CHARGE -> charge;
-				case DATA_FORMED -> formed ? 1 : 0;
-				case DATA_STATUS -> status.ordinal();
-				default -> dataAccess.get(index);
-			};
-		}
-
-		@Override
-		public void set(int index, int value) {
-			switch (index) {
-				case DATA_MODE -> {
-					// Derived from the chip slot — nothing to store.
-				}
-				case DATA_CHARGE -> charge = value;
-				case DATA_FORMED -> formed = value != 0;
-				case DATA_STATUS -> status = IncubatorStatus.byOrdinal(value);
-				default -> dataAccess.set(index, value);
-			}
-		}
-
-		@Override
-		public int getCount() {
-			return DATA_COUNT;
-		}
-	};
+	/** Width of {@link #getDataAccess()}, which the menu's client stub sizes itself from (MOD-235). */
+	public static final int DATA_COUNT = Channel.values().length;
 
 	@Override
-	public ContainerData getDataAccess() {
-		return incubatorData;
+	protected SyncChannels createChannels() {
+		return channels(Channel.class)
+				.read(Channel.MODE, () -> {
+					IncubatorMode mode = activeMode();
+					return mode == null ? -1 : mode.ordinal();
+				})
+				.readWrite(Channel.CHARGE, () -> charge, value -> charge = value)
+				.readWrite(Channel.FORMED, () -> formed ? 1 : 0, value -> formed = value != 0)
+				.readWrite(Channel.STATUS, () -> status.ordinal(), value -> status = IncubatorStatus.byOrdinal(value))
+				.build();
 	}
 
 	@Override
@@ -683,8 +639,8 @@ public final class IncubatorBlockEntity extends MachineBlockEntity implements Ov
 	}
 
 	@Override
-	protected void loadAdditional(ValueInput input) {
-		super.loadAdditional(input);
+	protected void loadMachineData(ValueInput input) {
+		super.loadMachineData(input);
 		charge = input.getIntOr("Charge", 0);
 		formed = input.getBooleanOr("Formed", false);
 		// Absent in every world saved before MOD-605: the tank loads empty and the flag false, which is
@@ -710,11 +666,6 @@ public final class IncubatorBlockEntity extends MachineBlockEntity implements Ov
 	}
 
 	// ---------------------------------------------------------------- menu
-
-	@Override
-	public Component getDisplayName() {
-		return Component.translatable("block.alaindustrial.incubator");
-	}
 
 	@Override
 	public AbstractContainerMenu createMenu(int syncId, Inventory inventory, Player player) {

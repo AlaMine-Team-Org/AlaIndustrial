@@ -1,26 +1,19 @@
 package dev.alaindustrial.network.neoforge;
 
-import dev.alaindustrial.network.MachineStatsPayload;
-import dev.alaindustrial.network.NetworkAnalyzerPayload;
-import dev.alaindustrial.network.RepellerDomePayload;
-import dev.alaindustrial.network.TeleportFadePayload;
-import dev.alaindustrial.network.TeleportNoticePayload;
-import dev.alaindustrial.network.DrillColumnTogglePayload;
-import dev.alaindustrial.network.FluxweaveStepAssistPayload;
-import dev.alaindustrial.network.TeleportRenamePayload;
+import dev.alaindustrial.client.ClientPayloadManifest;
+import dev.alaindustrial.network.ModPayloads;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 /**
- * NeoForge payload registration + dispatch wiring for the Network Analyzer S2C payload (MOD-022
- * Phase 3). The payload record and its {@code StreamCodec} live in {@code common}
- * ({@link NetworkAnalyzerPayload}); this class is the NeoForge counterpart to the Fabric
- * {@code PayloadTypeRegistry.clientboundPlay().register(...)} call and the Fabric client receiver.
+ * NeoForge payload registration (MOD-022 Phase 3, MOD-706): replays the shared
+ * {@link ModPayloads#PAYLOADS} list on the mod-bus {@link RegisterPayloadHandlersEvent} — the counterpart
+ * of {@code IndustrializationFabric.registerNetworkPayloads}. Sending is handled separately by the
+ * neutral {@link dev.alaindustrial.network.NetworkDispatcher} ({@link NeoForgeNetworkDispatcher}).
  *
- * <p>Wired from {@code IndustrializationNeoForge} by adding {@link #register} as a listener for the
- * mod-bus {@link RegisterPayloadHandlersEvent}. Sending is handled separately by the neutral
- * {@link dev.alaindustrial.network.NetworkDispatcher} ({@link NeoForgeNetworkDispatcher}).
+ * <p>Wired from {@code IndustrializationNeoForge} by adding {@link #register} as a listener.
  */
 public final class NeoForgeNetwork {
 
@@ -28,76 +21,35 @@ public final class NeoForgeNetwork {
 	}
 
 	/**
-	 * Registers the S2C Network Analyzer payload on the {@code "1"} channel version. The client-side
-	 * receive handler ({@link NeoForgeNetworkClient#receive}) hops to the main thread via
-	 * {@code context.enqueueWork(...)} before touching client state, mirroring how the Fabric receiver
-	 * runs on the render thread. {@link NeoForgeNetworkClient} is a client-dist class referenced only
-	 * from inside the handler lambda, so it is never linked on a dedicated server.
+	 * Registers every payload on the {@link ModPayloads#PROTOCOL_VERSION} channel version. Every handler
+	 * hops to the main thread with {@code context.enqueueWork(...)} exactly as the hand-written lines did
+	 * (the registrar's default {@code HandlerThread.MAIN} wraps it once more; both were there before).
+	 * The client side — the shared {@link ClientPayloadManifest} — is reached only from inside the
+	 * clientbound handler lambda, so it and the client classes it names are never linked on a dedicated
+	 * server.
+	 *
+	 * <p>Loader asymmetry worth knowing: {@code IPayloadContext#player()} returns {@code Player} here,
+	 * while Fabric's context hands back a {@code ServerPlayer} — hence the cast, which is safe because a
+	 * serverbound payload is only ever handled with a server player.
 	 */
 	public static void register(RegisterPayloadHandlersEvent event) {
-		PayloadRegistrar registrar = event.registrar("1");
-		registrar.playToClient(NetworkAnalyzerPayload.TYPE, NetworkAnalyzerPayload.CODEC,
-				(payload, context) -> context.enqueueWork(() -> NeoForgeNetworkClient.receive(payload)));
-		// MOD-278: the repeller dome answer — personal, one per button press; the client toggles it.
-		registrar.playToClient(RepellerDomePayload.TYPE, RepellerDomePayload.CODEC,
-				(payload, context) -> context.enqueueWork(
-						() -> NeoForgeNetworkClient.receiveRepellerDome(payload)));
-		// MOD-125: one machine's career statistics, pushed from its open menu every 40 ticks.
-		registrar.playToClient(MachineStatsPayload.TYPE, MachineStatsPayload.CODEC,
-				(payload, context) -> context.enqueueWork(
-						() -> NeoForgeNetworkClient.receiveMachineStats(payload)));
-		// MOD-620: the reactor's core, stack by stack, pushed from an open controller screen at most once a second.
-		registrar.playToClient(dev.alaindustrial.network.ReactorZonePayload.TYPE,
-				dev.alaindustrial.network.ReactorZonePayload.CODEC,
-				(payload, context) -> context.enqueueWork(
-						() -> NeoForgeNetworkClient.receiveReactorZone(payload)));
-		// MOD-622: the reactor's event log, pushed from an open controller screen at most twice a second.
-		registrar.playToClient(dev.alaindustrial.network.ReactorLogPayload.TYPE,
-				dev.alaindustrial.network.ReactorLogPayload.CODEC,
-				(payload, context) -> context.enqueueWork(
-						() -> NeoForgeNetworkClient.receiveReactorLog(payload)));
-		// MOD-628: the teleporter remote's stations, pushed from an open remote screen at most once a second.
-		registrar.playToClient(dev.alaindustrial.network.TeleportStationsPayload.TYPE,
-				dev.alaindustrial.network.TeleportStationsPayload.CODEC,
-				(payload, context) -> context.enqueueWork(
-						() -> NeoForgeNetworkClient.receiveTeleportStations(payload)));
-		// Teleport screen-fade level (MOD-106) — one float per tick of a jump's last second. The client
-		// clears itself once the levels stop arriving, so a cancelled warmup needs no packet of its own.
-		registrar.playToClient(TeleportFadePayload.TYPE, TeleportFadePayload.CODEC,
-				(payload, context) -> context.enqueueWork(
-						() -> NeoForgeNetworkClient.receiveFade(payload)));
-		// Why a jump was refused (MOD-093) — shown inside the remote's screen, which covers the action
-		// bar the refusal would otherwise land on.
-		registrar.playToClient(TeleportNoticePayload.TYPE, TeleportNoticePayload.CODEC,
-				(payload, context) -> context.enqueueWork(
-						() -> NeoForgeNetworkClient.receiveNotice(payload)));
-		// MOD-513: the player's archive record for the guide book's first page — once per login.
-		registrar.playToClient(dev.alaindustrial.network.ArchiveRecordPayload.TYPE,
-				dev.alaindustrial.network.ArchiveRecordPayload.CODEC,
-				(payload, context) -> context.enqueueWork(
-						() -> NeoForgeNetworkClient.receiveArchiveRecord(payload)));
-		// The mod's first C2S payload (MOD-093): renaming a teleport point. Every other button on that
-		// screen rides vanilla's container-button packet, which needs no registration — only a name,
-		// being a string, needs a payload of our own.
-		//
-		// Loader asymmetry worth knowing: IPayloadContext#player() returns Player here, while Fabric's
-		// context hands back a ServerPlayer directly — hence the cast, which is safe because a
-		// serverbound payload is only ever handled with a server player.
-		registrar.playToServer(TeleportRenamePayload.TYPE, TeleportRenamePayload.CODEC,
-				(payload, context) -> context.enqueueWork(
-						() -> TeleportRenamePayload.handle(payload, (ServerPlayer) context.player())));
-		registrar.playToServer(FluxweaveStepAssistPayload.TYPE, FluxweaveStepAssistPayload.CODEC,
-				(payload, context) -> context.enqueueWork(
-						() -> FluxweaveStepAssistPayload.handle(payload, (ServerPlayer) context.player())));
-		// MOD-482: the column bore's on/off switch.
-		registrar.playToServer(DrillColumnTogglePayload.TYPE, DrillColumnTogglePayload.CODEC,
-				(payload, context) -> context.enqueueWork(
-						() -> DrillColumnTogglePayload.handle(payload, (ServerPlayer) context.player())));
-		// MOD-483: no clientbound half — the skills attachment mirrors itself to its owner.
-		registrar.playToServer(dev.alaindustrial.network.SkillActionPayload.TYPE,
-				dev.alaindustrial.network.SkillActionPayload.CODEC,
-				(payload, context) -> context.enqueueWork(
-						() -> dev.alaindustrial.network.SkillActionPayload.handle(
-								payload, (ServerPlayer) context.player())));
+		PayloadRegistrar registrar = event.registrar(ModPayloads.PROTOCOL_VERSION);
+		ModPayloads.Registrar replayer = new ModPayloads.Registrar() {
+			@Override
+			public <T extends CustomPacketPayload> void clientbound(ModPayloads.PayloadDef<T> def) {
+				registrar.playToClient(def.type(), def.codec(),
+						(payload, context) -> context.enqueueWork(() -> ClientPayloadManifest.receive(payload)));
+			}
+
+			@Override
+			public <T extends CustomPacketPayload> void serverbound(ModPayloads.PayloadDef<T> def) {
+				registrar.playToServer(def.type(), def.codec(),
+						(payload, context) -> context.enqueueWork(
+								() -> def.handle(payload, (ServerPlayer) context.player())));
+			}
+		};
+		for (ModPayloads.PayloadDef<?> def : ModPayloads.PAYLOADS) {
+			def.bindTo(replayer);
+		}
 	}
 }

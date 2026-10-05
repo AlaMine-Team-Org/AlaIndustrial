@@ -1,7 +1,6 @@
 package dev.alaindustrial.core.net;
 
 import dev.alaindustrial.core.NetworkTickGuard;
-import dev.alaindustrial.core.energy.GraphComponents;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.IdentityHashMap;
@@ -11,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.IntSupplier;
+import java.util.function.ToLongFunction;
 
 /**
  * The per-level graph bookkeeping shared by every network kind (MOD-401): the position index, the
@@ -284,6 +284,15 @@ public final class GraphNetworkManager<L, N, P> implements LevelStateHolder {
 	 * kind gets it whether or not its author knew about that failure mode.
 	 */
 	public void tickAll(L level) {
+		tickAll(level, ops::tick);
+	}
+
+	/**
+	 * {@link #tickAll(Object)} with the tick body given by the caller, for a manager that hands each network
+	 * a value built once for the whole pass (the energy manager's {@code NetworkBalance}, MOD-710). Budget,
+	 * cursor, isolation and telemetry are the same; only how one network ticks is the caller's.
+	 */
+	public void tickAll(L level, ToLongFunction<N> tick) {
 		LevelState<N, P> st = levels.get(level);
 		if (st == null || st.networks.isEmpty()) {
 			return;
@@ -300,7 +309,7 @@ public final class GraphNetworkManager<L, N, P> implements LevelStateHolder {
 			N net = all.get((st.tickCursor + visited) % size);
 			visited++;
 			if (ops.isAwake(net)) {
-				moved += NetworkTickGuard.tickIsolated(kind, () -> ops.tick(net));
+				moved += NetworkTickGuard.tickIsolated(kind, () -> tick.applyAsLong(net));
 				ticked++;
 				budget--;
 			}

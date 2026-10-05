@@ -66,6 +66,22 @@ public final class ShotFamilies {
                     "Statistics panel (MOD-125): docked left of the GUI with nothing printed over it, "
                             + "every row inside the frame, the close cross centred on its plate, and the "
                             + "no-chip state saying a chip is needed instead of showing an empty box")},
+            new Object[] {"gui_stats_modal_", new Family(ShotGroup.GUI, List.of("R-GUI-03"),
+                    "Statistics panel dragged over a screen's own control and clicked there (MOD-693): the "
+                            + "panel is drawn above the control with nothing of it printed on top, and the "
+                            + "window under it did not react — the Assembler still shows its Work tab")},
+            new Object[] {"gui_overlay_input_", new Family(ShotGroup.GUI, List.of("R-GUI-03"),
+                    "A click on the screen's own control while an overlay is open (MOD-716): the log line "
+                            + "[OVERLAY-INPUT] of this frame says whether the screen claimed the click and what "
+                            + "changed; the frame shows the control and the overlay in their drawing order — a "
+                            + "refactoring of the overlays must reproduce both exactly")},
+            new Object[] {"gui_status_", new Family(ShotGroup.GUI, List.of("R-GUI-01", "R-GUI-03"),
+                    "Blocking status line under a long locale (MOD-716): the caption names the state the "
+                            + "frame is labelled with, in the frame's language; whether it fits, wraps or runs "
+                            + "over the frame today is the baseline a status refactoring must reproduce")},
+            new Object[] {"gui_status_over_bar_", new Family(ShotGroup.GUI, List.of("R-GUI-01", "R-GUI-03"),
+                    "Status row drawn after the energy bar (MOD-716): a label that starts inside the bar "
+                            + "column is readable from its first letter — the bar's fill covers none of it")},
             new Object[] {"gui_solar_panel_", new Family(ShotGroup.GUI, List.of("R-GUI-03"),
                     "Solar panel readout: output and buffer match the light level the scene is set to "
                             + "(day / night / rain / partial shade)")},
@@ -127,6 +143,11 @@ public final class ShotFamilies {
             new Object[] {"incubator_", new Family(ShotGroup.BER, List.of("R-VIS-01", "R-VIS-04"),
                     "Incubator dome: the glass dome and its contents are drawn above the base, not "
                             + "floating or sunk into it")},
+            new Object[] {"ber_quads_", new Family(ShotGroup.BER, List.of("R-VIS-04"),
+                    "Hand-built block-entity quads (MOD-716): the water surface inside the tank, the "
+                            + "airlock panel closed and open, the glass stand under the bare cable and the "
+                            + "stock display frame with its ingot — every face present, shaded as in the "
+                            + "previous run, none inside out or missing")},
             new Object[] {"condenser_crystal", new Family(ShotGroup.BER, List.of("R-VIS-01"),
                     "Energy condenser crystal: the crystal is drawn once a clot is banked and is "
                             + "absent below tier I — its presence IS the readout that an item is "
@@ -137,6 +158,10 @@ public final class ShotFamilies {
                             + "dark spindle and its green core show between the vanes, and nothing pokes "
                             + "through the frame. The _side frame is the same rotor through the left "
                             + "window — front and side must frame it alike")},
+            new Object[] {"chest_crumbling", new Family(ShotGroup.BER, List.of("R-VIS-04"),
+                    "Break cracks on a renderer-only block (MOD-703): the iron chest in chest_crumbling is "
+                            + "covered by the stage-9 crack pattern on its lid and front, following the lid's "
+                            + "shape; the two _clean frames show the same chest with no cracks at all")},
 
             // ── Items ───────────────────────────────────────────────────────────────────────
             new Object[] {"item_", new Family(ShotGroup.ITEM, List.of("R-VIS-05"),
@@ -146,6 +171,10 @@ public final class ShotFamilies {
             new Object[] {"hud_", new Family(ShotGroup.ITEM, List.of("R-GUI-03"),
                     "Hotbar charge HUD: the bar under the item matches its stored EU and does not drift "
                             + "off the icon")},
+            new Object[] {"hud_stack_", new Family(ShotGroup.ITEM, List.of("R-GUI-03"),
+                    "HUD layer stack (MOD-706): the teleport fade darkens the world evenly and the Energy "
+                            + "Pack readout, registered after it, stays legible on top; the vanilla hotbar "
+                            + "and hearts still draw")},
 
             // ── Advancements ────────────────────────────────────────────────────────────────
             new Object[] {"adv_", new Family(ShotGroup.ADVANCEMENT, List.of("R-ADV-03"),

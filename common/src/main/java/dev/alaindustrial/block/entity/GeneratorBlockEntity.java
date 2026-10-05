@@ -1,12 +1,13 @@
 package dev.alaindustrial.block.entity;
 
-import dev.alaindustrial.Config;
+import dev.alaindustrial.compat.FurnaceFuel;
+import dev.alaindustrial.core.environment.GeneratorConfig;
 import dev.alaindustrial.skill.SkillMachine;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.menu.GeneratorMenu;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -31,7 +32,7 @@ public class GeneratorBlockEntity extends AbstractGeneratorBlockEntity implement
 	private int burnDuration;
 
 	public GeneratorBlockEntity(BlockPos pos, BlockState state) {
-		super(ModContent.GENERATOR_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT, Config.generatorBuffer,
+		super(ModContent.GENERATOR_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT, GeneratorConfig.generatorBuffer,
 				EnergyTier.LV.maxVoltage());
 	}
 
@@ -43,15 +44,14 @@ public class GeneratorBlockEntity extends AbstractGeneratorBlockEntity implement
 		// not wasted with no consumer drawing.
 		if (burnTime > 0 && room) {
 			burnTime--;
-			made = Config.fuelEuPerTick;
+			made = GeneratorConfig.fuelEuPerTick;
 		}
 		if (burnTime <= 0 && room) {
 			ItemStack fuel = items.get(FUEL_SLOT);
-			// MOD-498 — FuelValues#burnDuration(ItemStack) is deprecated by NeoForge only; vanilla does not
-			// deprecate it. The replacement NeoForge names, ItemStack#getBurnTime, is a NeoForge addition
-			// absent from vanilla, and this class is compiled for Fabric too, so it must use the vanilla form.
-			@SuppressWarnings("deprecation")
-			int duration = level.fuelValues().burnDuration(fuel);
+			// The line's fuel lookup (compat.FurnaceFuel); produce() runs on the server tick only.
+			int duration = level instanceof ServerLevel serverLevel
+					? FurnaceFuel.burnDuration(serverLevel, this, fuel)
+					: 0;
 			if (duration > 0) {
 				// MOD-483 Steady Hands: fuel lasts longer. Applied to the burn LENGTH rather than to
 				// EU/t, because a solar panel makes 1 EU/t and a percentage of one is zero.
@@ -77,10 +77,6 @@ public class GeneratorBlockEntity extends AbstractGeneratorBlockEntity implement
 		return made;
 	}
 
-	// MOD-498 — FuelValues#burnDuration(ItemStack) is deprecated by NeoForge only (vanilla does not
-	// deprecate it); its replacement, ItemStack#getBurnTime, is a NeoForge extension that does not exist
-	// in vanilla, and this class is shared code compiled for Fabric as well.
-	@SuppressWarnings("deprecation")
 	@Override
 	public boolean canPlaceItem(int slot, ItemStack stack) {
 		if (slot != FUEL_SLOT) {
@@ -91,15 +87,9 @@ public class GeneratorBlockEntity extends AbstractGeneratorBlockEntity implement
 		if (stack.is(net.minecraft.world.item.Items.LAVA_BUCKET)) {
 			return false;
 		}
-		// Reject non-fuel (R-GUI-02). Burn values are per-level; level can be null on the client /
-		// before placement — stay permissive there (the server re-validates).
-		Level level = getLevel();
-		return level == null || level.fuelValues().burnDuration(stack) > 0;
-	}
-
-	@Override
-	public Component getDisplayName() {
-		return Component.translatable("block.alaindustrial.generator");
+		// Reject non-fuel (R-GUI-02). What to answer without a level (client side, before placement) is
+		// the line's: see FurnaceFuel.isFuelOrUnknown.
+		return FurnaceFuel.isFuelOrUnknown(getLevel(), stack);
 	}
 
 	@Override
@@ -115,8 +105,8 @@ public class GeneratorBlockEntity extends AbstractGeneratorBlockEntity implement
 	}
 
 	@Override
-	protected void loadAdditional(ValueInput input) {
-		super.loadAdditional(input);
+	protected void loadMachineData(ValueInput input) {
+		super.loadMachineData(input);
 		burnTime = input.getIntOr("BurnTime", 0);
 		burnDuration = input.getIntOr("BurnDuration", 0);
 	}

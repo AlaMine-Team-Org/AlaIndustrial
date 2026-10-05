@@ -1,8 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
-import net.minecraft.world.level.block.BaseEntityBlock;
-
 /**
  * The reinforced fluid pipe (MOD-660): the ordinary fluid pipe in a shielding-alloy jacket, built to be
  * laid INSIDE a reactor room.
@@ -20,14 +17,7 @@ import net.minecraft.world.level.block.BaseEntityBlock;
  */
 public final class ReinforcedFluidPipeBlock extends FluidPipeBlock {
 
-	public static final MapCodec<ReinforcedFluidPipeBlock> CODEC = simpleCodec(ReinforcedFluidPipeBlock::new);
-
 	public ReinforcedFluidPipeBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 }

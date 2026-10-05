@@ -1,8 +1,8 @@
 package dev.alaindustrial.block.entity;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.core.reactor.ReactorConfig;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -25,7 +25,7 @@ public class ReactorOutletBlockEntity extends EnergyBlockEntity {
 
 	public ReactorOutletBlockEntity(BlockPos pos, BlockState state) {
 		super(ModContent.REACTOR_OUTLET_BE.get(), pos, state, EnergyTier.HV,
-				Config.reactorOutletBuffer, 0L, EnergyTier.HV.maxVoltage());
+				ReactorConfig.reactorOutletBuffer, 0L, EnergyTier.HV.maxVoltage());
 	}
 
 	/**

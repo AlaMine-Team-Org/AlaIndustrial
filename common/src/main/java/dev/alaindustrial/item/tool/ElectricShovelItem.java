@@ -1,29 +1,25 @@
 package dev.alaindustrial.item.tool;
 
+import dev.alaindustrial.item.ToolConfig;
 import dev.alaindustrial.item.energy.ItemEnergy;
 
-import dev.alaindustrial.Config;
-import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.compat.RightClickTransform;
 import java.util.List;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlotGroup;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.Tool;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
+import dev.alaindustrial.client.ServerBalance;
+import dev.alaindustrial.item.energy.PoweredToolTooltip;
 
 /**
  * Electric Shovel (MOD-338) — the earth-side member of the EU hand-tool line, after the
@@ -32,8 +28,8 @@ import net.minecraft.world.level.block.state.BlockState;
  * to hand speed with every drop intact rather than becoming dead weight.
  *
  * <p>Energy is not re-implemented (project rule 4): the charge lives in the shared
- * {@code pouch_energy} component through {@link ItemEnergy}, which gains one {@code capacity} /
- * {@code inputRate} branch for this class — so the Battery Box charge slot, a worn Energy Pack and the
+ * {@code pouch_energy} component through {@link ItemEnergy}, which reads this class's
+ * {@code PoweredItem} answers (MOD-707) — so the Battery Box charge slot, a worn Energy Pack and the
  * Charge Pad all charge it with no changes on their side.
  *
  * <h2>Why a hand-built {@code TOOL} component, and not {@code extends ShovelItem}</h2>
@@ -48,22 +44,14 @@ import net.minecraft.world.level.block.state.BlockState;
  * what {@code applyToolProperties} would have produced for a diamond shovel, minus the durability.
  *
  * <h2>Path-making and campfire dousing — kept, unlike the chainsaw's log stripping</h2>
- * The chainsaw had to give up log stripping because {@code AxeItem.STRIPPABLES} is
- * {@code protected static}. The shovel does <b>not</b> have to give up the equivalent, and
- * {@link #useOn} keeps it. {@code ShovelItem.useOn} was disassembled too, and it turns out to be
- * usable from outside:
- * <ul>
- * <li>it is {@code public}, and its bytecode contains no {@code aload_0} — it reads nothing from
- * {@code this}, only the {@link UseOnContext} and the static {@code FLATTENABLES} map;</li>
- * <li>the only thing it does to the stack is
- * {@code context.getItemInHand().hurtAndBreak(1, player, slot)}, and {@code hurtAndBreak} routes
- * through {@code processDurabilityChange}, whose first act is {@code if (!isDamageableItem()) return
- * 0;} — a no-op for a tool with no {@code MAX_DAMAGE}, which is precisely what this item is.</li>
- * </ul>
- * So delegating to the vanilla diamond shovel's {@code useOn} with our own context is safe and
- * behaviourally exact. It is also strictly better than re-implementing the table: {@code FLATTENABLES}
- * is a mutable {@code HashMap} that other mods extend, so delegation picks up modded flattenables and
- * any loader patch to that method, while a hardcoded copy would freeze the vanilla list.
+ * The chainsaw had to give up log stripping because {@code AxeItem.STRIPPABLES} was
+ * {@code protected static}. The shovel keeps the equivalent: its vanilla right-click conversions — grass,
+ * dirt, podzol, mycelium, coarse and rooted dirt into a dirt path, and dousing a lit campfire — are reached
+ * through {@link RightClickTransform#SHOVEL}: {@link #electricShovelProperties} declares the conversion and
+ * {@link #useOn} applies it. How vanilla carries a shovel's conversions (and whether dousing is one of them
+ * or a property of the campfire) is not the same on every Minecraft line; that difference lives in the
+ * facade, not here. The conversion cannot wear this tool out: its durability hit is a no-op on an item with
+ * no {@code MAX_DAMAGE}, which is precisely what this item is.
  *
  * <p>The interaction is deliberately <b>free</b> — it is not gated on EU the way the drill's torch
  * placement is. Making a path is something a wooden shovel does; charging for it would contradict the
@@ -71,19 +59,26 @@ import net.minecraft.world.level.block.state.BlockState;
  * discharged electric shovel strictly worse than a stick with a plank on it.
  *
  * <h2>EU behaviour — identical in shape to the drill and the chainsaw</h2>
+ * The line's contract, written once in {@link ElectricMiningToolItem} (MOD-707):
  * <ul>
  * <li>{@link #getDestroySpeed}: full {@code TOOL} speed while the shovel holds at least one block's
  * worth of EU; otherwise exactly {@code 1.0f}. That value is not an approximation —
  * {@code Player.getDestroySpeed} only applies Efficiency when the tool reports {@code > 1.0F}, so a
  * flat shovel is a plain hand and the enchantment cannot revive it.</li>
- * <li>{@link #mineBlock}: drains {@link Config#electricShovelEuPerBlock} per block actually dug,
+ * <li>{@link #mineBlock}: drains {@link ToolConfig#electricShovelEuPerBlock} per block actually dug,
  * server-side only, only for blocks with non-zero hardness (so genuinely instant-break blocks cost
  * nothing, just as they never wear a vanilla shovel — <b>a snow layer is not one of them</b>, see
- * {@link #mineBlock}), and only when there was enough EU to run at tool speed in the first place.
+ * below), and only when there was enough EU to run at tool speed in the first place.
  * Creative is dropped inside {@link ItemEnergy#spend} (MOD-081).</li>
  * </ul>
+ *
+ * <p><b>Snow layers are not free</b> (MOD-389 — the earlier wording here said they were):
+ * {@code Blocks.SNOW} is {@code .strength(0.1F)} in the 26.2 sources, so every layer costs the full
+ * per-block drain. Short grass ({@code .instabreak()}, {@code 0.0}) is genuinely free, but it is not a
+ * shovel block either. The gate reads {@code getDestroySpeed}, so the only free blocks are the ones with
+ * hardness exactly {@code 0.0}.
  */
-public class ElectricShovelItem extends Item {
+public class ElectricShovelItem extends ElectricMiningToolItem {
 
 	/** Digging speed on {@code #minecraft:mineable/shovel} — above a vanilla diamond shovel (8.0), because
 	 * the tool is crafted around one and should out-dig the shovel that goes into it. Matches the
@@ -114,10 +109,13 @@ public class ElectricShovelItem extends Item {
 	 * <p>{@code damagePerBlock = 0} means {@code super.mineBlock} never calls {@code hurtAndBreak} —
 	 * there is no durability to spend. {@code stacksTo(1)} is set explicitly because we skip
 	 * {@code durability(...)}, which is where a vanilla tool's max-stack-size of 1 normally comes from.
+	 *
+	 * <p>{@code RightClickTransform.SHOVEL.declare} is the other half of {@code Properties.shovel(...)} —
+	 * the half that carries path-making (see {@link RightClickTransform#declare}).
 	 */
 	public static Properties electricShovelProperties(Properties props) {
 		HolderGetter<Block> blocks = BuiltInRegistries.acquireBootstrapRegistrationLookup(BuiltInRegistries.BLOCK);
-		return props.stacksTo(1)
+		return RightClickTransform.SHOVEL.declare(props.stacksTo(1))
 				.component(DataComponents.TOOL, new Tool(
 						List.of(
 								Tool.Rule.deniesDrops(blocks.getOrThrow(BlockTags.INCORRECT_FOR_DIAMOND_TOOL)),
@@ -139,74 +137,24 @@ public class ElectricShovelItem extends Item {
 	// --- right-click: vanilla shovel interactions (dirt path, campfire dousing), free of charge ---
 
 	/**
-	 * Delegates to the vanilla diamond shovel's {@code useOn}, giving this tool the two interactions a
-	 * player expects from any shovel: turning grass/dirt/podzol/mycelium/rooted dirt into a dirt path,
-	 * and dousing a lit campfire. See the class javadoc for the disassembly that proves the delegation
-	 * is safe — {@code ShovelItem.useOn} touches no instance state and its {@code hurtAndBreak} call is
-	 * a no-op on an item without {@code MAX_DAMAGE}.
-	 *
-	 * <p>The receiver has to be {@code Items.DIAMOND_SHOVEL} rather than {@code super}: {@code useOn} is
-	 * virtual, and {@code Item.useOn} (our real superclass method) just returns {@code PASS}.
+	 * Applies the shovel conversion this item declares ({@link RightClickTransform#SHOVEL}): the
+	 * right-click a player expects from any shovel, most visibly turning grass into a dirt path. Free of
+	 * charge — see the class javadoc.
 	 */
 	@Override
 	public InteractionResult useOn(UseOnContext context) {
-		return Items.DIAMOND_SHOVEL.useOn(context);
+		return RightClickTransform.SHOVEL.apply(context);
 	}
 
-	// --- digging: full speed while charged, hand speed when flat (drops kept either way) ---
-
-	/**
-	 * Returns exactly {@code 1.0f} when the shovel cannot afford a block — see the class javadoc for why
-	 * the value must not be "slightly above 1.0". The mining tier and the drops still come from the
-	 * {@code TOOL} component either way, so a flat shovel keeps every block's drop; it is just slow.
-	 */
+	/** MOD-707: the energy numbers of this tool's tier; a higher tier of the same line overrides it. */
 	@Override
-	public float getDestroySpeed(ItemStack stack, BlockState state) {
-		if (ItemEnergy.get(stack) >= Config.electricShovelEuPerBlock) {
-			return super.getDestroySpeed(stack, state);
-		}
-		return 1.0f;
+	protected ElectricToolTier toolTier() {
+		return ElectricToolTier.SHOVEL;
 	}
 
-	/**
-	 * Drains EU for the block just dug. The two guards mirror vanilla's durability gate in
-	 * {@code Item.mineBlock}: {@code !isClientSide} because {@code mineBlock} runs on both sides and the
-	 * charge must only move on the server (the client picks the new value up from the synced
-	 * {@code pouch_energy} component), and non-zero hardness so instant-break blocks cost nothing.
-	 *
-	 * <p><b>Snow layers are not among them</b> (MOD-389 — the earlier wording here said they were):
-	 * {@code Blocks.SNOW} is {@code .strength(0.1F)} in the 26.2 sources, so every layer costs the full
-	 * per-block drain. Short grass ({@code .instabreak()}, {@code 0.0}) is genuinely free, but it is not a
-	 * shovel block either. The gate reads {@code getDestroySpeed}, so the only free blocks are the ones with
-	 * hardness exactly {@code 0.0}.
-	 */
+	/** Usage, then the charge (MOD-716, ADR-040). */
 	@Override
-	public boolean mineBlock(ItemStack stack, Level level, BlockState state, BlockPos pos, LivingEntity owner) {
-		if (!level.isClientSide() && state.getDestroySpeed(level, pos) != 0.0f
-				&& ItemEnergy.get(stack) >= Config.electricShovelEuPerBlock) {
-			ItemEnergy.spend(stack, Config.electricShovelEuPerBlock, owner);
-		}
-		return super.mineBlock(stack, level, state, pos, owner);
-	}
-
-	// --- item bar shows the EU charge in the LV tier colour (numbers are in the tooltip) ---
-
-	@Override
-	public boolean isBarVisible(ItemStack stack) {
-		return true;
-	}
-
-	@Override
-	public int getBarWidth(ItemStack stack) {
-		long capacity = ItemEnergy.capacity(stack);
-		if (capacity <= 0) {
-			return 0;
-		}
-		return (int) Math.min(MAX_BAR_WIDTH, MAX_BAR_WIDTH * ItemEnergy.get(stack) / capacity);
-	}
-
-	@Override
-	public int getBarColor(ItemStack stack) {
-		return EnergyTier.LV.color();
+	public PoweredToolTooltip toolTooltip() {
+		return PoweredToolTooltip.of("electric_shovel", List.of(ServerBalance::electricShovelEuPerBlock));
 	}
 }

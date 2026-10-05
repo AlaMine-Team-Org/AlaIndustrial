@@ -1,7 +1,11 @@
 package dev.alaindustrial.gametest;
 
+import static dev.alaindustrial.gametest.AlaGameTestHelper.survivalPlayer;
+import static dev.alaindustrial.gametest.GameTestDrops.countDrops;
+
 import dev.alaindustrial.block.TrellisBlock;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -9,19 +13,14 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.FarmlandBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-
-import static dev.alaindustrial.gametest.AlaGameTestHelper.survivalPlayer;
 
 /**
  * Loader-neutral gametest bodies for the trellis (MOD-280). The Fabric {@code @GameTest} suite
@@ -53,6 +52,43 @@ import static dev.alaindustrial.gametest.AlaGameTestHelper.survivalPlayer;
  */
 public final class TrellisScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(TrellisScenarios::fun01PlantsSeed, "cotton_plants_seed")
+						.fabricId("TrellisGameTest", "fun01_plantsSeed").ticks(20, 40),
+				RosterEntry.of(TrellisScenarios::neg01KeepsSeedOnPlantedTrellis, "cotton_keeps_seed_on_planted")
+						.fabricId("TrellisGameTest", "neg01_keepsSeedOnPlantedTrellis").ticks(20, 40),
+				RosterEntry.of(TrellisScenarios::fun02GrowsOnMoistFarmland, "cotton_grows_on_moist_farmland")
+						.fabricId("TrellisGameTest", "fun02_growsOnMoistFarmland").ticks(20, 40),
+				RosterEntry.of(TrellisScenarios::neg02PausesOnDryFarmland, "cotton_pauses_on_dry_farmland")
+						.fabricId("TrellisGameTest", "neg02_pausesOnDryFarmland").ticks(20, 40),
+				RosterEntry.of(TrellisScenarios::fun03HarvestKeepsPlant, "cotton_harvest_keeps_plant")
+						.fabricId("TrellisGameTest", "fun03_harvestKeepsPlant").ticks(20, 40),
+				RosterEntry.of(TrellisScenarios::neg03UnripeYieldsNothing, "cotton_unripe_yields_nothing")
+						.fabricId("TrellisGameTest", "neg03_unripeYieldsNothing").ticks(20, 40),
+				RosterEntry.of(TrellisScenarios::reg01FarmlandSurvivesUnderTrellis, "cotton_farmland_survives")
+						.fabricId("TrellisGameTest", "reg01_farmlandSurvivesUnderTrellis").ticks(20, 40),
+				RosterEntry.of(TrellisScenarios::reg02BreakDropsExactlyOneTrellis, "cotton_break_drops_one")
+						.fabricId("TrellisGameTest", "reg02_breakDropsExactlyOneTrellis").ticks(20, 40),
+				RosterEntry.of(TrellisScenarios::reg03HarvestWorksWithSeedsInHand, "cotton_harvest_with_seeds_in_hand")
+						.fabricId("TrellisGameTest", "reg03_harvestWorksWithSeedsInHand").ticks(20, 40),
+				RosterEntry.of(TrellisScenarios::reg04PlantedTrellisReturnsSeed, "cotton_planted_returns_seed")
+						.fabricId("TrellisGameTest", "reg04_plantedTrellisReturnsSeed").ticks(20, 40),
+				RosterEntry.of(TrellisScenarios::neg04BareTrellisReturnsNoSeed, "cotton_bare_returns_no_seed")
+						.fabricId("TrellisGameTest", "neg04_bareTrellisReturnsNoSeed").ticks(20, 40),
+				RosterEntry.of(TrellisScenarios::fun04BonemealAdvancesOneStage, "cotton_bonemeal_one_stage")
+						.fabricId("TrellisGameTest", "fun04_bonemealAdvancesOneStage").ticks(20, 40),
+				RosterEntry.of(TrellisScenarios::neg05BonemealRefusesDrySoil, "cotton_bonemeal_refuses_dry")
+						.fabricId("TrellisGameTest", "neg05_bonemealRefusesDrySoil").ticks(20, 40),
+				RosterEntry.of(TrellisScenarios::fun05SecondHarvestCycle, "cotton_second_harvest_cycle")
+						.fabricId("TrellisGameTest", "fun05_secondHarvestCycle").ticks(20, 60),
+				RosterEntry.of(TrellisScenarios::reg05BreakingUpperHalfDropsOne, "cotton_break_upper_drops_one")
+						.fabricId("TrellisGameTest", "reg05_breakingUpperHalfDropsOne").ticks(20, 40));
+
+		private Roster() {}
+	}
+
 	private TrellisScenarios() {
 	}
 
@@ -65,7 +101,11 @@ public final class TrellisScenarios {
 
 	// ---------------------------------------------------------------- planting
 
-	/** Right-clicking a seed onto a bare trellis plants it and spends exactly one seed. */
+	/**
+	 * Right-clicking a seed onto a bare trellis plants it and spends exactly one seed.
+	 *
+	 * @implements TC-TRELLIS-001-FUN01 — a seed plants on a bare trellis and spends exactly one.
+	 */
 	public static void fun01PlantsSeed(GameTestHelper helper) {
 		ServerPlayer player = survivalPlayer(helper);
 		placeTrellis(helper, 7);
@@ -86,7 +126,11 @@ public final class TrellisScenarios {
 		helper.succeed();
 	}
 
-	/** A trellis that already carries a plant must not silently eat another seed. */
+	/**
+	 * A trellis that already carries a plant must not silently eat another seed.
+	 *
+	 * @implements TC-TRELLIS-001-NEG01 — clicking a planted trellis eats no seed.
+	 */
 	public static void neg01KeepsSeedOnPlantedTrellis(GameTestHelper helper) {
 		ServerPlayer player = survivalPlayer(helper);
 		placeTrellis(helper, 7);
@@ -109,7 +153,11 @@ public final class TrellisScenarios {
 
 	// ---------------------------------------------------------------- growth
 
-	/** On moist farmland the plant advances through the real random tick. */
+	/**
+	 * On moist farmland the plant advances through the real random tick.
+	 *
+	 * @implements TC-TRELLIS-001-FUN02 — the plant advances on moist farmland through the random tick.
+	 */
 	public static void fun02GrowsOnMoistFarmland(GameTestHelper helper) {
 		placeTrellis(helper, 7);
 		setAge(helper, POS, 1);
@@ -123,7 +171,11 @@ public final class TrellisScenarios {
 		helper.succeed();
 	}
 
-	/** Dry soil pauses growth — the stage must be kept, not lost, and the plant must stay alive. */
+	/**
+	 * Dry soil pauses growth — the stage must be kept, not lost, and the plant must stay alive.
+	 *
+	 * @implements TC-TRELLIS-001-NEG02 — dry soil pauses growth without losing the stage or the plant.
+	 */
 	public static void neg02PausesOnDryFarmland(GameTestHelper helper) {
 		placeTrellis(helper, 0);
 		setAge(helper, POS, 2);
@@ -143,7 +195,11 @@ public final class TrellisScenarios {
 
 	// ---------------------------------------------------------------- harvest
 
-	/** Picking a ripe bush yields fibre, leaves the block standing and winds it back to mature. */
+	/**
+	 * Picking a ripe bush yields fibre, leaves the block standing and winds it back to mature.
+	 *
+	 * @implements TC-TRELLIS-001-FUN03 — harvesting yields fibre, keeps the plant, resets it to mature.
+	 */
 	public static void fun03HarvestKeepsPlant(GameTestHelper helper) {
 		ServerPlayer player = survivalPlayer(helper);
 		placeTrellis(helper, 7);
@@ -161,14 +217,18 @@ public final class TrellisScenarios {
 					+ ", expected " + TrellisBlock.AGE_MATURE);
 			return;
 		}
-		if (countDrops(helper, ModContent.COTTON_FIBER.get()) < 1) {
+		if (countDrops(helper, POS, ModContent.COTTON_FIBER.get()) < 1) {
 			helper.fail("harvest dropped no cotton fibre");
 			return;
 		}
 		helper.succeed();
 	}
 
-	/** An unripe bush must not pay out and must not change state. */
+	/**
+	 * An unripe bush must not pay out and must not change state.
+	 *
+	 * @implements TC-TRELLIS-001-NEG03 — an unripe bush yields nothing and does not change state.
+	 */
 	public static void neg03UnripeYieldsNothing(GameTestHelper helper) {
 		ServerPlayer player = survivalPlayer(helper);
 		placeTrellis(helper, 7);
@@ -177,7 +237,7 @@ public final class TrellisScenarios {
 		player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
 		useOn(helper, player, POS);
 
-		if (countDrops(helper, ModContent.COTTON_FIBER.get()) != 0) {
+		if (countDrops(helper, POS, ModContent.COTTON_FIBER.get()) != 0) {
 			helper.fail("an unripe bush dropped fibre");
 			return;
 		}
@@ -190,7 +250,11 @@ public final class TrellisScenarios {
 
 	// ---------------------------------------------------------------- regression guards
 
-	/** Farmland must survive under the (collidable) trellis, or the plant loses its soil and dies. */
+	/**
+	 * Farmland must survive under the (collidable) trellis, or the plant loses its soil and dies.
+	 *
+	 * @implements TC-TRELLIS-001-REG01 — farmland survives under the collidable trellis.
+	 */
 	public static void reg01FarmlandSurvivesUnderTrellis(GameTestHelper helper) {
 		placeTrellis(helper, 7);
 		BlockPos soil = POS.below();
@@ -212,14 +276,18 @@ public final class TrellisScenarios {
 		helper.succeed();
 	}
 
-	/** Breaking the structure must drop exactly ONE trellis — both halves used to pay out. */
+	/**
+	 * Breaking the structure must drop exactly ONE trellis — both halves used to pay out.
+	 *
+	 * @implements TC-TRELLIS-001-REG02 — breaking the structure drops exactly one trellis.
+	 */
 	public static void reg02BreakDropsExactlyOneTrellis(GameTestHelper helper) {
 		ServerPlayer player = survivalPlayer(helper);
 		placeTrellis(helper, 7);
 
 		player.gameMode.destroyBlock(helper.absolutePos(POS));
 
-		int dropped = countDrops(helper, ModContent.TRELLIS_ITEM.get());
+		int dropped = countDrops(helper, POS, ModContent.TRELLIS_ITEM.get());
 		if (dropped != 1) {
 			helper.fail("breaking the trellis dropped " + dropped + " items, expected exactly 1");
 			return;
@@ -231,7 +299,11 @@ public final class TrellisScenarios {
 		helper.succeed();
 	}
 
-	/** The harvest must work with seeds in hand — PASS used to swallow the interaction. */
+	/**
+	 * The harvest must work with seeds in hand — PASS used to swallow the interaction.
+	 *
+	 * @implements TC-TRELLIS-001-REG03 — the harvest works with seeds in hand.
+	 */
 	public static void reg03HarvestWorksWithSeedsInHand(GameTestHelper helper) {
 		ServerPlayer player = survivalPlayer(helper);
 		placeTrellis(helper, 7);
@@ -241,7 +313,7 @@ public final class TrellisScenarios {
 		player.setItemInHand(InteractionHand.MAIN_HAND, seeds);
 		useOn(helper, player, POS);
 
-		if (countDrops(helper, ModContent.COTTON_FIBER.get()) < 1) {
+		if (countDrops(helper, POS, ModContent.COTTON_FIBER.get()) < 1) {
 			helper.fail("no fibre dropped while holding seeds — useItemOn swallowed the interaction");
 			return;
 		}
@@ -252,7 +324,11 @@ public final class TrellisScenarios {
 		helper.succeed();
 	}
 
-	/** A planted trellis returns its seed on break; a bare one must not (that would mint seeds). */
+	/**
+	 * A planted trellis returns its seed on break; a bare one must not (that would mint seeds).
+	 *
+	 * @implements TC-TRELLIS-001-REG04 — a planted trellis returns its seed when broken.
+	 */
 	public static void reg04PlantedTrellisReturnsSeed(GameTestHelper helper) {
 		ServerPlayer player = survivalPlayer(helper);
 		placeTrellis(helper, 7);
@@ -260,22 +336,26 @@ public final class TrellisScenarios {
 
 		player.gameMode.destroyBlock(helper.absolutePos(POS));
 
-		if (countDrops(helper, ModContent.COTTON_SEEDS.get()) != 1) {
+		if (countDrops(helper, POS, ModContent.COTTON_SEEDS.get()) != 1) {
 			helper.fail("breaking a planted trellis returned "
-					+ countDrops(helper, ModContent.COTTON_SEEDS.get()) + " seeds, expected 1");
+					+ countDrops(helper, POS, ModContent.COTTON_SEEDS.get()) + " seeds, expected 1");
 			return;
 		}
 		helper.succeed();
 	}
 
-	/** Breaking a BARE trellis must return no seed — otherwise sticks + string mint seeds for free. */
+	/**
+	 * Breaking a BARE trellis must return no seed — otherwise sticks + string mint seeds for free.
+	 *
+	 * @implements TC-TRELLIS-001-NEG04 — a bare trellis returns no seed (no free-seed exploit).
+	 */
 	public static void neg04BareTrellisReturnsNoSeed(GameTestHelper helper) {
 		ServerPlayer player = survivalPlayer(helper);
 		placeTrellis(helper, 7);
 
 		player.gameMode.destroyBlock(helper.absolutePos(POS));
 
-		int seeds = countDrops(helper, ModContent.COTTON_SEEDS.get());
+		int seeds = countDrops(helper, POS, ModContent.COTTON_SEEDS.get());
 		if (seeds != 0) {
 			helper.fail("breaking a bare trellis minted " + seeds + " seed(s)");
 			return;
@@ -285,7 +365,11 @@ public final class TrellisScenarios {
 
 	// ---------------------------------------------------------------- bone meal
 
-	/** Bone meal buys exactly one stage — never a jump straight to ripe. */
+	/**
+	 * Bone meal buys exactly one stage — never a jump straight to ripe.
+	 *
+	 * @implements TC-TRELLIS-001-FUN04 — bone meal advances exactly one stage.
+	 */
 	public static void fun04BonemealAdvancesOneStage(GameTestHelper helper) {
 		placeTrellis(helper, 7);
 		setAge(helper, POS, AGE_SET_TEST);
@@ -303,6 +387,8 @@ public final class TrellisScenarios {
 	/**
 	 * Bone meal must obey the same water/light gate as ordinary growth. Without this a player could farm
 	 * cotton forever on dry farmland, which contradicts what both specs promise.
+	 *
+	 * @implements TC-TRELLIS-001-NEG05 — bone meal obeys the water/light gate.
 	 */
 	public static void neg05BonemealRefusesDrySoil(GameTestHelper helper) {
 		placeTrellis(helper, 0);
@@ -320,7 +406,11 @@ public final class TrellisScenarios {
 
 	// ---------------------------------------------------------------- more coverage
 
-	/** The fruiting cycle repeats: a second harvest works after the plant ripens again. */
+	/**
+	 * The fruiting cycle repeats: a second harvest works after the plant ripens again.
+	 *
+	 * @implements TC-TRELLIS-001-FUN05 — the fruiting cycle repeats for a second harvest.
+	 */
 	public static void fun05SecondHarvestCycle(GameTestHelper helper) {
 		ServerPlayer player = survivalPlayer(helper);
 		placeTrellis(helper, 7);
@@ -328,7 +418,7 @@ public final class TrellisScenarios {
 		player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
 
 		useOn(helper, player, POS);
-		int afterFirst = countDrops(helper, ModContent.COTTON_FIBER.get());
+		int afterFirst = countDrops(helper, POS, ModContent.COTTON_FIBER.get());
 		if (afterFirst < 1) {
 			helper.fail("first harvest produced nothing");
 			return;
@@ -342,7 +432,7 @@ public final class TrellisScenarios {
 		}
 		useOn(helper, player, POS);
 
-		if (countDrops(helper, ModContent.COTTON_FIBER.get()) <= afterFirst) {
+		if (countDrops(helper, POS, ModContent.COTTON_FIBER.get()) <= afterFirst) {
 			helper.fail("second harvest produced nothing — the fruiting cycle does not repeat");
 			return;
 		}
@@ -353,6 +443,8 @@ public final class TrellisScenarios {
 	 * Breaking the UPPER half must still pay exactly one trellis. That path runs through
 	 * {@code updateShape → destroyBlock}, not through the player-break path, so the {@code half=lower}
 	 * loot condition is the only thing keeping it at one — and the only thing keeping it above zero.
+	 *
+	 * @implements TC-TRELLIS-001-REG05 — breaking the upper half also drops exactly one trellis.
 	 */
 	public static void reg05BreakingUpperHalfDropsOne(GameTestHelper helper) {
 		ServerPlayer player = survivalPlayer(helper);
@@ -360,7 +452,7 @@ public final class TrellisScenarios {
 
 		player.gameMode.destroyBlock(helper.absolutePos(POS.above()));
 
-		int dropped = countDrops(helper, ModContent.TRELLIS_ITEM.get());
+		int dropped = countDrops(helper, POS, ModContent.TRELLIS_ITEM.get());
 		if (dropped != 1) {
 			helper.fail("breaking the upper half dropped " + dropped + " trellises, expected exactly 1");
 			return;
@@ -427,34 +519,6 @@ public final class TrellisScenarios {
 			}
 			state.randomTick(level, abs, random);
 		}
-	}
-
-	/**
-	 * Total count of {@code item} dropped by THIS rig — {@code assertItemEntityPresent} can only answer
-	 * present/absent, and these scenarios need the exact number.
-	 *
-	 * <p>The radius is deliberate, and both extremes were tried and rejected on the NeoForge lane:
-	 * <ul>
-	 *   <li>{@code inflate(6.0)} was too wide — gametests sit only ~6 blocks apart, so the box reached
-	 *       into the neighbouring test and counted <em>its</em> drops ("a planted trellis returned 2
-	 *       seeds" was this rig plus the one next door, each seeing the other's seed). It stayed green
-	 *       on Fabric, whose layout is sparser — a loader-specific false pass.</li>
-	 *   <li>{@link GameTestHelper#getBounds()} was too tight — the NeoForge lane registers these bodies
-	 *       from code with a minimal structure, whose bounds do not cover the rig at all, so every count
-	 *       came back 0.</li>
-	 * </ul>
-	 * A radius of 2 spans well under the inter-test spacing while comfortably containing anything
-	 * {@code popResource} scatters around the plant.
-	 */
-	private static int countDrops(GameTestHelper helper, Item item) {
-		AABB box = new AABB(helper.absolutePos(POS)).inflate(2.0);
-		int total = 0;
-		for (ItemEntity entity : helper.getLevel().getEntitiesOfClass(ItemEntity.class, box)) {
-			if (entity.getItem().is(item)) {
-				total += entity.getItem().getCount();
-			}
-		}
-		return total;
 	}
 
 	/**

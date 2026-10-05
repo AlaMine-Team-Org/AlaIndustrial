@@ -9,12 +9,15 @@ import dev.alaindustrial.block.CableBlock;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.GeneratorBlockEntity;
+import dev.alaindustrial.compat.Invulnerability;
 import dev.alaindustrial.core.energy.CableType;
 import dev.alaindustrial.core.energy.NetworkManager;
 import dev.alaindustrial.core.energy.ShockGuardMaterial;
 import dev.alaindustrial.core.energy.ShockInsulation;
+import dev.alaindustrial.core.environment.GeneratorConfig;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModDamageTypes;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -34,6 +37,35 @@ import net.minecraft.world.phys.shapes.Shapes;
 
 /** Loader-neutral MOD-260 acceptance scenarios, invoked by both GameTest lanes. */
 public final class CableShockScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(CableShockScenarios::energizedBareOnly, "mod260_energized_bare_only")
+						.fabricId("NetworkGameTest", "mod260_energizedBareOnly").ticks(80),
+				RosterEntry.of(CableShockScenarios::retainedBufferIsSafe, "mod260_retained_buffer_is_safe")
+						.fabricId("NetworkGameTest", "mod260_retainedBufferIsSafe").ticks(80),
+				RosterEntry.of(CableShockScenarios::proximityRadiusRespectsCoverAndConfig,
+								"mod269_proximity_radius_respects_cover_and_config")
+						.fabricId("NetworkGameTest", "mod269_proximityRadiusRespectsCoverAndConfig").ticks(80),
+				RosterEntry.of(CableShockScenarios::shockGuardGatesShockAndOpensGraceWindow,
+								"mod279_shock_guard_gates_shock_and_opens_grace_window")
+						.fabricId("NetworkGameTest", "mod279_shockGuardGatesShockAndOpensGraceWindow").ticks(80),
+				RosterEntry.of(CableShockScenarios::shockGuardShieldsFromTheSide,
+								"mod279_shock_guard_shields_from_the_side")
+						.fabricId("NetworkGameTest", "mod279_shockGuardShieldsFromTheSide").ticks(80),
+				RosterEntry.of(CableShockScenarios::shockGuardInstallRules, "mod279_shock_guard_install_rules")
+						.fabricId("NetworkGameTest", "mod279_shockGuardInstallRules").ticks(80),
+				RosterEntry.of(CableShockScenarios::shockGuardPopsWhenDownConnectionAppears,
+								"mod279_shock_guard_pops_when_down_connection_appears")
+						.fabricId("NetworkGameTest", "mod279_shockGuardPopsWhenDownConnectionAppears").ticks(80),
+				RosterEntry.of(CableShockScenarios::insulatedSetProtectsByThePieceAndWearsOut,
+								"mod466_insulated_set_protects_by_the_piece_and_wears_out")
+						.fabricId("NetworkGameTest", "mod466_insulatedSetProtectsByThePieceAndWearsOut").ticks(80));
+
+		private Roster() {}
+	}
+
 	private static final BlockPos GENERATOR = new BlockPos(1, 2, 1);
 	private static final BlockPos CABLE = new BlockPos(2, 2, 1);
 	private static final BlockPos BOX = new BlockPos(3, 2, 1);
@@ -78,16 +110,12 @@ public final class CableShockScenarios {
 		// malformed data/alaindustrial/damage_type/electric_shock.json on either loader.
 		ModDamageTypes.electricShock(helper.getLevel());
 
-		player.invulnerableTime = 0;
-		boolean shockEnabledBeforeTest = Config.bareCableShockEnabled;
-		Config.bareCableShockEnabled = false;
-		try {
+		Invulnerability.setGraceTicks(player, 0);
+		try (ConfigOverrides o = ConfigOverrides.sync().set("bareCableShockEnabled", false)) {
 			if (bare.shouldShockPlayer(helper.getLevel(), helper.absolutePos(CABLE), player)) {
 				helper.fail("config-off cable remained hazardous");
 				return;
 			}
-		} finally {
-			Config.bareCableShockEnabled = shockEnabledBeforeTest;
 		}
 
 		helper.setBlock(CABLE, Blocks.AIR);
@@ -124,10 +152,9 @@ public final class CableShockScenarios {
 
 		BlockPos beside = CABLE.offset(0, 0, 1);
 		BlockPos twoAway = CABLE.offset(0, 0, 2);
-		double radiusBefore = Config.bareCableShockProximityRadius;
-		try {
+		try (ConfigOverrides o = ConfigOverrides.sync()) {
 			// Beside the cable, not intersecting its 6px model: out of reach before MOD-269, in reach now.
-			Config.bareCableShockProximityRadius = 0.5;
+			o.set("bareCableShockProximityRadius", 0.5);
 			snapToCentre(helper, player, beside);
 			if (!CableBlockEntity.isWithinShockReach(helper.getLevel(), cable, player)) {
 				helper.fail("player one cell from an energized bare cable was out of shock reach");
@@ -135,14 +162,14 @@ public final class CableShockScenarios {
 			}
 
 			// Same spot, radius off: the reach rule must vanish entirely, not merely shrink.
-			Config.bareCableShockProximityRadius = 0.0;
+			o.set("bareCableShockProximityRadius", 0.0);
 			if (CableBlockEntity.isWithinShockReach(helper.getLevel(), cable, player)) {
 				helper.fail("radius 0 still reported reach; MOD-260 contact-only behaviour was not restored");
 				return;
 			}
 
 			// The shipped 0.5 also keeps the hazard off anyone a full cell further out.
-			Config.bareCableShockProximityRadius = 0.5;
+			o.set("bareCableShockProximityRadius", 0.5);
 			snapToCentre(helper, player, twoAway);
 			if (CableBlockEntity.isWithinShockReach(helper.getLevel(), cable, player)) {
 				helper.fail("radius 0.5 reached two cells; the default is meant to be arm's length");
@@ -154,7 +181,7 @@ public final class CableShockScenarios {
 			// it, then assert the clear-line rule at a fixed distance — reachable without cover, not
 			// reachable with it. Comparing the same position both ways is what proves the difference is
 			// the cover and not the distance.
-			Config.bareCableShockProximityRadius = 2.0;
+			o.set("bareCableShockProximityRadius", 2.0);
 			snapToCentre(helper, player, twoAway);
 			if (!CableBlockEntity.isWithinShockReach(helper.getLevel(), cable, player)) {
 				helper.fail("widened radius did not reach an uncovered player two cells away");
@@ -167,7 +194,6 @@ public final class CableShockScenarios {
 				return;
 			}
 		} finally {
-			Config.bareCableShockProximityRadius = radiusBefore;
 			helper.setBlock(beside, Blocks.AIR);
 		}
 		helper.succeed();
@@ -234,16 +260,14 @@ public final class CableShockScenarios {
 			return;
 		}
 
-		double woodBefore = Config.shockGuardWoodHitChance;
-		int graceBefore = Config.shockGuardGraceTicks;
-		try {
+		try (ConfigOverrides o = ConfigOverrides.sync()) {
 			// No stand: the MOD-260 contract is untouched — the guard never intercepts a bare segment.
-			player.invulnerableTime = 0;
+			Invulnerability.setGraceTicks(player, 0);
 			if (!bare.passesShockGuard(helper.getLevel(), cablePos, player)) {
 				helper.fail("bare cable without a stand was intercepted; MOD-260 regressed");
 				return;
 			}
-			if (player.invulnerableTime != 0) {
+			if (Invulnerability.graceTicks(player) != 0) {
 				helper.fail("the no-stand path must not touch the invulnerability window");
 				return;
 			}
@@ -259,15 +283,15 @@ public final class CableShockScenarios {
 
 			// A stand that blocks everything must stop the shock AND leave a contact window behind, so the
 			// next tick of contact does not immediately roll again.
-			Config.shockGuardWoodHitChance = 0.0;
-			Config.shockGuardGraceTicks = 7;
-			player.invulnerableTime = 0;
+			o.set("shockGuardWoodHitChance", 0.0).set("shockGuardGraceTicks", 7);
+			Invulnerability.setGraceTicks(player, 0);
 			if (bare.passesShockGuard(helper.getLevel(), cablePos, player)) {
 				helper.fail("a stand with hit chance 0 still let the shock through");
 				return;
 			}
-			if (player.invulnerableTime != 7) {
-				helper.fail("blocked shock left no grace window; invulnerableTime=" + player.invulnerableTime);
+			if (Invulnerability.graceTicks(player) != 7) {
+				helper.fail("blocked shock left no grace window; invulnerableTime="
+						+ Invulnerability.graceTicks(player));
 				return;
 			}
 			// Still inside that window: eligibility itself must now say no, which is what stops the reroll.
@@ -277,15 +301,12 @@ public final class CableShockScenarios {
 			}
 
 			// A stand that blocks nothing must behave exactly like no stand at all.
-			Config.shockGuardWoodHitChance = 1.0;
-			player.invulnerableTime = 0;
+			o.set("shockGuardWoodHitChance", 1.0);
+			Invulnerability.setGraceTicks(player, 0);
 			if (!bare.passesShockGuard(helper.getLevel(), cablePos, player)) {
 				helper.fail("a stand with hit chance 1 wrongly absorbed the shock");
 				return;
 			}
-		} finally {
-			Config.shockGuardWoodHitChance = woodBefore;
-			Config.shockGuardGraceTicks = graceBefore;
 		}
 		helper.succeed();
 	}
@@ -310,7 +331,7 @@ public final class CableShockScenarios {
 
 		// Baseline: with no stand, a player at the cable's own level is eligible — MOD-260 behaviour.
 		snapToCentre(helper, player, CABLE);
-		player.invulnerableTime = 0;
+		Invulnerability.setGraceTicks(player, 0);
 		if (!bare.shouldShockPlayer(helper.getLevel(), cablePos, player)) {
 			helper.fail("bare cable did not reach a player at its own level; MOD-260 regressed");
 			return;
@@ -319,7 +340,7 @@ public final class CableShockScenarios {
 		cable.setShockGuard(Blocks.OAK_PLANKS);
 
 		// Beside/below the wire the stand is between them: no shock at all, whatever the chance says.
-		player.invulnerableTime = 0;
+		Invulnerability.setGraceTicks(player, 0);
 		if (bare.shouldShockPlayer(helper.getLevel(), cablePos, player)) {
 			helper.fail("a stand did not shield a player standing at the cable's own level");
 			return;
@@ -327,7 +348,7 @@ public final class CableShockScenarios {
 
 		// On top of the wire the player is above the plate and still eligible.
 		standOnCable(helper, player);
-		player.invulnerableTime = 0;
+		Invulnerability.setGraceTicks(player, 0);
 		if (!bare.shouldShockPlayer(helper.getLevel(), cablePos, player)) {
 			helper.fail("a stand wrongly shielded a player standing on top of the cable");
 			return;
@@ -360,7 +381,7 @@ public final class CableShockScenarios {
 
 		// The fixture has to be a live hazard, or every "no damage" assertion below is vacuous.
 		snapToCentre(helper, player, CABLE);
-		player.invulnerableTime = 0;
+		Invulnerability.setGraceTicks(player, 0);
 		if (!bare.shouldShockPlayer(helper.getLevel(), cablePos, player)) {
 			helper.fail("fixture cable was not a hazard; nothing below would prove anything");
 			return;
@@ -391,14 +412,14 @@ public final class CableShockScenarios {
 
 		// The real path: no damage lands, the suit is billed, and a contact window opens. Without that
 		// window both hazard paths re-enter next tick and the set is charged twenty times a second.
-		player.invulnerableTime = 0;
+		Invulnerability.setGraceTicks(player, 0);
 		if (bare.tryShockPlayer(helper.getLevel(), cablePos, player)) {
 			helper.fail("a full set still let the shock land");
 			return;
 		}
-		if (player.invulnerableTime != Config.shockGuardGraceTicks) {
+		if (Invulnerability.graceTicks(player) != Config.shockGuardGraceTicks) {
 			helper.fail("an absorbed shock left no contact window; invulnerableTime="
-					+ player.invulnerableTime);
+					+ Invulnerability.graceTicks(player));
 			return;
 		}
 		int helmetWear = player.getItemBySlot(EquipmentSlot.HEAD).getDamageValue();
@@ -583,7 +604,7 @@ public final class CableShockScenarios {
 
 	private static void energize(GameTestHelper helper) {
 		if (be(helper, GENERATOR) instanceof GeneratorBlockEntity generator) {
-			generator.getEnergyStorage().setAmountUntracked(Config.generatorBuffer);
+			generator.getEnergyStorage().setAmountUntracked(GeneratorConfig.generatorBuffer);
 			generator.setChanged();
 		}
 		for (int i = 0; i < 3; i++) {

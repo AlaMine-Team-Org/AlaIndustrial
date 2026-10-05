@@ -2,7 +2,6 @@ package dev.alaindustrial.item.tool.neoforge;
 
 import dev.alaindustrial.item.tool.ElectricShovelItem;
 import net.minecraft.world.item.ItemInstance;
-import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.ItemAbility;
 
 /**
@@ -34,8 +33,9 @@ import net.neoforged.neoforge.common.ItemAbility;
  * which sets {@code MAX_DAMAGE} and would give an EU tool a durability bar — see
  * {@link ElectricShovelItem}), so it inherited the {@code false} default.
  *
- * <p><b>Delegation cannot rescue it.</b> {@code ElectricShovelItem.useOn} forwards to
- * {@code Items.DIAMOND_SHOVEL.useOn(context)}, which is correct and sufficient on Fabric — but on
+ * <p><b>Delegation cannot rescue it.</b> {@code ElectricShovelItem.useOn} applies
+ * {@code RightClickTransform.SHOVEL}, which on this line forwards to
+ * {@code Items.DIAMOND_SHOVEL.useOn(context)} — correct and sufficient on Fabric — but on
  * NeoForge the gate reads {@code context.getItemInHand()}, and that is still the <i>electric</i> shovel's
  * stack, not the diamond one. Both {@code getToolModifiedState} calls therefore returned {@code null} and
  * {@code useOn} returned {@code PASS}.
@@ -61,6 +61,6 @@ public class ElectricShovelItemNeoForge extends ElectricShovelItem {
 
 	@Override
 	public boolean canPerformAction(ItemInstance stack, ItemAbility itemAbility) {
-		return ItemAbilities.DEFAULT_SHOVEL_ACTIONS.contains(itemAbility);
+		return RightClickAbility.SHOVEL.canPerform(itemAbility);
 	}
 }

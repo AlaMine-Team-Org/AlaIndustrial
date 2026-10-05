@@ -2,6 +2,7 @@ package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.HorizontalMachineBlock;
+import dev.alaindustrial.core.energy.DirectPushSource;
 import dev.alaindustrial.core.energy.EnergyBuffer;
 import dev.alaindustrial.core.energy.EnergyPort;
 import dev.alaindustrial.core.energy.EnergyPortHost;
@@ -49,7 +50,7 @@ import net.minecraft.world.level.storage.ValueOutput;
  * MOD-556 this path also stamps the data with {@link BlockEntityDataMigrations#DATA_VERSION}, so a
  * future change to a saved layout is a rung of a ladder rather than a guess at the point of reading.
  */
-public abstract class EnergyBlockEntity extends BlockEntity implements EnergyPortHost {
+public abstract class EnergyBlockEntity extends BlockEntity implements EnergyPortHost, DirectPushSource {
 
 	/** Idle-sleep safety net (R-29): how long an idle block skips its full tick before re-checking. */
 	protected static final int IDLE_SLEEP_TICKS = 40;
@@ -131,7 +132,16 @@ public abstract class EnergyBlockEntity extends BlockEntity implements EnergyPor
 			sleepTicks--;
 			return;
 		}
+		beforeServerTick();
 		sleepTicks = Math.max(0, onServerTick(level, pos, state));
+	}
+
+	/**
+	 * Runs right before every {@link #onServerTick}, so state a whole family of blocks shares is settled
+	 * by the base rather than by each tick remembering to do it. Default: nothing. The statistics counters
+	 * are switched here ({@link MachineBlockEntity}, MOD-692).
+	 */
+	protected void beforeServerTick() {
 	}
 
 	/**
@@ -157,10 +167,12 @@ public abstract class EnergyBlockEntity extends BlockEntity implements EnergyPor
 
 	// --- energy --------------------------------------------------------------------------------
 
+	@Override
 	public EnergyBuffer getEnergyStorage() {
 		return energy;
 	}
 
+	@Override
 	public EnergyTier getTier() {
 		return tier;
 	}
@@ -170,6 +182,7 @@ public abstract class EnergyBlockEntity extends BlockEntity implements EnergyPor
 	 * (cables / symmetric storage); generators override to OUT, consumer machines to IN, and the
 	 * BatteryBox to a mixed output-face layout.
 	 */
+	@Override
 	public EnergyRole energyRoleForFace(Direction worldFace) {
 		return EnergyRole.BOTH;
 	}
@@ -199,6 +212,7 @@ public abstract class EnergyBlockEntity extends BlockEntity implements EnergyPor
 	 * The {@link dev.alaindustrial.core.energy.EnergyNetwork} serves working machines before storage sinks so
 	 * a large buffer can't starve them, and never charges a sink from itself (MOD-009). Default false.
 	 */
+	@Override
 	public boolean isEnergyStorageSink() {
 		return false;
 	}
@@ -215,6 +229,7 @@ public abstract class EnergyBlockEntity extends BlockEntity implements EnergyPor
 	 * banking EU from a surplus. Whoever adds the next store answers this question explicitly instead of
 	 * inheriting an answer from a type check somewhere else. Default false.
 	 */
+	@Override
 	public boolean acceptsCascade() {
 		return false;
 	}
@@ -238,6 +253,7 @@ public abstract class EnergyBlockEntity extends BlockEntity implements EnergyPor
 	 * <p>A block that is <em>not</em> an {@link #isEnergyStorageSink()} has no use for this: an ordinary
 	 * machine already creates machine demand, which opens the existing backup-discharge stage.
 	 */
+	@Override
 	public long storageFeedRate() {
 		return 0L;
 	}
@@ -366,23 +382,22 @@ public abstract class EnergyBlockEntity extends BlockEntity implements EnergyPor
 	}
 
 	/**
-	 * Walk this block entity up the save-format ladder from the version its tag declared. Call it as the
-	 * LAST statement of {@code loadAdditional} in a class whose data a rung repairs — by then the fields
-	 * that rung reads are populated, which is why the base class cannot make the call itself
-	 * ({@code loadWithComponents} is {@code final} in 26.2, so there is no after-the-whole-load hook).
-	 */
-	protected final void migrateLoadedData() {
-		BlockEntityDataMigrations.migrate(this, loadedDataVersion);
-	}
-
-	/**
 	 * Set once the first time a save is read whose stored charge exceeds the block's current capacity,
 	 * so the warning below is printed once per server run instead of once per block entity.
 	 */
 	private static boolean warnedAboutClampedCharge;
 
+	/**
+	 * The load template (MOD-701, ADR-037): read the layout version and the energy buffer, give the
+	 * subclass its turn in {@link #loadMachineData}, then walk the save-format ladder over the fully
+	 * populated block entity. {@code loadWithComponents} is {@code final} in 26.2, so this is the only
+	 * place the ladder can be called from once, after the whole class chain has read its data.
+	 *
+	 * <p>{@code final}, so the compiler refuses a subclass that overrides it and would skip the ladder: a
+	 * subclass reads its own data by overriding {@link #loadMachineData}.
+	 */
 	@Override
-	protected void loadAdditional(ValueInput input) {
+	protected final void loadAdditional(ValueInput input) {
 		super.loadAdditional(input);
 		// Absent means "saved before MOD-556", i.e. version 0, which is read exactly as it always was.
 		loadedDataVersion = input.getIntOr(BlockEntityDataMigrations.DATA_VERSION_KEY, 0);
@@ -401,5 +416,22 @@ public abstract class EnergyBlockEntity extends BlockEntity implements EnergyPor
 							+ " config/alaindustrial.json; further occurrences this run are not logged.",
 					getType(), worldPosition, stored, energy.getCapacity());
 		}
+		loadMachineData(input);
+		BlockEntityDataMigrations.migrate(this, loadedDataVersion);
+	}
+
+	/**
+	 * Hook for a subclass's own saved data — what {@code loadAdditional} is for everywhere else.
+	 *
+	 * <p><b>Contract.</b> Called exactly once per load, after the version and the {@code "Energy"} buffer
+	 * have been read and BEFORE the save-format ladder runs, so the ladder always sees the block entity
+	 * fully populated. Read only what {@code saveAdditional} wrote; an absent key means "use the default"
+	 * (see {@link BlockEntityDataMigrations#DATA_VERSION}). An override calls {@code super} FIRST, so each
+	 * class in the chain reads its own keys in the order it always has — the bytes on disk do not move.
+	 * The default does nothing, so a block entity with no data beyond the energy buffer overrides nothing.
+	 *
+	 * @param input the tag being read; the same one {@code loadAdditional} received
+	 */
+	protected void loadMachineData(ValueInput input) {
 	}
 }

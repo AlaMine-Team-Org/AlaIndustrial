@@ -2,13 +2,11 @@ package dev.alaindustrial.menu;
 
 import dev.alaindustrial.block.entity.CanningMachineBlockEntity;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
-import dev.alaindustrial.core.food.CanningRules;
+import dev.alaindustrial.block.entity.CanningRules;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.world.Container;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
@@ -22,8 +20,8 @@ public final class CanningMachineMenu extends MachineMenu {
 
 	public CanningMachineMenu(int syncId, Inventory playerInventory) {
 		super(ModContent.CANNING_MACHINE_MENU.get(), syncId, playerInventory,
-				new SimpleContainer(CanningMachineBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT),
-				new SimpleContainerData(CanningMachineBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL,
+				clientStub(CanningMachineBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT,
+						CanningMachineBlockEntity.DATA_COUNT),
 				ModContent.CANNING_MACHINE.get());
 	}
 
@@ -50,11 +48,11 @@ public final class CanningMachineMenu extends MachineMenu {
 
 	/** Banked food value in tenths. */
 	public int getFoodBuffer() {
-		return data.get(4);
+		return channel(CanningMachineBlockEntity.Channel.FOOD_BUFFER);
 	}
 
 	/** Food value one ration costs, in tenths — synced so the readout cannot drift from the server. */
 	public int getValuePerRation() {
-		return data.get(5);
+		return channel(CanningMachineBlockEntity.Channel.VALUE_PER_RATION);
 	}
 }

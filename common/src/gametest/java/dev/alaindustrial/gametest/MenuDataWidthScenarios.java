@@ -42,6 +42,16 @@ import net.minecraft.world.level.block.entity.BlockEntity;
  */
 public final class MenuDataWidthScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(MenuDataWidthScenarios::reg02ClientMenuWidthMatchesBlockEntity,
+								"menu_data_width_matches_block_entity")
+						.fabricId("AlaCommonGameTest", "menuDataWidthMatchesBlockEntity").ticks(20, 200));
+
+		private Roster() {}
+	}
+
 	private MenuDataWidthScenarios() {
 	}
 
@@ -64,6 +74,8 @@ public final class MenuDataWidthScenarios {
 	/**
 	 * Every machine menu's client stub declares exactly as many sync channels as its block entity projects.
 	 * Traced by {@code AlaCommonGameTest} TC-CMN-001-REG02.
+	 *
+	 * @implements TC-CMN-001-REG02 — client menu data width == block entity channel count
 	 */
 	public static void reg02ClientMenuWidthMatchesBlockEntity(GameTestHelper helper) {
 		ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper);

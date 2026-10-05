@@ -1,10 +1,10 @@
 package dev.alaindustrial.core.radiation;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.block.IrradiatedSoilBlock;
 import dev.alaindustrial.block.entity.AbstractChestBlockEntity;
 import dev.alaindustrial.block.entity.FuelRodAssemblyBlockEntity;
 import dev.alaindustrial.block.entity.ShieldingChestBlockEntity;
+import dev.alaindustrial.core.reactor.ReactorConfig;
 import dev.alaindustrial.item.energy.PouchContents;
 import dev.alaindustrial.item.misc.ShieldingPouchItem;
 import dev.alaindustrial.loot.PendingLoot;
@@ -73,13 +73,13 @@ public final class RadiationSources {
 
 	/** Everything in the world irradiating this entity where it stands. */
 	public static int exposureAt(ServerLevel level, Entity target, int radius) {
-		return exposureAt(level, target, radius, Config.radiationGroundRadius);
+		return exposureAt(level, target, radius, RadiationConfig.radiationGroundRadius);
 	}
 
 	/**
 	 * The same field, with the reach of loose items and containers given explicitly (MOD-475).
 	 *
-	 * <p>{@link Config#radiationGroundRadius} caps how far a chest or a dropped stack can DOSE someone,
+	 * <p>{@link RadiationConfig#radiationGroundRadius} caps how far a chest or a dropped stack can DOSE someone,
 	 * and the collectors clamp to it. For the dose that is exactly right; for a DETECTOR it is not, and
 	 * the difference is the whole reason this overload exists. A Geiger counter sharing the cap went
 	 * quiet around a chest until the player was inside the band where it was already being irradiated —
@@ -155,7 +155,7 @@ public final class RadiationSources {
 			if (hasLineOfSight(level, target, eyes, source.at())) {
 				dose += attenuated;
 			} else if (detector) {
-				dose += RadiationCore.throughWall(attenuated, Config.geigerWallPermille);
+				dose += RadiationCore.throughWall(attenuated, RadiationConfig.geigerWallPermille);
 			}
 		}
 		return dose;
@@ -190,7 +190,7 @@ public final class RadiationSources {
 					if (at.distanceTo(centre) > radius + 1) {
 						continue;
 					}
-					out.add(new Source(at, Config.radiationRodDosePerTick * rack.getRods()));
+					out.add(new Source(at, RadiationConfig.radiationRodDosePerTick * rack.getRods()));
 				}
 			}
 		}
@@ -212,7 +212,7 @@ public final class RadiationSources {
 	 * for containers, arriving from the other direction.
 	 */
 	public static void collectFallout(ServerLevel level, Vec3 centre, int radius, List<Source> out) {
-		if (!Config.reactorFalloutEnabled || Config.reactorFalloutDosePerBlock <= 0) {
+		if (!ReactorConfig.reactorFalloutEnabled || ReactorConfig.reactorFalloutDosePerBlock <= 0) {
 			return;
 		}
 		int counted = 0;
@@ -220,7 +220,7 @@ public final class RadiationSources {
 		double sumX = 0;
 		double sumY = 0;
 		double sumZ = 0;
-		int cap = Config.reactorFalloutMaxBlocksCounted;
+		int cap = ReactorConfig.reactorFalloutMaxBlocksCounted;
 		int minChunkX = SectionPos.blockToSectionCoord(Math.floor(centre.x) - radius);
 		int maxChunkX = SectionPos.blockToSectionCoord(Math.floor(centre.x) + radius);
 		int minChunkZ = SectionPos.blockToSectionCoord(Math.floor(centre.z) - radius);
@@ -290,7 +290,7 @@ public final class RadiationSources {
 
 	/** Radioactive items lying on the ground nearby — dropping a fuel rod does not switch it off. */
 	public static void collectGround(ServerLevel level, Vec3 centre, int radius, List<Source> out) {
-		collectGround(level, centre, radius, Config.radiationGroundRadius, out);
+		collectGround(level, centre, radius, RadiationConfig.radiationGroundRadius, out);
 	}
 
 	/** As above, with the loose-item reach given explicitly — see {@link #exposureAt(ServerLevel, Entity, int, int)}. */
@@ -415,13 +415,13 @@ public final class RadiationSources {
 	}
 
 	public static void collectContainers(ServerLevel level, Vec3 centre, int radius, List<Source> out) {
-		collectContainers(level, centre, radius, Config.radiationGroundRadius, out);
+		collectContainers(level, centre, radius, RadiationConfig.radiationGroundRadius, out);
 	}
 
 	/** As above, with the container reach given explicitly — see {@link #exposureAt(ServerLevel, Entity, int, int)}. */
 	public static void collectContainers(ServerLevel level, Vec3 centre, int radius, int groundReach,
 			List<Source> out) {
-		if (groundReach <= 0 || Config.radiationContainerMaxItems <= 0) {
+		if (groundReach <= 0 || RadiationConfig.radiationContainerMaxItems <= 0) {
 			return;
 		}
 		double reach = Math.min(radius, groundReach);
@@ -454,7 +454,7 @@ public final class RadiationSources {
 					// Capped: a container leaks at most a few items' worth however full it is — see
 					// RadiationCore.containerLeak for why an uncapped chest was a trap and not a hazard.
 					int strength = RadiationCore.containerLeak(contentsStrength((Container) be),
-							Config.radiationContainerMaxItems, Config.radiationDoseHighPerItem);
+							RadiationConfig.radiationContainerMaxItems, RadiationConfig.radiationDoseHighPerItem);
 					if (strength > 0) {
 						out.add(new Source(at, strength));
 					}
@@ -487,19 +487,19 @@ public final class RadiationSources {
 
 	/** Dose per sweep a stack radiates, by the tag it belongs to; containers opened to the set depth. */
 	public static int strengthOf(ItemStack stack) {
-		return countTagged(stack, ModTags.Items.RADIOACTIVE_LOW, Config.radiationContainerDepth)
-						* Config.radiationDoseLowPerItem
-				+ countTagged(stack, ModTags.Items.RADIOACTIVE_MEDIUM, Config.radiationContainerDepth)
-						* Config.radiationDoseMediumPerItem
-				+ countTagged(stack, ModTags.Items.RADIOACTIVE_HIGH, Config.radiationContainerDepth)
-						* Config.radiationDoseHighPerItem;
+		return countTagged(stack, ModTags.Items.RADIOACTIVE_LOW, RadiationConfig.radiationContainerDepth)
+						* RadiationConfig.radiationDoseLowPerItem
+				+ countTagged(stack, ModTags.Items.RADIOACTIVE_MEDIUM, RadiationConfig.radiationContainerDepth)
+						* RadiationConfig.radiationDoseMediumPerItem
+				+ countTagged(stack, ModTags.Items.RADIOACTIVE_HIGH, RadiationConfig.radiationContainerDepth)
+						* RadiationConfig.radiationDoseHighPerItem;
 	}
 
 	/** Items of a tag in the player's own inventory, containers opened to the configured depth. */
 	public static int carried(Player player, TagKey<Item> tag) {
 		int count = 0;
 		for (ItemStack stack : player.getInventory().getNonEquipmentItems()) {
-			count += countTagged(stack, tag, Config.radiationContainerDepth);
+			count += countTagged(stack, tag, RadiationConfig.radiationContainerDepth);
 		}
 		return count;
 	}

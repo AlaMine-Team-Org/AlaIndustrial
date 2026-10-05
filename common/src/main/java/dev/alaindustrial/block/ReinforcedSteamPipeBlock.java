@@ -1,8 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
-import net.minecraft.world.level.block.BaseEntityBlock;
-
 /**
  * The reinforced steam pipe (MOD-662): the steam pipe in a shielding-alloy jacket, for the stretch of a
  * steam line that runs INSIDE a reactor room.
@@ -13,14 +10,7 @@ import net.minecraft.world.level.block.BaseEntityBlock;
  */
 public final class ReinforcedSteamPipeBlock extends SteamPipeBlock {
 
-	public static final MapCodec<ReinforcedSteamPipeBlock> CODEC = simpleCodec(ReinforcedSteamPipeBlock::new);
-
 	public ReinforcedSteamPipeBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 }

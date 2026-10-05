@@ -1,8 +1,10 @@
 package dev.alaindustrial.client.compat.jei;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.client.compat.InfoPageLayout;
 import dev.alaindustrial.client.compat.RecipeViewerInfo;
 import java.util.List;
+import java.util.function.Supplier;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -19,11 +21,15 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.block.Block;
 
 /**
  * JEI category for machines with no recipe of any kind (MOD-420) — the JEI counterpart of the
  * machine-info half of the REI {@code AlaInfoCategory}.
+ *
+ * <p>Since MOD-695 the same class also serves the evolution and plant pages, which used to go through
+ * JEI's built-in {@code addIngredientInfo}. That call takes FIXED components at registration, which
+ * happens at login before the server's balance arrives ({@code ServerBalance}); a page drawn here
+ * builds its lines on every draw, so it shows the server's numbers and follows a later reload.
  *
  * <p><b>Why this exists instead of {@code addIngredientInfo}.</b> The solar evolution pages use JEI's
  * built-in ingredient info, and that is fine for pages reached from the item. It cannot serve a GUI
@@ -37,34 +43,30 @@ import net.minecraft.world.level.block.Block;
  * JEI gives a POJO by default.
  */
 final class MachineInfoJeiCategory implements IRecipeCategory<RecipeViewerInfo.Entry> {
-	private static final int WIDTH = 160;
+	/** Card width, line height, line bounds and colours are the shared page card's (MOD-716, 12e). */
+	private static final int WIDTH = InfoPageLayout.WIDTH;
 	private static final int PADDING = 4;
-	private static final int LINE_HEIGHT = 10;
+	private static final int LINE_HEIGHT = InfoPageLayout.LINE_HEIGHT;
 	private static final int SLOT_X = 2, SLOT_Y = 2;
 	private static final int TITLE_X = 24, TITLE_Y = 7;
 	private static final int BODY_Y = 26;
-	/**
-	 * Floor for the reserved body lines, not a ceiling — the REI side's twin (MOD-422). A fixed
-	 * ceiling overflowed instead of truncating: the draw loop emits every visual line and the panel
-	 * neither clips nor scrolls, so a long locale painted outside the background.
-	 */
-	private static final int MIN_BODY_LINES = 8;
-
-	/** Ceiling, mirroring the REI side: a card taller than this stops fitting the smallest supported GUI. */
-	private static final int MAX_BODY_LINES = 17;
-
-	private static final int TITLE_COLOR = 0xFF303030;
-	private static final int BODY_COLOR = 0xFF404040;
+	private static final int TITLE_COLOR = InfoPageLayout.TITLE_COLOR;
+	private static final int BODY_COLOR = InfoPageLayout.BODY_COLOR;
 
 	private final IRecipeType<RecipeViewerInfo.Entry> recipeType;
 	private final Component title;
 	private final IDrawable icon;
+	private final Supplier<List<RecipeViewerInfo.Entry>> pages;
+	private final String idPrefix;
 
-	MachineInfoJeiCategory(IRecipeType<RecipeViewerInfo.Entry> recipeType, Block iconBlock,
-			Component title, IGuiHelper guiHelper) {
+	/** A text-page category over {@code pages}; {@code idPrefix} keeps page ids unique per category. */
+	MachineInfoJeiCategory(IRecipeType<RecipeViewerInfo.Entry> recipeType, ItemLike iconItem,
+			Component title, IGuiHelper guiHelper, Supplier<List<RecipeViewerInfo.Entry>> pages, String idPrefix) {
 		this.recipeType = recipeType;
 		this.title = title;
-		this.icon = guiHelper.createDrawableItemLike(iconBlock);
+		this.icon = guiHelper.createDrawableItemLike(iconItem);
+		this.pages = pages;
+		this.idPrefix = idPrefix;
 	}
 
 	@Override
@@ -87,26 +89,9 @@ final class MachineInfoJeiCategory implements IRecipeCategory<RecipeViewerInfo.E
 		return BODY_Y + LINE_HEIGHT * bodyLines() + PADDING;
 	}
 
-	/**
-	 * Body lines to reserve: the tallest page this category shows, measured with the same splitter and
-	 * width {@link #draw} wraps with. Measured live — the wrap depends on the active language and on
-	 * config values interpolated into the lines. Falls back to the floor before the font is up.
-	 */
+	/** Body lines to reserve: the tallest page, wrapped at the width {@link #draw} wraps with (MOD-422). */
 	private int bodyLines() {
-		Minecraft client = Minecraft.getInstance();
-		if (client == null || client.font == null) {
-			return MIN_BODY_LINES;
-		}
-		int maxTextWidth = WIDTH - PADDING * 2;
-		int longest = MIN_BODY_LINES;
-		for (RecipeViewerInfo.Entry page : pages()) {
-			int lines = 0;
-			for (Component line : RecipeViewerInfo.buildLines(page)) {
-				lines += client.font.getSplitter().splitLines(line, maxTextWidth, Style.EMPTY).size();
-			}
-			longest = Math.max(longest, lines);
-		}
-		return Math.min(longest, MAX_BODY_LINES);
+		return InfoPageLayout.bodyLines(pages.get(), WIDTH - PADDING * 2);
 	}
 
 	@Override
@@ -146,12 +131,7 @@ final class MachineInfoJeiCategory implements IRecipeCategory<RecipeViewerInfo.E
 	public Identifier getIdentifier(RecipeViewerInfo.Entry entry) {
 		// One id per page, keyed on the machine it describes. ':' is not legal in a path, hence the slash.
 		ItemLike owner = entry.owner().get();
-		return Industrialization.id("machine_info/"
+		return Industrialization.id(idPrefix
 				+ BuiltInRegistries.ITEM.getKey(owner.asItem()).toString().replace(':', '/'));
-	}
-
-	/** The pages this category shows, in the order the shared source declares them. */
-	static List<RecipeViewerInfo.Entry> pages() {
-		return RecipeViewerInfo.machineInfoEntries();
 	}
 }

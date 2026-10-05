@@ -1,6 +1,7 @@
 package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.compat.L3Chunks;
 import dev.alaindustrial.core.energy.EnergyNetwork;
 import dev.alaindustrial.core.energy.NetworkManager;
 import dev.alaindustrial.item.tool.AnalyzerMode;
@@ -60,7 +61,7 @@ public final class NetworkOverlayStand {
         cableStart = new BlockPos(x - 4, y, z);
         server.runCommand(String.format("tp @p %d.5 %d %d.5 180 45", x, p.getY(), p.getZ()));
         VisualWorld.awaitNoScreen(context);
-        singleplayer.getClientLevel().waitForChunksRender();
+        L3Chunks.waitRender(singleplayer);
         context.waitTicks(40);
 
         clearTrace(server);

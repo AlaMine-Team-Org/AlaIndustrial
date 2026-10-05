@@ -2,8 +2,10 @@ package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.HorizontalMachineBlock;
+import dev.alaindustrial.block.entity.machine.SyncChannels;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.core.environment.GeneratorConfig;
 import dev.alaindustrial.core.environment.WaterMillClearance;
 import dev.alaindustrial.core.environment.WaterMillInterference;
 import dev.alaindustrial.core.environment.WaterMillOutput;
@@ -14,7 +16,6 @@ import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -31,13 +32,13 @@ import net.minecraft.world.level.material.FluidState;
  * LV water mill (spec: alaindustrial:water_mill) — a passive, fuel-free generator. Each tick it counts
  * <b>flowing</b> water (a current — not a still source, MOD-188) in the four cells the <b>wheel</b>
  * sweeps through — above, below and to each side of the front cell, NOT around the mill block itself
- * (MOD-352) — and produces {@link Config#waterMillEuPerTick} EU/t per driven side: 0–4 EU/t,
+ * (MOD-352) — and produces {@link GeneratorConfig#waterMillEuPerTick} EU/t per driven side: 0–4 EU/t,
  * continuous. A crafted
  * {@code water_mill_wheel} must be installed in the single component slot. Since MOD-189 the
  * wheel is a durability component: it wears out only while the mill produces EU (wear proportional to
  * output) and breaks when spent — see {@link AbstractGeneratorBlockEntity#wearComponent}.
  * The remaining production calculation is a stateless world read. Buffer
- * {@link Config#waterMillBuffer}, LV output.
+ * {@link GeneratorConfig#waterMillBuffer}, LV output.
  *
  * <p>It never touches the fluid-tank/{@code FluidStorage} system; it reads {@code level.getFluidState}
  * directly. Energy persists via {@link MachineBlockEntity}; the water mill adds no NBT of its own.
@@ -104,7 +105,8 @@ public class WaterMillBlockEntity extends AbstractGeneratorBlockEntity implement
 	private int productionRate;
 
 	public WaterMillBlockEntity(BlockPos pos, BlockState state) {
-		super(ModContent.WATER_MILL_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT, Config.waterMillBuffer, MAX_EXTRACT);
+		super(ModContent.WATER_MILL_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT, GeneratorConfig.waterMillBuffer,
+				MAX_EXTRACT);
 	}
 
 	/**
@@ -194,7 +196,7 @@ public class WaterMillBlockEntity extends AbstractGeneratorBlockEntity implement
 		// Wheel grade (MOD-385): resolved from the slot, folded into euFor so a better wheel raises the
 		// rate itself rather than being applied on top of an already-computed number.
 		ComponentTier wheelTier = tierOf(items.get(WHEEL_SLOT), ComponentTier.WATER_MILL_WHEEL);
-		int made = WaterMillOutput.euFor(sides, Config.waterMillEuPerTick, wheelTier.outputMultiplier());
+		int made = WaterMillOutput.euFor(sides, GeneratorConfig.waterMillEuPerTick, wheelTier.outputMultiplier());
 		setState(sides, MODE_OK);
 		// Wheel wear (MOD-189): wear accrues only while the wheel actually turns water into EU (made > 0).
 		// No weather stress on the water mill, so the weather multiplier is a flat 1.0. EU-per-damage is
@@ -220,7 +222,7 @@ public class WaterMillBlockEntity extends AbstractGeneratorBlockEntity implement
 
 	/**
 	 * Store the wheel's spin input ({@code progress} = driven-side count, the value the wheel renderer
-	 * reads via {@code dataAccess} slot 2) and the status {@code mode} (the {@code maxProgress} channel,
+	 * reads as the PROGRESS channel) and the status {@code mode} (the {@code maxProgress} channel,
 	 * slot 3), and push a block-entity update to watching clients whenever either changes.
 	 *
 	 * <p>The water mill has no {@code lit} blockstate (it is a passive generator), so the base generator's
@@ -252,47 +254,21 @@ public class WaterMillBlockEntity extends AbstractGeneratorBlockEntity implement
 	}
 
 	/**
-	 * Five-wide data — hides {@link MachineBlockEntity#DATA_COUNT} so {@code WaterMillBlockEntity.DATA_COUNT}
-	 * names this machine's width for the bridge below and for {@code WaterMillMenu}'s client stub (MOD-235).
+	 * GUI sync channels (MOD-712, BE-7): the base four (PROGRESS the water-face count 0..4 the renderer turns
+	 * into the wheel's speed, MAX_PROGRESS the mode), then the effective production rate (MOD-348, MOD-356),
+	 * which takes a write. Derived on the client it would use the client's own {@link Config}, which is
+	 * per side and never synced.
 	 */
-	public static final int DATA_COUNT = 5;
+	public enum Channel { ENERGY, CAPACITY, PROGRESS, MAX_PROGRESS, RATE }
 
-	/**
-	 * Five-wide data: the shared base 0..3 (energy, capacity, water-face count, mode) plus the effective
-	 * production rate on channel 4 (MOD-348, made post-multiplier by MOD-356).
-	 *
-	 * <p><b>Why the rate needs a channel of its own.</b> Channel 2 already carries the <em>water-face
-	 * count</em> (0..4), which {@code WaterMillWheelBlockEntityRenderer} turns into the wheel's angular
-	 * speed via {@code Math.min(production, 4)} — so it cannot double as EU/t without capping the
-	 * in-world wheel at {@code waterMillEuPerTick} faces. Deriving EU/t on the client instead
-	 * ({@code faces × waterMillEuPerTick}) is not an option either: {@link Config} is loaded per side
-	 * and never synced, so a dedicated server with retuned balance would feed every client a number
-	 * from its own local config file.
-	 */
-	private final ContainerData waterMillData = new ContainerData() {
-		@Override
-		public int get(int index) {
-			return index == 4 ? productionRate : WaterMillBlockEntity.this.dataAccess.get(index);
-		}
-
-		@Override
-		public void set(int index, int value) {
-			if (index == 4) {
-				productionRate = value;
-			} else {
-				WaterMillBlockEntity.this.dataAccess.set(index, value);
-			}
-		}
-
-		@Override
-		public int getCount() {
-			return DATA_COUNT;
-		}
-	};
+	/** Width of {@link #getDataAccess()}, which the menu's client stub sizes itself from (MOD-235). */
+	public static final int DATA_COUNT = Channel.values().length;
 
 	@Override
-	public ContainerData getDataAccess() {
-		return waterMillData;
+	protected SyncChannels createChannels() {
+		return channels(Channel.class)
+				.readWrite(Channel.RATE, () -> productionRate, value -> productionRate = value)
+				.build();
 	}
 
 	@Override
@@ -311,11 +287,6 @@ public class WaterMillBlockEntity extends AbstractGeneratorBlockEntity implement
 	@Override
 	public boolean canPlaceItemThroughFace(int slot, ItemStack stack, Direction side) {
 		return super.canPlaceItemThroughFace(slot, stack, side) && items.get(WHEEL_SLOT).isEmpty();
-	}
-
-	@Override
-	public Component getDisplayName() {
-		return Component.translatable("block.alaindustrial.water_mill");
 	}
 
 	@Override

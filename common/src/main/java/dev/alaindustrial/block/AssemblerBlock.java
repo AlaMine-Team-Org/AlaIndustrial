@@ -1,14 +1,16 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.AssemblerBlockEntity;
+import dev.alaindustrial.core.machine.MachineRates;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import dev.alaindustrial.client.ServerBalance;
+import dev.alaindustrial.core.tooltip.HasMachineTooltip;
+import dev.alaindustrial.core.tooltip.MachineTooltipSpec;
 
 /**
  * Assembler (MOD-275) — the mod's first MV machine, a full cube that faces the player.
@@ -20,16 +22,9 @@ import net.minecraft.world.level.block.state.BlockState;
  * ({@code MachineBlockEntity#getSlotsForFace}), which is exactly the contract the OKF spec states
  * ("the front face is marked and … excluded from automation").
  */
-public class AssemblerBlock extends HorizontalMachineBlock {
-	public static final MapCodec<AssemblerBlock> CODEC = simpleCodec(AssemblerBlock::new);
-
+public class AssemblerBlock extends HorizontalMachineBlock implements HasMachineTooltip {
 	public AssemblerBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override
@@ -41,5 +36,15 @@ public class AssemblerBlock extends HorizontalMachineBlock {
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
 			BlockEntityType<T> type) {
 		return machineTicker(level);
+	}
+
+	/** Hover tooltip of this block's item (MOD-716, ADR-040). */
+	@Override
+	public MachineTooltipSpec machineTooltip() {
+		return MachineTooltipSpec.processing(MachineTooltipSpec.Tier.MV,
+				() -> MachineRates.euPerTick(ServerBalance.assemblerEuPerTick(),
+						ServerBalance.globalMachineSpeedMultiplier()),
+				() -> ServerBalance.scaledDuration(ServerBalance.assemblerDuration()),
+				ServerBalance::assemblerBuffer);
 	}
 }

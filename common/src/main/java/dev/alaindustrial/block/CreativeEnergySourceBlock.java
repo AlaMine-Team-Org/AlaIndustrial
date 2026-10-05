@@ -1,10 +1,8 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.CreativeEnergySourceBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -26,16 +24,9 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
  */
 public class CreativeEnergySourceBlock extends AbstractMachineBlock {
 
-	public static final MapCodec<CreativeEnergySourceBlock> CODEC = simpleCodec(CreativeEnergySourceBlock::new);
-
 	public CreativeEnergySourceBlock(Properties properties) {
 		super(properties);
 		registerDefaultState(getStateDefinition().any().setValue(BlockStateProperties.LIT, true));
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

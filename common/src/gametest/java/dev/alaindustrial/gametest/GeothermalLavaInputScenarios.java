@@ -5,6 +5,7 @@ import dev.alaindustrial.core.fluid.FluidAmounts;
 import dev.alaindustrial.item.fluid.ItemFluid;
 import dev.alaindustrial.item.fluid.VanillaBucketDeposit;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.InteractionHand;
@@ -31,6 +32,30 @@ import net.minecraft.world.phys.Vec3;
  */
 public final class GeothermalLavaInputScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(GeothermalLavaInputScenarios::fun05CapsuleInSlotDrains,
+								"geothermal_capsule_in_slot_drains")
+						.fabricId("GeothermalLavaInputGameTest", "tcGeo001Fun06_capsuleInSlotDrains").ticks(20, 40),
+				RosterEntry.of(GeothermalLavaInputScenarios::fun06BucketDepositViaShift,
+								"geothermal_bucket_deposit_via_shift")
+						.fabricId("GeothermalLavaInputGameTest", "tcGeo001Fun07_bucketDepositViaShift").ticks(20, 40),
+				RosterEntry.of(GeothermalLavaInputScenarios::neg06BucketFullTankNoOp,
+								"geothermal_bucket_full_tank_no_op")
+						.fabricId("GeothermalLavaInputGameTest", "tcGeo001Neg07_bucketFullTankNoOp").ticks(20, 40),
+				RosterEntry.of(GeothermalLavaInputScenarios::fun04LavaCapsuleIsFurnaceFuel,
+								"lava_capsule_is_furnace_fuel")
+						.fabricId("GeothermalLavaInputGameTest", "tcCaps001Fun04_lavaCapsuleIsFurnaceFuel")
+						.ticks(20, 40),
+				RosterEntry.of(GeothermalLavaInputScenarios::fun05FurnaceFuelSlotCapsOne,
+								"furnace_fuel_slot_caps_lava_capsule")
+						.fabricId("GeothermalLavaInputGameTest", "tcCaps001Fun05_furnaceFuelSlotCapsOne")
+						.ticks(20, 40));
+
+		private Roster() {}
+	}
+
 	private GeothermalLavaInputScenarios() {
 	}
 
@@ -42,7 +67,7 @@ public final class GeothermalLavaInputScenarios {
 		return stack;
 	}
 
-	private static GeothermalGeneratorBlockEntity placeGeo(GameTestHelper helper) {
+	static GeothermalGeneratorBlockEntity placeGeo(GameTestHelper helper) {
 		helper.setBlock(GEO, ModContent.GEOTHERMAL_GENERATOR.get().defaultBlockState());
 		GeothermalGeneratorBlockEntity be = helper.getBlockEntity(GEO, GeothermalGeneratorBlockEntity.class);
 		if (be == null) {
@@ -72,7 +97,11 @@ public final class GeothermalLavaInputScenarios {
 
 	// ── FUN01: a lava capsule in the GUI input slot drains and returns an empty capsule ───────────────
 
-	/** Lava capsule in the input slot is consumed for burn, empty capsule out. Traced by FUN05. */
+	/**
+	 * Lava capsule in the input slot is consumed for burn, empty capsule out. Traced by FUN05.
+	 *
+	 * @implements TC-GEO-001-FUN06 — lava capsule in the input slot drains and returns an empty capsule.
+	 */
 	public static void fun05CapsuleInSlotDrains(GameTestHelper helper) {
 		GeothermalGeneratorBlockEntity geo = placeGeo(helper);
 		if (geo == null) {
@@ -91,7 +120,11 @@ public final class GeothermalLavaInputScenarios {
 
 	// ── FUN06: shift-right-click with a vanilla lava bucket loads the tank + returns an empty bucket ──
 
-	/** Shift+use a lava bucket on the block fills the tank, returns an empty bucket. Traced by FUN06. */
+	/**
+	 * Shift+use a lava bucket on the block fills the tank, returns an empty bucket. Traced by FUN06.
+	 *
+	 * @implements TC-GEO-001-FUN07 — shift+use a lava bucket on the block loads the tank, returns an empty bucket.
+	 */
 	public static void fun06BucketDepositViaShift(GameTestHelper helper) {
 		GeothermalGeneratorBlockEntity geo = placeGeo(helper);
 		if (geo == null) {
@@ -112,7 +145,11 @@ public final class GeothermalLavaInputScenarios {
 
 	// ── NEG01: a FULL tank is a silent no-op — nothing spills, the bucket is kept ─────────────────────
 
-	/** Shift+use a lava bucket on a full tank consumes the click but keeps the bucket. Traced by NEG06. */
+	/**
+	 * Shift+use a lava bucket on a full tank consumes the click but keeps the bucket. Traced by NEG06.
+	 *
+	 * @implements TC-GEO-001-NEG07 — a full tank consumes the shift-click but keeps the bucket (silent no-op).
+	 */
 	public static void neg06BucketFullTankNoOp(GameTestHelper helper) {
 		GeothermalGeneratorBlockEntity geo = placeGeo(helper);
 		if (geo == null) {
@@ -142,10 +179,21 @@ public final class GeothermalLavaInputScenarios {
 	// the getCraftingRemainder(ItemStack) overload) are NeoForge-only API, and this scenario is shared
 	// code compiled against vanilla for the Fabric lane too. burnDuration is also exactly what the
 	// FuelValuesMixin under test injects into, so the test must call the same method the mod patches.
+	/**
+	 * @implements TC-CAPS-001-FUN04 — lava capsule is furnace fuel (lava-bucket burn time); water capsule is not.
+	 */
 	@SuppressWarnings("deprecation")
 	public static void fun04LavaCapsuleIsFurnaceFuel(GameTestHelper helper) {
 		FuelValues fuel = helper.getLevel().fuelValues();
 		int lavaBucketTime = fuel.burnDuration(new ItemStack(Items.LAVA_BUCKET));
+		if (lavaBucketTime <= 0) {
+			// Floor: if the lava bucket itself resolved to nothing, every comparison below would pass
+			// by both sides being zero — the vacuous-green failure mode this repository has been bitten
+			// by before.
+			helper.fail("a vanilla lava bucket resolved to " + lavaBucketTime
+					+ " ticks of burn time — the fuel lookup itself is broken, so this test proves nothing");
+			return;
+		}
 		ItemStack lava = capsule(Fluids.LAVA);
 		ItemStack water = capsule(Fluids.WATER);
 		if (!fuel.isFuel(lava) || fuel.burnDuration(lava) != lavaBucketTime) {
@@ -167,7 +215,11 @@ public final class GeothermalLavaInputScenarios {
 
 	// ── FUN08: a lava capsule caps to one item in a furnace fuel slot (no tare loss on a stack) ────────
 
-	/** A lava capsule stacks to one in a furnace fuel slot (like a bucket). Traced by CAPS FUN05. */
+	/**
+	 * A lava capsule stacks to one in a furnace fuel slot (like a bucket). Traced by CAPS FUN05.
+	 *
+	 * @implements TC-CAPS-001-FUN05 — a lava capsule caps to one in a furnace fuel slot (no tare loss).
+	 */
 	public static void fun05FurnaceFuelSlotCapsOne(GameTestHelper helper) {
 		Player player = helper.makeMockPlayer(GameType.SURVIVAL);
 		FurnaceMenu menu = new FurnaceMenu(0, player.getInventory());

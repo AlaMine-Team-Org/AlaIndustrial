@@ -6,6 +6,9 @@ import com.mojang.math.Axis;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.block.entity.WaterMillBlockEntity;
+import dev.alaindustrial.block.entity.machine.MachineChannels;
+import dev.alaindustrial.compat.client.ModelSubmit;
+import dev.alaindustrial.compat.client.Poses;
 import dev.alaindustrial.core.environment.WaterMillWheelGeometry;
 import dev.alaindustrial.core.machine.ComponentTier;
 import net.minecraft.client.model.Model;
@@ -203,7 +206,7 @@ public final class WaterMillWheelBlockEntityRenderer<T extends WaterMillBlockEnt
 			ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
 		BlockEntityRenderer.super.extractRenderState(entity, state, partialTicks, cameraPosition, breakProgress);
 		state.facing = facing(entity.getBlockState());
-		state.production = entity.getDataAccess().get(2);
+		state.production = entity.getDataAccess().get(MachineChannels.PROGRESS.ordinal());
 		net.minecraft.world.item.ItemStack wheel = entity.getItem(WaterMillBlockEntity.WHEEL_SLOT);
 		state.installed = !wheel.isEmpty();
 		// Grade → material sprites (MOD-385). Read straight off the slot: the machine's inventory is part
@@ -228,7 +231,7 @@ public final class WaterMillWheelBlockEntityRenderer<T extends WaterMillBlockEnt
 		// through a solid block (obstruction), hide it entirely instead of drawing a broken wheel. The
 		// mode rides the maxProgress sync channel (slot 3). MODE_NO_WATER does NOT hide the wheel — a
 		// dry wheel stands still but stays rendered.
-		int mode = entity.getDataAccess().get(3);
+		int mode = entity.getDataAccess().get(MachineChannels.MAX_PROGRESS.ordinal());
 		state.interfered = mode == WaterMillBlockEntity.MODE_INTERFERENCE
 				|| mode == WaterMillBlockEntity.MODE_OBSTRUCTED;
 		state.angle = state.production <= 0 ? 0.0F : rotationAngle(entity, partialTicks, state.production);
@@ -250,16 +253,16 @@ public final class WaterMillWheelBlockEntityRenderer<T extends WaterMillBlockEnt
 		rotateToFacing(poseStack, state.facing);
 		// Keep the axle exactly on the machine block's centre, both vertically and horizontally.
 		poseStack.translate(0.0F, 0.0F, -WHEEL_PUSH);
-		poseStack.mulPose(Axis.ZP.rotation(state.angle));
+		Poses.rotate(poseStack, Axis.ZP.rotation(state.angle));
 
 		renderContinuousRim(poseStack, collector, sprites.get(state.body), state);
-		collector.submitModel(planksModel, Unit.INSTANCE, poseStack,
+		ModelSubmit.withCrumbling(collector, planksModel, Unit.INSTANCE, poseStack,
 				state.lightCoords, OverlayTexture.NO_OVERLAY, -1,
 				state.body, sprites, 0, state.breakProgress);
-		collector.submitModel(timberModel, Unit.INSTANCE, poseStack,
+		ModelSubmit.withCrumbling(collector, timberModel, Unit.INSTANCE, poseStack,
 				state.lightCoords, OverlayTexture.NO_OVERLAY, -1,
 				state.spoke, sprites, 0, state.breakProgress);
-		collector.submitModel(axleModel, Unit.INSTANCE, poseStack,
+		ModelSubmit.withCrumbling(collector, axleModel, Unit.INSTANCE, poseStack,
 				state.lightCoords, OverlayTexture.NO_OVERLAY, -1,
 				state.axle, sprites, 0, state.breakProgress);
 		poseStack.popPose();
@@ -304,49 +307,22 @@ public final class WaterMillWheelBlockEntityRenderer<T extends WaterMillBlockEnt
 		float radial = RIM_OUTER - RIM_INNER;
 		float arc = Math.min(1.0F, (RIM_INNER + RIM_OUTER) * 0.5F * (end - start));
 		float depth = RIM_BACK - RIM_FRONT;
-
-		quad(pose, consumer, sprite, light, shade.at(0.0F, 0.0F, -1.0F), 0.0F, 0.0F, -1.0F,
+		// Each face in both windings: the exterior one Minecraft's culled item pipeline uses, and the
+		// reverse, so no loader or facing transform can make the solid ring disappear. Culling leaves
+		// exactly one copy visible from either side, so the coincident vertices do not z-fight.
+		QuadEmitter quads = new QuadEmitter(pose, consumer, light).sprite(sprite);
+		quads.shade(shade.at(0.0F, 0.0F, -1.0F)).quadBothSides(0.0F, 0.0F, -1.0F,
 				x0, y0, RIM_FRONT, x1, y1, RIM_FRONT, x2, y2, RIM_FRONT, x3, y3, RIM_FRONT,
 				0.0F, radial, 0.0F, 0.0F, arc, 0.0F, arc, radial);
-		quad(pose, consumer, sprite, light, shade.at(0.0F, 0.0F, 1.0F), 0.0F, 0.0F, 1.0F,
+		quads.shade(shade.at(0.0F, 0.0F, 1.0F)).quadBothSides(0.0F, 0.0F, 1.0F,
 				x3, y3, RIM_BACK, x2, y2, RIM_BACK, x1, y1, RIM_BACK, x0, y0, RIM_BACK,
 				arc, radial, arc, 0.0F, 0.0F, 0.0F, 0.0F, radial);
-		quad(pose, consumer, sprite, light, shade.at(mx, my, 0.0F), mx, my, 0.0F,
+		quads.shade(shade.at(mx, my, 0.0F)).quadBothSides(mx, my, 0.0F,
 				x1, y1, RIM_FRONT, x1, y1, RIM_BACK, x2, y2, RIM_BACK, x2, y2, RIM_FRONT,
 				0.0F, depth, 0.0F, 0.0F, arc, 0.0F, arc, depth);
-		quad(pose, consumer, sprite, light, shade.at(-mx, -my, 0.0F), -mx, -my, 0.0F,
+		quads.shade(shade.at(-mx, -my, 0.0F)).quadBothSides(-mx, -my, 0.0F,
 				x3, y3, RIM_FRONT, x3, y3, RIM_BACK, x0, y0, RIM_BACK, x0, y0, RIM_FRONT,
 				0.0F, depth, 0.0F, 0.0F, arc, 0.0F, arc, depth);
-	}
-
-	private static void quad(PoseStack.Pose pose, VertexConsumer consumer, TextureAtlasSprite sprite,
-			int light, float shade, float nx, float ny, float nz,
-			float ax, float ay, float az, float bx, float by, float bz,
-			float cx, float cy, float cz, float dx, float dy, float dz,
-			float ua, float va, float ub, float vb, float uc, float vc, float ud, float vd) {
-		// Exterior winding used by Minecraft's culled item pipeline.
-		vertex(pose, consumer, sprite, light, shade, nx, ny, nz, ax, ay, az, ua, va);
-		vertex(pose, consumer, sprite, light, shade, nx, ny, nz, bx, by, bz, ub, vb);
-		vertex(pose, consumer, sprite, light, shade, nx, ny, nz, cx, cy, cz, uc, vc);
-		vertex(pose, consumer, sprite, light, shade, nx, ny, nz, dx, dy, dz, ud, vd);
-		// Reverse winding guarantees that loader/facing transforms cannot make the solid ring
-		// disappear. Culling means exactly one copy is visible from either side, so the coincident
-		// vertices do not z-fight.
-		vertex(pose, consumer, sprite, light, shade, -nx, -ny, -nz, dx, dy, dz, ud, vd);
-		vertex(pose, consumer, sprite, light, shade, -nx, -ny, -nz, cx, cy, cz, uc, vc);
-		vertex(pose, consumer, sprite, light, shade, -nx, -ny, -nz, bx, by, bz, ub, vb);
-		vertex(pose, consumer, sprite, light, shade, -nx, -ny, -nz, ax, ay, az, ua, va);
-	}
-
-	private static void vertex(PoseStack.Pose pose, VertexConsumer consumer, TextureAtlasSprite sprite,
-			int light, float shade, float nx, float ny, float nz,
-			float x, float y, float z, float u, float v) {
-		consumer.addVertex(pose, x, y, z)
-				.setColor(shade, shade, shade, 1.0F)
-				.setUv(sprite.getU(u), sprite.getV(v))
-				.setOverlay(OverlayTexture.NO_OVERLAY)
-				.setLight(light)
-				.setNormal(pose, nx, ny, nz);
 	}
 
 	@Override
@@ -394,9 +370,9 @@ public final class WaterMillWheelBlockEntityRenderer<T extends WaterMillBlockEnt
 
 	private static void rotateToFacing(PoseStack poseStack, Direction facing) {
 		switch (facing) {
-			case SOUTH -> poseStack.mulPose(Axis.YP.rotationDegrees(180.0F));
-			case WEST -> poseStack.mulPose(Axis.YP.rotationDegrees(90.0F));
-			case EAST -> poseStack.mulPose(Axis.YP.rotationDegrees(-90.0F));
+			case SOUTH -> Poses.rotate(poseStack, Axis.YP.rotationDegrees(180.0F));
+			case WEST -> Poses.rotate(poseStack, Axis.YP.rotationDegrees(90.0F));
+			case EAST -> Poses.rotate(poseStack, Axis.YP.rotationDegrees(-90.0F));
 			default -> {
 			}
 		}

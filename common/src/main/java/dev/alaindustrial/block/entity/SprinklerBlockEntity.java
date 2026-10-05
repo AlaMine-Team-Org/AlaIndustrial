@@ -1,19 +1,18 @@
 package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.block.entity.machine.SyncChannels;
+import dev.alaindustrial.compat.Bonemeal;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.MenuProvider;
-import net.minecraft.network.chat.Component;
 import dev.alaindustrial.menu.SprinklerMenu;
 import dev.alaindustrial.item.fluid.ItemFluidBridge;
 import dev.alaindustrial.core.fluid.FluidAmounts;
 import dev.alaindustrial.block.SprinklerBlock;
-import dev.alaindustrial.core.crop.CropMaturity;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.core.fluid.FluidHolder;
@@ -58,7 +57,7 @@ import net.minecraft.world.level.storage.ValueOutput;
  * block in its interior and treats it as a third growth axis, drawing solution through
  * {@link #drawForGrowth} per delivered crystal.
  */
-public class SprinklerBlockEntity extends MachineBlockEntity implements FluidPortHost, MenuProvider {
+public class SprinklerBlockEntity extends MachineBlockEntity implements FluidPortHost, MenuProvider, NoUpgradePanel {
 
 	/** How far above and below its own level the spray reaches — a crop bed is rarely flat. */
 	private static final int SCAN_Y_BELOW = 1;
@@ -88,7 +87,7 @@ public class SprinklerBlockEntity extends MachineBlockEntity implements FluidPor
 	public static final int FILL_INPUT_SLOT = 0;
 	/** The emptied container drops here. */
 	public static final int FILL_OUTPUT_SLOT = 1;
-	/** Machine-specific slot count; no upgrade panel is appended (see {@link #hasUpgradePanel()}). */
+	/** Machine-specific slot count; no upgrade panel is appended (see {@link NoUpgradePanel}). */
 	public static final int SLOT_COUNT = 2;
 
 	/** Sentinel for an empty tank on the fluid-id sync channel — see {@link FluidTank#FLUID_ID_NONE}. */
@@ -131,15 +130,9 @@ public class SprinklerBlockEntity extends MachineBlockEntity implements FluidPor
 		super(ModContent.SPRINKLER_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT, 0L, 0L, 0L);
 	}
 
-	/**
-	 * No upgrade panel. Overclockers and the like all trade energy for speed, and this machine has no
-	 * energy to trade — four slots that could never do anything would be four slots a player has to
-	 * work out are dead.
-	 */
-	@Override
-	public boolean hasUpgradePanel() {
-		return false;
-	}
+	// No upgrade panel (NoUpgradePanel). Overclockers and the like all trade energy for speed, and this
+	// machine has no energy to trade — four slots that could never do anything would be four slots a
+	// player has to work out are dead.
 
 	private static boolean isNutrientSolution(FluidHolder fluid) {
 		return !fluid.isEmpty() && fluid.fluid() == ModContent.NUTRIENT_SOLUTION.get();
@@ -280,11 +273,11 @@ public class SprinklerBlockEntity extends MachineBlockEntity implements FluidPor
 			}
 			BlockState state = level.getBlockState(target);
 			if (!(state.getBlock() instanceof BonemealableBlock bonemealable)
-					|| !bonemealable.isValidBonemealTarget(level, target, state)) {
+					|| !Bonemeal.isValidTarget(bonemealable, level, target, state)) {
 				continue;
 			}
-			if (bonemealable.isBonemealSuccess(level, random, target, state)) {
-				bonemealable.performBonemeal(level, random, target, state);
+			if (Bonemeal.isSuccess(bonemealable, level, random, target, state)) {
+				Bonemeal.perform(bonemealable, level, random, target, state);
 			}
 			spend(price);
 			return true;
@@ -323,43 +316,24 @@ public class SprinklerBlockEntity extends MachineBlockEntity implements FluidPor
 		}
 	}
 
-	/** Six-wide data: the base four (energy/capacity/progress, all inert here) plus the tank gauge. */
-	public static final int DATA_COUNT = 6;
-
-	public static final int CH_SOLUTION_PERMILLE = 4;
-	public static final int CH_SOLUTION_FLUID_ID = 5;
-
 	/**
-	 * Channels 4 and 5 are derived, server-authoritative projections; nothing writes them back. The
-	 * level travels as a permille because each channel is a signed short — raw mB would truncate.
+	 * GUI sync channels (MOD-712, BE-7): the base four, the solution tank in permille and its fluid's
+	 * registry id; both read-only.
+	 *
+	 * Every channel is a signed short on the wire (see {@link SyncChannels}), so a tank travels as a
+	 * permille and a fluid as its registry id; the screen derives texture, tint and name from the id.
 	 */
-	private final ContainerData sprinklerData = new ContainerData() {
-		@Override
-		public int get(int index) {
-			return switch (index) {
-				case CH_SOLUTION_PERMILLE -> tank.amount <= 0 ? 0
-						: Math.max(1, (int) Math.min(tank.amount * 1000L / tank.capacity, 1000));
-				case CH_SOLUTION_FLUID_ID -> tank.fluidSyncId();
-				default -> SprinklerBlockEntity.this.dataAccess.get(index);
-			};
-		}
+	public enum Channel { ENERGY, CAPACITY, PROGRESS, MAX_PROGRESS, SOLUTION_PERMILLE, SOLUTION_FLUID_ID }
 
-		@Override
-		public void set(int index, int value) {
-			if (index < MachineBlockEntity.DATA_COUNT) {
-				SprinklerBlockEntity.this.dataAccess.set(index, value);
-			}
-		}
-
-		@Override
-		public int getCount() {
-			return DATA_COUNT;
-		}
-	};
+	/** Width of {@link #getDataAccess()}, which the menu's client stub sizes itself from (MOD-235). */
+	public static final int DATA_COUNT = Channel.values().length;
 
 	@Override
-	public ContainerData getDataAccess() {
-		return sprinklerData;
+	protected SyncChannels createChannels() {
+		return channels(Channel.class)
+				.read(Channel.SOLUTION_PERMILLE, () -> SyncChannels.permille(tank.amount, tank.capacity))
+				.read(Channel.SOLUTION_FLUID_ID, () -> tank.fluidSyncId())
+				.build();
 	}
 
 	/**
@@ -385,11 +359,6 @@ public class SprinklerBlockEntity extends MachineBlockEntity implements FluidPor
 	}
 
 	@Override
-	public Component getDisplayName() {
-		return Component.translatable("block.alaindustrial.sprinkler");
-	}
-
-	@Override
 	public AbstractContainerMenu createMenu(int syncId, Inventory inventory, Player player) {
 		return new SprinklerMenu(syncId, inventory, this,
 				ContainerLevelAccess.create(getLevel(), getBlockPos()));
@@ -403,8 +372,8 @@ public class SprinklerBlockEntity extends MachineBlockEntity implements FluidPor
 	}
 
 	@Override
-	protected void loadAdditional(ValueInput input) {
-		super.loadAdditional(input);
+	protected void loadMachineData(ValueInput input) {
+		super.loadMachineData(input);
 		// The fluid comes back from the stored id, never from what the sprinkler expects — hardcoding the
 		// expected fluid on load is the geothermal generator's save-corruption bug (flagged in MOD-261).
 		tank.load(input, "Solution");

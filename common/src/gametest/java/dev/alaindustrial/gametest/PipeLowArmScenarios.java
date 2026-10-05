@@ -6,6 +6,7 @@ import dev.alaindustrial.core.item.PipeFaceMode;
 import dev.alaindustrial.core.item.PipeFaceRender;
 import dev.alaindustrial.block.entity.ItemPipeBlockEntity;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -25,6 +26,31 @@ import net.minecraft.world.phys.shapes.CollisionContext;
  * where nothing was drawn — and no gate in this repo compares a model against a shape.
  */
 public final class PipeLowArmScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(PipeLowArmScenarios::itemPipeDropsArmTowardHalfBlock,
+								"mod540_item_pipe_drops_arm_toward_half_block")
+						.fabricId("PipeLowArmGameTest", "mod540ItemPipeDropsArmTowardHalfBlock").ticks(20, 40),
+				RosterEntry.of(PipeLowArmScenarios::itemPipeKeepsArmLevelWithoutHalfBlocks,
+								"mod540_item_pipe_keeps_arm_level_without_half_blocks")
+						.fabricId("PipeLowArmGameTest", "mod540ItemPipeKeepsArmLevelWithoutHalfBlocks").ticks(20, 40),
+				RosterEntry.of(PipeLowArmScenarios::itemPipeLowArmKeepsFaceMode,
+								"mod540_item_pipe_low_arm_keeps_face_mode")
+						.fabricId("PipeLowArmGameTest", "mod540ItemPipeLowArmKeepsFaceMode").ticks(20, 40),
+				RosterEntry.of(PipeLowArmScenarios::itemPipeVerticalFaceNeverDrops,
+								"mod540_item_pipe_vertical_face_never_drops")
+						.fabricId("PipeLowArmGameTest", "mod540ItemPipeVerticalFaceNeverDrops").ticks(20, 40),
+				RosterEntry.of(PipeLowArmScenarios::itemPipeRederivesStaleLowArm,
+								"mod540_item_pipe_rederives_stale_low_arm")
+						.fabricId("PipeLowArmGameTest", "mod540ItemPipeRederivesStaleLowArm").ticks(20, 40),
+				RosterEntry.of(PipeLowArmScenarios::fluidPipeLowArmDropsShape, "mod540_fluid_pipe_low_arm_drops_shape")
+						.fabricId("PipeLowArmGameTest", "mod540FluidPipeLowArmDropsShape").ticks(20, 40));
+
+		private Roster() {}
+	}
+
 	private PipeLowArmScenarios() {
 	}
 

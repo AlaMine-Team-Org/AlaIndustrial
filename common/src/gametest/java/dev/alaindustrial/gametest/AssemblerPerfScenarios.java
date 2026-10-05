@@ -59,6 +59,16 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public final class AssemblerPerfScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(AssemblerPerfScenarios::perf01FullWarehouseTickCost,
+								"assembler_full_warehouse_tick_cost")
+						.fabricId("AssemblerGameTest", "tcAsm24_fullWarehouseTickCost").ticks(20, 100));
+
+		private Roster() {}
+	}
+
 	private AssemblerPerfScenarios() {
 	}
 

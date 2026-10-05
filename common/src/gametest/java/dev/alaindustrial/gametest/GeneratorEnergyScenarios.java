@@ -9,7 +9,9 @@ import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.block.entity.StormWindMillBlockEntity;
 import dev.alaindustrial.block.entity.WaterMillBlockEntity;
 import dev.alaindustrial.block.entity.WindMillBlockEntity;
+import dev.alaindustrial.core.environment.GeneratorConfig;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -31,6 +33,87 @@ import static dev.alaindustrial.gametest.EnergyScenarioSupport.tick;
  */
 public final class GeneratorEnergyScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(GeneratorEnergyScenarios::generatorChargesAdjacentBox, "generator_charges_adjacent_box")
+						.fabricId("GeneratorGameTest", "tcGen001Fun04b_chargesAdjacentBox").ticks(20, 40),
+				RosterEntry.of(GeneratorEnergyScenarios::fullNeighbourNoLeak, "full_neighbour_no_leak")
+						.fabricId("GeneratorGameTest", "tcGen001Neg05b_fullNeighbourNoLeak").ticks(20, 40),
+				RosterEntry.of(GeneratorEnergyScenarios::windMillChargesAdjacentBox, "wind_mill_charges_adjacent_box")
+						.fabricId("WindMillGameTest", "tcWindmill001Con01_pushesToAdjacentBattery").ticks(120, 40)
+						.sky(true, false),
+				RosterEntry.of(GeneratorEnergyScenarios::waterMillWheelGate, "water_mill_wheel_gate")
+						.fabricId("WaterMillWheelGameTest", "waterMillWheel_wheelGate").ticks(20, 40),
+				RosterEntry.of(GeneratorEnergyScenarios::waterMillAdjacentFaceToFaceStalls,
+								"water_mill_adjacent_face_to_face_stalls")
+						.fabricId("WaterMillWheelGameTest", "waterMill_adjacentFaceToFaceStalls").ticks(20, 40),
+				RosterEntry.of(GeneratorEnergyScenarios::waterMillWheelWearsOut, "water_mill_wheel_wears_out")
+						.fabricId("WaterMillWheelGameTest", "waterMillWheel_wearsOut").ticks(20, 40),
+				RosterEntry.of(GeneratorEnergyScenarios::solarPanelGeneratesByDay, "solar_panel_generates_by_day")
+						.fabricId("SolarPanelGameTest", "tcSolar001Fun01_generatesByDay").ticks(40, 60)
+						.sky(true, false),
+				RosterEntry.of(GeneratorEnergyScenarios::solarPanelNoEuAtNight, "solar_panel_no_eu_at_night")
+						.fabricId("SolarPanelGameTest", "tcSolar001Neg01_noEuAtNight").ticks(40, 60).sky(true, false),
+				RosterEntry.of(GeneratorEnergyScenarios::geothermalLavaBucketRate, "geothermal_lava_bucket_rate")
+						.fabricId("FluidGameTest", "tcGeo001Fun01_lavaBucketProducesEu").ticks(20, 60),
+				RosterEntry.of(GeneratorEnergyScenarios::geothermalNoLavaNoEu, "geothermal_no_lava_no_eu")
+						.fabricId("FluidGameTest", "tcGeo001Neg01_noLavaNoEu").ticks(20, 60),
+				RosterEntry.of(GeneratorEnergyScenarios::windMillThunderMultipliesRate,
+								"wind_mill_thunder_multiplies_rate")
+						.fabricId("WindMillGameTest", "tcWindmill001Sta01_thunderMultipliesRate").ticks(120)
+						.sky(true, false),
+				RosterEntry.of(GeneratorEnergyScenarios::solarPanelReadoutMatchesBufferGain,
+								"solar_panel_readout_matches_buffer_gain")
+						.fabricId("SolarPanelGameTest", "mod356_solarPanelReadoutMatchesBufferGain").ticks(60)
+						.sky(true, false),
+				RosterEntry.of(GeneratorEnergyScenarios::windMillReadoutMatchesBufferGain,
+								"wind_mill_readout_matches_buffer_gain")
+						.fabricId("WindMillGameTest", "mod356_windMillReadoutMatchesBufferGain").ticks(120)
+						.sky(true, false),
+				RosterEntry.of(GeneratorEnergyScenarios::t2WindMillReadoutsMatchBufferGain,
+								"t2_wind_mill_readouts_match_buffer_gain")
+						.fabricId("WindMillGameTest", "mod356_t2WindMillReadoutsMatchBufferGain").ticks(120)
+						.sky(true, false),
+				RosterEntry.of(GeneratorEnergyScenarios::generatorFullBufferPausesBurn,
+								"generator_full_buffer_pauses_burn")
+						.fabricId("GeneratorGameTest", "tcGen001Neg03b_fullBufferPausesBurn").ticks(20, 40),
+				RosterEntry.of(GeneratorEnergyScenarios::generatorRatePerTickMatchesConfig,
+								"generator_rate_per_tick_matches_config")
+						.fabricId("GeneratorGameTest", "tcGen001Prf01b_ratePerTickMatchesConfig").ticks(20, 40),
+				RosterEntry.of(GeneratorEnergyScenarios::moonlitPanelGeneratesAtNight,
+								"moonlit_panel_generates_at_night")
+						.fabricId("SolarPanelGameTest", "tcMoonlit001Fun01_generatesAtNight").ticks(40, 60)
+						.sky(true, false),
+				RosterEntry.of(GeneratorEnergyScenarios::daylightPanelGeneratesByDay, "daylight_panel_generates_by_day")
+						.fabricId("SolarPanelGameTest", "tcDaylight001Fun01_generatesByDay").ticks(40, 60)
+						.sky(true, false),
+				RosterEntry.of(GeneratorEnergyScenarios::daylightPanelNoEuAtNight, "daylight_panel_no_eu_at_night")
+						.fabricId("SolarPanelGameTest", "tcDaylight001Neg01_noEuAtNight").ticks(40, 60)
+						.sky(true, false),
+				RosterEntry.of(GeneratorEnergyScenarios::generatorBufferCapsAtMaxBva,
+								"generator_buffer_caps_at_max_bva")
+						.fabricId("GeneratorGameTest", "tcGen001Fun02b_bufferCapsAtMaxBva").ticks(20, 40),
+				RosterEntry.of(GeneratorEnergyScenarios::solarPanelBufferCapsAtMaxBva,
+								"solar_panel_buffer_caps_at_max_bva")
+						.fabricId("SolarPanelGameTest", "tcSolar001Prf02_bufferCapsAtMax").ticks(40, 60)
+						.sky(true, false),
+				RosterEntry.of(GeneratorEnergyScenarios::solarDayChipEvolvesToDaylight,
+								"solar_day_chip_evolves_to_daylight")
+						.fabricId("SolarPanelGameTest", "tcSolar001Fun02_dayChipEvolvesToDaylight").ticks(40, 200)
+						.sky(true, false),
+				RosterEntry.of(GeneratorEnergyScenarios::geothermalTankBucketBoundary,
+								"geothermal_tank_bucket_boundary")
+						.fabricId("FluidGameTest", "tcGeo001Prf03_oneBucketYieldsTotalEu").ticks(20, 40),
+				RosterEntry.of(GeneratorEnergyScenarios::generatorRejectsExternalEu, "generator_rejects_external_eu")
+						.fabricId("GeneratorGameTest", "tcGen001Neg01b_rejectsExternalEu").ticks(20, 40),
+				RosterEntry.of(GeneratorEnergyScenarios::windMillRoofedYieldsZero, "wind_mill_roofed_yields_zero")
+						.fabricId("WindMillGameTest", "tcWindmill001Neg01_roofedYieldsZero").ticks(120)
+						.sky(true, false));
+
+		private Roster() {}
+	}
+
 	private GeneratorEnergyScenarios() {}
 
 	// ── scenario 1: generator → directly-adjacent battery box (no cable) ──────────────────────────
@@ -40,6 +123,9 @@ public final class GeneratorEnergyScenarios {
 	/**
 	 * Generator pushes EU into a directly-adjacent battery box (cable-less push path).
 	 * Mirrors: GeneratorGameTest.tcGen001Fun04_pushesToAdjacentConsumer
+	 *
+	 * @implements TC-GEN-001-FUN04 — direct push into an adjacent battery box (cable-less path).
+	 * Body: {@link GeneratorEnergyScenarios#generatorChargesAdjacentBox}.
 	 */
 	public static void generatorChargesAdjacentBox(GameTestHelper helper) {
 		helper.setBlock(GEN, ModContent.GENERATOR.get());
@@ -66,6 +152,9 @@ public final class GeneratorEnergyScenarios {
 	 * no-leak guard). Pre-charge the generator to half with no fuel (produce()==0), fill the neighbour,
 	 * and assert the generator buffer is byte-for-byte unchanged after driving.
 	 * Mirrors: GeneratorGameTest.tcGen001Neg05_fullAdjacentConsumerDoesNotDrainGenerator
+	 *
+	 * @implements TC-GEN-001-NEG05 — a full adjacent consumer does not drain the generator into the void.
+	 * Body: {@link GeneratorEnergyScenarios#fullNeighbourNoLeak}.
 	 */
 	public static void fullNeighbourNoLeak(GameTestHelper helper) {
 		helper.setBlock(GEN, ModContent.GENERATOR.get());
@@ -101,6 +190,11 @@ public final class GeneratorEnergyScenarios {
 	 * arithmetic is covered numerically at L1 in {@code WindMillOutputTest}); this verifies the world wiring —
 	 * face roles and the cable-less push path — on the NeoForge lane.
 	 * Mirrors: WindMillGameTest.tcWindmill001Con01_pushesToAdjacentBattery
+	 *
+	 * @implements TC-WINDMILL-001-CON01 — the mill pushes EU into a BatteryBox placed against its BACK face
+	 *     (the only output face, opposite of FACING). FACING defaults to NORTH, so the back is SOUTH.
+	 *     The mill buffer is pre-filled so there is always EU to push.
+	 * @covers R-NRG-03, R-CON-01
 	 */
 	public static void windMillChargesAdjacentBox(GameTestHelper helper) {
 		BlockPos millPos = new BlockPos(1, 2, 1);
@@ -180,9 +274,8 @@ public final class GeneratorEnergyScenarios {
 	 * Mirrors: WaterMillWheelGameTest.waterMillWheel_wearsOutAndBreaks
 	 */
 	public static void waterMillWheelWearsOut(GameTestHelper helper) {
-		int savedRate = Config.waterMillWheelEuPerDamage;
-		try {
-			Config.waterMillWheelEuPerDamage = 1; // 1 EU of production spends 1 durability point
+		try (ConfigOverrides o = ConfigOverrides.sync()) {
+			o.set("waterMillWheelEuPerDamage", 1); // 1 EU of production spends 1 durability point
 			BlockPos millPos = new BlockPos(1, 2, 1);
 			helper.setBlock(millPos, ModContent.WATER_MILL.get());
 			WaterMillBlockEntity mill = helper.getBlockEntity(millPos, WaterMillBlockEntity.class);
@@ -217,8 +310,6 @@ public final class GeneratorEnergyScenarios {
 				return;
 			}
 			helper.succeed();
-		} finally {
-			Config.waterMillWheelEuPerDamage = savedRate;
 		}
 	}
 
@@ -290,6 +381,13 @@ public final class GeneratorEnergyScenarios {
 	 * globalEuRateMultiplier × ticks. Exercises the full day-brightness wiring on the NeoForge lane
 	 * (level.isBrightOutside → produce → buffer). The buffer (8000) is far from full at 20 × 1 EU = 20.
 	 * Mirrors: SolarPanelGameTest.tcSolar001Fun01_generatesByDay
+	 *
+	 * @implements TC-SOLAR-001-FUN01 — generates EU by day under open sky, accumulating at exactly the
+	 *     config rate × ticks. The buffer (8000) is far from full at 20 ticks × 1 EU/t = 20 EU, so the
+	 *     rate is read cleanly. A regression that halves/doubles {@code solarEuPerTick} or drops the
+	 *     global multiplier is caught here, not just by the neighbouring PRF01 — an upper-bound-only
+	 *     {@code amount > 0} would pass a panel that generates 0.1 EU/t or 100 EU/t.
+	 * @covers R-NRG-15
 	 */
 	public static void solarPanelGeneratesByDay(GameTestHelper helper) {
 		helper.setBlock(SOLAR, ModContent.SOLAR_PANEL.get());
@@ -300,7 +398,7 @@ public final class GeneratorEnergyScenarios {
 				panel.serverTick(helper.getLevel(), panel.getBlockPos(),
 						helper.getLevel().getBlockState(panel.getBlockPos()));
 			}
-			long perTick = Math.max(1, Math.round(Config.solarEuPerTick * Config.globalEuRateMultiplier));
+			long perTick = Math.max(1, Math.round(GeneratorConfig.solarEuPerTick * Config.globalEuRateMultiplier));
 			long expected = perTick * ticks;
 			long got = panel.getEnergyStorage().getAmount();
 			if (got != expected) {
@@ -318,6 +416,8 @@ public final class GeneratorEnergyScenarios {
 	 * Solar panel generates 0 EU at midnight (night mode). A panel that leaks day generation into the
 	 * night (broken brightness read or cached skyDarken) would fail here.
 	 * Mirrors: SolarPanelGameTest.tcSolar001Neg01_noEuAtNight
+	 *
+	 * @implements TC-SOLAR-001-NEG01 — base panel generates 0 EU at night (day-only). @covers R-NRG-15
 	 */
 	public static void solarPanelNoEuAtNight(GameTestHelper helper) {
 		helper.setBlock(SOLAR, ModContent.SOLAR_PANEL.get());
@@ -348,6 +448,13 @@ public final class GeneratorEnergyScenarios {
 	 * the buffer grows by {@code 5 × geothermalEuPerTick = 80} EU (buffer 4000 is far from full). Catches a
 	 * regression that halves/doubles the conversion factor. The empty bucket is returned to the output slot.
 	 * Mirrors: FluidGameTest.tcGeo001Fun01_lavaBucketProducesEu
+	 *
+	 * @implements TC-GEO-001-FUN01 — a lava bucket is consumed for EU and the empty bucket returned, and
+	 *     the buffer grows by the exact per-tick rate × ticks. The buffer (4000) is far from full at 5
+	 *     ticks × 16 EU/t = 80 EU, so the rate is read cleanly with no cap masking; a regression that
+	 *     halves or doubles {@code geothermalEuPerTick} (or drops the conversion factor) is caught here,
+	 *     not just by the neighbouring PRF01.
+	 * @covers R-NRG-15
 	 */
 	public static void geothermalLavaBucketRate(GameTestHelper helper) {
 		helper.setBlock(GEO, ModContent.GEOTHERMAL_GENERATOR.get());
@@ -359,11 +466,12 @@ public final class GeneratorEnergyScenarios {
 				geo.serverTick(helper.getLevel(), geo.getBlockPos(),
 						helper.getLevel().getBlockState(geo.getBlockPos()));
 			}
-			long expected = (long) ticks * Config.geothermalEuPerTick;
+			long expected = (long) ticks * GeneratorConfig.geothermalEuPerTick;
 			long got = geo.getEnergyStorage().getAmount();
 			if (got != expected) {
 				helper.fail("geothermal produced " + got + " EU over " + ticks + " ticks, expected exactly "
-						+ expected + " (" + ticks + " × geothermalEuPerTick=" + Config.geothermalEuPerTick + ")");
+						+ expected + " (" + ticks + " × geothermalEuPerTick=" + GeneratorConfig.geothermalEuPerTick
+								+ ")");
 				return;
 			}
 			if (!geo.getItem(dev.alaindustrial.block.entity.GeothermalGeneratorBlockEntity.OUTPUT_SLOT)
@@ -385,6 +493,8 @@ public final class GeneratorEnergyScenarios {
 	 * Geothermal generator with no lava produces 0 EU. Catches a regression where the generator produces
 	 * EU unconditionally (ignores the lava/bucket gate).
 	 * Mirrors: FluidGameTest.tcGeo001Neg01_noLavaNoEu
+	 *
+	 * @implements TC-GEO-001-NEG01 — no lava → no EU. @covers R-NRG-15
 	 */
 	public static void geothermalNoLavaNoEu(GameTestHelper helper) {
 		helper.setBlock(GEO, ModContent.GEOTHERMAL_GENERATOR.get());
@@ -429,6 +539,11 @@ public final class GeneratorEnergyScenarios {
 	 * STRICTLY greater than the clear rate (thunder factor > 1), proving the weather wiring end-to-end
 	 * through the block entity, not just the static helper.
 	 * Mirrors: WindMillGameTest.tcWindmill001Sta01_thunderMultipliesRate
+	 *
+	 * @implements TC-WINDMILL-001-STA01 — a thunderstorm multiplies the base rate (×windMillThunderFactor,
+	 *     capped at windMillMaxEuPerTick): the storm rate is ≥ the clear-sky rate for the same block. The
+	 *     per-tick output matches {@link WindMillOutput#euFor} evaluated with thunder active.
+	 * @covers R-NRG-04
 	 */
 	public static void windMillThunderMultipliesRate(GameTestHelper helper) {
 		WindMillBlockEntity mill = placeWindRaised(helper);
@@ -437,7 +552,7 @@ public final class GeneratorEnergyScenarios {
 			return;
 		}
 		ServerLevel level = helper.getLevel();
-		int ticks = Config.windMillSampleTicks > 0 ? Config.windMillSampleTicks : 40;
+		int ticks = GeneratorConfig.windMillSampleTicks > 0 ? GeneratorConfig.windMillSampleTicks : 40;
 
 		// Clear-weather sample: empty buffer, drive, measure growth.
 		level.getWeatherData().setRaining(false);
@@ -467,7 +582,7 @@ public final class GeneratorEnergyScenarios {
 		if (stormRate <= clearRate) {
 			helper.fail("thunder did not raise wind output: clear=" + clearRate + " storm=" + stormRate
 					+ " over " + ticks + " ticks (expected storm > clear, thunderFactor="
-					+ Config.windMillThunderFactor + ")");
+					+ GeneratorConfig.windMillThunderFactor + ")");
 			return;
 		}
 		helper.succeed();
@@ -488,9 +603,7 @@ public final class GeneratorEnergyScenarios {
 	 * buffer gained" are the same tick's numbers rather than an average over a window.
 	 */
 	public static void solarPanelReadoutMatchesBufferGain(GameTestHelper helper) {
-		float savedMultiplier = Config.globalEuRateMultiplier;
-		try {
-			Config.globalEuRateMultiplier = 2.0f;
+		try (ConfigOverrides o = ConfigOverrides.sync().set("globalEuRateMultiplier", 2.0f)) {
 			helper.setBlock(SOLAR, ModContent.SOLAR_PANEL.get());
 			setClearDay(helper);
 			if (!(be(helper, SOLAR) instanceof dev.alaindustrial.block.entity.SolarPanelBlockEntity panel)) {
@@ -511,7 +624,7 @@ public final class GeneratorEnergyScenarios {
 						+ " so this test could never catch a wrong readout");
 				return;
 			}
-			if (gained == Config.solarEuPerTick) {
+			if (gained == GeneratorConfig.solarEuPerTick) {
 				helper.fail("globalEuRateMultiplier=2.0 did not reach the buffer (gained " + gained
 						+ " EU, the mechanical rate) — the readout comparison below would be vacuous");
 				return;
@@ -522,8 +635,6 @@ public final class GeneratorEnergyScenarios {
 				return;
 			}
 			helper.succeed();
-		} finally {
-			Config.globalEuRateMultiplier = savedMultiplier;
 		}
 	}
 
@@ -540,8 +651,7 @@ public final class GeneratorEnergyScenarios {
 	 * to zero, a mill that is genuinely turning must still report at least 1 EU/t, never 0.
 	 */
 	public static void windMillReadoutMatchesBufferGain(GameTestHelper helper) {
-		float savedMultiplier = Config.globalEuRateMultiplier;
-		try {
+		try (ConfigOverrides o = ConfigOverrides.sync()) {
 			WindMillBlockEntity mill = placeWindRaised(helper);
 			if (mill == null) {
 				helper.fail("raised wind mill block entity missing");
@@ -554,8 +664,8 @@ public final class GeneratorEnergyScenarios {
 			level.setRainLevel(0.0f);
 
 			// Warm the sampling cache at the shipped multiplier and read off the mechanical rate.
-			Config.globalEuRateMultiplier = 1.0f;
-			int warmUp = Math.max(1, Config.windMillSampleTicks);
+			o.set("globalEuRateMultiplier", 1.0f);
+			int warmUp = Math.max(1, GeneratorConfig.windMillSampleTicks);
 			for (int i = 0; i < warmUp; i++) {
 				mill.serverTick(level, pos, level.getBlockState(pos));
 			}
@@ -567,7 +677,7 @@ public final class GeneratorEnergyScenarios {
 			}
 
 			// ×2 — one measured tick.
-			Config.globalEuRateMultiplier = 2.0f;
+			o.set("globalEuRateMultiplier", 2.0f);
 			mill.getEnergyStorage().setAmountUntracked(0);
 			mill.serverTick(level, pos, level.getBlockState(pos));
 			long gained = mill.getEnergyStorage().getAmount();
@@ -576,7 +686,7 @@ public final class GeneratorEnergyScenarios {
 						+ " EU on a mechanical rate of " + mechanical + " (expected " + (mechanical * 2L) + ")");
 				return;
 			}
-			int shown = mill.getDataAccess().get(WindMillBlockEntity.RATE_CHANNEL);
+			int shown = mill.getDataAccess().get(WindMillBlockEntity.Channel.RATE.ordinal());
 			if (shown != gained) {
 				helper.fail("wind mill readout says " + shown + " EU/t but the buffer gained " + gained
 						+ " EU in the same tick (globalEuRateMultiplier=2.0)");
@@ -591,11 +701,11 @@ public final class GeneratorEnergyScenarios {
 			}
 
 			// Floor: a multiplier small enough to round to zero still reports a turning mill as ≥ 1 EU/t.
-			Config.globalEuRateMultiplier = 0.1f;
+			o.set("globalEuRateMultiplier", 0.1f);
 			mill.getEnergyStorage().setAmountUntracked(0);
 			mill.serverTick(level, pos, level.getBlockState(pos));
 			long floorGain = mill.getEnergyStorage().getAmount();
-			int floorShown = mill.getDataAccess().get(WindMillBlockEntity.RATE_CHANNEL);
+			int floorShown = mill.getDataAccess().get(WindMillBlockEntity.Channel.RATE.ordinal());
 			if (floorGain < 1) {
 				helper.fail("a turning mill credited " + floorGain + " EU at multiplier 0.1 — the max(1, ...)"
 						+ " floor is gone");
@@ -608,8 +718,6 @@ public final class GeneratorEnergyScenarios {
 				return;
 			}
 			helper.succeed();
-		} finally {
-			Config.globalEuRateMultiplier = savedMultiplier;
 		}
 	}
 
@@ -627,8 +735,7 @@ public final class GeneratorEnergyScenarios {
 	 * interference rule and stall both.
 	 */
 	public static void t2WindMillReadoutsMatchBufferGain(GameTestHelper helper) {
-		float savedMultiplier = Config.globalEuRateMultiplier;
-		try {
+		try (ConfigOverrides o = ConfigOverrides.sync()) {
 			for (int y = 2; y < WIND_RAISED.getY(); y++) {
 				helper.setBlock(new BlockPos(WIND_RAISED.getX(), y, WIND_RAISED.getZ()), Blocks.GLASS);
 			}
@@ -636,17 +743,15 @@ public final class GeneratorEnergyScenarios {
 			level.getWeatherData().setRaining(false);
 			level.getWeatherData().setThundering(false);
 			level.setRainLevel(0.0f);
-			if (!assertT2Readout(helper, ModContent.HIGH_ALTITUDE_WIND_MILL.get(),
-					HighAltitudeWindMillBlockEntity.RATE_CHANNEL, "high-altitude wind mill")) {
+			if (!assertT2Readout(helper, o, ModContent.HIGH_ALTITUDE_WIND_MILL.get(),
+					HighAltitudeWindMillBlockEntity.Channel.RATE.ordinal(), "high-altitude wind mill")) {
 				return;
 			}
-			if (!assertT2Readout(helper, ModContent.STORM_WIND_MILL.get(),
-					StormWindMillBlockEntity.RATE_CHANNEL, "storm wind mill")) {
+			if (!assertT2Readout(helper, o, ModContent.STORM_WIND_MILL.get(),
+					StormWindMillBlockEntity.Channel.RATE.ordinal(), "storm wind mill")) {
 				return;
 			}
 			helper.succeed();
-		} finally {
-			Config.globalEuRateMultiplier = savedMultiplier;
 		}
 	}
 
@@ -654,7 +759,8 @@ public final class GeneratorEnergyScenarios {
 	 * Place {@code block} on the shared pillar with a rotor, then assert its rate channel equals the buffer
 	 * gain at a 2.0 multiplier while channel 2 stays mechanical. Returns false once it has failed the test.
 	 */
-	private static boolean assertT2Readout(GameTestHelper helper, Block block, int rateChannel, String label) {
+	private static boolean assertT2Readout(GameTestHelper helper, ConfigOverrides o, Block block, int rateChannel,
+			String label) {
 		ServerLevel level = helper.getLevel();
 		helper.setBlock(WIND_RAISED, block);
 		MachineBlockEntity mill = helper.getBlockEntity(WIND_RAISED, MachineBlockEntity.class);
@@ -665,8 +771,8 @@ public final class GeneratorEnergyScenarios {
 		// Slot 0 is ROTOR_SLOT on both T2 branches (they declare it separately, same index as the T1 mill).
 		mill.setItem(0, new ItemStack(ModContent.WINDMILL_ROTOR.get()));
 
-		Config.globalEuRateMultiplier = 1.0f;
-		int warmUp = Math.max(1, Config.windMillSampleTicks);
+		o.set("globalEuRateMultiplier", 1.0f);
+		int warmUp = Math.max(1, GeneratorConfig.windMillSampleTicks);
 		for (int i = 0; i < warmUp; i++) {
 			mill.serverTick(level, WIND_RAISED, level.getBlockState(WIND_RAISED));
 		}
@@ -677,7 +783,7 @@ public final class GeneratorEnergyScenarios {
 			return false;
 		}
 
-		Config.globalEuRateMultiplier = 2.0f;
+		o.set("globalEuRateMultiplier", 2.0f);
 		mill.getEnergyStorage().setAmountUntracked(0);
 		mill.serverTick(level, WIND_RAISED, level.getBlockState(WIND_RAISED));
 		long gained = mill.getEnergyStorage().getAmount();
@@ -708,6 +814,9 @@ public final class GeneratorEnergyScenarios {
 	 * A generator with coal but a FULL buffer must pause the burn — burnTime must not decrement while
 	 * there is no room for the produced EU. Catches a regression that wastes fuel when full.
 	 * Mirrors: GeneratorGameTest.tcGen001Neg03_fullBufferPausesBurn
+	 *
+	 * @implements TC-GEN-001-NEG03 — a full buffer pauses the burn (R-NRG-11, no fuel waste).
+	 * Body: {@link GeneratorEnergyScenarios#generatorFullBufferPausesBurn}.
 	 */
 	public static void generatorFullBufferPausesBurn(GameTestHelper helper) {
 		helper.setBlock(GEN, ModContent.GENERATOR.get());
@@ -735,9 +844,12 @@ public final class GeneratorEnergyScenarios {
 	}
 
 	/**
-	 * Generator EU rate equals {@code Config.fuelEuPerTick} (canon 8 EU/t): one clean tick from empty
+	 * Generator EU rate equals {@code GeneratorConfig.fuelEuPerTick} (canon 8 EU/t): one clean tick from empty
 	 * produces exactly that much.
 	 * Mirrors: GeneratorGameTest.tcGen001Prf01_ratePerTickMatchesConfig
+	 *
+	 * @implements TC-GEN-001-PRF01 — exact EU/t rate == {@code fuelEuPerTick} × multiplier.
+	 * Body: {@link GeneratorEnergyScenarios#generatorRatePerTickMatchesConfig}.
 	 */
 	public static void generatorRatePerTickMatchesConfig(GameTestHelper helper) {
 		helper.setBlock(GEN, ModContent.GENERATOR.get());
@@ -749,8 +861,8 @@ public final class GeneratorEnergyScenarios {
 			gen.serverTick(helper.getLevel(), gen.getBlockPos(),
 					helper.getLevel().getBlockState(gen.getBlockPos()));
 			long made = gen.getEnergyStorage().getAmount();
-			if (made != Config.fuelEuPerTick) {
-				helper.fail("EU/t expected " + Config.fuelEuPerTick + " but measured " + made);
+			if (made != GeneratorConfig.fuelEuPerTick) {
+				helper.fail("EU/t expected " + GeneratorConfig.fuelEuPerTick + " but measured " + made);
 				return;
 			}
 			helper.succeed();
@@ -767,6 +879,12 @@ public final class GeneratorEnergyScenarios {
 	 * Moonlit solar panel generates EU at midnight, accumulating at exactly {@code moonlitEuPerTick} ×
 	 * globalEuRateMultiplier × ticks. Exercises the night-brightness branch (inverse of the day panel).
 	 * Mirrors: SolarPanelGameTest.tcMoonlit001Fun01_generatesAtNight
+	 *
+	 * @implements TC-MOONLIT-001-FUN01 — moonlit panel generates EU at midnight, accumulating at exactly
+	 *     {@code moonlitEuPerTick} × globalEuRateMultiplier × ticks. See {@link #tcSolar001Fun01_generatesByDay}
+	 *     for why an upper-bound-only assertion is insufficient. Moonlit buffer (8000) is far from full
+	 *     at 20 × 3 EU = 60, so the rate reads cleanly.
+	 * @covers R-NRG-15
 	 */
 	public static void moonlitPanelGeneratesAtNight(GameTestHelper helper) {
 		helper.setBlock(MOONLIT, ModContent.MOONLIT_SOLAR_PANEL.get());
@@ -777,7 +895,7 @@ public final class GeneratorEnergyScenarios {
 				panel.serverTick(helper.getLevel(), panel.getBlockPos(),
 						helper.getLevel().getBlockState(panel.getBlockPos()));
 			}
-			long perTick = Math.max(1, Math.round(Config.moonlitEuPerTick * Config.globalEuRateMultiplier));
+			long perTick = Math.max(1, Math.round(GeneratorConfig.moonlitEuPerTick * Config.globalEuRateMultiplier));
 			long expected = perTick * ticks;
 			long got = panel.getEnergyStorage().getAmount();
 			if (got != expected) {
@@ -797,6 +915,12 @@ public final class GeneratorEnergyScenarios {
 	 * Daylight solar panel generates EU by day, accumulating at exactly {@code daylightEuPerTick} ×
 	 * globalEuRateMultiplier × ticks. The daylight panel is the day-evolved branch (4 EU/t).
 	 * Mirrors: SolarPanelGameTest.tcDaylight001Fun01_generatesByDay
+	 *
+	 * @implements TC-DAYLIGHT-001-FUN01 — daylight panel generates EU by day under open sky, accumulating
+	 *     at exactly {@code daylightEuPerTick} × globalEuRateMultiplier × ticks. See
+	 *     {@link #tcSolar001Fun01_generatesByDay} for why an upper-bound-only assertion is insufficient.
+	 *     Daylight buffer (8000) is far from full at 20 × 4 EU = 80, so the rate reads cleanly.
+	 * @covers R-NRG-15
 	 */
 	public static void daylightPanelGeneratesByDay(GameTestHelper helper) {
 		helper.setBlock(SOLAR, ModContent.DAYLIGHT_SOLAR_PANEL.get());
@@ -807,7 +931,7 @@ public final class GeneratorEnergyScenarios {
 				panel.serverTick(helper.getLevel(), panel.getBlockPos(),
 						helper.getLevel().getBlockState(panel.getBlockPos()));
 			}
-			long perTick = Math.max(1, Math.round(Config.daylightEuPerTick * Config.globalEuRateMultiplier));
+			long perTick = Math.max(1, Math.round(GeneratorConfig.daylightEuPerTick * Config.globalEuRateMultiplier));
 			long expected = perTick * ticks;
 			long got = panel.getEnergyStorage().getAmount();
 			if (got != expected) {
@@ -824,6 +948,8 @@ public final class GeneratorEnergyScenarios {
 	/**
 	 * Daylight solar panel is day-only: at midnight it produces 0 EU (it does NOT inherit the moonlit
 	 * night branch). Catches a regression that lets the evolved panel generate at night.
+	 *
+	 * @implements TC-DAYLIGHT-001-NEG01 — daylight panel produces 0 EU at night (day-only). @covers R-NRG-15
 	 */
 	public static void daylightPanelNoEuAtNight(GameTestHelper helper) {
 		helper.setBlock(SOLAR, ModContent.DAYLIGHT_SOLAR_PANEL.get());
@@ -847,10 +973,13 @@ public final class GeneratorEnergyScenarios {
 	// ── scenario 24: generator buffer cap-1 BVA (R-NRG-01) ─────────────────────────────────────────
 
 	/**
-	 * Generator buffer caps at {@code Config.generatorBuffer} (BVA): pre-charged to cap−1, after a
+	 * Generator buffer caps at {@code GeneratorConfig.generatorBuffer} (BVA): pre-charged to cap−1, after a
 	 * burning tick it tops off to exactly cap, never above. Starting at cap only proves "stays full";
 	 * the cap−1 leg proves the boundary is actually reached and enforced.
 	 * Mirrors: GeneratorGameTest.tcGen001Fun02_bufferCapsAtMax
+	 *
+	 * @implements TC-GEN-001-FUN02 — buffer tops off to exactly {@code generatorBuffer} from cap−1 (BVA leg).
+	 * Body: {@link GeneratorEnergyScenarios#generatorBufferCapsAtMaxBva}.
 	 */
 	public static void generatorBufferCapsAtMaxBva(GameTestHelper helper) {
 		helper.setBlock(GEN, ModContent.GENERATOR.get());
@@ -875,15 +1004,22 @@ public final class GeneratorEnergyScenarios {
 	}
 
 	/**
-	 * Solar panel buffer caps at {@code Config.solarBuffer} (BVA): pre-charged to cap−1, after a clear-day
+	 * Solar panel buffer caps at {@code GeneratorConfig.solarBuffer} (BVA): pre-charged to cap−1, after a clear-day
 	 * tick it tops off to exactly cap.
 	 * Mirrors: SolarPanelGameTest.tcSolar001Prf02_bufferCapsAtMax
+	 *
+	 * @implements TC-SOLAR-001-PRF02 — buffer caps at {@code GeneratorConfig.solarBuffer} (BVA). Pre-charges the
+	 *     panel to {@code cap − 1} (one EU short of full) and drives a clear-day tick: generation of
+	 *     ≥1 EU must top the buffer off to exactly {@code cap}, never above. Starting AT the cap only
+	 *     proves "stays full", which would also pass a buffer that silently drains — the cap−1 leg is
+	 *     what proves the boundary is actually reached and enforced.
+	 * @covers R-NRG-01
 	 */
 	public static void solarPanelBufferCapsAtMaxBva(GameTestHelper helper) {
 		helper.setBlock(SOLAR, ModContent.SOLAR_PANEL.get());
 		setClearDay(helper);
 		if (be(helper, SOLAR) instanceof dev.alaindustrial.block.entity.SolarPanelBlockEntity panel) {
-			long cap = Config.solarBuffer;
+			long cap = GeneratorConfig.solarBuffer;
 			panel.getEnergyStorage().setAmountUntracked(cap - 1);
 			for (int i = 0; i < 5; i++) {
 				panel.serverTick(helper.getLevel(), panel.getBlockPos(),
@@ -909,6 +1045,9 @@ public final class GeneratorEnergyScenarios {
 	 * panel after {@code solarEvolveTicks} of accumulated sky-time. The block in the world changes from
 	 * SOLAR_PANEL to DAYLIGHT_SOLAR_PANEL. Catches a regression that breaks the evolution wiring.
 	 * Mirrors: SolarPanelGameTest.tcSolar001Fun02_dayChipEvolvesToDaylight
+	 *
+	 * @implements TC-SOLAR-001-FUN02 — a day evolution chip evolves the panel into the daylight panel,
+	 *     carrying the stored EU and consuming the chip (the shared evolveInto helper, MOD-166 #4).
 	 */
 	public static void solarDayChipEvolvesToDaylight(GameTestHelper helper) {
 		helper.setBlock(EVO, ModContent.SOLAR_PANEL.get());
@@ -919,7 +1058,7 @@ public final class GeneratorEnergyScenarios {
 			// Pre-charge the buffer so the carry-EU assertion below is meaningful (placement leaves 0).
 			long energy0 = 1500L;
 			panel.getEnergyStorage().setAmountUntracked(energy0);
-			for (int i = 0; i < Config.solarEvolveTicks + 100; i++) {
+			for (int i = 0; i < GeneratorConfig.solarEvolveTicks + 100; i++) {
 				panel.serverTick(helper.getLevel(), panel.getBlockPos(),
 						helper.getLevel().getBlockState(panel.getBlockPos()));
 				// Re-grab the BE: evolution replaces it with a DaylightSolarPanelBlockEntity.
@@ -930,7 +1069,7 @@ public final class GeneratorEnergyScenarios {
 			net.minecraft.world.level.block.state.BlockState evolved =
 					helper.getLevel().getBlockState(helper.absolutePos(EVO));
 			if (evolved.getBlock() != ModContent.DAYLIGHT_SOLAR_PANEL.get()) {
-				helper.fail("solar panel did not evolve into daylight after " + Config.solarEvolveTicks
+				helper.fail("solar panel did not evolve into daylight after " + GeneratorConfig.solarEvolveTicks
 						+ " ticks with a day chip; block=" + evolved.getBlock());
 				return;
 			}
@@ -966,17 +1105,22 @@ public final class GeneratorEnergyScenarios {
 	 * that drops the conversion factor or mis-counts burn ticks. Drives enough ticks to exhaust the burn
 	 * and drains the EU buffer between ticks so the cap does not mask the total.
 	 * Mirrors: FluidGameTest.tcGeo001Prf03_oneBucketYieldsTotalEu
+	 *
+	 * @implements TC-GEO-001-PRF03 — burning exactly 1 bucket of lava (from the slot) yields
+	 * geothermalBurnTicks * geothermalEuPerTick total EU (16000), measured via cumulative buffer
+	 * growth (draining the buffer between ticks so the cap never masks the sum).
+	 * @covers R-NRG-04
 	 */
 	public static void geothermalTankBucketBoundary(GameTestHelper helper) {
 		helper.setBlock(GEO, ModContent.GEOTHERMAL_GENERATOR.get());
 		if (be(helper, GEO) instanceof dev.alaindustrial.block.entity.GeothermalGeneratorBlockEntity geo) {
 			geo.setItem(dev.alaindustrial.block.entity.GeothermalGeneratorBlockEntity.INPUT_SLOT,
 					new ItemStack(Items.LAVA_BUCKET));
-			long expected = (long) Config.geothermalBurnTicks * Config.geothermalEuPerTick;
+			long expected = (long) GeneratorConfig.geothermalBurnTicks * GeneratorConfig.geothermalEuPerTick;
 			long total = 0;
 			// Drive well past the burn duration, draining the buffer each tick so the cap never pauses
 			// the burn (which would mask the cumulative total).
-			for (int i = 0; i < Config.geothermalBurnTicks + 100; i++) {
+			for (int i = 0; i < GeneratorConfig.geothermalBurnTicks + 100; i++) {
 				geo.serverTick(helper.getLevel(), geo.getBlockPos(),
 						helper.getLevel().getBlockState(geo.getBlockPos()));
 				total += geo.getEnergyStorage().getAmount();
@@ -984,8 +1128,8 @@ public final class GeneratorEnergyScenarios {
 			}
 			if (total != expected) {
 				helper.fail("one lava bucket yielded " + total + " EU total, expected exactly " + expected
-						+ " (geothermalBurnTicks=" + Config.geothermalBurnTicks + " × geothermalEuPerTick="
-						+ Config.geothermalEuPerTick + ")");
+						+ " (geothermalBurnTicks=" + GeneratorConfig.geothermalBurnTicks + " × geothermalEuPerTick="
+						+ GeneratorConfig.geothermalEuPerTick + ")");
 				return;
 			}
 			helper.succeed();
@@ -1001,6 +1145,9 @@ public final class GeneratorEnergyScenarios {
 	 * A regression that lets the generator soak up EU from its neighbours (acting as a sink) would fail
 	 * here. Catches the same invariant as the Fabric lane's GeneratorGameTest NEG01.
 	 * Mirrors: GeneratorGameTest.tcGen001Neg01_rejectsExternalEu
+	 *
+	 * @implements TC-GEN-001-NEG01 — the generator publishes maxInsert == 0 and takes nothing from outside.
+	 * Body: {@link GeneratorEnergyScenarios#generatorRejectsExternalEu}.
 	 */
 	public static void generatorRejectsExternalEu(GameTestHelper helper) {
 		helper.setBlock(GEN, ModContent.GENERATOR.get());
@@ -1022,6 +1169,13 @@ public final class GeneratorEnergyScenarios {
 	 * a regression that drops the open-sky gate. The mill is at the default low POS, so height is already
 	 * 0; a stone block above makes the mode ROOFED, distinguishing "dead from roof" from "dead from height".
 	 * Mirrors: WindMillGameTest.tcWindmill001Neg01_roofedYieldsZero (mode leg)
+	 *
+	 * @implements TC-WINDMILL-001-NEG01 — a solid roof (no open sky column) forces mode ROOFED. The
+	 *     mill sits below sea level in the region (so EU/t is 0 from height regardless), which makes the
+	 *     accumulated-EU check alone indistinguishable from "always 0" — so the case asserts the MODE code
+	 *     on the maxProgress sync channel (3) as well, which is the only signal that distinguishes "dead from
+	 *     height" from "dead from roof". Drives past a sample window under a thunderstorm for coverage.
+	 * @covers R-NRG-04
 	 */
 	public static void windMillRoofedYieldsZero(GameTestHelper helper) {
 		BlockPos millPos = new BlockPos(1, 2, 1);
@@ -1036,7 +1190,7 @@ public final class GeneratorEnergyScenarios {
 			level.getWeatherData().setThundering(true);
 			level.setRainLevel(1.0f);
 			mill.getEnergyStorage().setAmountUntracked(0);
-			for (int i = 0; i < Config.windMillSampleTicks + 5; i++) {
+			for (int i = 0; i < GeneratorConfig.windMillSampleTicks + 5; i++) {
 				mill.serverTick(level, mill.getBlockPos(), level.getBlockState(mill.getBlockPos()));
 			}
 			long got = mill.getEnergyStorage().getAmount();

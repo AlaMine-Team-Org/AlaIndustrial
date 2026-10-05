@@ -2,6 +2,7 @@ package dev.alaindustrial.item.energy;
 
 import com.mojang.serialization.Codec;
 import dev.alaindustrial.Config;
+import dev.alaindustrial.item.ToolConfig;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -62,8 +63,8 @@ public record PouchContents(List<ItemStack> items) {
 	/**
 	 * Remaining weight before the pouch is full. The capacity is passed in rather than read from
 	 * {@link Config}: the same contents back two pouches with different capacities (the Battery
-	 * Pouch's {@link Config#lvPouchCapacity} and the Shielding Pouch's
-	 * {@link Config#shieldingPouchCapacity}), and a capacity read here would silently be the wrong
+	 * Pouch's {@link ToolConfig#lvPouchCapacity} and the Shielding Pouch's
+	 * {@link ToolConfig#shieldingPouchCapacity}), and a capacity read here would silently be the wrong
 	 * one for whichever pouch was not the original.
 	 */
 	public int room(int capacity) {

@@ -10,6 +10,7 @@ import dev.alaindustrial.block.entity.GoldChestBlockEntity;
 import dev.alaindustrial.block.entity.IronChestBlockEntity;
 import dev.alaindustrial.block.entity.ShieldingChestBlockEntity;
 import dev.alaindustrial.block.entity.SilverChestBlockEntity;
+import dev.alaindustrial.compat.client.ModelSubmit;
 import it.unimi.dsi.fastutil.floats.Float2FloatFunction;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.object.chest.ChestModel;
@@ -248,7 +249,7 @@ public class ChestBlockEntityRenderer<T extends AbstractChestBlockEntity>
 		open = 1.0F - open * open * open;
 		// Same overload the vanilla ChestRenderer uses: the atlas-sprite path gives the right
 		// RenderType (entityCutoutCull bound to the chest atlas) with correct depth/cull/mipmaps.
-		submitNodeCollector.submitModel(models.select(state.type), open, poseStack,
+		ModelSubmit.withCrumbling(submitNodeCollector, models.select(state.type), open, poseStack,
 				state.lightCoords, OverlayTexture.NO_OVERLAY, -1,
 				sprites.select(state.type), spriteGetter, 0, state.breakProgress);
 		poseStack.popPose();

@@ -2,9 +2,9 @@ package dev.alaindustrial.gametest;
 
 import static dev.alaindustrial.gametest.VisualStandSupport.awaitMenuScreen;
 
-import dev.alaindustrial.block.entity.ReactorControllerBlockEntity;
 import dev.alaindustrial.block.entity.ReactorIdleReason;
 import dev.alaindustrial.block.entity.ReactorRoomStatus;
+import dev.alaindustrial.block.entity.reactor.ReactorChannels;
 import dev.alaindustrial.client.screen.ReactorControllerScreen;
 import dev.alaindustrial.client.screen.reactor.ConsoleTabPage;
 import dev.alaindustrial.client.screen.reactor.RoomTabPage;
@@ -644,7 +644,7 @@ public final class ReactorConsoleGuiStand {
 			int rate, int steam, ReactorIdleReason idle, int stored, boolean meltdown, int blast,
 			int instability, int breachDx, int breachDy, int breachDz) {
 
-		/** 200 000 EU buffer, as Config.reactorBuffer ships. */
+		/** 200 000 EU buffer, as ReactorConfig.reactorBuffer ships. */
 		private static final int CAPACITY = 200_000;
 
 		static Reading running() {
@@ -725,41 +725,41 @@ public final class ReactorConsoleGuiStand {
 
 		void applyTo(ReactorControllerMenu menu, RoomBox box) {
 			menu.injectTestData(CAPACITY * stored / 100, CAPACITY, 0, 0);
-			menu.injectTestChannel(ReactorControllerBlockEntity.DATA_STATUS, status.ordinal());
-			menu.injectTestChannel(ReactorControllerBlockEntity.DATA_BREACH_DX, breachDx);
-			menu.injectTestChannel(ReactorControllerBlockEntity.DATA_BREACH_DY, breachDy);
-			menu.injectTestChannel(ReactorControllerBlockEntity.DATA_BREACH_DZ, breachDz);
-			menu.injectTestChannel(ReactorControllerBlockEntity.DATA_SIZE_X, box.sizeX());
-			menu.injectTestChannel(ReactorControllerBlockEntity.DATA_SIZE_Y, box.sizeY());
-			menu.injectTestChannel(ReactorControllerBlockEntity.DATA_SIZE_Z, box.sizeZ());
-			menu.injectTestChannel(ReactorControllerBlockEntity.DATA_BOX_WEST, box.west());
-			menu.injectTestChannel(ReactorControllerBlockEntity.DATA_BOX_NORTH, box.north());
-			menu.injectTestChannel(ReactorControllerBlockEntity.DATA_HOLE_COUNT, box.holes().length / 3);
+			menu.injectTestChannel(ReactorChannels.STATUS.ordinal(), status.ordinal());
+			menu.injectTestChannel(ReactorChannels.BREACH_DX.ordinal(), breachDx);
+			menu.injectTestChannel(ReactorChannels.BREACH_DY.ordinal(), breachDy);
+			menu.injectTestChannel(ReactorChannels.BREACH_DZ.ordinal(), breachDz);
+			menu.injectTestChannel(ReactorChannels.SIZE_X.ordinal(), box.sizeX());
+			menu.injectTestChannel(ReactorChannels.SIZE_Y.ordinal(), box.sizeY());
+			menu.injectTestChannel(ReactorChannels.SIZE_Z.ordinal(), box.sizeZ());
+			menu.injectTestChannel(ReactorChannels.BOX_WEST.ordinal(), box.west());
+			menu.injectTestChannel(ReactorChannels.BOX_NORTH.ordinal(), box.north());
+			menu.injectTestChannel(ReactorChannels.HOLE_COUNT.ordinal(), box.holes().length / 3);
 			for (int i = 0; i < box.holes().length; i++) {
-				menu.injectTestChannel(ReactorControllerBlockEntity.DATA_HOLE_FIRST + i, box.holes()[i]);
+				menu.injectTestChannel(ReactorChannels.HOLE_FIRST + i, box.holes()[i]);
 			}
-			menu.injectTestChannel(ReactorControllerBlockEntity.DATA_HEAT_PERCENT, heat);
-			menu.injectTestChannel(ReactorControllerBlockEntity.DATA_RODS, rods);
-			menu.injectTestChannel(ReactorControllerBlockEntity.DATA_DEPTH_PERCENT, depth);
-			menu.injectTestChannel(ReactorControllerBlockEntity.DATA_OUTPUT, output);
-			menu.injectTestChannel(ReactorControllerBlockEntity.DATA_WATER_PERCENT, water);
-			menu.injectTestChannel(ReactorControllerBlockEntity.DATA_WATER_RATE, rate);
-			menu.injectTestChannel(ReactorControllerBlockEntity.DATA_STEAM_PERCENT, steam);
-			menu.injectTestChannel(ReactorControllerBlockEntity.DATA_IDLE_REASON, idle.ordinal());
-			menu.injectTestChannel(ReactorControllerBlockEntity.DATA_ENERGY_PERCENT, stored);
-			menu.injectTestChannel(ReactorControllerBlockEntity.DATA_ENERGY_HUNDREDS, CAPACITY * stored / 100 / 100);
-			menu.injectTestChannel(ReactorControllerBlockEntity.DATA_MELTDOWN, meltdown ? 1 : 0);
-			menu.injectTestChannel(ReactorControllerBlockEntity.DATA_BLAST_PERCENT, blast);
-			menu.injectTestChannel(ReactorControllerBlockEntity.DATA_INSTABILITY, instability);
+			menu.injectTestChannel(ReactorChannels.HEAT_PERCENT.ordinal(), heat);
+			menu.injectTestChannel(ReactorChannels.RODS.ordinal(), rods);
+			menu.injectTestChannel(ReactorChannels.DEPTH_PERCENT.ordinal(), depth);
+			menu.injectTestChannel(ReactorChannels.OUTPUT.ordinal(), output);
+			menu.injectTestChannel(ReactorChannels.WATER_PERCENT.ordinal(), water);
+			menu.injectTestChannel(ReactorChannels.WATER_RATE.ordinal(), rate);
+			menu.injectTestChannel(ReactorChannels.STEAM_PERCENT.ordinal(), steam);
+			menu.injectTestChannel(ReactorChannels.IDLE_REASON.ordinal(), idle.ordinal());
+			menu.injectTestChannel(ReactorChannels.ENERGY_PERCENT.ordinal(), stored);
+			menu.injectTestChannel(ReactorChannels.ENERGY_HUNDREDS.ordinal(), CAPACITY * stored / 100 / 100);
+			menu.injectTestChannel(ReactorChannels.MELTDOWN.ordinal(), meltdown ? 1 : 0);
+			menu.injectTestChannel(ReactorChannels.BLAST_PERCENT.ordinal(), blast);
+			menu.injectTestChannel(ReactorChannels.INSTABILITY.ordinal(), instability);
 			// In these frames a working reactor with water carries all its heat, a working one with none carries
 			// nothing, and a silent one has nothing to carry.
-			menu.injectTestChannel(ReactorControllerBlockEntity.DATA_COOLANT_SHARE, water > 0 || output == 0 ? 100 : 0);
+			menu.injectTestChannel(ReactorChannels.COOLANT_SHARE.ordinal(), water > 0 || output == 0 ? 100 : 0);
 			// The shipped defaults, written out: the stand photographs a layout, not this client's Config.
-			menu.injectTestChannel(ReactorControllerBlockEntity.DATA_HEAT_WARN, 70);
-			menu.injectTestChannel(ReactorControllerBlockEntity.DATA_HEAT_MELTDOWN, 85);
-			menu.injectTestChannel(ReactorControllerBlockEntity.DATA_ROOM_MIN_INNER, 3);
-			menu.injectTestChannel(ReactorControllerBlockEntity.DATA_ROOM_MAX_INNER, 12);
-			menu.injectTestChannel(ReactorControllerBlockEntity.DATA_ROOM_MAX_GLASS, 30);
+			menu.injectTestChannel(ReactorChannels.HEAT_WARN.ordinal(), 70);
+			menu.injectTestChannel(ReactorChannels.HEAT_MELTDOWN.ordinal(), 85);
+			menu.injectTestChannel(ReactorChannels.ROOM_MIN_INNER.ordinal(), 3);
+			menu.injectTestChannel(ReactorChannels.ROOM_MAX_INNER.ordinal(), 12);
+			menu.injectTestChannel(ReactorChannels.ROOM_MAX_GLASS.ordinal(), 30);
 		}
 	}
 }

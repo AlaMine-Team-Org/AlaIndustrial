@@ -1,16 +1,9 @@
 package dev.alaindustrial.item.tool;
 
 import java.util.List;
-import net.minecraft.ChatFormatting;
-import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -22,12 +15,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.Tool;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import dev.alaindustrial.item.energy.PoweredToolTooltip;
 
 /**
  * Diamond-Tipped Electric Chainsaw (MOD-374) — the upgrade tier of the {@link ElectricChainsawItem},
@@ -149,16 +139,7 @@ public class ElectricChainsawDiamondTipItem extends ElectricChainsawItem {
 	 * could disagree with it.
 	 */
 	public static boolean isSilkMode(ItemStack stack) {
-		ItemEnchantments enchantments = stack.get(DataComponents.ENCHANTMENTS);
-		if (enchantments == null) {
-			return false;
-		}
-		for (Holder<Enchantment> enchantment : enchantments.keySet()) {
-			if (enchantment.is(Enchantments.SILK_TOUCH)) {
-				return true;
-			}
-		}
-		return false;
+		return SilkModeToggle.isSilkMode(stack);
 	}
 
 	/**
@@ -176,35 +157,13 @@ public class ElectricChainsawDiamondTipItem extends ElectricChainsawItem {
 	 */
 	@Override
 	public InteractionResult use(Level level, Player player, InteractionHand hand) {
-		if (!player.isShiftKeyDown()) {
-			return InteractionResult.PASS;
-		}
-		ItemStack stack = player.getItemInHand(hand);
-		boolean nowSilk = !isSilkMode(stack);
-		if (level instanceof ServerLevel serverLevel) {
-			Holder<Enchantment> silkTouch = serverLevel.registryAccess()
-					.lookupOrThrow(Registries.ENCHANTMENT)
-					.getOrThrow(Enchantments.SILK_TOUCH);
-			EnchantmentHelper.updateEnchantments(stack, mutable -> {
-				if (nowSilk) {
-					mutable.set(silkTouch, 1);
-				} else {
-					mutable.removeIf(enchantment -> enchantment.is(Enchantments.SILK_TOUCH));
-				}
-			});
-			if (player instanceof ServerPlayer serverPlayer) {
-				serverPlayer.sendSystemMessage(
-						Component.translatable(nowSilk
-								? "item.alaindustrial.electric_chainsaw_diamond_tip.silk_on"
-								: "item.alaindustrial.electric_chainsaw_diamond_tip.silk_off")
-								.withStyle(nowSilk ? ChatFormatting.AQUA : ChatFormatting.GRAY),
-						true);
-			}
-		}
-		// The same copper-bulb click the drill upgrade and the Electromagnet use — a powered device
-		// switching mode.
-		player.playSound(nowSilk ? SoundEvents.COPPER_BULB_TURN_ON : SoundEvents.COPPER_BULB_TURN_OFF,
-				0.7F, nowSilk ? 1.15F : 0.9F);
-		return InteractionResult.SUCCESS;
+		return SilkModeToggle.toggle(level, player, hand, "item.alaindustrial.electric_chainsaw_diamond_tip");
+	}
+
+	/** The base tooltip, then the Silk Touch state (MOD-374, MOD-481). */
+	@Override
+	public PoweredToolTooltip toolTooltip() {
+		return super.toolTooltip()
+				.withAfterCharge(SilkModeToggle.tooltipLine("tooltip.alaindustrial.electric_chainsaw_diamond_tip"));
 	}
 }

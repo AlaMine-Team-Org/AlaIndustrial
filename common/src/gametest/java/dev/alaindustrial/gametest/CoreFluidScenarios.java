@@ -3,7 +3,9 @@ package dev.alaindustrial.gametest;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.GeothermalGeneratorBlockEntity;
 import dev.alaindustrial.block.entity.PumpBlockEntity;
+import dev.alaindustrial.core.environment.GeneratorConfig;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -24,6 +26,15 @@ import net.minecraft.world.level.block.state.BlockState;
  * becomes EU), not just that it compiles.
  */
 public final class CoreFluidScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(CoreFluidScenarios::sourceToPumpToGeoToEu, "fluid_source_to_pump_to_geo_to_eu")
+						.fabricId("FluidGameTest", "coreFluid_sourceToPumpToGeoToEu").ticks(100, 40));
+
+		private Roster() {}
+	}
 
 	private CoreFluidScenarios() {
 	}
@@ -65,7 +76,7 @@ public final class CoreFluidScenarios {
 	 * runs in that same tick — the geo drains a full bucket from its tank into {@code lavaTicks} the instant
 	 * it has one, so the tank's End-of-loop amount is 0 and cannot be used as the transport oracle. Then the
 	 * pump is removed and the geo ticks alone so the EU it accumulates is an exact, uncontended multiple of
-	 * {@code Config.geothermalEuPerTick}.
+	 * {@code GeneratorConfig.geothermalEuPerTick}.
 	 */
 	public static void sourceToPumpToGeoToEu(GameTestHelper helper) {
 		ServerLevel level = helper.getLevel();
@@ -110,7 +121,7 @@ public final class CoreFluidScenarios {
 		long geoEnergyAfter = geo.getEnergyStorage().getAmount();
 
 		long expectedGeoTankPeak = dev.alaindustrial.core.fluid.FluidAmounts.BUCKET;
-		long expectedEuGain = (long) burnTicks * Config.geothermalEuPerTick;
+		long expectedEuGain = (long) burnTicks * GeneratorConfig.geothermalEuPerTick;
 		long actualEuGain = geoEnergyAfter - geoEnergyBefore;
 
 		boolean pumpAcquiredExactlyOneBucket = pumpTankPeak == dev.alaindustrial.core.fluid.FluidAmounts.BUCKET;

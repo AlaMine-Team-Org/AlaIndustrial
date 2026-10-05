@@ -6,8 +6,10 @@ import dev.alaindustrial.block.ChargePadState;
 import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.block.entity.ChargePadBlockEntity;
+import dev.alaindustrial.item.ToolConfig;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.RegistryAccess;
@@ -39,6 +41,61 @@ import net.minecraft.world.level.storage.TagValueInput;
  * Restore any of those three behaviours to the pack's original code and the matching test goes red.
  */
 public final class ChargePadScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(ChargePadScenarios::fun01ChargesCarriedItem, "pad_charges_carried_item")
+						.fabricId("ChargePadGameTest", "tcPad001Fun01_chargesCarriedItem").ticks(20, 40),
+				RosterEntry.of(ChargePadScenarios::fun02ChargesWornEquipment, "pad_charges_worn_equipment")
+						.fabricId("ChargePadGameTest", "tcPad001Fun02_chargesWornEquipment").ticks(20, 40),
+				RosterEntry.of(ChargePadScenarios::fun03ChargesEnergyPackDespiteTag, "pad_charges_pack_despite_tag")
+						.fabricId("ChargePadGameTest", "tcPad001Fun03_chargesEnergyPackDespiteTag").ticks(20, 40),
+				RosterEntry.of(ChargePadScenarios::fun04RespectsPerItemInputRate, "pad_respects_input_rate")
+						.fabricId("ChargePadGameTest", "tcPad001Fun04_respectsPerItemInputRate").ticks(20, 40),
+				RosterEntry.of(ChargePadScenarios::fun05BudgetIsSharedAndCapped, "pad_budget_shared_and_capped")
+						.fabricId("ChargePadGameTest", "tcPad001Fun05_budgetIsSharedAndCapped").ticks(20, 40),
+				RosterEntry.of(ChargePadScenarios::fun12WholeArmourSetChargesTogether, "pad_armour_set_together")
+						.fabricId("ChargePadGameTest", "tcPad001Fun12_wholeArmourSetChargesTogether").ticks(20, 40),
+				RosterEntry.of(ChargePadScenarios::fun06EmptyStationReportsEmpty, "pad_empty_reports_empty")
+						.fabricId("ChargePadGameTest", "tcPad001Fun06_emptyStationReportsEmpty").ticks(20, 40),
+				RosterEntry.of(ChargePadScenarios::fun07FullVisitorReportsReady, "pad_full_visitor_ready")
+						.fabricId("ChargePadGameTest", "tcPad001Fun07_fullVisitorReportsReady").ticks(20, 40),
+				RosterEntry.of(ChargePadScenarios::fun08ReleasesAfterVisitorLeaves, "pad_releases_after_leaving")
+						.fabricId("ChargePadGameTest", "tcPad001Fun08_releasesAfterVisitorLeaves").ticks(20, 40),
+				RosterEntry.of(ChargePadScenarios::fun09SpectatorIsIgnored, "pad_spectator_ignored")
+						.fabricId("ChargePadGameTest", "tcPad001Fun09_spectatorIsIgnored").ticks(20, 40),
+				RosterEntry.of(ChargePadScenarios::fun10EntityInsideHookReachesTheStation, "pad_entity_inside_hook")
+						.fabricId("ChargePadGameTest", "tcPad001Fun10_entityInsideHookReachesTheStation")
+						.ticks(20, 40),
+				RosterEntry.of(ChargePadScenarios::fun11OnlyTheStationUnderfootServes, "pad_only_underfoot_serves")
+						.fabricId("ChargePadGameTest", "tcPad001Fun11_onlyTheStationUnderfootServes").ticks(20, 40),
+				RosterEntry.of(ChargePadScenarios::nrg01EveryFaceIsIntakeOnly, "pad_faces_intake_only")
+						.fabricId("ChargePadGameTest", "tcPad001Nrg01_everyFaceIsIntakeOnly").ticks(20, 40),
+				RosterEntry.of(ChargePadScenarios::nrg02BufferPersists, "pad_buffer_persists")
+						.fabricId("ChargePadGameTest", "tcPad001Nrg02_bufferPersists").ticks(20, 40),
+				RosterEntry.of(ChargePadScenarios::nrg03TakesEnergyFromNeighbour, "pad_takes_energy_from_neighbour")
+						.fabricId("ChargePadGameTest", "tcPad001Nrg03_takesEnergyFromNeighbour").ticks(20, 40),
+				RosterEntry.of(ChargePadScenarios::gui01ReadoutTracksPayout, "pad_readout_tracks_payout")
+						.fabricId("ChargePadGameTest", "tcPad001Gui01_readoutTracksPayout").ticks(20, 40),
+				RosterEntry.of(ChargePadScenarios::gui02ReadoutClearsWhenAlone, "pad_readout_clears_when_alone")
+						.fabricId("ChargePadGameTest", "tcPad001Gui02_readoutClearsWhenAlone").ticks(20, 40),
+				RosterEntry.of(ChargePadScenarios::snd01ClickIsOnePerVisit, "pad_click_is_one_per_visit")
+						.fabricId("ChargePadGameTest", "tcPad001Snd01_clickIsOnePerVisit").ticks(20, 40),
+				RosterEntry.of(ChargePadScenarios::mod668FinishedChargeChimesOnce,
+								"pad_mod668_finished_charge_chimes_once")
+						.fabricId("ChargePadGameTest", "mod668FinishedChargeChimesOnce").ticks(20, 100),
+				RosterEntry.of(ChargePadScenarios::mod668ArrivingFullIsSilent, "pad_mod668_arriving_full_is_silent")
+						.fabricId("ChargePadGameTest", "mod668ArrivingFullIsSilent").ticks(20, 100),
+				RosterEntry.of(ChargePadScenarios::mod406PayoutsAreBatchedNotPerTick,
+								"pad_mod406_payouts_are_batched_not_per_tick")
+						.fabricId("ChargePadGameTest", "mod406PayoutsAreBatchedNotPerTick").ticks(20, 100),
+				RosterEntry.of(ChargePadScenarios::mod406BatchedPayoutMatchesPerTickTotal,
+								"pad_mod406_batched_payout_matches_per_tick_total")
+						.fabricId("ChargePadGameTest", "mod406BatchedPayoutMatchesPerTickTotal").ticks(20, 100));
+
+		private Roster() {}
+	}
 
 	private ChargePadScenarios() {}
 
@@ -128,7 +185,12 @@ public final class ChargePadScenarios {
 
 	// ── FUN — functional ─────────────────────────────────────────────────────────────────────────
 
-	/** FUN01: one tick of contact moves one tick's budget into a carried item and debits the station. */
+	/**
+	 * FUN01: one tick of contact moves one tick's budget into a carried item and debits the station.
+	 *
+	 * @implements TC-PAD-001-FUN01 — one tick of contact moves one tick's budget into a carried item,
+	 *     debits the station by exactly that, and lights the indicator.
+	 */
 	public static void fun01ChargesCarriedItem(GameTestHelper helper) {
 		ChargePadBlockEntity pad = placePad(helper, Config.chargePadBuffer);
 		ServerPlayer player = survivalPlayer(helper);
@@ -157,6 +219,9 @@ public final class ChargePadScenarios {
 	 * <p>Regression guard: the pack's original distribution walked {@code getNonEquipmentItems()} plus
 	 * the offhand and never touched armour slots. Drop {@code Policy.includeEquipped} and a jetpack on
 	 * the player's back charges to exactly 0 here.
+	 *
+	 * @implements TC-PAD-001-FUN02 — worn equipment is charged, not just carried items (the reason to
+	 *     stand on the station after a flight).
 	 */
 	public static void fun02ChargesWornEquipment(GameTestHelper helper) {
 		ChargePadBlockEntity pad = placePad(helper, Config.chargePadBuffer);
@@ -185,6 +250,9 @@ public final class ChargePadScenarios {
 	 * (they would ping-pong energy and drain the wearer); a stationary charger cannot ping-pong with
 	 * anything, and topping up the pack is the main reason to step on the station. Reuse the pack's own
 	 * policy here — {@code Policy.WORN_PACK} — and the pack silently stays empty.
+	 *
+	 * @implements TC-PAD-001-FUN03 — the Energy Pack charges despite its no_auto_charge tag: the tag
+	 *     stops chargers charging chargers, which a stationary pad is not.
 	 */
 	public static void fun03ChargesEnergyPackDespiteTag(GameTestHelper helper) {
 		ChargePadBlockEntity pad = placePad(helper, Config.chargePadBuffer);
@@ -212,6 +280,9 @@ public final class ChargePadScenarios {
 	 * <p>Regression guard: the station's per-tick budget (128 EU) is four times what any powered item
 	 * accepts (32 EU/t). The pack's original {@code give} clamped only by free space, so reusing it
 	 * unchanged would push the whole 128 into the first item in slot order.
+	 *
+	 * @implements TC-PAD-001-FUN04 — no item takes more than its own input rate in a tick, even though
+	 *     the station's budget is four times that.
 	 */
 	public static void fun04RespectsPerItemInputRate(GameTestHelper helper) {
 		ChargePadBlockEntity pad = placePad(helper, Config.chargePadBuffer);
@@ -241,6 +312,9 @@ public final class ChargePadScenarios {
 	 * output, which is the only arrangement that can observe {@link Config#chargePadOutputRate} at all.
 	 * With two items (2 × 32 &lt; 128) the budget never binds, and deleting the output cap entirely
 	 * would go unnoticed — the exact hole this case exists to close.
+	 *
+	 * @implements TC-PAD-001-FUN05 — the per-tick output is a shared total: with demand above it, the
+	 *     first items take a full input rate each and the rest wait for the next tick.
 	 */
 	public static void fun05BudgetIsSharedAndCapped(GameTestHelper helper) {
 		ChargePadBlockEntity pad = placePad(helper, Config.chargePadBuffer);
@@ -299,6 +373,9 @@ public final class ChargePadScenarios {
 	 * helmet and chestplate fill first and the leggings and boots only afterwards, because the budget
 	 * was handed out in scan order and worn gear sits last in it. Every piece must now move on the same
 	 * tick.
+	 *
+	 * @implements TC-PAD-001-FUN12 — a full worn armour set charges on the same tick as carried gear,
+	 *     instead of filling two pieces at a time in scan order (MOD-334).
 	 */
 	public static void fun12WholeArmourSetChargesTogether(GameTestHelper helper) {
 		ChargePadBlockEntity pad = placePad(helper, Config.chargePadBuffer);
@@ -328,7 +405,11 @@ public final class ChargePadScenarios {
 		helper.succeed();
 	}
 
-	/** FUN06: an empty station charges nothing and says so on the indicator. */
+	/**
+	 * FUN06: an empty station charges nothing and says so on the indicator.
+	 *
+	 * @implements TC-PAD-001-FUN06 — a station with a flat buffer charges nothing and reads EMPTY.
+	 */
 	public static void fun06EmptyStationReportsEmpty(GameTestHelper helper) {
 		ChargePadBlockEntity pad = placePad(helper, 0L);
 		ServerPlayer player = survivalPlayer(helper);
@@ -346,11 +427,15 @@ public final class ChargePadScenarios {
 		helper.succeed();
 	}
 
-	/** FUN07: a visitor whose gear is already full gets the "you are done" signal, and costs nothing. */
+	/**
+	 * FUN07: a visitor whose gear is already full gets the "you are done" signal, and costs nothing.
+	 *
+	 * @implements TC-PAD-001-FUN07 — a visitor with full gear costs nothing and reads READY.
+	 */
 	public static void fun07FullVisitorReportsReady(GameTestHelper helper) {
 		ChargePadBlockEntity pad = placePad(helper, Config.chargePadBuffer);
 		ServerPlayer player = survivalPlayer(helper);
-		player.getInventory().setItem(0, drill(Config.electricDrillBuffer));
+		player.getInventory().setItem(0, drill(ToolConfig.electricDrillBuffer));
 
 		pad.chargePlayer(helper.getLevel(), player);
 
@@ -371,6 +456,9 @@ public final class ChargePadScenarios {
 	 * left would keep a phantom load on the network forever. It also covers the stuck-flag failure the
 	 * timestamp design exists to prevent — a player who leaves the world between the two ticks never
 	 * gets to clear anything.
+	 *
+	 * @implements TC-PAD-001-FUN08 — the station releases its indicator and stops drawing once contact
+	 *     goes stale (the idle-producer guard, MOD-214).
 	 */
 	public static void fun08ReleasesAfterVisitorLeaves(GameTestHelper helper) {
 		ChargePadBlockEntity pad = placePad(helper, Config.chargePadBuffer);
@@ -402,7 +490,11 @@ public final class ChargePadScenarios {
 				.thenSucceed();
 	}
 
-	/** FUN09: a spectator drifting through the block charges nothing and costs the station nothing. */
+	/**
+	 * FUN09: a spectator drifting through the block charges nothing and costs the station nothing.
+	 *
+	 * @implements TC-PAD-001-FUN09 — a spectator is charged nothing and drains nothing.
+	 */
 	public static void fun09SpectatorIsIgnored(GameTestHelper helper) {
 		ChargePadBlockEntity pad = placePad(helper, Config.chargePadBuffer);
 		// Standing in the station's cell, exactly like the survival visitor — otherwise this would pass
@@ -430,6 +522,9 @@ public final class ChargePadScenarios {
 	 * they all stay green while the station is stone dead in game. This one drives the vanilla hook
 	 * itself — the same "test the real path, end to end" guard the Energy Pack's inventory-tick case
 	 * exists for.
+	 *
+	 * @implements TC-PAD-001-FUN10 — the block's own entityInside hook reaches the block entity, so the
+	 *     feature cannot be dead in game while the direct-call cases stay green.
 	 */
 	public static void fun10EntityInsideHookReachesTheStation(GameTestHelper helper) {
 		ChargePadBlockEntity pad = placePad(helper, Config.chargePadBuffer);
@@ -459,6 +554,9 @@ public final class ChargePadScenarios {
 	 * stations serve the same player in the same tick, so the carried item takes twice its documented
 	 * input rate and the pair hands out twice the documented per-tick output — invisible in play until
 	 * someone counts EU, and directly contrary to the 1×1 zone the design settled on.
+	 *
+	 * @implements TC-PAD-001-FUN11 — a player straddling two stations is served by exactly one; the
+	 *     other spends nothing.
 	 */
 	public static void fun11OnlyTheStationUnderfootServes(GameTestHelper helper) {
 		ChargePadBlockEntity here = placePad(helper, Config.chargePadBuffer);
@@ -494,6 +592,8 @@ public final class ChargePadScenarios {
 	 *
 	 * <p>The station is a pure consumer. Left at the inherited {@code BOTH} its ports would advertise
 	 * extraction and the network would enumerate it as a candidate producer.
+	 *
+	 * @implements TC-PAD-001-NRG01 — every face accepts energy and no face offers any.
 	 */
 	public static void nrg01EveryFaceIsIntakeOnly(GameTestHelper helper) {
 		ChargePadBlockEntity pad = placePad(helper, Config.chargePadBuffer);
@@ -519,6 +619,8 @@ public final class ChargePadScenarios {
 	 * <p>The box's rotation is load-bearing: it emits ONLY from the face opposite its {@code FACING},
 	 * so with the station to its east it must face west. Placed with the default state it would emit
 	 * into thin air and this test would fail for a reason that has nothing to do with the station.
+	 *
+	 * @implements TC-PAD-001-NRG03 — the station draws EU out of an adjacent source into its buffer.
 	 */
 	public static void nrg03TakesEnergyFromNeighbour(GameTestHelper helper) {
 		ChargePadBlockEntity pad = placePad(helper, 0L);
@@ -545,7 +647,11 @@ public final class ChargePadScenarios {
 		helper.succeed();
 	}
 
-	/** NRG02: the banked buffer survives a save/load round trip — a station keeps its charge overnight. */
+	/**
+	 * NRG02: the banked buffer survives a save/load round trip — a station keeps its charge overnight.
+	 *
+	 * @implements TC-PAD-001-NRG02 — the banked buffer survives an NBT round trip.
+	 */
 	public static void nrg02BufferPersists(GameTestHelper helper) {
 		ServerLevel level = helper.getLevel();
 		RegistryAccess registries = level.registryAccess();
@@ -568,6 +674,8 @@ public final class ChargePadScenarios {
 	 * A drill a few payouts short of full is charged to the brim and the player stays on: the station
 	 * plays its chime exactly once. A gametest cannot hear, so it counts through
 	 * {@link ChargePadBlockEntity#chimesPlayed}; the rules themselves are pinned by ChargePadChimeTest.
+	 *
+	 * @implements MOD-668 — a finished charge chimes exactly once.
 	 */
 	public static void mod668FinishedChargeChimesOnce(GameTestHelper helper) {
 		ChargePadBlockEntity pad = placePad(helper, Config.chargePadBuffer);
@@ -598,11 +706,15 @@ public final class ChargePadScenarios {
 		helper.succeed();
 	}
 
-	/** A visitor who arrives already full hears nothing: there was no charge to finish. */
+	/**
+	 * A visitor who arrives already full hears nothing: there was no charge to finish.
+	 *
+	 * @implements MOD-668 — arriving already full is silent.
+	 */
 	public static void mod668ArrivingFullIsSilent(GameTestHelper helper) {
 		ChargePadBlockEntity pad = placePad(helper, Config.chargePadBuffer);
 		ServerPlayer player = survivalPlayer(helper);
-		player.getInventory().setItem(0, drill(Config.electricDrillBuffer));
+		player.getInventory().setItem(0, drill(ToolConfig.electricDrillBuffer));
 		for (int i = 0; i < 60; i++) {
 			pad.chargePlayer(helper.getLevel(), player);
 		}
@@ -628,6 +740,8 @@ public final class ChargePadScenarios {
 	 * <p>The number is chosen so the item's own input rate binds, not the station budget: that is the
 	 * ceiling a naive "just call it less often" would quietly divide by the batch size, turning a
 	 * performance fix into a nerf.
+	 *
+	 * @implements MOD-406 — batched payouts deliver exactly what per-tick payouts did.
 	 */
 	public static void mod406BatchedPayoutMatchesPerTickTotal(GameTestHelper helper) {
 		ChargePadBlockEntity pad = placePad(helper, Config.chargePadBuffer);
@@ -673,6 +787,8 @@ public final class ChargePadScenarios {
 	 *
 	 * <p>Asserts a ceiling rather than an exact count, so the cadence constant can be retuned without
 	 * rewriting the test — but a ceiling far below twenty, so reverting to per-tick payouts reddens it.
+	 *
+	 * @implements MOD-406 — and the stack is rewritten a handful of times, not every tick.
 	 */
 	public static void mod406PayoutsAreBatchedNotPerTick(GameTestHelper helper) {
 		ChargePadBlockEntity pad = placePad(helper, Config.chargePadBuffer);
@@ -715,6 +831,8 @@ public final class ChargePadScenarios {
 	 * against literals, because a literal here would pass on any balance and prove nothing about the
 	 * wiring. What this guards is that the three channels are fed from the real transfer — swap the
 	 * distributor's report for a constant and the rate or the item count goes wrong.
+	 *
+	 * @implements TC-PAD-001-GUI01 — the screen's channels carry the payout that actually happened.
 	 */
 	public static void gui01ReadoutTracksPayout(GameTestHelper helper) {
 		ChargePadBlockEntity pad = placePad(helper, Config.chargePadBuffer);
@@ -727,19 +845,19 @@ public final class ChargePadScenarios {
 		ContainerData data = pad.getDataAccess();
 		// The first tick of contact pays at once (the leading edge), so one tick's worth settled.
 		long expectedRate = Math.min(tickBudget(), ItemEnergy.inputRate(tool));
-		if (data.get(ChargePadBlockEntity.DATA_RATE) != expectedRate) {
+		if (data.get(ChargePadBlockEntity.Channel.RATE.ordinal()) != expectedRate) {
 			helper.fail("delivery channel should read " + expectedRate + " EU/t, got "
-					+ data.get(ChargePadBlockEntity.DATA_RATE));
+					+ data.get(ChargePadBlockEntity.Channel.RATE.ordinal()));
 			return;
 		}
-		if (data.get(ChargePadBlockEntity.DATA_ITEMS) != 1) {
+		if (data.get(ChargePadBlockEntity.Channel.ITEMS.ordinal()) != 1) {
 			helper.fail("one carried item was charged, the channel says "
-					+ data.get(ChargePadBlockEntity.DATA_ITEMS));
+					+ data.get(ChargePadBlockEntity.Channel.ITEMS.ordinal()));
 			return;
 		}
-		if (data.get(ChargePadBlockEntity.DATA_ETA) <= 0) {
+		if (data.get(ChargePadBlockEntity.Channel.ETA.ordinal()) <= 0) {
 			helper.fail("a drill that took one tick's charge still has room, so the estimate must be "
-					+ "positive, got " + data.get(ChargePadBlockEntity.DATA_ETA));
+					+ "positive, got " + data.get(ChargePadBlockEntity.Channel.ETA.ordinal()));
 			return;
 		}
 		helper.succeed();
@@ -751,6 +869,8 @@ public final class ChargePadScenarios {
 	 * <p>The second half is the cheap guard for a whole class of "it worked on my integrated server"
 	 * bugs: {@code ContainerData} ships each channel as a SIGNED 16-bit short, so anything outside
 	 * ±32767 arrives negative on a real client. Sweeping every channel catches it without a client test.
+	 *
+	 * @implements TC-PAD-001-GUI02 — an empty station reports nothing, and every channel fits a short.
 	 */
 	public static void gui02ReadoutClearsWhenAlone(GameTestHelper helper) {
 		ChargePadBlockEntity pad = placePad(helper, Config.chargePadBuffer);
@@ -758,7 +878,7 @@ public final class ChargePadScenarios {
 		player.getInventory().setItem(0, drill(0));
 
 		pad.chargePlayer(helper.getLevel(), player);
-		if (pad.getDataAccess().get(ChargePadBlockEntity.DATA_RATE) <= 0) {
+		if (pad.getDataAccess().get(ChargePadBlockEntity.Channel.RATE.ordinal()) <= 0) {
 			helper.fail("precondition: the station must be delivering before the visitor leaves");
 			return;
 		}
@@ -776,13 +896,13 @@ public final class ChargePadScenarios {
 							return;
 						}
 					}
-					if (data.get(ChargePadBlockEntity.DATA_RATE) != 0
-							|| data.get(ChargePadBlockEntity.DATA_ITEMS) != 0
-							|| data.get(ChargePadBlockEntity.DATA_ETA) != 0) {
+					if (data.get(ChargePadBlockEntity.Channel.RATE.ordinal()) != 0
+							|| data.get(ChargePadBlockEntity.Channel.ITEMS.ordinal()) != 0
+							|| data.get(ChargePadBlockEntity.Channel.ETA.ordinal()) != 0) {
 						helper.fail("an unoccupied station must report nothing, got rate="
-								+ data.get(ChargePadBlockEntity.DATA_RATE) + " items="
-								+ data.get(ChargePadBlockEntity.DATA_ITEMS) + " eta="
-								+ data.get(ChargePadBlockEntity.DATA_ETA));
+								+ data.get(ChargePadBlockEntity.Channel.RATE.ordinal()) + " items="
+								+ data.get(ChargePadBlockEntity.Channel.ITEMS.ordinal()) + " eta="
+								+ data.get(ChargePadBlockEntity.Channel.ETA.ordinal()));
 					}
 				})
 				.thenSucceed();
@@ -795,6 +915,8 @@ public final class ChargePadScenarios {
 	 * property worth guarding anyway: the station is a storage sink, so every intake from the grid wakes
 	 * it and walks back into the "contact went stale" branch. Without the flag the plate would click at a
 	 * departure that already happened, over and over, for as long as the station kept refilling.
+	 *
+	 * @implements TC-PAD-001-SND01 — one click per visit; a grid refill cannot replay the departure.
 	 */
 	public static void snd01ClickIsOnePerVisit(GameTestHelper helper) {
 		ChargePadBlockEntity pad = placePad(helper, Config.chargePadBuffer);

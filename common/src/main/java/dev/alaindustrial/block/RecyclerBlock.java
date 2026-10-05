@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.RecyclerBlockEntity;
 import dev.alaindustrial.registry.ModSounds;
 import java.util.function.Supplier;
@@ -9,11 +8,14 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import dev.alaindustrial.client.ServerBalance;
+import dev.alaindustrial.core.tooltip.HasMachineTooltip;
+import dev.alaindustrial.core.tooltip.MachineTooltipSpec;
+import java.util.List;
 
 /**
  * The Recycler (MOD-145). Beyond the usual {@code lit} state it carries {@link #LAMPS}: how many of the
@@ -24,9 +26,7 @@ import net.minecraft.world.level.block.state.BlockState;
  * in and the batch will pay ballast, three means the mix is right. The rule the machine is built around
  * is otherwise invisible from the outside.
  */
-public class RecyclerBlock extends LitMachineBlock implements MachineHumProvider {
-	public static final MapCodec<RecyclerBlock> CODEC = simpleCodec(RecyclerBlock::new);
-
+public class RecyclerBlock extends LitMachineBlock implements MachineHumProvider, HasMachineTooltip {
 	/** Fractions present in the current batch, 0..3 — the lamp count on the front face. */
 	public static final IntegerProperty LAMPS = IntegerProperty.create("lamps", 0, 3);
 
@@ -39,11 +39,6 @@ public class RecyclerBlock extends LitMachineBlock implements MachineHumProvider
 	protected void createBlockStateDefinition(StateDefinition.Builder<net.minecraft.world.level.block.Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder);
 		builder.add(LAMPS);
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override
@@ -74,5 +69,15 @@ public class RecyclerBlock extends LitMachineBlock implements MachineHumProvider
 		// mod's usual macerator_grind loudness anchor — this is the separate, code-level knob,
 		// the same layered-attenuation idiom charge_pad/electric_heater use at 0.18.
 		return 0.25f;
+	}
+
+	/** Hover tooltip of this block's item (MOD-716, ADR-040). */
+	@Override
+	public MachineTooltipSpec machineTooltip() {
+		return new MachineTooltipSpec(MachineTooltipSpec.Tier.LV,
+				List.of(MachineTooltipSpec.stat("energy_input", ServerBalance::recyclerEuPerTick),
+						MachineTooltipSpec.stat("duration_ticks",
+								() -> ServerBalance.scaledDuration(ServerBalance.recyclerDuration()))),
+				List.of());
 	}
 }

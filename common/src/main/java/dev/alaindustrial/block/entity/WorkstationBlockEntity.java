@@ -95,14 +95,20 @@ public class WorkstationBlockEntity extends EnergyBlockEntity {
 	}
 
 	/**
-	 * Served after the working machines, like the other pure stores.
+	 * Served as a machine, alongside the other consumers — not after them as a store (MOD-691).
 	 *
-	 * <p>Without this an idle workstation asking for a full MV tick would outbid every LV machine on
-	 * the same run — the exact reason the charging station and the teleporter declare it.
+	 * <p>This used to answer {@code true}, meaning "serve me after the working machines", but the cable
+	 * network never read it: it asked the flag only of {@code MachineBlockEntity}, which this is not, and
+	 * served the station as a machine all along. Only the network analyzer read it, drew the station as a
+	 * store and walked through it into neighbouring networks. The owner chose to keep the behaviour players
+	 * have (MOD-691, variant (b): the station is a machine), so the flag now states it and both readers
+	 * agree. Declared rather than
+	 * inherited on purpose: whether a consumer this hungry should wait behind LV machines is a question
+	 * with a recorded answer, not a default.
 	 */
 	@Override
 	public boolean isEnergyStorageSink() {
-		return true;
+		return false;
 	}
 
 	/**

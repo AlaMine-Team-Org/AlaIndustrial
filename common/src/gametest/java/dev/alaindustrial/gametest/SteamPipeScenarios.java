@@ -36,6 +36,41 @@ import net.minecraft.world.level.storage.TagValueInput;
  * wave can prove that its middle segments had NO evidence of their own on the first round.
  */
 public final class SteamPipeScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(SteamPipeScenarios::familiesNeverJoin, "steam_pipe_families_never_join")
+						.fabricId("SteamPipeGameTest", "mod662FamiliesNeverJoin").ticks(20, 40),
+				RosterEntry.of(SteamPipeScenarios::eachFamilyRefusesTheOthersFluid,
+								"steam_pipe_each_family_refuses_the_others_fluid")
+						.fabricId("SteamPipeGameTest", "mod662EachFamilyRefusesTheOthersFluid").ticks(20, 40),
+				RosterEntry.of(SteamPipeScenarios::aNewFluidPipeOnAColumnTopStaysDisconnected,
+								"steam_pipe_new_fluid_pipe_on_column_top_stays_disconnected")
+						.fabricId("SteamPipeGameTest", "mod662NewFluidPipeOnAColumnTopStaysDisconnected")
+						.ticks(20, 40),
+				RosterEntry.of(SteamPipeScenarios::migrationTurnsASteamFilledPipeIntoASteamPipe,
+								"steam_pipe_migration_steam_filled_pipe")
+						.fabricId("SteamPipeGameTest", "mod662MigrationTurnsASteamFilledPipe").ticks(20, 40),
+				RosterEntry.of(SteamPipeScenarios::migrationTurnsAnEmptyPipeOnAColumnTop,
+								"steam_pipe_migration_empty_pipe_on_column_top")
+						.fabricId("SteamPipeGameTest", "mod662MigrationTurnsAnEmptyPipeOnAColumnTop").ticks(20, 40),
+				RosterEntry.of(SteamPipeScenarios::migrationWaveConvertsAWholeEmptyLine,
+								"steam_pipe_migration_wave_converts_whole_line")
+						.fabricId("SteamPipeGameTest", "mod662MigrationWaveConvertsAWholeEmptyLine").ticks(20, 40),
+				RosterEntry.of(SteamPipeScenarios::migrationLeavesWaterLinesAlone,
+								"steam_pipe_migration_leaves_water_lines")
+						.fabricId("SteamPipeGameTest", "mod662MigrationLeavesWaterLinesAlone").ticks(20, 40),
+				RosterEntry.of(SteamPipeScenarios::migrationKeepsTheReinforcedGrade,
+								"steam_pipe_migration_keeps_reinforced_grade")
+						.fabricId("SteamPipeGameTest", "mod662MigrationKeepsTheReinforcedGrade").ticks(20, 40),
+				RosterEntry.of(SteamPipeScenarios::migrationLeavesAnAmbiguousPipe,
+								"steam_pipe_migration_leaves_ambiguous_pipe")
+						.fabricId("SteamPipeGameTest", "mod662MigrationLeavesAnAmbiguousPipe").ticks(20, 40));
+
+		private Roster() {}
+	}
+
 	private SteamPipeScenarios() {
 	}
 

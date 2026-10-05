@@ -1,6 +1,7 @@
 package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.item.ToolConfig;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.item.tool.MagnetItem;
 import dev.alaindustrial.registry.ModContent;
@@ -49,6 +50,40 @@ import static dev.alaindustrial.gametest.AlaGameTestHelper.survivalPlayer;
  */
 public final class MagnetScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(MagnetScenarios::fun01PullsNearbyDrop, "magnet_pulls_nearby_drop")
+						.fabricId("MagnetGameTest", "tcMagnet001Fun01_pullsNearbyDrop").ticks(20, 40),
+				RosterEntry.of(MagnetScenarios::fun02FlatMagnetInert, "magnet_flat_inert")
+						.fabricId("MagnetGameTest", "tcMagnet001Fun02_flatMagnetInert").ticks(20, 40),
+				RosterEntry.of(MagnetScenarios::fun03DisabledMagnetInert, "magnet_disabled_inert")
+						.fabricId("MagnetGameTest", "tcMagnet001Fun03_disabledMagnetInert").ticks(20, 40),
+				RosterEntry.of(MagnetScenarios::fun04RespectsPickupDelay, "magnet_respects_pickup_delay")
+						.fabricId("MagnetGameTest", "tcMagnet001Fun04_respectsPickupDelay").ticks(20, 40),
+				RosterEntry.of(MagnetScenarios::fun05OutOfRangeIgnored, "magnet_out_of_range_ignored")
+						.fabricId("MagnetGameTest", "tcMagnet001Fun05_outOfRangeIgnored").ticks(20, 40),
+				RosterEntry.of(MagnetScenarios::fun06ToggleViaUse, "magnet_toggle_via_use")
+						.fabricId("MagnetGameTest", "tcMagnet001Fun06_toggleViaUse").ticks(20, 40),
+				RosterEntry.of(MagnetScenarios::per01ToggleRoundTrip, "magnet_toggle_round_trip")
+						.fabricId("MagnetGameTest", "tcMagnet001Per01_toggleRoundTrip").ticks(20, 40),
+				RosterEntry.of(MagnetScenarios::tcMagnet002Fun01_advancedReachesFurther,
+								"magnet_tc_magnet002_fun01_advanced_reaches_further")
+						.fabricId("MagnetGameTest", "tcMagnet002Fun01_advancedReachesFurther").ticks(20, 40),
+				RosterEntry.of(MagnetScenarios::tcMagnet002Fun02_recipeTakesAnyMagnetState,
+								"magnet_tc_magnet002_fun02_recipe_takes_any_magnet_state")
+						.fabricId("MagnetGameTest", "tcMagnet002Fun02_recipeTakesAnyMagnetState").ticks(20, 40),
+				RosterEntry.of(MagnetScenarios::tcMagnet002Con01_tooltipKeysFollowTheItem,
+								"magnet_tc_magnet002_con01_tooltip_keys_follow_the_item")
+						.fabricId("MagnetGameTest", "tcMagnet002Con01_tooltipKeysFollowTheItem").ticks(20, 40),
+				RosterEntry.of(MagnetScenarios::tcMagnet002Fun03_pullsExperienceBeyondVanillaReach,
+								"magnet_tc_magnet002_fun03_pulls_experience_beyond_vanilla_reach")
+						.fabricId("MagnetGameTest", "tcMagnet002Fun03_pullsExperienceBeyondVanillaReach")
+						.ticks(20, 40));
+
+		private Roster() {}
+	}
+
 	private MagnetScenarios() {}
 
 	private static ItemStack magnet(long eu) {
@@ -74,11 +109,13 @@ public final class MagnetScenarios {
 	/**
 	 * TC-MAGNET-001-FUN01 — a charged, enabled magnet pulls a nearby drop toward the player
 	 *     (velocity points at the player) and spends exactly magnetEuPerItem.
+	 *
+	 * @implements TC-MAGNET-001-FUN01 — a charged, enabled magnet pulls a nearby drop and spends one item's EU.
 	 */
 	public static void fun01PullsNearbyDrop(GameTestHelper helper) {
 		ServerPlayer player = survivalPlayer(helper);
 		ItemEntity item = dropNear(helper, player, 2.5, 0.5, 0.0, 0);
-		ItemStack magnet = magnet(Config.magnetBuffer);
+		ItemStack magnet = magnet(ToolConfig.magnetBuffer);
 
 		if (!MagnetItem.pullSingle(magnet, player, item)) {
 			helper.fail("a charged, enabled magnet must pull a nearby drop");
@@ -86,7 +123,7 @@ public final class MagnetScenarios {
 		if (item.getDeltaMovement().x >= 0.0) {
 			helper.fail("pulled item must accelerate toward the player (-x), got dx=" + item.getDeltaMovement().x);
 		}
-		long expected = Config.magnetBuffer - Config.magnetEuPerItem;
+		long expected = ToolConfig.magnetBuffer - ToolConfig.magnetEuPerItem;
 		if (ItemEnergy.get(magnet) != expected) {
 			helper.fail("pulling one item must spend magnetEuPerItem; left " + ItemEnergy.get(magnet)
 					+ ", expected " + expected);
@@ -96,6 +133,8 @@ public final class MagnetScenarios {
 
 	/**
 	 * TC-MAGNET-001-FUN02 — a flat magnet (0 EU) pulls nothing and the drop keeps zero velocity.
+	 *
+	 * @implements TC-MAGNET-001-FUN02 — a flat magnet (0 EU) moves nothing.
 	 */
 	public static void fun02FlatMagnetInert(GameTestHelper helper) {
 		ServerPlayer player = survivalPlayer(helper);
@@ -110,17 +149,19 @@ public final class MagnetScenarios {
 
 	/**
 	 * TC-MAGNET-001-FUN03 — a disabled magnet (toggled off) pulls nothing even while charged.
+	 *
+	 * @implements TC-MAGNET-001-FUN03 — a disabled magnet moves nothing and spends no EU.
 	 */
 	public static void fun03DisabledMagnetInert(GameTestHelper helper) {
 		ServerPlayer player = survivalPlayer(helper);
 		ItemEntity item = dropNear(helper, player, 2.5, 0.5, 0.0, 0);
-		ItemStack magnet = magnet(Config.magnetBuffer);
+		ItemStack magnet = magnet(ToolConfig.magnetBuffer);
 		MagnetItem.setEnabled(magnet, false);
 
 		if (MagnetItem.pullSingle(magnet, player, item) || item.getDeltaMovement().length() > 1.0e-9) {
 			helper.fail("a disabled magnet must not move anything");
 		}
-		if (ItemEnergy.get(magnet) != Config.magnetBuffer) {
+		if (ItemEnergy.get(magnet) != ToolConfig.magnetBuffer) {
 			helper.fail("a disabled magnet must spend no EU");
 		}
 		helper.succeed();
@@ -129,16 +170,18 @@ public final class MagnetScenarios {
 	/**
 	 * TC-MAGNET-001-FUN04 — a drop still on its pickup delay (a fresh Q-drop) is left alone, so
 	 *     the magnet does not instantly suck back what was just thrown.
+	 *
+	 * @implements TC-MAGNET-001-FUN04 — a drop still on its pickup delay is left alone.
 	 */
 	public static void fun04RespectsPickupDelay(GameTestHelper helper) {
 		ServerPlayer player = survivalPlayer(helper);
 		ItemEntity item = dropNear(helper, player, 2.5, 0.5, 0.0, 40);
-		ItemStack magnet = magnet(Config.magnetBuffer);
+		ItemStack magnet = magnet(ToolConfig.magnetBuffer);
 
 		if (MagnetItem.pullSingle(magnet, player, item) || item.getDeltaMovement().length() > 1.0e-9) {
 			helper.fail("an item on pickup delay must not be pulled");
 		}
-		if (ItemEnergy.get(magnet) != Config.magnetBuffer) {
+		if (ItemEnergy.get(magnet) != ToolConfig.magnetBuffer) {
 			helper.fail("an item on pickup delay must cost no EU");
 		}
 		helper.succeed();
@@ -150,17 +193,20 @@ public final class MagnetScenarios {
 	 *     outside the sphere, and must NOT be pulled or charged. A control drop the same axis-distance
 	 *     straight ahead IS inside the sphere and IS pulled — proving it is the sphere trim
 	 *     ({@code canPull}'s {@code distanceToSqr}), which a cube-only test would leave unexercised.
+	 *
+	 * @implements TC-MAGNET-001-FUN05 — the spherical range refine (cube corner outside the sphere) is not pulled.
 	 */
 	public static void fun05OutOfRangeIgnored(GameTestHelper helper) {
 		ServerPlayer player = survivalPlayer(helper);
-		double corner = Config.magnetRange - 0.4; // inside inflate(range) cube, outside the sphere (√2·corner > range)
+		// inside inflate(range) cube, outside the sphere (√2·corner > range)
+		double corner = ToolConfig.magnetRange - 0.4;
 		ItemEntity outside = dropNear(helper, player, corner, 0.5, corner, 0);
-		ItemStack magnet = magnet(Config.magnetBuffer);
+		ItemStack magnet = magnet(ToolConfig.magnetBuffer);
 
 		if (MagnetItem.pullSingle(magnet, player, outside) || outside.getDeltaMovement().length() > 1.0e-9) {
 			helper.fail("a drop inside the AABB but outside the range sphere must not be pulled");
 		}
-		if (ItemEnergy.get(magnet) != Config.magnetBuffer) {
+		if (ItemEnergy.get(magnet) != ToolConfig.magnetBuffer) {
 			helper.fail("an out-of-sphere drop must cost no EU");
 		}
 		// Control: a drop the same axis-distance straight ahead is inside the sphere and IS pulled.
@@ -176,18 +222,23 @@ public final class MagnetScenarios {
 	 *     passes through and leaves the magnet enabled; a sneak right-click flips it off, and again back on.
 	 *     Guards the {@code isShiftKeyDown} gate and the server-side mutation that {@code per01} (static
 	 *     helpers only) does not exercise.
+	 *
+	 * @implements TC-MAGNET-001-FUN06 — use() toggles only on sneak; non-sneak passes through.
 	 */
 	public static void fun06ToggleViaUse(GameTestHelper helper) {
 		ServerLevel level = helper.getLevel();
 		ServerPlayer player = survivalPlayer(helper);
-		ItemStack magnet = magnet(Config.magnetBuffer);
+		ItemStack magnet = magnet(ToolConfig.magnetBuffer);
 		player.setItemInHand(InteractionHand.MAIN_HAND, magnet);
 
+		// MOD-592: a plain right-click opens the magnet's screen and leaves the on/off flag alone.
 		player.setShiftKeyDown(false);
 		InteractionResult plain = magnet.getItem().use(level, player, InteractionHand.MAIN_HAND);
-		if (plain != InteractionResult.PASS || !MagnetItem.isEnabled(magnet)) {
-			helper.fail("a non-sneak use must pass through and leave the magnet enabled");
+		if (plain != InteractionResult.SUCCESS || !MagnetItem.isEnabled(magnet)
+				|| !(player.containerMenu instanceof dev.alaindustrial.menu.MagnetMenu)) {
+			helper.fail("a non-sneak use must open the magnet screen and leave the magnet enabled");
 		}
+		player.closeContainer();
 
 		player.setShiftKeyDown(true);
 		InteractionResult off = magnet.getItem().use(level, player, InteractionHand.MAIN_HAND);
@@ -205,9 +256,11 @@ public final class MagnetScenarios {
 	/**
 	 * TC-MAGNET-001-PER01 — the on/off flag round-trips: enabled is the absent-component default,
 	 *     disabling stores it, re-enabling removes it (stacks stay component-identical to a fresh magnet).
+	 *
+	 * @implements TC-MAGNET-001-PER01 — the on/off flag round-trips (absent = on).
 	 */
 	public static void per01ToggleRoundTrip(GameTestHelper helper) {
-		ItemStack magnet = magnet(Config.magnetBuffer);
+		ItemStack magnet = magnet(ToolConfig.magnetBuffer);
 		if (!MagnetItem.isEnabled(magnet) || magnet.has(ModDataComponents.MAGNET_ENABLED.get())) {
 			helper.fail("a fresh magnet must read enabled with no component present");
 		}
@@ -230,6 +283,8 @@ public final class MagnetScenarios {
 	 * <p>Asserts the RELATION, not the number: a config edit that raises the basic reach past the
 	 * advanced one is exactly the regression worth catching, and a test pinned to "9" would go on
 	 * passing through it.
+	 *
+	 * @implements TC-MAGNET-002-FUN01 — the advanced grade reaches further and pulls experience.
 	 */
 	public static void tcMagnet002Fun01_advancedReachesFurther(GameTestHelper helper) {
 		int basic = MagnetTier.BASIC.range();
@@ -255,15 +310,17 @@ public final class MagnetScenarios {
 	 * compared — but that is vanilla's decision, not ours: a component-aware ingredient added here later
 	 * would silently start rejecting the charged magnet a player actually carries, which is the ONLY
 	 * kind they ever have.
+	 *
+	 * @implements TC-MAGNET-002-FUN02 — the tier-2 recipe takes a magnet at any charge or toggle state.
 	 */
 	public static void tcMagnet002Fun02_recipeTakesAnyMagnetState(GameTestHelper helper) {
-		ItemStack full = magnet(Config.magnetBuffer);
+		ItemStack full = magnet(ToolConfig.magnetBuffer);
 		assertCraftsInto(helper, full, "a fully charged magnet");
 
 		ItemStack flat = magnet(0);
 		assertCraftsInto(helper, flat, "a flat magnet");
 
-		ItemStack off = magnet(Config.magnetBuffer / 2);
+		ItemStack off = magnet(ToolConfig.magnetBuffer / 2);
 		MagnetItem.setEnabled(off, false);
 		assertCraftsInto(helper, off, "a half-charged magnet that is switched off");
 
@@ -306,9 +363,11 @@ public final class MagnetScenarios {
 	 *
 	 * <p>Found in play: the advanced magnet's tooltip said "radius 5 blocks" while it pulled from nine,
 	 * and called itself an item magnet while it collected experience — the lines were built from the
-	 * literal {@code item.alaindustrial.electromagnet.*} prefix and from {@code Config.magnetRange},
+	 * literal {@code item.alaindustrial.electromagnet.*} prefix and from {@code ToolConfig.magnetRange},
 	 * both of which belong to the BASIC grade. The keys now come from the item's own description id,
 	 * which is why this test asserts on the id rather than on any text.
+	 *
+	 * @implements TC-MAGNET-002-CON01 — the tooltip keys follow the item, not a typed-in prefix.
 	 */
 	public static void tcMagnet002Con01_tooltipKeysFollowTheItem(GameTestHelper helper) {
 		ItemStack advanced = new ItemStack(ModContent.ELECTROMAGNET_ADVANCED.get());
@@ -375,6 +434,8 @@ public final class MagnetScenarios {
 	 * <p>Driven on a detached orb for the same reason {@link MagnetItem#pullSingle} is: the live scan
 	 * finds targets in the world, and on a shared gametest server one test's orbs drift into another's
 	 * radius.
+	 *
+	 * @implements TC-MAGNET-002-FUN03 — the advanced grade pulls orbs beyond vanilla's own reach.
 	 */
 	public static void tcMagnet002Fun03_pullsExperienceBeyondVanillaReach(GameTestHelper helper) {
 		ServerPlayer player = survivalPlayer(helper);
@@ -384,7 +445,7 @@ public final class MagnetScenarios {
 		// Halfway between vanilla's ring and the magnet's edge. Not "reach + 1": the distance is measured
 		// from a point at half the player's eye height, so an orb placed at exactly the edge horizontally
 		// lands just OUTSIDE the sphere and the test would fail on its own geometry.
-		double far = (Config.magnetVanillaOrbReach + MagnetTier.ADVANCED.range()) / 2.0;
+		double far = (ToolConfig.magnetVanillaOrbReach + MagnetTier.ADVANCED.range()) / 2.0;
 		ExperienceOrb outside = new ExperienceOrb(player.level(),
 				player.getX() + far, player.getY(), player.getZ(), 1);
 		outside.setDeltaMovement(Vec3.ZERO);
@@ -401,7 +462,7 @@ public final class MagnetScenarios {
 			helper.fail("an orb vanilla already collects must cost the player no EU");
 		}
 
-		ItemStack basic = magnet(Config.magnetBuffer);
+		ItemStack basic = magnet(ToolConfig.magnetBuffer);
 		if (MagnetItem.pullOrb(basic, player, outside)) {
 			helper.fail("experience is the advanced grade's own mechanic; the basic magnet must not pull it");
 		}

@@ -1,10 +1,10 @@
 package dev.alaindustrial.registry.neoforge;
 
 import dev.alaindustrial.Industrialization;
-import dev.alaindustrial.skill.PlayerSkills;
-import dev.alaindustrial.skill.SkillStore;
-import dev.alaindustrial.stats.PlayerModStats;
-import dev.alaindustrial.stats.PlayerStatsStore;
+import dev.alaindustrial.attachment.PlayerAttachmentAccessor;
+import dev.alaindustrial.registry.ModPlayerAttachments;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -12,72 +12,81 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 /**
- * NeoForge registration of the {@link PlayerModStats} player attachment (MOD-133) and its binding
- * into the common {@link PlayerStatsStore} seam. The attachment registry freezes before mod init, so
- * (like data components) it goes through a {@link DeferredRegister} on the mod bus. Serialized via
- * {@link PlayerModStats#MAP_CODEC} (persists across relog), {@code copyOnDeath} (NeoForge copies it
- * automatically on the death clone), and synced only to its owner — the sync predicate sends the
- * attachment to a player only when that player <em>is</em> the holder.
+ * NeoForge registration of the per-player attachments: a replay of the shared
+ * {@link ModPlayerAttachments#PLAYER_ATTACHMENTS} list (MOD-708) through a {@link DeferredRegister} — the
+ * attachment registry freezes before mod init — plus the one {@link PlayerAttachmentAccessor} that binds
+ * every entry into its server-side store.
+ *
+ * <p>NeoForge's save form is the entry's {@code MapCodec} ({@code serialize(mapCodec)}) — the form every
+ * NeoForge player file holds; Fabric keeps its {@code Codec} form. {@code copyOnDeath} makes NeoForge copy
+ * the value on the death clone, and the sync predicate sends it to a player only when that player
+ * <em>is</em> the holder.
  */
 public final class ModAttachmentsNeoForge {
 	public static final DeferredRegister<AttachmentType<?>> ATTACHMENTS =
 			DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, Industrialization.MOD_ID);
 
-	public static final DeferredHolder<AttachmentType<?>, AttachmentType<PlayerModStats>> PLAYER_STATS =
-			ATTACHMENTS.register("player_stats", () -> AttachmentType
-					.builder(() -> PlayerModStats.EMPTY)
-					.serialize(PlayerModStats.MAP_CODEC)
-					.copyOnDeath()
-					.sync((holder, player) -> holder == player, PlayerModStats.STREAM_CODEC)
-					.build());
-
-	/**
-	 * MOD-483: the Workstation's upgrade tree. Same four choices as the stats attachment above and for
-	 * the same reasons — persisted, kept across death (a tree bought with levels is career progress, not
-	 * carried inventory), and mirrored only to its owner, which is what lets the purchase packet be
-	 * one-way.
-	 */
-	public static final DeferredHolder<AttachmentType<?>, AttachmentType<PlayerSkills>> PLAYER_SKILLS =
-			ATTACHMENTS.register("player_skills", () -> AttachmentType
-					.builder(() -> PlayerSkills.EMPTY)
-					.serialize(PlayerSkills.MAP_CODEC)
-					.copyOnDeath()
-					.sync((holder, player) -> holder == player, PlayerSkills.STREAM_CODEC)
-					.build());
+	/** Every entry, queued on {@link #ATTACHMENTS} the moment this class loads, by entry id. */
+	private static final Map<String, DeferredHolder<AttachmentType<?>, ?>> REGISTERED = registerAll();
 
 	private ModAttachmentsNeoForge() {
 	}
 
-	/** Bind the server-side store seam to the deferred attachment holder. Called from the {@code @Mod} ctor. */
+	private static Map<String, DeferredHolder<AttachmentType<?>, ?>> registerAll() {
+		Map<String, DeferredHolder<AttachmentType<?>, ?>> registered = new LinkedHashMap<>();
+		for (ModPlayerAttachments.PlayerAttachmentDef<?> def : ModPlayerAttachments.PLAYER_ATTACHMENTS) {
+			if (registered.put(def.id(), ATTACHMENTS.register(def.id(), () -> build(def))) != null) {
+				throw new IllegalStateException("PLAYER_ATTACHMENTS declares attachment id '" + def.id() + "' twice");
+			}
+		}
+		return Map.copyOf(registered);
+	}
+
+	private static <T> AttachmentType<T> build(ModPlayerAttachments.PlayerAttachmentDef<T> def) {
+		AttachmentType.Builder<T> builder = AttachmentType.builder(def::empty).serialize(def.mapCodec());
+		if (def.copyOnDeath()) {
+			builder = builder.copyOnDeath();
+		}
+		if (def.syncToOwner()) {
+			builder = builder.sync((holder, player) -> holder == player, def.streamCodec());
+		}
+		return builder.build();
+	}
+
+	/** The queued holder of an entry. The cast cannot lie: the entry built the type under its id. */
+	@SuppressWarnings("unchecked")
+	public static <T> DeferredHolder<AttachmentType<?>, AttachmentType<T>> holder(
+			ModPlayerAttachments.PlayerAttachmentDef<T> def) {
+		DeferredHolder<AttachmentType<?>, ?> holder = REGISTERED.get(def.id());
+		if (holder == null) {
+			throw new IllegalStateException("no NeoForge attachment for '" + def.id() + "'");
+		}
+		return (DeferredHolder<AttachmentType<?>, AttachmentType<T>>) holder;
+	}
+
+	/** Binds every entry's server-side store to this loader's accessor. Called from the {@code @Mod} ctor. */
 	public static void init() {
-		SkillStore.bind(new SkillStore.Accessor() {
+		for (ModPlayerAttachments.PlayerAttachmentDef<?> def : ModPlayerAttachments.PLAYER_ATTACHMENTS) {
+			bindStore(def);
+		}
+	}
+
+	private static <T> void bindStore(ModPlayerAttachments.PlayerAttachmentDef<T> def) {
+		DeferredHolder<AttachmentType<?>, AttachmentType<T>> type = holder(def);
+		def.bindStore().accept(new PlayerAttachmentAccessor<>() {
 			@Override
-			public PlayerSkills get(ServerPlayer player) {
+			public T get(ServerPlayer player) {
 				// Read without creating (MOD-483). NeoForge's getData INSTALLS the default value when none
 				// exists and syncs it — so a plain read writes state and puts a packet on the wire, and on
-				// a player with no connection (a vanilla gametest mock) it throws outright. The mod asks a
-				// player for this several times a second, so the read has to be a read. Same rule as
+				// a player with no connection (a vanilla gametest mock) it throws outright. Same rule as
 				// ADR-010 for containers, one layer up.
-				PlayerSkills stored = player.getExistingDataOrNull(PLAYER_SKILLS);
-				return stored != null ? stored : PlayerSkills.EMPTY;
+				T stored = player.getExistingDataOrNull(type);
+				return stored != null ? stored : def.empty();
 			}
 
 			@Override
-			public void set(ServerPlayer player, PlayerSkills skills) {
-				player.setData(PLAYER_SKILLS, skills);
-			}
-		});
-		PlayerStatsStore.bind(new PlayerStatsStore.Accessor() {
-			@Override
-			public PlayerModStats get(ServerPlayer player) {
-				// Same rule as the skills accessor above: a read must not install and sync a default.
-				PlayerModStats stored = player.getExistingDataOrNull(PLAYER_STATS);
-				return stored != null ? stored : PlayerModStats.EMPTY;
-			}
-
-			@Override
-			public void set(ServerPlayer player, PlayerModStats stats) {
-				player.setData(PLAYER_STATS, stats);
+			public void set(ServerPlayer player, T value) {
+				player.setData(type, value);
 			}
 		});
 	}

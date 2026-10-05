@@ -1,14 +1,26 @@
 package dev.alaindustrial.gametest;
 
+import static dev.alaindustrial.gametest.AlaGameTestHelper.drive;
+import static dev.alaindustrial.gametest.SolarPanelRig.POS;
+import static dev.alaindustrial.gametest.SolarPanelRig.assertTopFaceWorkingSurface;
+import static dev.alaindustrial.gametest.SolarPanelRig.concentratorAt;
+import static dev.alaindustrial.gametest.SolarPanelRig.daylightAt;
+import static dev.alaindustrial.gametest.SolarPanelRig.genAt;
+import static dev.alaindustrial.gametest.SolarPanelRig.moonlitAt;
+import static dev.alaindustrial.gametest.SolarPanelRig.panelAt;
+import static dev.alaindustrial.gametest.SolarPanelRig.setClearDay;
+import static dev.alaindustrial.gametest.SolarPanelRig.setNight;
+import static dev.alaindustrial.gametest.SolarPanelRig.setRaining;
+
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.AbstractGeneratorBlockEntity;
 import dev.alaindustrial.block.entity.DaylightSolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.MoonlitSolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.RadiantSolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.SolarPanelBlockEntity;
-import dev.alaindustrial.core.energy.EnergyPort;
-import dev.alaindustrial.core.energy.EnergyPortHost;
+import dev.alaindustrial.core.environment.GeneratorConfig;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -19,106 +31,172 @@ import net.minecraft.world.level.block.Blocks;
  * Loader-neutral world-based gametest bodies for the solar panel family (MOD-323): weather /
  * sky-blocking / physical / performance states of the base solar, moonlit and daylight panels.
  *
- * <p>Suite contract mirrors {@link SolarPanelGameTest} on the Fabric lane. Isolation note: every
+ * <p>Both lanes run these bodies from the roster below (ADR-038). Isolation note: every
  * gametest in a batch shares ONE {@code ServerLevel}, so world time is global. Each body sets
  * time/weather and then calls {@code updateSkyBrightness()} to recompute {@code skyDarken}
  * synchronously, reading production in the SAME method body with no {@code runAfterDelay}.
  */
 public final class SolarPanelScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(SolarPanelScenarios::tcSolar001Sta02_rainFlagsWeatherMode,
+								"solar_rain_flags_weather_mode")
+						.fabricId("SolarPanelGameTest", "tcSolar001Sta02_rainFlagsWeatherMode").ticks(40).sky(),
+				RosterEntry.of(SolarPanelScenarios::tcSolar001Sta03_thunderFlagsWeatherMode,
+								"solar_thunder_flags_weather_mode")
+						.fabricId("SolarPanelGameTest", "tcSolar001Sta03_thunderFlagsWeatherMode").ticks(40).sky(),
+				RosterEntry.of(SolarPanelScenarios::mod602_snowBlacksOutConcentratorButNotDaylightPanel,
+								"mod602_snow_blacks_out_concentrator_but_not_daylight_panel")
+						.fabricId("SolarPanelGameTest", "mod602_snowBlacksOutConcentratorButNotDaylightPanel")
+						.ticks(60).sky(),
+				RosterEntry.of(SolarPanelScenarios::mod602_noonWindowLiftsOutput, "mod602_noon_window_lifts_output")
+						.fabricId("SolarPanelGameTest", "mod602_noonWindowLiftsOutput").ticks(60).sky(),
+				RosterEntry.of(SolarPanelScenarios::mod602_daylightPanelTakesResonanceChipOnly,
+								"mod602_daylight_panel_takes_resonance_chip_only")
+						.fabricId("SolarPanelGameTest", "mod602_daylightPanelTakesResonanceChipOnly").ticks(40)
+						.sky(true, false),
+				RosterEntry.of(SolarPanelScenarios::mod602_daylightPanelEvolvesIntoConcentrator,
+								"mod602_daylight_panel_evolves_into_concentrator")
+						.fabricId("SolarPanelGameTest", "mod602_daylightPanelEvolvesIntoConcentrator").ticks(60).sky(),
+				RosterEntry.of(SolarPanelScenarios::solarPanel_automationCannotStackSecondChip,
+								"solar_automation_cannot_stack_second_chip")
+						.fabricId("SolarPanelGameTest", "solarPanel_automationCannotStackSecondChip").ticks(20, 100),
+				RosterEntry.of(SolarPanelScenarios::solarPanel_evolutionConsumesOneChipNotTheStack,
+								"solar_evolution_consumes_one_chip_not_the_stack")
+						.fabricId("SolarPanelGameTest", "solarPanel_evolutionConsumesOneChipNotTheStack").ticks(40)
+						.sky(),
+				RosterEntry.of(SolarPanelScenarios::solarPanel_removingChipClearsEvolutionProgress,
+								"solar_removing_chip_clears_evolution_progress")
+						.fabricId("SolarPanelGameTest", "solarPanel_removingChipClearsEvolutionProgress").ticks(60)
+						.sky(),
+				RosterEntry.of(SolarPanelScenarios::solarPanel_swappingChipBranchClearsEvolutionProgress,
+								"solar_swapping_chip_branch_clears_evolution_progress")
+						.fabricId("SolarPanelGameTest", "solarPanel_swappingChipBranchClearsEvolutionProgress")
+						.ticks(60).sky(),
+				RosterEntry.of(SolarPanelScenarios::tcSolar001Neg02_rainYieldsZeroEu, "solar_rain_yields_zero_eu")
+						.fabricId("SolarPanelGameTest", "tcSolar001Neg02_rainYieldsZeroEu").ticks(40).sky(),
+				RosterEntry.of(SolarPanelScenarios::tcSolar001Neg03_opaqueBlockAboveYieldsZero,
+								"solar_opaque_block_above_yields_zero")
+						.fabricId("SolarPanelGameTest", "tcSolar001Neg03_opaqueBlockAboveYieldsZero").ticks(40).sky(),
+				RosterEntry.of(SolarPanelScenarios::tcSolar001Fun04_glassAboveStaysFull, "solar_glass_above_stays_full")
+						.fabricId("SolarPanelGameTest", "tcSolar001Fun04_glassAboveStaysFull").ticks(40).sky(),
+				RosterEntry.of(SolarPanelScenarios::tcSolar001Sta06_leavesAboveFlagPartial,
+								"solar_leaves_above_flag_partial")
+						.fabricId("SolarPanelGameTest", "tcSolar001Sta06_leavesAboveFlagPartial").ticks(40).sky(),
+				RosterEntry.of(SolarPanelScenarios::tcSolar001Sta05_snowLayerAboveFlagsSnow,
+								"solar_snow_layer_above_flags_snow")
+						.fabricId("SolarPanelGameTest", "tcSolar001Sta05_snowLayerAboveFlagsSnow").ticks(40).sky(),
+				RosterEntry.of(SolarPanelScenarios::tcSolar001Sta09_snowLayerPlusThunderIsWeather,
+								"solar_snow_layer_plus_thunder_is_weather")
+						.fabricId("SolarPanelGameTest", "tcSolar001Sta09_snowLayerPlusThunderIsWeather").ticks(40)
+						.sky(),
+				RosterEntry.of(SolarPanelScenarios::tcSolar001Sta10_snowLayerAtNightIsZero,
+								"solar_snow_layer_at_night_is_zero")
+						.fabricId("SolarPanelGameTest", "tcSolar001Sta10_snowLayerAtNightIsZero").ticks(40).sky(),
+				RosterEntry.of(SolarPanelScenarios::tcSolar001Phy01_topFaceNoOutput, "solar_top_face_no_output")
+						.fabricId("SolarPanelGameTest", "tcSolar001Phy01_topFaceNoOutput").ticks(20, 100),
+				RosterEntry.of(SolarPanelScenarios::tcSolar001Prf01_euRateMatchesConfig, "solar_eu_rate_matches_config")
+						.fabricId("SolarPanelGameTest", "tcSolar001Prf01_euRateMatchesConfig").ticks(40).sky(),
+				RosterEntry.of(SolarPanelScenarios::tcMoonlit001Neg01_noEuByDay, "moonlit_no_eu_by_day")
+						.fabricId("SolarPanelGameTest", "tcMoonlit001Neg01_noEuByDay").ticks(40).sky(),
+				RosterEntry.of(SolarPanelScenarios::tcMoonlit001Sta01_rainFlagsWeatherMode,
+								"moonlit_rain_flags_weather_mode")
+						.fabricId("SolarPanelGameTest", "tcMoonlit001Sta01_rainFlagsWeatherMode").ticks(40).sky(),
+				RosterEntry.of(SolarPanelScenarios::tcMoonlit001Sta03_thunderYieldsWeatherTrickle,
+								"moonlit_thunder_yields_weather_trickle")
+						.fabricId("SolarPanelGameTest", "tcMoonlit001Sta03_thunderYieldsWeatherTrickle").ticks(40)
+						.sky(),
+				RosterEntry.of(SolarPanelScenarios::tcMoonlit001Neg03_opaqueBlockAboveYieldsZero,
+								"moonlit_opaque_block_above_yields_zero")
+						.fabricId("SolarPanelGameTest", "tcMoonlit001Neg03_opaqueBlockAboveYieldsZero").ticks(40)
+						.sky(),
+				RosterEntry.of(SolarPanelScenarios::tcMoonlit001Sta02_leavesAbovePartialHalvesOutput,
+								"moonlit_leaves_above_partial_halves_output")
+						.fabricId("SolarPanelGameTest", "tcMoonlit001Sta02_leavesAbovePartialHalvesOutput").ticks(40)
+						.sky(),
+				RosterEntry.of(SolarPanelScenarios::tcMoonlit001Phy01_topFaceNoOutput, "moonlit_top_face_no_output")
+						.fabricId("SolarPanelGameTest", "tcMoonlit001Phy01_topFaceNoOutput").ticks(20, 100),
+				RosterEntry.of(SolarPanelScenarios::tcMoonlit001Prf01_euRateMatchesConfig,
+								"moonlit_eu_rate_matches_config")
+						.fabricId("SolarPanelGameTest", "tcMoonlit001Prf01_euRateMatchesConfig").ticks(40).sky(),
+				RosterEntry.of(SolarPanelScenarios::tcMoonlit001Prf02_bufferCapsAtMax, "moonlit_buffer_caps_at_max")
+						.fabricId("SolarPanelGameTest", "tcMoonlit001Prf02_bufferCapsAtMax").ticks(40).sky(),
+				RosterEntry.of(SolarPanelScenarios::tcSolar001Fun03_nightChipEvolvesToMoonlit,
+								"solar_night_chip_evolves_to_moonlit")
+						.fabricId("SolarPanelGameTest", "tcSolar001Fun03_nightChipEvolvesToMoonlit").ticks(40).sky(),
+				RosterEntry.of(SolarPanelScenarios::tcDaylight001Neg02_rainYieldsZeroEu, "daylight_rain_yields_zero_eu")
+						.fabricId("SolarPanelGameTest", "tcDaylight001Neg02_rainYieldsZeroEu").ticks(40).sky(),
+				RosterEntry.of(SolarPanelScenarios::tcDaylight001Neg03_opaqueBlockAboveYieldsZero,
+								"daylight_opaque_block_above_yields_zero")
+						.fabricId("SolarPanelGameTest", "tcDaylight001Neg03_opaqueBlockAboveYieldsZero").ticks(40)
+						.sky(),
+				RosterEntry.of(SolarPanelScenarios::tcDaylight001Sta02_leavesAbovePartialHalvesOutput,
+								"daylight_leaves_above_partial_halves_output")
+						.fabricId("SolarPanelGameTest", "tcDaylight001Sta02_leavesAbovePartialHalvesOutput").ticks(40)
+						.sky(),
+				RosterEntry.of(SolarPanelScenarios::tcDaylight001Fun02_glassAboveStaysFull,
+								"daylight_glass_above_stays_full")
+						.fabricId("SolarPanelGameTest", "tcDaylight001Fun02_glassAboveStaysFull").ticks(40).sky(),
+				RosterEntry.of(SolarPanelScenarios::tcDaylight001Sta01_rainFlagsWeatherMode,
+								"daylight_rain_flags_weather_mode")
+						.fabricId("SolarPanelGameTest", "tcDaylight001Sta01_rainFlagsWeatherMode").ticks(40).sky(),
+				RosterEntry.of(SolarPanelScenarios::tcDaylight001Phy01_topFaceNoOutput, "daylight_top_face_no_output")
+						.fabricId("SolarPanelGameTest", "tcDaylight001Phy01_topFaceNoOutput").ticks(20, 100),
+				RosterEntry.of(SolarPanelScenarios::tcDaylight001Prf01_euRateMatchesConfig,
+								"daylight_eu_rate_matches_config")
+						.fabricId("SolarPanelGameTest", "tcDaylight001Prf01_euRateMatchesConfig").ticks(40).sky(),
+				RosterEntry.of(SolarPanelScenarios::tcDaylight001Prf02_bufferCapsAtMax, "daylight_buffer_caps_at_max")
+						.fabricId("SolarPanelGameTest", "tcDaylight001Prf02_bufferCapsAtMax").ticks(40).sky(),
+				RosterEntry.of(SolarPanelScenarios::tcSolar001Sta13_iceAboveYieldsBlocked,
+								"solar_ice_above_yields_blocked")
+						.fabricId("SolarPanelGameTest", "tcSolar001Sta13_iceAboveYieldsBlocked").ticks(40).sky(),
+				RosterEntry.of(SolarPanelScenarios::tcSolar001Sta15_glowstoneAboveYieldsBlocked,
+								"solar_glowstone_above_yields_blocked")
+						.fabricId("SolarPanelGameTest", "tcSolar001Sta15_glowstoneAboveYieldsBlocked").ticks(40).sky(),
+				RosterEntry.of(SolarPanelScenarios::tcSolar001Neg08_waterAboveYieldsZero,
+								"solar_water_above_yields_zero")
+						.fabricId("SolarPanelGameTest", "tcSolar001Neg08_waterAboveYieldsZero").ticks(40).sky(),
+				RosterEntry.of(SolarPanelScenarios::tcSolar001Prf03_globalRateMultiplierScalesOutput,
+								"solar_global_rate_multiplier_scales_output")
+						.fabricId("SolarPanelGameTest", "tcSolar001Prf03_globalRateMultiplierScalesOutput").ticks(40)
+						.sky(),
+				RosterEntry.of(SolarPanelScenarios::tcSolar001Prf04_configChangeAppliesNextTick,
+								"solar_config_change_applies_next_tick")
+						.fabricId("SolarPanelGameTest", "tcSolar001Prf04_configChangeAppliesNextTick").ticks(40).sky(),
+				RosterEntry.of(SolarPanelScenarios::tcSolar001Con01_batteryBoxWrongFacingGetsNothing,
+								"solar_battery_box_wrong_facing_gets_nothing")
+						.fabricId("SolarPanelGameTest", "tcSolar001Con01_batteryBoxWrongFacingGetsNothing").ticks(40)
+						.sky(),
+				RosterEntry.of(SolarPanelScenarios::tcSolar001Con02_opaqueGapBlocksDelivery,
+								"solar_opaque_gap_blocks_delivery")
+						.fabricId("SolarPanelGameTest", "tcSolar001Con02_opaqueGapBlocksDelivery").ticks(40).sky(),
+				RosterEntry.of(SolarPanelScenarios::tcSolar001Con03_immediateDeliveryOnPlacement,
+								"solar_immediate_delivery_on_placement")
+						.fabricId("SolarPanelGameTest", "tcSolar001Con03_immediateDeliveryOnPlacement").ticks(40)
+						.sky(),
+				RosterEntry.of(SolarPanelScenarios::tcSolar001Con04_twoReceiversDoNotDoubleOutput,
+								"solar_two_receivers_do_not_double_output")
+						.fabricId("SolarPanelGameTest", "tcSolar001Con04_twoReceiversDoNotDoubleOutput").ticks(40)
+						.sky(),
+				RosterEntry.of(SolarPanelScenarios::tcSolar001Con05_bufferHoldsWhileReceiverFull,
+								"solar_buffer_holds_while_receiver_full")
+						.fabricId("SolarPanelGameTest", "tcSolar001Con05_bufferHoldsWhileReceiverFull").ticks(40)
+						.sky());
+
+		private Roster() {}
+	}
+
 	private SolarPanelScenarios() {}
-
-	private static final BlockPos POS = new BlockPos(1, 2, 1);
-
-	/** Clear daytime, brightness recomputed NOW (no tick wait). Weather reset for isolation. */
-	private static void setClearDay(GameTestHelper helper) {
-		var level = helper.getLevel();
-		var server = level.getServer();
-		server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), "time set day");
-		level.getWeatherData().setRaining(false);
-		level.getWeatherData().setThundering(false);
-		level.setRainLevel(0.0f); // isRaining() reads the interpolated level, not WeatherData
-		level.updateSkyBrightness(); // skyDarken now reflects day → isBrightOutside() true synchronously
-	}
-
-	/** Clear midnight, brightness recomputed NOW. Mirror of {@link #setClearDay}. */
-	private static void setNight(GameTestHelper helper) {
-		var level = helper.getLevel();
-		var server = level.getServer();
-		server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), "time set midnight");
-		level.getWeatherData().setRaining(false);
-		level.getWeatherData().setThundering(false);
-		level.setRainLevel(0.0f);
-		level.updateSkyBrightness();
-	}
-
-	/** Turn on rain in the current (already-settled) time, synchronously: WeatherData + interpolated level. */
-	private static void setRaining(GameTestHelper helper, boolean thunder) {
-		var level = helper.getLevel();
-		level.getWeatherData().setRaining(true);
-		if (thunder) {
-			level.getWeatherData().setThundering(true);
-		}
-		level.setRainLevel(1.0f); // isRaining() reads the interpolated rain level, not WeatherData
-	}
-
-	private static SolarPanelBlockEntity panelAt(GameTestHelper helper) {
-		return helper.getLevel().getBlockEntity(helper.absolutePos(POS)) instanceof SolarPanelBlockEntity p ? p : null;
-	}
-
-	private static void drive(SolarPanelBlockEntity be, GameTestHelper helper, int ticks) {
-		AlaGameTestHelper.drive(be, helper, ticks);
-	}
-
-	private static MoonlitSolarPanelBlockEntity moonlitAt(GameTestHelper helper) {
-		return helper.getLevel().getBlockEntity(helper.absolutePos(POS)) instanceof MoonlitSolarPanelBlockEntity p
-				? p : null;
-	}
-
-	private static void driveMoonlit(MoonlitSolarPanelBlockEntity be, GameTestHelper helper, int ticks) {
-		for (int i = 0; i < ticks; i++) {
-			be.serverTick(helper.getLevel(), be.getBlockPos(), helper.getLevel().getBlockState(be.getBlockPos()));
-		}
-	}
-
-	private static AbstractGeneratorBlockEntity genAt(GameTestHelper helper) {
-		return helper.getLevel().getBlockEntity(helper.absolutePos(POS)) instanceof AbstractGeneratorBlockEntity g
-				? g : null;
-	}
-
-	private static void driveGen(AbstractGeneratorBlockEntity be, GameTestHelper helper, int ticks) {
-		for (int i = 0; i < ticks; i++) {
-			be.serverTick(helper.getLevel(), be.getBlockPos(), helper.getLevel().getBlockState(be.getBlockPos()));
-		}
-	}
-
-	/**
-	 * Shared assertion: top face emits no EU (working surface), the other five faces are OUT-only.
-	 * Loader-neutral equivalent of the Fabric lane's {@code EnergyStorage.SIDED} probe: the per-face
-	 * {@link EnergyPortHost#energyPort} is exactly what both loaders' energy capability is derived
-	 * from (MOD-433), so a null port with a non-null extracting port elsewhere proves the same thing.
-	 */
-	private static void assertTopFaceWorkingSurface(GameTestHelper helper, String label) {
-		if (!(helper.getLevel().getBlockEntity(helper.absolutePos(POS)) instanceof EnergyPortHost host)) {
-			helper.fail(label + ": no EnergyPortHost at " + POS);
-			return;
-		}
-		EnergyPort top = host.energyPort(Direction.UP);
-		if (top != null && top.supportsExtraction()) {
-			helper.fail(label + ": top face (working surface) must not emit EU");
-		}
-		for (Direction d : new Direction[]{
-				Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST, Direction.DOWN}) {
-			EnergyPort p = host.energyPort(d);
-			if (p == null || !p.supportsExtraction()) {
-				helper.fail(label + " face " + d + " must emit EU");
-			}
-		}
-	}
 
 	/**
 	 * Rain flags the weather production mode: day + rain resolves to MODE_WEATHER (0 EU output).
 	 * Mirrors: SolarPanelGameTest.tcSolar001Sta02_rainFlagsWeatherMode
+	 *
+	 * @implements TC-SOLAR-001-STA02 — rain flags the weather production mode (day + rain → MODE_WEATHER).
+	 *     The mode flag fires for the GUI even though output is 0 in weather (MOD-003; see NEG02). Rain set
+	 *     after the clear-day brightness is settled; everything synchronous.
 	 */
 	public static void tcSolar001Sta02_rainFlagsWeatherMode(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.SOLAR_PANEL.get());
@@ -157,6 +235,10 @@ public final class SolarPanelScenarios {
 	 * line in {@code produce()} guarded by {@code SolarSky.isClockDaytime}; if this ever becomes
 	 * testable, the honest shape is a scenario in its own batch, not a delay bolted onto this one.
 	 * Mirrors: SolarPanelGameTest.tcSolar001Sta03_thunderFlagsWeatherMode
+	 *
+	 * @implements TC-SOLAR-001-STA03 — thunderstorm also flags MODE_WEATHER (same zero-output as rain, MOD-003).
+	 *     Thunder always co-occurs with rain; both flags set so {@code isRaining()} reads true.
+	 * @covers R-NRG-15
 	 */
 	public static void tcSolar001Sta03_thunderFlagsWeatherMode(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.SOLAR_PANEL.get());
@@ -205,7 +287,7 @@ public final class SolarPanelScenarios {
 		SolarPanelBlockEntity panel = panelAt(helper);
 		panel.setItem(SolarPanelBlockEntity.CHIP_SLOT, new ItemStack(ModContent.ALIGNMENT_CHIP_DAY.get(), 8));
 		BlockPos abs = panel.getBlockPos();
-		for (int i = 0; i <= Config.solarEvolveTicks
+		for (int i = 0; i <= GeneratorConfig.solarEvolveTicks
 				&& helper.getLevel().getBlockState(abs).getBlock() == ModContent.SOLAR_PANEL.get(); i++) {
 			panel.serverTick(helper.getLevel(), abs, helper.getLevel().getBlockState(abs));
 		}
@@ -276,6 +358,11 @@ public final class SolarPanelScenarios {
 	/**
 	 * Rain/thunder stops base-panel generation entirely (0 EU; MOD-003).
 	 * Mirrors: SolarPanelGameTest.tcSolar001Neg02_rainYieldsZeroEu
+	 *
+	 * @implements TC-SOLAR-001-NEG02 — rain/thunder stops generation entirely (0 EU). MOD-003: rain blocks
+	 *     direct sunlight, so the panel produces nothing (the {@code solarWeatherFactor} ×0.5 halving was
+	 *     removed). The weather MODE flag still fires (see STA01); only the EU output is zero.
+	 * @covers R-NRG-15
 	 */
 	public static void tcSolar001Neg02_rainYieldsZeroEu(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.SOLAR_PANEL.get());
@@ -293,6 +380,14 @@ public final class SolarPanelScenarios {
 	/**
 	 * An opaque block above cancels sky access → 0 EU (SolarSky direct column scan, MOD-004).
 	 * Mirrors: SolarPanelGameTest.tcSolar001Neg03_opaqueBlockAboveYieldsZero
+	 *
+	 * @implements TC-SOLAR-001-NEG03 — an opaque block above cancels sky access → 0 EU.
+	 *
+	 * <p>Since MOD-004 the panel classifies sky access by scanning the column above it directly
+	 * ({@link dev.alaindustrial.core.environment.SolarSky}), not via {@code canSeeSkyFromBelowWater} — so a solid
+	 * roof is detected even in the deep gametest region (the old heightmap/below-sea quirk that forced
+	 * this case to MANUAL/L3 no longer applies).
+	 * @covers R-NRG-15
 	 */
 	public static void tcSolar001Neg03_opaqueBlockAboveYieldsZero(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.SOLAR_PANEL.get());
@@ -310,6 +405,10 @@ public final class SolarPanelScenarios {
 	/**
 	 * Glass above does NOT reduce generation: fully sky-transparent → CLEAR, full output, MODE_DAY.
 	 * Mirrors: SolarPanelGameTest.tcSolar001Fun04_glassAboveStaysFull
+	 *
+	 * @implements TC-SOLAR-001-FUN04 — glass above does NOT reduce generation (fully sky-transparent →
+	 *     CLEAR, full output, MODE_DAY). MOD-004.
+	 * @covers R-NRG-15
 	 */
 	public static void tcSolar001Fun04_glassAboveStaysFull(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.SOLAR_PANEL.get());
@@ -319,7 +418,7 @@ public final class SolarPanelScenarios {
 		panel.getEnergyStorage().setAmountUntracked(0);
 		drive(panel, helper, 1);
 		long got = panel.getEnergyStorage().getAmount();
-		long expected = Math.max(1, Math.round(Config.solarEuPerTick * Config.globalEuRateMultiplier));
+		long expected = Math.max(1, Math.round(GeneratorConfig.solarEuPerTick * Config.globalEuRateMultiplier));
 		int mode = panel.getDataAccess().get(3);
 		if (got != expected || mode != SolarPanelBlockEntity.MODE_DAY) {
 			helper.fail("glass should keep full output: got " + got + " (expected " + expected
@@ -332,6 +431,12 @@ public final class SolarPanelScenarios {
 	 * A translucent block (leaves) above flags MODE_PARTIAL and still generates at exactly the
 	 * partial rate (base × solarTransparentFactor, MOD-004).
 	 * Mirrors: SolarPanelGameTest.tcSolar001Sta06_leavesAboveFlagPartial
+	 *
+	 * @implements TC-SOLAR-001-STA06 — a translucent block (leaves) above flags MODE_PARTIAL and still
+	 *     generates (MOD-004). The base panel's 1 EU/t × 0.5 rounds back to 1, so assert the mode flag
+	 *     AND the exact 1 EU/t generation (a regression that classifies leaves as BLOCKED → 0 EU, or
+	 *     that drops the partial factor, is caught either way).
+	 * @covers R-NRG-15
 	 */
 	public static void tcSolar001Sta06_leavesAboveFlagPartial(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.SOLAR_PANEL.get());
@@ -347,12 +452,14 @@ public final class SolarPanelScenarios {
 		// Partial generation: base 1 EU/t × solarTransparentFactor (0.5) → max(1, round(0.5)) = 1 EU,
 		// then × globalEuRateMultiplier. Assert the exact value so a regression to 0 (misclassified as
 		// BLOCKED) or to full-day output (factor dropped) is caught, not just "<anything > 0>".
-		long perTick = Math.max(1, Math.round(Math.round(Config.solarEuPerTick * Config.solarTransparentFactor)
+		long perTick = Math.max(1, Math.round(Math.round(GeneratorConfig.solarEuPerTick
+				* GeneratorConfig.solarTransparentFactor)
 				* Config.globalEuRateMultiplier));
 		long got = panel.getEnergyStorage().getAmount();
 		if (got != perTick) {
 			helper.fail("partial-sky generation over 1 tick: got " + got + " EU, expected exactly " + perTick
-					+ " (max(1, round(round(" + Config.solarEuPerTick + " × " + Config.solarTransparentFactor
+					+ " (max(1, round(round(" + GeneratorConfig.solarEuPerTick + " × "
+							+ GeneratorConfig.solarTransparentFactor
 					+ ") × " + Config.globalEuRateMultiplier + ")))");
 		}
 		helper.succeed();
@@ -362,6 +469,12 @@ public final class SolarPanelScenarios {
 	 * A snow layer directly above flags MODE_SNOW and dims output to
 	 * max(1, round(solarEuPerTick × solarSnowFactor)).
 	 * Mirrors: SolarPanelGameTest.tcSolar001Sta05_snowLayerAboveFlagsSnow
+	 *
+	 * @implements TC-SOLAR-001-STA05 — a snow LAYER ({@code minecraft:snow}) directly above the panel
+	 *     flags MODE_SNOW and dims output to {@code max(1, round(solarEuPerTick × solarSnowFactor))}. The
+	 *     floor keeps the T1 base of 1 from truncating to 0 in snow, so the panel still trickles 1 EU/t.
+	 *     MODE_SNOW beats the BLOCKED/PARTIAL/DAY classification.
+	 * @covers R-NRG-15
 	 */
 	public static void tcSolar001Sta05_snowLayerAboveFlagsSnow(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.SOLAR_PANEL.get());
@@ -371,7 +484,7 @@ public final class SolarPanelScenarios {
 		panel.getEnergyStorage().setAmountUntracked(0);
 		drive(panel, helper, 1);
 		long got = panel.getEnergyStorage().getAmount();
-		int snowBase = Math.max(1, Math.round(Config.solarEuPerTick * Config.solarSnowFactor));
+		int snowBase = Math.max(1, Math.round(GeneratorConfig.solarEuPerTick * GeneratorConfig.solarSnowFactor));
 		long expected = Math.max(1, Math.round(snowBase * Config.globalEuRateMultiplier));
 		int mode = panel.getDataAccess().get(3);
 		if (mode != SolarPanelBlockEntity.MODE_SNOW) {
@@ -380,7 +493,8 @@ public final class SolarPanelScenarios {
 		}
 		if (got != expected) {
 			helper.fail("snow layer output: got " + got + " EU (expected " + expected
-					+ " = max(1, round(" + Config.solarEuPerTick + " × " + Config.solarSnowFactor + ")))");
+					+ " = max(1, round(" + GeneratorConfig.solarEuPerTick + " × " + GeneratorConfig.solarSnowFactor
+							+ ")))");
 		}
 		helper.succeed();
 	}
@@ -389,6 +503,10 @@ public final class SolarPanelScenarios {
 	 * WEATHER beats SNOW: a snow layer above plus an active thunderstorm resolves to MODE_WEATHER
 	 * with 0 EU, not MODE_SNOW.
 	 * Mirrors: SolarPanelGameTest.tcSolar001Sta09_snowLayerPlusThunderIsWeather
+	 *
+	 * @implements TC-SOLAR-001-STA09 — WEATHER beats SNOW: a snow layer above the panel plus an active
+	 *     thunderstorm resolves to MODE_WEATHER with 0 EU, not MODE_SNOW.
+	 * @covers R-NRG-15
 	 */
 	public static void tcSolar001Sta09_snowLayerPlusThunderIsWeather(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.SOLAR_PANEL.get());
@@ -410,6 +528,10 @@ public final class SolarPanelScenarios {
 	/**
 	 * NIGHT beats SNOW: a snow layer above at night yields 0 EU (mode NIGHT), never MODE_SNOW.
 	 * Mirrors: SolarPanelGameTest.tcSolar001Sta10_snowLayerAtNightIsZero
+	 *
+	 * @implements TC-SOLAR-001-STA10 — NIGHT beats SNOW: a snow layer above the panel at night yields 0 EU
+	 *     (mode NIGHT), never MODE_SNOW.
+	 * @covers R-NRG-15
 	 */
 	public static void tcSolar001Sta10_snowLayerAtNightIsZero(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.SOLAR_PANEL.get());
@@ -433,6 +555,10 @@ public final class SolarPanelScenarios {
 	 * The solar panel's top face (working surface) does not expose an energy output interface; the
 	 * other five faces are OUT-only.
 	 * Mirrors: SolarPanelGameTest.tcSolar001Phy01_topFaceNoOutput
+	 *
+	 * @implements TC-SOLAR-001-PHY01 — the solar panel's top face (working surface) does not expose an
+	 *     energy output interface; the other five faces are OUT-only (R-NRG-03).
+	 * @covers R-NRG-03
 	 */
 	public static void tcSolar001Phy01_topFaceNoOutput(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.SOLAR_PANEL.get());
@@ -446,6 +572,10 @@ public final class SolarPanelScenarios {
 	 * Production rate per tick equals Config.solarEuPerTick (× globalEuRateMultiplier); the config
 	 * constant is the source of truth.
 	 * Mirrors: SolarPanelGameTest.tcSolar001Prf01_euRateMatchesConfig
+	 *
+	 * @implements TC-SOLAR-001-PRF01 — production rate per tick equals {@code GeneratorConfig.solarEuPerTick}
+	 *     (× globalEuRateMultiplier). Config constant is the source of truth, not the concept doc.
+	 * @covers R-NRG-04
 	 */
 	public static void tcSolar001Prf01_euRateMatchesConfig(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.SOLAR_PANEL.get());
@@ -454,10 +584,10 @@ public final class SolarPanelScenarios {
 		panel.getEnergyStorage().setAmountUntracked(0);
 		drive(panel, helper, 1);
 		long got = panel.getEnergyStorage().getAmount();
-		long expected = Math.max(1, Math.round(Config.solarEuPerTick * Config.globalEuRateMultiplier));
+		long expected = Math.max(1, Math.round(GeneratorConfig.solarEuPerTick * Config.globalEuRateMultiplier));
 		if (got != expected) {
 			helper.fail("EU/tick mismatch: expected " + expected + " (solarEuPerTick="
-					+ Config.solarEuPerTick + " × globalEuRateMultiplier=" + Config.globalEuRateMultiplier
+					+ GeneratorConfig.solarEuPerTick + " × globalEuRateMultiplier=" + Config.globalEuRateMultiplier
 					+ ") got " + got);
 		}
 		helper.succeed();
@@ -468,12 +598,15 @@ public final class SolarPanelScenarios {
 	/**
 	 * The moonlit panel is night-only: by clear day it must produce 0 EU.
 	 * Mirrors: SolarPanelGameTest.tcMoonlit001Neg01_noEuByDay
+	 *
+	 * @implements TC-MOONLIT-001-NEG01 — moonlit panel is night-only: by clear day it must produce 0 EU. @covers
+	 *     R-NRG-15
 	 */
 	public static void tcMoonlit001Neg01_noEuByDay(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.MOONLIT_SOLAR_PANEL.get());
 		setClearDay(helper);
 		MoonlitSolarPanelBlockEntity panel = moonlitAt(helper);
-		driveMoonlit(panel, helper, 20);
+		drive(panel, helper, 20);
 		long amount = panel.getEnergyStorage().getAmount();
 		if (amount != 0) {
 			helper.fail("moonlit panel generated " + amount + " EU by day; expected 0");
@@ -484,13 +617,15 @@ public final class SolarPanelScenarios {
 	/**
 	 * Night + rain flags MODE_NIGHT_WEATHER (output 0, MOD-003).
 	 * Mirrors: SolarPanelGameTest.tcMoonlit001Sta01_rainFlagsWeatherMode
+	 *
+	 * @implements TC-MOONLIT-001-STA01 — night + rain flags the weather mode (output 0, MOD-003). @covers R-NRG-15
 	 */
 	public static void tcMoonlit001Sta01_rainFlagsWeatherMode(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.MOONLIT_SOLAR_PANEL.get());
 		setNight(helper);
 		setRaining(helper, false);
 		MoonlitSolarPanelBlockEntity panel = moonlitAt(helper);
-		driveMoonlit(panel, helper, 1);
+		drive(panel, helper, 1);
 		int mode = panel.getDataAccess().get(3);
 		if (mode != MoonlitSolarPanelBlockEntity.MODE_NIGHT_WEATHER) {
 			helper.fail("expected MODE_NIGHT_WEATHER (" + MoonlitSolarPanelBlockEntity.MODE_NIGHT_WEATHER
@@ -503,6 +638,11 @@ public final class SolarPanelScenarios {
 	 * A night thunderstorm flags MODE_NIGHT_WEATHER but keeps a small trickle
 	 * (moonlitWeatherEuPerTick EU/t) instead of going dark.
 	 * Mirrors: SolarPanelGameTest.tcMoonlit001Sta03_thunderYieldsWeatherTrickle
+	 *
+	 * @implements TC-MOONLIT-001-STA03 — a night thunderstorm flags MODE_NIGHT_WEATHER but, unlike the
+	 *     day panels (0 EU), the moonlit panel keeps a small trickle: {@code moonlitWeatherEuPerTick}
+	 *     EU/t, instead of going dark. Rain shares this code path (STA01 covers the rain mode flag).
+	 * @covers R-NRG-15
 	 */
 	public static void tcMoonlit001Sta03_thunderYieldsWeatherTrickle(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.MOONLIT_SOLAR_PANEL.get());
@@ -511,9 +651,9 @@ public final class SolarPanelScenarios {
 		MoonlitSolarPanelBlockEntity panel = moonlitAt(helper);
 		panel.getEnergyStorage().setAmountUntracked(0);
 		int ticks = 20;
-		driveMoonlit(panel, helper, ticks);
+		drive(panel, helper, ticks);
 		long amount = panel.getEnergyStorage().getAmount();
-		int perTick = Math.max(1, Math.round(Config.moonlitWeatherEuPerTick * Config.globalEuRateMultiplier));
+		int perTick = Math.max(1, Math.round(GeneratorConfig.moonlitWeatherEuPerTick * Config.globalEuRateMultiplier));
 		long expected = (long) perTick * ticks;
 		int mode = panel.getDataAccess().get(3);
 		if (mode != MoonlitSolarPanelBlockEntity.MODE_NIGHT_WEATHER) {
@@ -530,13 +670,16 @@ public final class SolarPanelScenarios {
 	/**
 	 * An opaque block above cancels sky access at night → 0 EU (MOD-004).
 	 * Mirrors: SolarPanelGameTest.tcMoonlit001Neg03_opaqueBlockAboveYieldsZero
+	 *
+	 * @implements TC-MOONLIT-001-NEG03 — opaque block above cancels sky access at night → 0 EU (MOD-004). @covers
+	 *     R-NRG-15
 	 */
 	public static void tcMoonlit001Neg03_opaqueBlockAboveYieldsZero(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.MOONLIT_SOLAR_PANEL.get());
 		helper.setBlock(POS.above(), Blocks.STONE);
 		setNight(helper);
 		MoonlitSolarPanelBlockEntity panel = moonlitAt(helper);
-		driveMoonlit(panel, helper, 20);
+		drive(panel, helper, 20);
 		long amount = panel.getEnergyStorage().getAmount();
 		if (amount != 0) {
 			helper.fail("moonlit generated " + amount + " EU under stone at night; expected 0");
@@ -547,6 +690,9 @@ public final class SolarPanelScenarios {
 	/**
 	 * Leaves above at night → MODE_NIGHT_PARTIAL, output × solarTransparentFactor.
 	 * Mirrors: SolarPanelGameTest.tcMoonlit001Sta02_leavesAbovePartialHalvesOutput
+	 *
+	 * @implements TC-MOONLIT-001-STA02 — leaves above at night → MODE_NIGHT_PARTIAL, output ×factor (2→1). @covers
+	 *     R-NRG-15
 	 */
 	public static void tcMoonlit001Sta02_leavesAbovePartialHalvesOutput(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.MOONLIT_SOLAR_PANEL.get());
@@ -554,9 +700,10 @@ public final class SolarPanelScenarios {
 		setNight(helper);
 		MoonlitSolarPanelBlockEntity panel = moonlitAt(helper);
 		panel.getEnergyStorage().setAmountUntracked(0);
-		driveMoonlit(panel, helper, 1);
+		drive(panel, helper, 1);
 		long got = panel.getEnergyStorage().getAmount();
-		long expected = Math.max(1, Math.round(Math.round(Config.moonlitEuPerTick * Config.solarTransparentFactor)
+		long expected = Math.max(1, Math.round(Math.round(GeneratorConfig.moonlitEuPerTick
+				* GeneratorConfig.solarTransparentFactor)
 				* Config.globalEuRateMultiplier));
 		int mode = panel.getDataAccess().get(3);
 		if (got != expected || mode != MoonlitSolarPanelBlockEntity.MODE_NIGHT_PARTIAL) {
@@ -569,6 +716,9 @@ public final class SolarPanelScenarios {
 	/**
 	 * Moonlit top face (working surface) emits no EU; the other five faces are OUT-only.
 	 * Mirrors: SolarPanelGameTest.tcMoonlit001Phy01_topFaceNoOutput
+	 *
+	 * @implements TC-MOONLIT-001-PHY01 — top face (working surface) emits no EU; other five faces OUT-only. @covers
+	 *     R-NRG-03
 	 */
 	public static void tcMoonlit001Phy01_topFaceNoOutput(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.MOONLIT_SOLAR_PANEL.get());
@@ -579,18 +729,21 @@ public final class SolarPanelScenarios {
 	/**
 	 * Moonlit EU/tick equals Config.moonlitEuPerTick (× globalEuRateMultiplier).
 	 * Mirrors: SolarPanelGameTest.tcMoonlit001Prf01_euRateMatchesConfig
+	 *
+	 * @implements TC-MOONLIT-001-PRF01 — EU/tick equals Config.moonlitEuPerTick (× globalEuRateMultiplier). @covers
+	 *     R-NRG-04
 	 */
 	public static void tcMoonlit001Prf01_euRateMatchesConfig(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.MOONLIT_SOLAR_PANEL.get());
 		setNight(helper);
 		MoonlitSolarPanelBlockEntity panel = moonlitAt(helper);
 		panel.getEnergyStorage().setAmountUntracked(0);
-		driveMoonlit(panel, helper, 1);
+		drive(panel, helper, 1);
 		long got = panel.getEnergyStorage().getAmount();
-		long expected = Math.max(1, Math.round(Config.moonlitEuPerTick * Config.globalEuRateMultiplier));
+		long expected = Math.max(1, Math.round(GeneratorConfig.moonlitEuPerTick * Config.globalEuRateMultiplier));
 		if (got != expected) {
 			helper.fail("moonlit EU/tick mismatch: expected " + expected + " (moonlitEuPerTick="
-					+ Config.moonlitEuPerTick + ") got " + got);
+					+ GeneratorConfig.moonlitEuPerTick + ") got " + got);
 		}
 		helper.succeed();
 	}
@@ -598,16 +751,18 @@ public final class SolarPanelScenarios {
 	/**
 	 * Moonlit buffer caps at Config.solarBuffer (use-it-or-lose-it).
 	 * Mirrors: SolarPanelGameTest.tcMoonlit001Prf02_bufferCapsAtMax
+	 *
+	 * @implements TC-MOONLIT-001-PRF02 — buffer caps at Config.solarBuffer (use-it-or-lose-it). @covers R-NRG-01
 	 */
 	public static void tcMoonlit001Prf02_bufferCapsAtMax(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.MOONLIT_SOLAR_PANEL.get());
 		setNight(helper);
 		MoonlitSolarPanelBlockEntity panel = moonlitAt(helper);
-		panel.getEnergyStorage().setAmountUntracked(Config.solarBuffer);
-		driveMoonlit(panel, helper, 20);
+		panel.getEnergyStorage().setAmountUntracked(GeneratorConfig.solarBuffer);
+		drive(panel, helper, 20);
 		long got = panel.getEnergyStorage().getAmount();
-		if (got != Config.solarBuffer) {
-			helper.fail("moonlit buffer changed from cap: expected " + Config.solarBuffer + " got " + got);
+		if (got != GeneratorConfig.solarBuffer) {
+			helper.fail("moonlit buffer changed from cap: expected " + GeneratorConfig.solarBuffer + " got " + got);
 		}
 		helper.succeed();
 	}
@@ -616,6 +771,9 @@ public final class SolarPanelScenarios {
 	 * A night evolution chip evolves the base panel into the moonlit panel, carrying the stored EU
 	 * and consuming the chip (shared evolveInto, MOD-166 #4).
 	 * Mirrors: SolarPanelGameTest.tcSolar001Fun03_nightChipEvolvesToMoonlit
+	 *
+	 * @implements TC-SOLAR-001-FUN03 — a night evolution chip evolves the base panel into the moonlit
+	 *     panel, carrying the stored EU and consuming the chip (shared evolveInto, MOD-166 #4).
 	 */
 	public static void tcSolar001Fun03_nightChipEvolvesToMoonlit(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.SOLAR_PANEL.get());
@@ -625,7 +783,7 @@ public final class SolarPanelScenarios {
 		long energy0 = 1500L;
 		panel.getEnergyStorage().setAmountUntracked(energy0);
 		BlockPos abs = panel.getBlockPos();
-		for (int i = 0; i <= Config.solarEvolveTicks
+		for (int i = 0; i <= GeneratorConfig.solarEvolveTicks
 				&& helper.getLevel().getBlockState(abs).getBlock() == ModContent.SOLAR_PANEL.get(); i++) {
 			panel.serverTick(helper.getLevel(), abs, helper.getLevel().getBlockState(abs));
 		}
@@ -651,13 +809,16 @@ public final class SolarPanelScenarios {
 	/**
 	 * Rain/thunder stops daylight generation entirely (0 EU; MOD-003).
 	 * Mirrors: SolarPanelGameTest.tcDaylight001Neg02_rainYieldsZeroEu
+	 *
+	 * @implements TC-DAYLIGHT-001-NEG02 — rain/thunder stops generation entirely (0 EU; MOD-003).
+	 * @covers R-NRG-15
 	 */
 	public static void tcDaylight001Neg02_rainYieldsZeroEu(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.DAYLIGHT_SOLAR_PANEL.get());
 		setClearDay(helper);
 		setRaining(helper, false);
 		AbstractGeneratorBlockEntity panel = genAt(helper);
-		driveGen(panel, helper, 20);
+		drive(panel, helper, 20);
 		long amount = panel.getEnergyStorage().getAmount();
 		if (amount != 0) {
 			helper.fail("rain: daylight generated " + amount + " EU (expected 0 — see MOD-003)");
@@ -668,13 +829,16 @@ public final class SolarPanelScenarios {
 	/**
 	 * An opaque block above cancels the daylight panel's sky access → 0 EU (MOD-004 direct scan).
 	 * Mirrors: SolarPanelGameTest.tcDaylight001Neg03_opaqueBlockAboveYieldsZero
+	 *
+	 * @implements TC-DAYLIGHT-001-NEG03 — opaque block above cancels sky access → 0 EU (MOD-004 direct scan). @covers
+	 *     R-NRG-15
 	 */
 	public static void tcDaylight001Neg03_opaqueBlockAboveYieldsZero(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.DAYLIGHT_SOLAR_PANEL.get());
 		helper.setBlock(POS.above(), Blocks.STONE);
 		setClearDay(helper);
 		AbstractGeneratorBlockEntity panel = genAt(helper);
-		driveGen(panel, helper, 20);
+		drive(panel, helper, 20);
 		long amount = panel.getEnergyStorage().getAmount();
 		if (amount != 0) {
 			helper.fail("daylight generated " + amount + " EU under stone; expected 0");
@@ -685,6 +849,9 @@ public final class SolarPanelScenarios {
 	/**
 	 * Leaves above the daylight panel → MODE_DAY_PARTIAL, output × solarTransparentFactor.
 	 * Mirrors: SolarPanelGameTest.tcDaylight001Sta02_leavesAbovePartialHalvesOutput
+	 *
+	 * @implements TC-DAYLIGHT-001-STA02 — leaves above → MODE_DAY_PARTIAL, output ×solarTransparentFactor (4→2).
+	 *     @covers R-NRG-15
 	 */
 	public static void tcDaylight001Sta02_leavesAbovePartialHalvesOutput(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.DAYLIGHT_SOLAR_PANEL.get());
@@ -692,9 +859,10 @@ public final class SolarPanelScenarios {
 		setClearDay(helper);
 		AbstractGeneratorBlockEntity panel = genAt(helper);
 		panel.getEnergyStorage().setAmountUntracked(0);
-		driveGen(panel, helper, 1);
+		drive(panel, helper, 1);
 		long got = panel.getEnergyStorage().getAmount();
-		long expected = Math.max(1, Math.round(Math.round(Config.daylightEuPerTick * Config.solarTransparentFactor)
+		long expected = Math.max(1, Math.round(Math.round(GeneratorConfig.daylightEuPerTick
+				* GeneratorConfig.solarTransparentFactor)
 				* Config.globalEuRateMultiplier));
 		int mode = panel.getDataAccess().get(3);
 		if (got != expected || mode != DaylightSolarPanelBlockEntity.MODE_DAY_PARTIAL) {
@@ -707,6 +875,8 @@ public final class SolarPanelScenarios {
 	/**
 	 * Glass above keeps full output (CLEAR).
 	 * Mirrors: SolarPanelGameTest.tcDaylight001Fun02_glassAboveStaysFull
+	 *
+	 * @implements TC-DAYLIGHT-001-FUN02 — glass above keeps full output (CLEAR). @covers R-NRG-15
 	 */
 	public static void tcDaylight001Fun02_glassAboveStaysFull(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.DAYLIGHT_SOLAR_PANEL.get());
@@ -714,9 +884,9 @@ public final class SolarPanelScenarios {
 		setClearDay(helper);
 		AbstractGeneratorBlockEntity panel = genAt(helper);
 		panel.getEnergyStorage().setAmountUntracked(0);
-		driveGen(panel, helper, 1);
+		drive(panel, helper, 1);
 		long got = panel.getEnergyStorage().getAmount();
-		long expected = Math.max(1, Math.round(Config.daylightEuPerTick * Config.globalEuRateMultiplier));
+		long expected = Math.max(1, Math.round(GeneratorConfig.daylightEuPerTick * Config.globalEuRateMultiplier));
 		if (got != expected) {
 			helper.fail("daylight under glass should stay full: got " + got + " expected " + expected);
 		}
@@ -726,13 +896,15 @@ public final class SolarPanelScenarios {
 	/**
 	 * Day + rain flags MODE_DAY_WEATHER (output 0, MOD-003).
 	 * Mirrors: SolarPanelGameTest.tcDaylight001Sta01_rainFlagsWeatherMode
+	 *
+	 * @implements TC-DAYLIGHT-001-STA01 — day + rain flags the weather mode (output 0, MOD-003). @covers R-NRG-15
 	 */
 	public static void tcDaylight001Sta01_rainFlagsWeatherMode(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.DAYLIGHT_SOLAR_PANEL.get());
 		setClearDay(helper);
 		setRaining(helper, false);
 		AbstractGeneratorBlockEntity panel = genAt(helper);
-		driveGen(panel, helper, 1);
+		drive(panel, helper, 1);
 		int mode = panel.getDataAccess().get(3);
 		if (mode != DaylightSolarPanelBlockEntity.MODE_DAY_WEATHER) {
 			helper.fail("expected MODE_DAY_WEATHER (" + DaylightSolarPanelBlockEntity.MODE_DAY_WEATHER
@@ -744,6 +916,9 @@ public final class SolarPanelScenarios {
 	/**
 	 * Daylight top face (working surface) emits no EU; the other five faces are OUT-only.
 	 * Mirrors: SolarPanelGameTest.tcDaylight001Phy01_topFaceNoOutput
+	 *
+	 * @implements TC-DAYLIGHT-001-PHY01 — top face (working surface) emits no EU; other five faces OUT-only. @covers
+	 *     R-NRG-03
 	 */
 	public static void tcDaylight001Phy01_topFaceNoOutput(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.DAYLIGHT_SOLAR_PANEL.get());
@@ -754,18 +929,21 @@ public final class SolarPanelScenarios {
 	/**
 	 * Daylight EU/tick equals Config.daylightEuPerTick (× globalEuRateMultiplier).
 	 * Mirrors: SolarPanelGameTest.tcDaylight001Prf01_euRateMatchesConfig
+	 *
+	 * @implements TC-DAYLIGHT-001-PRF01 — EU/tick equals Config.daylightEuPerTick (× globalEuRateMultiplier). @covers
+	 *     R-NRG-04
 	 */
 	public static void tcDaylight001Prf01_euRateMatchesConfig(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.DAYLIGHT_SOLAR_PANEL.get());
 		setClearDay(helper);
 		AbstractGeneratorBlockEntity panel = genAt(helper);
 		panel.getEnergyStorage().setAmountUntracked(0);
-		driveGen(panel, helper, 1);
+		drive(panel, helper, 1);
 		long got = panel.getEnergyStorage().getAmount();
-		long expected = Math.max(1, Math.round(Config.daylightEuPerTick * Config.globalEuRateMultiplier));
+		long expected = Math.max(1, Math.round(GeneratorConfig.daylightEuPerTick * Config.globalEuRateMultiplier));
 		if (got != expected) {
 			helper.fail("daylight EU/tick mismatch: expected " + expected + " (daylightEuPerTick="
-					+ Config.daylightEuPerTick + ") got " + got);
+					+ GeneratorConfig.daylightEuPerTick + ") got " + got);
 		}
 		helper.succeed();
 	}
@@ -773,16 +951,18 @@ public final class SolarPanelScenarios {
 	/**
 	 * Daylight buffer caps at Config.solarBuffer (use-it-or-lose-it).
 	 * Mirrors: SolarPanelGameTest.tcDaylight001Prf02_bufferCapsAtMax
+	 *
+	 * @implements TC-DAYLIGHT-001-PRF02 — buffer caps at Config.solarBuffer (use-it-or-lose-it). @covers R-NRG-01
 	 */
 	public static void tcDaylight001Prf02_bufferCapsAtMax(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.DAYLIGHT_SOLAR_PANEL.get());
 		setClearDay(helper);
 		AbstractGeneratorBlockEntity panel = genAt(helper);
-		panel.getEnergyStorage().setAmountUntracked(Config.solarBuffer);
-		driveGen(panel, helper, 20);
+		panel.getEnergyStorage().setAmountUntracked(GeneratorConfig.solarBuffer);
+		drive(panel, helper, 20);
 		long got = panel.getEnergyStorage().getAmount();
-		if (got != Config.solarBuffer) {
-			helper.fail("daylight buffer changed from cap: expected " + Config.solarBuffer + " got " + got);
+		if (got != GeneratorConfig.solarBuffer) {
+			helper.fail("daylight buffer changed from cap: expected " + GeneratorConfig.solarBuffer + " got " + got);
 		}
 		helper.succeed();
 	}
@@ -794,6 +974,17 @@ public final class SolarPanelScenarios {
 	 * shape stops skylight propagation, so SolarSky.classify falls through to PARTIAL (MOD-004) —
 	 * reduced output via solarTransparentFactor, not zero.
 	 * Mirrors: SolarPanelGameTest.tcSolar001Sta13_iceAboveYieldsBlocked
+	 *
+	 * @implements TC-SOLAR-001-STA13 — an ice block above the base panel classifies PARTIAL, not
+	 *     BLOCKED. {@code Blocks.ICE} is registered with {@code .noOcclusion()}
+	 *     ({@code canOcclude()=false}) and its default full-cube shape makes
+	 *     {@code propagatesSkylightDown()} false too, so {@link dev.alaindustrial.core.environment.SolarSky#classify}
+	 *     falls through both the "skip" and "BLOCKED" branches to {@code Access.PARTIAL} — the same
+	 *     bucket as leaves/cobweb (MOD-004): reduced output via {@code GeneratorConfig.solarTransparentFactor},
+	 *     not zero. (An earlier version of this test assumed ice was occlusion-opaque like stone; it is
+	 *     not — verified against {@code Blocks.ICE}'s {@code BlockBehaviour.Properties} and
+	 *     {@code SolarSky.classify}'s actual branch order.)
+	 * @covers R-VIS-01
 	 */
 	public static void tcSolar001Sta13_iceAboveYieldsBlocked(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.SOLAR_PANEL.get());
@@ -805,7 +996,7 @@ public final class SolarPanelScenarios {
 		long got = panel.getEnergyStorage().getAmount();
 		int mode = panel.getDataAccess().get(3);
 		// production is rounded PER TICK (Math.round(base * factor)), not on the 20-tick total.
-		long expected = (long) Math.round(Config.solarEuPerTick * Config.solarTransparentFactor) * 20;
+		long expected = (long) Math.round(GeneratorConfig.solarEuPerTick * GeneratorConfig.solarTransparentFactor) * 20;
 		if (got != expected || mode != SolarPanelBlockEntity.MODE_PARTIAL) {
 			helper.fail("ice above should yield " + expected + " EU / MODE_PARTIAL (canOcclude()=false on Ice, so"
 					+ " SolarSky.classify falls through to PARTIAL, not BLOCKED), got " + got + " EU, mode " + mode);
@@ -817,6 +1008,11 @@ public final class SolarPanelScenarios {
 	 * A glowstone block above is opaque to skylight (block light is not sky light), so it
 	 * classifies BLOCKED like stone: 0 EU.
 	 * Mirrors: SolarPanelGameTest.tcSolar001Sta15_glowstoneAboveYieldsBlocked
+	 *
+	 * @implements TC-SOLAR-001-STA15 — a Glowstone block above the base panel is opaque to skylight
+	 *     (block light emitted by the block itself is not sky light), so it classifies BLOCKED like stone:
+	 *     0 EU. Guards against conflating "emits light" with "lets sky light through".
+	 * @covers R-VIS-01
 	 */
 	public static void tcSolar001Sta15_glowstoneAboveYieldsBlocked(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.SOLAR_PANEL.get());
@@ -839,6 +1035,11 @@ public final class SolarPanelScenarios {
 	 * A water source block directly above is opaque to skylight (non-empty fluid state trips the
 	 * SolarSky fluid check): 0 EU, same as a stone roof.
 	 * Mirrors: SolarPanelGameTest.tcSolar001Neg08_waterAboveYieldsZero
+	 *
+	 * @implements TC-SOLAR-001-NEG08 — a water source block directly above the base panel is opaque to
+	 *     skylight ({@code canOcclude()=false} but a non-empty fluid state trips the {@code SolarSky}
+	 *     fluid check), so the panel yields 0 EU, same as a stone roof.
+	 * @covers R-NRG-04
 	 */
 	public static void tcSolar001Neg08_waterAboveYieldsZero(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.SOLAR_PANEL.get());
@@ -859,49 +1060,57 @@ public final class SolarPanelScenarios {
 	 * Config.globalEuRateMultiplier scales the per-tick output linearly (2.0× → double EU/t); the
 	 * mutable static is restored at the end to avoid poisoning the batch.
 	 * Mirrors: SolarPanelGameTest.tcSolar001Prf03_globalRateMultiplierScalesOutput
+	 *
+	 * @implements TC-SOLAR-001-PRF03 — {@code Config.globalEuRateMultiplier} scales the base panel's
+	 *     per-tick output linearly (2.0× → double EU/t). The knob is a mutable static, so it is restored
+	 *     to its original value at the end of the test to avoid poisoning any other test in the same batch.
+	 * @covers R-NRG-12
 	 */
 	public static void tcSolar001Prf03_globalRateMultiplierScalesOutput(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.SOLAR_PANEL.get());
 		setClearDay(helper);
 		SolarPanelBlockEntity panel = panelAt(helper);
-		float saved = Config.globalEuRateMultiplier;
-		try {
-			Config.globalEuRateMultiplier = 2.0f;
+		try (ConfigOverrides o = ConfigOverrides.sync().set("globalEuRateMultiplier", 2.0f)) {
 			panel.getEnergyStorage().setAmountUntracked(0);
 			drive(panel, helper, 1);
 			long got = panel.getEnergyStorage().getAmount();
-			long expected = Math.max(1, Math.round(Config.solarEuPerTick * 2.0f));
+			long expected = Math.max(1, Math.round(GeneratorConfig.solarEuPerTick * 2.0f));
 			if (got != expected) {
 				helper.fail("globalEuRateMultiplier=2.0 expected " + expected + " EU/t, got " + got);
 			}
-		} finally {
-			Config.globalEuRateMultiplier = saved;
 		}
 		helper.succeed();
 	}
 
 	/**
-	 * A changed Config.solarEuPerTick is picked up by the very next production tick (the field is
+	 * A changed GeneratorConfig.solarEuPerTick is picked up by the very next production tick (the field is
 	 * read live in produce(), not cached at construction); restored afterward.
 	 * Mirrors: SolarPanelGameTest.tcSolar001Prf04_configChangeAppliesNextTick
+	 *
+	 * @implements TC-SOLAR-001-PRF04 — a changed {@code GeneratorConfig.solarEuPerTick} is picked up by the very
+	 *     next production tick (the field is read live in {@code produce()}, not cached at block-entity
+	 *     construction). This is the in-process equivalent of a config file `/reload`: the datapack-reload
+	 *     path ({@code Config.loadFrom}) simply re-assigns the same static fields that {@code produce()}
+	 *     reads every tick, so mutating the field directly exercises the identical "new value applies
+	 *     without a restart" contract without needing to touch the filesystem or fire a real reload event.
+	 *     The field is restored afterward to avoid poisoning other tests in the same batch.
+	 * @covers R-CFG-02
 	 */
 	public static void tcSolar001Prf04_configChangeAppliesNextTick(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.SOLAR_PANEL.get());
 		setClearDay(helper);
 		SolarPanelBlockEntity panel = panelAt(helper);
-		int saved = Config.solarEuPerTick;
-		try {
-			Config.solarEuPerTick = saved * 3;
+		int saved = GeneratorConfig.solarEuPerTick;
+		try (ConfigOverrides o = ConfigOverrides.sync().set("solarEuPerTick", saved * 3)) {
 			panel.getEnergyStorage().setAmountUntracked(0);
 			drive(panel, helper, 1);
 			long got = panel.getEnergyStorage().getAmount();
-			long expected = Math.max(1, Math.round(Config.solarEuPerTick * Config.globalEuRateMultiplier));
+			long expected = Math.max(1, Math.round(GeneratorConfig.solarEuPerTick * Config.globalEuRateMultiplier));
 			if (got != expected) {
-				helper.fail("new solarEuPerTick=" + Config.solarEuPerTick + " not applied: expected " + expected
+				helper.fail("new solarEuPerTick=" + GeneratorConfig.solarEuPerTick + " not applied: expected "
+						+ expected
 						+ " got " + got);
 			}
-		} finally {
-			Config.solarEuPerTick = saved;
 		}
 		helper.succeed();
 	}
@@ -912,12 +1121,17 @@ public final class SolarPanelScenarios {
 	 * A BatteryBox adjacent to the panel but facing AWAY (single-axis input face, MOD-006)
 	 * receives no EU: no compatible interface meets across that face pair.
 	 * Mirrors: SolarPanelGameTest.tcSolar001Con01_batteryBoxWrongFacingGetsNothing
+	 *
+	 * @implements TC-SOLAR-001-CON01 — a BatteryBox adjacent to the panel but facing AWAY (its input face
+	 *     is single-axis, MOD-006) does not receive EU: no compatible interface meets across that face pair.
+	 * @covers R-CON-01
 	 */
 	public static void tcSolar001Con01_batteryBoxWrongFacingGetsNothing(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.SOLAR_PANEL.get());
 		setClearDay(helper);
 		SolarPanelBlockEntity panel = panelAt(helper);
-		panel.getEnergyStorage().setAmountUntracked(Config.solarBuffer); // ample supply to push, if a route existed
+		// ample supply to push, if a route existed
+		panel.getEnergyStorage().setAmountUntracked(GeneratorConfig.solarBuffer);
 
 		BlockPos batteryPos = POS.relative(Direction.EAST);
 		// BatteryBox input face = FACING (MOD-006). FACING=NORTH means input faces north, not the panel
@@ -940,12 +1154,16 @@ public final class SolarPanelScenarios {
 	 * An opaque block (stone) between the panel and a BatteryBox, with no cable bridging the gap,
 	 * blocks delivery entirely: energy does not pass through plain blocks.
 	 * Mirrors: SolarPanelGameTest.tcSolar001Con02_opaqueGapBlocksDelivery
+	 *
+	 * @implements TC-SOLAR-001-CON02 — an opaque block (stone) between the panel and a BatteryBox, with no
+	 *     cable bridging the gap, blocks delivery entirely: energy does not pass through plain blocks.
+	 * @covers R-CON-10
 	 */
 	public static void tcSolar001Con02_opaqueGapBlocksDelivery(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.SOLAR_PANEL.get());
 		setClearDay(helper);
 		SolarPanelBlockEntity panel = panelAt(helper);
-		panel.getEnergyStorage().setAmountUntracked(Config.solarBuffer);
+		panel.getEnergyStorage().setAmountUntracked(GeneratorConfig.solarBuffer);
 
 		BlockPos gapPos = POS.relative(Direction.EAST);
 		BlockPos batteryPos = gapPos.relative(Direction.EAST);
@@ -968,12 +1186,17 @@ public final class SolarPanelScenarios {
 	 * A consumer placed directly adjacent to an already-generating panel starts receiving EU
 	 * without any warm-up: the very next serverTick after placement moves EU in.
 	 * Mirrors: SolarPanelGameTest.tcSolar001Con03_immediateDeliveryOnPlacement
+	 *
+	 * @implements TC-SOLAR-001-CON03 — a consumer placed directly adjacent to an already-generating panel
+	 *     starts receiving EU without any warm-up: the very next serverTick after placement moves EU in.
+	 * @covers R-CON-15
 	 */
 	public static void tcSolar001Con03_immediateDeliveryOnPlacement(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.SOLAR_PANEL.get());
 		setClearDay(helper);
 		SolarPanelBlockEntity panel = panelAt(helper);
-		panel.getEnergyStorage().setAmountUntracked(Config.solarBuffer); // generation already running, buffer full
+		// generation already running, buffer full
+		panel.getEnergyStorage().setAmountUntracked(GeneratorConfig.solarBuffer);
 
 		BlockPos batteryPos = POS.relative(Direction.EAST);
 		helper.setBlock(batteryPos, ModContent.BATTERY_BOX.get().defaultBlockState()
@@ -993,6 +1216,11 @@ public final class SolarPanelScenarios {
 	 * Two LV consumers on two different side faces of the same panel never together exceed the
 	 * panel's per-tick production: the output is not duplicated per face.
 	 * Mirrors: SolarPanelGameTest.tcSolar001Con04_twoReceiversDoNotDoubleOutput
+	 *
+	 * @implements TC-SOLAR-001-CON04 — two LV consumers on two different side faces of the same panel
+	 *     never together exceed the panel's own per-tick production ({@code GeneratorConfig.solarEuPerTick} ×
+	 *     {@code globalEuRateMultiplier}): the output is not duplicated per face.
+	 * @covers R-CON-16
 	 */
 	public static void tcSolar001Con04_twoReceiversDoNotDoubleOutput(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.SOLAR_PANEL.get());
@@ -1013,7 +1241,7 @@ public final class SolarPanelScenarios {
 		}
 		drive(panel, helper, 1); // one production tick worth of EU to distribute
 		long total = batteryEast.getEnergyStorage().getAmount() + batterySouth.getEnergyStorage().getAmount();
-		long perTickCap = Math.max(1, Math.round(Config.solarEuPerTick * Config.globalEuRateMultiplier));
+		long perTickCap = Math.max(1, Math.round(GeneratorConfig.solarEuPerTick * Config.globalEuRateMultiplier));
 		if (total > perTickCap) {
 			helper.fail("two receivers together got " + total + " EU in one tick; expected <= " + perTickCap
 					+ " (output must not double per face)");
@@ -1023,9 +1251,14 @@ public final class SolarPanelScenarios {
 
 	/**
 	 * While an adjacent BatteryBox is full, the panel keeps generating into its own internal
-	 * buffer (capped at Config.solarBuffer); once the box has room again delivery resumes on the
+	 * buffer (capped at GeneratorConfig.solarBuffer); once the box has room again delivery resumes on the
 	 * next tick.
 	 * Mirrors: SolarPanelGameTest.tcSolar001Con05_bufferHoldsWhileReceiverFull
+	 *
+	 * @implements TC-SOLAR-001-CON05 — while an adjacent BatteryBox is full, the panel keeps generating
+	 *     into its own internal buffer (capped at {@code GeneratorConfig.solarBuffer}) instead of losing the EU;
+	 *     once the BatteryBox has room again delivery resumes automatically on the next tick.
+	 * @covers R-CON-01, R-NRG-01
 	 */
 	public static void tcSolar001Con05_bufferHoldsWhileReceiverFull(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.SOLAR_PANEL.get());
@@ -1048,8 +1281,9 @@ public final class SolarPanelScenarios {
 			helper.fail("panel lost its EU instead of buffering it while the receiver was full: "
 					+ panelAmount);
 		}
-		if (panelAmount > Config.solarBuffer) {
-			helper.fail("panel buffer exceeded its cap while holding EU: " + panelAmount + " > " + Config.solarBuffer);
+		if (panelAmount > GeneratorConfig.solarBuffer) {
+			helper.fail("panel buffer exceeded its cap while holding EU: " + panelAmount + " > "
+					+ GeneratorConfig.solarBuffer);
 		}
 
 		// Free up room in the receiver: delivery must resume automatically, no player action beyond time.
@@ -1061,7 +1295,7 @@ public final class SolarPanelScenarios {
 		}
 		if (panel.getEnergyStorage().getAmount() > before) {
 			// Not strictly required to fall, but it must not just keep climbing past cap unmoved.
-			if (panel.getEnergyStorage().getAmount() > Config.solarBuffer) {
+			if (panel.getEnergyStorage().getAmount() > GeneratorConfig.solarBuffer) {
 				helper.fail("panel buffer exceeded cap after resuming delivery");
 			}
 		}
@@ -1070,41 +1304,21 @@ public final class SolarPanelScenarios {
 
 	// --- Mirror Concentrator, the day branch's third rung (MOD-602) ---
 
-	private static RadiantSolarPanelBlockEntity concentratorAt(GameTestHelper helper) {
-		return helper.getLevel().getBlockEntity(helper.absolutePos(POS))
-				instanceof RadiantSolarPanelBlockEntity p ? p : null;
-	}
-
-	private static DaylightSolarPanelBlockEntity daylightAt(GameTestHelper helper) {
-		return helper.getLevel().getBlockEntity(helper.absolutePos(POS))
-				instanceof DaylightSolarPanelBlockEntity d ? d : null;
-	}
-
-	private static void driveConcentrator(RadiantSolarPanelBlockEntity be, GameTestHelper helper, int ticks) {
-		for (int i = 0; i < ticks; i++) {
-			be.serverTick(helper.getLevel(), be.getBlockPos(), helper.getLevel().getBlockState(be.getBlockPos()));
-		}
-	}
-
-	private static void driveDaylight(DaylightSolarPanelBlockEntity be, GameTestHelper helper, int ticks) {
-		for (int i = 0; i < ticks; i++) {
-			be.serverTick(helper.getLevel(), be.getBlockPos(), helper.getLevel().getBlockState(be.getBlockPos()));
-		}
-	}
-
 	/**
 	 * Snow blacks the concentrator OUT, where the panels below it keep a floored trickle.
 	 *
 	 * <p>That difference is the whole point of the block: flat cells under a dusting still catch
 	 * something, a snowed-over mirror reflects nothing. Both halves are asserted here — a change that
 	 * gave the concentrator the family's 1 EU/t floor back would otherwise stay green.
+	 *
+	 * @implements MOD-602 — snow blacks the concentrator out while the daylight panel keeps its trickle.
 	 */
 	public static void mod602_snowBlacksOutConcentratorButNotDaylightPanel(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.RADIANT_SOLAR_PANEL.get());
 		setClearDay(helper);
 		helper.setBlock(POS.above(), Blocks.SNOW);
 		RadiantSolarPanelBlockEntity concentrator = concentratorAt(helper);
-		driveConcentrator(concentrator, helper, 2);
+		drive(concentrator, helper, 2);
 		int mode = concentrator.getDataAccess().get(3);
 		int rate = concentrator.getDataAccess().get(2);
 		if (mode != RadiantSolarPanelBlockEntity.MODE_DAY_SNOW) {
@@ -1118,7 +1332,7 @@ public final class SolarPanelScenarios {
 		helper.setBlock(POS, ModContent.DAYLIGHT_SOLAR_PANEL.get());
 		helper.setBlock(POS.above(), Blocks.SNOW);
 		DaylightSolarPanelBlockEntity daylight = daylightAt(helper);
-		driveDaylight(daylight, helper, 2);
+		drive(daylight, helper, 2);
 		if (daylight.getDataAccess().get(2) <= 0) {
 			helper.fail("the daylight panel must keep its trickle under snow, got "
 					+ daylight.getDataAccess().get(2) + " EU/t");
@@ -1132,6 +1346,8 @@ public final class SolarPanelScenarios {
 	 *
 	 * <p>Both ends are checked: "noon is higher" alone would also pass for code that lifted output all
 	 * day long.
+	 *
+	 * @implements MOD-602 — the noon window lifts the concentrator's output, and only inside it.
 	 */
 	public static void mod602_noonWindowLiftsOutput(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.RADIANT_SOLAR_PANEL.get());
@@ -1141,7 +1357,7 @@ public final class SolarPanelScenarios {
 		server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), "time set noon");
 		level.updateSkyBrightness();
 		RadiantSolarPanelBlockEntity concentrator = concentratorAt(helper);
-		driveConcentrator(concentrator, helper, 2);
+		drive(concentrator, helper, 2);
 		int noonMode = concentrator.getDataAccess().get(3);
 		int noonRate = concentrator.getDataAccess().get(2);
 		if (noonMode != RadiantSolarPanelBlockEntity.MODE_DAY_PEAK) {
@@ -1151,7 +1367,7 @@ public final class SolarPanelScenarios {
 
 		server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), "time set day");
 		level.updateSkyBrightness();
-		driveConcentrator(concentrator, helper, 2);
+		drive(concentrator, helper, 2);
 		int dayRate = concentrator.getDataAccess().get(2);
 		if (concentrator.getDataAccess().get(3) != RadiantSolarPanelBlockEntity.MODE_DAY) {
 			helper.fail("outside the noon window expected MODE_DAY, got "
@@ -1168,6 +1384,8 @@ public final class SolarPanelScenarios {
 	 *
 	 * <p>The refusal is the half that matters: a slot that swallows any chip looks like it is working,
 	 * and the player then waits a day for an evolution that will never come.
+	 *
+	 * @implements MOD-602 — the daylight panel's slot takes the resonance chip and nothing else.
 	 */
 	public static void mod602_daylightPanelTakesResonanceChipOnly(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.DAYLIGHT_SOLAR_PANEL.get());
@@ -1188,7 +1406,11 @@ public final class SolarPanelScenarios {
 		helper.succeed();
 	}
 
-	/** The daylight panel grows into the concentrator and carries its stored energy across. */
+	/**
+	 * The daylight panel grows into the concentrator and carries its stored energy across.
+	 *
+	 * @implements MOD-602 — the daylight panel grows into the concentrator, carrying its energy.
+	 */
 	public static void mod602_daylightPanelEvolvesIntoConcentrator(GameTestHelper helper) {
 		helper.setBlock(POS, ModContent.DAYLIGHT_SOLAR_PANEL.get());
 		setClearDay(helper);
@@ -1197,8 +1419,8 @@ public final class SolarPanelScenarios {
 				new ItemStack(ModContent.RESONANCE_CHIP.get()));
 		panel.getEnergyStorage().setAmountUntracked(500);
 		// One tick short of the threshold: the transform must land on the next one.
-		panel.setEvolveProgressTicks(Config.solarEvolveTicks - 1);
-		driveDaylight(panel, helper, 2);
+		panel.setEvolveProgressTicks(GeneratorConfig.solarEvolveTicks - 1);
+		drive(panel, helper, 2);
 		if (helper.getLevel().getBlockState(helper.absolutePos(POS)).getBlock()
 				!= ModContent.RADIANT_SOLAR_PANEL.get()) {
 			helper.fail("the panel did not become a concentrator at the threshold");

@@ -90,6 +90,21 @@ class ShotFamiliesTest {
     }
 
     @Test
+    @DisplayName("the MOD-716 baseline frames resolve to their own families, not to the generic ones")
+    void mod716BaselineFramesHaveTheirOwnFamilies() {
+        ShotFamilies.Family genericGui = ShotFamilies.of("gui_compressor_idle");
+        for (String name : List.of("gui_overlay_input_sawmill_upgrades", "gui_status_incubator_de_de")) {
+            ShotFamilies.Family family = ShotFamilies.of(name);
+            assertNotNull(family, name);
+            assertEquals(ShotGroup.GUI, family.group(), name);
+            assertFalse(family.checks().equals(genericGui.checks()), name + " fell back to the generic gui_ family");
+        }
+        assertEquals(ShotGroup.BER, ShotFamilies.of("ber_quads_row_front").group());
+        assertTrue(ShotFamilies.of("gui_status_mob_repeller_ru_ru").rules().contains("R-GUI-01"),
+                "a long-locale frame must serve the clipping rule");
+    }
+
+    @Test
     @DisplayName("a screen frame is not filed under the world group and vice versa")
     void groupsAreNotAllTheSame() {
         assertEquals(ShotGroup.GUI, ShotFamilies.of("gui_macerator_empty").group());

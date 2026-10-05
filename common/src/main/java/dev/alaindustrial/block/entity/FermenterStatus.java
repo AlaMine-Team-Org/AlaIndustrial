@@ -1,6 +1,7 @@
 package dev.alaindustrial.block.entity;
 
 import java.util.Locale;
+import dev.alaindustrial.core.machine.StatusLine;
 
 /**
  * Why a fermenter is not brewing, for the GUI's status line (MOD-146).
@@ -8,7 +9,7 @@ import java.util.Locale;
  * <p>Travels as an ordinal over one {@code ContainerData} channel, so the declaration order is part
  * of the client contract — append, never reorder.
  */
-public enum FermenterStatus {
+public enum FermenterStatus implements StatusLine {
 	/** Brewing, or able to. */
 	READY,
 	/** The organic input slot is empty or holds too little for the recipe's batch. */
@@ -31,5 +32,11 @@ public enum FermenterStatus {
 
 	public String translationKey() {
 		return "gui.alaindustrial.fermenter.status." + name().toLowerCase(Locale.ROOT);
+	}
+
+	/** {@link StatusLine}: whether this state holds the machine up (see the interface). */
+	@Override
+	public boolean isBlocking() {
+		return this != READY;
 	}
 }

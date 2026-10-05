@@ -6,6 +6,7 @@ import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.item.energy.CrystalBlankItem;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -31,6 +32,23 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public final class CrystalPrimingScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(CrystalPrimingScenarios::crystal01FullBlankBecomesCrystal,
+								"crystal_full_blank_becomes_crystal")
+						.fabricId("CrystalPrimingGameTest", "tcCrystal001Fun01_fullBlankBecomesCrystal").ticks(20, 40),
+				RosterEntry.of(CrystalPrimingScenarios::crystal02BlankRefusesToDischarge,
+								"crystal_blank_refuses_to_discharge")
+						.fabricId("CrystalPrimingGameTest", "tcCrystal001Fun02_blankRefusesToDischarge").ticks(20, 40),
+				RosterEntry.of(CrystalPrimingScenarios::crystal03EveryTierFinishesIntoItsOwn,
+								"crystal_every_tier_finishes_into_its_own")
+						.fabricId("CrystalPrimingGameTest", "tcCrystal001Fun03_everyTierFinishesIntoItsOwn")
+						.ticks(20, 40));
+
+		private Roster() {}
+	}
+
 	private CrystalPrimingScenarios() {}
 
 	private static final BlockPos STORE = new BlockPos(1, 2, 1);
@@ -52,6 +70,8 @@ public final class CrystalPrimingScenarios {
 	 * <p>Driven from just below the top rather than from empty so the test stays a few ticks long
 	 * whatever the configured price is: the blank is pre-charged to {@code capacity - 1}, and a single
 	 * server tick has to both finish the charge and perform the swap.
+	 *
+	 * @implements TC-CRYSTAL-001-FUN01 — a full blank becomes the finished crystal in the charge slot.
 	 */
 	public static void crystal01FullBlankBecomesCrystal(GameTestHelper helper) {
 		BatteryBoxBlockEntity be = placeStore(helper);
@@ -85,6 +105,8 @@ public final class CrystalPrimingScenarios {
 	 * <p>Put a half-charged blank in the discharge slot and tick. The store must gain nothing and the
 	 * blank must keep every EU. Remove the guard in {@code ItemEnergy.stackAdd} and the store banks
 	 * energy the blank never gave up — EU created from nothing.
+	 *
+	 * @implements TC-CRYSTAL-001-FUN02 — a part-filled blank is never drained by a discharge slot.
 	 */
 	public static void crystal02BlankRefusesToDischarge(GameTestHelper helper) {
 		BatteryBoxBlockEntity be = placeStore(helper);
@@ -120,6 +142,8 @@ public final class CrystalPrimingScenarios {
 	 * the swap decision is one method, and this pins that each tier maps to the right item. A copy-paste
 	 * slip in the tier switch — a lapotron blank finishing into an energy crystal — passes every
 	 * single-tier test and is caught only here.
+	 *
+	 * @implements TC-CRYSTAL-001-FUN03 — every tier finishes into its own crystal, and none carries EU.
 	 */
 	public static void crystal03EveryTierFinishesIntoItsOwn(GameTestHelper helper) {
 		record Pair(ItemStack blank, net.minecraft.world.item.Item expected) {}

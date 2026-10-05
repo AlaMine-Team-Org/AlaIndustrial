@@ -1,5 +1,6 @@
 package dev.alaindustrial.stats;
 
+import dev.alaindustrial.attachment.PlayerAttachmentAccessor;
 import java.util.function.UnaryOperator;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -13,20 +14,14 @@ import net.minecraft.server.level.ServerPlayer;
  */
 public final class PlayerStatsStore {
 
-	/** Loader-bound bridge to the actual attachment get/set on a {@link ServerPlayer}. */
-	public interface Accessor {
-		PlayerModStats get(ServerPlayer player);
-
-		void set(ServerPlayer player, PlayerModStats stats);
-	}
-
-	private static Accessor accessor;
+	/** Loader-bound bridge to the actual attachment get/set — the one accessor each loader writes (MOD-708). */
+	private static PlayerAttachmentAccessor<PlayerModStats> accessor;
 
 	private PlayerStatsStore() {
 	}
 
 	/** Called once per loader during init, before any stat is read or written. */
-	public static void bind(Accessor impl) {
+	public static void bind(PlayerAttachmentAccessor<PlayerModStats> impl) {
 		accessor = impl;
 	}
 

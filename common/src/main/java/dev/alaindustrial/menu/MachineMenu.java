@@ -2,6 +2,8 @@ package dev.alaindustrial.menu;
 
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
+import dev.alaindustrial.block.entity.machine.MachineChannels;
+import dev.alaindustrial.block.entity.machine.SlotLayout;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.item.misc.OverclockerChipItem;
 import dev.alaindustrial.network.MachineStatsPayload;
@@ -19,6 +21,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -28,7 +31,7 @@ import org.jspecify.annotations.Nullable;
  * Shared menu base for Industrialization machines. Adds the machine's slots (subclass-defined) plus the
  * player inventory, and binds the machine's {@link ContainerData} so energy + progress sync to
  * the client automatically. Subclasses provide a server constructor (real block entity) and a
- * client constructor (dummy container + data the vanilla sync fills in).
+ * client constructor, one statement over {@link #clientStub} (dummy container + data the vanilla sync fills in).
  */
 public abstract class MachineMenu extends AbstractContainerMenu {
 	/** Upgrade slots appended after the machine slots (MOD-080); mirrors {@link MachineBlockEntity#UPGRADE_SLOT_COUNT}. */
@@ -65,6 +68,8 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 	protected final ContainerData data;
 	private final ContainerLevelAccess access;
 	private final Block block;
+	/** The slot layout this menu shows: the block entity's own server-side, the block's answer for a client stub. */
+	private final SlotLayout layout;
 	/** The viewer. Needed to address the statistics packet (MOD-125); vanilla's menu keeps no player. */
 	private final Player player;
 	/** Client-only: whether the upgrade panel is expanded. The screen toggles it; the server ignores it. */
@@ -96,6 +101,8 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 		this.data = data;
 		this.access = access;
 		this.block = block;
+		this.layout = machine instanceof MachineBlockEntity be ? be.slotLayout()
+				: SlotLayout.ofClientStub(block, machine.getContainerSize());
 		this.player = playerInventory.player;
 		addMachineSlots();
 		addUpgradeSlots();
@@ -104,6 +111,16 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 		}
 		addBatterySlot();
 		addDataSlots(data);
+	}
+
+	/** Client side: {@code stub} stands in for the block entity, which the client does not have. */
+	protected MachineMenu(MenuType<?> type, int syncId, Inventory playerInventory, MenuClientStub stub, Block block) {
+		this(type, syncId, playerInventory, stub.container(), stub.data(), ContainerLevelAccess.NULL, block);
+	}
+
+	/** Client stand-ins sized from the block entity's {@code SLOT_COUNT} and {@code DATA_COUNT} (MOD-439, MOD-235). */
+	protected static MenuClientStub clientStub(int slotCount, int dataCount) {
+		return new MenuClientStub(new SimpleContainer(slotCount), new SimpleContainerData(dataCount));
 	}
 
 	/**
@@ -121,32 +138,14 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 	/** Add the machine's own slots (slot indices 0..machineSize-1). */
 	protected abstract void addMachineSlots();
 
-	/**
-	 * Number of machine-specific slots (excludes upgrade slots). Derived from the container so it is the
-	 * same client- and server-side: a {@code MachineMenu} container is sized {@code base + N} slots.
-	 *
-	 * <p>A machine may opt out of the panel entirely ({@code hasUpgradePanel() == false} — the Energy
-	 * Condenser, MOD-393); then the container holds only its own slots and there is nothing to subtract.
-	 * Which case applies is read from {@link #hasUpgradePanel()} rather than guessed from the size, so
-	 * both sides agree even though the client is backed by a dummy container.
-	 */
+	/** Number of machine-specific slots (excludes upgrade slots); the same {@link SlotLayout} on both sides. */
 	protected final int baseSlotCount() {
-		// Server side the container IS the block entity, which knows its own layout, including the battery
-		// drawer slot (MOD-679) that sits after the upgrade block and would throw a size-based guess off by
-		// one. The client stub holds only machine + upgrade slots, so the formula below still holds there.
-		if (machine instanceof MachineBlockEntity be) {
-			return be.upgradeSlotStart();
-		}
-		return hasUpgradePanel() ? machine.getContainerSize() - UPGRADE_SLOT_COUNT : machine.getContainerSize();
+		return layout.upgradeStart();
 	}
 
-	/**
-	 * Whether this menu shows the upgrade panel. Default true; a menu whose block entity opted out of
-	 * the panel overrides it. Must answer identically on client and server — the slot indices depend
-	 * on it.
-	 */
-	public boolean hasUpgradePanel() {
-		return true;
+	/** Whether this menu shows the upgrade panel; the client derives the block entity's answer from the block. */
+	public final boolean hasUpgradePanel() {
+		return layout.panel();
 	}
 
 	/**
@@ -522,31 +521,32 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 	}
 
 	/**
-	 * How many sync channels this menu is bound to. The <b>client</b> constructor of every machine menu
-	 * sizes its {@code SimpleContainerData} from the block entity's {@code DATA_COUNT}, so this must equal
-	 * {@code MachineBlockEntity#getDataAccess().getCount()} for the machine the menu belongs to; a stub
-	 * narrower than the block entity throws when the screen reads the missing channel (the MOD-234 crash),
-	 * a wider one silently reads stale zeros. Asserted for every menu by {@code MenuDataWidthScenarios}
-	 * (MOD-235).
+	 * How many sync channels this menu is bound to; must equal the block entity's, or the screen throws on
+	 * the missing channel (MOD-234) or reads stale zeros. Asserted by {@code MenuDataWidthScenarios} (MOD-235).
 	 */
 	public final int getDataChannelCount() {
 		return data.getCount();
 	}
 
+	/** The value of {@code channel}, read by name: its index is the constant's ordinal (MOD-712, BE-7). */
+	protected final int channel(Enum<?> channel) {
+		return data.get(channel.ordinal());
+	}
+
 	public int getEnergy() {
-		return data.get(0);
+		return channel(MachineChannels.ENERGY);
 	}
 
 	public int getCapacity() {
-		return data.get(1);
+		return channel(MachineChannels.CAPACITY);
 	}
 
 	public int getProgress() {
-		return data.get(2);
+		return channel(MachineChannels.PROGRESS);
 	}
 
 	public int getMaxProgress() {
-		return data.get(3);
+		return channel(MachineChannels.MAX_PROGRESS);
 	}
 
 	/**
@@ -554,16 +554,13 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 	 * Only call this from client-game-test code; the values are overwritten on any real sync packet.
 	 */
 	public void injectTestData(int energy, int capacity, int progress, int maxProgress) {
-		data.set(0, energy);
-		data.set(1, capacity);
-		data.set(2, progress);
-		data.set(3, maxProgress);
+		data.set(MachineChannels.ENERGY.ordinal(), energy);
+		data.set(MachineChannels.CAPACITY.ordinal(), capacity);
+		data.set(MachineChannels.PROGRESS.ordinal(), progress);
+		data.set(MachineChannels.MAX_PROGRESS.ordinal(), maxProgress);
 	}
 
-	/**
-	 * Test-only companion to {@link #injectTestData}: sets one channel past the shared four, for the
-	 * machines that add their own (the incubator's mode, charge and multiblock flag).
-	 */
+	/** Test-only companion to {@link #injectTestData}: one channel past the shared four (an incubator's mode). */
 	public void injectTestChannel(int index, int value) {
 		data.set(index, value);
 	}

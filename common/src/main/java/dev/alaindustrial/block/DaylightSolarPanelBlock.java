@@ -1,29 +1,24 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.DaylightSolarPanelBlockEntity;
 import dev.alaindustrial.core.environment.SolarSky;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import dev.alaindustrial.client.ServerBalance;
+import dev.alaindustrial.core.tooltip.HasMachineTooltip;
+import dev.alaindustrial.core.tooltip.MachineTooltipSpec;
+import java.util.List;
 
 /**
  * Daylight Solar Panel — T2 day branch, the stronger day-mirror of {@link SolarPanelBlock}. Passive
  * LV generator driven by {@link SolarSky#isDaylitActive}. Half-block slab, hum while producing, EU
  * from five faces (the {@code UP} face is the working surface; see {@link AbstractSolarPanelBlock}).
  */
-public class DaylightSolarPanelBlock extends AbstractSolarPanelBlock {
-	public static final MapCodec<DaylightSolarPanelBlock> CODEC = simpleCodec(DaylightSolarPanelBlock::new);
-
+public class DaylightSolarPanelBlock extends AbstractSolarPanelBlock implements HasMachineTooltip {
 	public DaylightSolarPanelBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override
@@ -34,5 +29,15 @@ public class DaylightSolarPanelBlock extends AbstractSolarPanelBlock {
 	@Override
 	public boolean isWorking(Level level, BlockPos pos, BlockState state) {
 		return SolarSky.isDaylitActive(level, pos);
+	}
+
+	/** Hover tooltip of this block's item (MOD-716, ADR-040). */
+	@Override
+	public MachineTooltipSpec machineTooltip() {
+		return new MachineTooltipSpec(MachineTooltipSpec.Tier.LV,
+				List.of(MachineTooltipSpec.stat("energy_output_day_only", ServerBalance::daylightEuPerTick),
+						MachineTooltipSpec.stat("capacity", ServerBalance::solarBuffer)),
+				List.of(MachineTooltipSpec.stat("solar_day", ServerBalance::daylightEuPerTick),
+						MachineTooltipSpec.stat("solar_night", () -> 0)));
 	}
 }

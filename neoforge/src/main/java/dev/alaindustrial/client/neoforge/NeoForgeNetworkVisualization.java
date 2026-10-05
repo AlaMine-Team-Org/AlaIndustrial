@@ -19,8 +19,8 @@ import net.neoforged.neoforge.client.event.SubmitCustomGeometryEvent;
  * {@code LevelRenderEvents.AFTER_TRANSLUCENT_FEATURES} hook — so the per-tick approximation (20 Hz
  * motion, pixel-sized flow points) is gone entirely (MOD-033, MOD-060).
  *
- * <p>The payload reaches the renderer the same way as on Fabric: the receive seam
- * ({@link dev.alaindustrial.network.neoforge.NeoForgeNetworkClient}) pushes it into
+ * <p>The payload reaches the renderer the same way as on Fabric: its entry in the shared
+ * {@link dev.alaindustrial.client.ClientPayloadManifest} pushes it into
  * {@link NetworkOverlayRenderer#updatePayload}. (It used to be polled from a field here every frame —
  * a field nothing cleared, MOD-665 D1.)
  */

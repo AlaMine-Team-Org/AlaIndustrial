@@ -4,7 +4,9 @@ import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.ElectricHeaterBlockEntity;
 import dev.alaindustrial.block.entity.ThermalCentrifugeBlockEntity;
 import dev.alaindustrial.block.entity.ThermalCentrifugeStatus;
+import dev.alaindustrial.core.machine.MachineRates;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -38,6 +40,52 @@ import static dev.alaindustrial.gametest.AlaGameTestHelper.drive;
  * therefore carries a positive control in the same body.
  */
 public final class ThermalCentrifugeScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(ThermalCentrifugeScenarios::neg01NoSignalCostsNothingAnywhere,
+								"thermal_centrifuge_no_signal_costs_nothing")
+						.fabricId("ThermalCentrifugeGameTest", "tcCentr001Neg01_noSignalCostsNothingAnywhere")
+						.ticks(600),
+				RosterEntry.of(ThermalCentrifugeScenarios::fun01SpinUpCostsTheWorkingRate,
+								"thermal_centrifuge_spin_up_costs_working_rate")
+						.fabricId("ThermalCentrifugeGameTest", "tcCentr001Fun01_spinUpCostsTheWorkingRate").ticks(40),
+				RosterEntry.of(ThermalCentrifugeScenarios::fun05SignalWakesTheMachineImmediately,
+								"thermal_centrifuge_signal_wakes_machine_immediately")
+						.fabricId("ThermalCentrifugeGameTest", "tcCentr001Fun05_signalWakesTheMachineImmediately")
+						.ticks(40),
+				RosterEntry.of(ThermalCentrifugeScenarios::fun02FullSpinTakesExactlyConfigTicks,
+								"thermal_centrifuge_full_spin_takes_config_ticks")
+						.fabricId("ThermalCentrifugeGameTest", "tcCentr001Fun02_fullSpinTakesExactlyConfigTicks")
+						.ticks(200),
+				RosterEntry.of(ThermalCentrifugeScenarios::fun03CutSignalDropsTheSpinOutright,
+								"thermal_centrifuge_cut_signal_drops_spin")
+						.fabricId("ThermalCentrifugeGameTest", "tcCentr001Fun03_cutSignalDropsTheSpinOutright")
+						.ticks(200),
+				RosterEntry.of(ThermalCentrifugeScenarios::neg02StarvedRotorShedsOneRevolutionThenFreezes,
+								"thermal_centrifuge_starved_rotor_freezes_after_one_shed")
+						.fabricId("ThermalCentrifugeGameTest",
+								"tcCentr001Neg02_starvedRotorShedsOneRevolutionThenFreezes")
+						.ticks(200),
+				RosterEntry.of(ThermalCentrifugeScenarios::neg03PassiveHeatDoesNotStartIt,
+								"thermal_centrifuge_passive_heat_does_not_start_it")
+						.fabricId("ThermalCentrifugeGameTest", "tcCentr001Neg03_passiveHeatDoesNotStartIt")
+						.ticks(1000),
+				RosterEntry.of(ThermalCentrifugeScenarios::fun04HotHeaterMakesTwoShavings,
+								"thermal_centrifuge_hot_heater_makes_two_shavings")
+						.fabricId("ThermalCentrifugeGameTest", "tcCentr001Fun04_hotHeaterMakesTwoShavings").ticks(600),
+				RosterEntry.of(ThermalCentrifugeScenarios::con01BlockedOutputStopsWorkAndNamesIt,
+								"thermal_centrifuge_blocked_output_stops_work")
+						.fabricId("ThermalCentrifugeGameTest", "tcCentr001Con01_blockedOutputStopsWorkAndNamesIt")
+						.ticks(600),
+				RosterEntry.of(ThermalCentrifugeScenarios::sta01SpinSurvivesReload,
+								"thermal_centrifuge_spin_survives_reload")
+						.fabricId("ThermalCentrifugeGameTest", "tcCentr001Sta01_spinSurvivesReload").ticks(300));
+
+		private Roster() {}
+	}
+
 	private static final BlockPos MACHINE = new BlockPos(1, 2, 1);
 	private static final BlockPos HEAT = MACHINE.below();
 	/**
@@ -63,7 +111,7 @@ public final class ThermalCentrifugeScenarios {
 
 	/** Operation length in ticks, derived from the recipe's own price the way the machine derives it. */
 	private static int operationTicks() {
-		return Config.scaledDuration(Config.thermalCentrifugeDuration) + 2;
+		return MachineRates.duration(Config.thermalCentrifugeDuration, Config.globalMachineSpeedMultiplier) + 2;
 	}
 
 	/** Progress channel of the shared machine data block; there is no named constant for it. */

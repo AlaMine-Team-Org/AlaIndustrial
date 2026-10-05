@@ -25,7 +25,6 @@ import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.sprite.SpriteGetter;
 import net.minecraft.client.resources.model.sprite.SpriteId;
@@ -463,6 +462,7 @@ public final class CableAccessoryBlockEntityRenderer
 				| Math.min(255, Math.round(((tint >> 16) & 0xFF) * shade)) << 16
 				| Math.min(255, Math.round(((tint >> 8) & 0xFF) * shade)) << 8
 				| Math.min(255, Math.round((tint & 0xFF) * shade));
+		QuadEmitter quads = new QuadEmitter(pose, consumer, light).sprite(sprite).color(color);
 		FaceInfo info = FaceInfo.fromFacing(face);
 		for (int i = 0; i < 4; i++) {
 			FaceInfo.VertexInfo corner = info.getVertexInfo(i);
@@ -478,8 +478,7 @@ public final class CableAccessoryBlockEntityRenderer
 			// minimum V.
 			float u = i == 0 || i == 1 ? uv[0] : uv[2];
 			float v = i == 0 || i == 3 ? uv[1] : uv[3];
-			vertex(pose, consumer, x, y, z, sprite.getU(u / 16.0F), sprite.getV(v / 16.0F), light, color,
-					faces.getStepX(), faces.getStepY(), faces.getStepZ());
+			quads.vertex(x, y, z, u / 16.0F, v / 16.0F, faces.getStepX(), faces.getStepY(), faces.getStepZ());
 		}
 	}
 
@@ -627,21 +626,23 @@ public final class CableAccessoryBlockEntityRenderer
 	 */
 	private static void cuboid(PoseStack.Pose pose, VertexConsumer consumer, TextureAtlasSprite sprite, int light,
 			int color, float x0, float y0, float z0, float x1, float y1, float z1) {
+		// Every face takes the whole sprite: the first corner at its bottom-left, wound up and across.
+		QuadEmitter quads = new QuadEmitter(pose, consumer, light).sprite(sprite).color(color);
 		// Up / down
-		quad(pose, consumer, sprite, light, color, 0.0F, 1.0F, 0.0F,
-				x0, y1, z1, x1, y1, z1, x1, y1, z0, x0, y1, z0, 0.0F, 0.0F, 1.0F, 1.0F);
-		quad(pose, consumer, sprite, light, color, 0.0F, -1.0F, 0.0F,
-				x0, y0, z0, x1, y0, z0, x1, y0, z1, x0, y0, z1, 0.0F, 0.0F, 1.0F, 1.0F);
+		quads.quad(0.0F, 1.0F, 0.0F,
+				x0, y1, z1, x1, y1, z1, x1, y1, z0, x0, y1, z0, 0.0F, 1.0F, 0.0F, 0.0F, 1.0F, 0.0F, 1.0F, 1.0F);
+		quads.quad(0.0F, -1.0F, 0.0F,
+				x0, y0, z0, x1, y0, z0, x1, y0, z1, x0, y0, z1, 0.0F, 1.0F, 0.0F, 0.0F, 1.0F, 0.0F, 1.0F, 1.0F);
 		// North / south
-		quad(pose, consumer, sprite, light, color, 0.0F, 0.0F, -1.0F,
-				x0, y0, z0, x0, y1, z0, x1, y1, z0, x1, y0, z0, 0.0F, 0.0F, 1.0F, 1.0F);
-		quad(pose, consumer, sprite, light, color, 0.0F, 0.0F, 1.0F,
-				x1, y0, z1, x1, y1, z1, x0, y1, z1, x0, y0, z1, 0.0F, 0.0F, 1.0F, 1.0F);
+		quads.quad(0.0F, 0.0F, -1.0F,
+				x0, y0, z0, x0, y1, z0, x1, y1, z0, x1, y0, z0, 0.0F, 1.0F, 0.0F, 0.0F, 1.0F, 0.0F, 1.0F, 1.0F);
+		quads.quad(0.0F, 0.0F, 1.0F,
+				x1, y0, z1, x1, y1, z1, x0, y1, z1, x0, y0, z1, 0.0F, 1.0F, 0.0F, 0.0F, 1.0F, 0.0F, 1.0F, 1.0F);
 		// West / east
-		quad(pose, consumer, sprite, light, color, -1.0F, 0.0F, 0.0F,
-				x0, y0, z1, x0, y1, z1, x0, y1, z0, x0, y0, z0, 0.0F, 0.0F, 1.0F, 1.0F);
-		quad(pose, consumer, sprite, light, color, 1.0F, 0.0F, 0.0F,
-				x1, y0, z0, x1, y1, z0, x1, y1, z1, x1, y0, z1, 0.0F, 0.0F, 1.0F, 1.0F);
+		quads.quad(-1.0F, 0.0F, 0.0F,
+				x0, y0, z1, x0, y1, z1, x0, y1, z0, x0, y0, z0, 0.0F, 1.0F, 0.0F, 0.0F, 1.0F, 0.0F, 1.0F, 1.0F);
+		quads.quad(1.0F, 0.0F, 0.0F,
+				x1, y0, z0, x1, y1, z0, x1, y1, z1, x1, y0, z1, 0.0F, 1.0F, 0.0F, 0.0F, 1.0F, 0.0F, 1.0F, 1.0F);
 	}
 
 	/**
@@ -653,54 +654,30 @@ public final class CableAccessoryBlockEntityRenderer
 			int light, float x0, float x1, float z0, float z1) {
 		float y0 = FLOOR_GAP;
 		float y1 = FLOOR_GAP + THICKNESS;
+		// Each face's UV rectangle runs from its first corner's (minU, maxV) up and across.
+		QuadEmitter quads = new QuadEmitter(pose, consumer, light).sprite(sprite);
 
 		// Top and bottom, textured with the slice of the sprite matching the plate's footprint.
-		quad(pose, consumer, sprite, light, -1, 0.0F, 1.0F, 0.0F,
+		quads.quad(0.0F, 1.0F, 0.0F,
 				x0, y1, z1, x1, y1, z1, x1, y1, z0, x0, y1, z0,
-				x0, z0, x1, z1);
-		quad(pose, consumer, sprite, light, -1, 0.0F, -1.0F, 0.0F,
+				x0, z1, x0, z0, x1, z0, x1, z1);
+		quads.quad(0.0F, -1.0F, 0.0F,
 				x0, y0, z0, x1, y0, z0, x1, y0, z1, x0, y0, z1,
-				x0, z0, x1, z1);
+				x0, z1, x0, z0, x1, z0, x1, z1);
 
 		// The four sides: as wide as the plate, two pixels tall, sampled from the top of the sprite.
-		quad(pose, consumer, sprite, light, -1, 0.0F, 0.0F, -1.0F,
+		quads.quad(0.0F, 0.0F, -1.0F,
 				x0, y0, z0, x0, y1, z0, x1, y1, z0, x1, y0, z0,
-				x0, 0.0F, x1, THICKNESS);
-		quad(pose, consumer, sprite, light, -1, 0.0F, 0.0F, 1.0F,
+				x0, THICKNESS, x0, 0.0F, x1, 0.0F, x1, THICKNESS);
+		quads.quad(0.0F, 0.0F, 1.0F,
 				x1, y0, z1, x1, y1, z1, x0, y1, z1, x0, y0, z1,
-				x0, 0.0F, x1, THICKNESS);
-		quad(pose, consumer, sprite, light, -1, -1.0F, 0.0F, 0.0F,
+				x0, THICKNESS, x0, 0.0F, x1, 0.0F, x1, THICKNESS);
+		quads.quad(-1.0F, 0.0F, 0.0F,
 				x0, y0, z1, x0, y1, z1, x0, y1, z0, x0, y0, z0,
-				z0, 0.0F, z1, THICKNESS);
-		quad(pose, consumer, sprite, light, -1, 1.0F, 0.0F, 0.0F,
+				z0, THICKNESS, z0, 0.0F, z1, 0.0F, z1, THICKNESS);
+		quads.quad(1.0F, 0.0F, 0.0F,
 				x1, y0, z0, x1, y1, z0, x1, y1, z1, x1, y0, z1,
-				z0, 0.0F, z1, THICKNESS);
-	}
-
-	/** One quad, wound in the order given, with its UV rectangle taken as fractions of the sprite. */
-	private static void quad(PoseStack.Pose pose, VertexConsumer consumer, TextureAtlasSprite sprite, int light,
-			int color, float normalX, float normalY, float normalZ,
-			float ax, float ay, float az, float bx, float by, float bz,
-			float cx, float cy, float cz, float dx, float dy, float dz,
-			float uMin, float vMin, float uMax, float vMax) {
-		float u0 = sprite.getU(uMin);
-		float u1 = sprite.getU(uMax);
-		float v0 = sprite.getV(vMin);
-		float v1 = sprite.getV(vMax);
-		vertex(pose, consumer, ax, ay, az, u0, v1, light, color, normalX, normalY, normalZ);
-		vertex(pose, consumer, bx, by, bz, u0, v0, light, color, normalX, normalY, normalZ);
-		vertex(pose, consumer, cx, cy, cz, u1, v0, light, color, normalX, normalY, normalZ);
-		vertex(pose, consumer, dx, dy, dz, u1, v1, light, color, normalX, normalY, normalZ);
-	}
-
-	private static void vertex(PoseStack.Pose pose, VertexConsumer consumer, float x, float y, float z,
-			float u, float v, int light, int color, float normalX, float normalY, float normalZ) {
-		consumer.addVertex(pose, x, y, z)
-				.setColor(color)
-				.setUv(u, v)
-				.setOverlay(OverlayTexture.NO_OVERLAY)
-				.setLight(light)
-				.setNormal(pose, normalX, normalY, normalZ);
+				z0, THICKNESS, z0, 0.0F, z1, 0.0F, z1, THICKNESS);
 	}
 
 	public static final class State extends BlockEntityRenderState {

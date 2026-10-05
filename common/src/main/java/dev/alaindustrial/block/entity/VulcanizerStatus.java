@@ -1,9 +1,10 @@
 package dev.alaindustrial.block.entity;
 
 import java.util.Locale;
+import dev.alaindustrial.core.machine.StatusLine;
 
 /** Player-facing reason why the Vulcanizer is not advancing. */
-public enum VulcanizerStatus {
+public enum VulcanizerStatus implements StatusLine {
 	READY,
 	NO_HEAT,
 	NO_RAW_RUBBER,

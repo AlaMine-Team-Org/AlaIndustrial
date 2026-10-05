@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.EnergyCondenserBlockEntity;
 import dev.alaindustrial.registry.ModSounds;
 import java.util.function.Supplier;
@@ -8,7 +7,6 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -18,6 +16,10 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import dev.alaindustrial.client.ServerBalance;
+import dev.alaindustrial.core.tooltip.HasMachineTooltip;
+import dev.alaindustrial.core.tooltip.MachineTooltipSpec;
+import java.util.List;
 
 /**
  * The Energy Condenser (MOD-393): an open frame with an energy crystal turning inside it, banking the grid's
@@ -33,9 +35,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * exist for hit-testing, and a shape following the gaps would let clicks pass straight through it into
  * whatever is behind — the exact regression the fluid tank's glass once had.
  */
-public class EnergyCondenserBlock extends AbstractMachineBlock implements MachineHumProvider {
-
-	public static final MapCodec<EnergyCondenserBlock> CODEC = simpleCodec(EnergyCondenserBlock::new);
+public class EnergyCondenserBlock extends AbstractMachineBlock implements MachineHumProvider, HasMachineTooltip {
 
 	/**
 	 * The frame's own extent, not a full cube: it is open, so the block declares {@code noOcclusion()},
@@ -54,11 +54,6 @@ public class EnergyCondenserBlock extends AbstractMachineBlock implements Machin
 	public EnergyCondenserBlock(Properties properties) {
 		super(properties);
 		registerDefaultState(getStateDefinition().any().setValue(BlockStateProperties.LIT, false));
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override
@@ -95,5 +90,13 @@ public class EnergyCondenserBlock extends AbstractMachineBlock implements Machin
 	@Override
 	public Supplier<SoundEvent> humSound() {
 		return ModSounds.ENERGY_CONDENSER_HUM;
+	}
+
+	/** Hover tooltip of this block's item (MOD-716, ADR-040). */
+	@Override
+	public MachineTooltipSpec machineTooltip() {
+		return new MachineTooltipSpec(MachineTooltipSpec.Tier.LV,
+				List.of(MachineTooltipSpec.stat("energy_input", ServerBalance::condenserInputRate)),
+				List.of(MachineTooltipSpec.stat("capacity", ServerBalance::condenserCapacity)));
 	}
 }

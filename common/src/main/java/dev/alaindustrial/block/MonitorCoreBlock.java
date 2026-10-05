@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.MonitorCoreBlockEntity;
 import dev.alaindustrial.core.monitor.MonitorNetworkManager;
 import dev.alaindustrial.item.misc.CapacityCardItem;
@@ -38,8 +37,6 @@ import org.jetbrains.annotations.Nullable;
  */
 public class MonitorCoreBlock extends HorizontalMachineBlock {
 
-	public static final MapCodec<MonitorCoreBlock> CODEC = simpleCodec(MonitorCoreBlock::new);
-
 	/**
 	 * How many capacity cards are seated, 0..10 — in the block state so the rack SHOWS it.
 	 *
@@ -67,11 +64,6 @@ public class MonitorCoreBlock extends HorizontalMachineBlock {
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder);
 		builder.add(CARDS, LIT);
-	}
-
-	@Override
-	protected MapCodec<? extends net.minecraft.world.level.block.BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

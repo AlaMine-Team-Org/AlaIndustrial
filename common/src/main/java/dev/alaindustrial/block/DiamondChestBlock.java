@@ -1,12 +1,10 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.AbstractChestBlockEntity;
 import dev.alaindustrial.block.entity.DiamondChestBlockEntity;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -15,9 +13,9 @@ import net.minecraft.world.level.block.state.BlockState;
  * Diamond Chest block (MOD-599) — the tier above electrum: 108 slots behind the same six-row
  * scrolling window, and the first chest of the mod that shrugs off explosions.
  *
- * <p><b>Blast resistance 1200</b> (the ancient-debris figure) is set in {@code BLOCK_PROPS}. At that
- * value an explosion ray loses its whole budget on the first block it meets, so TNT and creepers —
- * charged ones included — leave the chest and its contents alone.
+ * <p><b>Blast resistance 1200</b> (the ancient-debris figure) is set in its {@code ContentManifest}
+ * declaration. At that value an explosion ray loses its whole budget on the first block it meets, so
+ * TNT and creepers — charged ones included — leave the chest and its contents alone.
  *
  * <p><b>It is not invulnerable, and the docs must not say so.</b> A wither's ram is gated by the
  * {@code minecraft:wither_immune} tag rather than by resistance, and ancient debris is not in that
@@ -29,15 +27,8 @@ import net.minecraft.world.level.block.state.BlockState;
  * slots.
  */
 public class DiamondChestBlock extends AbstractModChestBlock {
-	public static final MapCodec<DiamondChestBlock> CODEC = simpleCodec(DiamondChestBlock::new);
-
 	public DiamondChestBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

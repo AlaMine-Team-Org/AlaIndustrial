@@ -3,11 +3,9 @@ package dev.alaindustrial.menu;
 import dev.alaindustrial.block.entity.EnergyCondenserBlockEntity;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import net.minecraft.world.Container;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.SimpleContainerData;
 import dev.alaindustrial.registry.ModContent;
 
 /**
@@ -15,7 +13,7 @@ import dev.alaindustrial.registry.ModContent;
  * on — how full the bank is, which clot tier it is worth right now, and how far along it is toward the
  * next one.
  *
- * <p>The container has no upgrade slots ({@code hasUpgradePanel() == false} on the block entity), so
+ * <p>The container has no upgrade slots ({@code NoUpgradePanel} on the block entity), so
  * the client-side dummy is sized to the machine slots alone — sizing it like the other machines would
  * desync the slot indices the moment the player opens the screen.
  */
@@ -44,20 +42,10 @@ public class EnergyCondenserMenu extends MachineMenu {
 
 	/** Client side: dummy container of exactly the machine's slots, no upgrade block. */
 	public EnergyCondenserMenu(int syncId, Inventory playerInventory) {
-		this(syncId, playerInventory, new SimpleContainer(1),
-				new SimpleContainerData(EnergyCondenserBlockEntity.DATA_COUNT));
+		super(ModContent.ENERGY_CONDENSER_MENU.get(), syncId, playerInventory,
+				clientStub(1, EnergyCondenserBlockEntity.DATA_COUNT), ModContent.ENERGY_CONDENSER.get());
 	}
 
-	private EnergyCondenserMenu(int syncId, Inventory playerInventory, Container container, ContainerData data) {
-		super(ModContent.ENERGY_CONDENSER_MENU.get(), syncId, playerInventory, container, data,
-				ContainerLevelAccess.NULL, ModContent.ENERGY_CONDENSER.get());
-	}
-
-	/** No panel: an overclocker here would defeat the "sips surplus" design (see the block entity). */
-	@Override
-	public boolean hasUpgradePanel() {
-		return false;
-	}
 
 	@Override
 	protected void addMachineSlots() {
@@ -99,28 +87,28 @@ public class EnergyCondenserMenu extends MachineMenu {
 
 	/** Bank fill, 0..1000 — permille because the sync channel is 16-bit and the bank is millions. */
 	public int fillPermille() {
-		return data.get(EnergyCondenserBlockEntity.DATA_FILL_PERMILLE);
+		return channel(EnergyCondenserBlockEntity.Channel.FILL_PERMILLE);
 	}
 
 	/** Banked EU, reassembled from the two channels it had to be split across to survive 16 bits. */
 	public long bankedEu() {
-		return (long) data.get(EnergyCondenserBlockEntity.DATA_BANK_HI)
+		return (long) channel(EnergyCondenserBlockEntity.Channel.BANK_HI)
 				* EnergyCondenserBlockEntity.BANK_RADIX
-				+ data.get(EnergyCondenserBlockEntity.DATA_BANK_LO);
+				+ channel(EnergyCondenserBlockEntity.Channel.BANK_LO);
 	}
 
 	/** EU the bank is climbing toward; 0 once the top tier is reached. */
 	public long nextThresholdEu() {
-		return data.get(EnergyCondenserBlockEntity.DATA_NEXT_THOUSANDS) * 1000L;
+		return channel(EnergyCondenserBlockEntity.Channel.NEXT_THOUSANDS) * 1000L;
 	}
 
 	/** Clot tier the bank is worth right now: 0 when it is still below the first threshold. */
 	public int currentTier() {
-		return data.get(EnergyCondenserBlockEntity.DATA_TIER);
+		return channel(EnergyCondenserBlockEntity.Channel.TIER);
 	}
 
 	/** Progress toward the NEXT tier, 0..1000; 1000 once the top tier is reached. */
 	public int nextTierPermille() {
-		return data.get(EnergyCondenserBlockEntity.DATA_NEXT_PERMILLE);
+		return channel(EnergyCondenserBlockEntity.Channel.NEXT_PERMILLE);
 	}
 }

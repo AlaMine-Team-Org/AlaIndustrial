@@ -20,7 +20,7 @@ import net.minecraft.world.entity.player.Inventory;
  *   - Sun dot     : yellow fill when direct sunlight (MODE_DAY or MODE_PARTIAL).
  *   - Evo bar     : UV(176,48) yellow (day chip) or UV(176,57) blue (night chip).
  */
-public class SolarPanelScreen extends MachineScreen<SolarPanelMenu> {
+public class SolarPanelScreen extends LayoutMachineScreen<SolarPanelMenu> {
     private static final Identifier TEXTURE =
             Industrialization.id("textures/gui/container/solar_panel.png");
 
@@ -46,13 +46,11 @@ public class SolarPanelScreen extends MachineScreen<SolarPanelMenu> {
     private static final float EVO_UV_Y_DAY   = 48.0F;  // yellow (day chip)
     private static final float EVO_UV_Y_NIGHT = 57.0F;  // blue   (night chip)
 
-    public SolarPanelScreen(SolarPanelMenu menu, Inventory inventory, Component title) {
-        super(menu, inventory, title);
-    }
+    /** Atlas and energy bar (MOD-716, CLI-3). */
+    private static final MachineLayout LAYOUT = MachineLayout.of(TEXTURE, EnergyBarSpec.LEFT);
 
-    @Override
-    protected Identifier texture() {
-        return TEXTURE;
+    public SolarPanelScreen(SolarPanelMenu menu, Inventory inventory, Component title) {
+        super(menu, inventory, title, LAYOUT);
     }
 
     @Override
@@ -67,7 +65,6 @@ public class SolarPanelScreen extends MachineScreen<SolarPanelMenu> {
         // ── Energy bar fill (bottom-up) — via the shared MachineScreen helper ─────
         int capacity = this.menu.getCapacity();
         int energy   = this.menu.getEnergy();
-        renderEnergyBar(graphics, EnergyBarSpec.LEFT);
 
         // ── Sun indicator — blit service-area tile when active, texture shows when not ──
         int mode = this.menu.getMode();
@@ -132,4 +129,5 @@ public class SolarPanelScreen extends MachineScreen<SolarPanelMenu> {
         };
         return Component.translatable("gui.alaindustrial.solar_panel.mode." + key);
     }
+
 }

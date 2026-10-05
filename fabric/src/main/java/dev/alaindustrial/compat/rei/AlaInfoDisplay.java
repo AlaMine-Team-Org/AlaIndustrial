@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
  * display's input/output ingredients. There are no real inputs or outputs — the page is pure text.
  *
  * <p>{@link #getSerializer()} returns {@code null}: this display is purely client-side (the
- * description references blocks/items and {@link dev.alaindustrial.Config Config} values, none of
+ * description references blocks/items and balance values ({@code ServerBalance}), none of
  * which are server-only), so it is built directly by {@code AlaReiPlugin.registerDisplays} and never
  * round-tripped through the server-side {@code ServerDisplayRegistry}.
  */
@@ -53,22 +53,26 @@ public final class AlaInfoDisplay implements Display {
 	private final CategoryIdentifier<AlaInfoDisplay> category;
 	private final EntryIngredient ownerEntry;
 	private final Component title;
-	private final List<Component> lines;
+	private final Entry entry;
 
 	public AlaInfoDisplay(Entry entry, CategoryIdentifier<AlaInfoDisplay> category) {
 		ItemLike owner = entry.owner().get();
 		this.category = category;
 		this.ownerEntry = EntryIngredients.of(owner);
 		this.title = RecipeViewerInfo.title(entry);
-		this.lines = RecipeViewerInfo.buildLines(entry);
+		this.entry = entry;
 	}
 
 	public Component title() {
 		return title;
 	}
 
+	/**
+	 * Built on every call, not in the constructor (MOD-695): displays are registered at login, before the
+	 * server's balance arrives, and a page frozen then would keep showing the client's own file.
+	 */
 	public List<Component> lines() {
-		return lines;
+		return RecipeViewerInfo.buildLines(entry);
 	}
 
 	@Override

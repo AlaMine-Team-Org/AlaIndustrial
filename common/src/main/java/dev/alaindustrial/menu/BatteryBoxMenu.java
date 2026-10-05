@@ -4,10 +4,8 @@ import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.registry.ModContent;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
@@ -29,8 +27,8 @@ public class BatteryBoxMenu extends MachineMenu {
 	/** Client side. */
 	public BatteryBoxMenu(int syncId, Inventory playerInventory) {
 		super(ModContent.BATTERY_BOX_MENU.get(), syncId, playerInventory,
-				new SimpleContainer(BatteryBoxBlockEntity.MACHINE_SLOTS + UPGRADE_SLOT_COUNT),
-				new SimpleContainerData(BatteryBoxBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL, ModContent.BATTERY_BOX.get());
+				clientStub(BatteryBoxBlockEntity.MACHINE_SLOTS + UPGRADE_SLOT_COUNT, BatteryBoxBlockEntity.DATA_COUNT),
+				ModContent.BATTERY_BOX.get());
 	}
 
 	@Override
@@ -60,6 +58,6 @@ public class BatteryBoxMenu extends MachineMenu {
 
 	/** Per-tick output cap (EU/t) this BatteryBox can emit from its output face. */
 	public int getOutputRate() {
-		return data.get(4);
+		return channel(BatteryBoxBlockEntity.Channel.OUTPUT_CAP);
 	}
 }

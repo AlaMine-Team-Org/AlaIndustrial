@@ -28,11 +28,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * producers/consumers, plus a fake {@link EnergyTransactions} installed via
  * {@link EnergyTransactions#install}.
  *
- * <p>Lives in {@code :neoforge:test} because {@link EnergyLineDistributor} references
- * {@link BlockPos} (used as the cable/consumer identity in the no-self-churn check). Same pattern as
- * {@code FluidMoverTest} — MC-coupled common code goes through the {@link EphemeralTestServerProvider}
- * lane so the minecraft jar is on the classpath. The test itself never spins up a world; the provider
- * is only here for the classpath.
+ * <p>In {@code :neoforge:test} because it drives the kernel on {@link BlockPos} through the network's face
+ * numbering ({@link LineEndpoints#BLOCK_FACES}): since MOD-715 batch 8 the kernel is generic and its L1 twin,
+ * {@code EnergyLineDistributorCoreTest}, runs these cases on a toy grid under pitest; this suite proves the
+ * {@code BlockPos} adapter drives it identically. The provider only puts the minecraft jar on the classpath.
  *
  * <p>Pins the segment-to-segment flow contract (MOD-070): locality (a consumer only drains the cable
  * buffers it physically touches), the per-source packet cap, the round-robin pull, the no-self-churn
@@ -191,7 +190,7 @@ class EnergyLineDistributorTest {
 			machinePotential.put(p, machineDistance);
 		}
 
-		EnergyLineDistributor distributor(Map<BlockPos, Integer> consumerDistance) {
+		EnergyLineDistributor<BlockPos> distributor(Map<BlockPos, Integer> consumerDistance) {
 			return distributor(consumerDistance, (p, d) -> true, (p, d) -> true);
 		}
 
@@ -201,21 +200,27 @@ class EnergyLineDistributorTest {
 		 * adjacency the kernel uses to find an endpoint's cables. Every pre-MOD-255 case passes
 		 * always-true gates, which is exactly how a block whose every face is role BOTH behaves.
 		 */
-		EnergyLineDistributor distributor(Map<BlockPos, Integer> consumerDistance,
+		EnergyLineDistributor<BlockPos> distributor(Map<BlockPos, Integer> consumerDistance,
 				BiPredicate<BlockPos, Direction> canDraw, BiPredicate<BlockPos, Direction> canFeed) {
 			List<BlockPos> order = new ArrayList<>(cables);
 			order.sort((a, b) -> Integer.compare(flowPotential.get(a), flowPotential.get(b)));
-			return new EnergyLineDistributor(
+			return new EnergyLineDistributor<>(new LineView<>(
+					LineEndpoints.BLOCK_FACES,
 					cables::contains,
 					buffers::get,
 					pos -> consumerDistance.getOrDefault(pos, 0),
 					flowPotential::get,
 					machinePotential::get,
 					order,
-					canDraw,
-					canFeed,
+					byDirection(canDraw),
+					byDirection(canFeed),
 					strandedOrder,
-					producerDistance::get);
+					producerDistance::get));
+		}
+
+		/** A gate over {@link Direction} as the kernel's numbered face gate (face i is Direction.values()[i]). */
+		private static LineView.FaceGate<BlockPos> byDirection(BiPredicate<BlockPos, Direction> gate) {
+			return (pos, face) -> gate.test(pos, Direction.values()[face]);
 		}
 	}
 
@@ -233,10 +238,10 @@ class EnergyLineDistributorTest {
 		// Consumer at (0,1,0): adjacent to cableA only.
 		BlockPos consumerPos = new BlockPos(0, 1, 0);
 		StubPort consumer = new StubPort(consumerPos, 1000, 0, false, true);
-		List<EnergyLineDistributor.LiveConsumer> consumers = List.of(
-				new EnergyLineDistributor.LiveConsumer(consumerPos, consumer, 1000));
+		List<EnergyLineDistributor.LiveConsumer<BlockPos>> consumers = List.of(
+				new EnergyLineDistributor.LiveConsumer<>(consumerPos, consumer, 1000));
 
-		EnergyLineDistributor d = line.distributor(Map.of(consumerPos, 1));
+		EnergyLineDistributor<BlockPos> d = line.distributor(Map.of(consumerPos, 1));
 		long moved = d.serveConsumersFromLine(consumers, 32, COPPER_LOSS, txns.txn, 0);
 
 		// packetCap = 32 caps each consumer's per-tick draw, so the consumer takes 32 of cableA's 50.
@@ -253,10 +258,10 @@ class EnergyLineDistributorTest {
 
 		BlockPos consumerPos = new BlockPos(0, 1, 0);
 		StubPort consumer = new StubPort(consumerPos, 1000, 0, false, true);
-		List<EnergyLineDistributor.LiveConsumer> consumers = List.of(
-				new EnergyLineDistributor.LiveConsumer(consumerPos, consumer, 1000));
+		List<EnergyLineDistributor.LiveConsumer<BlockPos>> consumers = List.of(
+				new EnergyLineDistributor.LiveConsumer<>(consumerPos, consumer, 1000));
 
-		EnergyLineDistributor d = line.distributor(Map.of(consumerPos, 1));
+		EnergyLineDistributor<BlockPos> d = line.distributor(Map.of(consumerPos, 1));
 		assertEquals(0, d.serveConsumersFromLine(consumers, 32, COPPER_LOSS, txns.txn, 0));
 	}
 
@@ -264,7 +269,7 @@ class EnergyLineDistributorTest {
 	void serveConsumersFromLine_emptyClassReturnsZero() {
 		LineFixture line = new LineFixture();
 		line.cable(new BlockPos(0, 0, 0), 1, 100, 50);
-		EnergyLineDistributor d = line.distributor(Map.of());
+		EnergyLineDistributor<BlockPos> d = line.distributor(Map.of());
 		assertEquals(0, d.serveConsumersFromLine(List.of(), 32, COPPER_LOSS, txns.txn, 0));
 	}
 
@@ -279,11 +284,11 @@ class EnergyLineDistributorTest {
 		// Generator at (-1,0,0) is adjacent ONLY to cable at origin.
 		BlockPos generatorPos = new BlockPos(-1, 0, 0);
 		StubPort generator = new StubPort(generatorPos, 10_000, 10_000, true, false);
-		List<EnergyLineDistributor.LiveProducer> generators = List.of(
-				new EnergyLineDistributor.LiveProducer(generatorPos, generator));
+		List<EnergyLineDistributor.LiveProducer<BlockPos>> generators = List.of(
+				new EnergyLineDistributor.LiveProducer<>(generatorPos, generator));
 
-		EnergyLineDistributor d = line.distributor(Map.of());
-		d.chargeAndPropagateLine(generators, List.of(), 0L, 10_000L, 32, txns.txn, 0);
+		EnergyLineDistributor<BlockPos> d = line.distributor(Map.of());
+		d.chargeAndPropagateLine(generators, List.of(), DischargePlan.backupOnly(0L, 10_000L), 32, txns.txn, 0);
 
 		// Per-source packet cap = 32, so the generator injects at most 32 EU into the line this tick.
 		assertEquals(32, line.buffers.get(new BlockPos(0, 0, 0)).getAmount(),
@@ -301,17 +306,17 @@ class EnergyLineDistributorTest {
 		BlockPos storagePos = new BlockPos(0, 1, 0); // adjacent to cable at origin via Y face
 		StubPort generator = new StubPort(generatorPos, 10_000, 10_000, true, false);
 		StubPort storage = new StubPort(storagePos, 10_000, 10_000, true, false);
-		List<EnergyLineDistributor.LiveProducer> generators = List.of(
-				new EnergyLineDistributor.LiveProducer(generatorPos, generator));
-		List<EnergyLineDistributor.LiveProducer> storageSources = List.of(
-				new EnergyLineDistributor.LiveProducer(storagePos, storage));
+		List<EnergyLineDistributor.LiveProducer<BlockPos>> generators = List.of(
+				new EnergyLineDistributor.LiveProducer<>(generatorPos, generator));
+		List<EnergyLineDistributor.LiveProducer<BlockPos>> storageSources = List.of(
+				new EnergyLineDistributor.LiveProducer<>(storagePos, storage));
 
-		EnergyLineDistributor d = line.distributor(Map.of());
+		EnergyLineDistributor<BlockPos> d = line.distributor(Map.of());
 		long storageBefore = storage.amount;
 		// genSupply (20) > machineDemand (10) → storageBudget = max(0, 10−20) = 0.
 		// Generator still charges the line freely (its own budget is Long.MAX_VALUE), but storage
 		// contributes nothing.
-		d.chargeAndPropagateLine(generators, storageSources, 10L, 20L, 32, txns.txn, 0);
+		d.chargeAndPropagateLine(generators, storageSources, DischargePlan.backupOnly(10L, 20L), 32, txns.txn, 0);
 
 		assertEquals(storageBefore, storage.amount,
 				"storage must NOT discharge when generators cover the machine demand");
@@ -325,12 +330,12 @@ class EnergyLineDistributorTest {
 		// no cables at all
 		BlockPos generatorPos = new BlockPos(-1, 0, 0);
 		StubPort generator = new StubPort(generatorPos, 10_000, 10_000, true, false);
-		List<EnergyLineDistributor.LiveProducer> generators = List.of(
-				new EnergyLineDistributor.LiveProducer(generatorPos, generator));
+		List<EnergyLineDistributor.LiveProducer<BlockPos>> generators = List.of(
+				new EnergyLineDistributor.LiveProducer<>(generatorPos, generator));
 
-		EnergyLineDistributor d = line.distributor(Map.of());
+		EnergyLineDistributor<BlockPos> d = line.distributor(Map.of());
 		long before = generator.amount;
-		d.chargeAndPropagateLine(generators, List.of(), 0L, 10_000L, 32, txns.txn, 0);
+		d.chargeAndPropagateLine(generators, List.of(), DischargePlan.backupOnly(0L, 10_000L), 32, txns.txn, 0);
 		assertEquals(before, generator.amount, "generator must not draw when there are no cables to charge");
 	}
 
@@ -359,15 +364,15 @@ class EnergyLineDistributorTest {
 		line.cable(p3, 3, 12, 0);
 		line.cable(p4, 4, 12, 12); // the whole charge sits furthest from demand
 
-		EnergyLineDistributor d = line.distributor(Map.of());
-		d.chargeAndPropagateLine(List.of(), List.of(), 0L, 0L, 32, txns.txn, 0);
+		EnergyLineDistributor<BlockPos> d = line.distributor(Map.of());
+		d.chargeAndPropagateLine(List.of(), List.of(), DischargePlan.backupOnly(0L, 0L), 32, txns.txn, 0);
 
 		assertEquals(0, line.buffers.get(p4).getAmount(), "pass 1: the far cable handed its charge downhill");
 		assertEquals(12, line.buffers.get(p3).getAmount(), "pass 1: charge advanced exactly one hop, to potential 3");
 		assertEquals(0, line.buffers.get(p2).getAmount(), "pass 1: charge must NOT skip a hop");
 		assertEquals(0, line.buffers.get(p1).getAmount(), "pass 1: charge must NOT reach the sink-side cable");
 
-		d.chargeAndPropagateLine(List.of(), List.of(), 0L, 0L, 32, txns.txn, 0);
+		d.chargeAndPropagateLine(List.of(), List.of(), DischargePlan.backupOnly(0L, 0L), 32, txns.txn, 0);
 
 		assertEquals(12, line.buffers.get(p2).getAmount(), "pass 2: one more hop, to potential 2");
 		assertEquals(0, line.buffers.get(p3).getAmount(), "pass 2: the charge left potential 3");
@@ -387,8 +392,8 @@ class EnergyLineDistributorTest {
 		line.cable(left, 2, 12, 12);
 		line.cable(right, 2, 12, 0);
 
-		EnergyLineDistributor d = line.distributor(Map.of());
-		d.chargeAndPropagateLine(List.of(), List.of(), 0L, 0L, 32, txns.txn, 0);
+		EnergyLineDistributor<BlockPos> d = line.distributor(Map.of());
+		d.chargeAndPropagateLine(List.of(), List.of(), DischargePlan.backupOnly(0L, 0L), 32, txns.txn, 0);
 
 		assertEquals(12, line.buffers.get(left).getAmount(), "equal-potential neighbours must not exchange");
 		assertEquals(0, line.buffers.get(right).getAmount(), "equal-potential neighbours must not exchange");
@@ -422,8 +427,8 @@ class EnergyLineDistributorTest {
 		line.cable(eastNear, 2, 12, 0);
 		line.cable(eastFar, 1, 12, 0);
 
-		EnergyLineDistributor d = line.distributor(Map.of());
-		d.chargeAndPropagateLine(List.of(), List.of(), 0L, 0L, 32, txns.txn, 0);
+		EnergyLineDistributor<BlockPos> d = line.distributor(Map.of());
+		d.chargeAndPropagateLine(List.of(), List.of(), DischargePlan.backupOnly(0L, 0L), 32, txns.txn, 0);
 
 		assertEquals(6, line.buffers.get(westNear).getAmount(), "the west branch got its half of the fork");
 		assertEquals(6, line.buffers.get(eastNear).getAmount(), "the east branch got its half of the fork");
@@ -455,8 +460,8 @@ class EnergyLineDistributorTest {
 		line.cable(fork, 3, 3, 12, 12);
 		line.cable(eastNear, 2, 4, 12, 0);
 
-		EnergyLineDistributor d = line.distributor(Map.of());
-		d.chargeAndPropagateLine(List.of(), List.of(), 0L, 0L, 32, txns.txn, 0);
+		EnergyLineDistributor<BlockPos> d = line.distributor(Map.of());
+		d.chargeAndPropagateLine(List.of(), List.of(), DischargePlan.backupOnly(0L, 0L), 32, txns.txn, 0);
 
 		assertEquals(8, line.buffers.get(westNear).getAmount(), "the machine-ward branch takes the larger share");
 		assertEquals(4, line.buffers.get(eastNear).getAmount(), "the storage-ward branch is still served");
@@ -488,12 +493,12 @@ class EnergyLineDistributorTest {
 		line.cable(fork, 3, 12, 1); // one EU — less than one per claimant, so it is ALL remainder
 		line.cable(eastNear, 2, 12, 0);
 
-		EnergyLineDistributor d = line.distributor(Map.of());
-		d.chargeAndPropagateLine(List.of(), List.of(), 0L, 0L, 32, txns.txn, 0);
+		EnergyLineDistributor<BlockPos> d = line.distributor(Map.of());
+		d.chargeAndPropagateLine(List.of(), List.of(), DischargePlan.backupOnly(0L, 0L), 32, txns.txn, 0);
 		assertEquals(0, line.buffers.get(fork).getAmount(), "tick 1: the single EU moved off the seam");
 
 		line.buffers.get(fork).setAmountUntracked(1); // the generator refills the seam for the next tick
-		d.chargeAndPropagateLine(List.of(), List.of(), 0L, 0L, 32, txns.txn, 1);
+		d.chargeAndPropagateLine(List.of(), List.of(), DischargePlan.backupOnly(0L, 0L), 32, txns.txn, 1);
 
 		assertEquals(1, line.buffers.get(westNear).getAmount(),
 				"the west branch got the spare EU on exactly one of the two offsets");
@@ -522,8 +527,8 @@ class EnergyLineDistributorTest {
 			line.cable(b, 2, 12, 0);
 		}
 
-		EnergyLineDistributor d = line.distributor(Map.of());
-		d.chargeAndPropagateLine(List.of(), List.of(), 0L, 0L, 32, txns.txn, 0);
+		EnergyLineDistributor<BlockPos> d = line.distributor(Map.of());
+		d.chargeAndPropagateLine(List.of(), List.of(), DischargePlan.backupOnly(0L, 0L), 32, txns.txn, 0);
 
 		int fed = 0;
 		for (BlockPos b : branches) {
@@ -554,17 +559,17 @@ class EnergyLineDistributorTest {
 		BlockPos bPos = new BlockPos(1, 0, 0);
 		StubPort a = new StubPort(aPos, 10_000, 10_000, true, false);
 		StubPort b = new StubPort(bPos, 10_000, 10_000, true, false);
-		List<EnergyLineDistributor.LiveProducer> sources = List.of(
-				new EnergyLineDistributor.LiveProducer(aPos, a),
-				new EnergyLineDistributor.LiveProducer(bPos, b));
+		List<EnergyLineDistributor.LiveProducer<BlockPos>> sources = List.of(
+				new EnergyLineDistributor.LiveProducer<>(aPos, a),
+				new EnergyLineDistributor.LiveProducer<>(bPos, b));
 
-		EnergyLineDistributor d = line.distributor(Map.of());
-		d.chargeAndPropagateLine(sources, List.of(), 0L, 20_000L, 32, txns.txn, 0);
+		EnergyLineDistributor<BlockPos> d = line.distributor(Map.of());
+		d.chargeAndPropagateLine(sources, List.of(), DischargePlan.backupOnly(0L, 20_000L), 32, txns.txn, 0);
 		long drawnAFirst = 10_000L - a.amount;
 		long drawnBFirst = 10_000L - b.amount;
 
 		line.buffers.get(cable).setAmountUntracked(0); // the consumer drained the segment again
-		d.chargeAndPropagateLine(sources, List.of(), 0L, 20_000L, 32, txns.txn, 1);
+		d.chargeAndPropagateLine(sources, List.of(), DischargePlan.backupOnly(0L, 20_000L), 32, txns.txn, 1);
 		long drawnASecond = 10_000L - a.amount - drawnAFirst;
 		long drawnBSecond = 10_000L - b.amount - drawnBFirst;
 
@@ -600,11 +605,11 @@ class EnergyLineDistributorTest {
 
 		BlockPos consumerPos = new BlockPos(1, 0, 0); // between the two cables
 		StubPort consumer = new StubPort(consumerPos, 1000, 0, false, true);
-		List<EnergyLineDistributor.LiveConsumer> consumers = List.of(
-				new EnergyLineDistributor.LiveConsumer(consumerPos, consumer, 1000));
+		List<EnergyLineDistributor.LiveConsumer<BlockPos>> consumers = List.of(
+				new EnergyLineDistributor.LiveConsumer<>(consumerPos, consumer, 1000));
 
 		// Only the WEST face may draw; the EAST face is the discharging one.
-		EnergyLineDistributor d = line.distributor(Map.of(consumerPos, 1),
+		EnergyLineDistributor<BlockPos> d = line.distributor(Map.of(consumerPos, 1),
 				(pos, dir) -> dir == Direction.WEST, (pos, dir) -> true);
 		long moved = d.serveConsumersFromLine(consumers, 32, COPPER_LOSS, txns.txn, 0);
 
@@ -629,13 +634,13 @@ class EnergyLineDistributorTest {
 
 		BlockPos sourcePos = new BlockPos(1, 0, 0);
 		StubPort source = new StubPort(sourcePos, 10_000, 10_000, true, false);
-		List<EnergyLineDistributor.LiveProducer> generators = List.of(
-				new EnergyLineDistributor.LiveProducer(sourcePos, source));
+		List<EnergyLineDistributor.LiveProducer<BlockPos>> generators = List.of(
+				new EnergyLineDistributor.LiveProducer<>(sourcePos, source));
 
 		// Only the EAST face may emit; WEST is the input side.
-		EnergyLineDistributor d = line.distributor(Map.of(),
+		EnergyLineDistributor<BlockPos> d = line.distributor(Map.of(),
 				(pos, dir) -> true, (pos, dir) -> dir == Direction.EAST);
-		d.chargeAndPropagateLine(generators, List.of(), 0L, 10_000L, 32, txns.txn, 0);
+		d.chargeAndPropagateLine(generators, List.of(), DischargePlan.backupOnly(0L, 10_000L), 32, txns.txn, 0);
 
 		assertEquals(32, line.buffers.get(east).getAmount(), "the emitting face filled its cable up to packetCap");
 		assertEquals(0, line.buffers.get(west).getAmount(),
@@ -670,13 +675,13 @@ class EnergyLineDistributorTest {
 		long before = consumer.amount + source.amount
 				+ line.buffers.get(c1).getAmount() + line.buffers.get(c2).getAmount() + line.buffers.get(c3).getAmount();
 
-		EnergyLineDistributor d = line.distributor(Map.of(consumerPos, 3));
+		EnergyLineDistributor<BlockPos> d = line.distributor(Map.of(consumerPos, 3));
 		d.serveConsumersFromLine(
-				List.of(new EnergyLineDistributor.LiveConsumer(consumerPos, consumer, 900)),
+				List.of(new EnergyLineDistributor.LiveConsumer<>(consumerPos, consumer, 900)),
 				32, 0.0, txns.txn, 0);
 		d.chargeAndPropagateLine(
-				List.of(new EnergyLineDistributor.LiveProducer(sourcePos, source)), List.of(),
-				900L, 10_000L, 32, txns.txn, 0);
+				List.of(new EnergyLineDistributor.LiveProducer<>(sourcePos, source)), List.of(),
+				DischargePlan.backupOnly(900L, 10_000L), 32, txns.txn, 0);
 
 		long after = consumer.amount + source.amount
 				+ line.buffers.get(c1).getAmount() + line.buffers.get(c2).getAmount() + line.buffers.get(c3).getAmount();
@@ -701,12 +706,12 @@ class EnergyLineDistributorTest {
 		BlockPos same = new BlockPos(-1, 0, 0);
 		StubPort prodA = new StubPort(same, 10_000, 10_000, true, false);
 		StubPort prodB = new StubPort(same, 10_000, 10_000, true, false);
-		List<EnergyLineDistributor.LiveProducer> sources = List.of(
-				new EnergyLineDistributor.LiveProducer(same, prodA),
-				new EnergyLineDistributor.LiveProducer(same, prodB));
+		List<EnergyLineDistributor.LiveProducer<BlockPos>> sources = List.of(
+				new EnergyLineDistributor.LiveProducer<>(same, prodA),
+				new EnergyLineDistributor.LiveProducer<>(same, prodB));
 
-		EnergyLineDistributor d = line.distributor(Map.of());
-		d.chargeAndPropagateLine(sources, List.of(), 0L, 10_000L, 32, txns.txn, 0);
+		EnergyLineDistributor<BlockPos> d = line.distributor(Map.of());
+		d.chargeAndPropagateLine(sources, List.of(), DischargePlan.backupOnly(0L, 10_000L), 32, txns.txn, 0);
 
 		long drawnA = 10_000L - prodA.amount;
 		long drawnB = 10_000L - prodB.amount;
@@ -739,13 +744,13 @@ class EnergyLineDistributorTest {
 		StubPort gen1 = new StubPort(g1, 10_000, 10_000, true, false);
 		StubPort gen2 = new StubPort(g2, 10_000, 10_000, true, false);
 		StubPort gen3 = new StubPort(g3, 10_000, 10_000, true, false);
-		List<EnergyLineDistributor.LiveProducer> generators = List.of(
-				new EnergyLineDistributor.LiveProducer(g1, gen1),
-				new EnergyLineDistributor.LiveProducer(g2, gen2),
-				new EnergyLineDistributor.LiveProducer(g3, gen3));
+		List<EnergyLineDistributor.LiveProducer<BlockPos>> generators = List.of(
+				new EnergyLineDistributor.LiveProducer<>(g1, gen1),
+				new EnergyLineDistributor.LiveProducer<>(g2, gen2),
+				new EnergyLineDistributor.LiveProducer<>(g3, gen3));
 
-		EnergyLineDistributor d = line.distributor(Map.of());
-		d.chargeAndPropagateLine(generators, List.of(), 0L, 10_000L, 32, txns.txn, 0);
+		EnergyLineDistributor<BlockPos> d = line.distributor(Map.of());
+		d.chargeAndPropagateLine(generators, List.of(), DischargePlan.backupOnly(0L, 10_000L), 32, txns.txn, 0);
 
 		long drawn1 = 10_000L - gen1.amount;
 		long drawn2 = 10_000L - gen2.amount;
@@ -809,10 +814,10 @@ class EnergyLineDistributorTest {
 	void chargeAndPropagateLine_strandsASpurWithNothingWaitingOnIt() {
 		LineFixture line = spurRig();
 		StubPort gen = new StubPort(GEN, 10_000, 10_000, true, false);
-		EnergyLineDistributor d = line.distributor(Map.of());
+		EnergyLineDistributor<BlockPos> d = line.distributor(Map.of());
 		for (int i = 0; i < 20; i++) {
-			d.chargeAndPropagateLine(List.of(new EnergyLineDistributor.LiveProducer(GEN, gen)), List.of(),
-					0L, 10_000L, 32, txns.txn, 0);
+			d.chargeAndPropagateLine(List.of(new EnergyLineDistributor.LiveProducer<>(GEN, gen)), List.of(),
+					DischargePlan.backupOnly(0L, 10_000L), 32, txns.txn, 0);
 		}
 
 		assertEquals(12, line.buffers.get(C1).getAmount(), "negative control: the corridor saturates end to end");
@@ -836,10 +841,10 @@ class EnergyLineDistributorTest {
 		line.strandedOrder = STRANDED_ORDER;
 		line.producerDistance.putAll(PRODUCER_DISTANCE);
 		StubPort gen = new StubPort(GEN, 10_000, 10_000, true, false);
-		EnergyLineDistributor d = line.distributor(Map.of());
+		EnergyLineDistributor<BlockPos> d = line.distributor(Map.of());
 		for (int i = 0; i < 20; i++) {
-			d.chargeAndPropagateLine(List.of(new EnergyLineDistributor.LiveProducer(GEN, gen)), List.of(),
-					0L, 10_000L, 32, txns.txn, 0);
+			d.chargeAndPropagateLine(List.of(new EnergyLineDistributor.LiveProducer<>(GEN, gen)), List.of(),
+					DischargePlan.backupOnly(0L, 10_000L), 32, txns.txn, 0);
 		}
 
 		assertEquals(12, line.buffers.get(S1).getAmount(), "the stranded segment now carries charge");
@@ -887,16 +892,16 @@ class EnergyLineDistributorTest {
 		line.producerDistance.putAll(Map.of(T_C3, 1, T_C2, 2, T_C1, 3, T_SPUR, 4));
 
 		StubPort machine = new StubPort(T_MACHINE, 10_000, 0, false, true);
-		List<EnergyLineDistributor.LiveConsumer> consumers =
-				List.of(new EnergyLineDistributor.LiveConsumer(T_MACHINE, machine, 10_000));
+		List<EnergyLineDistributor.LiveConsumer<BlockPos>> consumers =
+				List.of(new EnergyLineDistributor.LiveConsumer<>(T_MACHINE, machine, 10_000));
 		StubPort gen = new StubPort(T_GEN, 10_000, 10_000, true, false);
-		EnergyLineDistributor d = line.distributor(Map.of(T_MACHINE, 1));
+		EnergyLineDistributor<BlockPos> d = line.distributor(Map.of(T_MACHINE, 1));
 
 		long delivered = 0;
 		for (int i = 0; i < 40; i++) {
 			delivered += d.serveConsumersFromLine(consumers, 32, COPPER_LOSS, txns.txn, 0);
-			d.chargeAndPropagateLine(List.of(new EnergyLineDistributor.LiveProducer(T_GEN, gen)), List.of(),
-					0L, 10_000L, 32, txns.txn, 0);
+			d.chargeAndPropagateLine(List.of(new EnergyLineDistributor.LiveProducer<>(T_GEN, gen)), List.of(),
+					DischargePlan.backupOnly(0L, 10_000L), 32, txns.txn, 0);
 		}
 
 		assertTrue(delivered > 0,
@@ -920,7 +925,7 @@ class EnergyLineDistributorTest {
 		line.buffers.get(C2).setAmountUntracked(12);
 		line.buffers.get(C3).setAmountUntracked(12); // saturated corridor: C3's packet is true surplus
 
-		EnergyLineDistributor d = line.distributor(Map.of());
+		EnergyLineDistributor<BlockPos> d = line.distributor(Map.of());
 		d.fillStrandedOneHop(STRANDED_ORDER, PRODUCER_DISTANCE::get, 32, txns.txn);
 		assertEquals(12, line.buffers.get(S1).getAmount(), "pass 1: the packet advanced exactly one hop");
 		assertEquals(0, line.buffers.get(S2).getAmount(), "pass 1: it must NOT skip down the whole spur");
@@ -947,7 +952,7 @@ class EnergyLineDistributorTest {
 		LineFixture line = spurRig();
 		line.buffers.get(C3).setAmountUntracked(12); // full — but C2 below it is empty: delivery in transit
 
-		EnergyLineDistributor d = line.distributor(Map.of());
+		EnergyLineDistributor<BlockPos> d = line.distributor(Map.of());
 		d.fillStrandedOneHop(STRANDED_ORDER, PRODUCER_DISTANCE::get, 32, txns.txn);
 
 		assertEquals(12, line.buffers.get(C3).getAmount(),
@@ -965,7 +970,7 @@ class EnergyLineDistributorTest {
 		LineFixture line = spurRig();
 		line.buffers.get(C3).setAmountUntracked(11); // one EU short of full: still working for the machines
 
-		EnergyLineDistributor d = line.distributor(Map.of());
+		EnergyLineDistributor<BlockPos> d = line.distributor(Map.of());
 		d.fillStrandedOneHop(STRANDED_ORDER, PRODUCER_DISTANCE::get, 32, txns.txn);
 
 		assertEquals(11, line.buffers.get(C3).getAmount(), "a partly drained donor must not be tapped");
@@ -981,7 +986,7 @@ class EnergyLineDistributorTest {
 		line.buffers.get(C3).setAmountUntracked(12); // saturated, so the pass genuinely moves EU (MOD-413)
 		long before = line.buffers.values().stream().mapToLong(b -> b.getAmount()).sum();
 
-		EnergyLineDistributor d = line.distributor(Map.of());
+		EnergyLineDistributor<BlockPos> d = line.distributor(Map.of());
 		for (int i = 0; i < 5; i++) {
 			d.fillStrandedOneHop(STRANDED_ORDER, PRODUCER_DISTANCE::get, 32, txns.txn);
 		}

@@ -1,0 +1,3 @@
+#
+#Sat Oct 03 02:01:23 EEST 2026
+no\ classes\ that\ reside\ in\ a\ package\ 'dev.alaindustrial.core..'\ should\ depend\ on\ classes\ that\ reside\ in\ any\ package\ ['dev.alaindustrial.block..',\ 'dev.alaindustrial.registry..'],\ because\ core\ is\ the\ lowest\ layer\ of\ game\ logic\ (coding.md\ \u00A73,\ ADR-039)\:\ a\ core\ class\ that\ names\ a\ block\ or\ the\ registry\ has\ to\ change\ for\ every\ new\ block,\ and\ drags\ the\ block\ layer\ into\ everything\ that\ only\ wanted\ the\ core.\ Declare\ an\ interface\ in\ core\ (CableNode,\ FluidPipeNode,\ StorageEndpoint,\ EnergyPortHost)\ and\ implement\ it\ in\ the\ block=3703ae60-eae4-465b-89b4-78b58d4cc992

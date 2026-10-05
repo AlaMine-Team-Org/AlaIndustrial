@@ -8,12 +8,10 @@ import dev.alaindustrial.registry.ModContent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -59,8 +57,8 @@ public class MobRepellerMenu extends MachineMenu {
 	protected MobRepellerMenu(MenuType<? extends MobRepellerMenu> type, int syncId, Inventory playerInventory,
 			Block block) {
 		super(type, syncId, playerInventory,
-				new SimpleContainer(MobRepellerBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT),
-				new SimpleContainerData(MachineBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL, block);
+				clientStub(MobRepellerBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT, MachineBlockEntity.DATA_COUNT),
+				block);
 		this.repeller = null;
 	}
 

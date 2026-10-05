@@ -2,6 +2,7 @@ package dev.alaindustrial.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.compat.client.Keyboard;
 import net.minecraft.client.KeyMapping;
 import dev.alaindustrial.network.DrillColumnTogglePayload;
 import dev.alaindustrial.network.FluxweaveStepAssistPayload;
@@ -9,7 +10,6 @@ import dev.alaindustrial.network.NetworkDispatcher;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
-import org.lwjgl.glfw.GLFW;
 
 /**
  * The mod's key mappings (MOD-065) — currently one: toggle the Energy Pack charge readout. Declared
@@ -19,6 +19,10 @@ import org.lwjgl.glfw.GLFW;
  *
  * <p>The binding shows up in vanilla Controls under a mod-owned category, so players can rebind it
  * like any other key.
+ *
+ * <p><b>Defaults are {@code InputConstants.KEY_*}</b> in the input type {@link Keyboard#keyMappingType()}
+ * names — the line's own pair, since 26.3 moved input from GLFW to SDL3 and changed both (see
+ * {@link Keyboard}). Each line compiles its own key values in, so this source is the same on every line.
  */
 public final class ModKeyMappings {
 
@@ -34,8 +38,8 @@ public final class ModKeyMappings {
 	/** Toggle the worn-pack charge readout. Default: H — free in vanilla. */
 	public static final KeyMapping TOGGLE_ENERGY_HUD = new KeyMapping(
 			"key.alaindustrial.toggle_energy_hud",
-			InputConstants.Type.KEYSYM,
-			GLFW.GLFW_KEY_H,
+			Keyboard.keyMappingType(),
+			InputConstants.KEY_H,
 			CATEGORY);
 
 	/** Toggle the held-drill charge readout (MOD-079). Default: J — free in vanilla, next to H. Its own
@@ -43,23 +47,23 @@ public final class ModKeyMappings {
 	 * shown independently of the pack readout. */
 	public static final KeyMapping TOGGLE_DRILL_HUD = new KeyMapping(
 			"key.alaindustrial.toggle_drill_hud",
-			InputConstants.Type.KEYSYM,
-			GLFW.GLFW_KEY_J,
+			Keyboard.keyMappingType(),
+			InputConstants.KEY_J,
 			CATEGORY);
 
 	/** Open the player profile / dashboard (MOD-133). Default: K — free in vanilla, next to H/J. NOT
 	 * P: vanilla binds P to Social Interactions (the multiplayer/LAN player list), so P would clash. */
 	public static final KeyMapping OPEN_PROFILE = new KeyMapping(
 			"key.alaindustrial.open_profile",
-			InputConstants.Type.KEYSYM,
-			GLFW.GLFW_KEY_K,
+			Keyboard.keyMappingType(),
+			InputConstants.KEY_K,
 			CATEGORY);
 
 	/** Toggle the Fluxweave leggings' step assist (MOD-127). Default: G — free in vanilla, next to H/J/K. */
 	public static final KeyMapping TOGGLE_STEP_ASSIST = new KeyMapping(
 			"key.alaindustrial.toggle_step_assist",
-			InputConstants.Type.KEYSYM,
-			GLFW.GLFW_KEY_G,
+			Keyboard.keyMappingType(),
+			InputConstants.KEY_G,
 			CATEGORY);
 
 	/** Toggle the column bore on the held drill (MOD-482). Default: L — free in vanilla, and the next
@@ -68,8 +72,8 @@ public final class ModKeyMappings {
 	 * sneak switches Silk Touch on the two tipped ones. */
 	public static final KeyMapping TOGGLE_DRILL_COLUMN = new KeyMapping(
 			"key.alaindustrial.toggle_drill_column",
-			InputConstants.Type.KEYSYM,
-			GLFW.GLFW_KEY_L,
+			Keyboard.keyMappingType(),
+			InputConstants.KEY_L,
 			CATEGORY);
 
 	private ModKeyMappings() {

@@ -1,17 +1,18 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.FermenterBlockEntity;
 import dev.alaindustrial.registry.ModSounds;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import dev.alaindustrial.client.ServerBalance;
+import dev.alaindustrial.core.tooltip.HasMachineTooltip;
+import dev.alaindustrial.core.tooltip.MachineTooltipSpec;
 
 /**
  * The Fermenter block (MOD-146) — a full cube that faces the player and shows its "on" model while a
@@ -21,16 +22,9 @@ import net.minecraft.world.level.block.state.BlockState;
  * {@link MachineHumProvider}, and this block now has its own — wet, airy compost bubbling, chosen
  * to stay clear of the polymerizer's thick tar-like boil.
  */
-public class FermenterBlock extends LitMachineBlock implements MachineHumProvider {
-	public static final MapCodec<FermenterBlock> CODEC = simpleCodec(FermenterBlock::new);
-
+public class FermenterBlock extends LitMachineBlock implements MachineHumProvider, HasMachineTooltip {
 	public FermenterBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override
@@ -51,5 +45,13 @@ public class FermenterBlock extends LitMachineBlock implements MachineHumProvide
 	@Override
 	public Supplier<SoundEvent> humSound() {
 		return ModSounds.FERMENTER_HUM;
+	}
+
+	/** Hover tooltip of this block's item (MOD-716, ADR-040). */
+	@Override
+	public MachineTooltipSpec machineTooltip() {
+		return MachineTooltipSpec.processing(ServerBalance::machineEuPerTickEffective,
+				() -> ServerBalance.scaledDuration(ServerBalance.fermenterDuration()),
+				ServerBalance::machineBuffer);
 	}
 }

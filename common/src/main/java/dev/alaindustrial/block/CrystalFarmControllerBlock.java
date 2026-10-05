@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.CrystalFarmControllerBlockEntity;
 import dev.alaindustrial.chat.ModChat;
 import net.minecraft.core.BlockPos;
@@ -36,20 +35,12 @@ import org.jspecify.annotations.Nullable;
  */
 public class CrystalFarmControllerBlock extends HorizontalMachineBlock {
 
-	public static final MapCodec<CrystalFarmControllerBlock> CODEC =
-			simpleCodec(CrystalFarmControllerBlock::new);
-
 	/** Whether the room around this controller passed its last scan. Drives the lit panel texture. */
 	public static final BooleanProperty FORMED = BooleanProperty.create("formed");
 
 	public CrystalFarmControllerBlock(Properties properties) {
 		super(properties);
 		registerDefaultState(defaultBlockState().setValue(FORMED, false));
-	}
-
-	@Override
-	protected MapCodec<? extends CrystalFarmControllerBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

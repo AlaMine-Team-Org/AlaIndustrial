@@ -3,6 +3,7 @@ package dev.alaindustrial.gametest;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModProfessions;
 import dev.alaindustrial.worldgen.VillagePoolInjector;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -20,6 +21,31 @@ import net.minecraft.world.item.trading.MerchantOffers;
  * sets, and the server-start pool injection.
  */
 public final class IndustrialistScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(IndustrialistScenarios::tradeSetsResolvePerLevel, "industrialist_trade_sets_resolve")
+						.fabricId("IndustrialistVillagerGameTest", "tcVil002_tradeSetsResolvePerLevel").ticks(20, 40),
+				RosterEntry.of(IndustrialistScenarios::poolInjectionIsIdempotent,
+								"industrialist_pool_injection_idempotent")
+						.fabricId("IndustrialistVillagerGameTest", "tcVil005_poolInjectionIsIdempotent").ticks(20, 40),
+				RosterEntry.of(IndustrialistScenarios::houseCapFilter, "industrialist_house_cap_filter")
+						.fabricId("IndustrialistVillagerGameTest", "tcVil006_houseCapFilter").ticks(20, 40),
+				RosterEntry.of(IndustrialistScenarios::houseStructureLoads, "industrialist_house_structure_loads")
+						.fabricId("IndustrialistVillagerGameTest", "tcVil007_houseStructureLoads").ticks(20, 40),
+				RosterEntry.of(IndustrialistScenarios::tcVil003_sellOffersIgnoreReputation,
+								"villager_sell_offers_ignore_reputation")
+						.fabricId("IndustrialistVillagerGameTest", "tcVil003_sellOffersIgnoreReputation")
+						.ticks(20, 100),
+				RosterEntry.of(IndustrialistScenarios::tcVil004_unemployedVillagerTakesProfession,
+								"unemployed_villager_takes_profession")
+						.fabricId("IndustrialistVillagerGameTest", "tcVil004_unemployedVillagerTakesProfession")
+						.ticks(300));
+
+		private Roster() {}
+	}
+
 	private IndustrialistScenarios() {
 	}
 

@@ -3,7 +3,7 @@ package dev.alaindustrial.client.screen;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 /**
- * Shared visual language for Industrialization machine screens, built on the 26.2 render-state
+ * Shared visual language for Industrialization machine screens, built on the render-state GUI
  * model ({@link GuiGraphicsExtractor#fill}). The look is a light control-panel face with a bevel
  * and a single copper accent strip under the header (the signature element), recessed slots, and
  * an amber energy bar. Text stays dark for legibility on the light panel (matching vanilla labels).
@@ -23,6 +23,21 @@ public final class GuiStyle {
 	public static final int COPPER = 0xFFB87333;
 	public static final int TEXT = 0xFF3F3F3F;
 	public static final int TEXT_DIM = 0xFF6B6B6B;
+	/**
+	 * The vanilla container-label grey — one step lighter than {@link #TEXT}. Kept apart on purpose: the
+	 * screens that print in it today would shift a shade if it were folded into {@code TEXT}.
+	 */
+	public static final int LABEL = 0xFF404040;
+	/** A blocking status caption — dark red, the colour of {@code ChatFormatting.DARK_RED}. */
+	public static final int STATUS_BLOCKING = 0xFFAA0000;
+	/** Face of an unselected mode button (the sawmill's four modes). */
+	public static final int BUTTON = 0xFF2B2B2B;
+	/** Face of the selected mode button. */
+	public static final int BUTTON_ACTIVE = 0xFF5A4A21;
+	/** The 1 px frame around the selected mode button. */
+	public static final int BUTTON_ACTIVE_EDGE = 0xFFFFC94A;
+	/** Translucent white laid over a button under the cursor, before its icon. */
+	public static final int HOVER_WASH = 0x40FFFFFF;
 
 	/** Panel face with bevel border and a copper accent strip under the header. */
 	public static void panel(GuiGraphicsExtractor g, int x, int y, int w, int h) {

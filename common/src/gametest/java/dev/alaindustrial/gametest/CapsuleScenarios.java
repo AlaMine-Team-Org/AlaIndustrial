@@ -8,6 +8,7 @@ import dev.alaindustrial.item.fluid.ItemFluid;
 import dev.alaindustrial.menu.PumpMenu;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModDataComponents;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -38,6 +39,39 @@ import static dev.alaindustrial.gametest.AlaGameTestHelper.survivalPlayer;
  * directions). World fill/place ports vanilla {@code BucketItem} verbatim and is verified in the dev client.
  */
 public final class CapsuleScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(CapsuleScenarios::per01ComponentRoundTrip, "capsule_component_round_trip")
+						.fabricId("CapsuleGameTest", "tcCaps001Per01_componentRoundTrip").ticks(20, 40),
+				RosterEntry.of(CapsuleScenarios::fun01StackingByFluid, "capsule_stacking_by_fluid")
+						.fabricId("CapsuleGameTest", "tcCaps001Fun01_stackingByFluid").ticks(20, 40),
+				RosterEntry.of(CapsuleScenarios::fun02FillFromTank, "capsule_fill_from_tank")
+						.fabricId("CapsuleGameTest", "tcCaps001Fun02_fillFromTank").ticks(20, 40),
+				RosterEntry.of(CapsuleScenarios::fun03EmptyIntoTank, "capsule_empty_into_tank")
+						.fabricId("CapsuleGameTest", "tcCaps001Fun03_emptyIntoTank").ticks(20, 40),
+				RosterEntry.of(CapsuleScenarios::fun05UseRoutingFill, "capsule_use_routing_fill")
+						.fabricId("CapsuleGameTest", "tcCaps001Fun05_useRoutingFill").ticks(20, 100),
+				RosterEntry.of(CapsuleScenarios::fun06UseRoutingEmpty, "capsule_use_routing_empty")
+						.fabricId("CapsuleGameTest", "tcCaps001Fun06_useRoutingEmpty").ticks(20, 100),
+				RosterEntry.of(CapsuleScenarios::fun07UseRoutingOffHand, "capsule_use_routing_offhand")
+						.fabricId("CapsuleGameTest", "tcCaps001Fun07_useRoutingOffHand").ticks(20, 100),
+				RosterEntry.of(CapsuleScenarios::fun08SyncChannelsFitShort, "pump_sync_channels_fit_short")
+						.fabricId("CapsuleGameTest", "tcCaps001Fun08_syncChannelsFitShort").ticks(20, 100),
+				RosterEntry.of(CapsuleScenarios::fun09MenuStubWidthMatches, "pump_menu_stub_width_matches")
+						.fabricId("CapsuleGameTest", "tcCaps001Fun09_menuStubWidthMatches").ticks(20, 100),
+				RosterEntry.of(CapsuleScenarios::fun10BucketFillsTankFromSlot, "pump_slot_bucket_fill")
+						.fabricId("CapsuleGameTest", "tcCaps001Fun10_bucketFillsTankFromSlot").ticks(20, 100),
+				RosterEntry.of(CapsuleScenarios::fun11BucketDrainsTankFromSlot, "pump_slot_bucket_drain")
+						.fabricId("CapsuleGameTest", "tcCaps001Fun11_bucketDrainsTankFromSlot").ticks(20, 100),
+				RosterEntry.of(CapsuleScenarios::fun12CapsuleFillsTankFromSlot, "pump_slot_capsule_fill")
+						.fabricId("CapsuleGameTest", "tcCaps001Fun12_capsuleFillsTankFromSlot").ticks(20, 100),
+				RosterEntry.of(CapsuleScenarios::fun13CapsuleDrainsTankFromSlot, "pump_slot_capsule_drain")
+						.fabricId("CapsuleGameTest", "tcCaps001Fun13_capsuleDrainsTankFromSlot").ticks(20, 100));
+
+		private Roster() {}
+	}
 
 	private CapsuleScenarios() {
 	}
@@ -78,6 +112,8 @@ public final class CapsuleScenarios {
 	/**
 	 * The {@code capsule_fluid} component stores and returns the fluid, and writing empty removes it (a
 	 * drained capsule is component-identical to a crafted one). Traced by {@code CapsuleGameTest} PER01.
+	 *
+	 * @implements TC-CAPS-001-PER01 — capsule_fluid component round-trip; writing empty removes it.
 	 */
 	public static void per01ComponentRoundTrip(GameTestHelper helper) {
 		ItemStack stack = filled(Fluids.WATER);
@@ -103,6 +139,8 @@ public final class CapsuleScenarios {
 	 * Two filled capsules of the same fluid share one component value and stack; different fluids never
 	 * merge. This is the whole "16 buckets in one slot, separated by fluid" guarantee, riding vanilla
 	 * component-equality (no custom stacking override). Traced by {@code CapsuleGameTest} FUN01.
+	 *
+	 * @implements TC-CAPS-001-FUN01 — same fluid stacks (to 16), different fluids do not merge.
 	 */
 	public static void fun01StackingByFluid(GameTestHelper helper) {
 		boolean sameMerges = ItemStack.isSameItemSameComponents(filled(Fluids.WATER), filled(Fluids.WATER));
@@ -121,6 +159,8 @@ public final class CapsuleScenarios {
 	 * Right-clicking a mod tank that holds at least one bucket with an empty capsule pulls exactly one
 	 * bucket into the capsule (via {@code FluidLookup}) and swaps it for a filled one. Traced by
 	 * {@code CapsuleGameTest} FUN02.
+	 *
+	 * @implements TC-CAPS-001-FUN02 — empty capsule pulls one bucket from a mod tank and becomes filled.
 	 */
 	public static void fun02FillFromTank(GameTestHelper helper) {
 		PumpBlockEntity pump = placePump(helper);
@@ -146,6 +186,8 @@ public final class CapsuleScenarios {
 	/**
 	 * Right-clicking a mod tank with a filled capsule pushes its bucket into the tank and swaps back to an
 	 * empty capsule. Traced by {@code CapsuleGameTest} FUN03.
+	 *
+	 * @implements TC-CAPS-001-FUN03 — filled capsule pushes its bucket into a mod tank and becomes empty.
 	 */
 	public static void fun03EmptyIntoTank(GameTestHelper helper) {
 		PumpBlockEntity pump = placePump(helper);
@@ -185,6 +227,9 @@ public final class CapsuleScenarios {
 	 * pulls one bucket from the tank and swaps the capsule to filled. MOD-099 regression guard: without
 	 * the PumpBlock.useItemOn override, the GUI opens instead and the tank is unchanged. Traced by
 	 * {@code CapsuleGameTest} FUN05.
+	 *
+	 * @implements TC-CAPS-001-FUN05 — MOD-099: empty capsule right-click on the pump block via the REAL
+	 * ServerPlayerGameMode routing pulls one bucket (regression guard for GUI-eats-click ordering).
 	 */
 	public static void fun05UseRoutingFill(GameTestHelper helper) {
 		PumpBlockEntity pump = placePump(helper);
@@ -214,6 +259,9 @@ public final class CapsuleScenarios {
 	 * Right-clicking the pump block with a filled capsule (through the real ServerPlayerGameMode routing)
 	 * pushes its bucket into the tank and swaps back to an empty capsule. MOD-099 regression guard for the
 	 * insertion direction. Traced by {@code CapsuleGameTest} FUN06.
+	 *
+	 * @implements TC-CAPS-001-FUN06 — MOD-099: filled capsule right-click on the pump block via the REAL
+	 * ServerPlayerGameMode routing empties into the tank (regression guard, insertion direction).
 	 */
 	public static void fun06UseRoutingEmpty(GameTestHelper helper) {
 		PumpBlockEntity pump = placePump(helper);
@@ -242,6 +290,9 @@ public final class CapsuleScenarios {
 	 * let vanilla fall through to {@code Item.useOn} a <em>second</em> time, double-applying the swap.
 	 * A tank starting with exactly 2 buckets must end with exactly 1 (one exchange), not 0 (two). Traced
 	 * by {@code CapsuleGameTest} FUN07.
+	 *
+	 * @implements TC-CAPS-001-FUN07 — MOD-099: OFF-hand capsule must exchange exactly once (no
+	 * double Item.useOn fall-through); tank goes 2 buckets → 1, not → 0.
 	 */
 	public static void fun07UseRoutingOffHand(GameTestHelper helper) {
 		PumpBlockEntity pump = placePump(helper);
@@ -282,6 +333,9 @@ public final class CapsuleScenarios {
 	 * Every {@code PumpBlockEntity} sync channel must round-trip through a signed short unchanged, for any
 	 * tank content. Guards the whole channel set (not just the one that broke) against a future channel
 	 * carrying a colour, a raw mB amount, or any other >16-bit value. Traced by {@code CapsuleGameTest} FUN08.
+	 *
+	 * @implements TC-CAPS-001-FUN08 — MOD-099: every pump sync channel fits a signed short, the encoding
+	 * ClientboundContainerSetDataPacket uses (regression guard for the ARGB-colour channel that truncated).
 	 */
 	public static void fun08SyncChannelsFitShort(GameTestHelper helper) {
 		PumpBlockEntity pump = placePump(helper);
@@ -324,6 +378,9 @@ public final class CapsuleScenarios {
 	 * REGRESSION GUARD (MOD-107): a vanilla lava bucket in the fill slot still empties into the tank and
 	 * leaves an empty bucket in the fill-output slot — the behaviour that existed before the bridge and had
 	 * no test. Traced by {@code CapsuleGameTest} FUN10.
+	 *
+	 * @implements TC-CAPS-001-FUN10 — MOD-107 regression guard: a vanilla lava bucket in the pump's fill
+	 * slot still empties into the tank (behaviour that predates the item-fluid bridge and had no coverage).
 	 */
 	public static void fun10BucketFillsTankFromSlot(GameTestHelper helper) {
 		PumpBlockEntity pump = placePump(helper);
@@ -347,6 +404,9 @@ public final class CapsuleScenarios {
 	/**
 	 * REGRESSION GUARD (MOD-107): an empty bucket in the drain slot still fills from the tank and leaves a
 	 * lava bucket in the drain-output slot. Traced by {@code CapsuleGameTest} FUN11.
+	 *
+	 * @implements TC-CAPS-001-FUN11 — MOD-107 regression guard: an empty bucket in the drain slot still
+	 * fills from the tank.
 	 */
 	public static void fun11BucketDrainsTankFromSlot(GameTestHelper helper) {
 		PumpBlockEntity pump = placePump(helper);
@@ -369,6 +429,9 @@ public final class CapsuleScenarios {
 	 * MOD-107 — the player's report: a filled capsule in the fill slot must empty into the tank and leave an
 	 * empty capsule in the fill-output slot. Before the bridge it just sat in the slot doing nothing.
 	 * Traced by {@code CapsuleGameTest} FUN12.
+	 *
+	 * @implements TC-CAPS-001-FUN12 — MOD-107: a filled capsule in the pump's fill slot empties into the
+	 * tank and leaves an empty capsule (the player-reported "capsule just sits in the slot").
 	 */
 	public static void fun12CapsuleFillsTankFromSlot(GameTestHelper helper) {
 		PumpBlockEntity pump = placePump(helper);
@@ -393,6 +456,9 @@ public final class CapsuleScenarios {
 	 * MOD-107 — the other direction: an empty capsule in the drain slot fills from the tank and leaves a
 	 * filled capsule carrying the tank's fluid in the drain-output slot. Traced by {@code CapsuleGameTest}
 	 * FUN13.
+	 *
+	 * @implements TC-CAPS-001-FUN13 — MOD-107: an empty capsule in the drain slot fills from the tank,
+	 * carrying the tank's fluid out.
 	 */
 	public static void fun13CapsuleDrainsTankFromSlot(GameTestHelper helper) {
 		PumpBlockEntity pump = placePump(helper);
@@ -416,6 +482,9 @@ public final class CapsuleScenarios {
 	 * The client-side {@code PumpMenu} stub must declare exactly as many data channels as the block entity
 	 * projects. A stub narrower than the server's data throws when the screen reads the missing channel;
 	 * a wider one silently reads zeros. Traced by {@code CapsuleGameTest} FUN09.
+	 *
+	 * @implements TC-CAPS-001-FUN09 — MOD-099: the client PumpMenu stub declares the same channel count the
+	 * block entity projects.
 	 */
 	public static void fun09MenuStubWidthMatches(GameTestHelper helper) {
 		PumpBlockEntity pump = placePump(helper);

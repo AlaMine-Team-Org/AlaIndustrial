@@ -1,6 +1,6 @@
 package dev.alaindustrial.client.screen;
 
-import dev.alaindustrial.Config;
+import dev.alaindustrial.client.ServerBalance;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.IncubatorBlockEntity;
 import dev.alaindustrial.block.entity.IncubatorMode;
@@ -41,6 +41,9 @@ public class IncubatorScreen extends MachineScreen<IncubatorMenu> {
 	private static final int ARROW_SU = 176;
 	private static final int ARROW_SV = 46;
 
+	/** Click area of the recipe viewers (MOD-716): exactly the progress arrow. */
+	public static final GuiRect PROGRESS_AREA = new GuiRect(ARROW_X, ARROW_Y, ARROW_W, ARROW_H);
+
 	/**
 	 * Charge pips, one per remaining attempt, stacked vertically in the narrow trough right of the fuel
 	 * slot — the charge reads as a level gauge, so the pips light from the bottom up.
@@ -67,6 +70,12 @@ public class IncubatorScreen extends MachineScreen<IncubatorMenu> {
 		return TEXTURE;
 	}
 
+	/** The energy bar and its tooltip, drawn by the base (MOD-716). */
+	@Override
+	protected EnergyBarSpec energyBar() {
+		return EnergyBarSpec.INCUBATOR;
+	}
+
 	@Override
 	protected void drawMachineFrame(GuiGraphicsExtractor graphics, int mouseX, int mouseY,
 			float partialTick) {
@@ -74,7 +83,6 @@ public class IncubatorScreen extends MachineScreen<IncubatorMenu> {
 		int y = this.topPos;
 
 		blitStaticFrame(graphics);
-		renderEnergyBar(graphics, EnergyBarSpec.INCUBATOR);
 
 		int maxProgress = this.menu.getMaxProgress();
 		int progress = this.menu.getProgress();
@@ -161,19 +169,18 @@ public class IncubatorScreen extends MachineScreen<IncubatorMenu> {
 	@Override
 	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		super.extractTooltip(graphics, mouseX, mouseY);
-		renderEnergyTooltip(graphics, mouseX, mouseY, EnergyBarSpec.INCUBATOR);
 
 		int height = pipCount() * (PIP_SIZE + PIP_GAP) - PIP_GAP;
 		if (isHovering(PIP_X, PIP_Y, PIP_SIZE, height, mouseX, mouseY)) {
 			graphics.setTooltipForNextFrame(this.font,
 					Component.translatable("gui.alaindustrial.incubator.charge",
-							this.menu.getCharge(), Math.max(1, Config.mutationAttemptsPerIngot)),
+							this.menu.getCharge(), Math.max(1, ServerBalance.mutationAttemptsPerIngot())),
 					mouseX, mouseY);
 		}
 	}
 
 	/** Pips actually drawn: the configured charge, never more than the trough holds. */
 	private static int pipCount() {
-		return Math.clamp(Config.mutationAttemptsPerIngot, 1, PIP_CAPACITY);
+		return Math.clamp(ServerBalance.mutationAttemptsPerIngot(), 1, PIP_CAPACITY);
 	}
 }

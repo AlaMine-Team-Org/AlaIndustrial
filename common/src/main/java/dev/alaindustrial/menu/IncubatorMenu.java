@@ -8,13 +8,11 @@ import dev.alaindustrial.registry.ModCriteria;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModTags;
 import net.minecraft.world.Container;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,8 +39,8 @@ public class IncubatorMenu extends MachineMenu {
 	/** Client side — the data width must match the block entity's channel count exactly. */
 	public IncubatorMenu(int syncId, Inventory playerInventory) {
 		super(ModContent.INCUBATOR_MENU.get(), syncId, playerInventory,
-				new SimpleContainer(IncubatorBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT),
-				new SimpleContainerData(IncubatorBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL, ModContent.INCUBATOR.get());
+				clientStub(IncubatorBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT, IncubatorBlockEntity.DATA_COUNT),
+				ModContent.INCUBATOR.get());
 		this.incubator = null;
 	}
 
@@ -110,21 +108,21 @@ public class IncubatorMenu extends MachineMenu {
 	/** The mode the inserted chip selects, or {@code null} when the chip slot is empty. */
 	@Nullable
 	public IncubatorMode getMode() {
-		return IncubatorMode.byDataValue(data.get(IncubatorBlockEntity.DATA_MODE));
+		return IncubatorMode.byDataValue(channel(IncubatorBlockEntity.Channel.MODE));
 	}
 
 	/** Remaining irradiation attempts on the loaded ingot (0..mutationAttemptsPerIngot). */
 	public int getCharge() {
-		return data.get(IncubatorBlockEntity.DATA_CHARGE);
+		return channel(IncubatorBlockEntity.Channel.CHARGE);
 	}
 
 	/** Whether the dome is in place; without it the machine refuses to run. */
 	public boolean isFormed() {
-		return data.get(IncubatorBlockEntity.DATA_FORMED) != 0;
+		return channel(IncubatorBlockEntity.Channel.FORMED) != 0;
 	}
 
 	/** Why the machine is idle, as diagnosed server-side (MOD-234) — the screen's status line. */
 	public IncubatorStatus getStatus() {
-		return IncubatorStatus.byOrdinal(data.get(IncubatorBlockEntity.DATA_STATUS));
+		return IncubatorStatus.byOrdinal(channel(IncubatorBlockEntity.Channel.STATUS));
 	}
 }

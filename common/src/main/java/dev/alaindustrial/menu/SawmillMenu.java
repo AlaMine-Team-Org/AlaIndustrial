@@ -6,11 +6,9 @@ import dev.alaindustrial.block.entity.SawmillBlockEntity;
 import dev.alaindustrial.block.entity.SawmillMode;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import org.jspecify.annotations.Nullable;
 
@@ -19,7 +17,7 @@ import org.jspecify.annotations.Nullable;
  * The four cutting modes ({@link SawmillMode}) are switched with GUI buttons that ride the vanilla
  * {@link #clickMenuButton} channel (no custom packet, works on both loaders): the button id is the
  * target mode ordinal. The active mode is read back for the screen from the machine's 6-wide
- * {@link net.minecraft.world.inventory.ContainerData} (index {@link SawmillBlockEntity#DATA_MODE}).
+ * {@link net.minecraft.world.inventory.ContainerData} (channel {@link SawmillBlockEntity.Channel#MODE}).
  */
 public class SawmillMenu extends MachineMenu {
 	/** Server side — carries a typed block-entity ref so {@link #clickMenuButton} can set the mode. */
@@ -35,8 +33,9 @@ public class SawmillMenu extends MachineMenu {
 	/** Client side — 6-wide data (the family's four + status, plus mode) matches the server bridge. */
 	public SawmillMenu(int syncId, Inventory playerInventory) {
 		super(ModContent.SAWMILL_MENU.get(), syncId, playerInventory,
-				new SimpleContainer(AbstractProcessingMachineBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT),
-				new SimpleContainerData(SawmillBlockEntity.DATA_COUNT), ContainerLevelAccess.NULL, ModContent.SAWMILL.get());
+				clientStub(AbstractProcessingMachineBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT,
+						SawmillBlockEntity.DATA_COUNT),
+				ModContent.SAWMILL.get());
 		this.sawmill = null;
 	}
 
@@ -51,7 +50,7 @@ public class SawmillMenu extends MachineMenu {
 
 	/** The active cutting mode, read from synced data (works on both sides). */
 	public SawmillMode getMode() {
-		return SawmillMode.byOrdinal(data.get(SawmillBlockEntity.DATA_MODE));
+		return SawmillMode.byOrdinal(channel(SawmillBlockEntity.Channel.MODE));
 	}
 
 	/**
@@ -73,6 +72,6 @@ public class SawmillMenu extends MachineMenu {
 	}
 	/** Why the machine is idle (MOD-458), read from synced data — works on both sides. */
 	public ProcessingMachineStatus getStatus() {
-		return ProcessingMachineStatus.byOrdinal(data.get(AbstractProcessingMachineBlockEntity.DATA_STATUS));
+		return ProcessingMachineStatus.byOrdinal(channel(AbstractProcessingMachineBlockEntity.Channel.STATUS));
 	}
 }

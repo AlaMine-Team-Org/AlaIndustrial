@@ -1,109 +1,104 @@
 package dev.alaindustrial.registry;
 
 import dev.alaindustrial.Industrialization;
-import dev.alaindustrial.fluid.DieselFluid;
-import dev.alaindustrial.fluid.BiofuelFluid;
-import dev.alaindustrial.fluid.FuelOilFluid;
-import dev.alaindustrial.fluid.NutrientSolutionFluid;
-import dev.alaindustrial.fluid.OilFluid;
-import dev.alaindustrial.fluid.SteamFluid;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributeHandler;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.level.material.FlowingFluid;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 
 /**
- * Central Fabric registration for the mod's fluids (MOD-238): oil, still + flowing. Mirrors the
- * vanilla {@code Fluids} class shape (eager {@code Registry.register}); NeoForge registers the same
- * ids through {@code ModFluidsNeoForge} with {@code FluidType}-carrying subclasses.
+ * Fabric fluid registration: a replay of the shared {@link ModFluidsManifest#FLUIDS} list (MOD-708).
+ * Eager {@code Registry.register} like the vanilla {@code Fluids} class; NeoForge queues the same entries
+ * through {@code ModFluidsNeoForge}, with a {@code FluidType} each.
  *
- * <p><b>Order is load-bearing:</b> {@link #init()} must run before {@code ModBlocks.init()} — the
- * oil {@code LiquidBlock} constructor builds its fluid-state cache through
- * {@code OilFluid.getSource()/getFlowing()}, which read the {@link ModContent} fluid handles bound
- * here.
+ * <p><b>Order is load-bearing:</b> the fluids must be registered and bound before {@code ModBlocks}
+ * builds the liquid blocks — the oil {@code LiquidBlock} constructor builds its fluid-state cache through
+ * {@code OilFluid.getSource()/getFlowing()}, which read the {@link ModContent} fluid handles bound here.
  */
 public final class ModFluids {
 	private ModFluids() {
 	}
 
-	public static final ResourceKey<Fluid> OIL_KEY = key("oil");
-	public static final FlowingFluid OIL = register(OIL_KEY, new OilFluid.Source());
+	/**
+	 * Every fluid, registered and bound into {@link ModContent} the moment this class loads — not only in
+	 * {@link #init()}. "ModFluids.init() runs before ModBlocks.init()" is not enough: the Fabric gametest
+	 * entrypoint locator ({@code FabricGameTestModInitializer}, a 'main' entrypoint of fabric-gametest-api-v1)
+	 * class-loads the {@code @GameTest} suites — and through them {@code ModBlocks} — BEFORE this mod's
+	 * {@code onInitialize} ever runs, and the {@code OilLiquidBlock} constructor immediately reads
+	 * {@code ModContent.OIL} while building its fluid-state cache. {@code ModBlocks} calls {@link #init()}
+	 * before its first block factory, so this class's initialisation has completed by then (JLS class-init
+	 * happens-before the call returns).
+	 */
+	private static final Map<String, Fluid> REGISTERED = registerAll();
 
-	public static final ResourceKey<Fluid> FLOWING_OIL_KEY = key("flowing_oil");
-	public static final FlowingFluid FLOWING_OIL = register(FLOWING_OIL_KEY, new OilFluid.Flowing());
+	private static Map<String, Fluid> registerAll() {
+		Map<String, Fluid> registered = new LinkedHashMap<>();
+		for (ModFluidsManifest.FluidDef<?> def : ModFluidsManifest.FLUIDS) {
+			register(def, registered);
+		}
+		return Map.copyOf(registered);
+	}
 
-	// Distillation fractions (MOD-251): diesel + fuel oil, registered in the same still/flowing pairs.
-	public static final ResourceKey<Fluid> DIESEL_KEY = key("diesel");
-	public static final FlowingFluid DIESEL = register(DIESEL_KEY, new DieselFluid.Source());
+	/** One entry: the still fluid, then the flowing form, each bound into its slot as a constant supplier. */
+	private static <T extends Fluid> void register(ModFluidsManifest.FluidDef<T> def, Map<String, Fluid> registered) {
+		T source = Registry.register(BuiltInRegistries.FLUID, key(def.id()), def.source().get());
+		def.bindSource().accept(() -> source);
+		put(registered, def.id(), source);
+		if (def.hasFlowing()) {
+			T flowing = Registry.register(BuiltInRegistries.FLUID, key(def.flowingId()), def.flowing().get());
+			def.bindFlowing().accept(() -> flowing);
+			put(registered, def.flowingId(), flowing);
+		}
+	}
 
-	public static final ResourceKey<Fluid> FLOWING_DIESEL_KEY = key("flowing_diesel");
-	public static final FlowingFluid FLOWING_DIESEL = register(FLOWING_DIESEL_KEY, new DieselFluid.Flowing());
-
-	public static final ResourceKey<Fluid> FUEL_OIL_KEY = key("fuel_oil");
-	public static final FlowingFluid FUEL_OIL = register(FUEL_OIL_KEY, new FuelOilFluid.Source());
-
-	public static final ResourceKey<Fluid> FLOWING_FUEL_OIL_KEY = key("flowing_fuel_oil");
-	public static final FlowingFluid FLOWING_FUEL_OIL = register(FLOWING_FUEL_OIL_KEY, new FuelOilFluid.Flowing());
-
-	// The organic chain (MOD-146/MOD-525): brewed fuel and the solution cracked out of it, registered
-	// in the same still/flowing pairs as the two oil fractions.
-	public static final ResourceKey<Fluid> BIOFUEL_KEY = key("biofuel");
-	public static final FlowingFluid BIOFUEL = register(BIOFUEL_KEY, new BiofuelFluid.Source());
-
-	public static final ResourceKey<Fluid> FLOWING_BIOFUEL_KEY = key("flowing_biofuel");
-	public static final FlowingFluid FLOWING_BIOFUEL = register(FLOWING_BIOFUEL_KEY, new BiofuelFluid.Flowing());
-
-	public static final ResourceKey<Fluid> NUTRIENT_SOLUTION_KEY = key("nutrient_solution");
-	public static final FlowingFluid NUTRIENT_SOLUTION =
-			register(NUTRIENT_SOLUTION_KEY, new NutrientSolutionFluid.Source());
-
-	public static final ResourceKey<Fluid> FLOWING_NUTRIENT_SOLUTION_KEY = key("flowing_nutrient_solution");
-	public static final FlowingFluid FLOWING_NUTRIENT_SOLUTION =
-			register(FLOWING_NUTRIENT_SOLUTION_KEY, new NutrientSolutionFluid.Flowing());
-
-	// Steam (MOD-468): a single entry, not a still/flowing pair — steam has no world form at all
-	// (see SteamFluid). Registered here so both loaders resolve the same id; no block, no bucket.
-	public static final ResourceKey<Fluid> STEAM_KEY = key("steam");
-	public static final Fluid STEAM = register(STEAM_KEY, new SteamFluid());
+	private static void put(Map<String, Fluid> registered, String id, Fluid fluid) {
+		if (registered.put(id, fluid) != null) {
+			throw new IllegalStateException("ModFluidsManifest.FLUIDS declares fluid id '" + id + "' twice");
+		}
+	}
 
 	private static ResourceKey<Fluid> key(String path) {
 		return ResourceKey.create(Registries.FLUID, Industrialization.id(path));
 	}
 
-	private static <T extends Fluid> T register(ResourceKey<Fluid> key, T fluid) {
-		return Registry.register(BuiltInRegistries.FLUID, key, fluid);
-	}
-
-	static {
-		// Bind the ModContent handles at CLASS LOAD, not only in init(). "ModFluids.init() runs
-		// before ModBlocks.init()" is not enough: the Fabric gametest entrypoint locator
-		// (FabricGameTestModInitializer, a 'main' entrypoint of fabric-gametest-api-v1) class-loads
-		// the @GameTest suites — and through them ModBlocks — BEFORE this mod's onInitialize ever
-		// runs, and the OilLiquidBlock constructor immediately reads ModContent.OIL while building
-		// its fluid-state cache (LiquidBlock ctor -> OilFluid.getSource()). ModBlocks references
-		// ModFluids.OIL in that block's field initializer, so this static block is guaranteed to
-		// have completed by then (JLS class-init happens-before the field read returns).
-		bind();
-	}
-
-	/** Triggers the eager registrations above and publishes them into the {@link ModContent} facade. */
+	/**
+	 * Class-load trigger: registration and binding happen in the static initializer above, so this only has
+	 * to touch the class. Idempotent; {@code ModBlocks} calls it before its first block factory.
+	 */
 	public static void init() {
-		bind();
+		if (REGISTERED.isEmpty()) {
+			throw new IllegalStateException("ModFluids registered no fluid");
+		}
 	}
 
-	private static void bind() {
-		ModContent.OIL = () -> OIL;
-		ModContent.FLOWING_OIL = () -> FLOWING_OIL;
-		ModContent.DIESEL = () -> DIESEL;
-		ModContent.FLOWING_DIESEL = () -> FLOWING_DIESEL;
-		ModContent.FUEL_OIL = () -> FUEL_OIL;
-		ModContent.FLOWING_FUEL_OIL = () -> FLOWING_FUEL_OIL;
-		ModContent.BIOFUEL = () -> BIOFUEL;
-		ModContent.FLOWING_BIOFUEL = () -> FLOWING_BIOFUEL;
-		ModContent.NUTRIENT_SOLUTION = () -> NUTRIENT_SOLUTION;
-		ModContent.FLOWING_NUTRIENT_SOLUTION = () -> FLOWING_NUTRIENT_SOLUTION;
-		ModContent.STEAM = () -> STEAM;
+	/**
+	 * Registers the Transfer API attribute handler of every entry that declares one — today only crude oil,
+	 * whose handler reports its viscosity; the other fluids keep the Transfer API defaults on Fabric (a known
+	 * defect with its own task). One handler serves the still and the flowing form.
+	 */
+	public static void registerTransferAttributes() {
+		for (ModFluidsManifest.FluidDef<?> def : ModFluidsManifest.FLUIDS) {
+			if (!def.transferAttributes()) {
+				continue;
+			}
+			int viscosity = def.physics().viscosity();
+			FluidVariantAttributeHandler handler = new FluidVariantAttributeHandler() {
+				@Override
+				public int getViscosity(FluidVariant variant, Level level) {
+					return viscosity;
+				}
+			};
+			FluidVariantAttributes.register(REGISTERED.get(def.id()), handler);
+			if (def.hasFlowing()) {
+				FluidVariantAttributes.register(REGISTERED.get(def.flowingId()), handler);
+			}
+		}
 	}
 }

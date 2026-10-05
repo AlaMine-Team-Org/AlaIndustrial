@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.StorageModuleBlockEntity;
 import dev.alaindustrial.storage.StorageCluster;
 import java.util.ArrayList;
@@ -13,7 +12,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.PipeBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -82,8 +80,6 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
  * keeps the block entity and its items untouched.
  */
 public class StorageModuleBlock extends AbstractMachineBlock {
-	public static final MapCodec<StorageModuleBlock> CODEC = simpleCodec(StorageModuleBlock::new);
-
 	/**
 	 * How far a placement or a break can change another module's seams, in steps through modules.
 	 * A group that fits the cap spans at most {@code MAX_MODULES - 1} steps, and the block that
@@ -106,11 +102,6 @@ public class StorageModuleBlock extends AbstractMachineBlock {
 			state = state.setValue(joined, false);
 		}
 		registerDefaultState(state);
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

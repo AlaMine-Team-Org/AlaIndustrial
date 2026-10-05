@@ -17,42 +17,7 @@ import net.minecraft.gametest.framework.GameTestHelper;
 public class RtpGameTest {
 
 	@GameTest
-	public void tcTele004Fun01_chipFitsOnceAndIsConsumed(GameTestHelper helper) {
-		RtpScenarios.tcTele004Fun01_chipFitsOnceAndIsConsumed(helper);
-	}
-
-	@GameTest
-	public void tcTele004Neg01_moduleIsWhatOpensTheGate(GameTestHelper helper) {
-		RtpScenarios.tcTele004Neg01_moduleIsWhatOpensTheGate(helper);
-	}
-
-	@GameTest
-	public void tcTele004Fun02_checklistReportsEveryProblem(GameTestHelper helper) {
-		RtpScenarios.tcTele004Fun02_checklistReportsEveryProblem(helper);
-	}
-
-	@GameTest
 	public void tcTele004Neg02_pressOnBrokenStationStartsNothing(GameTestHelper helper) {
 		RtpScenarios.tcTele004Neg02_pressOnBrokenStationStartsNothing(helper);
-	}
-
-	@GameTest
-	public void tcTele004Nrg01_refusedJumpCostsNothing(GameTestHelper helper) {
-		RtpScenarios.tcTele004Nrg01_refusedJumpCostsNothing(helper);
-	}
-
-	@GameTest
-	public void tcTele004Nrg02_chargesExactlyTheFlatPrice(GameTestHelper helper) {
-		RtpScenarios.tcTele004Nrg02_chargesExactlyTheFlatPrice(helper);
-	}
-
-	@GameTest
-	public void tcTele004Sta01_moduleSurvivesAReload(GameTestHelper helper) {
-		RtpScenarios.tcTele004Sta01_moduleSurvivesAReload(helper);
-	}
-
-	@GameTest
-	public void tcTele004Brk01_dropCarriesTheModule(GameTestHelper helper) {
-		RtpScenarios.tcTele004Brk01_dropCarriesTheModule(helper);
 	}
 }

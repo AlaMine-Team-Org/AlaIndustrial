@@ -12,10 +12,10 @@ import dev.alaindustrial.Config;
  * <p><b>Config-backed.</b> The per-tier voltage/capacity numbers live in {@link Config}
  * ({@code tierLvVoltage}, {@code tierMvVoltage}, {@code tierHvVoltage} and the matching capacity
  * knobs), so a server operator can retune them from {@code config/alaindustrial.json} without a
- * code change — the same contract every other balance number in the mod already follows. The enum
- * still carries the compile-time default in its constructor so the tier is self-describing before
- * {@link Config} is loaded (the {@link #maxVoltage()}/{@link #capacity()} methods read Config live
- * at runtime, where it is guaranteed to be initialised).
+ * code change — the same contract every other balance number in the mod already follows. The
+ * {@link #maxVoltage()}/{@link #capacity()} methods always read the live knob; before any file is
+ * loaded that is the compiled default itself. The enum's own constructor numbers are that same
+ * default, kept for the tests that pin it ({@link #defaultMaxVoltage()}, {@link #defaultCapacity()}).
  *
  * <p>The {@code color} ARGB value is the per-tier cable/UI tint (yellow/orange/red) — a visual
  * constant, NOT balance — so it stays in the enum.
@@ -39,9 +39,8 @@ public enum EnergyTier {
 
 	/**
 	 * Max packet voltage (EU) and per-tick transfer cap for this tier — read live from {@link Config}
-	 * so {@code config/alaindustrial.json} can retune it without a code change. Falls back to the
-	 * enum's compile-time default if Config has not been loaded yet (defensive — Config is initialised
-	 * at mod init, well before any runtime call here).
+	 * so {@code config/alaindustrial.json} can retune it without a code change. There is no separate
+	 * fallback: until a file is loaded the knob holds its compiled default (ADR-033).
 	 */
 	public long maxVoltage() {
 		return switch (this) {

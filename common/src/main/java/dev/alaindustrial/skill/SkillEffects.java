@@ -68,11 +68,11 @@ public final class SkillEffects {
 		Map<SkillSlot, Effect> mech = new EnumMap<>(SkillSlot.class);
 		mech.put(SkillSlot.IN, wired("MachineBlockEntity.effectiveDuration"));
 		mech.put(SkillSlot.A1, wired("GeneratorBlockEntity — the fuel's burn duration"));
-		mech.put(SkillSlot.B1, wired("ProcessingCycle — one drain tick in ten is skipped"));
+		mech.put(SkillSlot.B1, wired("MachineBlockEntity.spendOperationEnergy — one drain tick in ten is skipped"));
 		mech.put(SkillSlot.MID, wired("MachineBlockEntity.effectiveDuration"));
 		mech.put(SkillSlot.A2, wired("MachineBlockEntity.overclockerCap"));
 		mech.put(SkillSlot.B2, wired("MachineBlockEntity.hasStatsChip"));
-		mech.put(SkillSlot.CAP, wired("ProcessingCycle — coasting on the machine's own charge"));
+		mech.put(SkillSlot.CAP, wired("MachineBlockEntity.spendOperationEnergy — coasting on stored charge"));
 		all.put(SkillBranch.MECH, mech);
 
 		Map<SkillSlot, Effect> agro = new EnumMap<>(SkillSlot.class);

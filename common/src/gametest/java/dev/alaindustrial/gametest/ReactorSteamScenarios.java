@@ -1,6 +1,5 @@
 package dev.alaindustrial.gametest;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.block.FuelRodAssemblyBlock;
 import dev.alaindustrial.block.SteamNozzleBlock;
 import dev.alaindustrial.block.entity.FuelRodAssemblyBlockEntity;
@@ -8,6 +7,7 @@ import dev.alaindustrial.block.entity.ReactorControllerBlockEntity;
 import dev.alaindustrial.block.entity.ReactorRoomStatus;
 import dev.alaindustrial.block.entity.SteamNozzleBlockEntity;
 import dev.alaindustrial.core.fluid.FluidHolder;
+import dev.alaindustrial.core.reactor.ReactorConfig;
 import dev.alaindustrial.registry.ModContent;
 import java.util.List;
 import net.minecraft.core.BlockPos;
@@ -27,6 +27,19 @@ import net.minecraft.world.level.block.Blocks;
  */
 public final class ReactorSteamScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(ReactorSteamScenarios::aBoilingRoomPuffsOverEachBoilingStack,
+								"reactor_boiling_room_puffs_over_each_stack")
+						.fabricId("ReactorSteamGameTest", "aBoilingRoomPuffsOverEachBoilingStack").ticks(400),
+				RosterEntry.of(ReactorSteamScenarios::aVentingNozzleThrowsAGeyserAndHisses,
+								"reactor_venting_nozzle_throws_a_geyser_and_hisses")
+						.fabricId("ReactorSteamGameTest", "aVentingNozzleThrowsAGeyserAndHisses").ticks(200));
+
+		private Roster() {}
+	}
+
 	private ReactorSteamScenarios() {
 	}
 
@@ -44,18 +57,18 @@ public final class ReactorSteamScenarios {
 	 * a stack that is not boiling must stay quiet even while its neighbour works.
 	 */
 	public static void aBoilingRoomPuffsOverEachBoilingStack(GameTestHelper helper) {
-		ReactorScenarios.buildRoom(helper);
-		ReactorControllerBlockEntity brain = ReactorScenarios.controller(helper);
-		FuelRodAssemblyBlockEntity bottom = ReactorScenarios.placeColumnAt(helper, STACK_BOTTOM);
-		FuelRodAssemblyBlockEntity top = ReactorScenarios.placeColumnAt(helper, STACK_BOTTOM.above());
-		ReactorScenarios.placeColumnAt(helper, DRY_COLUMN);
+		ReactorRig.buildRoom(helper);
+		ReactorControllerBlockEntity brain = ReactorRig.controller(helper);
+		FuelRodAssemblyBlockEntity bottom = ReactorRig.placeColumnAt(helper, STACK_BOTTOM);
+		FuelRodAssemblyBlockEntity top = ReactorRig.placeColumnAt(helper, STACK_BOTTOM.above());
+		ReactorRig.placeColumnAt(helper, DRY_COLUMN);
 		for (int i = 0; i < FuelRodAssemblyBlock.MAX_RODS; i++) {
 			bottom.insertRod(new ItemStack(ModContent.URANIUM_FUEL_ROD.get()));
 		}
-		helper.setBlock(ReactorScenarios.CONTROLLER.west(), Blocks.REDSTONE_BLOCK.defaultBlockState());
+		helper.setBlock(ReactorRig.CONTROLLER.west(), Blocks.REDSTONE_BLOCK.defaultBlockState());
 
 		// Dry: the reaction runs, nothing boils, and there is nothing to puff about.
-		ReactorScenarios.driveUnderLoad(helper, brain, 60);
+		ReactorRig.driveUnderLoad(helper, brain, 60);
 		if (brain.getStatus() != ReactorRoomStatus.FORMED) {
 			helper.fail("room did not seal: " + brain.getStatus());
 		}
@@ -64,7 +77,7 @@ public final class ReactorSteamScenarios {
 		}
 
 		// Plumbed: water topped up and steam carried off every tick, the way a working loop keeps a stack.
-		int interval = Math.max(1, Config.reactorSteamPlumeIntervalTicks);
+		int interval = Math.max(1, ReactorConfig.reactorSteamPlumeIntervalTicks);
 		keepBoiling(helper, brain, bottom, top, interval * 2);
 		if (!bottom.isBoiling() && !top.isBoiling()) {
 			helper.fail("the watered stack is not boiling, so the puff count below would be measuring nothing");
@@ -88,7 +101,7 @@ public final class ReactorSteamScenarios {
 				column.setTank(true, column.waterTank.capacity);
 				column.setTank(false, 0);
 			}
-			ReactorScenarios.driveUnderLoad(helper, brain, 1);
+			ReactorRig.driveUnderLoad(helper, brain, 1);
 		}
 	}
 
@@ -124,7 +137,7 @@ public final class ReactorSteamScenarios {
 				helper.fail("a nozzle venting for " + NOZZLE_RUN_TICKS + " ticks hissed " + up.getVentSounds()
 						+ " time(s); expected the start and one periodic restart");
 			}
-			int interval = Math.max(1, Config.reactorNozzlePlumeIntervalTicks);
+			int interval = Math.max(1, ReactorConfig.reactorNozzlePlumeIntervalTicks);
 			int minBursts = NOZZLE_RUN_TICKS / interval - 3;
 			if (up.getPlumeBursts() < minBursts || east.getPlumeBursts() < minBursts) {
 				helper.fail("too few geyser bursts: up " + up.getPlumeBursts() + ", east " + east.getPlumeBursts()

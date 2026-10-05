@@ -4,6 +4,7 @@ import static dev.alaindustrial.gametest.VisualStandSupport.awaitMenuScreen;
 import static dev.alaindustrial.gametest.VisualStandSupport.differingPixels;
 import static dev.alaindustrial.gametest.VisualStandSupport.takeCleanScreenshot;
 
+import dev.alaindustrial.compat.L3Chunks;
 import dev.alaindustrial.menu.StorageModuleMenu;
 import dev.alaindustrial.registry.ModContent;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
@@ -74,7 +75,7 @@ public final class StorageModuleStands {
         server.runCommand("fill 167 100 170 168 101 170 " + module);               // 2x2 wall
         server.runCommand("fill 171 100 170 174 100 170 " + module);               // row of four
 
-        singleplayer.getClientLevel().waitForChunksRender();
+        L3Chunks.waitRender(singleplayer);
         context.waitTicks(5);
 
         String[][] views = {
@@ -88,7 +89,7 @@ public final class StorageModuleStands {
         };
         for (String[] view : views) {
             server.runCommand("tp @p " + view[0]);
-            singleplayer.getClientLevel().waitForChunksRender();
+            L3Chunks.waitRender(singleplayer);
             context.waitTicks(5);
             LOG.info("[GUITEST][STORAGE] {} -> {}",
                     view[1], takeCleanScreenshot(context, view[1]).toAbsolutePath());
@@ -108,7 +109,7 @@ public final class StorageModuleStands {
             {"178.5 103.0 176.5 150 20", "storage_seams_row_5_iso"},
         }) {
             server.runCommand("tp @p " + view[0]);
-            singleplayer.getClientLevel().waitForChunksRender();
+            L3Chunks.waitRender(singleplayer);
             context.waitTicks(5);
             LOG.info("[GUITEST][STORAGE] {} -> {}",
                     view[1], takeCleanScreenshot(context, view[1]).toAbsolutePath());
@@ -140,7 +141,7 @@ public final class StorageModuleStands {
             TestSingleplayerContext singleplayer, TestServerContext server, String module) {
         // Level camera (pitch 0): the hidden fifth module below must stay hidden.
         server.runCommand("tp @p 172.5 100.9 176.5 180 0");
-        singleplayer.getClientLevel().waitForChunksRender();
+        L3Chunks.waitRender(singleplayer);
         context.waitTicks(5);
         Path merged = takeCleanScreenshot(context, "storage_gate_merged");
         context.waitTicks(5);

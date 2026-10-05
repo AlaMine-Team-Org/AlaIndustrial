@@ -1,10 +1,9 @@
 package dev.alaindustrial.item.tool;
 
+import dev.alaindustrial.item.ToolConfig;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.item.wearable.EnergyPackItem;
 
-import dev.alaindustrial.Config;
-import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModDataComponents;
 import java.util.List;
@@ -38,6 +37,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import dev.alaindustrial.item.energy.PoweredToolTooltip;
 
 /**
  * Electric Drill (MOD-079) — the first powered hand tool: a diamond-tier pickaxe that runs on EU
@@ -58,25 +58,27 @@ import net.minecraft.world.phys.shapes.CollisionContext;
  * {@code MAX_DAMAGE}/{@code REPAIRABLE}, so the bar is free to show the EU charge.
  *
  * <h2>EU behaviour</h2>
+ * The mining half is the line's contract, written once in {@link ElectricMiningToolItem} (MOD-707):
  * <ul>
  * <li>{@link #getDestroySpeed}: full {@code TOOL} speed (8.5 on {@code #minecraft:mineable/pickaxe})
  * while the drill holds at least one block's worth of EU; otherwise exactly hand speed (1.0f). The
  * mining level and drops come from the {@code TOOL} component either way, so a flat drill still
  * mines diamond-tier blocks and keeps their drops — it is just slow.</li>
- * <li>{@link #mineBlock}: drains {@link Config#electricDrillEuPerBlock} per successfully mined block,
+ * <li>{@link #mineBlock}: drains {@link ToolConfig#electricDrillEuPerBlock} per successfully mined block,
  * server-side only and only for blocks with non-zero hardness (mirroring vanilla's durability gate),
- * and only when there was enough EU to run at tool speed in the first place.</li>
+ * and only when there was enough EU to run at tool speed in the first place. The drill's own price
+ * list — the column bore's extra blocks — is {@link #payForBlock}.</li>
  * <li>{@link #useOn}: a mining QoL — right-clicking a block places a torch from the player's inventory
  * (the {@code enriched_uranium_torch} first, then the vanilla {@code torch}), so the drill never leaves
  * the hotbar while lighting a tunnel. Placement is delegated to the torch's own {@link BlockItem#place}
  * via a 1-item copy, so wall/floor orientation, {@code canSurvive}, the uranium torch's waterlogged
  * handling, the place sound and protection events all come for free; one torch is consumed from the
- * inventory and {@link Config#electricDrillTorchEuCost} EU is drained. A drill below that cost places
+ * inventory and {@link ToolConfig#electricDrillTorchEuCost} EU is drained. A drill below that cost places
  * nothing and tells the player on the action bar (MOD-097) — the torch is powered, not free; creative
  * bypasses the check (the spend is dropped there anyway, MOD-081).</li>
  * </ul>
  */
-public class ElectricDrillItem extends Item {
+public class ElectricDrillItem extends ElectricMiningToolItem {
 
 	/** Mining speed on {@code #minecraft:mineable/pickaxe} — a touch above the diamond value (8.0). The
 	 * drill is crafted around a diamond pickaxe (see the recipe), so it out-digs the tool that goes into
@@ -131,22 +133,6 @@ public class ElectricDrillItem extends Item {
 						.build());
 	}
 
-	// --- mining: full speed while charged, hand speed when flat (drops kept either way) ---
-
-	/**
-	 * Returns exactly {@code 1.0f} when the drill can't afford a block. That value is deliberate, not
-	 * an approximation: {@code Player.getDestroySpeed} only adds the Efficiency bonus when the tool's
-	 * speed is {@code > 1.0F}, so a flat drill is a plain hand — Efficiency cannot revive it. Any value
-	 * slightly above 1.0f would switch the enchantment back on for an empty drill.
-	 */
-	@Override
-	public float getDestroySpeed(ItemStack stack, BlockState state) {
-		if (ItemEnergy.get(stack) >= Config.electricDrillEuPerBlock) {
-			return super.getDestroySpeed(stack, state);
-		}
-		return 1.0f;
-	}
-
 	// --- column bore (MOD-482): the block hit, plus the one above and the one below ---------------
 
 	/**
@@ -159,8 +145,8 @@ public class ElectricDrillItem extends Item {
 	 * {@code useOn} and its {@code mineBlock} is a stub; the drill cannot copy that, because
 	 * {@code mineBlock} is exactly where its EU is spent.
 	 *
-	 * <p>It is also the price switch: an extra block costs {@link Config#electricDrillColumnEuPerBlock},
-	 * the one the player aimed at costs {@link Config#electricDrillEuPerBlock}, and the recursive entry
+	 * <p>It is also the price switch: an extra block costs {@link ToolConfig#electricDrillColumnEuPerBlock},
+	 * the one the player aimed at costs {@link ToolConfig#electricDrillEuPerBlock}, and the recursive entry
 	 * is the only thing that can tell them apart.
 	 */
 	private static final ThreadLocal<Boolean> BREAKING_COLUMN = ThreadLocal.withInitial(() -> Boolean.FALSE);
@@ -226,7 +212,7 @@ public class ElectricDrillItem extends Item {
 		if (!isColumnActive(stack)) {
 			return;
 		}
-		long wholeColumn = 2L * Config.electricDrillColumnEuPerBlock;
+		long wholeColumn = 2L * ToolConfig.electricDrillColumnEuPerBlock;
 		if (!player.getAbilities().instabuild && ItemEnergy.get(stack) < wholeColumn) {
 			return;
 		}
@@ -250,35 +236,27 @@ public class ElectricDrillItem extends Item {
 	}
 
 	/**
-	 * Drains EU for the block just broken. Two guards mirror vanilla's durability gate
-	 * ({@code Item.mineBlock}): {@code !isClientSide} because {@code mineBlock} runs on both sides and
-	 * the charge must only change on the server (the client picks up the new value from the synced
-	 * {@code pouch_energy} component), and non-zero hardness so instant-break blocks (grass, torches,
-	 * flowers) cost nothing — just as they never wear a vanilla tool. The drain is only taken when there
-	 * was enough EU to mine at tool speed, so a block broken at hand speed (EU below the per-block cost)
-	 * is free.
+	 * Bills the block just broken — {@link ElectricMiningToolItem#mineBlock} has already decided it is
+	 * billable (server side, non-zero hardness, so instant-break grass, torches and flowers cost nothing,
+	 * just as they never wear a vanilla tool) — and then bores the column from the block the player aimed
+	 * at. The drain is only taken when the drill affords it, so a block broken at hand speed is free.
 	 *
 	 * <p>Creative is handled twice over, and deliberately so: {@code ServerPlayerGameMode.destroyBlock}
-	 * already returns on {@code preventsBlockDrops()} before this is ever called, and the spend itself
-	 * goes through {@link ItemEnergy#spend}, which drops the debit for a creative owner (MOD-081). The
-	 * vanilla path is the one that runs today; routing through {@code spend} is what keeps the rule true
-	 * of the drill no matter who calls {@code mineBlock}.
+	 * already returns on {@code preventsBlockDrops()} before {@code mineBlock} is ever called, and the
+	 * spend itself goes through {@link ItemEnergy#spend}, which drops the debit for a creative owner
+	 * (MOD-081). The vanilla path is the one that runs today; routing through {@code spend} is what keeps
+	 * the rule true of the drill no matter who calls {@code mineBlock}.
 	 */
 	@Override
-	public boolean mineBlock(ItemStack stack, Level level, BlockState state, BlockPos pos, LivingEntity owner) {
-		if (!level.isClientSide() && state.getDestroySpeed(level, pos) != 0.0f) {
-			// An extra block of a column pays the column price; the block the player aimed at pays the
-			// plain one. Nothing else can tell the two apart — see BREAKING_COLUMN.
-			boolean extraBlock = BREAKING_COLUMN.get();
-			int cost = extraBlock ? Config.electricDrillColumnEuPerBlock : Config.electricDrillEuPerBlock;
-			if (ItemEnergy.get(stack) >= cost) {
-				ItemEnergy.spend(stack, cost, owner);
-			}
-			if (!extraBlock) {
-				mineColumn(stack, level, state, pos, owner);
-			}
+	protected void payForBlock(ItemStack stack, Level level, BlockState state, BlockPos pos, LivingEntity owner) {
+		// An extra block of a column pays the column price; the block the player aimed at pays the
+		// plain one. Nothing else can tell the two apart — see BREAKING_COLUMN.
+		boolean extraBlock = BREAKING_COLUMN.get();
+		spendIfAffordable(stack, extraBlock ? ToolConfig.electricDrillColumnEuPerBlock : toolTier().euPerBlock(),
+				owner);
+		if (!extraBlock) {
+			mineColumn(stack, level, state, pos, owner);
 		}
-		return super.mineBlock(stack, level, state, pos, owner);
 	}
 
 	// --- right-click: place a torch from the inventory (MOD-089) — keep the drill in the hotbar ---
@@ -303,7 +281,7 @@ public class ElectricDrillItem extends Item {
 	 * server-side only, only when placement actually succeeded ({@code consumesAction()}), and skipped in
 	 * creative ({@code instabuild}).
 	 *
-	 * <p>EU drain ({@link Config#electricDrillTorchEuCost}) is taken the same way — including in creative,
+	 * <p>EU drain ({@link ToolConfig#electricDrillTorchEuCost}) is taken the same way — including in creative,
 	 * where {@link ItemEnergy#spend} drops it just as the torch itself is not consumed (MOD-081). A drill
 	 * that holds less than the cost refuses the placement instead of giving a free torch (MOD-097): it
 	 * places nothing, consumes nothing, and shows a one-line action-bar notice so the player knows why.
@@ -372,7 +350,7 @@ public class ElectricDrillItem extends Item {
 		// is exempt — the spend is dropped there anyway (MOD-081). CONSUME eats the click (no off-hand
 		// fallback, no place, no swing) while the drill keeps the torch in the inventory — but only now that
 		// the spot is known to be one where a charged drill would have placed something (MOD-398).
-		if (!player.getAbilities().instabuild && ItemEnergy.get(drill) < Config.electricDrillTorchEuCost) {
+		if (!player.getAbilities().instabuild && ItemEnergy.get(drill) < ToolConfig.electricDrillTorchEuCost) {
 			if (player instanceof ServerPlayer serverPlayer) {
 				serverPlayer.sendSystemMessage(
 						Component.translatable("item.alaindustrial.electric_drill.torch_no_charge")
@@ -401,7 +379,7 @@ public class ElectricDrillItem extends Item {
 		}
 		// The MOD-097 gate above already refused a drill that couldn't afford this, so the spend is now
 		// unconditional; ItemEnergy.spend still drops the debit for a creative owner (MOD-081).
-		ItemEnergy.spend(drill, Config.electricDrillTorchEuCost, player);
+		ItemEnergy.spend(drill, ToolConfig.electricDrillTorchEuCost, player);
 		return InteractionResult.SUCCESS;
 	}
 
@@ -416,7 +394,7 @@ public class ElectricDrillItem extends Item {
 	 * block is already in the world — it is the mutation. Its dry half, {@code getPlacementState}, is
 	 * {@code protected} (verified with {@code javap -p} against {@code minecraft-common.jar}, 26.2), and the
 	 * {@link net.minecraft.world.item.StandingAndWallBlockItem} override that torches actually use is
-	 * {@code protected} too. The {@code VanillaTillables} trick from MOD-389 — a never-instantiated subclass
+	 * {@code protected} too. The MOD-389 trick of the hoe probe — a never-instantiated subclass
 	 * reading a {@code protected static} field — does not carry over: this needs an <i>instance</i> method
 	 * of the torch item, and Java's protected access would only allow calling it on our own subclass, not on
 	 * the registered vanilla item. Constructing a throwaway probe item is not an option either: in 26.2
@@ -488,24 +466,15 @@ public class ElectricDrillItem extends Item {
 		return ItemStack.EMPTY;
 	}
 
-	// --- item bar shows the EU charge in the LV tier colour (numbers are in the tooltip) ---
-
+	/** MOD-707: the energy numbers of this tool's tier; a higher tier of the same line overrides it. */
 	@Override
-	public boolean isBarVisible(ItemStack stack) {
-		return true;
+	protected ElectricToolTier toolTier() {
+		return ElectricToolTier.DRILL;
 	}
 
+	/** Usage, then the charge (MOD-716, ADR-040). */
 	@Override
-	public int getBarWidth(ItemStack stack) {
-		long capacity = ItemEnergy.capacity(stack);
-		if (capacity <= 0) {
-			return 0;
-		}
-		return (int) Math.min(MAX_BAR_WIDTH, MAX_BAR_WIDTH * ItemEnergy.get(stack) / capacity);
-	}
-
-	@Override
-	public int getBarColor(ItemStack stack) {
-		return EnergyTier.LV.color();
+	public PoweredToolTooltip toolTooltip() {
+		return DrillTooltips.of(null);
 	}
 }

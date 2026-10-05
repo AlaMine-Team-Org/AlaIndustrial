@@ -2,6 +2,7 @@ package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.entity.StockDisplayFrameEntity;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -24,6 +25,29 @@ import net.minecraft.world.level.block.state.properties.ChestType;
  * scan interval regardless of the configured value.
  */
 public final class StockDisplayFrameScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(StockDisplayFrameScenarios::fun01CountsWholeContainer,
+								"stock_frame_counts_whole_container")
+						.fabricId("StockDisplayFrameGameTest", "tcFrame001Fun01_countsWholeContainer").ticks(20, 60),
+				RosterEntry.of(StockDisplayFrameScenarios::fun02FilterCountsOnlyMatching,
+								"stock_frame_filter_counts_matching")
+						.fabricId("StockDisplayFrameGameTest", "tcFrame001Fun02_filterCountsOnlyMatching")
+						.ticks(20, 60),
+				RosterEntry.of(StockDisplayFrameScenarios::fun03DoubleChestCombined,
+								"stock_frame_double_chest_combined")
+						.fabricId("StockDisplayFrameGameTest", "tcFrame001Fun03_doubleChestCombined").ticks(20, 60),
+				RosterEntry.of(StockDisplayFrameScenarios::fun04UpdatesAfterChange, "stock_frame_updates_after_change")
+						.fabricId("StockDisplayFrameGameTest", "tcFrame001Fun04_updatesAfterChange").ticks(20, 60),
+				RosterEntry.of(StockDisplayFrameScenarios::fun05NoContainer, "stock_frame_no_container")
+						.fabricId("StockDisplayFrameGameTest", "tcFrame001Fun05_noContainer").ticks(20, 60),
+				RosterEntry.of(StockDisplayFrameScenarios::fun06DropsOwnItem, "stock_frame_drops_own_item")
+						.fabricId("StockDisplayFrameGameTest", "tcFrame001Fun06_dropsOwnItem").ticks(20, 60));
+
+		private Roster() {}
+	}
 
 	private StockDisplayFrameScenarios() {}
 
@@ -65,7 +89,11 @@ public final class StockDisplayFrameScenarios {
 
 	// ── scenario 1: empty frame counts the whole container ────────────────────────────────────────
 
-	/** TC-FRAME-001-FUN01 — an empty frame on a chest shows the total item count across all slots. */
+	/**
+	 * TC-FRAME-001-FUN01 — an empty frame on a chest shows the total item count across all slots.
+	 *
+	 * @implements TC-FRAME-001-FUN01 — an empty frame counts the whole container.
+	 */
 	public static void fun01CountsWholeContainer(GameTestHelper helper) {
 		helper.setBlock(CHEST, Blocks.CHEST);
 		if (helper.getBlockEntity(CHEST, ChestBlockEntity.class) instanceof ChestBlockEntity chest) {
@@ -82,7 +110,11 @@ public final class StockDisplayFrameScenarios {
 
 	// ── scenario 2: filter item counts only matching stacks ───────────────────────────────────────
 
-	/** TC-FRAME-001-FUN02 — a diamond in the frame counts only the chest's diamonds. */
+	/**
+	 * TC-FRAME-001-FUN02 — a diamond in the frame counts only the chest's diamonds.
+	 *
+	 * @implements TC-FRAME-001-FUN02 — a filter item counts only matching stacks.
+	 */
 	public static void fun02FilterCountsOnlyMatching(GameTestHelper helper) {
 		helper.setBlock(CHEST, Blocks.CHEST);
 		if (helper.getBlockEntity(CHEST, ChestBlockEntity.class) instanceof ChestBlockEntity chest) {
@@ -101,7 +133,11 @@ public final class StockDisplayFrameScenarios {
 
 	// ── scenario 3: double chest counts both halves from either half ──────────────────────────────
 
-	/** TC-FRAME-001-FUN03 — a frame on one half of a double chest shows the combined total. */
+	/**
+	 * TC-FRAME-001-FUN03 — a frame on one half of a double chest shows the combined total.
+	 *
+	 * @implements TC-FRAME-001-FUN03 — a double chest is counted as one combined container.
+	 */
 	public static void fun03DoubleChestCombined(GameTestHelper helper) {
 		BlockPos west = CHEST;
 		BlockPos east = CHEST.east();
@@ -127,7 +163,11 @@ public final class StockDisplayFrameScenarios {
 
 	// ── scenario 4: the count follows inventory changes ───────────────────────────────────────────
 
-	/** TC-FRAME-001-FUN04 — adding items to the chest updates the count within one scan interval. */
+	/**
+	 * TC-FRAME-001-FUN04 — adding items to the chest updates the count within one scan interval.
+	 *
+	 * @implements TC-FRAME-001-FUN04 — the count follows inventory changes within one scan.
+	 */
 	public static void fun04UpdatesAfterChange(GameTestHelper helper) {
 		helper.setBlock(CHEST, Blocks.CHEST);
 		ChestBlockEntity chest = helper.getBlockEntity(CHEST, ChestBlockEntity.class);
@@ -147,7 +187,11 @@ public final class StockDisplayFrameScenarios {
 
 	// ── scenario 5: no container behind the frame ─────────────────────────────────────────────────
 
-	/** TC-FRAME-001-FUN05 — a frame on a plain block reports NO_CONTAINER (renderer hides the text). */
+	/**
+	 * TC-FRAME-001-FUN05 — a frame on a plain block reports NO_CONTAINER (renderer hides the text).
+	 *
+	 * @implements TC-FRAME-001-FUN05 — a non-container support reports NO_CONTAINER.
+	 */
 	public static void fun05NoContainer(GameTestHelper helper) {
 		helper.setBlock(CHEST, Blocks.STONE);
 		StockDisplayFrameEntity frame = placeFrame(helper, FRAME, CHEST);
@@ -160,7 +204,11 @@ public final class StockDisplayFrameScenarios {
 
 	// ── scenario 6: breaking the frame drops the mod's own item ───────────────────────────────────
 
-	/** TC-FRAME-001-FUN06 — dropItem yields alaindustrial:stock_display_frame, not the vanilla frame. */
+	/**
+	 * TC-FRAME-001-FUN06 — dropItem yields alaindustrial:stock_display_frame, not the vanilla frame.
+	 *
+	 * @implements TC-FRAME-001-FUN06 — breaking the frame drops the mod's own item.
+	 */
 	public static void fun06DropsOwnItem(GameTestHelper helper) {
 		helper.setBlock(CHEST, Blocks.CHEST);
 		StockDisplayFrameEntity frame = placeFrame(helper, FRAME, CHEST);

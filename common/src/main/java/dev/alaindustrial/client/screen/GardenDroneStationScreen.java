@@ -46,10 +46,15 @@ public class GardenDroneStationScreen extends MachineScreen<GardenDroneStationMe
 		return TEXTURE;
 	}
 
+	/** The energy bar and its tooltip, drawn by the base (MOD-716). */
+	@Override
+	protected EnergyBarSpec energyBar() {
+		return EnergyBarSpec.LEFT;
+	}
+
 	@Override
 	protected void drawMachineFrame(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
 		blitStaticFrame(graphics);
-		renderEnergyBar(graphics, EnergyBarSpec.LEFT);
 	}
 
 	@Override
@@ -75,11 +80,6 @@ public class GardenDroneStationScreen extends MachineScreen<GardenDroneStationMe
 		ghostHint(graphics, GardenDroneStationBlockEntity.FERTILIZER_SLOT, new ItemStack(Items.BONE_MEAL));
 	}
 
-	@Override
-	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-		super.extractTooltip(graphics, mouseX, mouseY);
-		renderEnergyTooltip(graphics, mouseX, mouseY, EnergyBarSpec.LEFT);
-	}
 
 	/**
 	 * One line naming what the station is doing. The station diagnoses its own state server-side; the

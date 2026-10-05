@@ -1,12 +1,14 @@
 package dev.alaindustrial.block.entity;
 
+import dev.alaindustrial.core.machine.StatusLine;
+
 /**
  * Why the Distillation Column is (not) running, projected to the screen over a {@code ContainerData}
  * channel (MOD-251). Mirrors {@link GalvanicBathStatus}: the column has several independent reasons
  * to idle — and two of them ("diesel tank full" / "fuel-oil tank full") point at different faces of
  * the tower, so a single "output blocked" label would send the player to the wrong pump.
  */
-public enum DistillationColumnStatus {
+public enum DistillationColumnStatus implements StatusLine {
 	/** Hot and distilling. */
 	WORKING,
 	/** Powered and fed, but still heating up to operating temperature. */
@@ -32,5 +34,11 @@ public enum DistillationColumnStatus {
 	/** Translation key for the screen's status line. */
 	public String translationKey() {
 		return "gui.alaindustrial.distillation_column.status." + name().toLowerCase(java.util.Locale.ROOT);
+	}
+
+	/** {@link StatusLine}: whether this state holds the machine up (see the interface). */
+	@Override
+	public boolean isBlocking() {
+		return this != WORKING && this != WARMING;
 	}
 }

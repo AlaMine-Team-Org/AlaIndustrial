@@ -1,6 +1,7 @@
 package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.item.energy.ItemEnergy;
+import java.util.List;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -16,6 +17,18 @@ import net.minecraft.server.level.ServerPlayer;
  * <p>Whoever reimplements the wrapper gets these two tests as the contract to reimplement against.
  */
 public final class MockPlayerScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(MockPlayerScenarios::inLevelMockIsWiredIntoTheLevel, "mock_player_in_level_wiring")
+						.fabricId("MockPlayerGameTest", "inLevelMockIsWiredIntoTheLevel").ticks(20, 40),
+				RosterEntry.of(MockPlayerScenarios::survivalMockIsBilledDespiteReportingCreative,
+								"mock_player_survival_is_billed")
+						.fabricId("MockPlayerGameTest", "survivalMockIsBilledDespiteReportingCreative").ticks(20, 40));
+
+		private Roster() {}
+	}
 
 	private MockPlayerScenarios() {}
 

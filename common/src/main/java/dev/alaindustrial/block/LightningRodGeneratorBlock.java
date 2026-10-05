@@ -1,12 +1,10 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.LightningRodGeneratorBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -17,6 +15,10 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import dev.alaindustrial.client.ServerBalance;
+import dev.alaindustrial.core.tooltip.HasMachineTooltip;
+import dev.alaindustrial.core.tooltip.MachineTooltipSpec;
+import java.util.List;
 
 /**
  * Lightning rod generator block (MOD-386) — a machine casing with an antenna: an 8px base plate
@@ -42,10 +44,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * <p>Not a full cube, hence {@code noOcclusion()} in the manifest's block properties and the
  * slab {@link #SHAPE} below (R-PHY-05).
  */
-public class LightningRodGeneratorBlock extends AbstractMachineBlock {
-	public static final MapCodec<LightningRodGeneratorBlock> CODEC =
-			simpleCodec(LightningRodGeneratorBlock::new);
-
+public class LightningRodGeneratorBlock extends AbstractMachineBlock implements HasMachineTooltip {
 	public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
 	/**
@@ -74,11 +73,6 @@ public class LightningRodGeneratorBlock extends AbstractMachineBlock {
 	public LightningRodGeneratorBlock(Properties properties) {
 		super(properties);
 		registerDefaultState(defaultBlockState().setValue(LIT, false).setValue(TIPPED, false));
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override
@@ -112,5 +106,12 @@ public class LightningRodGeneratorBlock extends AbstractMachineBlock {
 	@Override
 	public boolean isCableConnectable(BlockState state, Direction side) {
 		return side != Direction.UP;
+	}
+
+	/** Hover tooltip of this block's item (MOD-716, ADR-040). */
+	@Override
+	public MachineTooltipSpec machineTooltip() {
+		return new MachineTooltipSpec(MachineTooltipSpec.Tier.LV,
+				List.of(MachineTooltipSpec.stat("buffer", ServerBalance::lightningRodBuffer)), List.of());
 	}
 }

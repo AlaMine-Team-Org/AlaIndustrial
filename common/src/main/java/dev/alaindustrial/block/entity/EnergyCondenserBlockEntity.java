@@ -1,18 +1,17 @@
 package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.block.entity.machine.SyncChannels;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.menu.EnergyCondenserMenu;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -47,27 +46,11 @@ import net.minecraft.world.level.storage.ValueOutput;
  * greed against patience, is the whole mechanic, which is why the screen spells out both the current
  * tier and what is still missing for the next one.
  */
-public class EnergyCondenserBlockEntity extends MachineBlockEntity implements MenuProvider {
+public class EnergyCondenserBlockEntity extends MachineBlockEntity implements MenuProvider, NoUpgradePanel {
 
 	/** The only slot: where the clot the current bank is worth appears. */
 	public static final int OUTPUT_SLOT = 0;
 	private static final int[] NO_SLOTS = new int[0];
-
-	/**
-	 * The shared four (energy, capacity, progress, maxProgress) plus six of our own. Hides
-	 * {@link MachineBlockEntity#DATA_COUNT} the way the sawmill does — the client stub is sized from
-	 * THIS constant, and a stub narrower than what the block entity projects desyncs the channel.
-	 */
-	public static final int DATA_COUNT = MachineBlockEntity.DATA_COUNT + 6;
-	public static final int DATA_FILL_PERMILLE = MachineBlockEntity.DATA_COUNT;
-	public static final int DATA_TIER = MachineBlockEntity.DATA_COUNT + 1;
-	public static final int DATA_NEXT_PERMILLE = MachineBlockEntity.DATA_COUNT + 2;
-	/** Banked EU, split across two channels — see {@link #BANK_RADIX}. */
-	public static final int DATA_BANK_LO = MachineBlockEntity.DATA_COUNT + 3;
-	public static final int DATA_BANK_HI = MachineBlockEntity.DATA_COUNT + 4;
-	/** The threshold the bank is currently heading for, in thousands of EU; 0 at the top tier. */
-	public static final int DATA_NEXT_THOUSANDS = MachineBlockEntity.DATA_COUNT + 5;
-
 	/**
 	 * Split base for the banked total. A {@code DataSlot} is a signed 16-bit channel, so the millions
 	 * this block deals in cannot cross it whole — they arrive negative. Splitting keeps the number
@@ -75,34 +58,30 @@ public class EnergyCondenserBlockEntity extends MachineBlockEntity implements Me
 	 * the block look broken, since below the first tier it rounds to a stationary zero for minutes.
 	 */
 	public static final int BANK_RADIX = 30_000;
+	/**
+	 * GUI sync channels (MOD-712, BE-7): the base four, then the bank — its fill in permille, the tier it
+	 * is worth, progress to the next tier in permille, the stored EU split into two shorts' worth (low and
+	 * high {@code BANK_RADIX} digits) and the next threshold in thousands; all derived and read-only.
+	 */
+	public enum Channel {
+		ENERGY, CAPACITY, PROGRESS, MAX_PROGRESS,
+		FILL_PERMILLE, TIER, NEXT_PERMILLE, BANK_LO, BANK_HI, NEXT_THOUSANDS
+	}
 
-	private final ContainerData condenserData = new ContainerData() {
-		@Override
-		public int get(int index) {
-			return switch (index) {
-				case DATA_FILL_PERMILLE -> fillPermille();
-				case DATA_TIER -> tierForBank();
-				case DATA_NEXT_PERMILLE -> progressToNextTierPermille();
-				case DATA_BANK_LO -> (int) (energy.getAmount() % BANK_RADIX);
-				case DATA_BANK_HI -> (int) (energy.getAmount() / BANK_RADIX);
-				case DATA_NEXT_THOUSANDS -> nextThresholdThousands();
-				default -> dataAccess.get(index);
-			};
-		}
+	/** Width of {@link #getDataAccess()}, which the menu's client stub sizes itself from (MOD-235). */
+	public static final int DATA_COUNT = Channel.values().length;
 
-		@Override
-		public void set(int index, int value) {
-			if (index < MachineBlockEntity.DATA_COUNT) {
-				dataAccess.set(index, value);
-			}
-			// Our own six are derived from the bank — nothing to store.
-		}
-
-		@Override
-		public int getCount() {
-			return DATA_COUNT;
-		}
-	};
+	@Override
+	protected SyncChannels createChannels() {
+		return channels(Channel.class)
+				.read(Channel.FILL_PERMILLE, () -> fillPermille())
+				.read(Channel.TIER, () -> tierForBank())
+				.read(Channel.NEXT_PERMILLE, () -> progressToNextTierPermille())
+				.read(Channel.BANK_LO, () -> (int) (energy.getAmount() % BANK_RADIX))
+				.read(Channel.BANK_HI, () -> (int) (energy.getAmount() / BANK_RADIX))
+				.read(Channel.NEXT_THOUSANDS, () -> nextThresholdThousands())
+				.build();
+	}
 
 	/**
 	 * Tier of the clot currently standing in the window, i.e. the one the bank still owes for; 0 when the
@@ -151,14 +130,8 @@ public class EnergyCondenserBlockEntity extends MachineBlockEntity implements Me
 		return false;
 	}
 
-	/**
-	 * No upgrade panel. A condenser is meant to sip what is left over; an overclocker in it would turn
-	 * it into a pump on the grid — the exact opposite of the design.
-	 */
-	@Override
-	public boolean hasUpgradePanel() {
-		return false;
-	}
+	// No upgrade panel (NoUpgradePanel). A condenser is meant to sip what is left over; an overclocker in
+	// it would turn it into a pump on the grid — the exact opposite of the design.
 
 	/** Banked EU as permille — the GUI channel is 16-bit and 4 000 000 would arrive negative. */
 	public int fillPermille() {
@@ -298,25 +271,15 @@ public class EnergyCondenserBlockEntity extends MachineBlockEntity implements Me
 	}
 
 	@Override
-	protected void loadAdditional(ValueInput input) {
-		super.loadAdditional(input);
+	protected void loadMachineData(ValueInput input) {
+		super.loadMachineData(input);
 		issuedTier = input.getIntOr("IssuedTier", 0);
 	}
 
 	@Override
-	public Component getDisplayName() {
-		return Component.translatable("block.alaindustrial.energy_condenser");
-	}
-
-	@Override
 	public AbstractContainerMenu createMenu(int syncId, Inventory inventory, Player player) {
-		return new EnergyCondenserMenu(syncId, inventory, this, condenserData,
+		return new EnergyCondenserMenu(syncId, inventory, this, getDataAccess(),
 				ContainerLevelAccess.create(level, worldPosition));
 	}
 
-	/** The widened GUI channel: the shared four, then the condenser's own three. */
-	@Override
-	public ContainerData getDataAccess() {
-		return condenserData;
-	}
 }

@@ -1,6 +1,5 @@
 package dev.alaindustrial.block.entity;
 
-import dev.alaindustrial.skill.SkillMachine;
 import net.minecraft.world.level.Level;
 
 /**
@@ -16,7 +15,8 @@ import net.minecraft.world.level.Level;
  *   <li>decide whether this tick can be paid for and worked (the machine's own predicate);</li>
  *   <li>show it: the {@code lit} blockstate follows that decision;</li>
  *   <li>report the draw to the statistics panel — the working rate, or 0 when stopped (MOD-125);</li>
- *   <li>take the EU out of the buffer;</li>
+ *   <li>take the EU out of the buffer — through {@link MachineBlockEntity#spendOperationEnergy}, where the
+ *       Mechanic skills apply;</li>
  *   <li>advance progress by one tick;</li>
  *   <li>at the top of the bar, commit the operation — the one machine-specific step;</li>
  *   <li>count the operation, credit its EU cost to the owner (MOD-133) and answer the idle-sleep gate
@@ -43,7 +43,11 @@ import net.minecraft.world.level.Level;
  * fused with a scheduler of their own, and splitting them is separate work with a separate risk
  * assessment. The distillation column and the thermal centrifuge spend a paid tick on a pre-stage
  * (warm-up, spin-up) BEFORE progress may advance, which is a genuine second shape rather than a copy of
- * this one; they keep their hand-written loops until that shape is worth naming.
+ * this one; they keep their hand-written loops until that shape is worth naming (owner decision D4 of
+ * MOD-697 kept the shapes as they are). The assembler, the column, the centrifuge and the incubator still
+ * share both ends of an operation with this cycle: they pay an operation tick through
+ * {@link MachineBlockEntity#spendOperationEnergy}, so the Mechanic skills reach them too, and they end one
+ * through {@link MachineBlockEntity#completeOperation}, the counter and the XP credit (MOD-712, BE-3).
  */
 public final class ProcessingCycle {
 
@@ -185,38 +189,22 @@ public final class ProcessingCycle {
 		machine.maxProgress = job.duration;
 		machine.updateLit(job.canWork);
 		// MOD-125: the statistics panel's "now" line for a consumer is its draw, and a stopped machine
-		// reports 0 rather than keeping its last reading. Recorded BEFORE the drain: this call is what
-		// switches the buffer's counters on, and the very tick a statistics chip is fitted must already
-		// count its own draw.
+		// reports 0 rather than keeping its last reading. (The buffer's counters are switched by the base
+		// before this tick even started — MOD-692 — so the tick a chip is fitted already counts its draw.)
 		machine.recordEuRate(job.canWork ? job.euPerTick : 0);
 
 		boolean changed = job.alreadyChanged;
-		// MOD-483 Resilient Cycle: an operation past halfway may finish on the machine's own charge when
-		// the supply dies. The energy is still spent — only the demand for an incoming supply is waived,
-		// which is why a switch cutting power mid-run cannot be farmed for free operations.
-		//
-		// MOD-576: and ONLY that demand. `canWork` is every condition of the machine at once, so testing
-		// it alone let the skill waive a full output slot or a missing part too — the completion then ran
-		// with no room for its result. `readyExceptEnergy` is the machine saying "the supply is the only
-		// thing missing", which is exactly the case the skill was written for.
-		boolean coasting = !job.canWork && job.readyExceptEnergy && machine.energy.getAmount() > 0
-				&& SkillMachine.canCoast(machine.progress, machine.maxProgress,
-						level, machine.getOwner());
-		if (job.canWork || coasting) {
-			// MOD-483 Precise Draw: one tick in ten costs nothing, which is 10 % off the operation.
-			// Counted in ticks because a basic machine draws 2 EU/t and a percentage of two rounds to
-			// nothing or to half.
-			if (!SkillMachine.freeDrainTick(machine.progress, level, machine.getOwner())) {
-				machine.energy.drainInternal(job.euPerTick);
-			}
+		// The tick runs when the machine can pay, or — Resilient Cycle — when the supply is the only thing
+		// missing; Precise Draw may make it free. Both skills (MOD-483) live in the one rule every machine
+		// shares, with or without this component (OperationEnergy, MOD-712).
+		boolean worked = machine.spendOperationEnergy(level, job.euPerTick, job.canWork, job.readyExceptEnergy);
+		if (worked) {
 			machine.progress++;
 			if (machine.progress >= machine.maxProgress) {
 				machine.progress = 0;
 				completion.commit();
-				machine.recordItemProcessed(); // MOD-125: lifetime operation counter
-				// MOD-133: a COMPLETED operation is the mod's only XP source, so a contraption that
-				// aborts one mid-run burns EU and earns nothing.
-				machine.creditUsefulWork(level, (long) job.euPerTick * machine.maxProgress);
+				// MOD-125 counter + MOD-133 XP: the end every operation shares (MachineBlockEntity, BE-3).
+				machine.completeOperation(level, (long) job.euPerTick * machine.maxProgress);
 			}
 			changed = true;
 		} else if (!job.jobIntact && machine.progress != 0) {
@@ -228,6 +216,6 @@ public final class ProcessingCycle {
 		}
 		// Idle → sleep until inventory, energy or a neighbour wakes the block (R-29). A coasting
 		// machine counts as working: it must keep ticking to reach the end of its operation.
-		return job.canWork || coasting || job.keepAwake ? 0 : EnergyBlockEntity.IDLE_SLEEP_TICKS;
+		return worked || job.keepAwake ? 0 : EnergyBlockEntity.IDLE_SLEEP_TICKS;
 	}
 }

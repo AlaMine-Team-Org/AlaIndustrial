@@ -26,18 +26,20 @@ public final class CanningMachineScreen extends ProgressMachineScreen<CanningMac
 	 * clips them and a centered {@code destX} leaves a gap that shouldn't be there.
 	 */
 	private static final ProgressSpec PROGRESS = new ProgressSpec(176, 48, 31, 10, 74, 33, false);
+
+	/** Click area of the recipe viewers (MOD-716): exactly the progress sprite. */
+	public static final GuiRect PROGRESS_AREA = PROGRESS.area();
 	/** Baseline between the machine area and the vanilla inventory label, as in VulcanizerScreen. */
 	private static final int READOUT_Y = 61;
 	/** Left stop — the energy bar occupies x 17..26 down to y=63. */
 	private static final int READOUT_MIN_X = 30;
 
-	public CanningMachineScreen(CanningMachineMenu menu, Inventory inventory, Component title) {
-		super(menu, inventory, title, PROGRESS);
-	}
+	/** Atlas, energy bar and progress sprite: the whole declared frame (MOD-716, CLI-3). */
+	private static final MachineLayout LAYOUT = MachineLayout.of(TEXTURE, EnergyBarSpec.LEFT)
+			.withProgress(PROGRESS);
 
-	@Override
-	protected Identifier texture() {
-		return TEXTURE;
+	public CanningMachineScreen(CanningMachineMenu menu, Inventory inventory, Component title) {
+		super(menu, inventory, title, LAYOUT);
 	}
 
 	@Override
@@ -51,6 +53,6 @@ public final class CanningMachineScreen extends ProgressMachineScreen<CanningMac
 		Component line = Component.translatable("gui.alaindustrial.canning_machine.calories", percent)
 				.withStyle(ChatFormatting.DARK_GRAY);
 		int textX = Math.max(READOUT_MIN_X, (imageWidth - font.width(line)) / 2);
-		graphics.text(font, line, leftPos + textX, topPos + READOUT_Y, 0xFF404040, false);
+		graphics.text(font, line, leftPos + textX, topPos + READOUT_Y, GuiStyle.LABEL, false);
 	}
 }

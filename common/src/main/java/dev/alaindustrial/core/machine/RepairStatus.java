@@ -10,7 +10,7 @@ package dev.alaindustrial.core.machine;
  * content of this type: a bench holding a spent component reports the spent component, not the
  * missing plate, because fetching the plate would not help.
  */
-public enum RepairStatus {
+public enum RepairStatus implements StatusLine {
 	/** The target slot holds nothing the bench recognises as a rotor or a wheel. */
 	NO_TARGET,
 	/** A component is in place but has taken no wear — there is nothing to restore. */
@@ -81,5 +81,26 @@ public enum RepairStatus {
 	public static RepairStatus byCode(int code) {
 		RepairStatus[] all = values();
 		return code >= 0 && code < all.length ? all[code] : NO_TARGET;
+	}
+
+	/**
+	 * {@link StatusLine}: the caption of the bench's status row — what it is doing, or the single reason
+	 * it is not (MOD-716 moved this mapping here from the screen, keys unchanged).
+	 */
+	@Override
+	public String translationKey() {
+		return switch (this) {
+			case NO_TARGET -> "gui.alaindustrial.component_repair_bench.insert_component";
+			case NOT_DAMAGED -> "gui.alaindustrial.component_repair_bench.not_damaged";
+			case LIMIT_REACHED -> "gui.alaindustrial.component_repair_bench.limit_reached";
+			case NEEDS_MATERIAL -> "gui.alaindustrial.component_repair_bench.needs_material";
+			case READY -> "gui.alaindustrial.component_repair_bench.repairing";
+		};
+	}
+
+	/** {@link StatusLine}: whether this state holds the machine up (see the interface). */
+	@Override
+	public boolean isBlocking() {
+		return !canWork();
 	}
 }

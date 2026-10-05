@@ -4,10 +4,8 @@ import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.block.entity.UpgradeTableBlockEntity;
 import dev.alaindustrial.core.machine.ToolUpgradeStatus;
 import dev.alaindustrial.registry.ModContent;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
@@ -32,9 +30,8 @@ public class UpgradeTableMenu extends MachineMenu {
 
 	public UpgradeTableMenu(int syncId, Inventory playerInventory) {
 		super(ModContent.UPGRADE_TABLE_MENU.get(), syncId, playerInventory,
-				new SimpleContainer(UpgradeTableBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT),
-				new SimpleContainerData(UpgradeTableBlockEntity.DATA_COUNT),
-				ContainerLevelAccess.NULL, ModContent.UPGRADE_TABLE.get());
+				clientStub(UpgradeTableBlockEntity.SLOT_COUNT + UPGRADE_SLOT_COUNT, UpgradeTableBlockEntity.DATA_COUNT),
+				ModContent.UPGRADE_TABLE.get());
 	}
 
 	/**
@@ -67,6 +64,6 @@ public class UpgradeTableMenu extends MachineMenu {
 
 	/** The table's current {@link ToolUpgradeStatus}, for the screen's status line. */
 	public ToolUpgradeStatus getStatus() {
-		return ToolUpgradeStatus.byCode(data.get(UpgradeTableBlockEntity.STATUS_CHANNEL));
+		return ToolUpgradeStatus.byCode(channel(UpgradeTableBlockEntity.Channel.STATUS));
 	}
 }

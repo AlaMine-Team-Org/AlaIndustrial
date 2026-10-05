@@ -2,8 +2,10 @@ package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.LightningRodGeneratorBlock;
+import dev.alaindustrial.block.entity.machine.SyncChannels;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.core.environment.GeneratorConfig;
 import dev.alaindustrial.core.environment.LightningRodOutput;
 import dev.alaindustrial.core.machine.ComponentTier;
 import dev.alaindustrial.menu.LightningRodGeneratorMenu;
@@ -12,7 +14,6 @@ import dev.alaindustrial.registry.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -23,7 +24,6 @@ import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -40,8 +40,8 @@ import net.minecraft.world.phys.Vec3;
  * network at a flat rate until it is empty.
  *
  * <p><b>The rod summons its own strikes.</b> Every tick that it is raining over open sky the rod
- * rolls a one-in-N chance ({@link Config#lightningRodThunderStrikeChanceDivisor} in thunder,
- * {@link Config#lightningRodRainStrikeChanceDivisor} in plain rain) and, on a hit, spawns a
+ * rolls a one-in-N chance ({@link GeneratorConfig#lightningRodThunderStrikeChanceDivisor} in thunder,
+ * {@link GeneratorConfig#lightningRodRainStrikeChanceDivisor} in plain rain) and, on a hit, spawns a
  * <b>visual-only</b> {@link LightningBolt} at itself for the player's benefit before crediting the
  * energy in code. Three reasons this is not "intercept vanilla lightning":
  * <ul>
@@ -68,7 +68,7 @@ import net.minecraft.world.phys.Vec3;
  * <p><b>Overload never destroys anything.</b> The mod removed overvoltage deliberately (see
  * {@code EnergyTier}: "there is no overvoltage penalty"), so a strike arriving at a full capacitor
  * does not burn the block or a cable. It is simply <b>lost</b>, and the tip takes
- * {@link Config#lightningRodOverloadWearFactor}× wear for having stood there and taken it. Losing
+ * {@link GeneratorConfig#lightningRodOverloadWearFactor}× wear for having stood there and taken it. Losing
  * ~20 000 EU of free energy is the punishment; the base staying intact is the point.
  *
  * <p><b>Why a capacitor at all.</b> {@code AbstractGeneratorBlockEntity#onServerTick} credits at
@@ -89,13 +89,6 @@ public class LightningRodGeneratorBlockEntity extends AbstractGeneratorBlockEnti
 	public static final int TIP_SLOT = 0;
 	/** Machine-slot count (indices before the upgrade block) — the client menu stub sizes from this (MOD-439). */
 	public static final int SLOT_COUNT = 1;
-
-	/** Six-wide data — hides {@link MachineBlockEntity#DATA_COUNT} so the menu's client stub sizes from here. */
-	public static final int DATA_COUNT = 6;
-	/** Channel carrying the mode code below. */
-	public static final int MODE_CHANNEL = 4;
-	/** Channel carrying the effective (post-multiplier) EU/t the GUI prints. */
-	public static final int RATE_CHANNEL = 5;
 
 	/** No conductor tip installed — the rod still attracts nothing and banks nothing. */
 	public static final int MODE_NO_TIP = 0;
@@ -118,15 +111,15 @@ public class LightningRodGeneratorBlockEntity extends AbstractGeneratorBlockEnti
 	/** Countdown for the overload readout. Persisted so a relog mid-penalty is not silently cleared. */
 	private int overloadTicks;
 
-	/** Effective EU/t published on {@link #RATE_CHANNEL}. Transient — recomputed every tick. */
+	/** Effective EU/t published on {@link Channel#RATE}. Transient — recomputed every tick. */
 	private int effectiveRate;
-	/** Cached "a strike could land here" answer, refreshed every {@link Config#lightningRodSampleTicks}. */
+	/** Cached "a strike could land here" answer, refreshed every {@link GeneratorConfig#lightningRodSampleTicks}. */
 	private boolean struckable;
 	private int sampleCountdown;
 
 	public LightningRodGeneratorBlockEntity(BlockPos pos, BlockState state) {
 		super(ModContent.LIGHTNING_ROD_GENERATOR_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT,
-				Config.lightningRodBuffer, EnergyTier.LV.maxVoltage());
+				GeneratorConfig.lightningRodBuffer, EnergyTier.LV.maxVoltage());
 		this.maxProgress = 1000;
 	}
 
@@ -142,8 +135,8 @@ public class LightningRodGeneratorBlockEntity extends AbstractGeneratorBlockEnti
 	/** Capacitor size of the installed tip, 0 with no tip. */
 	public int capacitorCapacity() {
 		ComponentTier tip = installedTip();
-		return tip == null ? 0 : LightningRodOutput.capacityFor(Config.lightningRodBaseCapacitorEu,
-				tip.outputMultiplier(), Config.lightningRodMaxCapacitorEu);
+		return tip == null ? 0 : LightningRodOutput.capacityFor(GeneratorConfig.lightningRodBaseCapacitorEu,
+				tip.outputMultiplier(), GeneratorConfig.lightningRodMaxCapacitorEu);
 	}
 
 	/** EU currently banked in the capacitor. */
@@ -172,8 +165,8 @@ public class LightningRodGeneratorBlockEntity extends AbstractGeneratorBlockEnti
 		// Roll for a strike before bleeding, so a strike landing this tick is already spendable.
 		if (level instanceof ServerLevel serverLevel && struckable) {
 			int divisor = LightningRodOutput.strikeDivisor(level.isThundering(), level.isRaining(),
-					Config.lightningRodThunderStrikeChanceDivisor,
-					Config.lightningRodRainStrikeChanceDivisor);
+					GeneratorConfig.lightningRodThunderStrikeChanceDivisor,
+					GeneratorConfig.lightningRodRainStrikeChanceDivisor);
 			if (divisor > 0 && serverLevel.getRandom().nextInt(divisor) == 0) {
 				strike(serverLevel, pos, tip);
 				tip = installedTip(); // the strike may have worn the tip out entirely
@@ -201,8 +194,8 @@ public class LightningRodGeneratorBlockEntity extends AbstractGeneratorBlockEnti
 		if (room <= 0) {
 			return 0;
 		}
-		int rate = LightningRodOutput.bleedFor(Config.lightningRodBaseBleedEuPerTick,
-				tip.outputMultiplier(), Config.lightningRodMaxBleedEuPerTick);
+		int rate = LightningRodOutput.bleedFor(GeneratorConfig.lightningRodBaseBleedEuPerTick,
+				tip.outputMultiplier(), GeneratorConfig.lightningRodMaxBleedEuPerTick);
 		int drained = (int) Math.min(Math.min(capacitorEu, rate), room);
 		if (drained > 0) {
 			capacitorEu -= drained;
@@ -225,7 +218,7 @@ public class LightningRodGeneratorBlockEntity extends AbstractGeneratorBlockEnti
 		if (--sampleCountdown > 0) {
 			return;
 		}
-		sampleCountdown = Math.max(1, Config.lightningRodSampleTicks);
+		sampleCountdown = Math.max(1, GeneratorConfig.lightningRodSampleTicks);
 		struckable = level.isRaining() && level.isRainingAt(pos.above());
 	}
 
@@ -237,7 +230,7 @@ public class LightningRodGeneratorBlockEntity extends AbstractGeneratorBlockEnti
 	 */
 	private void strike(ServerLevel level, BlockPos pos, ComponentTier tip) {
 		spawnVisualBolt(level, pos);
-		int strikeEu = Math.max(0, Config.lightningRodStrikeEu);
+		int strikeEu = Math.max(0, GeneratorConfig.lightningRodStrikeEu);
 		int banked = 0;
 		if (tip != null) {
 			banked = LightningRodOutput.accepted(strikeEu, capacitorCapacity() - capacitorEu);
@@ -246,7 +239,7 @@ public class LightningRodGeneratorBlockEntity extends AbstractGeneratorBlockEnti
 				wearComponent(level, pos, TIP_SLOT, banked, 1.0f, tip.euPerDamage());
 			} else {
 				wearComponent(level, pos, TIP_SLOT, strikeEu,
-						Math.max(1.0f, Config.lightningRodOverloadWearFactor), tip.euPerDamage());
+						Math.max(1.0f, GeneratorConfig.lightningRodOverloadWearFactor), tip.euPerDamage());
 			}
 		}
 		if (banked < strikeEu) {
@@ -371,33 +364,22 @@ public class LightningRodGeneratorBlockEntity extends AbstractGeneratorBlockEnti
 		this.effectiveRate = effectiveEuPerTick;
 	}
 
-	private final ContainerData rodData = new ContainerData() {
-		@Override
-		public int get(int index) {
-			return switch (index) {
-				case 3 -> 1000;
-				case MODE_CHANNEL -> mode();
-				case RATE_CHANNEL -> effectiveRate;
-				default -> LightningRodGeneratorBlockEntity.this.dataAccess.get(index);
-			};
-		}
+	/**
+	 * GUI sync channels (MOD-712, BE-7): the base four — MAX_PROGRESS is the constant 1000, the bar's
+	 * denominator — then the mode code and the effective (post-multiplier) EU/t; the last three read-only.
+	 */
+	public enum Channel { ENERGY, CAPACITY, PROGRESS, MAX_PROGRESS, MODE, RATE }
 
-		@Override
-		public void set(int index, int value) {
-			if (index != 3 && index != MODE_CHANNEL && index != RATE_CHANNEL) {
-				LightningRodGeneratorBlockEntity.this.dataAccess.set(index, value);
-			}
-		}
-
-		@Override
-		public int getCount() {
-			return DATA_COUNT;
-		}
-	};
+	/** Width of {@link #getDataAccess()}, which the menu's client stub sizes itself from (MOD-235). */
+	public static final int DATA_COUNT = Channel.values().length;
 
 	@Override
-	public ContainerData getDataAccess() {
-		return rodData;
+	protected SyncChannels createChannels() {
+		return channels(Channel.class)
+				.override(Channel.MAX_PROGRESS, () -> 1000)
+				.read(Channel.MODE, () -> mode())
+				.read(Channel.RATE, () -> effectiveRate)
+				.build();
 	}
 
 	/**
@@ -408,11 +390,6 @@ public class LightningRodGeneratorBlockEntity extends AbstractGeneratorBlockEnti
 	@Override
 	public boolean canPlaceItem(int slot, ItemStack stack) {
 		return slot == TIP_SLOT && stack.is(ModTags.Items.CONDUCTOR_TIPS);
-	}
-
-	@Override
-	public Component getDisplayName() {
-		return Component.translatable("block.alaindustrial.lightning_rod_generator");
 	}
 
 	@Override
@@ -429,8 +406,8 @@ public class LightningRodGeneratorBlockEntity extends AbstractGeneratorBlockEnti
 	}
 
 	@Override
-	protected void loadAdditional(ValueInput input) {
-		super.loadAdditional(input);
+	protected void loadMachineData(ValueInput input) {
+		super.loadMachineData(input);
 		// Clamped on load: a world saved before an operator lowered the capacitor caps would otherwise
 		// keep a charge its tip can no longer hold, and the GUI bar would read over 100 %.
 		capacitorEu = Math.max(0, input.getIntOr("CapacitorEu", 0));

@@ -40,6 +40,17 @@ import net.minecraft.world.item.enchantment.Enchantment;
  */
 public final class EnchantableRosterScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(EnchantableRosterScenarios::fun01EveryEnchantableItemHasCandidates,
+								"enchantable_roster_has_candidates")
+						.fabricId("EnchantableRosterGameTest", "tcEnch001Fun01_everyEnchantableItemHasCandidates")
+						.ticks(20, 40));
+
+		private Roster() {}
+	}
+
 	private EnchantableRosterScenarios() {}
 
 	/**
@@ -47,6 +58,9 @@ public final class EnchantableRosterScenarios {
 	 * enchantment. Removing an item from its membership tag reddens this.
 	 *
 	 * <p>Mirrors: EnchantableRosterGameTest.tcEnch001Fun01_everyEnchantableItemHasCandidates
+	 *
+	 * @implements TC-ENCH-001-FUN01 — every item that declares itself enchantable accepts at least one
+	 *     enchantment, so the enchanting table never shows levels above a blank line.
 	 */
 	public static void fun01EveryEnchantableItemHasCandidates(GameTestHelper helper) {
 		ServerLevel level = helper.getLevel();

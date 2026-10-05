@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.RadiantSolarPanelBlockEntity;
 import dev.alaindustrial.core.environment.SolarSky;
 import java.util.List;
@@ -14,7 +13,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.Mirror;
@@ -28,6 +26,9 @@ import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jspecify.annotations.Nullable;
+import dev.alaindustrial.client.ServerBalance;
+import dev.alaindustrial.core.tooltip.HasMachineTooltip;
+import dev.alaindustrial.core.tooltip.MachineTooltipSpec;
 
 /**
  * Mirror Concentrator — the third rung of the day branch, grown from {@link DaylightSolarPanelBlock}.
@@ -47,9 +48,7 @@ import org.jspecify.annotations.Nullable;
  * a volume no honest hitbox could follow. The machine — model, mirrors and all — belongs to the
  * assembled structure.
  */
-public class RadiantSolarPanelBlock extends AbstractSolarPanelBlock implements CableArmReach {
-	public static final MapCodec<RadiantSolarPanelBlock> CODEC = simpleCodec(RadiantSolarPanelBlock::new);
-
+public class RadiantSolarPanelBlock extends AbstractSolarPanelBlock implements CableArmReach, HasMachineTooltip {
 	/** True once seven sections have closed around this block and it drives the whole structure. */
 	public static final BooleanProperty ASSEMBLED = BooleanProperty.create("assembled");
 
@@ -78,11 +77,6 @@ public class RadiantSolarPanelBlock extends AbstractSolarPanelBlock implements C
 		registerDefaultState(stateDefinition.any()
 				.setValue(ASSEMBLED, Boolean.FALSE)
 				.setValue(FACING, Direction.NORTH));
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override
@@ -216,5 +210,14 @@ public class RadiantSolarPanelBlock extends AbstractSolarPanelBlock implements C
 	@Override
 	protected BlockState mirror(BlockState state, Mirror mirror) {
 		return state.rotate(mirror.getRotation(state.getValue(FACING)));
+	}
+
+	/** Hover tooltip of this block's item (MOD-716, ADR-040). */
+	@Override
+	public MachineTooltipSpec machineTooltip() {
+		return new MachineTooltipSpec(MachineTooltipSpec.Tier.LV,
+				List.of(MachineTooltipSpec.stat("energy_output_day", ServerBalance::radiantEuPerTick),
+						MachineTooltipSpec.stat("capacity", ServerBalance::radiantBuffer)),
+				List.of());
 	}
 }

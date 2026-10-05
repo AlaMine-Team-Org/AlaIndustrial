@@ -42,9 +42,34 @@ import dev.alaindustrial.client.render.UpgradeTableBlockEntityRenderer;
 import dev.alaindustrial.client.render.WorkstationBlockEntityRenderer;
 import dev.alaindustrial.registry.ContentManifest;
 import dev.alaindustrial.registry.ModContent;
+import dev.alaindustrial.registry.ModFluidsManifest;
 import java.util.List;
 import java.util.function.Supplier;
+import dev.alaindustrial.client.hud.ElectricDrillHud;
+import dev.alaindustrial.client.hud.EnergyPackHud;
+import dev.alaindustrial.client.hud.TeleportFadeHud;
+import dev.alaindustrial.client.render.ConcentratorSchematicRenderer;
+import dev.alaindustrial.client.render.RootInspection;
+import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.client.particle.NutrientSprayParticle;
+import dev.alaindustrial.registry.ModParticles;
+import java.util.Objects;
+import java.util.function.Function;
+import net.minecraft.client.particle.FlameParticle;
+import net.minecraft.client.particle.ParticleProvider;
+import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.client.renderer.block.FluidModel;
+import net.minecraft.client.resources.model.sprite.Material;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.level.material.Fluid;
+import org.jspecify.annotations.Nullable;
+import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.color.block.BlockTintSource;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.object.chest.ChestModel;
@@ -54,6 +79,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
+// size-justified: a declarative table — seven client lists, one entry per line, each with its record and its
+// one factory; splitting it by list would scatter the single place a client registration is declared, which
+// is what MOD-403 and MOD-706 built it to be.
 /**
  * Client-only content declared once for both loaders (MOD-403): block-entity renderers, the model layers
  * they bake, and the block tint sources. The counterpart of
@@ -72,12 +100,14 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
  * {@code RegisterColorHandlersEvent.BlockTintSources} on NeoForge. Each client adapts one small
  * interface per list and loops.
  *
- * <p><b>Deliberately NOT here</b> (each would cost more than it saves, and each is a single line):
- * the entity renderer for the Stock Display Frame — its handle
- * ({@code ModEntities}/{@code ModEntitiesNeoForge}) is loader-specific and {@code ModContent}'s neutral
- * slot is a wildcard {@code EntityType<?>}, so nothing typed could be shared; the particle provider,
- * where Fabric takes a {@code ParticleProvider} and NeoForge a sprite-set factory; and fluid model
- * registration, which is a different event with a different argument order on each side.
+ * <p>MOD-706 added the key mappings ({@link #KEY_MAPPINGS}), the HUD layers ({@link #HUD_LAYERS}), the
+ * fluid models ({@link #FLUID_MODELS}) and the particle providers ({@link #PARTICLE_PROVIDERS}), which both
+ * client entry points used to list by hand — and which {@code loader_parity_check.py} could not see.
+ *
+ * <p><b>Deliberately NOT here</b> (it would cost more than it saves, and it is a single line): the
+ * entity renderer for the Stock Display Frame — its handle ({@code ModEntities}/{@code ModEntitiesNeoForge})
+ * is loader-specific and {@code ModContent}'s neutral slot is a wildcard {@code EntityType<?>}, so nothing
+ * typed could be shared.
  *
  * <p>Lives in the {@code client} package so it is only ever class-loaded on the physical client.
  */
@@ -292,4 +322,183 @@ public final class ClientContentManifest {
 			new BlockTintDef(List.of(CableSleeveTint.INSTANCE), () -> ModContent.INSULATED_TIN_CABLE.get()),
 			new BlockTintDef(List.of(CableSleeveTint.INSTANCE), () -> ModContent.INSULATED_GOLD_CABLE.get()),
 			new BlockTintDef(List.of(CableSleeveTint.INSTANCE), () -> ModContent.INSULATED_ELECTRUM_CABLE.get()));
+
+	// ─────────────────────────────────────────────────────────────────────────────────────────
+	// Key mappings (MOD-706)
+	// ─────────────────────────────────────────────────────────────────────────────────────────
+
+	/**
+	 * Every key mapping of the mod, in the registration order both clients used: Fabric
+	 * {@code KeyMappingHelper.registerKeyMapping}, NeoForge {@code RegisterKeyMappingsEvent.register}. The
+	 * mappings themselves (key, category, defaults) are {@link ModKeyMappings}; only the category is NOT
+	 * registered per loader — {@code KeyMapping.Category.register} already does that on both.
+	 */
+	public static final List<KeyMapping> KEY_MAPPINGS = List.of(
+			ModKeyMappings.TOGGLE_ENERGY_HUD,
+			ModKeyMappings.TOGGLE_DRILL_HUD,
+			ModKeyMappings.OPEN_PROFILE,
+			// MOD-127: the Fluxweave leggings' step assist.
+			ModKeyMappings.TOGGLE_STEP_ASSIST,
+			// MOD-482: the column bore on the held drill.
+			ModKeyMappings.TOGGLE_DRILL_COLUMN);
+
+	// ─────────────────────────────────────────────────────────────────────────────────────────
+	// HUD layers (MOD-706)
+	// ─────────────────────────────────────────────────────────────────────────────────────────
+
+	/**
+	 * One HUD layer's drawing — the loader-neutral {@code (GuiGraphicsExtractor, DeltaTracker)} pair both
+	 * loaders hand over (Fabric's {@code HudElement#extractRenderState}, NeoForge's {@code GuiLayer#render}).
+	 */
+	@FunctionalInterface
+	public interface HudRenderer {
+		void render(GuiGraphicsExtractor graphics, DeltaTracker delta);
+	}
+
+	/**
+	 * Where a layer goes relative to what is already registered when it is added. The one value is the
+	 * translation each client made by hand before MOD-706, and it is NOT the same spot on both:
+	 * Fabric {@code HudElementRegistry.addLast} versus NeoForge {@code RegisterGuiLayersEvent.registerAboveAll}.
+	 * Aligning the two is a product decision outside MOD-706; the field exists so a layer that needs
+	 * another placement says so here, not in one loader.
+	 */
+	public enum HudPlacement {
+		/** Fabric {@code addLast}, NeoForge {@code registerAboveAll}. */
+		LAST
+	}
+
+	/**
+	 * One HUD layer.
+	 *
+	 * @param id        path under the mod namespace
+	 * @param renderer  what it draws
+	 * @param placement how each loader places it
+	 */
+	public record HudLayerDef(String id, HudRenderer renderer, HudPlacement placement) {
+		public HudLayerDef {
+			Objects.requireNonNull(id, "id");
+			Objects.requireNonNull(renderer, "renderer");
+			Objects.requireNonNull(placement, "placement");
+		}
+	}
+
+	private static HudLayerDef hudLayer(String id, HudRenderer renderer, HudPlacement placement) {
+		return new HudLayerDef(id, renderer, placement);
+	}
+
+	/**
+	 * Every HUD layer, in registration order — which is drawing order: a later layer draws over an earlier
+	 * one, so the charge readouts stay legible over the teleport fade.
+	 */
+	public static final List<HudLayerDef> HUD_LAYERS = List.of(
+			// MOD-605: what the root under the crosshair is doing.
+			hudLayer("root_inspection", RootInspection::renderHud, HudPlacement.LAST),
+			// MOD-603: the concentrator's assembly hint.
+			hudLayer("concentrator_assembly", ConcentratorSchematicRenderer::renderHud, HudPlacement.LAST),
+			// MOD-106: the screen going dark as a jump lands.
+			hudLayer("teleport_fade", TeleportFadeHud::render, HudPlacement.LAST),
+			// MOD-065: the worn Energy Pack's charge readout.
+			hudLayer("energy_pack_hud", EnergyPackHud::render, HudPlacement.LAST),
+			// MOD-079: the held Electric Drill's charge readout, stacked below the pack's.
+			hudLayer("electric_drill_hud", ElectricDrillHud::render, HudPlacement.LAST));
+
+	// ─────────────────────────────────────────────────────────────────────────────────────────
+	// Fluid models (MOD-706)
+	// ─────────────────────────────────────────────────────────────────────────────────────────
+
+	/**
+	 * One fluid's model: the vanilla {@code FluidStateModelSet} hard-codes water and lava, so a custom
+	 * fluid supplies its own {@code FluidModel.Unbaked} — Fabric through
+	 * {@code FluidRenderingRegistry.register}, NeoForge through {@code RegisterFluidModelsEvent.register}.
+	 *
+	 * <p>The fluids are named by registry id and resolved when a loader registers the model; by then both
+	 * have registered every fluid of {@code ModFluidsManifest.FLUIDS}.
+	 *
+	 * @param texture the {@code block/<texture>_still|_flow} sprites
+	 * @param still   the still (or only) fluid's id
+	 * @param flowing the flowing form's id, or {@code null} for a fluid that has none (steam)
+	 */
+	public record FluidModelDef(String texture, String still, @Nullable String flowing) {
+		public FluidModelDef {
+			Objects.requireNonNull(texture, "texture");
+			Objects.requireNonNull(still, "still");
+		}
+
+		/** The model: still and flowing sprites, overlay and tint {@code null} exactly like vanilla lava. */
+		public FluidModel.Unbaked model() {
+			return new FluidModel.Unbaked(
+					new Material(Industrialization.id("block/" + texture + "_still")),
+					new Material(Industrialization.id("block/" + texture + "_flow")),
+					null, null);
+		}
+
+		/** The still (or only) fluid, from the registry. */
+		public Fluid stillFluid() {
+			return fluid(still);
+		}
+
+		/** The flowing form, from the registry, or {@code null} when there is none. */
+		public @Nullable Fluid flowingFluid() {
+			return flowing == null ? null : fluid(flowing);
+		}
+
+		private static Fluid fluid(String id) {
+			Identifier key = Industrialization.id(id);
+			if (!BuiltInRegistries.FLUID.containsKey(key)) {
+				throw new IllegalStateException("fluid model names " + key + ", which is not registered");
+			}
+			return BuiltInRegistries.FLUID.getValue(key);
+		}
+	}
+
+	/**
+	 * Every fluid model, in the order both clients registered them — one per entry of
+	 * {@link ModFluidsManifest#FLUIDS} (MOD-708), its texture named after the fluid's id. A fluid without
+	 * a flowing form (steam) registers its single fluid; without a model every tank and pipe holding it
+	 * would draw the missing-texture sprite.
+	 */
+	public static final List<FluidModelDef> FLUID_MODELS = ModFluidsManifest.FLUIDS.stream()
+			.map(def -> new FluidModelDef(def.id(), def.id(), def.flowingId()))
+			.toList();
+
+	// ─────────────────────────────────────────────────────────────────────────────────────────
+	// Particle providers (MOD-706)
+	// ─────────────────────────────────────────────────────────────────────────────────────────
+
+	/**
+	 * A loader's sprite-set particle registration, as one generic method so the particle type and the
+	 * provider keep their option type to the call (Fabric {@code ParticleProviderRegistry.register} with a
+	 * {@code PendingParticleProvider}, NeoForge {@code RegisterParticleProvidersEvent.registerSpriteSet}).
+	 */
+	public interface ParticleRegistrar {
+		<T extends ParticleOptions> void register(ParticleType<T> type,
+				Function<SpriteSet, ParticleProvider<T>> factory);
+	}
+
+	/**
+	 * One json-backed particle and the provider built from its sprite set.
+	 *
+	 * @param type    the registered particle type ({@code ModParticles} constant)
+	 * @param factory the provider for the particle's sprites
+	 */
+	public record ParticleProviderDef<T extends ParticleOptions>(ParticleType<T> type,
+			Function<SpriteSet, ParticleProvider<T>> factory) {
+
+		/** Hands this pair to a loader's registrar, types intact. */
+		public void bindTo(ParticleRegistrar registrar) {
+			registrar.register(type, factory);
+		}
+	}
+
+	private static <T extends ParticleOptions> ParticleProviderDef<T> particleProvider(ParticleType<T> type,
+			Function<SpriteSet, ParticleProvider<T>> factory) {
+		return new ParticleProviderDef<>(type, factory);
+	}
+
+	/** Every particle provider, in the order both clients registered them. */
+	public static final List<ParticleProviderDef<?>> PARTICLE_PROVIDERS = List.of(
+			// MOD-085: the Enriched Uranium Torch's green flame reuses the vanilla flame provider (like
+			// soul_fire_flame); the colour comes entirely from the particle's own texture.
+			particleProvider(ModParticles.ENRICHED_URANIUM_FLAME, FlameParticle.Provider::new),
+			particleProvider(ModParticles.NUTRIENT_SPRAY, NutrientSprayParticle.Provider::new));
 }

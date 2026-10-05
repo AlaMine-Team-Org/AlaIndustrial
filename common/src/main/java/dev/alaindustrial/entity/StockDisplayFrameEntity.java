@@ -1,6 +1,7 @@
 package dev.alaindustrial.entity;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.compat.ServerDrops;
 import dev.alaindustrial.loot.PendingLoot;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
@@ -176,7 +177,7 @@ public class StockDisplayFrameEntity extends ItemFrame {
 		this.playSound(this.getRemoveItemSound(), 1.0F, 1.0F);
 		this.gameEvent(GameEvent.BLOCK_CHANGE, player);
 		if (!player.getInventory().add(filter)) {
-			player.drop(filter, false);
+			ServerDrops.drop(player, filter);
 		}
 		this.scanCooldown = 0;
 		return InteractionResult.SUCCESS;

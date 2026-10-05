@@ -25,7 +25,7 @@ import net.minecraft.world.item.component.TooltipDisplay;
  * become"), and each charging site applies it to its own container. The sites are listed in the OKF
  * spec and covered by a gametest per path, because a missed one is a blank that silently stays a blank.
  */
-public class CrystalBlankItem extends Item {
+public class CrystalBlankItem extends Item implements PoweredItem {
 	private final CrystalTier tier;
 
 	public CrystalBlankItem(Properties properties, CrystalTier tier) {
@@ -75,15 +75,22 @@ public class CrystalBlankItem extends Item {
 
 	@Override
 	public int getBarWidth(ItemStack stack) {
-		long capacity = ItemEnergy.capacity(stack);
-		if (capacity <= 0) {
-			return 0;
-		}
-		return (int) Math.min(MAX_BAR_WIDTH, MAX_BAR_WIDTH * ItemEnergy.get(stack) / capacity);
+		return EnergyBar.width(stack, MAX_BAR_WIDTH);
 	}
 
 	@Override
 	public int getBarColor(ItemStack stack) {
-		return tier == CrystalTier.ENERGY ? EnergyTier.MV.color() : EnergyTier.HV.color();
+		return EnergyBar.color(tier == CrystalTier.ENERGY ? EnergyTier.MV : EnergyTier.HV);
+	}
+
+	/** MOD-707: this item's EU buffer, read by {@code ItemEnergy.capacity} through {@link PoweredItem}. */
+	@Override
+	public long energyCapacity(ItemStack stack) {
+		return tier().capacity();
+	}
+
+	@Override
+	public long energyInputRate(ItemStack stack) {
+		return tier().inputRate();
 	}
 }

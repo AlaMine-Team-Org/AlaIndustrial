@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.ReactorControllerBlockEntity;
 import org.jspecify.annotations.Nullable;
 import net.minecraft.core.BlockPos;
@@ -31,19 +30,12 @@ import net.minecraft.world.level.redstone.Orientation;
  */
 public class ReactorControllerBlock extends HorizontalMachineBlock {
 
-	public static final MapCodec<ReactorControllerBlock> CODEC = simpleCodec(ReactorControllerBlock::new);
-
 	/** Whether the room around this controller passed its last scan. Drives the lit front texture. */
 	public static final BooleanProperty FORMED = BooleanProperty.create("formed");
 
 	public ReactorControllerBlock(Properties properties) {
 		super(properties);
 		registerDefaultState(defaultBlockState().setValue(FORMED, false));
-	}
-
-	@Override
-	protected MapCodec<? extends ReactorControllerBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

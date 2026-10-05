@@ -1,8 +1,9 @@
 package dev.alaindustrial.client.screen;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.AssemblerBlockEntity;
-import dev.alaindustrial.block.entity.AssemblerBlockEntity.AssemblerStatus;
+import dev.alaindustrial.block.entity.AssemblerStatus;
 import dev.alaindustrial.menu.AssemblerMenu;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,10 +21,9 @@ import net.minecraft.world.item.ItemStack;
 /**
  * Screen for the Assembler (MOD-275) — <b>two tabs in one window</b>.
  *
- * <p>The window used to do two unrelated jobs side by side: the 3×3 grid a recipe is <i>authored</i>
- * in sat next to the machine's live production state, and a playtester could not tell what had been
- * recorded, what was being made, or which grid was which. The two jobs now have a tab each and never
- * share screen space:
+ * <p>The window used to do two unrelated jobs side by side: the 3×3 grid a recipe is <i>authored</i> in sat next to the
+ * machine's live production state, and a playtester could not tell what had been recorded, what was being made, or
+ * which grid was which. The two jobs now have a tab each and never share screen space:
  *
  * <ul>
  *   <li><b>Work</b> — the running machine: the blueprint queue with the active one marked, the
@@ -138,6 +138,18 @@ public class AssemblerScreen extends MachineScreen<AssemblerMenu> {
 		return this.menu.getActiveTab() == AssemblerMenu.TAB_RECORD;
 	}
 
+	/** The energy bar, drawn by the base (MOD-716). */
+	@Override
+	protected EnergyBarSpec energyBar() {
+		return ENERGY;
+	}
+
+	/** No base tooltip: the Work tab shows it itself, under its own modality and tab hints. */
+	@Override
+	protected boolean energyTooltip() {
+		return false;
+	}
+
 	@Override
 	protected void drawMachineFrame(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
 		blitStaticFrame(graphics);
@@ -148,7 +160,6 @@ public class AssemblerScreen extends MachineScreen<AssemblerMenu> {
 
 		int x = this.leftPos;
 		int y = this.topPos;
-		renderEnergyBar(graphics, ENERGY);
 
 		int max = this.menu.getMaxProgress();
 		int filled = max > 0 ? this.menu.getProgress() * ARROW_W / max : 0;
@@ -219,8 +230,7 @@ public class AssemblerScreen extends MachineScreen<AssemblerMenu> {
 	}
 
 	@Override
-	public void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-		super.extractContents(graphics, mouseX, mouseY, partialTick);
+	protected void drawUnderPanels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		if (this.menu.isPanelOpen()) {
 			return; // the modal upgrade panel owns this area
 		}
@@ -331,7 +341,7 @@ public class AssemblerScreen extends MachineScreen<AssemblerMenu> {
 	@Override
 	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		super.extractTooltip(graphics, mouseX, mouseY);
-		if (this.menu.isPanelOpen()) {
+		if (!frameAcceptsInput(mouseX, mouseY)) {
 			return;
 		}
 		int tab = tabAt(mouseX, mouseY);
@@ -473,8 +483,9 @@ public class AssemblerScreen extends MachineScreen<AssemblerMenu> {
 	 */
 	@Override
 	public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
-		if (event.button() == 0 && !this.menu.isPanelOpen() && this.minecraft != null
-				&& this.minecraft.gameMode != null) {
+		// The open statistics panel is modal too: a tab or button it covers must not answer (MOD-693).
+		if (event.button() == InputConstants.MOUSE_BUTTON_LEFT && frameAcceptsInput(event.x(), event.y())
+				&& this.minecraft != null && this.minecraft.gameMode != null) {
 			int tab = tabAt(event.x(), event.y());
 			if (tab >= 0) {
 				if (tab != this.menu.getActiveTab()) {

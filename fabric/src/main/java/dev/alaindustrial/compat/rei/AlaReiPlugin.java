@@ -1,10 +1,11 @@
 package dev.alaindustrial.compat.rei;
 
 import dev.alaindustrial.client.compat.RecipeCategoryTitle;
+import dev.alaindustrial.client.screen.GuiRect;
 import dev.alaindustrial.client.screen.MachineScreen;
 import dev.alaindustrial.Industrialization;
-import dev.alaindustrial.client.compat.CanningExchange;
 import dev.alaindustrial.client.compat.MachineRecipeViewerTargets;
+import dev.alaindustrial.client.compat.RecipeViewerForm;
 import dev.alaindustrial.client.compat.RecipeViewerInfo;
 import dev.alaindustrial.registry.ModBlocks;
 import dev.alaindustrial.registry.ModRecipes;
@@ -79,83 +80,26 @@ public class AlaReiPlugin implements REIClientPlugin {
 		registry.addWorkstations(
 				CategoryIdentifier.of("minecraft", "plugins/smelting"),
 				EntryStacks.of(ModBlocks.IRON_FURNACE));
-		// MOD-019: the Polymerizer's fluid → item family. One category, its own display type. Its card
-		// layout is unlike the processing one, so it is registered by hand — but the block still comes
-		// from the family (MOD-558), not from a second mention of it here.
-		Block polymerizer = ModRecipes.POLYMERIZING.station().get();
-		registry.add(new PolymerizingCategory(polymerizer, polymerizer.getName()));
-		registry.addWorkstations(PolymerizingDisplay.CATEGORY, EntryStacks.of(polymerizer));
-		// MOD-251: the Distillation Column's fluid → two-fluids family (the MOD-257 display contract,
-		// registered now that the real workstation exists).
-		Block column = ModRecipes.DISTILLING.station().get();
-		CategoryIdentifier<FluidOutputDisplay> distilling =
-				CategoryIdentifier.of(Industrialization.id(ModRecipes.DISTILLING.id()));
-		registry.add(new FluidOutputCategory(distilling, column, column.getName()));
-		registry.addWorkstations(distilling, EntryStacks.of(column));
-		// MOD-064: the alloy smelter's multi-component family. One category, its own display type.
-		Block alloySmelter = ModRecipes.ALLOYING.station().get();
-		registry.add(new AlloyingCategory(alloySmelter, alloySmelter.getName()));
-		registry.addWorkstations(AlloyingDisplay.CATEGORY, EntryStacks.of(alloySmelter));
-		// MOD-383: the canning machine. No recipe type at all — the cards are computed from the item
-		// registry (CanningExchange), so the title comes from its own lang key rather than a block name.
-		registry.add(new CanningCategory(ModBlocks.CANNING_MACHINE, RecipeCategoryTitle.canning()));
-		registry.addWorkstations(CanningDisplay.CATEGORY, EntryStacks.of(ModBlocks.CANNING_MACHINE));
-		// Informational category: the T2 solar branches (and future evolution lines) with no crafting
-		// recipe. The base solar_panel is craftable, so it is intentionally not linked here.
-		// The pages are handed over so the category can size itself against its tallest one (MOD-422).
-		java.util.List<RecipeViewerInfo.Entry> evolutionPages = new java.util.ArrayList<>(
-				RecipeViewerInfo.solarEvolutionEntries());
-		evolutionPages.addAll(RecipeViewerInfo.mutationGradeEntries());
-		registry.add(new AlaInfoCategory(AlaInfoDisplay.CATEGORY, "jei.alaindustrial.category.evolution",
-				dev.alaindustrial.registry.ModContent.ALIGNMENT_CHIP_DAY.get(), evolutionPages));
-		registry.addWorkstations(AlaInfoDisplay.CATEGORY, EntryStacks.of(ModBlocks.DAYLIGHT_SOLAR_PANEL));
-		registry.addWorkstations(AlaInfoDisplay.CATEGORY, EntryStacks.of(ModBlocks.MOONLIT_SOLAR_PANEL));
-		// MOD-420: machines that have no recipe at all — their GUIs used to answer nothing when clicked.
-		registry.add(new AlaInfoCategory(AlaInfoDisplay.MACHINE_CATEGORY,
-				"jei.alaindustrial.category.machine_info", ModBlocks.GEOTHERMAL_GENERATOR,
-				RecipeViewerInfo.machineInfoEntries()));
-		registry.addWorkstations(AlaInfoDisplay.MACHINE_CATEGORY, EntryStacks.of(ModBlocks.GEOTHERMAL_GENERATOR));
-		registry.addWorkstations(AlaInfoDisplay.MACHINE_CATEGORY, EntryStacks.of(ModBlocks.ENERGY_CONDENSER));
-		// MOD-584: the kok sagyz plant. No workstation — there is no screen to click; the pages are
-		// reached by pressing the recipe key on the seeds or the root, which resolves through the
-		// display's output entry.
-		registry.add(new AlaInfoCategory(AlaInfoDisplay.PLANT_CATEGORY,
-				"jei.alaindustrial.category.plant_info",
-				dev.alaindustrial.registry.ModContent.KOK_SAGYZ_SEEDS.get(),
-				RecipeViewerInfo.kokSagyzEntries()));
+		// MOD-716: the special recipe forms (polymerizing, distilling, alloying, canning, the evolution, machine
+		// and plant pages), each declared once in RecipeViewerForm and drawn by its ReiRecipeForms adapter, in
+		// REI's own tab order. A form is worked at the machines it names, so clicking one in REI opens the tab
+		// (MOD-420: both machine-info pages at the machine they describe; the evolution pages at the two T2
+		// solar panels, the base panel being craftable; the plant pages at none — there is no screen to click).
+		for (RecipeViewerForm form : ReiRecipeForms.TAB_ORDER) {
+			registry.add(ReiRecipeForms.category(form));
+			for (ItemLike station : form.stations()) {
+				registry.addWorkstations(ReiRecipeForms.categoryId(form), EntryStacks.of(station));
+			}
+		}
 	}
 
 	@Override
 	public void registerDisplays(DisplayRegistry registry) {
-		// Build one static informational display per entry. Pure client-side data (block/item refs +
-		// Config values), so it is added directly here rather than synced via ServerDisplayRegistry.
-		for (RecipeViewerInfo.Entry entry : RecipeViewerInfo.solarEvolutionEntries()) {
-			registry.add(new AlaInfoDisplay(entry, AlaInfoDisplay.CATEGORY));
-		}
-		// MOD-118: the incubator's rarity grades — a second roll on top of every success, which no
-		// recipe card has room for.
-		for (RecipeViewerInfo.Entry entry : RecipeViewerInfo.mutationGradeEntries()) {
-			registry.add(new AlaInfoDisplay(entry, AlaInfoDisplay.CATEGORY));
-		}
-		// MOD-584: kok sagyz seeds and root — loot-table drops, so no recipe names them as a result.
-		for (RecipeViewerInfo.Entry entry : RecipeViewerInfo.kokSagyzEntries()) {
-			registry.add(new AlaInfoDisplay(entry, AlaInfoDisplay.PLANT_CATEGORY));
-		}
-		// MOD-600: the ceramic plate — its real source is a hand-built quench press, and the only recipe
-		// the game has for it runs the other way (plate back out of a block). MOD-638: soot, which lies
-		// where burning oil went out by itself.
-		for (RecipeViewerInfo.Entry entry : RecipeViewerInfo.worldMadeEntries()) {
-			registry.add(new AlaInfoDisplay(entry, AlaInfoDisplay.CATEGORY));
-		}
-		// MOD-420: the geothermal generator and the energy condenser — no recipe kind, no recipe JSON,
-		// so the only thing a viewer can show for them is this page.
-		for (RecipeViewerInfo.Entry entry : RecipeViewerInfo.machineInfoEntries()) {
-			registry.add(new AlaInfoDisplay(entry, AlaInfoDisplay.MACHINE_CATEGORY));
-		}
-		// MOD-383: one canning card per accepted food. Also pure client-side data — the sweep over the
-		// (by now frozen) item registry happens on the first call, here.
-		for (CanningExchange.Card card : CanningExchange.cards()) {
-			registry.add(new CanningDisplay(card));
+		// MOD-716: the client-side displays of the special forms — canning cards (MOD-383) and the evolution,
+		// machine and plant pages (MOD-043, MOD-118, MOD-420, MOD-584, MOD-600/638). The recipe families arrive
+		// from the server (AlaReiCommonPlugin).
+		for (RecipeViewerForm form : ReiRecipeForms.TAB_ORDER) {
+			ReiRecipeForms.addDisplays(form, registry);
 		}
 	}
 
@@ -173,7 +117,7 @@ public class AlaReiPlugin implements REIClientPlugin {
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	public void registerScreens(ScreenRegistry registry) {
 		for (MachineRecipeViewerTargets.Target target : MachineRecipeViewerTargets.ALL) {
-			MachineRecipeViewerTargets.GuiRect rect = target.progressArea();
+			GuiRect rect = target.progressArea();
 			// MOD-086: the electric furnace runs vanilla smelting as a fallback (see registerCategories),
 			// so its progress arrow opens both categories at once. The string form of the built-in category
 			// matches the addWorkstations call above — BuiltinPlugin.SMELTING lives in the runtime jar.
@@ -197,27 +141,12 @@ public class AlaReiPlugin implements REIClientPlugin {
 				registerClickArea(registry, target.screenClass(), rect, categoryId(target.kind()));
 			}
 		}
-		// MOD-019: fluid-fed machines carry their own display type, so they list separately.
-		for (MachineRecipeViewerTargets.FluidTarget target : MachineRecipeViewerTargets.FLUID_ALL) {
-			MachineRecipeViewerTargets.GuiRect rect = target.progressArea();
-			// Per-kind category id (MOD-251): polymerizing and distilling each open their own card.
-			registerClickArea(registry, target.screenClass(), rect,
-					CategoryIdentifier.of(Industrialization.id(target.kind().id())));
-		}
-		// MOD-064: the alloy smelter likewise carries its own display type.
-		for (MachineRecipeViewerTargets.AlloyTarget target : MachineRecipeViewerTargets.ALLOY_ALL) {
-			MachineRecipeViewerTargets.GuiRect rect = target.progressArea();
-			registerClickArea(registry, target.screenClass(), rect, AlloyingDisplay.CATEGORY);
-		}
-		// MOD-383: the canning machine has no recipe kind, so its target list carries only the hitbox.
-		for (MachineRecipeViewerTargets.CanningTarget target : MachineRecipeViewerTargets.CANNING_ALL) {
-			MachineRecipeViewerTargets.GuiRect rect = target.progressArea();
-			registerClickArea(registry, target.screenClass(), rect, CanningDisplay.CATEGORY);
-		}
-		// MOD-420: machines with no recipe at all open their informational page instead.
-		for (MachineRecipeViewerTargets.InfoTarget target : MachineRecipeViewerTargets.INFO_ALL) {
-			MachineRecipeViewerTargets.GuiRect rect = target.progressArea();
-			registerClickArea(registry, target.screenClass(), rect, AlaInfoDisplay.MACHINE_CATEGORY);
+		// MOD-716: the special forms' click areas (the polymerizer and distillation column, MOD-019/251; the alloy
+		// smelter, MOD-064; the canning machine, MOD-383; the machine-info screens, MOD-420) — each opens its form.
+		for (RecipeViewerForm form : ReiRecipeForms.TAB_ORDER) {
+			for (RecipeViewerForm.ClickArea area : form.clickAreas()) {
+				registerClickArea(registry, area.screenClass(), area.rect(), ReiRecipeForms.categoryId(form));
+			}
 		}
 		// MOD-080: keep REI's item grid clear of the upgrade panel + gear tab on every machine screen.
 		registry.exclusionZones().register((Class) MachineScreen.class, new AlaReiExclusionZones());
@@ -226,11 +155,13 @@ public class AlaReiPlugin implements REIClientPlugin {
 				screen -> screen.extraGuiAreas().stream()
 						.map(r -> new me.shedaniel.math.Rectangle(r.getX(), r.getY(), r.getWidth(), r.getHeight()))
 						.toList());
+		// MOD-592: drag an item onto a magnet filter cell.
+		registry.registerDraggableStackVisitor(new MagnetFilterDragVisitor());
 	}
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	private static void registerClickArea(ScreenRegistry registry, Class<? extends AbstractContainerScreen<?>> screenClass,
-			MachineRecipeViewerTargets.GuiRect rect, CategoryIdentifier<?>... categoryIds) {
+			GuiRect rect, CategoryIdentifier<?>... categoryIds) {
 		registry.registerContainerClickArea(
 				new Rectangle(rect.x(), rect.y(), rect.width(), rect.height()),
 				(Class) screenClass,

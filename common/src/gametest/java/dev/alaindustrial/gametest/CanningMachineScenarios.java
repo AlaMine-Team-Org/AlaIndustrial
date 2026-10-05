@@ -1,9 +1,14 @@
 package dev.alaindustrial.gametest;
 
+import static dev.alaindustrial.gametest.GameTestDrive.drivePowered;
+import static dev.alaindustrial.gametest.GameTestDrive.driveUnpowered;
+
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.CanningMachineBlockEntity;
 import dev.alaindustrial.core.food.CanningMath;
+import dev.alaindustrial.core.machine.MachineRates;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
@@ -48,16 +53,64 @@ import net.minecraft.world.level.storage.TagValueInput;
  */
 public final class CanningMachineScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(CanningMachineScenarios::fun01FoodBecomesRation, "canning_machine_food_becomes_ration")
+						.fabricId("CanningMachineGameTest", "tcCan001Fun01_foodBecomesRation").ticks(400),
+				RosterEntry.of(CanningMachineScenarios::fun02RationsFromDifferentFoodsStack,
+								"canning_machine_rations_from_different_foods_stack")
+						.fabricId("CanningMachineGameTest", "tcCan001Fun02_rationsFromDifferentFoodsStack").ticks(600),
+				RosterEntry.of(CanningMachineScenarios::fun03RichFoodYieldsMoreRations,
+								"canning_machine_rich_food_yields_more")
+						.fabricId("CanningMachineGameTest", "tcCan001Fun03_richFoodYieldsMoreRations").ticks(1200),
+				RosterEntry.of(CanningMachineScenarios::fun04AbsorptionNeedsNeitherCanNorPower,
+								"canning_machine_absorption_needs_neither_can_nor_power")
+						.fabricId("CanningMachineGameTest", "tcCan001Fun04_absorptionNeedsNeitherCanNorPower")
+						.ticks(600),
+				RosterEntry.of(CanningMachineScenarios::con02NoPowerNoOutput, "canning_machine_no_power_no_output")
+						.fabricId("CanningMachineGameTest", "tcCan001Con02_noPowerNoOutput").ticks(600),
+				RosterEntry.of(CanningMachineScenarios::con03FullOutputJams, "canning_machine_full_output_jams")
+						.fabricId("CanningMachineGameTest", "tcCan001Con03_fullOutputJams").ticks(600),
+				RosterEntry.of(CanningMachineScenarios::reg01HazardousFoodRefused,
+								"canning_machine_hazardous_food_refused")
+						.fabricId("CanningMachineGameTest", "tcCan001Reg01_hazardousFoodRefused").ticks(200),
+				RosterEntry.of(CanningMachineScenarios::reg02RationRefusedAsInput,
+								"canning_machine_ration_refused_as_input")
+						.fabricId("CanningMachineGameTest", "tcCan001Reg02_rationRefusedAsInput").ticks(200),
+				RosterEntry.of(CanningMachineScenarios::reg03NonFoodRefused, "canning_machine_non_food_refused")
+						.fabricId("CanningMachineGameTest", "tcCan001Reg03_nonFoodRefused").ticks(200),
+				RosterEntry.of(CanningMachineScenarios::dup01ValueStrictlyDecreases,
+								"canning_machine_value_strictly_decreases")
+						.fabricId("CanningMachineGameTest", "tcCan001Dup01_valueStrictlyDecreases").ticks(1200),
+				RosterEntry.of(CanningMachineScenarios::per01BufferSurvivesReload,
+								"canning_machine_buffer_survives_reload")
+						.fabricId("CanningMachineGameTest", "tcCan001Per01_bufferSurvivesReload").ticks(400),
+				RosterEntry.of(CanningMachineScenarios::eat01RationFeedsExactly, "canning_machine_ration_feeds_exactly")
+						.fabricId("CanningMachineGameTest", "tcCan001Eat01_rationFeedsExactly").ticks(200),
+				RosterEntry.of(CanningMachineScenarios::eat02FullPlayerCannotEat,
+								"canning_machine_full_player_cannot_eat")
+						.fabricId("CanningMachineGameTest", "tcCan001Eat02_fullPlayerCannotEat").ticks(200),
+				RosterEntry.of(CanningMachineScenarios::eat03NoSideEffectsCarried,
+								"canning_machine_no_side_effects_carried")
+						.fabricId("CanningMachineGameTest", "tcCan001Eat03_noSideEffectsCarried").ticks(200));
+
+		private Roster() {}
+	}
+
 	private CanningMachineScenarios() {
 	}
 
 	private static final BlockPos POS = new BlockPos(1, 2, 1);
-	/** Far above one ration's cost, set directly so the tier packet cap is bypassed. */
+	/**
+	 * Far above one ration's cost, set directly so the tier packet cap is bypassed — and set before EVERY tick
+	 * ({@link GameTestDrive#drivePowered}), the way a connected cable keeps the machine fed.
+	 */
 	private static final long AMPLE_EU = 20_000L;
 
 	/** Ticks for one press, plus slack for the scaled-duration knob. */
 	private static int pressTicks() {
-		return Config.scaledDuration(Config.canningMachineDuration) + 20;
+		return MachineRates.duration(Config.canningMachineDuration, Config.globalMachineSpeedMultiplier) + 20;
 	}
 
 	private static CanningMachineBlockEntity place(GameTestHelper helper) {
@@ -67,20 +120,6 @@ public final class CanningMachineScenarios {
 			helper.fail("canning machine block entity missing after placement");
 		}
 		return be;
-	}
-
-	/** Drive with the buffer topped up every tick, the way a connected cable keeps it fed. */
-	private static void drivePowered(CanningMachineBlockEntity be, GameTestHelper helper, int ticks) {
-		for (int i = 0; i < ticks; i++) {
-			be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
-			AlaGameTestHelper.drive(be, helper, 1);
-		}
-	}
-
-	/** Drive with no energy at all — the machine must sit still. */
-	private static void driveUnpowered(CanningMachineBlockEntity be, GameTestHelper helper, int ticks) {
-		be.getEnergyStorage().setAmountUntracked(0L);
-		AlaGameTestHelper.drive(be, helper, ticks);
 	}
 
 	private static void load(CanningMachineBlockEntity be, ItemStack food, ItemStack cans) {
@@ -107,11 +146,15 @@ public final class CanningMachineScenarios {
 
 	// ── FUN: the machine cans food ─────────────────────────────────────────────────────────────────
 
-	/** Cooked beef plus an empty can becomes a ration, and the can is spent. */
+	/**
+	 * Cooked beef plus an empty can becomes a ration, and the can is spent.
+	 *
+	 * @implements TC-CAN-001-FUN01 — food plus an empty can becomes a ration, spending one can.
+	 */
 	public static void fun01FoodBecomesRation(GameTestHelper helper) {
 		CanningMachineBlockEntity be = place(helper);
 		load(be, new ItemStack(Items.COOKED_BEEF, 8), cans(4));
-		drivePowered(be, helper, pressTicks());
+		drivePowered(be, helper, pressTicks(), AMPLE_EU);
 		assertRations(be, helper, 1, "cooked beef");
 		if (be.getItem(CanningMachineBlockEntity.CAN_SLOT).getCount() != 3) {
 			helper.fail("one press must spend exactly one empty can, can slot now holds "
@@ -128,11 +171,14 @@ public final class CanningMachineScenarios {
 	 * when their components are equal ({@code ItemStack.isSameItemSameComponents}), so any such data
 	 * silently un-merges these two and the machine stops saving the player a single slot — while every
 	 * other test in this file keeps passing.
+	 *
+	 * @implements TC-CAN-001-FUN02 — rations from pork and from bread occupy one stack. The reason the
+	 * machine exists: give the ration per-stack data and only this case goes red.
 	 */
 	public static void fun02RationsFromDifferentFoodsStack(GameTestHelper helper) {
 		CanningMachineBlockEntity be = place(helper);
 		load(be, new ItemStack(Items.COOKED_PORKCHOP, 4), cans(8));
-		drivePowered(be, helper, pressTicks());
+		drivePowered(be, helper, pressTicks(), AMPLE_EU);
 		ItemStack fromPork = out(be).copy();
 		if (fromPork.isEmpty()) {
 			helper.fail("no ration produced from pork");
@@ -141,7 +187,7 @@ public final class CanningMachineScenarios {
 		// Clear the output and run the same machine on a completely different food.
 		be.setItem(CanningMachineBlockEntity.OUTPUT_SLOT, ItemStack.EMPTY);
 		load(be, new ItemStack(Items.BREAD, 16), cans(8));
-		drivePowered(be, helper, pressTicks());
+		drivePowered(be, helper, pressTicks(), AMPLE_EU);
 		ItemStack fromBread = out(be).copy();
 		if (fromBread.isEmpty()) {
 			helper.fail("no ration produced from bread");
@@ -154,16 +200,20 @@ public final class CanningMachineScenarios {
 		helper.succeed();
 	}
 
-	/** Rich food buys more rations than poor food for the same item count. */
+	/**
+	 * Rich food buys more rations than poor food for the same item count.
+	 *
+	 * @implements TC-CAN-001-FUN03 — rich food out-yields poor food for the same item count.
+	 */
 	public static void fun03RichFoodYieldsMoreRations(GameTestHelper helper) {
 		CanningMachineBlockEntity be = place(helper);
 		load(be, new ItemStack(Items.COOKED_PORKCHOP, 8), cans(16));
-		drivePowered(be, helper, pressTicks() * 6);
+		drivePowered(be, helper, pressTicks() * 6, AMPLE_EU);
 		int rich = out(be).getCount();
 
 		be.setItem(CanningMachineBlockEntity.OUTPUT_SLOT, ItemStack.EMPTY);
 		load(be, new ItemStack(Items.SWEET_BERRIES, 8), cans(16));
-		drivePowered(be, helper, pressTicks() * 6);
+		drivePowered(be, helper, pressTicks() * 6, AMPLE_EU);
 		int poor = out(be).getCount();
 
 		if (rich <= poor) {
@@ -177,6 +227,8 @@ public final class CanningMachineScenarios {
 	 * Food banks into calories even with no can, no power and a full output — only the paid PRESS step
 	 * needs those (MOD-488). Before this, a machine with food but no can yet left it sitting in the
 	 * slot untouched, so a player who fed it early got no head start once the first can arrived.
+	 *
+	 * @implements TC-CAN-001-FUN04 — absorption banks calories with no can and no power present.
 	 */
 	public static void fun04AbsorptionNeedsNeitherCanNorPower(GameTestHelper helper) {
 		CanningMachineBlockEntity be = place(helper);
@@ -196,7 +248,11 @@ public final class CanningMachineScenarios {
 
 	// ── CON: the machine refuses to run ────────────────────────────────────────────────────────────
 
-	/** Unpowered: no ration and no progress, even though absorption still banks calories. */
+	/**
+	 * Unpowered: no ration and no progress, even though absorption still banks calories.
+	 *
+	 * @implements TC-CAN-001-CON02 — unpowered: no ration and no can spent. @covers R-NRG-10
+	 */
 	public static void con02NoPowerNoOutput(GameTestHelper helper) {
 		CanningMachineBlockEntity be = place(helper);
 		load(be, new ItemStack(Items.COOKED_BEEF, 8), cans(4));
@@ -210,13 +266,17 @@ public final class CanningMachineScenarios {
 		helper.succeed();
 	}
 
-	/** A full output slot jams the press, but absorption keeps banking calories regardless. */
+	/**
+	 * A full output slot jams the press, but absorption keeps banking calories regardless.
+	 *
+	 * @implements TC-CAN-001-CON03 — a full output jams the press; absorption still banks calories.
+	 */
 	public static void con03FullOutputJams(GameTestHelper helper) {
 		CanningMachineBlockEntity be = place(helper);
 		load(be, new ItemStack(Items.COOKED_BEEF, 16), cans(8));
 		be.setItem(CanningMachineBlockEntity.OUTPUT_SLOT,
 				new ItemStack(ModContent.CANNED_RATION.get(), 64));
-		drivePowered(be, helper, pressTicks() * 2);
+		drivePowered(be, helper, pressTicks() * 2, AMPLE_EU);
 		if (out(be).getCount() != 64) {
 			helper.fail("full output slot changed to " + out(be).getCount() + " — overflow or voiding");
 		}
@@ -243,7 +303,11 @@ public final class CanningMachineScenarios {
 		}
 	}
 
-	/** Hazardous food is refused: canning would launder its risk away for free. */
+	/**
+	 * Hazardous food is refused: canning would launder its risk away for free.
+	 *
+	 * @implements TC-CAN-001-REG01 — hazardous food is refused. @covers R-GUI-02
+	 */
 	public static void reg01HazardousFoodRefused(GameTestHelper helper) {
 		CanningMachineBlockEntity be = place(helper);
 		assertRefused(be, helper, Items.CHICKEN, "raw chicken carries salmonella");
@@ -264,6 +328,8 @@ public final class CanningMachineScenarios {
 	 * <p>It is food, so it passes the property filter that admits everything else. Without the explicit
 	 * exclusion an output-to-input hopper loop grinds rations into fewer rations and burns a tin can
 	 * every pass — quietly, because nothing errors.
+	 *
+	 * @implements TC-CAN-001-REG02 — the ration is refused as input, so the machine cannot eat itself.
 	 */
 	public static void reg02RationRefusedAsInput(GameTestHelper helper) {
 		CanningMachineBlockEntity be = place(helper);
@@ -272,7 +338,11 @@ public final class CanningMachineScenarios {
 		helper.succeed();
 	}
 
-	/** Items that are not food at all are refused, in both slots. */
+	/**
+	 * Items that are not food at all are refused, in both slots.
+	 *
+	 * @implements TC-CAN-001-REG03 — non-food is refused, and each slot keeps its own contract.
+	 */
 	public static void reg03NonFoodRefused(GameTestHelper helper) {
 		CanningMachineBlockEntity be = place(helper);
 		assertRefused(be, helper, Items.COBBLESTONE, "cobblestone is not food");
@@ -294,13 +364,15 @@ public final class CanningMachineScenarios {
 	 * <p>Measured on the real machine rather than on {@link CanningMath} alone, so a block entity that
 	 * charged the buffer twice, or forgot to subtract on press, is caught even though the arithmetic
 	 * class stays correct.
+	 *
+	 * @implements TC-CAN-001-DUP01 — food value out is strictly below food value in.
 	 */
 	public static void dup01ValueStrictlyDecreases(GameTestHelper helper) {
 		CanningMachineBlockEntity be = place(helper);
 		int perItem = CanningMath.foodValue(8, 12.8f);          // cooked porkchop
 		int items = 8;
 		load(be, new ItemStack(Items.COOKED_PORKCHOP, items), cans(16));
-		drivePowered(be, helper, pressTicks() * 8);
+		drivePowered(be, helper, pressTicks() * 8, AMPLE_EU);
 
 		int consumed = items - be.getItem(CanningMachineBlockEntity.FOOD_SLOT).getCount();
 		int valueIn = consumed * perItem;
@@ -314,7 +386,11 @@ public final class CanningMachineScenarios {
 
 	// ── EAT: what the ration does to the player ────────────────────────────────────────────────────
 
-	/** A ration restores exactly its declared nutrition and saturation, and nothing more. */
+	/**
+	 * A ration restores exactly its declared nutrition and saturation, and nothing more.
+	 *
+	 * @implements TC-CAN-001-EAT01 — a ration restores exactly its declared nutrition and saturation.
+	 */
 	public static void eat01RationFeedsExactly(GameTestHelper helper) {
 		Player player = helper.makeMockPlayer(GameType.SURVIVAL);
 		FoodData food = player.getFoodData();
@@ -346,6 +422,8 @@ public final class CanningMachineScenarios {
 	 *
 	 * <p>Negative control built in: the same check on a golden apple must say yes, so a
 	 * {@code canEat} that simply always refused would not pass this.
+	 *
+	 * @implements TC-CAN-001-EAT02 — a full player cannot eat a ration, unlike a golden apple.
 	 */
 	public static void eat02FullPlayerCannotEat(GameTestHelper helper) {
 		Player player = helper.makeMockPlayer(GameType.SURVIVAL);
@@ -378,6 +456,8 @@ public final class CanningMachineScenarios {
 	 * this very test: the ration deliberately carries one {@link PlaySoundConsumeEffect}, the metallic
 	 * clink of the emptied tin. A blanket empty-list check called that a failure. What must never
 	 * appear is an effect that touches the player — status effects, teleports, cures.
+	 *
+	 * @implements TC-CAN-001-EAT03 — the ration carries no consume effects; the golden apple does.
 	 */
 	public static void eat03NoSideEffectsCarried(GameTestHelper helper) {
 		ItemStack ration = new ItemStack(ModContent.CANNED_RATION.get());
@@ -411,12 +491,14 @@ public final class CanningMachineScenarios {
 	 * <p>The buffer is the machine's only hidden state. If it failed to persist, a chunk unload would
 	 * silently eat whatever the player had part-processed, and nothing else here would notice: every
 	 * other body runs inside one uninterrupted tick loop.
+	 *
+	 * @implements TC-CAN-001-PER01 — banked calories survive a save/load round trip.
 	 */
 	public static void per01BufferSurvivesReload(GameTestHelper helper) {
 		CanningMachineBlockEntity be = place(helper);
 		// One porkchop banks 208 tenths against a 120 threshold, so a press leaves a real remainder.
 		load(be, new ItemStack(Items.COOKED_PORKCHOP, 1), cans(1));
-		drivePowered(be, helper, pressTicks());
+		drivePowered(be, helper, pressTicks(), AMPLE_EU);
 		int banked = be.foodBuffer();
 		if (banked <= 0) {
 			helper.fail("expected leftover calories after one press, buffer is " + banked);

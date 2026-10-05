@@ -12,7 +12,7 @@ import net.minecraft.world.entity.player.Inventory;
  * Texture-backed screen for the LV Generator. Static frame from atlas PNG; dynamic layer draws
  * the energy fill (bottom-up orange bar) and burn flame (top-shrinks as fuel is consumed).
  */
-public class GeneratorScreen extends MachineScreen<GeneratorMenu> {
+public class GeneratorScreen extends LayoutMachineScreen<GeneratorMenu> {
 	private static final Identifier TEXTURE = Industrialization.id("textures/gui/container/generator.png");
 
 	// Burn indicator: flame sprite starts at u=188 (teardrop inner pixels, 14px wide at widest).
@@ -21,13 +21,11 @@ public class GeneratorScreen extends MachineScreen<GeneratorMenu> {
 	private static final int FLAME_SU = 188, FLAME_SV = 0, FLAME_W = 14, FLAME_H = 21;
 	private static final int FLAME_X = 124, FLAME_Y = 31;
 
-	public GeneratorScreen(GeneratorMenu menu, Inventory inventory, Component title) {
-		super(menu, inventory, title);
-	}
+	/** Atlas and energy bar (MOD-716, CLI-3). */
+	private static final MachineLayout LAYOUT = MachineLayout.of(TEXTURE, EnergyBarSpec.LEFT);
 
-	@Override
-	protected Identifier texture() {
-		return TEXTURE;
+	public GeneratorScreen(GeneratorMenu menu, Inventory inventory, Component title) {
+		super(menu, inventory, title, LAYOUT);
 	}
 
 	@Override
@@ -38,8 +36,6 @@ public class GeneratorScreen extends MachineScreen<GeneratorMenu> {
 		// Static frame: visible imageWidth × imageHeight region at top-left of the 256×256 atlas.
 		blitStaticFrame(graphics);
 
-		// Energy fill: blit the segmented orange sprite (bottom-up) via the shared MachineScreen helper.
-		renderEnergyBar(graphics, EnergyBarSpec.LEFT);
 
 		// Burn indicator: bottom-anchored — base stays, tip disappears from top as fuel burns.
 		// dest y = FLAME_Y + (FLAME_H - flameFill) shifts the blit up as fill grows.
@@ -53,10 +49,4 @@ public class GeneratorScreen extends MachineScreen<GeneratorMenu> {
 		}
 	}
 
-	@Override
-	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-		super.extractTooltip(graphics, mouseX, mouseY);
-		// Hovering the energy bar shows the exact buffer as "X / max EU" (R-GUI-14).
-		renderEnergyTooltip(graphics, mouseX, mouseY, EnergyBarSpec.LEFT);
-	}
 }

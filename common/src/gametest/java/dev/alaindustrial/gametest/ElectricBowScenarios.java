@@ -3,6 +3,7 @@ package dev.alaindustrial.gametest;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.item.ToolConfig;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.item.tool.ElectricBowItem;
 import dev.alaindustrial.menu.BatteryBoxMenu;
@@ -55,6 +56,30 @@ import static dev.alaindustrial.gametest.AlaGameTestHelper.survivalPlayer;
  * failure somewhere else.
  */
 public final class ElectricBowScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(ElectricBowScenarios::fun01ChargeInBatteryBox, "bow_charge_in_battery_box")
+						.fabricId("ElectricBowGameTest", "tcBow001Fun01_chargeInBatteryBox").ticks(20, 80),
+				RosterEntry.of(ElectricBowScenarios::fun02LiveShotIsFasterAndPays, "bow_live_shot_is_faster_and_pays")
+						.fabricId("ElectricBowGameTest", "tcBow001Fun02_liveShotIsFasterAndPays").ticks(20, 40),
+				RosterEntry.of(ElectricBowScenarios::fun03FlatShotFallsShort, "bow_flat_shot_falls_short")
+						.fabricId("ElectricBowGameTest", "tcBow001Fun03_flatShotFallsShort").ticks(20, 40),
+				RosterEntry.of(ElectricBowScenarios::fun04ChargedFlagFollowsCharge, "bow_charged_flag_follows_charge")
+						.fabricId("ElectricBowGameTest", "tcBow001Fun04_chargedFlagFollowsCharge").ticks(20, 40),
+				RosterEntry.of(ElectricBowScenarios::fun05CreativeSpendsNothing, "bow_creative_spends_nothing")
+						.fabricId("ElectricBowGameTest", "tcBow001Fun05_creativeSpendsNothing").ticks(20, 40),
+				RosterEntry.of(ElectricBowScenarios::fun06NoArrowNoShot, "bow_no_arrow_no_shot")
+						.fabricId("ElectricBowGameTest", "tcBow001Fun06_noArrowNoShot").ticks(20, 40),
+				RosterEntry.of(ElectricBowScenarios::fun07UnderDrawnReleaseCostsNothing,
+								"bow_under_drawn_release_costs_nothing")
+						.fabricId("ElectricBowGameTest", "tcBow001Fun07_underDrawnReleaseCostsNothing").ticks(20, 40),
+				RosterEntry.of(ElectricBowScenarios::fun08TagsAndEnchants, "bow_tags_and_enchants")
+						.fabricId("ElectricBowGameTest", "tcBow001Fun08_tagsAndEnchants").ticks(20, 40));
+
+		private Roster() {}
+	}
 
 	private ElectricBowScenarios() {}
 
@@ -124,6 +149,9 @@ public final class ElectricBowScenarios {
 	 * FUN01: the bow is accepted by the Battery Box charge slot (both the menu's client-side
 	 * {@code mayPlace} and the server-side {@code canPlaceItem}) and charges there at
 	 * {@code min(tier ceiling, its own intake)} — no change on the charger's side.
+	 *
+	 * @implements TC-BOW-001-FUN01 — the bow is accepted by the Battery Box charge slot (both filters) and
+	 *     charges there at min(LV ceiling, its intake rate).
 	 */
 	public static void fun01ChargeInBatteryBox(GameTestHelper helper) {
 		helper.setBlock(BOX, ModContent.BATTERY_BOX.get());
@@ -144,7 +172,7 @@ public final class ElectricBowScenarios {
 		box.getEnergyStorage().setAmountUntracked(box.getEnergyStorage().getCapacity());
 		box.setItem(BatteryBoxBlockEntity.CHARGE_SLOT, bow(0));
 		box.serverTick(helper.getLevel(), box.getBlockPos(), helper.getLevel().getBlockState(box.getBlockPos()));
-		long expected = Math.min(EnergyTier.LV.maxVoltage(), Config.electricBowInputRate);
+		long expected = Math.min(EnergyTier.LV.maxVoltage(), ToolConfig.electricBowInputRate);
 		long gained = ItemEnergy.get(box.getItem(BatteryBoxBlockEntity.CHARGE_SLOT));
 		if (gained != expected) {
 			helper.fail("one tick must move min(LV ceiling, bow intake) = " + expected + " EU, got " + gained);
@@ -156,9 +184,12 @@ public final class ElectricBowScenarios {
 	 * FUN02: a charged bow drawn for {@link ElectricBowItem#LIVE_DRAW_TICKS} fires a full-power shot —
 	 * crit, launched at vanilla's full speed × {@link ElectricBowItem#LIVE_VELOCITY_MULTIPLIER} — consumes
 	 * one arrow, and pays exactly one shot's worth of EU.
+	 *
+	 * @implements TC-BOW-001-FUN02 — a charged bow is fully drawn in the live draw time, launches a crit at
+	 *     vanilla speed × the live multiplier, consumes one arrow and pays exactly one shot of EU.
 	 */
 	public static void fun02LiveShotIsFasterAndPays(GameTestHelper helper) {
-		ItemStack bow = bow(Config.electricBowBuffer);
+		ItemStack bow = bow(ToolConfig.electricBowBuffer);
 		ServerPlayer player = archer(helper, bow, 8);
 
 		if (!release(bow, helper.getLevel(), player, ElectricBowItem.LIVE_DRAW_TICKS)) {
@@ -178,7 +209,7 @@ public final class ElectricBowScenarios {
 			helper.fail("a powered shot must leave faster than a vanilla full draw (" + VANILLA_FULL_SPEED
 					+ " b/t), got " + speed);
 		}
-		long expected = Config.electricBowBuffer - Config.electricBowEuPerShot;
+		long expected = ToolConfig.electricBowBuffer - ToolConfig.electricBowEuPerShot;
 		if (ItemEnergy.get(bow) != expected) {
 			helper.fail("one shot must drain exactly electricBowEuPerShot; expected " + expected
 					+ ", left " + ItemEnergy.get(bow));
@@ -196,9 +227,12 @@ public final class ElectricBowScenarios {
 	 * {@link ElectricBowItem#FLAT_LAUNCH_SPEED} and is no crit. The second assertion on speed does not
 	 * follow the constant: whatever it is set to, a flat shot must stay far below even a half-drawn
 	 * vanilla shot, or the penalty is gone.
+	 *
+	 * @implements TC-BOW-001-FUN03 — below one shot's worth even a full draw lets the arrow fall short: the
+	 *     arrow is spent, no crit, no EU — a flat bow is not a free vanilla bow.
 	 */
 	public static void fun03FlatShotFallsShort(GameTestHelper helper) {
-		long flat = Config.electricBowEuPerShot - 1;
+		long flat = ToolConfig.electricBowEuPerShot - 1;
 		ItemStack bow = bow(flat);
 		ServerPlayer player = archer(helper, bow, 8);
 
@@ -230,13 +264,16 @@ public final class ElectricBowScenarios {
 	 * FUN04: the {@code electric_bow_charged} flag — what the client draws the lit textures, the draw
 	 * frames and the zoom from — follows the charge across the per-shot price in both directions,
 	 * including on the shot that takes the bow under it.
+	 *
+	 * @implements TC-BOW-001-FUN04 — the electric_bow_charged flag follows the charge across the per-shot
+	 *     price in both directions, including on the last powered shot.
 	 */
 	public static void fun04ChargedFlagFollowsCharge(GameTestHelper helper) {
 		ItemStack bow = bow(0);
 		if (ElectricBowItem.showsCharged(bow) || bow.has(ModDataComponents.ELECTRIC_BOW_CHARGED.get())) {
 			helper.fail("an empty bow must not show as charged");
 		}
-		ItemEnergy.set(bow, Config.electricBowEuPerShot);
+		ItemEnergy.set(bow, ToolConfig.electricBowEuPerShot);
 		if (!ElectricBowItem.showsCharged(bow)) {
 			helper.fail("a bow holding exactly one shot must show as charged");
 		}
@@ -258,18 +295,22 @@ public final class ElectricBowScenarios {
 		helper.succeed();
 	}
 
-	/** FUN05: a creative archer spends nothing — EU is tool wear, and creative does not wear tools (MOD-081). */
+	/**
+	 * FUN05: a creative archer spends nothing — EU is tool wear, and creative does not wear tools (MOD-081).
+	 *
+	 * @implements TC-BOW-001-FUN05 — a creative archer fires without spending EU.
+	 */
 	public static void fun05CreativeSpendsNothing(GameTestHelper helper) {
 		ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper);
 		player.getAbilities().instabuild = true;
-		ItemStack bow = bow(Config.electricBowBuffer);
+		ItemStack bow = bow(ToolConfig.electricBowBuffer);
 		player.setItemInHand(InteractionHand.MAIN_HAND, bow);
 
 		if (!release(bow, helper.getLevel(), player, ElectricBowItem.LIVE_DRAW_TICKS)) {
 			helper.fail("a creative archer must be able to fire without arrows");
 		}
 		takeArrows(helper, player);
-		if (ItemEnergy.get(bow) != Config.electricBowBuffer) {
+		if (ItemEnergy.get(bow) != ToolConfig.electricBowBuffer) {
 			helper.fail("a creative archer must spend no EU, left " + ItemEnergy.get(bow));
 		}
 		helper.succeed();
@@ -278,9 +319,11 @@ public final class ElectricBowScenarios {
 	/**
 	 * FUN06: EU is not ammunition. A charged bow in a survival hand with no arrows refuses to start
 	 * drawing, fires nothing on release and spends nothing.
+	 *
+	 * @implements TC-BOW-001-FUN06 — with no arrows a charged bow neither draws nor fires nor spends EU.
 	 */
 	public static void fun06NoArrowNoShot(GameTestHelper helper) {
-		ItemStack bow = bow(Config.electricBowBuffer);
+		ItemStack bow = bow(ToolConfig.electricBowBuffer);
 		ServerPlayer player = archer(helper, bow, 0);
 
 		InteractionResult use = bow.getItem().use(helper.getLevel(), player, InteractionHand.MAIN_HAND);
@@ -293,7 +336,7 @@ public final class ElectricBowScenarios {
 		if (!takeArrows(helper, player).isEmpty()) {
 			helper.fail("an arrow appeared without ammunition");
 		}
-		if (ItemEnergy.get(bow) != Config.electricBowBuffer) {
+		if (ItemEnergy.get(bow) != ToolConfig.electricBowBuffer) {
 			helper.fail("a shot that never happened must cost nothing, left " + ItemEnergy.get(bow));
 		}
 		helper.succeed();
@@ -302,9 +345,11 @@ public final class ElectricBowScenarios {
 	/**
 	 * FUN07: a release too short to fire (under vanilla's 0.1 power) costs nothing even on a charged
 	 * bow — the debit sits behind vanilla's own refusal, not in front of it.
+	 *
+	 * @implements TC-BOW-001-FUN07 — a release too short to fire costs neither EU nor an arrow.
 	 */
 	public static void fun07UnderDrawnReleaseCostsNothing(GameTestHelper helper) {
-		ItemStack bow = bow(Config.electricBowBuffer);
+		ItemStack bow = bow(ToolConfig.electricBowBuffer);
 		ServerPlayer player = archer(helper, bow, 8);
 
 		if (release(bow, helper.getLevel(), player, 1)) {
@@ -313,7 +358,7 @@ public final class ElectricBowScenarios {
 		if (!takeArrows(helper, player).isEmpty()) {
 			helper.fail("a one-tick draw spawned an arrow");
 		}
-		if (ItemEnergy.get(bow) != Config.electricBowBuffer || player.getInventory().countItem(Items.ARROW) != 8) {
+		if (ItemEnergy.get(bow) != ToolConfig.electricBowBuffer || player.getInventory().countItem(Items.ARROW) != 8) {
 			helper.fail("an under-drawn release must cost neither EU nor an arrow");
 		}
 		helper.succeed();
@@ -323,9 +368,12 @@ public final class ElectricBowScenarios {
 	 * FUN08: identity and enchantments. The bow sits in {@code #minecraft:enchantable/bow} (Power,
 	 * Punch, Flame, Infinity) and in {@code #c:tools/bow} / {@code #c:tools/ranged_weapon}; it takes the
 	 * bow enchantments and NOT Unbreaking or Mending, which would do nothing on a bow without durability.
+	 *
+	 * @implements TC-BOW-001-FUN08 — the bow is in the bow enchantable and convention tags, takes Power,
+	 *     Punch, Flame and Infinity, and rejects Unbreaking and Mending.
 	 */
 	public static void fun08TagsAndEnchants(GameTestHelper helper) {
-		ItemStack bow = bow(Config.electricBowBuffer);
+		ItemStack bow = bow(ToolConfig.electricBowBuffer);
 		assertInTag(helper, bow, ItemTags.BOW_ENCHANTABLE, "#minecraft:enchantable/bow");
 		assertInTag(helper, bow, C_BOW, "#c:tools/bow");
 		assertInTag(helper, bow, C_RANGED_WEAPON, "#c:tools/ranged_weapon");

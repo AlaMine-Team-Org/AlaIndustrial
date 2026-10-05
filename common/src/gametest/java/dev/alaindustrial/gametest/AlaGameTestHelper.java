@@ -2,6 +2,7 @@ package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.block.entity.EnergyBlockEntity;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
+import dev.alaindustrial.compat.Invulnerability;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
@@ -142,17 +143,17 @@ public final class AlaGameTestHelper {
 	 * <p>Every invulnerability path is cleared explicitly, because the tests that need a detached
 	 * player (cable shock, breaker, charge pad) exist to prove the player CAN be hurt or debited:
 	 * {@code abilities.instabuild}/{@code invulnerable} for the {@link #survivalPlayer} reasons,
-	 * {@code Entity#setInvulnerable(false)} for the entity-level flag, and {@code invulnerableTime = 0}
-	 * so the post-hit grace window never swallows the first hit. The position is the caller's job:
-	 * the mock spawns at the world origin, and a test that reads "who is standing in this cell" must
-	 * {@code setPos} the player into it or it passes/fails for the wrong reason.
+	 * the entity-level flag ({@link Invulnerability#setPermanent}), and the post-hit grace window
+	 * ({@link Invulnerability#setGraceTicks} to 0) so it never swallows the first hit. The position is the
+	 * caller's job: the mock spawns at the world origin, and a test that reads "who is standing in this
+	 * cell" must {@code setPos} the player into it or it passes/fails for the wrong reason.
 	 */
 	public static ServerPlayer detachedSurvivalPlayer(GameTestHelper helper) {
 		ServerPlayer player = (ServerPlayer) helper.makeMockServerPlayer(GameType.SURVIVAL);
 		player.getAbilities().instabuild = false;
 		player.getAbilities().invulnerable = false;
-		player.setInvulnerable(false);
-		player.invulnerableTime = 0;
+		Invulnerability.setPermanent(player, false);
+		Invulnerability.setGraceTicks(player, 0);
 		return player;
 	}
 

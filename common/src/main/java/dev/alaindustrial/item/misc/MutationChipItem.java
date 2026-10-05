@@ -2,6 +2,8 @@ package dev.alaindustrial.item.misc;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.IncubatorMode;
+import dev.alaindustrial.client.ServerBalance;
+import dev.alaindustrial.core.machine.MachineRates;
 import java.util.Locale;
 import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
@@ -55,8 +57,10 @@ public class MutationChipItem extends Item {
 					.withStyle(ChatFormatting.DARK_GRAY));
 		}
 		// Mirrors the block entity's own arithmetic so the numbers cannot drift from the machine.
-		int euPerTick = Math.max(1, Math.round(Config.incubatorEuPerTick * Config.globalMachineSpeedMultiplier));
-		int ticks = Config.scaledDuration(mode.baseDuration());
+		// The server's numbers (MOD-695): a tooltip runs on the client, whose Config is its own file.
+		int euPerTick = MachineRates.euPerTick(ServerBalance.incubatorEuPerTick(),
+				ServerBalance.globalMachineSpeedMultiplier());
+		int ticks = ServerBalance.scaledDuration(mode.baseDuration());
 		String seconds = String.format("%.0f", ticks / 20.0);
 		adder.accept(Component.translatable("item.alaindustrial.mutation_chip.tech.cycle",
 				seconds, (long) euPerTick * ticks).withStyle(ChatFormatting.DARK_GRAY));

@@ -11,6 +11,7 @@ import dev.alaindustrial.core.item.PipeFaceMode;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.storage.StorageCluster;
 import dev.alaindustrial.menu.StorageModuleMenu;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.RegistryAccess;
@@ -36,6 +37,55 @@ import net.minecraft.world.level.storage.TagValueInput;
  * whose items are whose. Suite contract and shared helpers: {@link EnergyScenarioSupport}.
  */
 public final class StorageClusterScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(StorageClusterScenarios::faceAdjacentMergesDiagonalDoesNot,
+								"storage_face_adjacent_merges")
+						.fabricId("StorageClusterGameTest", "tcStor01_faceAdjacentMergesDiagonalDoesNot")
+						.ticks(20, 40),
+				RosterEntry.of(StorageClusterScenarios::fifthModuleAddsNothing, "storage_fifth_module_adds_nothing")
+						.fabricId("StorageClusterGameTest", "tcStor02_fifthModuleAddsNothing").ticks(20, 40),
+				RosterEntry.of(StorageClusterScenarios::itemsStayInTheirOwnModule,
+								"storage_items_stay_in_their_own_module")
+						.fabricId("StorageClusterGameTest", "tcStor03_itemsStayInTheirOwnModule").ticks(20, 40),
+				RosterEntry.of(StorageClusterScenarios::breakingMiddleModuleSplitsWithoutLoss,
+								"storage_breaking_middle_module_splits")
+						.fabricId("StorageClusterGameTest", "tcStor04_breakingMiddleModuleSplitsWithoutLoss")
+						.ticks(20, 40),
+				RosterEntry.of(StorageClusterScenarios::moduleExposesItemPortOnEveryFace,
+								"storage_module_exposes_item_port")
+						.fabricId("StorageClusterGameTest", "tcStor05_moduleExposesItemPortOnEveryFace").ticks(20, 40),
+				RosterEntry.of(StorageClusterScenarios::seamsMatchClusterMembership,
+								"storage_seams_match_cluster_membership")
+						.fabricId("StorageClusterGameTest", "tcStor06_seamsMatchClusterMembership").ticks(20, 40),
+				RosterEntry.of(StorageClusterScenarios::seamsJoinAWallAndNeverADiagonal,
+								"storage_seams_join_wall_not_diagonal")
+						.fabricId("StorageClusterGameTest", "tcStor07_seamsJoinAWallAndNeverADiagonal").ticks(20, 40),
+				RosterEntry.of(StorageClusterScenarios::windowShowsSixRowsAndScrolls,
+								"storage_window_shows_six_rows_and_scrolls")
+						.fabricId("StorageClusterGameTest", "tcStor08_windowShowsSixRowsAndScrolls").ticks(20, 40),
+				RosterEntry.of(StorageClusterScenarios::shiftClickReachesScrolledAwayRows,
+								"storage_shift_click_reaches_scrolled_away_rows")
+						.fabricId("StorageClusterGameTest", "tcStor09_shiftClickReachesScrolledAwayRows")
+						.ticks(20, 40),
+				RosterEntry.of(StorageClusterScenarios::capacityNeverGoesNegative,
+								"storage_capacity_never_goes_negative")
+						.fabricId("StorageClusterGameTest", "tcStor10_capacityNeverGoesNegative").ticks(20, 40),
+				RosterEntry.of(StorageClusterScenarios::unloadedPositionIsSkippedNotForceLoaded,
+								"storage_unloaded_position_is_skipped")
+						.fabricId("StorageClusterGameTest", "tcStor11_unloadedPositionIsSkippedNotForceLoaded")
+						.ticks(20, 40),
+				RosterEntry.of(StorageClusterScenarios::pipeFillsAndDrainsTheWarehouse,
+								"storage_pipe_fills_and_drains_warehouse")
+						.fabricId("StorageClusterGameTest", "tcStor12_pipeFillsAndDrainsTheWarehouse").ticks(20, 100),
+				RosterEntry.of(StorageClusterScenarios::moduleContentsSurviveReload,
+								"storage_module_contents_survive_reload")
+						.fabricId("StorageClusterGameTest", "tcStor13_moduleContentsSurviveReload").ticks(20, 40));
+
+		private Roster() {}
+	}
 
 	private StorageClusterScenarios() {}
 

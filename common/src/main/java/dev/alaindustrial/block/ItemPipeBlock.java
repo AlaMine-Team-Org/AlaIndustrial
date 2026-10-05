@@ -42,9 +42,14 @@ import dev.alaindustrial.registry.ModContent;
  * neighbour's side instead of floating above it (MOD-540) — the same fix cables got in MOD-042, with
  * the "low" answer folded into the face value rather than added as a fifth property; the reasoning,
  * and its price in blockstates, is on {@link PipeFaceRender}.
+ *
+ * <p><b>The 26.2 block-codec seam (MOD-703).</b> Minecraft 26.2 requires every block to name a codec
+ * ({@code BlockBehaviour.codec()} is abstract there); 26.3 removed block codecs. {@link #codec()} answers it
+ * once for every subclass, so no subclass carries a {@code CODEC} of its own and their sources are the same
+ * on both lines. It has no {@code @Override} on purpose: on 26.2 it overrides, on 26.3 it is a method of its
+ * own that nothing calls.
  */
 public class ItemPipeBlock extends BaseEntityBlock {
-	public static final MapCodec<ItemPipeBlock> CODEC = simpleCodec(ItemPipeBlock::new);
 	private static final Map<Direction, EnumProperty<PipeFaceRender>> FACE_MODES = new EnumMap<>(Direction.class);
 	static {
 		FACE_MODES.put(Direction.DOWN,
@@ -67,9 +72,8 @@ public class ItemPipeBlock extends BaseEntityBlock {
 	}
 
 	/**
-	 * Which grade this pipe is (MOD-581). A field would have been simpler, but the block is built by
-	 * {@code simpleCodec}, which reconstructs from {@code Properties} alone and would hand every decoded
-	 * pipe the basic grade; a subclass carries the answer in its type instead, where nothing can lose it.
+	 * Which grade this pipe is (MOD-581). A subclass carries the answer in its type rather than a field,
+	 * so nothing can lose it: the two grades are separate blocks, exactly as the cable grades are.
 	 */
 	public PipeTier tier() {
 		return PipeTier.BASIC;
@@ -85,7 +89,6 @@ public class ItemPipeBlock extends BaseEntityBlock {
 		return PipeShapes.of(down, up, north, south, west, east);
 	}
 
-	@Override protected MapCodec<? extends BaseEntityBlock> codec() { return CODEC; }
 	@Override protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		FACE_MODES.values().forEach(builder::add);
 	}
@@ -211,5 +214,14 @@ public class ItemPipeBlock extends BaseEntityBlock {
 			BlockEntityType<T> type) {
 		if (level.isClientSide() || type != ModContent.ITEM_PIPE_BE.get()) return null;
 		return (world, pos, blockState, entity) -> ((ItemPipeBlockEntity) entity).serverTick(world, pos, blockState);
+	}
+
+	/**
+	 * The codec Minecraft 26.2 asks every block for: the unit codec of this very instance. 26.2 reads block
+	 * codecs only in the datagen block-list report ({@code BlockTypes.CODEC} → {@code BlockListReport},
+	 * javap), so nothing at run time decodes a block through it.
+	 */
+	protected MapCodec<? extends BaseEntityBlock> codec() {
+		return MapCodec.unit(this);
 	}
 }

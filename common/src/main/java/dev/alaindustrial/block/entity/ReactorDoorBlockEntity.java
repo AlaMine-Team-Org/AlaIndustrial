@@ -1,7 +1,7 @@
 package dev.alaindustrial.block.entity;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.block.ReactorDoorBlock;
+import dev.alaindustrial.core.reactor.ReactorConfig;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
@@ -105,7 +105,7 @@ public class ReactorDoorBlockEntity extends BlockEntity {
 		if (transitionStart == NO_TRANSITION) {
 			return open ? 1.0f : 0.0f;
 		}
-		float span = Math.max(1, Config.reactorDoorSlideTicks);
+		float span = Math.max(1, ReactorConfig.reactorDoorSlideTicks);
 		float elapsed = (float) (gameTime - transitionStart) + partialTicks;
 		float t = Mth.clamp(elapsed / span, 0.0f, 1.0f);
 		// Smoothstep: the panel leaves and arrives with zero speed. A linear ramp starts and stops

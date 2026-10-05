@@ -1,0 +1,2145 @@
+== alaindustrial:advanced_circuit plain : none
+== alaindustrial:advanced_machine_casing plain : none
+== alaindustrial:alignment_chip_day plain : none
+== alaindustrial:alignment_chip_night plain : none
+== alaindustrial:alloy_smelter plain
+-- plain eu
+tooltip.alaindustrial.energy_input(8) {gray}
+tooltip.alaindustrial.duration_ticks(150) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.energy_input(8) {gray}
+tooltip.alaindustrial.duration_ticks(150) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.buffer(800) {gray}
+tooltip.alaindustrial.energy_per_op(1200) {gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:ash plain : none
+== alaindustrial:assembler plain
+-- plain eu
+tooltip.alaindustrial.energy_input(12) {gray}
+tooltip.alaindustrial.duration_ticks(40) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.energy_input(12) {gray}
+tooltip.alaindustrial.duration_ticks(40) {gray}
+tooltip.alaindustrial.tier_mv {green}
+tooltip.alaindustrial.buffer(12000) {gray}
+tooltip.alaindustrial.energy_per_op(480) {gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_mv {green}
+== alaindustrial:assembly_blueprint plain : none
+== alaindustrial:basic_bearing plain : none
+== alaindustrial:battery plain
+-- plain eu
+tooltip.alaindustrial.battery.usage {gray}
+tooltip.alaindustrial.battery.depleted {red}
+-- shift eu
+tooltip.alaindustrial.battery.usage {gray}
+tooltip.alaindustrial.battery.depleted {red}
+-- plain no-eu
+tooltip.alaindustrial.battery.usage {gray}
+tooltip.alaindustrial.battery.depleted {red}
+-- shift no-eu
+tooltip.alaindustrial.battery.usage {gray}
+tooltip.alaindustrial.battery.depleted {red}
+== alaindustrial:battery eu=1
+-- plain eu
+tooltip.alaindustrial.battery.usage {gray}
+tooltip.alaindustrial.battery.charge(1, 2000) {gold}
+-- shift eu
+tooltip.alaindustrial.battery.usage {gray}
+tooltip.alaindustrial.battery.charge(1, 2000) {gold}
+-- plain no-eu
+tooltip.alaindustrial.battery.usage {gray}
+tooltip.alaindustrial.battery.charge(1, 2000) {gold}
+-- shift no-eu
+tooltip.alaindustrial.battery.usage {gray}
+tooltip.alaindustrial.battery.charge(1, 2000) {gold}
+== alaindustrial:battery full
+-- plain eu
+tooltip.alaindustrial.battery.usage {gray}
+tooltip.alaindustrial.battery.charge(2000, 2000) {gold}
+-- shift eu
+tooltip.alaindustrial.battery.usage {gray}
+tooltip.alaindustrial.battery.charge(2000, 2000) {gold}
+-- plain no-eu
+tooltip.alaindustrial.battery.usage {gray}
+tooltip.alaindustrial.battery.charge(2000, 2000) {gold}
+-- shift no-eu
+tooltip.alaindustrial.battery.usage {gray}
+tooltip.alaindustrial.battery.charge(2000, 2000) {gold}
+== alaindustrial:battery full x2
+-- plain eu
+tooltip.alaindustrial.battery.usage {gray}
+tooltip.alaindustrial.battery.charge(2000, 2000) {gold}
+tooltip.alaindustrial.battery.stack_total(2, 4000) {dark_gray}
+-- shift eu
+tooltip.alaindustrial.battery.usage {gray}
+tooltip.alaindustrial.battery.charge(2000, 2000) {gold}
+tooltip.alaindustrial.battery.stack_total(2, 4000) {dark_gray}
+-- plain no-eu
+tooltip.alaindustrial.battery.usage {gray}
+tooltip.alaindustrial.battery.charge(2000, 2000) {gold}
+tooltip.alaindustrial.battery.stack_total(2, 4000) {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.battery.usage {gray}
+tooltip.alaindustrial.battery.charge(2000, 2000) {gold}
+tooltip.alaindustrial.battery.stack_total(2, 4000) {dark_gray}
+== alaindustrial:battery_box plain
+-- plain eu
+tooltip.alaindustrial.capacity(20000) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.capacity(20000) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.battery_box_io {gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.battery_box_io {gray}
+== alaindustrial:battery_pouch plain
+-- plain eu
+tooltip.alaindustrial.battery_pouch.usage_insert {gray}
+tooltip.alaindustrial.battery_pouch.usage_extract {gray}
+tooltip.alaindustrial.battery_pouch.depleted {red}
+-- shift eu
+tooltip.alaindustrial.battery_pouch.usage_insert {gray}
+tooltip.alaindustrial.battery_pouch.usage_extract {gray}
+tooltip.alaindustrial.battery_pouch.depleted {red}
+-- plain no-eu
+tooltip.alaindustrial.battery_pouch.usage_insert {gray}
+tooltip.alaindustrial.battery_pouch.usage_extract {gray}
+tooltip.alaindustrial.battery_pouch.depleted {red}
+-- shift no-eu
+tooltip.alaindustrial.battery_pouch.usage_insert {gray}
+tooltip.alaindustrial.battery_pouch.usage_extract {gray}
+tooltip.alaindustrial.battery_pouch.depleted {red}
+== alaindustrial:battery_pouch eu=1
+-- plain eu
+tooltip.alaindustrial.battery_pouch.usage_insert {gray}
+tooltip.alaindustrial.battery_pouch.usage_extract {gray}
+tooltip.alaindustrial.battery_pouch.charge(1, 2000) {gold}
+tooltip.alaindustrial.battery_pouch.low_charge {red}
+-- shift eu
+tooltip.alaindustrial.battery_pouch.usage_insert {gray}
+tooltip.alaindustrial.battery_pouch.usage_extract {gray}
+tooltip.alaindustrial.battery_pouch.charge(1, 2000) {gold}
+tooltip.alaindustrial.battery_pouch.low_charge {red}
+-- plain no-eu
+tooltip.alaindustrial.battery_pouch.usage_insert {gray}
+tooltip.alaindustrial.battery_pouch.usage_extract {gray}
+tooltip.alaindustrial.battery_pouch.charge(1, 2000) {gold}
+tooltip.alaindustrial.battery_pouch.low_charge {red}
+-- shift no-eu
+tooltip.alaindustrial.battery_pouch.usage_insert {gray}
+tooltip.alaindustrial.battery_pouch.usage_extract {gray}
+tooltip.alaindustrial.battery_pouch.charge(1, 2000) {gold}
+tooltip.alaindustrial.battery_pouch.low_charge {red}
+== alaindustrial:battery_pouch full
+-- plain eu
+tooltip.alaindustrial.battery_pouch.usage_insert {gray}
+tooltip.alaindustrial.battery_pouch.usage_extract {gray}
+tooltip.alaindustrial.battery_pouch.charge(2000, 2000) {gold}
+-- shift eu
+tooltip.alaindustrial.battery_pouch.usage_insert {gray}
+tooltip.alaindustrial.battery_pouch.usage_extract {gray}
+tooltip.alaindustrial.battery_pouch.charge(2000, 2000) {gold}
+-- plain no-eu
+tooltip.alaindustrial.battery_pouch.usage_insert {gray}
+tooltip.alaindustrial.battery_pouch.usage_extract {gray}
+tooltip.alaindustrial.battery_pouch.charge(2000, 2000) {gold}
+-- shift no-eu
+tooltip.alaindustrial.battery_pouch.usage_insert {gray}
+tooltip.alaindustrial.battery_pouch.usage_extract {gray}
+tooltip.alaindustrial.battery_pouch.charge(2000, 2000) {gold}
+== alaindustrial:biofuel_bucket plain : none
+== alaindustrial:biomass plain : none
+== alaindustrial:broken_engraved_plate_b plain : none
+== alaindustrial:broken_engraved_plate_d plain : none
+== alaindustrial:broken_engraved_plate_k plain : none
+== alaindustrial:broken_engraved_plate_m plain : none
+== alaindustrial:broken_engraved_plate_p plain : none
+== alaindustrial:broken_engraved_plate_r plain : none
+== alaindustrial:broken_engraved_plate_w plain : none
+== alaindustrial:bronze_ingot plain : none
+== alaindustrial:bronze_plate plain : none
+== alaindustrial:bronze_reinforced_plate plain : none
+== alaindustrial:cable_breaker plain : none
+== alaindustrial:canned_ration plain : none
+== alaindustrial:canning_machine plain
+-- plain eu
+tooltip.alaindustrial.energy_input(2) {gray}
+tooltip.alaindustrial.duration_ticks(100) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.energy_input(2) {gray}
+tooltip.alaindustrial.duration_ticks(100) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.buffer(800) {gray}
+tooltip.alaindustrial.energy_per_op(200) {gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:capacity_card plain : none
+== alaindustrial:carbon_briquette plain : none
+== alaindustrial:carbon_ceramic plain : none
+== alaindustrial:carbon_rod plain : none
+== alaindustrial:carbon_rod_double plain : none
+== alaindustrial:ceramic_plate plain : none
+== alaindustrial:cesu plain
+-- plain eu
+tooltip.alaindustrial.capacity(100000) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.capacity(100000) {gray}
+tooltip.alaindustrial.tier_mv {green}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_mv {green}
+== alaindustrial:charge_pad plain
+-- plain eu
+tooltip.alaindustrial.capacity(20000) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.capacity(20000) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.energy_input(128) {gray}
+tooltip.alaindustrial.energy_output(128) {gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:choke plain : none
+== alaindustrial:choke_advanced plain : none
+== alaindustrial:choke_reinforced plain : none
+== alaindustrial:coal_dust plain : none
+== alaindustrial:component_repair_bench plain
+-- plain eu
+tooltip.alaindustrial.energy_input(8) {gray}
+tooltip.alaindustrial.duration_ticks(1200) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.energy_input(8) {gray}
+tooltip.alaindustrial.duration_ticks(1200) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.buffer(800) {gray}
+tooltip.alaindustrial.energy_per_op(9600) {gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:compressor plain
+-- plain eu
+tooltip.alaindustrial.energy_input(2) {gray}
+tooltip.alaindustrial.duration_ticks(130) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.energy_input(2) {gray}
+tooltip.alaindustrial.duration_ticks(130) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.buffer(800) {gray}
+tooltip.alaindustrial.energy_per_op(260) {gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:concentrator_section plain : none
+== alaindustrial:control_rod_drive plain : none
+== alaindustrial:copper_cable plain
+-- plain eu
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.buffer(12) {gray}
+tooltip.alaindustrial.cable_shock_warning {red}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.buffer(12) {gray}
+tooltip.alaindustrial.cable_shock_warning {red}
+tooltip.alaindustrial.cable_loss(2) {gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.cable_shock_warning {red}
+== alaindustrial:copper_cable dyed
+-- plain eu
+item.color(<color.minecraft.red>) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.buffer(12) {gray}
+tooltip.alaindustrial.cable_shock_warning {red}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+item.color(<color.minecraft.red>) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.buffer(12) {gray}
+tooltip.alaindustrial.cable_shock_warning {red}
+tooltip.alaindustrial.cable_loss(2) {gray}
+-- plain no-eu
+item.color(<color.minecraft.red>) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+item.color(<color.minecraft.red>) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.cable_shock_warning {red}
+== alaindustrial:copper_coil plain : none
+== alaindustrial:copper_dust plain : none
+== alaindustrial:copper_plate plain : none
+== alaindustrial:core_barrel plain
+-- plain eu
+tooltip.alaindustrial.core_barrel.role {gray}
+-- shift eu
+tooltip.alaindustrial.core_barrel.role {gray}
+-- plain no-eu
+tooltip.alaindustrial.core_barrel.role {gray}
+-- shift no-eu
+tooltip.alaindustrial.core_barrel.role {gray}
+== alaindustrial:cotton_fiber plain : none
+== alaindustrial:cotton_seeds plain : none
+== alaindustrial:creative_energy_source plain : none
+== alaindustrial:crystal_farm_controller plain : none
+== alaindustrial:crystal_farm_door plain : none
+== alaindustrial:crystal_farm_floor plain : none
+== alaindustrial:crystal_farm_glass plain : none
+== alaindustrial:crystal_seedbed plain : none
+== alaindustrial:cupronickel_ingot plain : none
+== alaindustrial:cupronickel_plate plain : none
+== alaindustrial:cupronickel_reinforced_plate plain : none
+== alaindustrial:daylight_solar_panel plain
+-- plain eu
+tooltip.alaindustrial.energy_output_day_only(4) {gray}
+tooltip.alaindustrial.capacity(8000) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.energy_output_day_only(4) {gray}
+tooltip.alaindustrial.capacity(8000) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.solar_day(4) {gray}
+tooltip.alaindustrial.solar_night(0) {gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:deepslate_nickel_ore plain : none
+== alaindustrial:deepslate_silver_ore plain : none
+== alaindustrial:deepslate_sulfur_ore plain : none
+== alaindustrial:deepslate_tin_ore plain : none
+== alaindustrial:deepslate_uranium_ore plain : none
+== alaindustrial:depleted_uranium plain : none
+== alaindustrial:diamond_chest plain
+-- plain eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.storage_slots(108) {gray}
+tooltip.alaindustrial.storage_slots_double(216) {dark_gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.storage_slots(108) {gray}
+tooltip.alaindustrial.storage_slots_double(216) {dark_gray}
+== alaindustrial:diamond_dust plain : none
+== alaindustrial:diesel_bucket plain : none
+== alaindustrial:distillation_column plain
+-- plain eu
+tooltip.alaindustrial.energy_input(2) {gray}
+tooltip.alaindustrial.duration_ticks(200) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.energy_input(2) {gray}
+tooltip.alaindustrial.duration_ticks(200) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.buffer(800) {gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:drill_column_module plain
+-- plain eu
+tooltip.alaindustrial.drill_column_module.role {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.drill_column_module.role {gray}
+tooltip.alaindustrial.drill_column_module.fitting {gray}
+tooltip.alaindustrial.drill_column_module.toggle {gray}
+-- plain no-eu
+tooltip.alaindustrial.drill_column_module.role {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.drill_column_module.role {gray}
+tooltip.alaindustrial.drill_column_module.fitting {gray}
+tooltip.alaindustrial.drill_column_module.toggle {gray}
+== alaindustrial:electric_bow plain
+-- plain eu
+tooltip.alaindustrial.electric_bow.usage(150) {gray}
+tooltip.alaindustrial.electric_bow.depleted {red}
+-- shift eu
+tooltip.alaindustrial.electric_bow.usage(150) {gray}
+tooltip.alaindustrial.electric_bow.depleted {red}
+-- plain no-eu
+tooltip.alaindustrial.electric_bow.usage(150) {gray}
+tooltip.alaindustrial.electric_bow.depleted {red}
+-- shift no-eu
+tooltip.alaindustrial.electric_bow.usage(150) {gray}
+tooltip.alaindustrial.electric_bow.depleted {red}
+== alaindustrial:electric_bow eu=1
+-- plain eu
+tooltip.alaindustrial.electric_bow.usage(150) {gray}
+tooltip.alaindustrial.electric_bow.depleted {red}
+-- shift eu
+tooltip.alaindustrial.electric_bow.usage(150) {gray}
+tooltip.alaindustrial.electric_bow.depleted {red}
+-- plain no-eu
+tooltip.alaindustrial.electric_bow.usage(150) {gray}
+tooltip.alaindustrial.electric_bow.depleted {red}
+-- shift no-eu
+tooltip.alaindustrial.electric_bow.usage(150) {gray}
+tooltip.alaindustrial.electric_bow.depleted {red}
+== alaindustrial:electric_bow full
+-- plain eu
+tooltip.alaindustrial.electric_bow.usage(150) {gray}
+tooltip.alaindustrial.electric_bow.charge(10000, 10000) {gold}
+-- shift eu
+tooltip.alaindustrial.electric_bow.usage(150) {gray}
+tooltip.alaindustrial.electric_bow.charge(10000, 10000) {gold}
+-- plain no-eu
+tooltip.alaindustrial.electric_bow.usage(150) {gray}
+tooltip.alaindustrial.electric_bow.charge(10000, 10000) {gold}
+-- shift no-eu
+tooltip.alaindustrial.electric_bow.usage(150) {gray}
+tooltip.alaindustrial.electric_bow.charge(10000, 10000) {gold}
+== alaindustrial:electric_chainsaw plain
+-- plain eu
+tooltip.alaindustrial.electric_chainsaw.usage(30) {gray}
+tooltip.alaindustrial.electric_chainsaw.depleted {red}
+-- shift eu
+tooltip.alaindustrial.electric_chainsaw.usage(30) {gray}
+tooltip.alaindustrial.electric_chainsaw.depleted {red}
+-- plain no-eu
+tooltip.alaindustrial.electric_chainsaw.usage(30) {gray}
+tooltip.alaindustrial.electric_chainsaw.depleted {red}
+-- shift no-eu
+tooltip.alaindustrial.electric_chainsaw.usage(30) {gray}
+tooltip.alaindustrial.electric_chainsaw.depleted {red}
+== alaindustrial:electric_chainsaw eu=1
+-- plain eu
+tooltip.alaindustrial.electric_chainsaw.usage(30) {gray}
+tooltip.alaindustrial.electric_chainsaw.charge(1, 10000) {gold}
+-- shift eu
+tooltip.alaindustrial.electric_chainsaw.usage(30) {gray}
+tooltip.alaindustrial.electric_chainsaw.charge(1, 10000) {gold}
+-- plain no-eu
+tooltip.alaindustrial.electric_chainsaw.usage(30) {gray}
+tooltip.alaindustrial.electric_chainsaw.charge(1, 10000) {gold}
+-- shift no-eu
+tooltip.alaindustrial.electric_chainsaw.usage(30) {gray}
+tooltip.alaindustrial.electric_chainsaw.charge(1, 10000) {gold}
+== alaindustrial:electric_chainsaw full
+-- plain eu
+tooltip.alaindustrial.electric_chainsaw.usage(30) {gray}
+tooltip.alaindustrial.electric_chainsaw.charge(10000, 10000) {gold}
+-- shift eu
+tooltip.alaindustrial.electric_chainsaw.usage(30) {gray}
+tooltip.alaindustrial.electric_chainsaw.charge(10000, 10000) {gold}
+-- plain no-eu
+tooltip.alaindustrial.electric_chainsaw.usage(30) {gray}
+tooltip.alaindustrial.electric_chainsaw.charge(10000, 10000) {gold}
+-- shift no-eu
+tooltip.alaindustrial.electric_chainsaw.usage(30) {gray}
+tooltip.alaindustrial.electric_chainsaw.charge(10000, 10000) {gold}
+== alaindustrial:electric_chainsaw_diamond_tip plain
+-- plain eu
+tooltip.alaindustrial.electric_chainsaw.usage(30) {gray}
+tooltip.alaindustrial.electric_chainsaw.depleted {red}
+tooltip.alaindustrial.electric_chainsaw_diamond_tip.silk_off {gray}
+-- shift eu
+tooltip.alaindustrial.electric_chainsaw.usage(30) {gray}
+tooltip.alaindustrial.electric_chainsaw.depleted {red}
+tooltip.alaindustrial.electric_chainsaw_diamond_tip.silk_off {gray}
+-- plain no-eu
+tooltip.alaindustrial.electric_chainsaw.usage(30) {gray}
+tooltip.alaindustrial.electric_chainsaw.depleted {red}
+tooltip.alaindustrial.electric_chainsaw_diamond_tip.silk_off {gray}
+-- shift no-eu
+tooltip.alaindustrial.electric_chainsaw.usage(30) {gray}
+tooltip.alaindustrial.electric_chainsaw.depleted {red}
+tooltip.alaindustrial.electric_chainsaw_diamond_tip.silk_off {gray}
+== alaindustrial:electric_chainsaw_diamond_tip eu=1
+-- plain eu
+tooltip.alaindustrial.electric_chainsaw.usage(30) {gray}
+tooltip.alaindustrial.electric_chainsaw.charge(1, 10000) {gold}
+tooltip.alaindustrial.electric_chainsaw_diamond_tip.silk_off {gray}
+-- shift eu
+tooltip.alaindustrial.electric_chainsaw.usage(30) {gray}
+tooltip.alaindustrial.electric_chainsaw.charge(1, 10000) {gold}
+tooltip.alaindustrial.electric_chainsaw_diamond_tip.silk_off {gray}
+-- plain no-eu
+tooltip.alaindustrial.electric_chainsaw.usage(30) {gray}
+tooltip.alaindustrial.electric_chainsaw.charge(1, 10000) {gold}
+tooltip.alaindustrial.electric_chainsaw_diamond_tip.silk_off {gray}
+-- shift no-eu
+tooltip.alaindustrial.electric_chainsaw.usage(30) {gray}
+tooltip.alaindustrial.electric_chainsaw.charge(1, 10000) {gold}
+tooltip.alaindustrial.electric_chainsaw_diamond_tip.silk_off {gray}
+== alaindustrial:electric_chainsaw_diamond_tip full
+-- plain eu
+tooltip.alaindustrial.electric_chainsaw.usage(30) {gray}
+tooltip.alaindustrial.electric_chainsaw.charge(10000, 10000) {gold}
+tooltip.alaindustrial.electric_chainsaw_diamond_tip.silk_off {gray}
+-- shift eu
+tooltip.alaindustrial.electric_chainsaw.usage(30) {gray}
+tooltip.alaindustrial.electric_chainsaw.charge(10000, 10000) {gold}
+tooltip.alaindustrial.electric_chainsaw_diamond_tip.silk_off {gray}
+-- plain no-eu
+tooltip.alaindustrial.electric_chainsaw.usage(30) {gray}
+tooltip.alaindustrial.electric_chainsaw.charge(10000, 10000) {gold}
+tooltip.alaindustrial.electric_chainsaw_diamond_tip.silk_off {gray}
+-- shift no-eu
+tooltip.alaindustrial.electric_chainsaw.usage(30) {gray}
+tooltip.alaindustrial.electric_chainsaw.charge(10000, 10000) {gold}
+tooltip.alaindustrial.electric_chainsaw_diamond_tip.silk_off {gray}
+== alaindustrial:electric_chainsaw_diamond_tip full modes
+-- plain eu
+tooltip.alaindustrial.electric_chainsaw.usage(30) {gray}
+tooltip.alaindustrial.electric_chainsaw.charge(10000, 10000) {gold}
+tooltip.alaindustrial.electric_chainsaw_diamond_tip.silk_on {aqua}
+-- shift eu
+tooltip.alaindustrial.electric_chainsaw.usage(30) {gray}
+tooltip.alaindustrial.electric_chainsaw.charge(10000, 10000) {gold}
+tooltip.alaindustrial.electric_chainsaw_diamond_tip.silk_on {aqua}
+-- plain no-eu
+tooltip.alaindustrial.electric_chainsaw.usage(30) {gray}
+tooltip.alaindustrial.electric_chainsaw.charge(10000, 10000) {gold}
+tooltip.alaindustrial.electric_chainsaw_diamond_tip.silk_on {aqua}
+-- shift no-eu
+tooltip.alaindustrial.electric_chainsaw.usage(30) {gray}
+tooltip.alaindustrial.electric_chainsaw.charge(10000, 10000) {gold}
+tooltip.alaindustrial.electric_chainsaw_diamond_tip.silk_on {aqua}
+== alaindustrial:electric_drill plain
+-- plain eu
+tooltip.alaindustrial.electric_drill.usage(50) {gray}
+tooltip.alaindustrial.electric_drill.depleted {red}
+-- shift eu
+tooltip.alaindustrial.electric_drill.usage(50) {gray}
+tooltip.alaindustrial.electric_drill.depleted {red}
+-- plain no-eu
+tooltip.alaindustrial.electric_drill.usage(50) {gray}
+tooltip.alaindustrial.electric_drill.depleted {red}
+-- shift no-eu
+tooltip.alaindustrial.electric_drill.usage(50) {gray}
+tooltip.alaindustrial.electric_drill.depleted {red}
+== alaindustrial:electric_drill eu=1
+-- plain eu
+tooltip.alaindustrial.electric_drill.usage(50) {gray}
+tooltip.alaindustrial.electric_drill.charge(1, 10000) {gold}
+-- shift eu
+tooltip.alaindustrial.electric_drill.usage(50) {gray}
+tooltip.alaindustrial.electric_drill.charge(1, 10000) {gold}
+-- plain no-eu
+tooltip.alaindustrial.electric_drill.usage(50) {gray}
+tooltip.alaindustrial.electric_drill.charge(1, 10000) {gold}
+-- shift no-eu
+tooltip.alaindustrial.electric_drill.usage(50) {gray}
+tooltip.alaindustrial.electric_drill.charge(1, 10000) {gold}
+== alaindustrial:electric_drill full
+-- plain eu
+tooltip.alaindustrial.electric_drill.usage(50) {gray}
+tooltip.alaindustrial.electric_drill.charge(10000, 10000) {gold}
+-- shift eu
+tooltip.alaindustrial.electric_drill.usage(50) {gray}
+tooltip.alaindustrial.electric_drill.charge(10000, 10000) {gold}
+-- plain no-eu
+tooltip.alaindustrial.electric_drill.usage(50) {gray}
+tooltip.alaindustrial.electric_drill.charge(10000, 10000) {gold}
+-- shift no-eu
+tooltip.alaindustrial.electric_drill.usage(50) {gray}
+tooltip.alaindustrial.electric_drill.charge(10000, 10000) {gold}
+== alaindustrial:electric_drill full modes
+-- plain eu
+tooltip.alaindustrial.electric_drill.usage(50) {gray}
+tooltip.alaindustrial.electric_drill.column_on {aqua}
+tooltip.alaindustrial.electric_drill.charge(10000, 10000) {gold}
+-- shift eu
+tooltip.alaindustrial.electric_drill.usage(50) {gray}
+tooltip.alaindustrial.electric_drill.column_on {aqua}
+tooltip.alaindustrial.electric_drill.charge(10000, 10000) {gold}
+-- plain no-eu
+tooltip.alaindustrial.electric_drill.usage(50) {gray}
+tooltip.alaindustrial.electric_drill.column_on {aqua}
+tooltip.alaindustrial.electric_drill.charge(10000, 10000) {gold}
+-- shift no-eu
+tooltip.alaindustrial.electric_drill.usage(50) {gray}
+tooltip.alaindustrial.electric_drill.column_on {aqua}
+tooltip.alaindustrial.electric_drill.charge(10000, 10000) {gold}
+== alaindustrial:electric_drill_diamond_tip plain
+-- plain eu
+tooltip.alaindustrial.electric_drill_diamond_tip.usage(50) {gray}
+tooltip.alaindustrial.electric_drill_diamond_tip.silk_off {gray}
+tooltip.alaindustrial.electric_drill.depleted {red}
+-- shift eu
+tooltip.alaindustrial.electric_drill_diamond_tip.usage(50) {gray}
+tooltip.alaindustrial.electric_drill_diamond_tip.silk_off {gray}
+tooltip.alaindustrial.electric_drill.depleted {red}
+-- plain no-eu
+tooltip.alaindustrial.electric_drill_diamond_tip.usage(50) {gray}
+tooltip.alaindustrial.electric_drill_diamond_tip.silk_off {gray}
+tooltip.alaindustrial.electric_drill.depleted {red}
+-- shift no-eu
+tooltip.alaindustrial.electric_drill_diamond_tip.usage(50) {gray}
+tooltip.alaindustrial.electric_drill_diamond_tip.silk_off {gray}
+tooltip.alaindustrial.electric_drill.depleted {red}
+== alaindustrial:electric_drill_diamond_tip eu=1
+-- plain eu
+tooltip.alaindustrial.electric_drill_diamond_tip.usage(50) {gray}
+tooltip.alaindustrial.electric_drill_diamond_tip.silk_off {gray}
+tooltip.alaindustrial.electric_drill.charge(1, 10000) {gold}
+-- shift eu
+tooltip.alaindustrial.electric_drill_diamond_tip.usage(50) {gray}
+tooltip.alaindustrial.electric_drill_diamond_tip.silk_off {gray}
+tooltip.alaindustrial.electric_drill.charge(1, 10000) {gold}
+-- plain no-eu
+tooltip.alaindustrial.electric_drill_diamond_tip.usage(50) {gray}
+tooltip.alaindustrial.electric_drill_diamond_tip.silk_off {gray}
+tooltip.alaindustrial.electric_drill.charge(1, 10000) {gold}
+-- shift no-eu
+tooltip.alaindustrial.electric_drill_diamond_tip.usage(50) {gray}
+tooltip.alaindustrial.electric_drill_diamond_tip.silk_off {gray}
+tooltip.alaindustrial.electric_drill.charge(1, 10000) {gold}
+== alaindustrial:electric_drill_diamond_tip full
+-- plain eu
+tooltip.alaindustrial.electric_drill_diamond_tip.usage(50) {gray}
+tooltip.alaindustrial.electric_drill_diamond_tip.silk_off {gray}
+tooltip.alaindustrial.electric_drill.charge(10000, 10000) {gold}
+-- shift eu
+tooltip.alaindustrial.electric_drill_diamond_tip.usage(50) {gray}
+tooltip.alaindustrial.electric_drill_diamond_tip.silk_off {gray}
+tooltip.alaindustrial.electric_drill.charge(10000, 10000) {gold}
+-- plain no-eu
+tooltip.alaindustrial.electric_drill_diamond_tip.usage(50) {gray}
+tooltip.alaindustrial.electric_drill_diamond_tip.silk_off {gray}
+tooltip.alaindustrial.electric_drill.charge(10000, 10000) {gold}
+-- shift no-eu
+tooltip.alaindustrial.electric_drill_diamond_tip.usage(50) {gray}
+tooltip.alaindustrial.electric_drill_diamond_tip.silk_off {gray}
+tooltip.alaindustrial.electric_drill.charge(10000, 10000) {gold}
+== alaindustrial:electric_drill_diamond_tip full modes
+-- plain eu
+tooltip.alaindustrial.electric_drill_diamond_tip.usage(50) {gray}
+tooltip.alaindustrial.electric_drill_diamond_tip.silk_on {aqua}
+tooltip.alaindustrial.electric_drill.column_on {aqua}
+tooltip.alaindustrial.electric_drill.charge(10000, 10000) {gold}
+-- shift eu
+tooltip.alaindustrial.electric_drill_diamond_tip.usage(50) {gray}
+tooltip.alaindustrial.electric_drill_diamond_tip.silk_on {aqua}
+tooltip.alaindustrial.electric_drill.column_on {aqua}
+tooltip.alaindustrial.electric_drill.charge(10000, 10000) {gold}
+-- plain no-eu
+tooltip.alaindustrial.electric_drill_diamond_tip.usage(50) {gray}
+tooltip.alaindustrial.electric_drill_diamond_tip.silk_on {aqua}
+tooltip.alaindustrial.electric_drill.column_on {aqua}
+tooltip.alaindustrial.electric_drill.charge(10000, 10000) {gold}
+-- shift no-eu
+tooltip.alaindustrial.electric_drill_diamond_tip.usage(50) {gray}
+tooltip.alaindustrial.electric_drill_diamond_tip.silk_on {aqua}
+tooltip.alaindustrial.electric_drill.column_on {aqua}
+tooltip.alaindustrial.electric_drill.charge(10000, 10000) {gold}
+== alaindustrial:electric_drill_netherite_tip plain
+-- plain eu
+tooltip.alaindustrial.electric_drill_netherite_tip.usage(50) {gray}
+tooltip.alaindustrial.electric_drill_netherite_tip.silk_off {gray}
+tooltip.alaindustrial.electric_drill.depleted {red}
+-- shift eu
+tooltip.alaindustrial.electric_drill_netherite_tip.usage(50) {gray}
+tooltip.alaindustrial.electric_drill_netherite_tip.silk_off {gray}
+tooltip.alaindustrial.electric_drill.depleted {red}
+-- plain no-eu
+tooltip.alaindustrial.electric_drill_netherite_tip.usage(50) {gray}
+tooltip.alaindustrial.electric_drill_netherite_tip.silk_off {gray}
+tooltip.alaindustrial.electric_drill.depleted {red}
+-- shift no-eu
+tooltip.alaindustrial.electric_drill_netherite_tip.usage(50) {gray}
+tooltip.alaindustrial.electric_drill_netherite_tip.silk_off {gray}
+tooltip.alaindustrial.electric_drill.depleted {red}
+== alaindustrial:electric_drill_netherite_tip eu=1
+-- plain eu
+tooltip.alaindustrial.electric_drill_netherite_tip.usage(50) {gray}
+tooltip.alaindustrial.electric_drill_netherite_tip.silk_off {gray}
+tooltip.alaindustrial.electric_drill.charge(1, 15000) {gold}
+-- shift eu
+tooltip.alaindustrial.electric_drill_netherite_tip.usage(50) {gray}
+tooltip.alaindustrial.electric_drill_netherite_tip.silk_off {gray}
+tooltip.alaindustrial.electric_drill.charge(1, 15000) {gold}
+-- plain no-eu
+tooltip.alaindustrial.electric_drill_netherite_tip.usage(50) {gray}
+tooltip.alaindustrial.electric_drill_netherite_tip.silk_off {gray}
+tooltip.alaindustrial.electric_drill.charge(1, 15000) {gold}
+-- shift no-eu
+tooltip.alaindustrial.electric_drill_netherite_tip.usage(50) {gray}
+tooltip.alaindustrial.electric_drill_netherite_tip.silk_off {gray}
+tooltip.alaindustrial.electric_drill.charge(1, 15000) {gold}
+== alaindustrial:electric_drill_netherite_tip full
+-- plain eu
+tooltip.alaindustrial.electric_drill_netherite_tip.usage(50) {gray}
+tooltip.alaindustrial.electric_drill_netherite_tip.silk_off {gray}
+tooltip.alaindustrial.electric_drill.charge(15000, 15000) {gold}
+-- shift eu
+tooltip.alaindustrial.electric_drill_netherite_tip.usage(50) {gray}
+tooltip.alaindustrial.electric_drill_netherite_tip.silk_off {gray}
+tooltip.alaindustrial.electric_drill.charge(15000, 15000) {gold}
+-- plain no-eu
+tooltip.alaindustrial.electric_drill_netherite_tip.usage(50) {gray}
+tooltip.alaindustrial.electric_drill_netherite_tip.silk_off {gray}
+tooltip.alaindustrial.electric_drill.charge(15000, 15000) {gold}
+-- shift no-eu
+tooltip.alaindustrial.electric_drill_netherite_tip.usage(50) {gray}
+tooltip.alaindustrial.electric_drill_netherite_tip.silk_off {gray}
+tooltip.alaindustrial.electric_drill.charge(15000, 15000) {gold}
+== alaindustrial:electric_drill_netherite_tip full modes
+-- plain eu
+tooltip.alaindustrial.electric_drill_netherite_tip.usage(50) {gray}
+tooltip.alaindustrial.electric_drill_netherite_tip.silk_on {aqua}
+tooltip.alaindustrial.electric_drill.column_on {aqua}
+tooltip.alaindustrial.electric_drill.charge(15000, 15000) {gold}
+-- shift eu
+tooltip.alaindustrial.electric_drill_netherite_tip.usage(50) {gray}
+tooltip.alaindustrial.electric_drill_netherite_tip.silk_on {aqua}
+tooltip.alaindustrial.electric_drill.column_on {aqua}
+tooltip.alaindustrial.electric_drill.charge(15000, 15000) {gold}
+-- plain no-eu
+tooltip.alaindustrial.electric_drill_netherite_tip.usage(50) {gray}
+tooltip.alaindustrial.electric_drill_netherite_tip.silk_on {aqua}
+tooltip.alaindustrial.electric_drill.column_on {aqua}
+tooltip.alaindustrial.electric_drill.charge(15000, 15000) {gold}
+-- shift no-eu
+tooltip.alaindustrial.electric_drill_netherite_tip.usage(50) {gray}
+tooltip.alaindustrial.electric_drill_netherite_tip.silk_on {aqua}
+tooltip.alaindustrial.electric_drill.column_on {aqua}
+tooltip.alaindustrial.electric_drill.charge(15000, 15000) {gold}
+== alaindustrial:electric_furnace plain
+-- plain eu
+tooltip.alaindustrial.energy_input(2) {gray}
+tooltip.alaindustrial.duration_ticks(100) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.energy_input(2) {gray}
+tooltip.alaindustrial.duration_ticks(100) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.buffer(800) {gray}
+tooltip.alaindustrial.energy_per_op(200) {gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:electric_heater plain
+-- plain eu
+tooltip.alaindustrial.energy_input(6) {gray}
+tooltip.alaindustrial.capacity(2400) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.energy_input(6) {gray}
+tooltip.alaindustrial.capacity(2400) {gray}
+tooltip.alaindustrial.tier_lv {green}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:electric_hoe plain
+-- plain eu
+tooltip.alaindustrial.electric_hoe.usage(50) {gray}
+tooltip.alaindustrial.electric_hoe.depleted {red}
+-- shift eu
+tooltip.alaindustrial.electric_hoe.usage(50) {gray}
+tooltip.alaindustrial.electric_hoe.depleted {red}
+-- plain no-eu
+tooltip.alaindustrial.electric_hoe.usage(50) {gray}
+tooltip.alaindustrial.electric_hoe.depleted {red}
+-- shift no-eu
+tooltip.alaindustrial.electric_hoe.usage(50) {gray}
+tooltip.alaindustrial.electric_hoe.depleted {red}
+== alaindustrial:electric_hoe eu=1
+-- plain eu
+tooltip.alaindustrial.electric_hoe.usage(50) {gray}
+tooltip.alaindustrial.electric_hoe.charge(1, 10000) {gold}
+-- shift eu
+tooltip.alaindustrial.electric_hoe.usage(50) {gray}
+tooltip.alaindustrial.electric_hoe.charge(1, 10000) {gold}
+-- plain no-eu
+tooltip.alaindustrial.electric_hoe.usage(50) {gray}
+tooltip.alaindustrial.electric_hoe.charge(1, 10000) {gold}
+-- shift no-eu
+tooltip.alaindustrial.electric_hoe.usage(50) {gray}
+tooltip.alaindustrial.electric_hoe.charge(1, 10000) {gold}
+== alaindustrial:electric_hoe full
+-- plain eu
+tooltip.alaindustrial.electric_hoe.usage(50) {gray}
+tooltip.alaindustrial.electric_hoe.charge(10000, 10000) {gold}
+-- shift eu
+tooltip.alaindustrial.electric_hoe.usage(50) {gray}
+tooltip.alaindustrial.electric_hoe.charge(10000, 10000) {gold}
+-- plain no-eu
+tooltip.alaindustrial.electric_hoe.usage(50) {gray}
+tooltip.alaindustrial.electric_hoe.charge(10000, 10000) {gold}
+-- shift no-eu
+tooltip.alaindustrial.electric_hoe.usage(50) {gray}
+tooltip.alaindustrial.electric_hoe.charge(10000, 10000) {gold}
+== alaindustrial:electric_hoe_diamond_tip plain
+-- plain eu
+tooltip.alaindustrial.electric_hoe.usage(50) {gray}
+tooltip.alaindustrial.electric_hoe.depleted {red}
+tooltip.alaindustrial.electric_hoe_diamond_tip.irrigation {aqua}
+-- shift eu
+tooltip.alaindustrial.electric_hoe.usage(50) {gray}
+tooltip.alaindustrial.electric_hoe.depleted {red}
+tooltip.alaindustrial.electric_hoe_diamond_tip.irrigation {aqua}
+-- plain no-eu
+tooltip.alaindustrial.electric_hoe.usage(50) {gray}
+tooltip.alaindustrial.electric_hoe.depleted {red}
+tooltip.alaindustrial.electric_hoe_diamond_tip.irrigation {aqua}
+-- shift no-eu
+tooltip.alaindustrial.electric_hoe.usage(50) {gray}
+tooltip.alaindustrial.electric_hoe.depleted {red}
+tooltip.alaindustrial.electric_hoe_diamond_tip.irrigation {aqua}
+== alaindustrial:electric_hoe_diamond_tip eu=1
+-- plain eu
+tooltip.alaindustrial.electric_hoe.usage(50) {gray}
+tooltip.alaindustrial.electric_hoe.charge(1, 10000) {gold}
+tooltip.alaindustrial.electric_hoe_diamond_tip.irrigation {aqua}
+-- shift eu
+tooltip.alaindustrial.electric_hoe.usage(50) {gray}
+tooltip.alaindustrial.electric_hoe.charge(1, 10000) {gold}
+tooltip.alaindustrial.electric_hoe_diamond_tip.irrigation {aqua}
+-- plain no-eu
+tooltip.alaindustrial.electric_hoe.usage(50) {gray}
+tooltip.alaindustrial.electric_hoe.charge(1, 10000) {gold}
+tooltip.alaindustrial.electric_hoe_diamond_tip.irrigation {aqua}
+-- shift no-eu
+tooltip.alaindustrial.electric_hoe.usage(50) {gray}
+tooltip.alaindustrial.electric_hoe.charge(1, 10000) {gold}
+tooltip.alaindustrial.electric_hoe_diamond_tip.irrigation {aqua}
+== alaindustrial:electric_hoe_diamond_tip full
+-- plain eu
+tooltip.alaindustrial.electric_hoe.usage(50) {gray}
+tooltip.alaindustrial.electric_hoe.charge(10000, 10000) {gold}
+tooltip.alaindustrial.electric_hoe_diamond_tip.irrigation {aqua}
+-- shift eu
+tooltip.alaindustrial.electric_hoe.usage(50) {gray}
+tooltip.alaindustrial.electric_hoe.charge(10000, 10000) {gold}
+tooltip.alaindustrial.electric_hoe_diamond_tip.irrigation {aqua}
+-- plain no-eu
+tooltip.alaindustrial.electric_hoe.usage(50) {gray}
+tooltip.alaindustrial.electric_hoe.charge(10000, 10000) {gold}
+tooltip.alaindustrial.electric_hoe_diamond_tip.irrigation {aqua}
+-- shift no-eu
+tooltip.alaindustrial.electric_hoe.usage(50) {gray}
+tooltip.alaindustrial.electric_hoe.charge(10000, 10000) {gold}
+tooltip.alaindustrial.electric_hoe_diamond_tip.irrigation {aqua}
+== alaindustrial:electric_saber plain
+-- plain eu
+tooltip.alaindustrial.electric_saber.usage(100) {gray}
+tooltip.alaindustrial.electric_saber.state_on {green}
+tooltip.alaindustrial.electric_saber.depleted {red}
+-- shift eu
+tooltip.alaindustrial.electric_saber.usage(100) {gray}
+tooltip.alaindustrial.electric_saber.state_on {green}
+tooltip.alaindustrial.electric_saber.depleted {red}
+-- plain no-eu
+tooltip.alaindustrial.electric_saber.usage(100) {gray}
+tooltip.alaindustrial.electric_saber.state_on {green}
+tooltip.alaindustrial.electric_saber.depleted {red}
+-- shift no-eu
+tooltip.alaindustrial.electric_saber.usage(100) {gray}
+tooltip.alaindustrial.electric_saber.state_on {green}
+tooltip.alaindustrial.electric_saber.depleted {red}
+== alaindustrial:electric_saber eu=1
+-- plain eu
+tooltip.alaindustrial.electric_saber.usage(100) {gray}
+tooltip.alaindustrial.electric_saber.state_on {green}
+tooltip.alaindustrial.electric_saber.depleted {red}
+-- shift eu
+tooltip.alaindustrial.electric_saber.usage(100) {gray}
+tooltip.alaindustrial.electric_saber.state_on {green}
+tooltip.alaindustrial.electric_saber.depleted {red}
+-- plain no-eu
+tooltip.alaindustrial.electric_saber.usage(100) {gray}
+tooltip.alaindustrial.electric_saber.state_on {green}
+tooltip.alaindustrial.electric_saber.depleted {red}
+-- shift no-eu
+tooltip.alaindustrial.electric_saber.usage(100) {gray}
+tooltip.alaindustrial.electric_saber.state_on {green}
+tooltip.alaindustrial.electric_saber.depleted {red}
+== alaindustrial:electric_saber full
+-- plain eu
+tooltip.alaindustrial.electric_saber.usage(100) {gray}
+tooltip.alaindustrial.electric_saber.state_on {green}
+tooltip.alaindustrial.electric_saber.charge(10000, 10000) {gold}
+-- shift eu
+tooltip.alaindustrial.electric_saber.usage(100) {gray}
+tooltip.alaindustrial.electric_saber.state_on {green}
+tooltip.alaindustrial.electric_saber.charge(10000, 10000) {gold}
+-- plain no-eu
+tooltip.alaindustrial.electric_saber.usage(100) {gray}
+tooltip.alaindustrial.electric_saber.state_on {green}
+tooltip.alaindustrial.electric_saber.charge(10000, 10000) {gold}
+-- shift no-eu
+tooltip.alaindustrial.electric_saber.usage(100) {gray}
+tooltip.alaindustrial.electric_saber.state_on {green}
+tooltip.alaindustrial.electric_saber.charge(10000, 10000) {gold}
+== alaindustrial:electric_saber full modes
+-- plain eu
+tooltip.alaindustrial.electric_saber.usage(100) {gray}
+tooltip.alaindustrial.electric_saber.state_off {gray}
+tooltip.alaindustrial.electric_saber.charge(10000, 10000) {gold}
+-- shift eu
+tooltip.alaindustrial.electric_saber.usage(100) {gray}
+tooltip.alaindustrial.electric_saber.state_off {gray}
+tooltip.alaindustrial.electric_saber.charge(10000, 10000) {gold}
+-- plain no-eu
+tooltip.alaindustrial.electric_saber.usage(100) {gray}
+tooltip.alaindustrial.electric_saber.state_off {gray}
+tooltip.alaindustrial.electric_saber.charge(10000, 10000) {gold}
+-- shift no-eu
+tooltip.alaindustrial.electric_saber.usage(100) {gray}
+tooltip.alaindustrial.electric_saber.state_off {gray}
+tooltip.alaindustrial.electric_saber.charge(10000, 10000) {gold}
+== alaindustrial:electric_shovel plain
+-- plain eu
+tooltip.alaindustrial.electric_shovel.usage(20) {gray}
+tooltip.alaindustrial.electric_shovel.depleted {red}
+-- shift eu
+tooltip.alaindustrial.electric_shovel.usage(20) {gray}
+tooltip.alaindustrial.electric_shovel.depleted {red}
+-- plain no-eu
+tooltip.alaindustrial.electric_shovel.usage(20) {gray}
+tooltip.alaindustrial.electric_shovel.depleted {red}
+-- shift no-eu
+tooltip.alaindustrial.electric_shovel.usage(20) {gray}
+tooltip.alaindustrial.electric_shovel.depleted {red}
+== alaindustrial:electric_shovel eu=1
+-- plain eu
+tooltip.alaindustrial.electric_shovel.usage(20) {gray}
+tooltip.alaindustrial.electric_shovel.charge(1, 10000) {gold}
+-- shift eu
+tooltip.alaindustrial.electric_shovel.usage(20) {gray}
+tooltip.alaindustrial.electric_shovel.charge(1, 10000) {gold}
+-- plain no-eu
+tooltip.alaindustrial.electric_shovel.usage(20) {gray}
+tooltip.alaindustrial.electric_shovel.charge(1, 10000) {gold}
+-- shift no-eu
+tooltip.alaindustrial.electric_shovel.usage(20) {gray}
+tooltip.alaindustrial.electric_shovel.charge(1, 10000) {gold}
+== alaindustrial:electric_shovel full
+-- plain eu
+tooltip.alaindustrial.electric_shovel.usage(20) {gray}
+tooltip.alaindustrial.electric_shovel.charge(10000, 10000) {gold}
+-- shift eu
+tooltip.alaindustrial.electric_shovel.usage(20) {gray}
+tooltip.alaindustrial.electric_shovel.charge(10000, 10000) {gold}
+-- plain no-eu
+tooltip.alaindustrial.electric_shovel.usage(20) {gray}
+tooltip.alaindustrial.electric_shovel.charge(10000, 10000) {gold}
+-- shift no-eu
+tooltip.alaindustrial.electric_shovel.usage(20) {gray}
+tooltip.alaindustrial.electric_shovel.charge(10000, 10000) {gold}
+== alaindustrial:electric_shovel_diamond_tip plain
+-- plain eu
+tooltip.alaindustrial.electric_shovel.usage(20) {gray}
+tooltip.alaindustrial.electric_shovel.depleted {red}
+tooltip.alaindustrial.electric_shovel_diamond_tip.silk_off {gray}
+-- shift eu
+tooltip.alaindustrial.electric_shovel.usage(20) {gray}
+tooltip.alaindustrial.electric_shovel.depleted {red}
+tooltip.alaindustrial.electric_shovel_diamond_tip.silk_off {gray}
+-- plain no-eu
+tooltip.alaindustrial.electric_shovel.usage(20) {gray}
+tooltip.alaindustrial.electric_shovel.depleted {red}
+tooltip.alaindustrial.electric_shovel_diamond_tip.silk_off {gray}
+-- shift no-eu
+tooltip.alaindustrial.electric_shovel.usage(20) {gray}
+tooltip.alaindustrial.electric_shovel.depleted {red}
+tooltip.alaindustrial.electric_shovel_diamond_tip.silk_off {gray}
+== alaindustrial:electric_shovel_diamond_tip eu=1
+-- plain eu
+tooltip.alaindustrial.electric_shovel.usage(20) {gray}
+tooltip.alaindustrial.electric_shovel.charge(1, 10000) {gold}
+tooltip.alaindustrial.electric_shovel_diamond_tip.silk_off {gray}
+-- shift eu
+tooltip.alaindustrial.electric_shovel.usage(20) {gray}
+tooltip.alaindustrial.electric_shovel.charge(1, 10000) {gold}
+tooltip.alaindustrial.electric_shovel_diamond_tip.silk_off {gray}
+-- plain no-eu
+tooltip.alaindustrial.electric_shovel.usage(20) {gray}
+tooltip.alaindustrial.electric_shovel.charge(1, 10000) {gold}
+tooltip.alaindustrial.electric_shovel_diamond_tip.silk_off {gray}
+-- shift no-eu
+tooltip.alaindustrial.electric_shovel.usage(20) {gray}
+tooltip.alaindustrial.electric_shovel.charge(1, 10000) {gold}
+tooltip.alaindustrial.electric_shovel_diamond_tip.silk_off {gray}
+== alaindustrial:electric_shovel_diamond_tip full
+-- plain eu
+tooltip.alaindustrial.electric_shovel.usage(20) {gray}
+tooltip.alaindustrial.electric_shovel.charge(10000, 10000) {gold}
+tooltip.alaindustrial.electric_shovel_diamond_tip.silk_off {gray}
+-- shift eu
+tooltip.alaindustrial.electric_shovel.usage(20) {gray}
+tooltip.alaindustrial.electric_shovel.charge(10000, 10000) {gold}
+tooltip.alaindustrial.electric_shovel_diamond_tip.silk_off {gray}
+-- plain no-eu
+tooltip.alaindustrial.electric_shovel.usage(20) {gray}
+tooltip.alaindustrial.electric_shovel.charge(10000, 10000) {gold}
+tooltip.alaindustrial.electric_shovel_diamond_tip.silk_off {gray}
+-- shift no-eu
+tooltip.alaindustrial.electric_shovel.usage(20) {gray}
+tooltip.alaindustrial.electric_shovel.charge(10000, 10000) {gold}
+tooltip.alaindustrial.electric_shovel_diamond_tip.silk_off {gray}
+== alaindustrial:electric_shovel_diamond_tip full modes
+-- plain eu
+tooltip.alaindustrial.electric_shovel.usage(20) {gray}
+tooltip.alaindustrial.electric_shovel.charge(10000, 10000) {gold}
+tooltip.alaindustrial.electric_shovel_diamond_tip.silk_on {aqua}
+-- shift eu
+tooltip.alaindustrial.electric_shovel.usage(20) {gray}
+tooltip.alaindustrial.electric_shovel.charge(10000, 10000) {gold}
+tooltip.alaindustrial.electric_shovel_diamond_tip.silk_on {aqua}
+-- plain no-eu
+tooltip.alaindustrial.electric_shovel.usage(20) {gray}
+tooltip.alaindustrial.electric_shovel.charge(10000, 10000) {gold}
+tooltip.alaindustrial.electric_shovel_diamond_tip.silk_on {aqua}
+-- shift no-eu
+tooltip.alaindustrial.electric_shovel.usage(20) {gray}
+tooltip.alaindustrial.electric_shovel.charge(10000, 10000) {gold}
+tooltip.alaindustrial.electric_shovel_diamond_tip.silk_on {aqua}
+== alaindustrial:electromagnet plain : none
+== alaindustrial:electromagnet eu=1 : none
+== alaindustrial:electromagnet full : none
+== alaindustrial:electromagnet_advanced plain : none
+== alaindustrial:electromagnet_advanced eu=1 : none
+== alaindustrial:electromagnet_advanced full : none
+== alaindustrial:electronic_circuit plain : none
+== alaindustrial:electrum_cable plain
+-- plain eu
+tooltip.alaindustrial.tier_hv {light_purple}
+tooltip.alaindustrial.buffer(192) {gray}
+tooltip.alaindustrial.cable_shock_warning {red}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.tier_hv {light_purple}
+tooltip.alaindustrial.buffer(192) {gray}
+tooltip.alaindustrial.cable_shock_warning {red}
+tooltip.alaindustrial.cable_loss(0.5) {gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_hv {light_purple}
+tooltip.alaindustrial.cable_shock_warning {red}
+== alaindustrial:electrum_cable dyed
+-- plain eu
+item.color(<color.minecraft.red>) {gray}
+tooltip.alaindustrial.tier_hv {light_purple}
+tooltip.alaindustrial.buffer(192) {gray}
+tooltip.alaindustrial.cable_shock_warning {red}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+item.color(<color.minecraft.red>) {gray}
+tooltip.alaindustrial.tier_hv {light_purple}
+tooltip.alaindustrial.buffer(192) {gray}
+tooltip.alaindustrial.cable_shock_warning {red}
+tooltip.alaindustrial.cable_loss(0.5) {gray}
+-- plain no-eu
+item.color(<color.minecraft.red>) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+item.color(<color.minecraft.red>) {gray}
+tooltip.alaindustrial.tier_hv {light_purple}
+tooltip.alaindustrial.cable_shock_warning {red}
+== alaindustrial:electrum_chest plain
+-- plain eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.storage_slots(81) {gray}
+tooltip.alaindustrial.storage_slots_double(162) {dark_gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.storage_slots(81) {gray}
+tooltip.alaindustrial.storage_slots_double(162) {dark_gray}
+== alaindustrial:electrum_gear plain : none
+== alaindustrial:electrum_ingot plain : none
+== alaindustrial:electrum_plate plain : none
+== alaindustrial:electrum_reinforced_plate plain : none
+== alaindustrial:emerald_dust plain : none
+== alaindustrial:empty_can plain : none
+== alaindustrial:empty_chip plain : none
+== alaindustrial:empty_fuel_rod plain : none
+== alaindustrial:energy_clot_i plain : none
+== alaindustrial:energy_clot_ii plain : none
+== alaindustrial:energy_clot_iii plain : none
+== alaindustrial:energy_condenser plain
+-- plain eu
+tooltip.alaindustrial.energy_input(128) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.energy_input(128) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.capacity(4000000) {gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:energy_crystal plain : none
+== alaindustrial:energy_crystal_blank plain : none
+== alaindustrial:energy_crystal_blank eu=1 : none
+== alaindustrial:energy_crystal_blank full : none
+== alaindustrial:energy_pack plain
+-- plain eu
+tooltip.alaindustrial.energy_pack.usage {gray}
+tooltip.alaindustrial.energy_pack.usage_charges {gray}
+tooltip.alaindustrial.energy_pack.depleted {red}
+-- shift eu
+tooltip.alaindustrial.energy_pack.usage {gray}
+tooltip.alaindustrial.energy_pack.usage_charges {gray}
+tooltip.alaindustrial.energy_pack.depleted {red}
+-- plain no-eu
+tooltip.alaindustrial.energy_pack.usage {gray}
+tooltip.alaindustrial.energy_pack.usage_charges {gray}
+tooltip.alaindustrial.energy_pack.depleted {red}
+-- shift no-eu
+tooltip.alaindustrial.energy_pack.usage {gray}
+tooltip.alaindustrial.energy_pack.usage_charges {gray}
+tooltip.alaindustrial.energy_pack.depleted {red}
+== alaindustrial:energy_pack eu=1
+-- plain eu
+tooltip.alaindustrial.energy_pack.usage {gray}
+tooltip.alaindustrial.energy_pack.usage_charges {gray}
+tooltip.alaindustrial.energy_pack.charge(1, 20000) {gold}
+-- shift eu
+tooltip.alaindustrial.energy_pack.usage {gray}
+tooltip.alaindustrial.energy_pack.usage_charges {gray}
+tooltip.alaindustrial.energy_pack.charge(1, 20000) {gold}
+-- plain no-eu
+tooltip.alaindustrial.energy_pack.usage {gray}
+tooltip.alaindustrial.energy_pack.usage_charges {gray}
+tooltip.alaindustrial.energy_pack.charge(1, 20000) {gold}
+-- shift no-eu
+tooltip.alaindustrial.energy_pack.usage {gray}
+tooltip.alaindustrial.energy_pack.usage_charges {gray}
+tooltip.alaindustrial.energy_pack.charge(1, 20000) {gold}
+== alaindustrial:energy_pack full
+-- plain eu
+tooltip.alaindustrial.energy_pack.usage {gray}
+tooltip.alaindustrial.energy_pack.usage_charges {gray}
+tooltip.alaindustrial.energy_pack.charge(20000, 20000) {gold}
+-- shift eu
+tooltip.alaindustrial.energy_pack.usage {gray}
+tooltip.alaindustrial.energy_pack.usage_charges {gray}
+tooltip.alaindustrial.energy_pack.charge(20000, 20000) {gold}
+-- plain no-eu
+tooltip.alaindustrial.energy_pack.usage {gray}
+tooltip.alaindustrial.energy_pack.usage_charges {gray}
+tooltip.alaindustrial.energy_pack.charge(20000, 20000) {gold}
+-- shift no-eu
+tooltip.alaindustrial.energy_pack.usage {gray}
+tooltip.alaindustrial.energy_pack.usage_charges {gray}
+tooltip.alaindustrial.energy_pack.charge(20000, 20000) {gold}
+== alaindustrial:engraved_plate_0 plain : none
+== alaindustrial:engraved_plate_1 plain : none
+== alaindustrial:engraved_plate_2 plain : none
+== alaindustrial:engraved_plate_3 plain : none
+== alaindustrial:engraved_plate_4 plain : none
+== alaindustrial:engraved_plate_5 plain : none
+== alaindustrial:engraved_plate_6 plain : none
+== alaindustrial:engraved_plate_7 plain : none
+== alaindustrial:engraved_plate_8 plain : none
+== alaindustrial:engraved_plate_9 plain : none
+== alaindustrial:enriched_uranium_torch plain : none
+== alaindustrial:extractor plain
+-- plain eu
+tooltip.alaindustrial.energy_input(2) {gray}
+tooltip.alaindustrial.duration_ticks(120) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.energy_input(2) {gray}
+tooltip.alaindustrial.duration_ticks(120) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.buffer(800) {gray}
+tooltip.alaindustrial.energy_per_op(240) {gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:fermenter plain
+-- plain eu
+tooltip.alaindustrial.energy_input(2) {gray}
+tooltip.alaindustrial.duration_ticks(300) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.energy_input(2) {gray}
+tooltip.alaindustrial.duration_ticks(300) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.buffer(800) {gray}
+tooltip.alaindustrial.energy_per_op(600) {gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:filled_vacuum_capsule plain : none
+== alaindustrial:fluid_pipe plain : none
+== alaindustrial:fluid_pipe_advanced plain : none
+== alaindustrial:fluid_tank plain : none
+== alaindustrial:fluid_tank_advanced plain : none
+== alaindustrial:flux_thread plain : none
+== alaindustrial:fluxweave_boots plain : none
+== alaindustrial:fluxweave_boots eu=1 : none
+== alaindustrial:fluxweave_boots full : none
+== alaindustrial:fluxweave_chestplate plain : none
+== alaindustrial:fluxweave_chestplate eu=1 : none
+== alaindustrial:fluxweave_chestplate full : none
+== alaindustrial:fluxweave_cloth plain : none
+== alaindustrial:fluxweave_helmet plain : none
+== alaindustrial:fluxweave_helmet eu=1 : none
+== alaindustrial:fluxweave_helmet full : none
+== alaindustrial:fluxweave_leggings plain : none
+== alaindustrial:fluxweave_leggings eu=1 : none
+== alaindustrial:fluxweave_leggings full : none
+== alaindustrial:forge_hammer plain : none
+== alaindustrial:fuel_oil_bucket plain : none
+== alaindustrial:fuel_rod_assembly plain : none
+== alaindustrial:galvanic_bath plain
+-- plain eu
+tooltip.alaindustrial.energy_input(2) {gray}
+tooltip.alaindustrial.duration_ticks(500) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.energy_input(2) {gray}
+tooltip.alaindustrial.duration_ticks(500) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.buffer(800) {gray}
+tooltip.alaindustrial.energy_per_op(1000) {gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:garden_drone plain : none
+== alaindustrial:garden_drone_station plain
+-- plain eu
+tooltip.alaindustrial.garden_drone_action_cost(8) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.garden_drone_action_cost(8) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.garden_drone_range(4) {gray}
+tooltip.alaindustrial.capacity(4000) {gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:geiger_counter plain : none
+== alaindustrial:generator plain
+-- plain eu
+tooltip.alaindustrial.energy_output_fuel(8) {gray}
+tooltip.alaindustrial.capacity(4000) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.energy_output_fuel(8) {gray}
+tooltip.alaindustrial.capacity(4000) {gray}
+tooltip.alaindustrial.tier_lv {green}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:geothermal_generator plain
+-- plain eu
+tooltip.alaindustrial.energy_output_lava(16) {gray}
+tooltip.alaindustrial.capacity(4000) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.energy_output_lava(16) {gray}
+tooltip.alaindustrial.capacity(4000) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.geo_burn_ticks(1000) {gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:gold_cable plain
+-- plain eu
+tooltip.alaindustrial.tier_mv {green}
+tooltip.alaindustrial.buffer(48) {gray}
+tooltip.alaindustrial.cable_shock_warning {red}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.tier_mv {green}
+tooltip.alaindustrial.buffer(48) {gray}
+tooltip.alaindustrial.cable_shock_warning {red}
+tooltip.alaindustrial.cable_loss(3) {gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_mv {green}
+tooltip.alaindustrial.cable_shock_warning {red}
+== alaindustrial:gold_cable dyed
+-- plain eu
+item.color(<color.minecraft.red>) {gray}
+tooltip.alaindustrial.tier_mv {green}
+tooltip.alaindustrial.buffer(48) {gray}
+tooltip.alaindustrial.cable_shock_warning {red}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+item.color(<color.minecraft.red>) {gray}
+tooltip.alaindustrial.tier_mv {green}
+tooltip.alaindustrial.buffer(48) {gray}
+tooltip.alaindustrial.cable_shock_warning {red}
+tooltip.alaindustrial.cable_loss(3) {gray}
+-- plain no-eu
+item.color(<color.minecraft.red>) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+item.color(<color.minecraft.red>) {gray}
+tooltip.alaindustrial.tier_mv {green}
+tooltip.alaindustrial.cable_shock_warning {red}
+== alaindustrial:gold_chest plain
+-- plain eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.storage_slots(54) {gray}
+tooltip.alaindustrial.storage_slots_double(108) {dark_gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.storage_slots(54) {gray}
+tooltip.alaindustrial.storage_slots_double(108) {dark_gray}
+== alaindustrial:gold_dust plain : none
+== alaindustrial:gold_gear plain : none
+== alaindustrial:gold_plate plain : none
+== alaindustrial:guide_book plain : none
+== alaindustrial:high_altitude_wind_mill plain : none
+== alaindustrial:incubator plain
+-- plain eu
+tooltip.alaindustrial.energy_input(8) {gray}
+tooltip.alaindustrial.capacity(8000) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.energy_input(8) {gray}
+tooltip.alaindustrial.capacity(8000) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.buffer(8000) {gray}
+gui.alaindustrial.incubator.mode.transform {gray} + " — " + tooltip.alaindustrial.duration_ticks(300)
+gui.alaindustrial.incubator.mode.duplicate {gray} + " — " + tooltip.alaindustrial.duration_ticks(500)
+gui.alaindustrial.incubator.mode.create {gray} + " — " + tooltip.alaindustrial.duration_ticks(1000)
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:industrial_workbench plain : none
+== alaindustrial:insulated_boots plain : none
+== alaindustrial:insulated_chestplate plain : none
+== alaindustrial:insulated_copper_cable plain
+-- plain eu
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.buffer(12) {gray}
+tooltip.alaindustrial.cable_safe {green}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.buffer(12) {gray}
+tooltip.alaindustrial.cable_safe {green}
+tooltip.alaindustrial.cable_loss(1) {gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.cable_safe {green}
+== alaindustrial:insulated_copper_cable dyed
+-- plain eu
+item.color(<color.minecraft.red>) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.buffer(12) {gray}
+tooltip.alaindustrial.cable_safe {green}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+item.color(<color.minecraft.red>) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.buffer(12) {gray}
+tooltip.alaindustrial.cable_safe {green}
+tooltip.alaindustrial.cable_loss(1) {gray}
+-- plain no-eu
+item.color(<color.minecraft.red>) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+item.color(<color.minecraft.red>) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.cable_safe {green}
+== alaindustrial:insulated_electrum_cable plain
+-- plain eu
+tooltip.alaindustrial.tier_hv {light_purple}
+tooltip.alaindustrial.buffer(192) {gray}
+tooltip.alaindustrial.cable_safe {green}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.tier_hv {light_purple}
+tooltip.alaindustrial.buffer(192) {gray}
+tooltip.alaindustrial.cable_safe {green}
+tooltip.alaindustrial.cable_loss(0.25) {gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_hv {light_purple}
+tooltip.alaindustrial.cable_safe {green}
+== alaindustrial:insulated_electrum_cable dyed
+-- plain eu
+item.color(<color.minecraft.red>) {gray}
+tooltip.alaindustrial.tier_hv {light_purple}
+tooltip.alaindustrial.buffer(192) {gray}
+tooltip.alaindustrial.cable_safe {green}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+item.color(<color.minecraft.red>) {gray}
+tooltip.alaindustrial.tier_hv {light_purple}
+tooltip.alaindustrial.buffer(192) {gray}
+tooltip.alaindustrial.cable_safe {green}
+tooltip.alaindustrial.cable_loss(0.25) {gray}
+-- plain no-eu
+item.color(<color.minecraft.red>) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+item.color(<color.minecraft.red>) {gray}
+tooltip.alaindustrial.tier_hv {light_purple}
+tooltip.alaindustrial.cable_safe {green}
+== alaindustrial:insulated_gold_cable plain
+-- plain eu
+tooltip.alaindustrial.tier_mv {green}
+tooltip.alaindustrial.buffer(48) {gray}
+tooltip.alaindustrial.cable_safe {green}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.tier_mv {green}
+tooltip.alaindustrial.buffer(48) {gray}
+tooltip.alaindustrial.cable_safe {green}
+tooltip.alaindustrial.cable_loss(1.5) {gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_mv {green}
+tooltip.alaindustrial.cable_safe {green}
+== alaindustrial:insulated_gold_cable dyed
+-- plain eu
+item.color(<color.minecraft.red>) {gray}
+tooltip.alaindustrial.tier_mv {green}
+tooltip.alaindustrial.buffer(48) {gray}
+tooltip.alaindustrial.cable_safe {green}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+item.color(<color.minecraft.red>) {gray}
+tooltip.alaindustrial.tier_mv {green}
+tooltip.alaindustrial.buffer(48) {gray}
+tooltip.alaindustrial.cable_safe {green}
+tooltip.alaindustrial.cable_loss(1.5) {gray}
+-- plain no-eu
+item.color(<color.minecraft.red>) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+item.color(<color.minecraft.red>) {gray}
+tooltip.alaindustrial.tier_mv {green}
+tooltip.alaindustrial.cable_safe {green}
+== alaindustrial:insulated_helmet plain : none
+== alaindustrial:insulated_leggings plain : none
+== alaindustrial:insulated_tin_cable plain
+-- plain eu
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.buffer(8) {gray}
+tooltip.alaindustrial.cable_safe {green}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.buffer(8) {gray}
+tooltip.alaindustrial.cable_safe {green}
+tooltip.alaindustrial.cable_loss(0.3) {gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.cable_safe {green}
+== alaindustrial:insulated_tin_cable dyed
+-- plain eu
+item.color(<color.minecraft.red>) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.buffer(8) {gray}
+tooltip.alaindustrial.cable_safe {green}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+item.color(<color.minecraft.red>) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.buffer(8) {gray}
+tooltip.alaindustrial.cable_safe {green}
+tooltip.alaindustrial.cable_loss(0.3) {gray}
+-- plain no-eu
+item.color(<color.minecraft.red>) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+item.color(<color.minecraft.red>) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.cable_safe {green}
+== alaindustrial:inulin plain : none
+== alaindustrial:invar_ingot plain : none
+== alaindustrial:invar_plate plain : none
+== alaindustrial:invar_reinforced_plate plain : none
+== alaindustrial:iron_chest plain
+-- plain eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.storage_slots(36) {gray}
+tooltip.alaindustrial.storage_slots_double(72) {dark_gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.storage_slots(36) {gray}
+tooltip.alaindustrial.storage_slots_double(72) {dark_gray}
+== alaindustrial:iron_dust plain : none
+== alaindustrial:iron_furnace plain : none
+== alaindustrial:iron_gear plain : none
+== alaindustrial:iron_plate plain : none
+== alaindustrial:irradiated_diamond plain : none
+== alaindustrial:irradiated_slag plain : none
+== alaindustrial:irradiated_soil plain : none
+== alaindustrial:item_pipe plain : none
+== alaindustrial:item_pipe_advanced plain : none
+== alaindustrial:jetpack plain
+-- plain eu
+tooltip.alaindustrial.jetpack.usage {gray}
+tooltip.alaindustrial.jetpack.depleted {red}
+-- shift eu
+tooltip.alaindustrial.jetpack.usage {gray}
+tooltip.alaindustrial.jetpack.depleted {red}
+-- plain no-eu
+tooltip.alaindustrial.jetpack.usage {gray}
+tooltip.alaindustrial.jetpack.depleted {red}
+-- shift no-eu
+tooltip.alaindustrial.jetpack.usage {gray}
+tooltip.alaindustrial.jetpack.depleted {red}
+== alaindustrial:jetpack eu=1
+-- plain eu
+tooltip.alaindustrial.jetpack.usage {gray}
+tooltip.alaindustrial.jetpack.charge(1, 30000) {gold}
+-- shift eu
+tooltip.alaindustrial.jetpack.usage {gray}
+tooltip.alaindustrial.jetpack.charge(1, 30000) {gold}
+-- plain no-eu
+tooltip.alaindustrial.jetpack.usage {gray}
+tooltip.alaindustrial.jetpack.charge(1, 30000) {gold}
+-- shift no-eu
+tooltip.alaindustrial.jetpack.usage {gray}
+tooltip.alaindustrial.jetpack.charge(1, 30000) {gold}
+== alaindustrial:jetpack full
+-- plain eu
+tooltip.alaindustrial.jetpack.usage {gray}
+tooltip.alaindustrial.jetpack.charge(30000, 30000) {gold}
+-- shift eu
+tooltip.alaindustrial.jetpack.usage {gray}
+tooltip.alaindustrial.jetpack.charge(30000, 30000) {gold}
+-- plain no-eu
+tooltip.alaindustrial.jetpack.usage {gray}
+tooltip.alaindustrial.jetpack.charge(30000, 30000) {gold}
+-- shift no-eu
+tooltip.alaindustrial.jetpack.usage {gray}
+tooltip.alaindustrial.jetpack.charge(30000, 30000) {gold}
+== alaindustrial:kok_sagyz_root plain : none
+== alaindustrial:kok_sagyz_seeds plain : none
+== alaindustrial:lapis_dust plain : none
+== alaindustrial:lapotron_crystal plain : none
+== alaindustrial:lapotron_crystal_blank plain : none
+== alaindustrial:lapotron_crystal_blank eu=1 : none
+== alaindustrial:lapotron_crystal_blank full : none
+== alaindustrial:lightning_rod_conductor_tip plain : none
+== alaindustrial:lightning_rod_conductor_tip_advanced plain : none
+== alaindustrial:lightning_rod_conductor_tip_reinforced plain : none
+== alaindustrial:lightning_rod_generator plain
+-- plain eu
+tooltip.alaindustrial.buffer(4000) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.buffer(4000) {gray}
+tooltip.alaindustrial.tier_lv {green}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:macerator plain
+-- plain eu
+tooltip.alaindustrial.energy_input(2) {gray}
+tooltip.alaindustrial.duration_ticks(150) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.energy_input(2) {gray}
+tooltip.alaindustrial.duration_ticks(150) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.buffer(800) {gray}
+tooltip.alaindustrial.energy_per_op(300) {gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:machine_casing plain : none
+== alaindustrial:magnet_filter_module plain : none
+== alaindustrial:mob_repeller plain
+-- plain eu
+tooltip.alaindustrial.energy_input(8) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.energy_input(8) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.buffer(2000) {gray}
+tooltip.alaindustrial.range(8) {gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.range(8) {gray}
+== alaindustrial:mob_repeller_hv plain : none
+== alaindustrial:mob_repeller_mv plain : none
+== alaindustrial:module_blank plain : none
+== alaindustrial:monitor_core plain : none
+== alaindustrial:monitor_panel plain : none
+== alaindustrial:moonlit_solar_panel plain
+-- plain eu
+tooltip.alaindustrial.energy_output_night_only(3) {gray}
+tooltip.alaindustrial.capacity(8000) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.energy_output_night_only(3) {gray}
+tooltip.alaindustrial.capacity(8000) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.solar_day(0) {gray}
+tooltip.alaindustrial.solar_night(3) {gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:mutagen_dust plain : none
+== alaindustrial:mutation_chip_create plain : none
+== alaindustrial:mutation_chip_duplicate plain : none
+== alaindustrial:mutation_chip_transform plain : none
+== alaindustrial:mute_chip plain : none
+== alaindustrial:netherite_alloy_ingot plain : none
+== alaindustrial:netherite_drill_head plain : none
+== alaindustrial:netherite_drill_upgrade_smithing_template plain : none
+== alaindustrial:network_analyzer plain
+-- plain eu
+tooltip.alaindustrial.network_analyzer.usage {gray}
+tooltip.alaindustrial.network_analyzer.mode_label(<tooltip.alaindustrial.network_analyzer.mode.traverse>) {aqua}
+-- shift eu
+tooltip.alaindustrial.network_analyzer.usage {gray}
+tooltip.alaindustrial.network_analyzer.mode_label(<tooltip.alaindustrial.network_analyzer.mode.traverse>) {aqua}
+-- plain no-eu
+tooltip.alaindustrial.network_analyzer.usage {gray}
+tooltip.alaindustrial.network_analyzer.mode_label(<tooltip.alaindustrial.network_analyzer.mode.traverse>) {aqua}
+-- shift no-eu
+tooltip.alaindustrial.network_analyzer.usage {gray}
+tooltip.alaindustrial.network_analyzer.mode_label(<tooltip.alaindustrial.network_analyzer.mode.traverse>) {aqua}
+== alaindustrial:network_analyzer scanned
+-- plain eu
+tooltip.alaindustrial.network_analyzer.usage {gray}
+tooltip.alaindustrial.network_analyzer.mode_label(<tooltip.alaindustrial.network_analyzer.mode.stop_at_storage>) {aqua}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.network_analyzer.usage {gray}
+tooltip.alaindustrial.network_analyzer.mode_label(<tooltip.alaindustrial.network_analyzer.mode.stop_at_storage>) {aqua}
+tooltip.alaindustrial.network_analyzer.last_scan {aqua}
+tooltip.alaindustrial.network_analyzer.cables(12) {gray}
+tooltip.alaindustrial.network_analyzer.endpoints(2, 3, 1) {gray}
+tooltip.alaindustrial.network_analyzer.flow(40, 32) {gray}
+tooltip.alaindustrial.network_analyzer.moved(30) {gray}
+-- plain no-eu
+tooltip.alaindustrial.network_analyzer.usage {gray}
+tooltip.alaindustrial.network_analyzer.mode_label(<tooltip.alaindustrial.network_analyzer.mode.stop_at_storage>) {aqua}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.network_analyzer.usage {gray}
+tooltip.alaindustrial.network_analyzer.mode_label(<tooltip.alaindustrial.network_analyzer.mode.stop_at_storage>) {aqua}
+tooltip.alaindustrial.network_analyzer.last_scan {aqua}
+tooltip.alaindustrial.network_analyzer.cables(12) {gray}
+tooltip.alaindustrial.network_analyzer.endpoints(2, 3, 1) {gray}
+tooltip.alaindustrial.network_analyzer.flow(40, 32) {gray}
+tooltip.alaindustrial.network_analyzer.moved(30) {gray}
+== alaindustrial:nickel_dust plain : none
+== alaindustrial:nickel_ingot plain : none
+== alaindustrial:nickel_ore plain : none
+== alaindustrial:nickel_plate plain : none
+== alaindustrial:nutrient_solution_bucket plain : none
+== alaindustrial:oil_bucket plain : none
+== alaindustrial:overclocker_chip_i plain : none
+== alaindustrial:overclocker_chip_ii plain : none
+== alaindustrial:overclocker_chip_iii plain : none
+== alaindustrial:palladium_dust plain : none
+== alaindustrial:palladium_ingot plain : none
+== alaindustrial:palladium_ore plain : none
+== alaindustrial:palladium_plate plain : none
+== alaindustrial:polymerizer plain
+-- plain eu
+tooltip.alaindustrial.energy_input(2) {gray}
+tooltip.alaindustrial.duration_ticks(200) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.energy_input(2) {gray}
+tooltip.alaindustrial.duration_ticks(200) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.buffer(800) {gray}
+tooltip.alaindustrial.energy_per_op(400) {gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:pump plain
+-- plain eu
+tooltip.alaindustrial.pump_cost(1000) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.pump_cost(1000) {gray}
+tooltip.alaindustrial.tier_lv {green}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:radiant_solar_panel plain
+-- plain eu
+tooltip.alaindustrial.energy_output_day(8) {gray}
+tooltip.alaindustrial.capacity(16000) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.energy_output_day(8) {gray}
+tooltip.alaindustrial.capacity(16000) {gray}
+tooltip.alaindustrial.tier_lv {green}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:raw_nickel plain : none
+== alaindustrial:raw_palladium plain : none
+== alaindustrial:raw_rubber plain : none
+== alaindustrial:raw_silver plain : none
+== alaindustrial:raw_sulfur plain : none
+== alaindustrial:raw_tin plain : none
+== alaindustrial:raw_uranium plain : none
+== alaindustrial:reactor_button plain : none
+== alaindustrial:reactor_casing plain : none
+== alaindustrial:reactor_circuit plain : none
+== alaindustrial:reactor_controller plain : none
+== alaindustrial:reactor_door plain : none
+== alaindustrial:reactor_glass plain : none
+== alaindustrial:reactor_lamp plain : none
+== alaindustrial:reactor_lever plain : none
+== alaindustrial:reactor_outlet plain : none
+== alaindustrial:reactor_port plain : none
+== alaindustrial:rectification_section plain : none
+== alaindustrial:recycler plain
+-- plain eu
+tooltip.alaindustrial.energy_input(8) {gray}
+tooltip.alaindustrial.duration_ticks(40) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.energy_input(8) {gray}
+tooltip.alaindustrial.duration_ticks(40) {gray}
+tooltip.alaindustrial.tier_lv {green}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:recycler_blades_diamond plain : none
+== alaindustrial:recycler_blades_iron plain : none
+== alaindustrial:recycler_blades_tempered plain : none
+== alaindustrial:refined_uranium plain : none
+== alaindustrial:reinforced_amethyst plain : none
+== alaindustrial:reinforced_bearing plain : none
+== alaindustrial:reinforced_fluid_pipe plain : none
+== alaindustrial:reinforced_steam_pipe plain : none
+== alaindustrial:resonance_chip plain : none
+== alaindustrial:resonance_coil plain : none
+== alaindustrial:resonant_crystal plain : none
+== alaindustrial:resonant_crystal_blank plain : none
+== alaindustrial:resonant_crystal_blank eu=1 : none
+== alaindustrial:resonant_crystal_blank full : none
+== alaindustrial:resonant_shard plain : none
+== alaindustrial:rtp_chip plain : none
+== alaindustrial:rubber plain : none
+== alaindustrial:sawmill plain
+-- plain eu
+tooltip.alaindustrial.energy_input(2) {gray}
+tooltip.alaindustrial.duration_ticks(80) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.energy_input(2) {gray}
+tooltip.alaindustrial.duration_ticks(80) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.buffer(800) {gray}
+tooltip.alaindustrial.energy_per_op(160) {gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:scythe_copper plain : none
+== alaindustrial:scythe_diamond plain : none
+== alaindustrial:scythe_gold plain : none
+== alaindustrial:scythe_iron plain : none
+== alaindustrial:scythe_netherite plain : none
+== alaindustrial:scythe_stone plain : none
+== alaindustrial:scythe_tempered_iron plain : none
+== alaindustrial:scythe_wood plain : none
+== alaindustrial:shielding_alloy_ingot plain : none
+== alaindustrial:shielding_alloy_plate plain : none
+== alaindustrial:shielding_alloy_reinforced_plate plain : none
+== alaindustrial:shielding_boots plain : none
+== alaindustrial:shielding_chest plain
+-- plain eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.storage_slots(36) {gray}
+tooltip.alaindustrial.storage_slots_double(72) {dark_gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.storage_slots(36) {gray}
+tooltip.alaindustrial.storage_slots_double(72) {dark_gray}
+== alaindustrial:shielding_chestplate plain : none
+== alaindustrial:shielding_helmet plain : none
+== alaindustrial:shielding_leggings plain : none
+== alaindustrial:shielding_pouch plain
+-- plain eu
+tooltip.alaindustrial.battery_pouch.usage_insert {gray}
+tooltip.alaindustrial.battery_pouch.usage_extract {gray}
+tooltip.alaindustrial.battery_pouch.depleted {red}
+tooltip.alaindustrial.shielding_pouch.shielded {green}
+tooltip.alaindustrial.shielding_pouch.not_a_suit {yellow}
+-- shift eu
+tooltip.alaindustrial.battery_pouch.usage_insert {gray}
+tooltip.alaindustrial.battery_pouch.usage_extract {gray}
+tooltip.alaindustrial.battery_pouch.depleted {red}
+tooltip.alaindustrial.shielding_pouch.shielded {green}
+tooltip.alaindustrial.shielding_pouch.not_a_suit {yellow}
+-- plain no-eu
+tooltip.alaindustrial.battery_pouch.usage_insert {gray}
+tooltip.alaindustrial.battery_pouch.usage_extract {gray}
+tooltip.alaindustrial.battery_pouch.depleted {red}
+tooltip.alaindustrial.shielding_pouch.shielded {green}
+tooltip.alaindustrial.shielding_pouch.not_a_suit {yellow}
+-- shift no-eu
+tooltip.alaindustrial.battery_pouch.usage_insert {gray}
+tooltip.alaindustrial.battery_pouch.usage_extract {gray}
+tooltip.alaindustrial.battery_pouch.depleted {red}
+tooltip.alaindustrial.shielding_pouch.shielded {green}
+tooltip.alaindustrial.shielding_pouch.not_a_suit {yellow}
+== alaindustrial:shielding_pouch eu=1
+-- plain eu
+tooltip.alaindustrial.battery_pouch.usage_insert {gray}
+tooltip.alaindustrial.battery_pouch.usage_extract {gray}
+tooltip.alaindustrial.battery_pouch.charge(1, 2000) {gold}
+tooltip.alaindustrial.battery_pouch.low_charge {red}
+tooltip.alaindustrial.shielding_pouch.shielded {green}
+tooltip.alaindustrial.shielding_pouch.not_a_suit {yellow}
+-- shift eu
+tooltip.alaindustrial.battery_pouch.usage_insert {gray}
+tooltip.alaindustrial.battery_pouch.usage_extract {gray}
+tooltip.alaindustrial.battery_pouch.charge(1, 2000) {gold}
+tooltip.alaindustrial.battery_pouch.low_charge {red}
+tooltip.alaindustrial.shielding_pouch.shielded {green}
+tooltip.alaindustrial.shielding_pouch.not_a_suit {yellow}
+-- plain no-eu
+tooltip.alaindustrial.battery_pouch.usage_insert {gray}
+tooltip.alaindustrial.battery_pouch.usage_extract {gray}
+tooltip.alaindustrial.battery_pouch.charge(1, 2000) {gold}
+tooltip.alaindustrial.battery_pouch.low_charge {red}
+tooltip.alaindustrial.shielding_pouch.shielded {green}
+tooltip.alaindustrial.shielding_pouch.not_a_suit {yellow}
+-- shift no-eu
+tooltip.alaindustrial.battery_pouch.usage_insert {gray}
+tooltip.alaindustrial.battery_pouch.usage_extract {gray}
+tooltip.alaindustrial.battery_pouch.charge(1, 2000) {gold}
+tooltip.alaindustrial.battery_pouch.low_charge {red}
+tooltip.alaindustrial.shielding_pouch.shielded {green}
+tooltip.alaindustrial.shielding_pouch.not_a_suit {yellow}
+== alaindustrial:shielding_pouch full
+-- plain eu
+tooltip.alaindustrial.battery_pouch.usage_insert {gray}
+tooltip.alaindustrial.battery_pouch.usage_extract {gray}
+tooltip.alaindustrial.battery_pouch.charge(2000, 2000) {gold}
+tooltip.alaindustrial.shielding_pouch.shielded {green}
+tooltip.alaindustrial.shielding_pouch.not_a_suit {yellow}
+-- shift eu
+tooltip.alaindustrial.battery_pouch.usage_insert {gray}
+tooltip.alaindustrial.battery_pouch.usage_extract {gray}
+tooltip.alaindustrial.battery_pouch.charge(2000, 2000) {gold}
+tooltip.alaindustrial.shielding_pouch.shielded {green}
+tooltip.alaindustrial.shielding_pouch.not_a_suit {yellow}
+-- plain no-eu
+tooltip.alaindustrial.battery_pouch.usage_insert {gray}
+tooltip.alaindustrial.battery_pouch.usage_extract {gray}
+tooltip.alaindustrial.battery_pouch.charge(2000, 2000) {gold}
+tooltip.alaindustrial.shielding_pouch.shielded {green}
+tooltip.alaindustrial.shielding_pouch.not_a_suit {yellow}
+-- shift no-eu
+tooltip.alaindustrial.battery_pouch.usage_insert {gray}
+tooltip.alaindustrial.battery_pouch.usage_extract {gray}
+tooltip.alaindustrial.battery_pouch.charge(2000, 2000) {gold}
+tooltip.alaindustrial.shielding_pouch.shielded {green}
+tooltip.alaindustrial.shielding_pouch.not_a_suit {yellow}
+== alaindustrial:silver_chest plain
+-- plain eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.storage_slots(45) {gray}
+tooltip.alaindustrial.storage_slots_double(90) {dark_gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.storage_slots(45) {gray}
+tooltip.alaindustrial.storage_slots_double(90) {dark_gray}
+== alaindustrial:silver_dust plain : none
+== alaindustrial:silver_gear plain : none
+== alaindustrial:silver_ingot plain : none
+== alaindustrial:silver_ore plain : none
+== alaindustrial:silver_plate plain : none
+== alaindustrial:silver_plate_block plain : none
+== alaindustrial:slag plain : none
+== alaindustrial:slag_block plain : none
+== alaindustrial:slag_poor plain : none
+== alaindustrial:slag_rich plain : none
+== alaindustrial:smart_wire plain : none
+== alaindustrial:solar_panel plain
+-- plain eu
+tooltip.alaindustrial.energy_output_day(1) {gray}
+tooltip.alaindustrial.capacity(8000) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.energy_output_day(1) {gray}
+tooltip.alaindustrial.capacity(8000) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.solar_day(1) {gray}
+tooltip.alaindustrial.solar_night(0) {gray}
+tooltip.alaindustrial.solar_chip_hint {dark_gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.solar_chip_hint {dark_gray}
+== alaindustrial:soot plain : none
+== alaindustrial:soul_vessel plain : none
+== alaindustrial:spatial_crystal plain : none
+== alaindustrial:sprinkler plain
+-- plain eu
+tooltip.alaindustrial.tank_mb(4000) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.tank_mb(4000) {gray}
+tooltip.alaindustrial.range(4) {gray}
+-- plain no-eu
+tooltip.alaindustrial.tank_mb(4000) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tank_mb(4000) {gray}
+tooltip.alaindustrial.range(4) {gray}
+== alaindustrial:stats_chip plain : none
+== alaindustrial:steam_nozzle plain : none
+== alaindustrial:steam_pipe plain : none
+== alaindustrial:stock_display_frame plain : none
+== alaindustrial:stone_gear plain : none
+== alaindustrial:storage_module plain
+-- plain eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.storage_slots(27) {gray}
+tooltip.alaindustrial.storage_module_merges {dark_gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.storage_slots(27) {gray}
+tooltip.alaindustrial.storage_module_merges {dark_gray}
+== alaindustrial:storm_wind_mill plain : none
+== alaindustrial:sulfur_dust plain : none
+== alaindustrial:sulfur_ore plain : none
+== alaindustrial:teleporter plain
+-- plain eu
+tooltip.alaindustrial.buffer(500000) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.buffer(500000) {gray}
+tooltip.alaindustrial.tier_hv {light_purple}
+tooltip.alaindustrial.teleporter_io {gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_hv {light_purple}
+tooltip.alaindustrial.teleporter_io {gray}
+== alaindustrial:teleporter_remote plain : none
+== alaindustrial:tempered_iron plain : none
+== alaindustrial:tempered_iron_axe plain : none
+== alaindustrial:tempered_iron_block plain : none
+== alaindustrial:tempered_iron_boots plain : none
+== alaindustrial:tempered_iron_chestplate plain : none
+== alaindustrial:tempered_iron_helmet plain : none
+== alaindustrial:tempered_iron_hoe plain : none
+== alaindustrial:tempered_iron_leggings plain : none
+== alaindustrial:tempered_iron_pickaxe plain : none
+== alaindustrial:tempered_iron_plate plain : none
+== alaindustrial:tempered_iron_plate_block plain : none
+== alaindustrial:tempered_iron_shovel plain : none
+== alaindustrial:tempered_iron_sword plain : none
+== alaindustrial:thermal_centrifuge plain
+-- plain eu
+tooltip.alaindustrial.energy_input(4) {gray}
+tooltip.alaindustrial.duration_ticks(200) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.energy_input(4) {gray}
+tooltip.alaindustrial.duration_ticks(200) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.buffer(800) {gray}
+tooltip.alaindustrial.energy_per_op(800) {gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:tin_cable plain
+-- plain eu
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.buffer(8) {gray}
+tooltip.alaindustrial.cable_shock_warning {red}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.buffer(8) {gray}
+tooltip.alaindustrial.cable_shock_warning {red}
+tooltip.alaindustrial.cable_loss(0.6) {gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.cable_shock_warning {red}
+== alaindustrial:tin_cable dyed
+-- plain eu
+item.color(<color.minecraft.red>) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.buffer(8) {gray}
+tooltip.alaindustrial.cable_shock_warning {red}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+item.color(<color.minecraft.red>) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.buffer(8) {gray}
+tooltip.alaindustrial.cable_shock_warning {red}
+tooltip.alaindustrial.cable_loss(0.6) {gray}
+-- plain no-eu
+item.color(<color.minecraft.red>) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+item.color(<color.minecraft.red>) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.cable_shock_warning {red}
+== alaindustrial:tin_dust plain : none
+== alaindustrial:tin_ingot plain : none
+== alaindustrial:tin_ore plain : none
+== alaindustrial:tin_plate plain : none
+== alaindustrial:trellis plain : none
+== alaindustrial:unstable_isotope plain : none
+== alaindustrial:upgrade_table plain
+-- plain eu
+tooltip.alaindustrial.upgrade_table.assemble {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.upgrade_table.assemble {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.upgrade_table.purpose {gray}
+tooltip.alaindustrial.upgrade_table.cost(8, 10) {gray}
+-- plain no-eu
+tooltip.alaindustrial.upgrade_table.assemble {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.upgrade_table.assemble {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.upgrade_table.purpose {gray}
+== alaindustrial:uranium_dust plain : none
+== alaindustrial:uranium_fuel_rod plain : none
+== alaindustrial:uranium_ingot plain : none
+== alaindustrial:uranium_ore plain : none
+== alaindustrial:uranium_plate plain : none
+== alaindustrial:uranium_shavings plain : none
+== alaindustrial:vacuum_capsule plain : none
+== alaindustrial:vulcanizer plain
+-- plain eu
+tooltip.alaindustrial.energy_input(2) {gray}
+tooltip.alaindustrial.duration_ticks(200) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.energy_input(2) {gray}
+tooltip.alaindustrial.duration_ticks(200) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.buffer(800) {gray}
+tooltip.alaindustrial.energy_per_op(400) {gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:water_mill plain
+-- plain eu
+tooltip.alaindustrial.energy_output_max(4) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.energy_output_max(4) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.buffer(4000) {gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:water_mill_wheel plain : none
+== alaindustrial:water_mill_wheel_advanced plain : none
+== alaindustrial:water_mill_wheel_reinforced plain : none
+== alaindustrial:wind_gauge plain : none
+== alaindustrial:wind_mill plain
+-- plain eu
+tooltip.alaindustrial.energy_output_max(8) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.energy_output_max(8) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.buffer(4000) {gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:windmill_rotor plain
+-- plain eu
+tooltip.alaindustrial.rotor_role {gray}
+tooltip.alaindustrial.rotor_output(8) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.rotor_role {gray}
+tooltip.alaindustrial.rotor_output(8) {gray}
+tooltip.alaindustrial.tier_lv {green}
+-- plain no-eu
+tooltip.alaindustrial.rotor_role {gray}
+tooltip.alaindustrial.rotor_output(8) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.rotor_role {gray}
+tooltip.alaindustrial.rotor_output(8) {gray}
+tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:windmill_rotor_advanced plain : none
+== alaindustrial:windmill_rotor_reinforced plain : none
+== alaindustrial:wooden_gear plain : none
+== alaindustrial:workstation plain : none
+== alaindustrial:wrench plain : none
+== minecraft:dirt plain : none
+== minecraft:iron_ingot graded
+-- plain eu
+tooltip.alaindustrial.mutation_grade.rare {yellow}
+-- shift eu
+tooltip.alaindustrial.mutation_grade.rare {yellow}
+-- plain no-eu
+tooltip.alaindustrial.mutation_grade.rare {yellow}
+-- shift no-eu
+tooltip.alaindustrial.mutation_grade.rare {yellow}

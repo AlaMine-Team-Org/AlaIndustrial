@@ -1,7 +1,6 @@
 package dev.alaindustrial.item;
 
-import dev.alaindustrial.Config;
-import dev.alaindustrial.core.ceramic.QuenchPress;
+import dev.alaindustrial.client.ServerBalance;
 import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
@@ -37,7 +36,7 @@ public class CarbonBriquetteItem extends Item {
 			lines.accept(Component.translatable(key).withStyle(ChatFormatting.GRAY));
 		}
 		lines.accept(Component.translatable("item.alaindustrial.carbon_briquette.press",
-				QuenchPress.pressYield(), Config.ceramicPressRedstoneCost)
+				QuenchPress.pressYield(), ServerBalance.ceramicPressRedstoneCost())
 				.withStyle(ChatFormatting.DARK_GRAY));
 	}
 }

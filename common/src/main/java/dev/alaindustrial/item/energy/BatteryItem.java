@@ -1,7 +1,7 @@
 package dev.alaindustrial.item.energy;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.item.ToolConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -41,7 +41,7 @@ import net.minecraft.world.level.Level;
  * in the inventory (that is the worn Energy Pack's job). It gives its charge back in a discharge slot
  * (Battery Box, CESU) or by an explicit right-click into the item in the other hand.
  */
-public class BatteryItem extends Item {
+public class BatteryItem extends Item implements PoweredItem {
 	/** Stack size, matching IC2's RE-Battery — and the number that keeps stack transfers exact. */
 	public static final int MAX_STACK = 16;
 
@@ -52,7 +52,7 @@ public class BatteryItem extends Item {
 	// --- right-click: pour charge into the item in the other hand ---
 
 	/**
-	 * Hands {@link Config#batteryTransferPerUse} EU to whatever powered item the player holds in their
+	 * Hands {@link ToolConfig#batteryTransferPerUse} EU to whatever powered item the player holds in their
 	 * other hand. This is the manual counterpart of a discharge slot: no ticking, no background
 	 * transfer, no loop to guard against — energy moves only when the player asks for it.
 	 *
@@ -83,7 +83,7 @@ public class BatteryItem extends Item {
 			return InteractionResult.FAIL;
 		}
 		long move = Math.min(Math.min(ItemEnergy.get(battery), ItemEnergy.room(target)),
-				Config.batteryTransferPerUse);
+				ToolConfig.batteryTransferPerUse);
 		if (move <= 0) {
 			if (player instanceof ServerPlayer serverPlayer) {
 				serverPlayer.sendSystemMessage(
@@ -121,15 +121,22 @@ public class BatteryItem extends Item {
 	 */
 	@Override
 	public int getBarWidth(ItemStack stack) {
-		long capacity = ItemEnergy.capacity(stack);
-		if (capacity <= 0) {
-			return 0;
-		}
-		return (int) Math.min(MAX_BAR_WIDTH, MAX_BAR_WIDTH * ItemEnergy.get(stack) / capacity);
+		return EnergyBar.width(stack, MAX_BAR_WIDTH);
 	}
 
 	@Override
 	public int getBarColor(ItemStack stack) {
-		return EnergyTier.LV.color();
+		return EnergyBar.color(EnergyTier.LV);
+	}
+
+	/** MOD-707: this item's EU buffer, read by {@code ItemEnergy.capacity} through {@link PoweredItem}. */
+	@Override
+	public long energyCapacity(ItemStack stack) {
+		return ToolConfig.batteryBuffer;
+	}
+
+	@Override
+	public long energyInputRate(ItemStack stack) {
+		return ToolConfig.batteryInputRate;
 	}
 }

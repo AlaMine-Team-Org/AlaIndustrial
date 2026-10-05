@@ -1,12 +1,10 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.AbstractChestBlockEntity;
 import dev.alaindustrial.block.entity.ElectrumChestBlockEntity;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -26,15 +24,8 @@ import net.minecraft.world.level.block.state.BlockState;
  * {@code entity/chest/electrum.png} (single) and {@code electrum_left/right.png} (double halves).
  */
 public class ElectrumChestBlock extends AbstractModChestBlock {
-	public static final MapCodec<ElectrumChestBlock> CODEC = simpleCodec(ElectrumChestBlock::new);
-
 	public ElectrumChestBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

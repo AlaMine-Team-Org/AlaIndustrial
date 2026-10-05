@@ -4,6 +4,7 @@ import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -25,6 +26,21 @@ import org.jspecify.annotations.Nullable;
  * notes would still promise a speed-up. So this measures a real machine in a real world.
  */
 public final class OverclockerEffectScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(OverclockerEffectScenarios::overclocker_chipSpeedsTheMachineAndCostsMore,
+								"overclocker_chip_speeds_the_machine_and_costs_more")
+						.fabricId("OverclockerEffectGameTest", "overclocker_chipSpeedsTheMachineAndCostsMore")
+						.ticks(900),
+				RosterEntry.of(OverclockerEffectScenarios::overclocker_chipAndProgressSurviveReload,
+								"overclocker_chip_and_progress_survive_reload")
+						.fabricId("OverclockerEffectGameTest", "overclocker_chipAndProgressSurviveReload")
+						.ticks(20, 40));
+
+		private Roster() {}
+	}
 
 	private OverclockerEffectScenarios() {}
 
@@ -86,7 +102,7 @@ public final class OverclockerEffectScenarios {
 		machine.getEnergyStorage().setAmountUntracked(machine.getEnergyStorage().getCapacity());
 		AlaGameTestHelper.drive(machine, helper, 3);
 
-		int progressBefore = machine.dataAccess.get(DATA_PROGRESS);
+		int progressBefore = machine.getDataAccess().get(DATA_PROGRESS);
 		if (progressBefore <= 0) {
 			helper.fail("the machine made no progress in three ticks, so a round trip of it proves nothing");
 		}
@@ -98,9 +114,9 @@ public final class OverclockerEffectScenarios {
 				new MaceratorBlockEntity(abs, helper.getLevel().getBlockState(abs));
 		restored.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, tag));
 
-		if (restored.dataAccess.get(DATA_PROGRESS) != progressBefore) {
+		if (restored.getDataAccess().get(DATA_PROGRESS) != progressBefore) {
 			helper.fail("progress was " + progressBefore + " before the round trip and "
-					+ restored.dataAccess.get(DATA_PROGRESS) + " after");
+					+ restored.getDataAccess().get(DATA_PROGRESS) + " after");
 		}
 		ItemStack chip = restored.getItem(restored.upgradeSlotStart() + OVERCLOCK_ARM);
 		if (!chip.is(ModContent.OVERCLOCKER_CHIP_I.get())) {
@@ -127,9 +143,9 @@ public final class OverclockerEffectScenarios {
 			// buffer lasts. Left to drain, the overclocked one would starve and finish LATER, turning
 			// the comparison upside down.
 			machine.getEnergyStorage().setAmountUntracked(machine.getEnergyStorage().getCapacity());
-			int before = machine.dataAccess.get(DATA_ENERGY);
+			int before = machine.getDataAccess().get(DATA_ENERGY);
 			AlaGameTestHelper.drive(machine, helper, 1);
-			int drawn = before - machine.dataAccess.get(DATA_ENERGY);
+			int drawn = before - machine.getDataAccess().get(DATA_ENERGY);
 			if (drawn > 0) {
 				perTick = drawn;
 			}

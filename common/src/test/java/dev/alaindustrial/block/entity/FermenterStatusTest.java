@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
  */
 class FermenterStatusTest {
 
-	/** The ordinal is the wire format: channel {@code CH_STATUS} carries nothing else. */
+	/** The ordinal is the wire format: channel {@code STATUS} carries nothing else. */
 	@Test
 	void ordinalsAreTheWireFormat() {
 		assertEquals(0, FermenterStatus.READY.ordinal());

@@ -2,6 +2,7 @@ package dev.alaindustrial.block;
 
 import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.FuelRodAssemblyBlockEntity;
+import dev.alaindustrial.compat.ServerDrops;
 import dev.alaindustrial.core.structure.RoomValidator;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModSounds;
@@ -59,8 +60,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * GUI for nothing.
  */
 public class FuelRodAssemblyBlock extends BaseEntityBlock implements MachineHumProvider {
-
-	public static final MapCodec<FuelRodAssemblyBlock> CODEC = simpleCodec(FuelRodAssemblyBlock::new);
 
 	/** How many rods one assembly holds. Four reads clearly at 16 px and keeps the maths in round numbers. */
 	public static final int MAX_RODS = 4;
@@ -153,9 +152,15 @@ public class FuelRodAssemblyBlock extends BaseEntityBlock implements MachineHumP
 				.setValue(UP, false).setValue(DOWN, false).setValue(ACTIVE, false));
 	}
 
-	@Override
-	protected MapCodec<? extends FuelRodAssemblyBlock> codec() {
-		return CODEC;
+	/**
+	 * The codec Minecraft 26.2 asks every block for ({@code BaseEntityBlock.codec()} is abstract there; 26.3
+	 * removed block codecs): the unit codec of this very instance, as the mod's own block bases answer it
+	 * (MOD-703). No {@code @Override} on purpose: on 26.2 it overrides, on 26.3 it is a method of its own that
+	 * nothing calls, so this source is the same on both lines. 26.2 reads block codecs only in the datagen
+	 * block-list report ({@code BlockTypes.CODEC} -> {@code BlockListReport}, javap).
+	 */
+	protected MapCodec<? extends BaseEntityBlock> codec() {
+		return MapCodec.unit(this);
 	}
 
 	@Override
@@ -331,7 +336,7 @@ public class FuelRodAssemblyBlock extends BaseEntityBlock implements MachineHumP
 			ItemStack removed = assembly.removeRod();
 			if (!removed.isEmpty()) {
 				if (!player.getInventory().add(removed)) {
-					player.drop(removed, false);
+					ServerDrops.drop(player, removed);
 				}
 				level.playSound(null, pos, SoundEvents.ITEM_FRAME_REMOVE_ITEM, SoundSource.BLOCKS, 0.7f, 1.2f);
 				return InteractionResult.SUCCESS;

@@ -1,6 +1,8 @@
 package dev.alaindustrial.item.wearable;
 
-import dev.alaindustrial.Config;
+import dev.alaindustrial.item.ToolConfig;
+import dev.alaindustrial.item.energy.EnergyBar;
+import dev.alaindustrial.item.energy.PoweredItem;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.item.energy.ItemEnergy;
@@ -67,7 +69,7 @@ import net.minecraft.world.item.equipment.EquipmentAssets;
  * would spam all of that, so {@link #refreshWorn} compares before it writes.</li>
  * </ol>
  */
-public class FluxweaveArmorItem extends Item {
+public class FluxweaveArmorItem extends Item implements PoweredItem {
 
 	/** Charged look — the conductor tracks glow gold. Declared by the material as its default asset. */
 	public static final ResourceKey<EquipmentAsset> FLUXWEAVE_ASSET = ModArmorMaterials.FLUXWEAVE_ASSET;
@@ -163,29 +165,29 @@ public class FluxweaveArmorItem extends Item {
 			// to spend air, NOT unlimited breathing — and swim efficiency makes the dive practical.
 			case HELMET -> attributes
 					.withModifierAdded(Attributes.OXYGEN_BONUS,
-							modifier("fluxweave_oxygen", Config.fluxweaveOxygenBonus,
+							modifier("fluxweave_oxygen", ToolConfig.fluxweaveOxygenBonus,
 									AttributeModifier.Operation.ADD_VALUE), group)
 					.withModifierAdded(Attributes.WATER_MOVEMENT_EFFICIENCY,
-							modifier("fluxweave_swim", Config.fluxweaveSwimEfficiency / 100.0,
+							modifier("fluxweave_swim", ToolConfig.fluxweaveSwimEfficiency / 100.0,
 									AttributeModifier.Operation.ADD_VALUE), group);
 			// Chestplate: soak the big hits. There is no "damage reduction" attribute in 26.2 — toughness
 			// is what actually blunts heavy blows, and knockback resistance keeps the wearer planted.
 			case CHESTPLATE -> attributes
 					.withModifierAdded(Attributes.ARMOR_TOUGHNESS,
-							modifier("fluxweave_toughness", Config.fluxweaveChargedToughness,
+							modifier("fluxweave_toughness", ToolConfig.fluxweaveChargedToughness,
 									AttributeModifier.Operation.ADD_VALUE), group)
 					.withModifierAdded(Attributes.KNOCKBACK_RESISTANCE,
-							modifier("fluxweave_knockback", Config.fluxweaveKnockbackResistance / 100.0,
+							modifier("fluxweave_knockback", ToolConfig.fluxweaveKnockbackResistance / 100.0,
 									AttributeModifier.Operation.ADD_VALUE), group);
 			// Leggings: run speed is passive; the step assist is opt-in and rides the stack's own flag.
 			case LEGGINGS -> {
 				ItemAttributeModifiers legs = attributes
 						.withModifierAdded(Attributes.MOVEMENT_SPEED,
-								modifier("fluxweave_speed", Config.fluxweaveRunSpeedPercent / 100.0,
+								modifier("fluxweave_speed", ToolConfig.fluxweaveRunSpeedPercent / 100.0,
 										AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL), group);
 				yield stepAssist
 						? legs.withModifierAdded(Attributes.STEP_HEIGHT,
-								modifier("fluxweave_step", Config.fluxweaveStepHeightBonus / 100.0,
+								modifier("fluxweave_step", ToolConfig.fluxweaveStepHeightBonus / 100.0,
 										AttributeModifier.Operation.ADD_VALUE), group)
 						: legs;
 			}
@@ -204,7 +206,7 @@ public class FluxweaveArmorItem extends Item {
 	 * fall damage outright trivialises a core survival rule, so no config value may reach 1.0.
 	 */
 	public static double fallReductionFraction() {
-		int percent = Math.max(0, Math.min(90, Config.fluxweaveFallDamageReductionPercent));
+		int percent = Math.max(0, Math.min(90, ToolConfig.fluxweaveFallDamageReductionPercent));
 		return percent / 100.0;
 	}
 
@@ -257,7 +259,7 @@ public class FluxweaveArmorItem extends Item {
 		// round to nothing or to everything — both skills therefore skip whole seconds instead.
 		long clock = wearer.level().getGameTime();
 		if (!SkillEnergy.armourUpkeepIdle(wearer) && !SkillEnergy.armourUpkeepFree(wearer, clock)) {
-			ItemEnergy.spend(stack, Config.fluxweaveUpkeepEuPerSecond, wearer);
+			ItemEnergy.spend(stack, ToolConfig.fluxweaveUpkeepEuPerSecond, wearer);
 		}
 		if (piece.armorType() == ArmorType.HELMET
 				&& wearer instanceof net.minecraft.world.entity.LivingEntity living) {
@@ -327,11 +329,11 @@ public class FluxweaveArmorItem extends Item {
 				return;
 			}
 		}
-		if (ItemEnergy.get(helmet) < Config.fluxweaveRegenEuPerHeal) {
+		if (ItemEnergy.get(helmet) < ToolConfig.fluxweaveRegenEuPerHeal) {
 			return;
 		}
 		wearer.heal(1.0f);
-		ItemEnergy.spend(helmet, Config.fluxweaveRegenEuPerHeal, wearer);
+		ItemEnergy.spend(helmet, ToolConfig.fluxweaveRegenEuPerHeal, wearer);
 	}
 
 	// --- tooltip: how much charge is left, and whether the assist is on ---
@@ -378,15 +380,30 @@ public class FluxweaveArmorItem extends Item {
 
 	@Override
 	public int getBarWidth(ItemStack stack) {
-		long capacity = ItemEnergy.capacity(stack);
-		if (capacity <= 0) {
-			return 0;
-		}
-		return (int) Math.min(MAX_BAR_WIDTH, MAX_BAR_WIDTH * ItemEnergy.get(stack) / capacity);
+		return EnergyBar.width(stack, MAX_BAR_WIDTH);
 	}
 
 	@Override
 	public int getBarColor(ItemStack stack) {
-		return EnergyTier.LV.color();
+		return EnergyBar.color(EnergyTier.LV);
+	}
+
+	/** MOD-707: this item's EU buffer, read by {@code ItemEnergy.capacity} through {@link PoweredItem}. */
+	@Override
+	public long energyCapacity(ItemStack stack) {
+		return ToolConfig.fluxweaveBuffer;
+	}
+
+	@Override
+	public long energyInputRate(ItemStack stack) {
+		return ToolConfig.fluxweaveInputRate;
+	}
+
+	@Override
+	public void onChargeChanged(ItemStack stack, long charge) {
+		// The armour swaps BOTH its worn asset and its attribute modifiers with the charge, so the
+		// active bonuses can never disagree with the number in the tooltip. One class serves all four
+		// pieces (MOD-127): they share a buffer and the class carries its ArmorType.
+		refreshWorn(stack, charge);
 	}
 }

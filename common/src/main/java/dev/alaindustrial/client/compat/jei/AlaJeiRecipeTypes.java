@@ -2,6 +2,7 @@ package dev.alaindustrial.client.compat.jei;
 
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.client.compat.CanningExchange;
+import dev.alaindustrial.client.compat.RecipeViewerForm;
 import dev.alaindustrial.client.compat.RecipeViewerInfo;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
 import dev.alaindustrial.recipe.AlloyRecipeInput;
@@ -68,7 +69,29 @@ final class AlaJeiRecipeTypes {
 	static final IRecipeType<RecipeViewerInfo.Entry> MACHINE_INFO =
 			IRecipeType.create(Industrialization.id("machine_info"), RecipeViewerInfo.Entry.class);
 
+	/**
+	 * Evolution pages — the T2 solar branches, the incubator's rarity grades and the world-made items
+	 * (MOD-695; were JEI ingredient info). Same records as {@link #MACHINE_INFO}, drawn per frame.
+	 */
+	static final IRecipeType<RecipeViewerInfo.Entry> EVOLUTION_INFO =
+			IRecipeType.create(Industrialization.id("evolution_info"), RecipeViewerInfo.Entry.class);
+
+	/** The kok sagyz plant pages (MOD-695; were JEI ingredient info). */
+	static final IRecipeType<RecipeViewerInfo.Entry> PLANT_INFO =
+			IRecipeType.create(Industrialization.id("plant_info"), RecipeViewerInfo.Entry.class);
+
 	private AlaJeiRecipeTypes() {
+	}
+
+	/** The viewer type of a page form (MOD-716): machine info, evolution or plant pages. */
+	static IRecipeType<RecipeViewerInfo.Entry> pages(RecipeViewerForm form) {
+		return switch (form) {
+			case MACHINE_INFO -> MACHINE_INFO;
+			case EVOLUTION_INFO -> EVOLUTION_INFO;
+			case PLANT_INFO -> PLANT_INFO;
+			case POLYMERIZING, ALLOYING, DISTILLING, CANNING ->
+					throw new IllegalArgumentException(form + " is a card form, not a page form");
+		};
 	}
 
 	/**

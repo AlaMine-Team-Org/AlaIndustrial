@@ -18,7 +18,8 @@ import net.minecraft.server.level.ServerPlayer;
  * the world ({@code ArchiveRecordClient#reset}), so a second world never shows the first one's
  * record.
  *
- * <p>Loader-neutral, like {@link GuideBookGiver}: each loader's join hook calls {@link #sendOnJoin}.
+ * <p>Loader-neutral, like {@code item.misc.GuideBookGiver}: each loader's join hook calls
+ * {@link #sendOnJoin}.
  */
 public final class ArchiveRecordSync {
 

@@ -622,8 +622,7 @@ public final class BlueprintIconStands {
                     && acs.getMenu() instanceof MachineMenu menu) {
                 menu.injectTestData(0, 12000, 0, 40);
                 menu.injectTestChannel(4, -1);
-                menu.injectTestChannel(5, dev.alaindustrial.block.entity.AssemblerBlockEntity
-                        .AssemblerStatus.NO_BLUEPRINT.ordinal());
+                menu.injectTestChannel(5, dev.alaindustrial.block.entity.AssemblerStatus.NO_BLUEPRINT.ordinal());
                 java.util.List<net.minecraft.world.inventory.Slot> player = menu.slots.stream()
                         .filter(s -> s.container instanceof net.minecraft.world.entity.player.Inventory)
                         .toList();

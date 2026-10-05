@@ -45,12 +45,16 @@ public class WaterMillScreen extends MachineScreen<WaterMillMenu> {
 		return TEXTURE;
 	}
 
+	/** The energy bar and its tooltip, drawn by the base (MOD-716). */
+	@Override
+	protected EnergyBarSpec energyBar() {
+		return EnergyBarSpec.LEFT_WINDMILL;
+	}
+
 	@Override
 	protected void drawMachineFrame(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
 		blitStaticFrame(graphics);
 
-		// The supplied atlas uses the same left-side energy track as the wind-mill family.
-		renderEnergyBar(graphics, EnergyBarSpec.LEFT_WINDMILL);
 
 		// Progress carries the number of horizontal faces touching water (0..4). The slot check keeps
 		// the indicator inactive when water is present but the required wheel has not been installed.
@@ -61,10 +65,13 @@ public class WaterMillScreen extends MachineScreen<WaterMillMenu> {
 					STATUS_FRAME_W, STATUS_FRAME_H,
 					TEX_SIZE, TEX_SIZE);
 		}
+	}
 
-		// One centred row carries both messages, because only one of them is ever meaningful: a running
-		// mill answers "how much am I making right now" (MOD-348), a stopped one answers "why am I
-		// stopped" (MOD-175/MOD-179 — wheel clash, wheel blocked by a solid block, or no water at all).
+	// One centred row carries both messages, because only one of them is ever meaningful: a running
+	// mill answers "how much am I making right now" (MOD-348), a stopped one answers "why am I
+	// stopped" (MOD-175/MOD-179 — wheel clash, wheel blocked by a solid block, or no water at all).
+	@Override
+	protected void drawFrameText(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		drawStatusText(graphics);
 	}
 
@@ -91,10 +98,4 @@ public class WaterMillScreen extends MachineScreen<WaterMillMenu> {
 				idle ? GuiStyle.TEXT_DIM : GuiStyle.TEXT, false);
 	}
 
-	@Override
-	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-		super.extractTooltip(graphics, mouseX, mouseY);
-		// Hovering the energy bar shows the exact buffer as "X / max EU" (R-GUI-14).
-		renderEnergyTooltip(graphics, mouseX, mouseY, EnergyBarSpec.LEFT_WINDMILL);
-	}
 }

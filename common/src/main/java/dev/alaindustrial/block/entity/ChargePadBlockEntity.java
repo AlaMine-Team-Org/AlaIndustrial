@@ -3,6 +3,7 @@ package dev.alaindustrial.block.entity;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.ChargePadBlock;
 import dev.alaindustrial.block.ChargePadState;
+import dev.alaindustrial.block.entity.machine.SyncChannels;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.item.energy.PlayerEuDistributor;
@@ -11,7 +12,6 @@ import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -56,7 +56,7 @@ import net.minecraft.world.level.block.state.BlockState;
  * awake forever, drawing from the grid for nobody. A timestamp cannot get stuck: it simply stops being
  * recent.
  */
-public final class ChargePadBlockEntity extends MachineBlockEntity implements MenuProvider {
+public final class ChargePadBlockEntity extends MachineBlockEntity implements MenuProvider, NoUpgradePanel {
 
 	/**
 	 * How stale the last contact may be before the station calls itself unoccupied. Two ticks, not one,
@@ -131,18 +131,10 @@ public final class ChargePadBlockEntity extends MachineBlockEntity implements Me
 				Config.chargePadBuffer, Config.chargePadInputRate, 0L);
 	}
 
-	/**
-	 * No upgrade panel — and this is load-bearing, not cosmetic. {@code MachineBlockEntity}'s constructor
-	 * sizes the inventory as {@code slots + (this instanceof MenuProvider && hasUpgradePanel() ? 4 : 0)},
-	 * so the moment this class gained a menu (MOD-416) the plate would silently have grown four slots:
-	 * hoppers would start filling a floor plate, the NBT layout would change under existing worlds, and
-	 * the screen would advertise upgrades the station has never accepted. {@link ChargePadMenu} answers
-	 * the same — both sides must agree, the slot indices depend on it.
-	 */
-	@Override
-	public boolean hasUpgradePanel() {
-		return false;
-	}
+	// No upgrade panel (NoUpgradePanel) — load-bearing, not cosmetic: the slot layout appends four upgrade
+	// slots to every menu-providing machine, so the moment this class gained a menu (MOD-416) the plate
+	// would silently have grown four slots: hoppers would fill a floor plate, the NBT layout would change
+	// under existing worlds, and the screen would advertise upgrades the station never accepted.
 
 	/**
 	 * Test seam (MOD-416): whether the departure click is still owed.
@@ -339,7 +331,7 @@ public final class ChargePadBlockEntity extends MachineBlockEntity implements Me
 	 * machine asks for: as a plain machine the station would win a 128:32 split and take ~80 % of a
 	 * shared grid, so placing one would visibly stall the base's furnaces. Worse, its 20 000 EU of head
 	 * room reads as machine demand even with nobody standing on it, which makes
-	 * {@code EnergyLineDistributor#storageBudget} positive and starts draining every Battery Box on the
+	 * {@code DischargePlan#backupBudget} positive and starts draining every Battery Box on the
 	 * line into a block that can never give the energy back ({@code maxExtract = 0}).
 	 *
 	 * <p>It still fills perfectly well: a player who wants it topped up now puts a generator or a
@@ -384,61 +376,21 @@ public final class ChargePadBlockEntity extends MachineBlockEntity implements Me
 	}
 
 	/**
-	 * Seven-wide data — hides {@link MachineBlockEntity#DATA_COUNT} on purpose so this name always states
-	 * <em>this</em> machine's width, both here and in {@link ChargePadMenu}'s client stub. The width lives
-	 * in exactly one place for a reason: when it was a literal on both sides, adding a channel to a block
-	 * entity alone threw {@code ArrayIndexOutOfBoundsException} on the client render thread while every
-	 * server test stayed green (MOD-235).
+	 * GUI sync channels (MOD-712, BE-7): the base four, then the readout of the last payout — EU/t paid, items
+	 * charging, seconds to full; all three derived and read-only.
 	 */
-	public static final int DATA_COUNT = MachineBlockEntity.DATA_COUNT + 3;
+	public enum Channel { ENERGY, CAPACITY, PROGRESS, MAX_PROGRESS, RATE, ITEMS, ETA }
 
-	/** EU per tick currently flowing into whoever stands on the plate. */
-	public static final int DATA_RATE = 4;
-	/** How many carried items are taking charge right now. */
-	public static final int DATA_ITEMS = 5;
-	/** Seconds until the visitor's gear is full; {@code 0} means "nothing to report", drawn as a dash. */
-	public static final int DATA_ETA = 6;
-
-	/**
-	 * Base 0..3 plus the three readout channels. Channels 2 and 3 ({@code progress}/{@code maxProgress})
-	 * are left untouched rather than reused: their meaning varies per machine and other machines' block
-	 * entity renderers read them, so borrowing the indices for something else is how a GUI feature ported
-	 * between machines quietly breaks the target's renderer.
-	 */
-	private final ContainerData chargePadData = new ContainerData() {
-		@Override
-		public int get(int index) {
-			return switch (index) {
-				case DATA_RATE -> rateEuPerTick;
-				case DATA_ITEMS -> itemsCharging;
-				case DATA_ETA -> etaSeconds;
-				default -> ChargePadBlockEntity.this.dataAccess.get(index);
-			};
-		}
-
-		@Override
-		public void set(int index, int value) {
-			// The three readout channels are derived and server-authoritative: they are computed from a
-			// payout, never assigned from outside.
-			if (index < DATA_RATE) {
-				ChargePadBlockEntity.this.dataAccess.set(index, value);
-			}
-		}
-
-		@Override
-		public int getCount() {
-			return DATA_COUNT;
-		}
-	};
+	/** Width of {@link #getDataAccess()}, which the menu's client stub sizes itself from (MOD-235). */
+	public static final int DATA_COUNT = Channel.values().length;
 
 	@Override
-	public ContainerData getDataAccess() {
-		return chargePadData;
-	}
-
-	@Override
-	public Component getDisplayName() {
-		return Component.translatable("block.alaindustrial.charge_pad");
+	protected SyncChannels createChannels() {
+		return channels(Channel.class)
+				.read(Channel.RATE, () -> rateEuPerTick)
+				.read(Channel.ITEMS, () -> itemsCharging)
+				.read(Channel.ETA, () -> etaSeconds)
+				.build();
 	}
 
 	@Override

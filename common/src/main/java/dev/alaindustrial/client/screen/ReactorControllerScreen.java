@@ -1,5 +1,6 @@
 package dev.alaindustrial.client.screen;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.client.screen.reactor.ConsoleTabPage;
 import dev.alaindustrial.client.screen.reactor.CoolantTabPage;
@@ -212,10 +213,19 @@ public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu
 
 	// ── Input ────────────────────────────────────────────────────────────────────────────────────
 
+	/**
+	 * No upgrade panel here; the open statistics panel silences the tab strip and the pages wholesale — it
+	 * can be dragged over the strip, and a click on it belongs to it.
+	 */
+	@Override
+	protected OverlayModality overlayModality() {
+		return OverlayModality.STATS_PANEL_OPEN;
+	}
+
 	@Override
 	public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
 		// Not under an open statistics panel: it can be dragged over the strip, and a click on it belongs to it.
-		if (event.button() == 0 && !this.menu.isStatsPanelOpen()) {
+		if (event.button() == InputConstants.MOUSE_BUTTON_LEFT && frameAcceptsInput(event.x(), event.y())) {
 			int tab = tabAt(event.x(), event.y());
 			if (tab >= 0) {
 				if (tab != selected) {
@@ -249,7 +259,7 @@ public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu
 
 	@Override
 	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-		if (!this.menu.isStatsPanelOpen()) {
+		if (frameAcceptsInput(mouseX, mouseY)) {
 			int tab = tabAt(mouseX, mouseY);
 			if (tab >= 0) {
 				graphics.setTooltipForNextFrame(this.font, pages.get(tab).title(), mouseX, mouseY);

@@ -66,6 +66,8 @@ public final class ModDataComponents {
 	public static final Identifier DISTILLATION_COLUMN_CONTENTS_ID = Industrialization.id("distillation_column_contents");
 	public static final Identifier MAGNET_ENABLED_ID = Industrialization.id("magnet_enabled");
 	public static final Identifier CABLE_COLOR_ID = Industrialization.id("cable_color");
+	public static final Identifier ITEM_MODULES_ID = Industrialization.id("item_modules");
+	public static final Identifier MAGNET_FILTER_ID = Industrialization.id("magnet_filter");
 	public static final Identifier STEP_ASSIST_ENABLED_ID = Industrialization.id("step_assist_enabled");
 	public static final Identifier SABER_ACTIVE_ID = Industrialization.id("saber_active");
 	public static final Identifier SOUL_VESSEL_KILLS_ID = Industrialization.id("soul_vessel_kills");
@@ -262,6 +264,39 @@ public final class ModDataComponents {
 		return DataComponentType.<net.minecraft.world.item.DyeColor>builder()
 				.persistent(net.minecraft.world.item.DyeColor.CODEC)
 				.networkSynchronized(net.minecraft.world.item.DyeColor.STREAM_CODEC)
+				.build();
+	}
+
+	/**
+	 * Modules fitted into an item's own module slots (MOD-592) — the electromagnet first, other hosts
+	 * later; one component for all of them ({@link dev.alaindustrial.item.module.ItemModules}). Absent =
+	 * nothing fitted, so a magnet that never had a module stays component-identical to a fresh one.
+	 */
+	public static Supplier<DataComponentType<dev.alaindustrial.item.module.ItemModules>> ITEM_MODULES = () -> {
+		throw new IllegalStateException("ModDataComponents.ITEM_MODULES read before its loader bound it");
+	};
+
+	/** Build the {@code item_modules} type both loaders register (MOD-592). */
+	public static DataComponentType<dev.alaindustrial.item.module.ItemModules> createItemModules() {
+		return DataComponentType.<dev.alaindustrial.item.module.ItemModules>builder()
+				.persistent(dev.alaindustrial.item.module.ItemModules.CODEC)
+				.networkSynchronized(dev.alaindustrial.item.module.ItemModules.STREAM_CODEC)
+				.build();
+	}
+
+	/**
+	 * Settings of a magnet filter module (MOD-592), kept on the MODULE's stack so they travel with it
+	 * ({@link dev.alaindustrial.item.tool.MagnetFilter}). Absent = a fresh filter.
+	 */
+	public static Supplier<DataComponentType<dev.alaindustrial.item.tool.MagnetFilter>> MAGNET_FILTER = () -> {
+		throw new IllegalStateException("ModDataComponents.MAGNET_FILTER read before its loader bound it");
+	};
+
+	/** Build the {@code magnet_filter} type both loaders register (MOD-592). */
+	public static DataComponentType<dev.alaindustrial.item.tool.MagnetFilter> createMagnetFilter() {
+		return DataComponentType.<dev.alaindustrial.item.tool.MagnetFilter>builder()
+				.persistent(dev.alaindustrial.item.tool.MagnetFilter.CODEC)
+				.networkSynchronized(dev.alaindustrial.item.tool.MagnetFilter.STREAM_CODEC)
 				.build();
 	}
 
@@ -674,5 +709,7 @@ public final class ModDataComponents {
 			new ComponentDef<>(TELEPORTER_LOG_ID, ModDataComponents::createTeleporterLog, c -> TELEPORTER_LOG = c),
 			new ComponentDef<>(ELECTRIC_BOW_CHARGED_ID, ModDataComponents::createElectricBowCharged,
 					c -> ELECTRIC_BOW_CHARGED = c),
-			new ComponentDef<>(CABLE_COLOR_ID, ModDataComponents::createCableColor, c -> CABLE_COLOR = c));
+			new ComponentDef<>(CABLE_COLOR_ID, ModDataComponents::createCableColor, c -> CABLE_COLOR = c),
+			new ComponentDef<>(ITEM_MODULES_ID, ModDataComponents::createItemModules, c -> ITEM_MODULES = c),
+			new ComponentDef<>(MAGNET_FILTER_ID, ModDataComponents::createMagnetFilter, c -> MAGNET_FILTER = c));
 }

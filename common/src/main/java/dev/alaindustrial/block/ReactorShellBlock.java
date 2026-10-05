@@ -20,10 +20,14 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
  *
  * <p>The property is set by {@link dev.alaindustrial.block.entity.ReactorControllerBlockEntity}, never
  * by the block itself: only the controller knows whether the shell around this cell is complete.
+ *
+ * <p><b>The 26.2 block-codec seam (MOD-703).</b> Minecraft 26.2 requires every block to name a codec
+ * ({@code BlockBehaviour.codec()} is abstract there); 26.3 removed block codecs. {@link #codec()} answers it
+ * once for every subclass, so no subclass carries a {@code CODEC} of its own and their sources are the same
+ * on both lines. It has no {@code @Override} on purpose: on 26.2 it overrides, on 26.3 it is a method of its
+ * own that nothing calls.
  */
 public class ReactorShellBlock extends Block {
-
-	public static final MapCodec<ReactorShellBlock> CODEC = simpleCodec(ReactorShellBlock::new);
 
 	/** Whether this cell belongs to a shell that currently passes its scan. Cosmetic only. */
 	public static final BooleanProperty FORMED = BooleanProperty.create("formed");
@@ -41,11 +45,6 @@ public class ReactorShellBlock extends Block {
 	}
 
 	@Override
-	protected MapCodec<? extends ReactorShellBlock> codec() {
-		return CODEC;
-	}
-
-	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder);
 		builder.add(FORMED, EDGE);
@@ -60,5 +59,14 @@ public class ReactorShellBlock extends Block {
 	@Override
 	protected boolean skipRendering(BlockState state, BlockState neighbourState, net.minecraft.core.Direction side) {
 		return neighbourState.is(this) || super.skipRendering(state, neighbourState, side);
+	}
+
+	/**
+	 * The codec Minecraft 26.2 asks every block for: the unit codec of this very instance. 26.2 reads block
+	 * codecs only in the datagen block-list report ({@code BlockTypes.CODEC} → {@code BlockListReport},
+	 * javap), so nothing at run time decodes a block through it.
+	 */
+	protected MapCodec<? extends Block> codec() {
+		return MapCodec.unit(this);
 	}
 }

@@ -1,10 +1,17 @@
 package dev.alaindustrial.client.screen;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import dev.alaindustrial.client.AlaClientConfig;
 import dev.alaindustrial.menu.MachineMenu;
+import java.util.List;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 
 /**
@@ -19,7 +26,7 @@ import net.minecraft.util.Mth;
  * <p>Draggable and persisted, like the upgrade panel, so a player who prefers it elsewhere is not
  * fighting the layout every time a screen opens.
  */
-public final class StatsPanelController {
+public final class StatsPanelController implements ScreenOverlay {
 
 	/**
 	 * Atlas region of the chart tab. Two variants sit side by side: the right-facing one at u=0 (unused
@@ -35,6 +42,7 @@ public final class StatsPanelController {
 	private static final int DOCK_Y = MachineMenu.PANEL_Y;
 
 	private final MachineMenu menu;
+	private final OverlayHost host;
 	private int panelDX;
 	private int panelDY;
 	private boolean dragging;
@@ -44,7 +52,9 @@ public final class StatsPanelController {
 	private long closePressUntil;
 	private boolean pendingClose;
 
-	public StatsPanelController(MachineMenu menu, int leftPos, int topPos, int screenWidth, int screenHeight) {
+	StatsPanelController(OverlayHost host, MachineMenu menu, int leftPos, int topPos, int screenWidth,
+			int screenHeight) {
+		this.host = host;
 		this.menu = menu;
 		this.panelDX = Mth.clamp(AlaClientConfig.statsPanelDX, minDX(leftPos), maxDX(leftPos, screenWidth));
 		this.panelDY = Mth.clamp(AlaClientConfig.statsPanelDY, minDY(topPos), maxDY(topPos, screenHeight));
@@ -206,5 +216,154 @@ public final class StatsPanelController {
 	/** Screen area the open panel occupies — same purpose as {@link #tabArea}. */
 	public Rect2i panelArea(int leftPos, int topPos) {
 		return new Rect2i(panelX(leftPos), panelY(topPos), PANEL_W, PANEL_H);
+	}
+
+	// --- ScreenOverlay (MOD-716): the panel's drawing and input, moved from MachineScreen unchanged ---
+
+	@Override
+	public void beginFrame() {
+		finishCloseIfReady();
+	}
+
+	/** The tab, on every machine that shows one ({@link MachineScreen#hasStatsTab()}). */
+	@Override
+	public void drawHandle(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+		if (!host.hasStatsTab()) {
+			return;
+		}
+		int bx = tabX(host.left());
+		int by = tabY(host.top());
+		boolean flash = System.currentTimeMillis() < tabPressUntil();
+		int off = flash ? 1 : 0;
+		graphics.blit(RenderPipelines.GUI_TEXTURED, MachineScreen.UPGRADES_ATLAS, bx + off, by + off,
+				(float) TAB_U, (float) TAB_V, TAB_W, TAB_H,
+				UpgradePanelController.ATLAS, UpgradePanelController.ATLAS);
+		if (flash) {
+			graphics.fill(bx + off, by + off, bx + off + TAB_W, by + off + TAB_H, UpgradePanelController.PRESS_DARKEN);
+		}
+	}
+
+	@Override
+	public void drawBody(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+		if (this.menu.isStatsPanelOpen()) {
+			drawPanel(graphics, mouseX, mouseY);
+		}
+	}
+
+	/**
+	 * Paint the statistics panel.
+	 *
+	 * <p>Blitted from its own texture: the frame is artwork, and artwork belongs in a PNG an artist can open.
+	 * Everything below only writes text into it.
+	 */
+	private void drawPanel(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+		int px = panelX(host.left());
+		int py = panelY(host.top());
+		int pw = PANEL_W;
+		int ph = PANEL_H;
+		Font font = host.font();
+
+		graphics.blit(RenderPipelines.GUI_TEXTURED, MachineScreen.STATS_PANEL_TEXTURE, px, py,
+				0.0F, 0.0F, pw, ph, MachineScreen.TEX_SIZE, MachineScreen.TEX_SIZE);
+
+		graphics.text(font, Component.translatable("gui.alaindustrial.stats.title"),
+				px + 8, py + 7, GuiStyle.TEXT, false);
+
+		// The × itself lives in the panel texture, centred there by construction. Only the press flash is
+		// drawn here — the font's "x" glyph sat low and left of the plate, which is what showed in game.
+		if (System.currentTimeMillis() < closePressUntil()) {
+			int cx = closeX(host.left());
+			int cy = closeY(host.top());
+			graphics.fill(cx, cy, cx + CLOSE_SIZE, cy + CLOSE_SIZE, UpgradePanelController.PRESS_DARKEN);
+		}
+
+		new StatsPanelReadout(host.font(), this.menu, graphics, mouseX, mouseY).draw(px, py);
+	}
+
+	@Override
+	public boolean handleTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+		if (host.hasStatsTab() && isOverTab(mouseX, mouseY, host.left(), host.top())) {
+			graphics.setTooltipForNextFrame(host.font(),
+					Component.translatable("gui.alaindustrial.stats.title"), mouseX, mouseY);
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Modal over its own footprint: the row tooltips are emitted while drawing, and nothing from the GUI
+	 * beneath may show through.
+	 */
+	@Override
+	public boolean bodyTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+		return coversPoint(mouseX, mouseY);
+	}
+
+	@Override
+	public boolean coversPoint(double mouseX, double mouseY) {
+		return this.menu.isStatsPanelOpen() && isOverPanel(mouseX, mouseY, host.left(), host.top());
+	}
+
+	/** MOD-125: the statistics tab, on every machine that shows one. */
+	@Override
+	public boolean clickHandle(MouseButtonEvent event) {
+		if (event.button() == InputConstants.MOUSE_BUTTON_LEFT && host.hasStatsTab()
+				&& isOverTab(event.x(), event.y(), host.left(), host.top())) {
+			onTabClick();
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Modal over its footprint, like the upgrade panel, but with nothing to click inside it except the close
+	 * button — a readout takes no input, so the whole surface is a drag handle.
+	 */
+	@Override
+	public boolean clickBody(MouseButtonEvent event) {
+		if (!coversPoint(event.x(), event.y())) {
+			return false;
+		}
+		int btn = event.button();
+		if (btn == InputConstants.MOUSE_BUTTON_LEFT && isOverClose(event.x(), event.y(), host.left(), host.top())) {
+			onCloseClick();
+			return true;
+		}
+		if (btn == InputConstants.MOUSE_BUTTON_LEFT) {
+			beginDrag(event.x(), event.y());
+		}
+		return true;
+	}
+
+	@Override
+	public boolean drag(MouseButtonEvent event) {
+		if (dragging() && event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
+			dragTo(event.x(), event.y(), host.left(), host.top(), host.screenWidth(), host.screenHeight());
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean release(MouseButtonEvent event) {
+		if (dragging() && event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
+			endDrag();
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * The statistics dock is declared with the tab (MOD-125): both stick out of the frame, exactly where
+	 * REI/JEI park their item list.
+	 */
+	@Override
+	public void addExclusionAreas(List<Rect2i> areas) {
+		if (host.hasStatsTab()) {
+			areas.add(tabArea(host.left(), host.top()));
+		}
+		if (this.menu.isStatsPanelOpen()) {
+			areas.add(panelArea(host.left(), host.top()));
+		}
 	}
 }

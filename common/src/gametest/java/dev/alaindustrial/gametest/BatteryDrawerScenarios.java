@@ -1,15 +1,16 @@
 package dev.alaindustrial.gametest;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.block.entity.ElectricFurnaceBlockEntity;
 import dev.alaindustrial.block.entity.GeneratorBlockEntity;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.item.ToolConfig;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.registry.ContentManifest;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -26,6 +27,29 @@ import net.minecraft.world.level.block.Block;
  */
 public final class BatteryDrawerScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(BatteryDrawerScenarios::drawer01DrainsStackIntoBuffer,
+								"battery_drawer_drains_stack_into_buffer")
+						.fabricId("BatteryDrawerGameTest", "tcCmn001Drw01_drainsStackIntoBuffer").ticks(20, 40),
+				RosterEntry.of(BatteryDrawerScenarios::drawer02DrainsWhileTheMachineSleeps,
+								"battery_drawer_drains_while_the_machine_sleeps")
+						.fabricId("BatteryDrawerGameTest", "tcCmn001Drw02_drainsWhileTheMachineSleeps").ticks(20, 40),
+				RosterEntry.of(BatteryDrawerScenarios::drawer03SlotIsLastAndHiddenFromAutomation,
+								"battery_drawer_slot_is_last_and_hidden")
+						.fabricId("BatteryDrawerGameTest", "tcCmn001Drw03_slotIsLastAndHidden").ticks(20, 40),
+				RosterEntry.of(BatteryDrawerScenarios::drawer04OnlyConsumersHaveADrawer,
+								"battery_drawer_only_consumers")
+						.fabricId("BatteryDrawerGameTest", "tcCmn001Drw04_onlyConsumersHaveADrawer").ticks(20, 40),
+				RosterEntry.of(BatteryDrawerScenarios::drawer05BlankRefusedAndFullMachineWaits,
+								"battery_drawer_blank_refused_full_machine_waits")
+						.fabricId("BatteryDrawerGameTest", "tcCmn001Drw05_blankRefusedAndFullMachineWaits")
+						.ticks(20, 40));
+
+		private Roster() {}
+	}
+
 	private BatteryDrawerScenarios() {}
 
 	private static final BlockPos MACHINE = new BlockPos(1, 2, 1);
@@ -41,7 +65,7 @@ public final class BatteryDrawerScenarios {
 
 	private static ItemStack batteries(int count) {
 		ItemStack stack = new ItemStack(ModContent.BATTERY.get(), count);
-		ItemEnergy.set(stack, Config.batteryBuffer);
+		ItemEnergy.set(stack, ToolConfig.batteryBuffer);
 		return stack;
 	}
 
@@ -53,6 +77,9 @@ public final class BatteryDrawerScenarios {
 	 * DRAWER-01 — a full stack of 16 batteries feeds an empty furnace, one LV packet per tick, and every EU
 	 * the buffer gained left the stack. A per-item drain (sixteen packets a tick) or a stack paid for as one
 	 * battery breaks either the ceiling or the conservation check.
+	 *
+	 * @implements TC-CMN-001-DRW01 — a stack of 16 batteries feeds the machine one LV packet a tick, EU
+	 *     conserved.
 	 */
 	public static void drawer01DrainsStackIntoBuffer(GameTestHelper helper) {
 		ElectricFurnaceBlockEntity be = place(helper, ModContent.ELECTRIC_FURNACE.get(), ElectricFurnaceBlockEntity.class);
@@ -69,7 +96,7 @@ public final class BatteryDrawerScenarios {
 		tick(be, helper);
 
 		long gained = be.getEnergyStorage().getAmount();
-		long lost = (Config.batteryBuffer - ItemEnergy.get(be.getItem(be.batterySlotIndex()))) * count;
+		long lost = (ToolConfig.batteryBuffer - ItemEnergy.get(be.getItem(be.batterySlotIndex()))) * count;
 		if (gained <= 0) {
 			helper.fail("the drawer moved no EU out of a full stack");
 			return;
@@ -89,6 +116,8 @@ public final class BatteryDrawerScenarios {
 	 * DRAWER-02 — an idle furnace still drinks from its drawer while it sleeps. With nothing to smelt it
 	 * sleeps between checks; a drain that ran only on waking ticks would feed it once per sleep interval,
 	 * and five ticks would add one packet instead of five.
+	 *
+	 * @implements TC-CMN-001-DRW02 — an idle machine keeps draining its drawer every tick while it sleeps.
 	 */
 	public static void drawer02DrainsWhileTheMachineSleeps(GameTestHelper helper) {
 		ElectricFurnaceBlockEntity be = place(helper, ModContent.ELECTRIC_FURNACE.get(), ElectricFurnaceBlockEntity.class);
@@ -101,7 +130,7 @@ public final class BatteryDrawerScenarios {
 		for (int i = 0; i < ticks; i++) {
 			tick(be, helper);
 		}
-		long expected = Math.min((long) EnergyTier.LV.maxVoltage() * ticks, Config.batteryBuffer);
+		long expected = Math.min((long) EnergyTier.LV.maxVoltage() * ticks, ToolConfig.batteryBuffer);
 		long gained = be.getEnergyStorage().getAmount();
 		if (gained != expected) {
 			helper.fail("after " + ticks + " ticks the drawer delivered " + gained + " EU, expected " + expected
@@ -115,6 +144,8 @@ public final class BatteryDrawerScenarios {
 	 * DRAWER-03 — the drawer slot is the LAST index and no face offers it to automation. Last, because a
 	 * slot anywhere else would shift the upgrade chips of every saved machine by one (the MOD-083 trap);
 	 * hidden, because a hopper that could fill or empty it would bypass the player's choice.
+	 *
+	 * @implements TC-CMN-001-DRW03 — the drawer slot is the last index and no face offers it to automation.
 	 */
 	public static void drawer03SlotIsLastAndHiddenFromAutomation(GameTestHelper helper) {
 		ElectricFurnaceBlockEntity be = place(helper, ModContent.ELECTRIC_FURNACE.get(), ElectricFurnaceBlockEntity.class);
@@ -146,6 +177,8 @@ public final class BatteryDrawerScenarios {
 	 * DRAWER-04 — only a consumer gets a drawer. A generator would pour the battery straight into the wire,
 	 * and the Battery Box already has a discharge slot of its own; the block-level answer the client menu
 	 * relies on must agree with the block entity.
+	 *
+	 * @implements TC-CMN-001-DRW04 — only consumers have a drawer; the manifest agrees with the block entity.
 	 */
 	public static void drawer04OnlyConsumersHaveADrawer(GameTestHelper helper) {
 		GeneratorBlockEntity generator = place(helper, ModContent.GENERATOR.get(), GeneratorBlockEntity.class);
@@ -175,6 +208,8 @@ public final class BatteryDrawerScenarios {
 	 * DRAWER-05 — a crystal blank is refused and a full machine leaves the battery alone. The blank only
 	 * ever fills up, so a drawer that took it would hold it forever; a full buffer must not nibble charge
 	 * it has no room for.
+	 *
+	 * @implements TC-CMN-001-DRW05 — a crystal blank is refused and a full machine leaves the battery alone.
 	 */
 	public static void drawer05BlankRefusedAndFullMachineWaits(GameTestHelper helper) {
 		if (ItemEnergy.canDischarge(new ItemStack(ModContent.ENERGY_CRYSTAL_BLANK.get()))) {
@@ -189,7 +224,7 @@ public final class BatteryDrawerScenarios {
 		be.setItem(be.batterySlotIndex(), batteries(1));
 		tick(be, helper);
 		long left = ItemEnergy.get(be.getItem(be.batterySlotIndex()));
-		if (left != Config.batteryBuffer) {
+		if (left != ToolConfig.batteryBuffer) {
 			helper.fail("a full machine drained the battery to " + left);
 			return;
 		}

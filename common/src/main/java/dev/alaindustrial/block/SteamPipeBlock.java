@@ -1,8 +1,6 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.core.fluid.PipeFamily;
-import net.minecraft.world.level.block.BaseEntityBlock;
 
 /**
  * The steam pipe (MOD-662): the fluid pipe's geometry, block entity and network, carrying steam and
@@ -17,15 +15,8 @@ import net.minecraft.world.level.block.BaseEntityBlock;
  */
 public class SteamPipeBlock extends FluidPipeBlock {
 
-	public static final MapCodec<SteamPipeBlock> CODEC = simpleCodec(SteamPipeBlock::new);
-
 	public SteamPipeBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

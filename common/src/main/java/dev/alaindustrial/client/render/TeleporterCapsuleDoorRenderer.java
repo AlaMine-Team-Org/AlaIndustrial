@@ -19,7 +19,6 @@ import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.sprite.SpriteGetter;
 import net.minecraft.client.resources.model.sprite.SpriteId;
@@ -31,7 +30,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -260,27 +258,35 @@ public final class TeleporterCapsuleDoorRenderer
 		float z0 = p.z0();
 		float z1 = p.z1();
 		float fullHeight = p.y1() - p.y0();
+		// Corners clockwise from the top-left as seen from outside, both windings: a glass pane is looked
+		// at from both sides, and neither sheet's back-face culling may hide it.
+		QuadEmitter quads = new QuadEmitter(pose, out, light);
 		float[] across = uv(sprite, glass, x1 - x0, fullHeight, visible);
 		// north (-Z) and south (+Z)
-		face(pose, out, matrix, light, across, 0, 0, -1,
-				x1, y1, z0, x0, y1, z0, x0, y0, z0, x1, y0, z0);
-		face(pose, out, matrix, light, across, 0, 0, 1,
-				x0, y1, z1, x1, y1, z1, x1, y0, z1, x0, y0, z1);
+		quads.quadBothSides(matrix, 16.0f, 0, 0, -1,
+				x1, y1, z0, x0, y1, z0, x0, y0, z0, x1, y0, z0,
+				across[0], across[1], across[2], across[1], across[2], across[3], across[0], across[3]);
+		quads.quadBothSides(matrix, 16.0f, 0, 0, 1,
+				x0, y1, z1, x1, y1, z1, x1, y0, z1, x0, y0, z1,
+				across[0], across[1], across[2], across[1], across[2], across[3], across[0], across[3]);
 		if (glass) {
 			return;
 		}
 		float[] side = uv(sprite, false, z1 - z0, fullHeight, visible);
-		face(pose, out, matrix, light, side, -1, 0, 0,
-				x0, y1, z0, x0, y1, z1, x0, y0, z1, x0, y0, z0);
-		face(pose, out, matrix, light, side, 1, 0, 0,
-				x1, y1, z1, x1, y1, z0, x1, y0, z0, x1, y0, z1);
+		quads.quadBothSides(matrix, 16.0f, -1, 0, 0,
+				x0, y1, z0, x0, y1, z1, x0, y0, z1, x0, y0, z0,
+				side[0], side[1], side[2], side[1], side[2], side[3], side[0], side[3]);
+		quads.quadBothSides(matrix, 16.0f, 1, 0, 0,
+				x1, y1, z1, x1, y1, z0, x1, y0, z0, x1, y0, z1,
+				side[0], side[1], side[2], side[1], side[2], side[3], side[0], side[3]);
 		float[] cap = {
 				sprite.getU((EDGE_TILE_X + PLAIN_TEXEL_X + UV_INSET) / PALETTE_SIZE),
 				sprite.getV((EDGE_TILE_Y + PLAIN_TEXEL_Y + UV_INSET) / PALETTE_SIZE),
 				sprite.getU((EDGE_TILE_X + PLAIN_TEXEL_X + 1.0f - UV_INSET) / PALETTE_SIZE),
 				sprite.getV((EDGE_TILE_Y + PLAIN_TEXEL_Y + 1.0f - UV_INSET) / PALETTE_SIZE)};
-		face(pose, out, matrix, light, cap, 0, 1, 0,
-				x0, y1, z0, x1, y1, z0, x1, y1, z1, x0, y1, z1);
+		quads.quadBothSides(matrix, 16.0f, 0, 1, 0,
+				x0, y1, z0, x1, y1, z0, x1, y1, z1, x0, y1, z1,
+				cap[0], cap[1], cap[2], cap[1], cap[2], cap[3], cap[0], cap[3]);
 	}
 
 	/**
@@ -310,43 +316,6 @@ public final class TeleporterCapsuleDoorRenderer
 	/** A position in the design's 16-pixel glass tile, moved inside the frame of a 16-pixel texture, as 0..1. */
 	private static float glassU(float local) {
 		return (GLASS_UV_MARGIN + local * (16.0f - 2.0f * GLASS_UV_MARGIN) / 16.0f) / 16.0f;
-	}
-
-	/**
-	 * One quad, corners given clockwise from its top-left as seen from outside, emitted with both windings
-	 * so that neither sheet's back-face culling hides it — a glass pane is looked at from both sides.
-	 */
-	private static void face(PoseStack.Pose pose, VertexConsumer out, Matrix4f matrix, int light, float[] uv,
-			float nx, float ny, float nz, float ax, float ay, float az, float bx, float by, float bz,
-			float cx, float cy, float cz, float dx, float dy, float dz) {
-		Vector3f normal = matrix.transformDirection(new Vector3f(nx, ny, nz)).normalize();
-		Vector3f a = corner(matrix, ax, ay, az);
-		Vector3f b = corner(matrix, bx, by, bz);
-		Vector3f c = corner(matrix, cx, cy, cz);
-		Vector3f d = corner(matrix, dx, dy, dz);
-		vertex(pose, out, a, uv[0], uv[1], light, normal, 1.0f);
-		vertex(pose, out, b, uv[2], uv[1], light, normal, 1.0f);
-		vertex(pose, out, c, uv[2], uv[3], light, normal, 1.0f);
-		vertex(pose, out, d, uv[0], uv[3], light, normal, 1.0f);
-
-		vertex(pose, out, d, uv[0], uv[3], light, normal, -1.0f);
-		vertex(pose, out, c, uv[2], uv[3], light, normal, -1.0f);
-		vertex(pose, out, b, uv[2], uv[1], light, normal, -1.0f);
-		vertex(pose, out, a, uv[0], uv[1], light, normal, -1.0f);
-	}
-
-	private static Vector3f corner(Matrix4f matrix, float x, float y, float z) {
-		return matrix.transformPosition(new Vector3f(x, y, z)).div(16.0f);
-	}
-
-	private static void vertex(PoseStack.Pose pose, VertexConsumer out, Vector3f p, float u, float v, int light,
-			Vector3f normal, float sign) {
-		out.addVertex(pose, p.x(), p.y(), p.z())
-				.setColor(-1)
-				.setUv(u, v)
-				.setOverlay(OverlayTexture.NO_OVERLAY)
-				.setLight(light)
-				.setNormal(pose, sign * normal.x(), sign * normal.y(), sign * normal.z());
 	}
 
 	public static final class State extends BlockEntityRenderState {

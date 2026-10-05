@@ -7,6 +7,7 @@ import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.TeleporterBlockEntity;
 import dev.alaindustrial.core.energy.StorageFeedShare;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -34,6 +35,29 @@ import static dev.alaindustrial.gametest.EnergyScenarioSupport.driveWithNetwork;
  */
 public final class Mod353DiagnosticScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(Mod353DiagnosticScenarios::scene1BoxOverCableToTeleporter,
+								"mod353_scene1_box_over_cable_to_teleporter")
+						.fabricId("Mod353DiagnosticGameTest", "mod353Scene1_boxOverCableToTeleporter").ticks(20, 100),
+				RosterEntry.of(Mod353DiagnosticScenarios::scene3BoxFlushAgainstTeleporter,
+								"mod353_scene3_box_flush_against_teleporter")
+						.fabricId("Mod353DiagnosticGameTest", "mod353Scene3_boxFlushAgainstTeleporter").ticks(20, 100),
+				RosterEntry.of(Mod353DiagnosticScenarios::mod353StorageFeedYieldsToMachines,
+								"mod353_storage_feed_yields_to_machines")
+						.fabricId("Mod353DiagnosticGameTest", "mod353_storageFeedYieldsToMachines").ticks(20, 100),
+				RosterEntry.of(Mod353DiagnosticScenarios::mod353ChargePadChargesFromBatteryBoxOverCable,
+								"mod353_charge_pad_charges_from_battery_box_over_cable")
+						.fabricId("Mod353DiagnosticGameTest", "mod353_chargePadChargesFromBatteryBoxOverCable")
+						.ticks(20, 100),
+				RosterEntry.of(Mod353DiagnosticScenarios::mod314CascadeIgnoresTeleporterFund,
+								"mod314_cascade_ignores_teleporter_fund")
+						.fabricId("Mod353DiagnosticGameTest", "mod314_cascadeIgnoresTeleporterFund").ticks(20, 100));
+
+		private Roster() {}
+	}
+
 	private Mod353DiagnosticScenarios() {}
 
 	// Scene 1 — box → 5 cables → teleporter, and nothing else on the segment.
@@ -54,6 +78,8 @@ public final class Mod353DiagnosticScenarios {
 	 * Teleporter at the far end, and <b>no generator, panel or machine anywhere on the segment</b>.
 	 *
 	 * <p>Asserted a hard zero before the fix; now asserts the opposite plus the donor's reserve.
+	 *
+	 * @implements MOD-353 scene 1 — storage-only segment must move a hard zero into the teleporter.
 	 */
 	public static void scene1BoxOverCableToTeleporter(GameTestHelper helper) {
 		// OUT face must look at the cable: FACING is the INPUT face, so point it away (west) and the
@@ -127,6 +153,8 @@ public final class Mod353DiagnosticScenarios {
 	 * station is fed unconditionally here. Asserts that this path really is open today — it is the
 	 * mod's existing, undocumented answer to "I want it charged now", and the fix must not close it by
 	 * accident.
+	 *
+	 * @implements MOD-353 scene 3 — flush box feeds the teleporter through the cable-less path.
 	 */
 	public static void scene3BoxFlushAgainstTeleporter(GameTestHelper helper) {
 		helper.setBlock(S3_BOX, ModContent.BATTERY_BOX.get().defaultBlockState()
@@ -185,6 +213,8 @@ public final class Mod353DiagnosticScenarios {
 	 * <p>Without this the fix would be a balance change, not a bug fix: a Teleporter on a shared bus would
 	 * start competing with the base's machines, which is precisely what {@code isEnergyStorageSink} was
 	 * introduced to prevent (MOD-009).
+	 *
+	 * @implements MOD-353 — machines keep priority over the storage feed.
 	 */
 	public static void mod353StorageFeedYieldsToMachines(GameTestHelper helper) {
 		helper.setBlock(M_BOX, ModContent.BATTERY_BOX.get().defaultBlockState()
@@ -222,6 +252,8 @@ public final class Mod353DiagnosticScenarios {
 	 * <p>It had the identical defect: a storage sink outside the cascade, so a cabled Battery Box fed it
 	 * nothing. If this ever goes red while the teleporter test stays green, the fix has drifted back into
 	 * being about one block.
+	 *
+	 * @implements MOD-353 — the charging station is fixed by the same mechanism.
 	 */
 	public static void mod353ChargePadChargesFromBatteryBoxOverCable(GameTestHelper helper) {
 		helper.setBlock(P_BOX, ModContent.BATTERY_BOX.get().defaultBlockState()
@@ -262,6 +294,8 @@ public final class Mod353DiagnosticScenarios {
 	 * <em>fill fraction</em> the cascade would happily empty the box into it. The feed channel is allowed
 	 * to move energy here — that is the MOD-353 fix — but it must stop at the donor's reserve, which the
 	 * cascade never would.
+	 *
+	 * @implements MOD-314 R3 — the cascade must not drain a box into the teleporter fund.
 	 */
 	public static void mod314CascadeIgnoresTeleporterFund(GameTestHelper helper) {
 		helper.setBlock(C_BOX, ModContent.BATTERY_BOX.get().defaultBlockState()

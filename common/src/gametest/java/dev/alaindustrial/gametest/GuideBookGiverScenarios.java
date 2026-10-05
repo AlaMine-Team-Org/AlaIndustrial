@@ -1,8 +1,9 @@
 package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.core.GuideBookState;
-import dev.alaindustrial.core.guide.GuideBookGiver;
+import dev.alaindustrial.item.misc.GuideBookGiver;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import java.util.UUID;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
@@ -17,6 +18,15 @@ import net.minecraft.world.level.GameType;
  */
 public final class GuideBookGiverScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(GuideBookGiverScenarios::giveOnce, "guide_book_give_once")
+						.fabricId("GuideBookGameTest", "tcGuide001Fun01_giveOnce").ticks(20, 40));
+
+		private Roster() {}
+	}
+
 	private GuideBookGiverScenarios() {
 	}
 
@@ -25,6 +35,9 @@ public final class GuideBookGiverScenarios {
 	 * repeat call (the per-world {@link GuideBookState} ledger prevents duplicates on relog/death). The
 	 * assertion is relative to the pre-state, so it holds even if the server-global ledger already
 	 * carries this mock UUID from an earlier test in the same run.
+	 *
+	 * @implements TC-GUIDE-001-FUN01 — first join gives exactly one book; a repeat call is a no-op
+	 *     (the {@code SavedData} ledger prevents duplicates on relog/death).
 	 */
 	public static void giveOnce(GameTestHelper helper) {
 		ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper);

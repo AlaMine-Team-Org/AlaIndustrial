@@ -1,11 +1,11 @@
 package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
-import dev.alaindustrial.core.energy.EnergyRole;
+import dev.alaindustrial.block.entity.machine.SyncChannels;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.core.heat.HeatConsumer;
 import dev.alaindustrial.core.heat.HeatSource;
-import dev.alaindustrial.core.heat.WorldHeatSources;
+import dev.alaindustrial.core.machine.MachineRates;
 import dev.alaindustrial.menu.VulcanizerMenu;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
 import dev.alaindustrial.recipe.ProcessingRecipeInput;
@@ -14,13 +14,11 @@ import dev.alaindustrial.registry.ModRecipes;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -36,7 +34,6 @@ public final class VulcanizerBlockEntity extends MachineBlockEntity
 	public static final int SULFUR_SLOT = 1;
 	public static final int OUTPUT_SLOT = 2;
 	public static final int SLOT_COUNT = 3;
-	public static final int DATA_COUNT = 6;
 	private static final int[] NO_SLOTS = new int[0];
 
 	private final RecipeManager.CachedCheck<ProcessingRecipeInput, AlaProcessingRecipe> recipeCheck =
@@ -51,7 +48,7 @@ public final class VulcanizerBlockEntity extends MachineBlockEntity
 	public VulcanizerBlockEntity(BlockPos pos, BlockState state) {
 		super(ModContent.VULCANIZER_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT,
 				Config.machineBuffer, EnergyTier.LV.maxVoltage(), 0L);
-		this.maxProgress = Config.scaledDuration(Config.vulcanizerDuration);
+		this.maxProgress = MachineRates.duration(Config.vulcanizerDuration, Config.globalMachineSpeedMultiplier);
 	}
 
 
@@ -262,37 +259,21 @@ public final class VulcanizerBlockEntity extends MachineBlockEntity
 		super.setItem(slot, stack);
 	}
 
-	@Override
-	public EnergyRole energyRoleForFace(Direction worldFace) {
-		return facingAwareRole(worldFace, EnergyRole.IN);
-	}
+	/**
+	 * GUI sync channels (MOD-712, BE-7): the base four, the {@link HeatSource} below and the
+	 * {@link VulcanizerStatus} ordinal; both derived and read-only.
+	 */
+	public enum Channel { ENERGY, CAPACITY, PROGRESS, MAX_PROGRESS, HEAT_SOURCE, STATUS }
 
-	private final ContainerData vulcanizerData = new ContainerData() {
-		@Override
-		public int get(int index) {
-			return switch (index) {
-				case 4 -> heatSource.ordinal();
-				case 5 -> status.ordinal();
-				default -> VulcanizerBlockEntity.this.dataAccess.get(index);
-			};
-		}
-
-		@Override
-		public void set(int index, int value) {
-			if (index != 4 && index != 5) {
-				VulcanizerBlockEntity.this.dataAccess.set(index, value);
-			}
-		}
-
-		@Override
-		public int getCount() {
-			return DATA_COUNT;
-		}
-	};
+	/** Width of {@link #getDataAccess()}, which the menu's client stub sizes itself from (MOD-235). */
+	public static final int DATA_COUNT = Channel.values().length;
 
 	@Override
-	public ContainerData getDataAccess() {
-		return vulcanizerData;
+	protected SyncChannels createChannels() {
+		return channels(Channel.class)
+				.read(Channel.HEAT_SOURCE, () -> heatSource.ordinal())
+				.read(Channel.STATUS, () -> status.ordinal())
+				.build();
 	}
 
 	@Override
@@ -302,14 +283,9 @@ public final class VulcanizerBlockEntity extends MachineBlockEntity
 	}
 
 	@Override
-	protected void loadAdditional(ValueInput input) {
-		super.loadAdditional(input);
+	protected void loadMachineData(ValueInput input) {
+		super.loadMachineData(input);
 		cycleHeatLevel = Math.max(0, Math.min(3, input.getIntOr("CycleHeatLevel", 0)));
-	}
-
-	@Override
-	public Component getDisplayName() {
-		return Component.translatable("block.alaindustrial.vulcanizer");
 	}
 
 	@Override

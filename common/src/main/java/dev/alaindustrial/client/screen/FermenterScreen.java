@@ -58,6 +58,12 @@ public class FermenterScreen extends MachineScreen<FermenterMenu> {
 		return TEXTURE;
 	}
 
+	/** The energy bar and its tooltip, drawn by the base (MOD-716). */
+	@Override
+	protected EnergyBarSpec energyBar() {
+		return ENERGY;
+	}
+
 	@Override
 	protected void drawMachineFrame(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
 		int x = this.leftPos;
@@ -76,7 +82,6 @@ public class FermenterScreen extends MachineScreen<FermenterMenu> {
 					GAUGE_W, biofuelFill);
 		}
 
-		renderEnergyBar(graphics, ENERGY);
 
 		int max = this.menu.getMaxProgress();
 		int filled = max > 0 ? this.menu.getProgress() * ARROW_W / max : 0;
@@ -110,7 +115,6 @@ public class FermenterScreen extends MachineScreen<FermenterMenu> {
 	@Override
 	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		super.extractTooltip(graphics, mouseX, mouseY);
-		renderEnergyTooltip(graphics, mouseX, mouseY, ENERGY);
 
 		// An EMPTY gauge still explains itself: "why is nothing happening" is most often "no water".
 		if (this.isHovering(WATER_X, GAUGE_BOTTOM - GAUGE_H, GAUGE_W, GAUGE_H, mouseX, mouseY)) {

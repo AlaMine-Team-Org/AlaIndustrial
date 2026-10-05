@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.PumpBlockEntity;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModSounds;
@@ -12,13 +11,16 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.phys.BlockHitResult;
+import dev.alaindustrial.client.ServerBalance;
+import dev.alaindustrial.core.tooltip.HasMachineTooltip;
+import dev.alaindustrial.core.tooltip.MachineTooltipSpec;
+import java.util.List;
 
 /**
  * Electric pump — faces the player, lights up while moving fluid.
@@ -42,16 +44,9 @@ import net.minecraft.world.phys.BlockHitResult;
  * the action do we hand off to {@code useWithoutItem} (the GUI). Any other held item falls through to
  * the default (GUI on empty hand).
  */
-public class PumpBlock extends LitMachineBlock implements MachineHumProvider {
-	public static final MapCodec<PumpBlock> CODEC = simpleCodec(PumpBlock::new);
-
+public class PumpBlock extends LitMachineBlock implements MachineHumProvider, HasMachineTooltip {
 	public PumpBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
 	}
 
 	@Override
@@ -102,5 +97,12 @@ public class PumpBlock extends LitMachineBlock implements MachineHumProvider {
 		// that (consuming) result. Returning a consuming result here is what prevents vanilla from
 		// proceeding to Item.useOn (no second capsule call) and from re-entering useWithoutItem.
 		return state.useWithoutItem(level, player, hit);
+	}
+
+	/** Hover tooltip of this block's item (MOD-716, ADR-040). */
+	@Override
+	public MachineTooltipSpec machineTooltip() {
+		return new MachineTooltipSpec(MachineTooltipSpec.Tier.LV,
+				List.of(MachineTooltipSpec.stat("pump_cost", ServerBalance::pumpEuPerBucket)), List.of());
 	}
 }

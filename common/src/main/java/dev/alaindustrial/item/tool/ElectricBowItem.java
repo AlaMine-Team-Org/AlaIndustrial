@@ -1,6 +1,8 @@
 package dev.alaindustrial.item.tool;
 
-import dev.alaindustrial.Config;
+import dev.alaindustrial.item.ToolConfig;
+import dev.alaindustrial.item.energy.EnergyBar;
+import dev.alaindustrial.item.energy.PoweredItem;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.registry.ModDataComponents;
@@ -15,6 +17,8 @@ import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jspecify.annotations.Nullable;
+import dev.alaindustrial.client.ServerBalance;
+import dev.alaindustrial.item.energy.PoweredToolTooltip;
 
 /**
  * Electric Bow (MOD-363) — the EU line's ranged weapon, after the Electric Saber (MOD-149). Same
@@ -32,10 +36,10 @@ import org.jspecify.annotations.Nullable;
  *
  * <h2>Two states, both decided by the charge</h2>
  * <ul>
- * <li><b>Charged</b> (at least {@link Config#electricBowEuPerShot}) — full draw in
+ * <li><b>Charged</b> (at least {@link ToolConfig#electricBowEuPerShot}) — full draw in
  * {@link #LIVE_DRAW_TICKS} ticks instead of 20, the arrow leaves {@link #LIVE_VELOCITY_MULTIPLIER}
  * times faster, and its spread is {@link #LIVE_SPREAD_MULTIPLIER} of vanilla's. One shot costs
- * {@link Config#electricBowEuPerShot}.</li>
+ * {@link ToolConfig#electricBowEuPerShot}.</li>
  * <li><b>Flat</b> — the draw animation still plays and the arrow is still spent, but it leaves at
  * {@link #FLAT_LAUNCH_SPEED}, never crits, and lands at the archer's feet. Nothing to pay, nothing to
  * gain.</li>
@@ -61,7 +65,7 @@ import org.jspecify.annotations.Nullable;
  * step from {@link ItemEnergy#set}, the single point a powered item's charge ever changes. So the
  * picture and the shot agree even when the server's config differs from the player's.
  */
-public class ElectricBowItem extends BowItem {
+public class ElectricBowItem extends BowItem implements PoweredItem {
 
 	/** Ticks to a full draw while charged — 0.8 s against vanilla's {@link BowItem#MAX_DRAW_DURATION}. */
 	public static final int LIVE_DRAW_TICKS = 16;
@@ -99,7 +103,7 @@ public class ElectricBowItem extends BowItem {
 
 	/** Whether this stack would fire a powered shot right now — the server's decision. */
 	public static boolean isLive(ItemStack stack) {
-		return stack.getItem() instanceof ElectricBowItem && ItemEnergy.get(stack) >= Config.electricBowEuPerShot;
+		return stack.getItem() instanceof ElectricBowItem && ItemEnergy.get(stack) >= ToolConfig.electricBowEuPerShot;
 	}
 
 	/**
@@ -124,7 +128,7 @@ public class ElectricBowItem extends BowItem {
 		if (!(stack.getItem() instanceof ElectricBowItem)) {
 			return;
 		}
-		boolean live = eu >= Config.electricBowEuPerShot;
+		boolean live = eu >= ToolConfig.electricBowEuPerShot;
 		boolean shown = stack.has(ModDataComponents.ELECTRIC_BOW_CHARGED.get());
 		if (live && !shown) {
 			stack.set(ModDataComponents.ELECTRIC_BOW_CHARGED.get(), Unit.INSTANCE);
@@ -170,7 +174,7 @@ public class ElectricBowItem extends BowItem {
 		}
 		super.shoot(level, shooter, hand, weapon, projectiles, power * LIVE_VELOCITY_MULTIPLIER,
 				uncertainty * LIVE_SPREAD_MULTIPLIER, isCrit, targetOverride);
-		ItemEnergy.spend(weapon, Config.electricBowEuPerShot, shooter);
+		ItemEnergy.spend(weapon, ToolConfig.electricBowEuPerShot, shooter);
 	}
 
 	// --- self-heal: a bow can arrive charged without ever passing through ItemEnergy.set ---
@@ -198,15 +202,38 @@ public class ElectricBowItem extends BowItem {
 
 	@Override
 	public int getBarWidth(ItemStack stack) {
-		long capacity = ItemEnergy.capacity(stack);
-		if (capacity <= 0) {
-			return 0;
-		}
-		return (int) Math.min(MAX_BAR_WIDTH, MAX_BAR_WIDTH * ItemEnergy.get(stack) / capacity);
+		return EnergyBar.width(stack, MAX_BAR_WIDTH);
 	}
 
 	@Override
 	public int getBarColor(ItemStack stack) {
-		return EnergyTier.LV.color();
+		return EnergyBar.color(EnergyTier.LV);
+	}
+
+	/** MOD-707: this item's EU buffer, read by {@code ItemEnergy.capacity} through {@link PoweredItem}. */
+	@Override
+	public long energyCapacity(ItemStack stack) {
+		return ToolConfig.electricBowBuffer;
+	}
+
+	@Override
+	public long energyInputRate(ItemStack stack) {
+		return ToolConfig.electricBowInputRate;
+	}
+
+	@Override
+	public void onChargeChanged(ItemStack stack, long charge) {
+		// The charged flag the client draws from follows the charge from the one place charge changes,
+		// so the lit bow and the powered shot can never disagree.
+		refreshCharged(stack, charge);
+	}
+
+	/** Shot cost, then the charge. */
+	@Override
+	public PoweredToolTooltip toolTooltip() {
+		// Below one shot's worth the bow is a plain bow: the synced flag, not the local config, so the red line
+		// appears exactly when the lit texture goes out.
+		return PoweredToolTooltip.of("electric_bow", List.of(ServerBalance::electricBowEuPerShot))
+				.withDepleted(stack -> !showsCharged(stack));
 	}
 }

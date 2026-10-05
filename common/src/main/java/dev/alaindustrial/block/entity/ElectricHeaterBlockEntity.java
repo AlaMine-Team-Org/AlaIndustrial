@@ -3,19 +3,17 @@ package dev.alaindustrial.block.entity;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.ElectricHeaterBlock;
 import dev.alaindustrial.block.HeaterGlow;
-import dev.alaindustrial.core.energy.EnergyRole;
+import dev.alaindustrial.block.entity.machine.SyncChannels;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.core.heat.HeatConsumer;
+import dev.alaindustrial.core.machine.MachineRates;
 import dev.alaindustrial.menu.ElectricHeaterMenu;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -39,17 +37,7 @@ import net.minecraft.world.level.storage.ValueOutput;
  * blocked on heat, so one sitting under nothing, or under a machine with no inputs, still costs exactly
  * zero and stays cold.
  */
-public final class ElectricHeaterBlockEntity extends MachineBlockEntity implements MenuProvider {
-	/** Seven-wide data: base 0..3 plus warm-up, rate and status. */
-	public static final int DATA_COUNT = MachineBlockEntity.DATA_COUNT + 3;
-
-	/** Warm-up as permille of {@link Config#electricHeaterWarmupTicks}. */
-	public static final int DATA_HEAT = 4;
-	/** EU per tick this heater would bill right now, including the chips of the machine above. */
-	public static final int DATA_RATE = 5;
-	/** {@link ElectricHeaterStatus} ordinal. */
-	public static final int DATA_STATUS = 6;
-
+public final class ElectricHeaterBlockEntity extends MachineBlockEntity implements MenuProvider, NoUpgradePanel {
 	/**
 	 * Two ticks keep the working state stable regardless of whether this BE or the Vulcanizer is ticked
 	 * first. Each successful consumer call renews the lease.
@@ -71,25 +59,16 @@ public final class ElectricHeaterBlockEntity extends MachineBlockEntity implemen
 				Config.electricHeaterBuffer, EnergyTier.LV.maxVoltage(), 0L);
 	}
 
-	/**
-	 * No upgrade panel — and this is load-bearing, not cosmetic. {@code MachineBlockEntity}'s constructor
-	 * sizes the inventory as {@code slots + (this instanceof MenuProvider && hasUpgradePanel() ? 4 : 0)},
-	 * so the moment this class gained a menu (MOD-418) the heater would silently have grown four slots:
-	 * hoppers would start filling a support block, and the NBT layout would change under existing worlds.
-	 * {@link ElectricHeaterMenu#hasUpgradePanel()} must keep answering the same, or the slot indices
-	 * derived from it drift between client and server.
-	 *
-	 * <p>It would also be the wrong panel to offer: the chips that scale this block's rate live in the
-	 * machine above (MOD-392), and a second set here would be two independent multipliers on one
-	 * operation.
-	 */
-	@Override
-	public boolean hasUpgradePanel() {
-		return false;
-	}
+	// No upgrade panel (NoUpgradePanel) — load-bearing, not cosmetic: the slot layout appends four upgrade
+	// slots to every menu-providing machine, so the moment this class gained a menu (MOD-418) the heater
+	// would silently have grown four slots: hoppers would fill a support block, and the NBT layout would
+	// change under existing worlds. It would also be the wrong panel to offer: the chips that scale this
+	// block's rate live in the machine above (MOD-392), and a second set here would be two independent
+	// multipliers on one operation.
 
 	public boolean canSupplyHeatTick() {
-		return energy.getAmount() >= Config.electricHeaterEuPerTickEffective();
+		return energy.getAmount() >= MachineRates.euPerTick(Config.electricHeaterEuPerTick,
+				Config.globalMachineSpeedMultiplier);
 	}
 
 	/** Whether the warm-up has finished, i.e. whether this heater supplies tier 3 rather than tier 2. */
@@ -112,7 +91,7 @@ public final class ElectricHeaterBlockEntity extends MachineBlockEntity implemen
 
 	/**
 	 * As above, but billed at the overclocker multiple of the machine it heats (MOD-392). The heater has
-	 * no upgrade panel of its own — see {@link #hasUpgradePanel()} — so the rate rides in from above.
+	 * no upgrade panel of its own — see {@link NoUpgradePanel} — so the rate rides in from above.
 	 *
 	 * <p>This is also the only place the warm-up advances (MOD-418): a tick that was paid for is exactly
 	 * a tick of real heating, so the ramp cannot run on energy nobody was billed for.
@@ -143,7 +122,8 @@ public final class ElectricHeaterBlockEntity extends MachineBlockEntity implemen
 	 * above and arrives as an argument.
 	 */
 	private int heatTickCost(int overclockers) {
-		return Math.max(1, Math.round(Config.electricHeaterEuPerTickEffective()
+		return Math.max(1, Math.round(MachineRates.euPerTick(Config.electricHeaterEuPerTick,
+				Config.globalMachineSpeedMultiplier)
 				* (float) Math.pow(Config.overclockerEuFactor, Math.max(0, overclockers))));
 	}
 
@@ -269,54 +249,27 @@ public final class ElectricHeaterBlockEntity extends MachineBlockEntity implemen
 	}
 
 	@Override
-	protected void loadAdditional(ValueInput input) {
-		super.loadAdditional(input);
+	protected void loadMachineData(ValueInput input) {
+		super.loadMachineData(input);
 		heat = Math.max(0, Math.min(input.getIntOr("Heat", 0), warmupTicks()));
 	}
 
-	@Override
-	public EnergyRole energyRoleForFace(Direction worldFace) {
-		return facingAwareRole(worldFace, EnergyRole.IN);
-	}
-
 	/**
-	 * Seven-wide data — hides {@link MachineBlockEntity#DATA_COUNT} on purpose so
-	 * {@code ElectricHeaterBlockEntity.DATA_COUNT} always names <em>this</em> block's width, for the
-	 * client stub in {@link ElectricHeaterMenu} as well (MOD-235).
+	 * GUI sync channels (MOD-712, BE-7): the base four, the heat in permille, the EU/t the last heat tick
+	 * cost and the {@link ElectricHeaterStatus} ordinal; all three derived and read-only.
 	 */
-	private final ContainerData heaterData = new ContainerData() {
-		@Override
-		public int get(int index) {
-			return switch (index) {
-				case DATA_HEAT -> heatPermille();
-				case DATA_RATE -> costEuPerTick;
-				case DATA_STATUS -> status.ordinal();
-				default -> ElectricHeaterBlockEntity.this.dataAccess.get(index);
-			};
-		}
+	public enum Channel { ENERGY, CAPACITY, PROGRESS, MAX_PROGRESS, HEAT, RATE, STATUS }
 
-		@Override
-		public void set(int index, int value) {
-			// The three readout channels are derived and server-authoritative.
-			if (index < DATA_HEAT) {
-				ElectricHeaterBlockEntity.this.dataAccess.set(index, value);
-			}
-		}
-
-		@Override
-		public int getCount() {
-			return DATA_COUNT;
-		}
-	};
+	/** Width of {@link #getDataAccess()}, which the menu's client stub sizes itself from (MOD-235). */
+	public static final int DATA_COUNT = Channel.values().length;
 
 	@Override
-	public ContainerData getDataAccess() {
-		return heaterData;
-	}
-
-	@Override
-	public Component getDisplayName() {
-		return Component.translatable("block.alaindustrial.electric_heater");
+	protected SyncChannels createChannels() {
+		return channels(Channel.class)
+				.read(Channel.HEAT, () -> heatPermille())
+				.read(Channel.RATE, () -> costEuPerTick)
+				.read(Channel.STATUS, () -> status.ordinal())
+				.build();
 	}
 
 	@Override

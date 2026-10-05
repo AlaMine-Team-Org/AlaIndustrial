@@ -40,6 +40,9 @@ public class GalvanicBathScreen extends MachineScreen<GalvanicBathMenu> {
 	private static final int ARROW_U = 176, ARROW_V = 48, ARROW_W = 24, ARROW_H = 17;
 	private static final int ARROW_X = 86, ARROW_Y = 35;
 
+	/** Click area of the recipe viewers (MOD-716): exactly the progress arrow. */
+	public static final GuiRect PROGRESS_AREA = new GuiRect(ARROW_X, ARROW_Y, ARROW_W, ARROW_H);
+
 	/** Tank capacity in mB for the tooltip — read from the block entity so the two cannot drift. */
 	private static final int TANK_MB = (int) GalvanicBathBlockEntity.TANK_CAPACITY;
 
@@ -50,6 +53,12 @@ public class GalvanicBathScreen extends MachineScreen<GalvanicBathMenu> {
 	@Override
 	protected Identifier texture() {
 		return TEXTURE;
+	}
+
+	/** The energy bar and its tooltip, drawn by the base (MOD-716). */
+	@Override
+	protected EnergyBarSpec energyBar() {
+		return EnergyBarSpec.RIGHT;
 	}
 
 	@Override
@@ -65,8 +74,6 @@ public class GalvanicBathScreen extends MachineScreen<GalvanicBathMenu> {
 			FluidGauge.draw(graphics, tankFluid(), x + FLUID_X, y + FLUID_BOTTOM - fluidFill, FLUID_W, fluidFill);
 		}
 
-		// Energy fill (right bar).
-		renderEnergyBar(graphics, EnergyBarSpec.RIGHT);
 
 		// Progress arrow (left-to-right).
 		int max = this.menu.getMaxProgress();
@@ -98,7 +105,6 @@ public class GalvanicBathScreen extends MachineScreen<GalvanicBathMenu> {
 	@Override
 	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		super.extractTooltip(graphics, mouseX, mouseY);
-		renderEnergyTooltip(graphics, mouseX, mouseY, EnergyBarSpec.RIGHT);
 		// Tank gauge — fluid name + level in millibuckets. Hovering an EMPTY tank still explains itself,
 		// because "why is nothing happening" is most often "there is no water in it".
 		if (this.isHovering(FLUID_X, FLUID_BOTTOM - FLUID_H, FLUID_W, FLUID_H, mouseX, mouseY)) {

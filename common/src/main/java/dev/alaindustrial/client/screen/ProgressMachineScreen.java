@@ -1,6 +1,7 @@
 package dev.alaindustrial.client.screen;
 
 import dev.alaindustrial.menu.MachineMenu;
+import java.util.Objects;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
@@ -14,16 +15,17 @@ import net.minecraft.world.entity.player.Inventory;
  * the dynamic layer fills the energy bar ({@link #renderEnergyBar}) and the progress sprite (this
  * class's {@link ProgressSpec}).
  *
- * <p>Each subclass declares only its {@link Identifier texture}, its {@link MachineMenu} type, and
- * its {@link ProgressSpec progress sprite}. That replaces three near-identical copies of the same
- * ~50-line {@code drawMachineFrame}/{@code extractTooltip} pair with one shared implementation.
+ * <p>Each subclass declares only its {@link MachineMenu} type and its {@link MachineLayout} — atlas, energy
+ * bar, {@link ProgressSpec progress sprite} and, if it has one, status row (MOD-716). That replaces three
+ * near-identical copies of the same ~50-line {@code drawMachineFrame}/{@code extractTooltip} pair with one
+ * shared implementation.
  *
  * <p>Not for screens with non-trivial progress shapes (e.g. Compressor's bidirectional arrows,
- * Generator's flame) — those keep their own subclasses.
+ * Generator's flame) — those extend {@link LayoutMachineScreen} with no progress sprite.
  */
-public abstract class ProgressMachineScreen<T extends MachineMenu> extends MachineScreen<T> {
+public abstract class ProgressMachineScreen<T extends MachineMenu> extends LayoutMachineScreen<T> {
 	/** A left-to-right progress sprite in the atlas service area, plus its destination in the GUI frame. */
-	protected record ProgressSpec(int spriteU, int spriteV, int spriteW, int spriteH,
+	public record ProgressSpec(int spriteU, int spriteV, int spriteW, int spriteH,
 			int destX, int destY, boolean minOnePixel) {
 		/**
 		 * @param spriteU    atlas u of the sprite's left edge
@@ -36,13 +38,19 @@ public abstract class ProgressMachineScreen<T extends MachineMenu> extends Machi
 		 * @param minOnePixel if true, render at least 1 px the instant {@code progress > 0} so the user
 		 *                   gets immediate feedback without waiting for the integer-rounded fill to reach 1
 		 */
+
+		/** Where the sprite lands in the frame — the click area of a screen whose arrow is exactly the sprite. */
+		public GuiRect area() {
+			return new GuiRect(destX, destY, spriteW, spriteH);
+		}
 	}
 
 	private final ProgressSpec progress;
 
-	protected ProgressMachineScreen(T menu, Inventory inventory, Component title, ProgressSpec progress) {
-		super(menu, inventory, title);
-		this.progress = progress;
+	/** {@code layout} names the atlas, the bar and the progress sprite (MOD-716, CLI-3); the sprite is required. */
+	protected ProgressMachineScreen(T menu, Inventory inventory, Component title, MachineLayout layout) {
+		super(menu, inventory, title, layout);
+		this.progress = Objects.requireNonNull(layout.progress(), "a progress screen's layout names its sprite");
 	}
 
 	@Override
@@ -54,8 +62,6 @@ public abstract class ProgressMachineScreen<T extends MachineMenu> extends Machi
 		// Static frame from the atlas: visible imageWidth × imageHeight region at top-left of TEX_SIZE².
 		blitStaticFrame(graphics);
 
-		// Energy fill: blit the segmented orange sprite (bottom-up) via the shared MachineScreen helper.
-		renderEnergyBar(graphics, EnergyBarSpec.LEFT);
 
 		// Progress fill (left-to-right): blit the sprite, growing right with progress.
 		int max = this.menu.getMaxProgress();
@@ -71,10 +77,4 @@ public abstract class ProgressMachineScreen<T extends MachineMenu> extends Machi
 		}
 	}
 
-	@Override
-	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-		super.extractTooltip(graphics, mouseX, mouseY);
-		// Hovering the energy bar shows the exact buffer as "X / max EU" (R-GUI-14).
-		renderEnergyTooltip(graphics, mouseX, mouseY, EnergyBarSpec.LEFT);
-	}
 }

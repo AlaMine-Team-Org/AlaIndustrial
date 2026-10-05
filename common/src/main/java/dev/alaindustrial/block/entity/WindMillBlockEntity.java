@@ -2,8 +2,11 @@ package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.HorizontalMachineBlock;
+import dev.alaindustrial.block.entity.machine.EvolutionHelper;
+import dev.alaindustrial.block.entity.machine.SyncChannels;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.core.environment.GeneratorConfig;
 import dev.alaindustrial.core.environment.SolarSky;
 import dev.alaindustrial.core.environment.WindMillClearance;
 import dev.alaindustrial.core.environment.WindMillInterference;
@@ -15,7 +18,6 @@ import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -31,9 +33,10 @@ import net.minecraft.world.level.storage.ValueOutput;
 
 /**
  * LV wind mill (spec: alaindustrial:wind_mill) — a generator driven by build height, open sky and
- * weather. Base grows with height ({@code (y − seaLevel) / 16}, 0–{@link Config#windMillMaxBaseEuPerTick}),
- * multiplied by weather (rain ×{@link Config#windMillRainFactor}, thunder ×{@link Config#windMillThunderFactor})
- * and capped at {@link Config#windMillMaxEuPerTick}. Requires the Overworld and an open sky column above
+ * weather. Base grows with height ({@code (y − seaLevel) / 16}, 0–{@link GeneratorConfig#windMillMaxBaseEuPerTick}),
+ * multiplied by weather (rain ×{@link GeneratorConfig#windMillRainFactor}, thunder ×{@link
+ * GeneratorConfig#windMillThunderFactor})
+ * and capped at {@link GeneratorConfig#windMillMaxEuPerTick}. Requires the Overworld and an open sky column above
  * the block; roofed or below sea level → 0.
  *
  * <p><b>Blade clearance.</b> The 2×2 rotor overhangs the front face and sweeps a disc of radius ~1
@@ -51,11 +54,11 @@ import net.minecraft.world.level.storage.ValueOutput;
  * {@linkplain ModContent#ALIGNMENT_CHIP_DAY day chip} evolves it into the high-altitude branch, a
  * {@linkplain ModContent#ALIGNMENT_CHIP_NIGHT night chip} into the storm branch. With a chip in
  * {@link #CHIP_SLOT} the mill accumulates active open-sky ticks (rotor installed, clear sky above);
- * once {@link Config#windMillEvolveTicks} is reached it transforms, carrying its stored energy and
+ * once {@link GeneratorConfig#windMillEvolveTicks} is reached it transforms, carrying its stored energy and
  * consuming the chip.
  *
  * <p>Height/sky/weather are not sampled every tick: a transient tick counter recomputes the rate every
- * {@link Config#windMillSampleTicks} ticks and {@link #produce} returns the cached rate in between.
+ * {@link GeneratorConfig#windMillSampleTicks} ticks and {@link #produce} returns the cached rate in between.
  *
  * <p>Sync channels: 0 energy, 1 capacity, 2 mechanical rate (EU/t — also the rotor's spin speed),
  * 3 mode, 4 evolution progress (permille 0..1000), 5 denominator (constant 1000), 6 effective rate
@@ -111,11 +114,12 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 	private int effectiveRate = 0;
 
 	private int evolveProgress;
-	/** Which chip the counter above belongs to; see {@link MachineBlockEntity#saveEvolveChip}. */
-	private int evolveChip = EVOLVE_CHIP_NONE;
+	/** Which chip the counter above belongs to; see {@link EvolutionHelper#saveEvolveChip}. */
+	private int evolveChip = EvolutionHelper.EVOLVE_CHIP_NONE;
 
 	public WindMillBlockEntity(BlockPos pos, BlockState state) {
-		super(ModContent.WIND_MILL_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT, Config.windMillBuffer, MAX_EXTRACT);
+		super(ModContent.WIND_MILL_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT, GeneratorConfig.windMillBuffer,
+				MAX_EXTRACT);
 	}
 
 	/**
@@ -143,10 +147,12 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 	private int sampleRate(Level level, BlockPos pos, float rotorFactor) {
 		return WindMillOutput.euFor(pos.getY(), level.getSeaLevel(), openSky(level, pos),
 				level.isRaining(), level.isThundering(),
-				Config.windMillMaxBaseEuPerTick, WindProfile.DEFAULT_BLOCKS_PER_BASE, Config.windMillMaxEuPerTick,
-				Config.windMillRainFactor, Config.windMillThunderFactor,
+				GeneratorConfig.windMillMaxBaseEuPerTick, WindProfile.DEFAULT_BLOCKS_PER_BASE,
+				GeneratorConfig.windMillMaxEuPerTick,
+				GeneratorConfig.windMillRainFactor, GeneratorConfig.windMillThunderFactor,
 				// Shared altitude profile (MOD-347): peaks under the clouds, dies above them.
-				Config.windCloudY, Config.windDeadY, Config.windRidgeFactor, Config.windTraceFactor,
+				GeneratorConfig.windCloudY, GeneratorConfig.windDeadY, GeneratorConfig.windRidgeFactor,
+				GeneratorConfig.windTraceFactor,
 				// Rotor grade (MOD-385) — folded in before euFor's cap, so it never lifts the ceiling.
 				rotorFactor);
 	}
@@ -186,7 +192,7 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 
 		// --- Production: sample on tick 0, then every windMillSampleTicks; cache in between. ---
 		// Sampled before evolution so the evolution gate below sees a fresh interference flag.
-		if (sampleCounter % Config.windMillSampleTicks == 0) {
+		if (sampleCounter % GeneratorConfig.windMillSampleTicks == 0) {
 			int previousRate = cachedRate;
 			int previousMode = cachedMode;
 			// Rotor interference (MOD-051): a neighbouring mill's rotor disc overlapping ours stalls
@@ -215,12 +221,12 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 		// removing the chip or swapping the branch abandons the run. Note the difference from the
 		// environment freezes above — an obstructed or interfered mill KEEPS its progress, because
 		// the chip is still in the slot and the player has not changed their mind about the branch.
-		int chipNow = evolveChipOf(chip);
+		int chipNow = EvolutionHelper.evolveChipOf(chip);
 		if (chipNow != evolveChip) {
 			// An UNATTRIBUTED counter is adopted, not cleared: that is the state of a save written
 			// before the marker existed, and of a counter seeded directly by a test rig. Only a
 			// counter that already belongs to a chip can be abandoned by removing or swapping it.
-			if (evolveChip != EVOLVE_CHIP_NONE) {
+			if (evolveChip != EvolutionHelper.EVOLVE_CHIP_NONE) {
 				evolveProgress = 0;
 			}
 			evolveChip = chipNow;
@@ -228,7 +234,7 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 		}
 		if ((dayChip || nightChip) && sky && !obstructed && !cachedInterfered) {
 			evolveProgress++;
-			if (evolveProgress >= Config.windMillEvolveTicks) {
+			if (evolveProgress >= GeneratorConfig.windMillEvolveTicks) {
 				evolveInto(level, pos, dayChip ? ModContent.HIGH_ALTITUDE_WIND_MILL.get() : ModContent.STORM_WIND_MILL.get());
 				return 0; // this block entity is gone after the transform
 			}
@@ -239,7 +245,7 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 		// Rotor wear (MOD-189): wear accrues only while the mill actually produces EU. In rain/thunder the
 		// blades take extra mechanical stress (windMillStormWearFactor) on top of the higher storm output.
 		if (cachedRate > 0) {
-			float weather = (level.isThundering() || level.isRaining()) ? Config.windMillStormWearFactor : 1.0f;
+			float weather = level.isThundering() || level.isRaining() ? GeneratorConfig.windMillStormWearFactor : 1.0f;
 			// EU-per-damage comes from the rotor's own grade (MOD-385): cachedRate already carries that
 			// grade's output multiplier, so charging wear at the T1 rate would make a better rotor wear
 			// proportionally faster and cancel part of the durability gain it was bought for.
@@ -249,7 +255,7 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 	}
 
 	/**
-	 * The mill's readout rides {@link #RATE_CHANNEL}, not channel 2: channel 2 stays the mechanical rate
+	 * The mill's readout rides {@link Channel#RATE}, not channel 2: channel 2 stays the mechanical rate
 	 * because {@code WindMillRotorBlockEntityRenderer} turns it into the blades' angular speed (MOD-356).
 	 */
 	@Override
@@ -295,7 +301,7 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 		ItemStack rotorSnapshot = items.get(ROTOR_SLOT).copy();
 		ItemStack chipRemainder = items.get(CHIP_SLOT).copy();
 		chipRemainder.shrink(1);
-		evolveInto(level, pos, target, java.util.Map.of(
+		EvolutionHelper.evolveInto(this, items, level, pos, target, java.util.Map.of(
 				CHIP_SLOT, chipRemainder,
 				ROTOR_SLOT, rotorSnapshot));
 	}
@@ -319,58 +325,36 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 	}
 
 	/**
-	 * Seven-wide data — hides {@link MachineBlockEntity#DATA_COUNT} so {@code WindMillBlockEntity.DATA_COUNT}
-	 * names this machine's width for the bridge below and for {@code WindMillMenu}'s client stub (MOD-235).
-	 */
-	public static final int DATA_COUNT = 7;
-
-	/** Channel carrying the effective (post-multiplier) EU/t the GUI prints — see {@link #effectiveRate}. */
-	public static final int RATE_CHANNEL = 6;
-
-	/**
-	 * Seven-wide data: base 0..3 plus evolution progress (4), denominator (5) and the effective
-	 * generation rate (6), mirroring SolarPanelBlockEntity. The evolution channels are scaled to
-	 * <b>permille (0..1000)</b> to stay 16-bit-DataSlot-safe.
+	 * GUI sync channels (MOD-712, BE-7): the base four (PROGRESS the mechanical rate, MAX_PROGRESS the mode),
+	 * the evolution progress in permille and its denominator, then the effective generation rate; all
+	 * read-only.
 	 *
-	 * <p><b>Why the rate needs a channel of its own (MOD-356).</b> Channel 2 carries the <em>mechanical</em>
-	 * rate, which {@code WindMillRotorBlockEntityRenderer} turns into the blades' angular speed via
-	 * {@code Math.min(production, 16)} — so it cannot also carry the post-multiplier number without an
-	 * EU-economy knob speeding up the rotor and, past ~2×, pinning it to that cap so wind strength stops
-	 * reading off the spin at all. Scaling on the client instead is not an option either: {@link Config}
-	 * is loaded per side and never synced, so a dedicated server with a retuned multiplier would feed
-	 * every client a number from its own local config file. Same split, same reasons, as the water mill.
+	 * The effective (post-multiplier) rate rides a channel of its own (MOD-356): PROGRESS carries the
+	 * <em>mechanical</em> rate the renderer turns into the rotor's spin, and the client cannot scale
+	 * it itself because {@link Config} is per side and never synced.
+	 *
+	 * The evolution channels are a <b>permille</b>, not raw ticks: a channel is a 16-bit short and the
+	 * evolution target (33 600 ticks by default) overflowed it — the target arrived negative and the
+	 * bar never drew. EVOLVE_PERMILLE is at least 1 as soon as any progress accrues; EVOLVE_MAX is the
+	 * constant 1000 the screen divides by.
 	 */
-	private final ContainerData windMillData = new ContainerData() {
-		@Override
-		public int get(int index) {
-			return switch (index) {
-				case 4 -> evolveProgress <= 0 ? 0
-						: Math.max(1, (int) Math.min((long) evolveProgress * 1000 / Config.windMillEvolveTicks, 1000));
-				case 5 -> 1000;
-				case RATE_CHANNEL -> effectiveRate;
-				default -> WindMillBlockEntity.this.dataAccess.get(index);
-			};
-		}
+	public enum Channel { ENERGY, CAPACITY, PROGRESS, MAX_PROGRESS, EVOLVE_PERMILLE, EVOLVE_MAX, RATE }
 
-		@Override
-		public void set(int index, int value) {
-			if (index != 4 && index != 5 && index != RATE_CHANNEL) {
-				WindMillBlockEntity.this.dataAccess.set(index, value);
-			}
-		}
-
-		@Override
-		public int getCount() {
-			return DATA_COUNT;
-		}
-	};
+	/** Width of {@link #getDataAccess()}, which the menu's client stub sizes itself from (MOD-235). */
+	public static final int DATA_COUNT = Channel.values().length;
 
 	@Override
-	public ContainerData getDataAccess() {
-		return windMillData;
+	protected SyncChannels createChannels() {
+		return channels(Channel.class)
+				.read(Channel.EVOLVE_PERMILLE, () -> evolveProgress <= 0 ? 0
+						: Math.max(1, (int) Math.min((long) evolveProgress * 1000 / GeneratorConfig.windMillEvolveTicks,
+								1000)))
+				.read(Channel.EVOLVE_MAX, () -> 1000)
+				.read(Channel.RATE, () -> effectiveRate)
+				.build();
 	}
 
-	/** Raw accumulated evolution counter in ticks (0..{@link Config#windMillEvolveTicks}), persisted in NBT. */
+	/** Raw evolution counter in ticks (0..{@link GeneratorConfig#windMillEvolveTicks}), persisted in NBT. */
 	public int getEvolveProgressTicks() {
 		return evolveProgress;
 	}
@@ -381,11 +365,6 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 	}
 
 	@Override
-	public Component getDisplayName() {
-		return Component.translatable("block.alaindustrial.wind_mill");
-	}
-
-	@Override
 	public AbstractContainerMenu createMenu(int syncId, Inventory inventory, Player player) {
 		return new WindMillMenu(syncId, inventory, this, ContainerLevelAccess.create(getLevel(), getBlockPos()));
 	}
@@ -393,14 +372,14 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 	@Override
 	protected void saveAdditional(ValueOutput output) {
 		super.saveAdditional(output);
-		saveEvolve(output, evolveProgress);
-		saveEvolveChip(output, evolveChip);
+		EvolutionHelper.saveEvolve(output, evolveProgress);
+		EvolutionHelper.saveEvolveChip(output, evolveChip);
 	}
 
 	@Override
-	protected void loadAdditional(ValueInput input) {
-		super.loadAdditional(input);
-		evolveProgress = loadEvolve(input);
-		evolveChip = loadEvolveChip(input);
+	protected void loadMachineData(ValueInput input) {
+		super.loadMachineData(input);
+		evolveProgress = EvolutionHelper.loadEvolve(input);
+		evolveChip = EvolutionHelper.loadEvolveChip(input);
 	}
 }

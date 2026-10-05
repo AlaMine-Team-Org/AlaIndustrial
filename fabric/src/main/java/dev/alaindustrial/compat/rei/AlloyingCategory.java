@@ -12,7 +12,7 @@ import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.ItemLike;
 
 /**
  * REI category for the Alloy Smelter (MOD-064): two or three component slots → arrow → one alloy,
@@ -24,9 +24,9 @@ import net.minecraft.world.level.block.Block;
  */
 public class AlloyingCategory implements DisplayCategory<AlloyingDisplay> {
 	private final Component title;
-	private final Block icon;
+	private final ItemLike icon;
 
-	public AlloyingCategory(Block icon, Component title) {
+	public AlloyingCategory(ItemLike icon, Component title) {
 		this.icon = icon;
 		this.title = title;
 	}

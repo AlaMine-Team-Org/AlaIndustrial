@@ -37,6 +37,40 @@ import net.minecraft.world.phys.AABB;
  */
 public final class MuteChipScenarios {
 
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(MuteChipScenarios::muteChip_isMutedReflectsActiveSlot,
+								"mute_chip_is_muted_reflects_active_slot")
+						.fabricId("MuteChipGameTest", "muteChip_isMutedReflectsActiveSlot").ticks(20, 40),
+				RosterEntry.of(MuteChipScenarios::muteChip_persistsAcrossNbtRoundTrip,
+								"mute_chip_persists_across_nbt_round_trip")
+						.fabricId("MuteChipGameTest", "muteChip_persistsAcrossNbtRoundTrip").ticks(20, 40),
+				RosterEntry.of(MuteChipScenarios::muteChip_hoppersCannotReachUpgradeSlots,
+								"mute_chip_hoppers_cannot_reach_upgrade_slots")
+						.fabricId("MuteChipGameTest", "muteChip_hoppersCannotReachUpgradeSlots").ticks(20, 40),
+				RosterEntry.of(MuteChipScenarios::muteChip_dropsOnBreak, "mute_chip_drops_on_break")
+						.fabricId("MuteChipGameTest", "muteChip_dropsOnBreak").ticks(20, 40),
+				RosterEntry.of(MuteChipScenarios::muteChip_dropsFromFormerlySlotlessMachine,
+								"mute_chip_drops_from_formerly_slotless_machine")
+						.fabricId("MuteChipGameTest", "muteChip_dropsFromFormerlySlotlessMachine").ticks(20, 40),
+				RosterEntry.of(MuteChipScenarios::muteChip_menuSlotFilterAndQuickMove,
+								"mute_chip_menu_slot_filter_and_quick_move")
+						.fabricId("MuteChipGameTest", "muteChip_menuSlotFilterAndQuickMove").ticks(20, 40),
+				RosterEntry.of(MuteChipScenarios::muteChip_craftingRecipesResolve, "mute_chip_crafting_recipes_resolve")
+						.fabricId("MuteChipGameTest", "muteChip_craftingRecipesResolve").ticks(20, 40),
+				RosterEntry.of(MuteChipScenarios::overclocker_speedsUpAndCostsMore,
+								"overclocker_speeds_up_and_costs_more")
+						.fabricId("MuteChipGameTest", "overclocker_speedsUpAndCostsMore").ticks(20, 40),
+				RosterEntry.of(MuteChipScenarios::overclocker_tierCapsTheChips, "overclocker_tier_caps_the_chips")
+						.fabricId("MuteChipGameTest", "overclocker_tierCapsTheChips").ticks(20, 40),
+				RosterEntry.of(MuteChipScenarios::overclocker_generatorIsNotOverclockable,
+								"overclocker_generator_is_not_overclockable")
+						.fabricId("MuteChipGameTest", "overclocker_generatorIsNotOverclockable").ticks(20, 40));
+
+		private Roster() {}
+	}
+
 	private MuteChipScenarios() {}
 
 	private static final BlockPos POS = new BlockPos(1, 2, 1);

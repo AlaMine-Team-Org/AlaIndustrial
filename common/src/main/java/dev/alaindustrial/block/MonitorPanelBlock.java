@@ -2,6 +2,7 @@ package dev.alaindustrial.block;
 
 import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.MonitorPanelBlockEntity;
+import dev.alaindustrial.compat.ServerDrops;
 import dev.alaindustrial.core.monitor.MonitorNetworkManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -47,8 +48,6 @@ import org.jetbrains.annotations.Nullable;
  */
 public class MonitorPanelBlock extends BaseEntityBlock {
 
-	public static final MapCodec<MonitorPanelBlock> CODEC = simpleCodec(MonitorPanelBlock::new);
-
 	public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
 	public static final BooleanProperty ACTIVE = BlockStateProperties.LIT;
 
@@ -62,9 +61,15 @@ public class MonitorPanelBlock extends BaseEntityBlock {
 		registerDefaultState(defaultBlockState().setValue(FACING, Direction.NORTH).setValue(ACTIVE, false));
 	}
 
-	@Override
+	/**
+	 * The codec Minecraft 26.2 asks every block for ({@code BaseEntityBlock.codec()} is abstract there; 26.3
+	 * removed block codecs): the unit codec of this very instance, as the mod's own block bases answer it
+	 * (MOD-703). No {@code @Override} on purpose: on 26.2 it overrides, on 26.3 it is a method of its own that
+	 * nothing calls, so this source is the same on both lines. 26.2 reads block codecs only in the datagen
+	 * block-list report ({@code BlockTypes.CODEC} -> {@code BlockListReport}, javap).
+	 */
 	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return CODEC;
+		return MapCodec.unit(this);
 	}
 
 	@Override
@@ -150,7 +155,7 @@ public class MonitorPanelBlock extends BaseEntityBlock {
 		ItemStack filter = panel.getFilter().copy();
 		panel.setFilter(ItemStack.EMPTY);
 		if (!player.getInventory().add(filter)) {
-			player.drop(filter, false);
+			ServerDrops.drop(player, filter);
 		}
 		level.playSound(null, pos, SoundEvents.ITEM_FRAME_REMOVE_ITEM, SoundSource.BLOCKS, 0.8f, 1.2f);
 		return InteractionResult.SUCCESS;

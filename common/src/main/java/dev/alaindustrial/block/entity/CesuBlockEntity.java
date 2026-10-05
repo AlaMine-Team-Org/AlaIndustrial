@@ -2,6 +2,7 @@ package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.HorizontalMachineBlock;
+import dev.alaindustrial.block.entity.machine.SyncChannels;
 import dev.alaindustrial.core.energy.DirectAdjacencyDistributor;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
@@ -15,12 +16,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -204,59 +203,23 @@ public class CesuBlockEntity extends MachineBlockEntity implements MenuProvider 
 	 */
 	public static final int SYNC_SCALE = 100;
 
-	/** Channel 0 — stored EU divided by {@link #SYNC_SCALE}. */
-	public static final int DATA_ENERGY_SCALED = 0;
-	/** Channel 1 — capacity divided by {@link #SYNC_SCALE}. */
-	public static final int DATA_CAPACITY_SCALED = 1;
-
 	/**
-	 * Five-wide data — hides {@link MachineBlockEntity#DATA_COUNT} on purpose so
-	 * {@code CesuBlockEntity.DATA_COUNT} always names <em>this</em> machine's width, for the block entity
-	 * below and for {@code CesuMenu}'s client stub (MOD-235).
+	 * GUI sync channels (MOD-712, BE-7): the base four — ENERGY and CAPACITY <b>scaled in place</b> by
+	 * {@link #SYNC_SCALE}, read-only, since 100 000 EU does not fit a channel's short and every reader goes
+	 * through {@code CesuMenu}, which multiplies the scale back — then the per-tick output cap (read-only).
 	 */
-	public static final int DATA_COUNT = 5;
+	public enum Channel { ENERGY, CAPACITY, PROGRESS, MAX_PROGRESS, OUTPUT_CAP }
 
-	/**
-	 * Five-wide data: base 0..3 plus the per-tick output cap (4).
-	 *
-	 * <p>The two energy channels are <b>scaled in place</b> rather than duplicated into extra channels.
-	 * Every reader goes through {@code CesuMenu.getEnergy()/getCapacity()}, which multiply the scale
-	 * back in, so nothing sees a wrong number — and, critically, no channel on this block can carry a
-	 * value outside the short range. Leaving the raw EU in channels 0/1 "for compatibility" would have
-	 * kept sending an overflowing value down the wire that merely nobody read.
-	 */
-	private final ContainerData cesuData = new ContainerData() {
-		@Override
-		public int get(int index) {
-			return switch (index) {
-				case 4 -> (int) Math.min(Integer.MAX_VALUE, energy.maxExtract);
-				case DATA_ENERGY_SCALED -> (int) (energy.getAmount() / SYNC_SCALE);
-				case DATA_CAPACITY_SCALED -> (int) (energy.getCapacity() / SYNC_SCALE);
-				default -> CesuBlockEntity.this.dataAccess.get(index);
-			};
-		}
-
-		@Override
-		public void set(int index, int value) {
-			if (index != 4 && index != DATA_ENERGY_SCALED && index != DATA_CAPACITY_SCALED) {
-				CesuBlockEntity.this.dataAccess.set(index, value);
-			}
-		}
-
-		@Override
-		public int getCount() {
-			return DATA_COUNT;
-		}
-	};
+	/** Width of {@link #getDataAccess()}, which the menu's client stub sizes itself from (MOD-235). */
+	public static final int DATA_COUNT = Channel.values().length;
 
 	@Override
-	public ContainerData getDataAccess() {
-		return cesuData;
-	}
-
-	@Override
-	public Component getDisplayName() {
-		return Component.translatable("block.alaindustrial.cesu");
+	protected SyncChannels createChannels() {
+		return channels(Channel.class)
+				.override(Channel.ENERGY, () -> (int) (energy.getAmount() / SYNC_SCALE))
+				.override(Channel.CAPACITY, () -> (int) (energy.getCapacity() / SYNC_SCALE))
+				.read(Channel.OUTPUT_CAP, () -> SyncChannels.clampInt(energy.maxExtract))
+				.build();
 	}
 
 	@Override

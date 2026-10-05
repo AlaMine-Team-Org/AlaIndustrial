@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import com.mojang.serialization.MapCodec;
 import dev.alaindustrial.block.entity.WorkstationBlockEntity;
 import dev.alaindustrial.client.skill.SkillTreeClientAccess;
 import java.util.Map;
@@ -58,8 +57,6 @@ import org.jspecify.annotations.Nullable;
  */
 public class WorkstationBlock extends HorizontalMachineBlock {
 
-	public static final MapCodec<WorkstationBlock> CODEC = simpleCodec(WorkstationBlock::new);
-
 	/** Loose casing, lower half or upper half. See {@link WorkstationPart}. */
 	public static final EnumProperty<WorkstationPart> PART =
 			EnumProperty.create("part", WorkstationPart.class);
@@ -96,11 +93,6 @@ public class WorkstationBlock extends HorizontalMachineBlock {
 		registerDefaultState(defaultBlockState()
 				.setValue(PART, WorkstationPart.SINGLE)
 				.setValue(LIT, false));
-	}
-
-	@Override
-	protected MapCodec<? extends WorkstationBlock> codec() {
-		return CODEC;
 	}
 
 	@Override

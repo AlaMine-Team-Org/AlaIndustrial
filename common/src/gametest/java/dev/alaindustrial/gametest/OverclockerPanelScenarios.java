@@ -4,6 +4,7 @@ import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.menu.MachineMenu;
 import dev.alaindustrial.menu.UpgradeSlotKind;
 import dev.alaindustrial.registry.ContentManifest;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
@@ -21,6 +22,23 @@ import net.minecraft.world.level.block.Block;
  * upgrade reads as a broken item.
  */
 public final class OverclockerPanelScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(OverclockerPanelScenarios::overclocker_generatorRefusesTheChip,
+								"overclocker_generator_refuses_the_chip")
+						.fabricId("OverclockerPanelGameTest", "overclocker_generatorRefusesTheChip").ticks(20, 40),
+				RosterEntry.of(OverclockerPanelScenarios::overclocker_refusalSurvivesAPanelDrag,
+								"overclocker_refusal_survives_a_panel_drag")
+						.fabricId("OverclockerPanelGameTest", "overclocker_refusalSurvivesAPanelDrag").ticks(20, 40),
+				RosterEntry.of(OverclockerPanelScenarios::overclocker_manifestMatchesTheBlockEntity,
+								"overclocker_manifest_matches_the_block_entity")
+						.fabricId("OverclockerPanelGameTest", "overclocker_manifestMatchesTheBlockEntity")
+						.ticks(20, 40));
+
+		private Roster() {}
+	}
 
 	private OverclockerPanelScenarios() {}
 

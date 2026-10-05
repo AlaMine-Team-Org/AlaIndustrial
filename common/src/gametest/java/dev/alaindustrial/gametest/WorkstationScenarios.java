@@ -2,13 +2,20 @@ package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.block.WorkstationBlock;
 import dev.alaindustrial.block.WorkstationPart;
+import dev.alaindustrial.block.entity.GeneratorBlockEntity;
+import dev.alaindustrial.block.entity.MaceratorBlockEntity;
 import dev.alaindustrial.block.entity.WorkstationBlockEntity;
+import dev.alaindustrial.core.energy.EnergyNetwork;
 import dev.alaindustrial.core.energy.EnergyRole;
+import dev.alaindustrial.core.energy.NetworkManager;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
@@ -20,6 +27,30 @@ import net.minecraft.world.level.block.state.BlockState;
  * structure both lanes use — no structure of its own is needed.
  */
 public final class WorkstationScenarios {
+
+	/** This class's world gametests for both loaders (ADR-038); nested so reading them does not initialise it. */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(WorkstationScenarios::frm01TwoCasingsAssemble, "mod483_two_casings_assemble")
+						.fabricId("WorkstationGameTest", "mod483TwoCasingsAssemble").ticks(20, 40),
+				RosterEntry.of(WorkstationScenarios::frm02ThreeCasingsPairTheBottomTwo,
+								"mod483_three_casings_pair_the_bottom_two")
+						.fabricId("WorkstationGameTest", "mod483ThreeCasingsPairTheBottomTwo").ticks(20, 40),
+				RosterEntry.of(WorkstationScenarios::brk01BreakingUpperDegradesLower,
+								"mod483_breaking_upper_degrades_lower")
+						.fabricId("WorkstationGameTest", "mod483BreakingUpperDegradesLower").ticks(20, 40),
+				RosterEntry.of(WorkstationScenarios::brk02BreakingLowerDegradesUpper,
+								"mod483_breaking_lower_degrades_upper")
+						.fabricId("WorkstationGameTest", "mod483BreakingLowerDegradesUpper").ticks(20, 40),
+				RosterEntry.of(WorkstationScenarios::nrg01OnlyTheLowerHalfTakesEnergy,
+								"mod483_only_the_lower_half_takes_energy")
+						.fabricId("WorkstationGameTest", "mod483OnlyTheLowerHalfTakesEnergy").ticks(20, 40),
+				RosterEntry.of(WorkstationScenarios::nrg02ServedAlongsideHungryMachine,
+								"mod691_served_alongside_hungry_machine")
+						.fabricId("WorkstationGameTest", "mod691ServedAlongsideHungryMachine").ticks(20, 40));
+
+		private Roster() {}
+	}
 
 	private WorkstationScenarios() {
 	}
@@ -174,6 +205,95 @@ public final class WorkstationScenarios {
 		}
 		if (partAt(level, base.above(2)) != WorkstationPart.SINGLE) {
 			helper.fail("the third casing must be left alone, got " + partAt(level, base.above(2)));
+			return;
+		}
+		helper.succeed();
+	}
+
+	// ── MOD-691: where the station stands in the serve order ─────────────────────────────────────────
+
+	private static final BlockPos SERVE_GEN = new BlockPos(1, 2, 1);
+	private static final BlockPos SERVE_CABLE = new BlockPos(2, 2, 1);
+	private static final BlockPos SERVE_MAC = new BlockPos(3, 2, 1);
+	/** Lower half; the upper half stands on it. South of the cable, so its NORTH face takes the arm. */
+	private static final BlockPos SERVE_STATION = new BlockPos(2, 2, 2);
+
+	/**
+	 * A generator short of the demand, one copper cable, an LV machine and the workstation on that same
+	 * cable: the station is served ALONGSIDE the hungry machine, as a machine, not after it as a store.
+	 *
+	 * <p>A characterization of the serve order the network applies today (MOD-691, variant (b)).
+	 * The deficit is structural: a copper segment holds 12 EU and the macerator alone takes up to 32 EU/t,
+	 * while forty ticks of at most 12 EU cannot fill its 800 EU buffer ({@code maceratorBuffer}), so over
+	 * this run the machine never stops asking. Were the station a store
+	 * (variant (a), ADR-002), it would get nothing until the macerator were full — this expectation is the
+	 * one to flip if the owner chooses that. Two readings, both from the network itself: the station's own
+	 * buffer, and {@code lastTickToStorage}, the part of each delivery the network booked as "into a store".
+	 *
+	 * <p>The station is deliberately not ticked: its upkeep would drain what it received, and the question
+	 * here is only whether anything arrived.
+	 *
+	 * @implements TC-WKST-001-NRG02 — served as a machine on a short line
+	 */
+	public static void nrg02ServedAlongsideHungryMachine(GameTestHelper helper) {
+		ServerLevel level = helper.getLevel();
+		helper.setBlock(SERVE_GEN, ModContent.GENERATOR.get());
+		helper.setBlock(SERVE_CABLE, ModContent.COPPER_CABLE.get());
+		helper.setBlock(SERVE_MAC, ModContent.MACERATOR.get());
+		BlockPos station = helper.absolutePos(SERVE_STATION);
+		level.setBlockAndUpdate(station, casing().setValue(WorkstationBlock.FACING, Direction.SOUTH));
+		level.setBlockAndUpdate(station.above(), casing().setValue(WorkstationBlock.FACING, Direction.SOUTH));
+		WorkstationBlock.tryAssemble(level, station.above());
+		if (EnergyScenarioSupport.be(helper, SERVE_GEN) instanceof GeneratorBlockEntity gen) {
+			gen.setItem(GeneratorBlockEntity.FUEL_SLOT, new ItemStack(Items.COAL, 64));
+		}
+		if (EnergyScenarioSupport.be(helper, SERVE_MAC) instanceof MaceratorBlockEntity mac) {
+			mac.setItem(MaceratorBlockEntity.INPUT_SLOT, new ItemStack(Items.RAW_IRON, 8));
+		}
+		if (partAt(level, station) != WorkstationPart.LOWER
+				|| !(level.getBlockEntity(station) instanceof WorkstationBlockEntity)) {
+			helper.fail("precondition: the workstation did not assemble at " + station);
+			return;
+		}
+
+		long intoStorage = 0L;
+		for (int i = 0; i < 40; i++) {
+			EnergyScenarioSupport.tick(helper, EnergyScenarioSupport.be(helper, SERVE_GEN));
+			EnergyScenarioSupport.tick(helper, EnergyScenarioSupport.be(helper, SERVE_CABLE));
+			EnergyScenarioSupport.tick(helper, EnergyScenarioSupport.be(helper, SERVE_MAC));
+			NetworkManager.tickAll(level);
+			EnergyNetwork net = NetworkManager.networkAt(level, helper.absolutePos(SERVE_CABLE));
+			if (net != null) {
+				intoStorage += net.lastTickToStorage();
+			}
+		}
+
+		if (!(EnergyScenarioSupport.be(helper, SERVE_MAC) instanceof MaceratorBlockEntity mac)) {
+			helper.fail("the macerator is gone");
+			return;
+		}
+		long macAmount = mac.getEnergyStorage().getAmount();
+		long macCapacity = mac.getEnergyStorage().getCapacity();
+		if (macAmount <= 0) {
+			helper.fail("precondition: the line delivered nothing to the macerator — the rig is not powered");
+			return;
+		}
+		if (macAmount >= macCapacity) {
+			helper.fail("precondition: the macerator filled up (" + macAmount + "/" + macCapacity
+					+ "), so the line was never short and the serve order was not exercised");
+			return;
+		}
+		long stationAmount = ((WorkstationBlockEntity) level.getBlockEntity(station)).getEnergyStorage().getAmount();
+		if (stationAmount <= 0) {
+			helper.fail("MOD-691: the workstation received nothing while the macerator was still hungry ("
+					+ macAmount + "/" + macCapacity + ") — the network is serving it after the machines, as a"
+					+ " store; MOD-691 variant (b) serves it as a machine");
+			return;
+		}
+		if (intoStorage != 0L) {
+			helper.fail("MOD-691: the network booked " + intoStorage + " EU as delivered into storage on a line"
+					+ " whose only consumers are a macerator and the workstation — the station is being"
+					+ " classed as a store");
 			return;
 		}
 		helper.succeed();

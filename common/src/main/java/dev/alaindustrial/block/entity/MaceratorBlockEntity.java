@@ -8,7 +8,6 @@ import dev.alaindustrial.recipe.ProcessingRecipeInput;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModRecipes;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -44,11 +43,6 @@ public final class MaceratorBlockEntity extends AbstractProcessingMachineBlockEn
 	protected RecipeSolution resolveInput(ServerLevel level, ItemStack input) {
 		AlaProcessingRecipe recipe = lookupKind(recipeCheck, level, input);
 		return recipe != null ? RecipeSolution.of(recipe) : RecipeSolution.empty();
-	}
-
-	@Override
-	public Component getDisplayName() {
-		return Component.translatable("block.alaindustrial.macerator");
 	}
 
 	@Override

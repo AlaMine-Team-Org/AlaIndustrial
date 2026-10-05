@@ -39,13 +39,12 @@ public class UpgradeTableScreen extends ProgressMachineScreen<UpgradeTableMenu> 
 	private static final int STATUS_BAND_LEFT = 32;
 	private static final int STATUS_BAND_RIGHT = 168;
 
-	public UpgradeTableScreen(UpgradeTableMenu menu, Inventory inventory, Component title) {
-		super(menu, inventory, title, PROGRESS);
-	}
+	/** Atlas, energy bar and progress sprite: the whole declared frame (MOD-716, CLI-3). */
+	private static final MachineLayout LAYOUT = MachineLayout.of(TEXTURE, EnergyBarSpec.LEFT)
+			.withProgress(PROGRESS);
 
-	@Override
-	protected Identifier texture() {
-		return TEXTURE;
+	public UpgradeTableScreen(UpgradeTableMenu menu, Inventory inventory, Component title) {
+		super(menu, inventory, title, LAYOUT);
 	}
 
 	/**
@@ -80,9 +79,4 @@ public class UpgradeTableScreen extends ProgressMachineScreen<UpgradeTableMenu> 
 		drawFittedStatus(graphics, label, STATUS_TEXT_Y, STATUS_BAND_LEFT, STATUS_BAND_RIGHT, colour);
 	}
 
-	@Override
-	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-		super.extractTooltip(graphics, mouseX, mouseY);
-		renderEnergyTooltip(graphics, mouseX, mouseY, EnergyBarSpec.LEFT);
-	}
 }
