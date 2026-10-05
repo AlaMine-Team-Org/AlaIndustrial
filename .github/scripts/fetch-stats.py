@@ -130,6 +130,10 @@ def fetch_modrinth_history() -> dict:
         "project_ids": [MODRINTH_ID],
     }
     data = post_json("https://api.modrinth.com/v3/analytics", body, {"Authorization": token})
+    slices = data.get("metrics") or []
+    rows = [row for slice_ in slices for row in slice_]
+    print(f"INFO  modrinth analytics answer: {len(slices)} slice(s), {len(rows)} row(s)"
+          + (f", first row keys {sorted(rows[0])}" if rows else ""))
     return parse_modrinth_history(data, start)
 
 
