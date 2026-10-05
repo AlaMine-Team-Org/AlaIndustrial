@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 """Daily Telegram report on mod downloads, plus a health check of the pipeline.
 
-The figures come from data/stats.json — the snapshot history written by
-fetch-stats.py — and are computed with exactly the formulas the guide site uses
-in docs/tools/wiki/guide_site.js (dailyFrom, the week / previous-week sums, and the
-rule that drops any day that is not over yet). If a number here disagrees with
-the number on the site, this script is wrong.
+The figures come from data/stats.json, written by fetch-stats.py. The per-day
+numbers are its `daily` rows (MOD-749) — the very rows the guide site draws, so the
+two cannot disagree; the week sums and the rule that drops any day that is not
+over yet follow docs/tools/wiki/guide_site.js. An older file without `daily` falls
+back to the snapshot differences (dailyFrom). The checks below — a skipped day, a
+counter that did not move — still look at the raw snapshots: smoothing must not hide
+a stalled source. If a number here disagrees with the number on the site, this
+script is wrong.
 
 Two things it verifies beyond the arithmetic:
 
@@ -149,6 +152,24 @@ def daily_from(rows):
     return out
 
 
+def daily_rows(data):
+    """{date: (value, CurseForge estimated?)} from the collector's `daily`, or None.
+
+    A row is [date, modrinth, curseforge or null, flags]; anything malformed makes the
+    whole list untrusted and the report falls back to the snapshot differences."""
+    rows = data.get("daily")
+    if not isinstance(rows, list) or not rows:
+        return None
+    out = {}
+    for row in rows:
+        if (not isinstance(row, list) or len(row) != 4 or not isinstance(row[0], str)
+                or not DATE_RE.match(row[0]) or not is_number(row[1])
+                or not (row[2] is None or is_number(row[2])) or not isinstance(row[3], str)):
+            return None
+        out[row[0]] = (max(0, row[1] + (row[2] or 0)), "e" in row[3])
+    return out
+
+
 def trim_future(days, today_iso):
     """Drop any day that is not over yet (guide_site.js: the todayUTC loop)."""
     while days and days[-1]["date"] >= today_iso:
@@ -198,6 +219,13 @@ def build_report(data, today, site_result):
         problems.append("series: %d unusable row(s) ignored" % dropped)
 
     days = trim_future(daily_from(rows), today.isoformat())
+    # The figures shown are the collector's daily rows when it wrote them (MOD-749):
+    # the same numbers the site draws, CurseForge's catch-up days already smoothed.
+    shown = daily_rows(data)
+    if shown is not None:
+        for entry in days:
+            if entry["date"] in shown:
+                entry["value"], entry["cf_estimate"] = shown[entry["date"]]
     # Look the day up BY DATE. Taking the last element instead would pin a
     # diagnosis about a stalled source onto whatever day happens to sit there.
     today_entry = None
@@ -216,8 +244,13 @@ def build_report(data, today, site_result):
                         % (day_iso, newest))
     else:
         marks = []
-        if today_entry["spread"]:
+        if today_entry.get("cf_estimate"):
+            # Not a problem: CurseForge releases its counter in batches, and the
+            # collector spreads a catch-up over the week it belongs to.
             marks.append("estimate")
+        if today_entry["spread"]:
+            if "estimate" not in marks:
+                marks.append("estimate")
             problems.append(
                 "collection skipped %d day(s) after %s — the figure is the gap "
                 "spread evenly" % (today_entry["gap"] - 1, today_entry["from"]))

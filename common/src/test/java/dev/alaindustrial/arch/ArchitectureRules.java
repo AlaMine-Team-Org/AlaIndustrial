@@ -375,6 +375,29 @@ public class ArchitectureRules {
 			.because("appendHoverText runs on the client, whose Config is the player's own file on a "
 					+ "dedicated server: read the knob through dev.alaindustrial.client.ServerBalance (MOD-695)");
 
+	/** The registry classes whose recipe-family declarations the recipe viewers read, nested classes included. */
+	static final String RECIPE_FAMILY_DECLARATIONS = "dev\\.alaindustrial\\.registry\\."
+			+ "(ModRecipes|MachineRecipeFamily)(\\$.*)?";
+
+	/**
+	 * Recipe data and the recipe families' draw per tick read no balance knob (MOD-743).
+	 *
+	 * <p>{@link #clientReadsBalanceThroughServerBalance} sees only a read made BY client code. The recipe
+	 * viewers read the balance one step removed: a JEI card printed the cost a {@code recipe..} class had
+	 * computed from {@code Config} (the vanilla-smelt mirror), and the time a family's rate lambda in
+	 * {@code ModRecipes} read from {@code Config} — both the player's own file on a dedicated server. These
+	 * classes are drawn on the client, so a rate is read through {@code ServerBalance} (a family's rate is
+	 * viewer-only — no machine calls it) and a cost is left to the viewer, which resolves it when it draws.
+	 */
+	@ArchTest
+	static final ArchRule recipeDataReadsNoBalanceKnob = noClasses()
+			.that().resideInAPackage("dev.alaindustrial.recipe..")
+			.or().haveNameMatching(RECIPE_FAMILY_DECLARATIONS)
+			.should(readBalanceKnobsFromConfig())
+			.because("recipe data is drawn on the client, whose Config is the player's own file on a dedicated "
+					+ "server: a family's rate reads ServerBalance, and a cost is resolved by the viewer when it "
+					+ "draws the card (RecipeViewerCost, MOD-743)");
+
 	/**
 	 * {@code appendHoverText} itself, or a lambda javac lifted out of it. ArchUnit 1.x already attributes
 	 * a lambda's accesses to the declaring method, so the second arm is a guard for an importer that does

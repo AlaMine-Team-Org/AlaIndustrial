@@ -1,12 +1,11 @@
 package dev.alaindustrial.core.energy;
 
-import java.util.ArrayDeque;
+import dev.alaindustrial.core.net.DistanceField;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -19,8 +18,12 @@ import net.minecraft.core.Direction;
  * geometric order, the producer field seeded from supplying producers, the sink and machine fields seeded
  * from every waiting endpoint, the stranded order handed over only while a generator supplies, the three
  * discharge channels and their sink exclusion — but it is a COPY, kept here so the kernel can be driven
- * without a world. It is the input side of the golden; the real cache and orchestration are pinned end to
- * end by {@code EnergyFlowFieldGoldenScenarios} and {@code DischargeChannelBoundaryScenarios}. Every face
+ * without a world. Two rules are not copies: the replica calls {@code DischargePlan.setAside} for the sinks
+ * that sit the tick out and those of them that draw the generators' surplus apart (MOD-731), and its fields,
+ * sweep order and stranded cables are production's own {@link FlowField}
+ * (MOD-730) — a copy of either rule would pin the golden to the old one. It is the input side of the golden; the real
+ * cache and orchestration are pinned end to end by {@code EnergyFlowFieldGoldenScenarios} and
+ * {@code DischargeChannelBoundaryScenarios}. Every face
  * accepts and emits, which is how a block whose faces are all role BOTH behaves.
  */
 final class GoldenRig {
@@ -39,15 +42,12 @@ final class GoldenRig {
 	private final Set<BlockPos> cables = new LinkedHashSet<>();
 	private final Map<BlockPos, EnergyBuffer> buffers = new LinkedHashMap<>();
 	private final List<End> ends = new ArrayList<>();
-	private final Map<BlockPos, Integer> producerDistance = new LinkedHashMap<>();
-	private final Map<BlockPos, Integer> sinkDistance = new LinkedHashMap<>();
-	private final Map<BlockPos, Integer> machineDistance = new LinkedHashMap<>();
+	/** Production's fields over this rig's cables: flow potential, sweep order, stranded cables (MOD-730). */
+	private final FlowField<BlockPos> flow =
+			new FlowField<>(this::cableNeighbours, EnergyTopologyCache.BLOCK_POS_ORDER);
 	private final Map<BlockPos, Integer> consumerDistance = new LinkedHashMap<>();
-	private final List<BlockPos> propagationOrder = new ArrayList<>();
-	private final List<BlockPos> strandedOrder = new ArrayList<>();
 	private final List<End> producers = new ArrayList<>();
 	private final List<End> consumers = new ArrayList<>();
-	private boolean sinkMode;
 	private boolean endpointsKnown;
 	private Set<BlockPos> supplying = Set.of();
 	private Set<BlockPos> sinkSeeds = Set.of();
@@ -55,6 +55,8 @@ final class GoldenRig {
 	private int cursor;
 	private long lastMoved;
 	private long lastDrawn;
+	/** {@code EnergyNetwork.generatorSurplus}: generator injection beyond the machines' draw, last tick. */
+	private long generatorSurplus;
 
 	GoldenRig(String name) {
 		this.name = name;
@@ -131,31 +133,43 @@ final class GoldenRig {
 			}
 		}
 		computeProducerField();
-		floodFromSinks(sinkSeeds, sinkDistance);
-		floodFromSinks(machineSeeds, machineDistance);
-		rebuildFlowOrder();
+		floodFromSinks(sinkSeeds, flow.sink());
+		floodFromSinks(machineSeeds, flow.machine());
+		flow.rebuild(cables);
+	}
+
+	/** {@code EnergyTopologyCache.cableNeighbours}: the cables one hop away, in {@link Direction} order. */
+	private List<BlockPos> cableNeighbours(BlockPos pos) {
+		List<BlockPos> out = new ArrayList<>(DIRECTIONS.length);
+		for (Direction dir : DIRECTIONS) {
+			BlockPos np = pos.relative(dir);
+			if (cables.contains(np)) {
+				out.add(np);
+			}
+		}
+		return out;
 	}
 
 	private void computeProducerField() {
 		consumerDistance.clear();
-		producerDistance.clear();
-		Queue<BlockPos> queue = new ArrayDeque<>();
+		DistanceField<BlockPos> field = flow.producer();
+		field.clear();
 		for (End p : producers) {
 			if (!supplying.isEmpty() && !supplying.contains(p.pos())) {
 				continue;
 			}
 			for (Direction dir : DIRECTIONS) {
 				BlockPos cable = p.pos().relative(dir);
-				if (cables.contains(cable) && producerDistance.putIfAbsent(cable, 1) == null) {
-					queue.add(cable);
+				if (cables.contains(cable)) {
+					field.seed(cable, 1);
 				}
 			}
 		}
-		floodFrom(queue, producerDistance);
+		field.flood();
 		for (End c : consumers) {
 			int best = 0;
 			for (Direction dir : DIRECTIONS) {
-				Integer d = producerDistance.get(c.pos().relative(dir));
+				Integer d = flow.producerDistance(c.pos().relative(dir));
 				if (d != null && (best == 0 || d < best)) {
 					best = d;
 				}
@@ -166,78 +180,17 @@ final class GoldenRig {
 		}
 	}
 
-	private void floodFromSinks(Set<BlockPos> seeds, Map<BlockPos, Integer> dist) {
-		dist.clear();
-		Queue<BlockPos> queue = new ArrayDeque<>();
+	private void floodFromSinks(Set<BlockPos> seeds, DistanceField<BlockPos> field) {
+		field.clear();
 		for (BlockPos seed : seeds) {
 			for (Direction dir : DIRECTIONS) {
 				BlockPos cable = seed.relative(dir);
-				if (cables.contains(cable) && dist.putIfAbsent(cable, 1) == null) {
-					queue.add(cable);
+				if (cables.contains(cable)) {
+					field.seed(cable, 1);
 				}
 			}
 		}
-		floodFrom(queue, dist);
-	}
-
-	private void floodFrom(Queue<BlockPos> queue, Map<BlockPos, Integer> dist) {
-		while (!queue.isEmpty()) {
-			BlockPos cur = queue.poll();
-			int next = dist.get(cur) + 1;
-			for (Direction dir : DIRECTIONS) {
-				BlockPos np = cur.relative(dir);
-				if (cables.contains(np) && dist.putIfAbsent(np, next) == null) {
-					queue.add(np);
-				}
-			}
-		}
-	}
-
-	private void rebuildFlowOrder() {
-		sinkMode = !sinkDistance.isEmpty();
-		propagationOrder.clear();
-		if (sinkMode) {
-			propagationOrder.addAll(sinkDistance.keySet());
-			propagationOrder.sort((a, b) -> Integer.compare(sinkDistance.get(a), sinkDistance.get(b)));
-		} else {
-			propagationOrder.addAll(producerDistance.keySet());
-			propagationOrder.sort((a, b) -> Integer.compare(producerDistance.get(b), producerDistance.get(a)));
-		}
-		rebuildStrandedOrder();
-	}
-
-	private void rebuildStrandedOrder() {
-		strandedOrder.clear();
-		if (!sinkMode || producerDistance.isEmpty()) {
-			return;
-		}
-		Set<BlockPos> reachable = new LinkedHashSet<>();
-		Queue<BlockPos> queue = new ArrayDeque<>();
-		for (Map.Entry<BlockPos, Integer> entry : producerDistance.entrySet()) {
-			if (entry.getValue() == 1 && sinkDistance.containsKey(entry.getKey()) && reachable.add(entry.getKey())) {
-				queue.add(entry.getKey());
-			}
-		}
-		while (!queue.isEmpty()) {
-			BlockPos cur = queue.poll();
-			int potential = sinkDistance.get(cur);
-			for (Direction dir : DIRECTIONS) {
-				BlockPos np = cur.relative(dir);
-				Integer next = sinkDistance.get(np);
-				if (next != null && next < potential && reachable.add(np)) {
-					queue.add(np);
-				}
-			}
-		}
-		for (BlockPos cable : cables) {
-			if (!reachable.contains(cable) && producerDistance.containsKey(cable)) {
-				strandedOrder.add(cable);
-			}
-		}
-		strandedOrder.sort((a, b) -> {
-			int byDistance = Integer.compare(producerDistance.get(b), producerDistance.get(a));
-			return byDistance != 0 ? byDistance : EnergyTopologyCache.BLOCK_POS_ORDER.compare(a, b);
-		});
+		field.flood();
 	}
 
 	private void updateLiveEndpoints(Set<BlockPos> nowSupplying, Set<BlockPos> nowSinks, Set<BlockPos> nowMachines) {
@@ -249,24 +202,16 @@ final class GoldenRig {
 		}
 		if (!sinkSeeds.equals(nowSinks)) {
 			sinkSeeds = new LinkedHashSet<>(nowSinks);
-			floodFromSinks(sinkSeeds, sinkDistance);
+			floodFromSinks(sinkSeeds, flow.sink());
 			changed = true;
 		}
 		if (!machineSeeds.equals(nowMachines)) {
 			machineSeeds = new LinkedHashSet<>(nowMachines);
-			floodFromSinks(machineSeeds, machineDistance);
+			floodFromSinks(machineSeeds, flow.machine());
 		}
 		if (changed) {
-			rebuildFlowOrder();
+			flow.rebuild(cables);
 		}
-	}
-
-	private Integer flowPotential(BlockPos pos) {
-		if (sinkMode) {
-			return sinkDistance.get(pos);
-		}
-		Integer d = producerDistance.get(pos);
-		return d == null ? null : -d;
 	}
 
 	/** One network tick, preceded by every endpoint's own block-entity tick (production, then work). */
@@ -289,6 +234,7 @@ final class GoldenRig {
 		lastDrawn = 0;
 		discoverEndpoints();
 		if (producers.isEmpty()) {
+			generatorSurplus = 0;
 			return;
 		}
 		long genSupply = 0;
@@ -338,11 +284,12 @@ final class GoldenRig {
 		if (backup == 0 && cascade.isEmpty() && !stores.isEmpty() && !sinks.isEmpty()) {
 			feed = feedAllowances(stores, sinks);
 		}
-		Map<BlockPos, Long> discharging = backup > 0 ? null : !cascade.isEmpty() ? cascade : feed;
-		if (!storePositions.isEmpty()) {
-			sinks.removeIf(c -> discharging == null ? storePositions.contains(c.pos())
-					: discharging.containsKey(c.pos()));
-		}
+		// Which sinks sit the tick out, and which of them draw the generators' surplus apart, is production's
+		// own rule, not a copy of it (MOD-731).
+		DischargePlan<BlockPos> plan = new DischargePlan<>(backup, cascade, feed,
+				cascade.isEmpty() ? 0 : generatorSurplus);
+		List<EnergyLineDistributor.LiveConsumer<BlockPos>> surplusTakers = storePositions.isEmpty()
+				? List.of() : plan.setAside(sinks, storePositions, pos -> byPos(pos).cascade());
 		Set<BlockPos> nowSinks = new LinkedHashSet<>();
 		Set<BlockPos> nowMachines = new LinkedHashSet<>();
 		for (EnergyLineDistributor.LiveConsumer<BlockPos> c : machines) {
@@ -356,13 +303,15 @@ final class GoldenRig {
 		boolean hasSupply = !nowSupplying.isEmpty();
 		EnergyLineDistributor<BlockPos> kernel = new EnergyLineDistributor<>(new LineView<>(
 				LineEndpoints.BLOCK_FACES, cables::contains, buffers::get,
-				pos -> consumerDistance.getOrDefault(pos, 0), this::flowPotential, machineDistance::get,
-				propagationOrder, (p, d) -> true, (p, d) -> true,
-				hasSupply ? strandedOrder : List.of(), producerDistance::get));
-		lastMoved = kernel.serveConsumersFromLine(machines, PACKET_CAP, LOSS, txn, cursor)
-				+ kernel.serveConsumersFromLine(sinks, PACKET_CAP, LOSS, txn, cursor);
-		lastDrawn = kernel.chargeAndPropagateLine(generators, stores, new DischargePlan<>(backup, cascade, feed),
-				PACKET_CAP, txn, cursor);
+				pos -> consumerDistance.getOrDefault(pos, 0), flow::flowPotential, flow::machinePotential,
+				flow.propagationOrder(), (p, d) -> true, (p, d) -> true,
+				hasSupply ? flow.strandedOrder() : List.of(), flow::producerDistance));
+		lastMoved = kernel.serveConsumersFromLine(machines, PACKET_CAP, LOSS, txn, cursor);
+		long machinesDrew = kernel.lastServeDrawn();
+		lastMoved += kernel.serveConsumersFromLine(surplusTakers, PACKET_CAP, LOSS, txn, cursor,
+				plan.surplusBudget()) + kernel.serveConsumersFromLine(sinks, PACKET_CAP, LOSS, txn, cursor);
+		lastDrawn = kernel.chargeAndPropagateLine(generators, stores, plan, PACKET_CAP, txn, cursor);
+		generatorSurplus = Math.max(0, kernel.generatorDrawn() - machinesDrew);
 		cursor = (cursor + 1) & Integer.MAX_VALUE;
 	}
 

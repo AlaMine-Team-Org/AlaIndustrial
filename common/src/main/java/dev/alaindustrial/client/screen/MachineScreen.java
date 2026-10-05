@@ -478,9 +478,10 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 
 	/**
 	 * Whether the point lies on the open statistics panel. The panel is modal over its footprint: a
-	 * screen's own button under it must neither take the click nor show its tooltip (MOD-693).
+	 * screen's own button under it must neither take the click nor show its tooltip (MOD-693). Read only
+	 * through {@link #frameAcceptsInput}, so a screen cannot answer one of the three by another rule (MOD-738).
 	 */
-	protected final boolean isOverOpenStatsPanel(double mx, double my) {
+	private boolean isOverOpenStatsPanel(double mx, double my) {
 		return statsPanel.coversPoint(mx, my);
 	}
 

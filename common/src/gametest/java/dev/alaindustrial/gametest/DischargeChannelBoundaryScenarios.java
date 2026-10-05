@@ -1,6 +1,7 @@
 package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.core.energy.CableType;
 import dev.alaindustrial.core.energy.EnergyNetwork;
 import dev.alaindustrial.core.energy.StorageFeedShare;
 import dev.alaindustrial.registry.ModContent;
@@ -20,7 +21,8 @@ import net.minecraft.world.item.Items;
  *   <li><b>backup</b> opens on a generator deficit and closes the moment the generators cover the
  *       machines;</li>
  *   <li><b>cascade</b> opens with no machine demand, and outranks the feed: a donor the cascade levels
- *       ends below the reserve the feed would have stopped it at;</li>
+ *       ends below the reserve the feed would have stopped it at, and a fund on the bus gets none of it
+ *       (MOD-731);</li>
  *   <li><b>feed</b> opens only when both are closed, and never takes a donor below its reserve.</li>
  * </ol>
  *
@@ -117,11 +119,14 @@ public final class DischargeChannelBoundaryScenarios {
 		helper.succeed();
 	}
 
+	/** Copper cables between the two boxes of {@link #boxToBox}. */
+	private static final int BOX_TO_BOX_CABLES = 4;
+
 	/** A box of {@code donor} EU discharging along four cables into an empty box. */
 	private static EnergyGoldenRig boxToBox(GameTestHelper helper, long donor) {
 		EnergyGoldenRig rig = new EnergyGoldenRig(helper, "boundary");
 		rig.store(DONOR, ModContent.BATTERY_BOX.get(), Direction.WEST, donor);
-		rig.run(p(1, 1), p(4, 1));
+		rig.run(p(1, 1), p(BOX_TO_BOX_CABLES, 1));
 		rig.store(FAR_END, ModContent.BATTERY_BOX.get(), Direction.WEST, 0L);
 		return rig;
 	}
@@ -150,7 +155,12 @@ public final class DischargeChannelBoundaryScenarios {
 
 	/**
 	 * Channel 2 outranks channel 3: with a fund on the same bus, a box at 60 % still levels into the empty
-	 * box — down below the reserve floor that the feed would have stopped it at.
+	 * box — down below the reserve floor that the feed would have stopped it at — and the fund gets none of
+	 * it (MOD-731). Before MOD-731 the end state "donor below the floor, empty box above zero" held under the
+	 * defect too (donor 498, box 480, fund 11 022), so the rule is the three checks together: below the
+	 * floor, levelled, and the fund holding no more than twice the tail the cables carry — the closing
+	 * cascade re-opens for a smaller round as the tail lands (measured: 52 EU against a 48 EU tail; see
+	 * {@code CascadeAddressScenarios.closingLeak}).
 	 *
 	 * @implements MOD-715-DC04 — the cascade outranks the feed
 	 */
@@ -159,9 +169,24 @@ public final class DischargeChannelBoundaryScenarios {
 		rig.store(FUND, ModContent.TELEPORTER.get(), Direction.SOUTH, 0L);
 		drawnFromStorage(rig, 1200);
 		long floor = StorageFeedShare.reserveFloor(Config.batteryBoxBuffer, Config.storageFeedReserveFraction);
-		if (rig.amountAt(DONOR) >= floor || rig.amountAt(FAR_END) <= 0) {
-			helper.fail("channel 2 must run before the feed: the donor ended at " + rig.amountAt(DONOR)
-					+ " (reserve floor " + floor + "), the empty box at " + rig.amountAt(FAR_END));
+		long deadband = CableType.COPPER.segmentBuffer();
+		long tail = BOX_TO_BOX_CABLES * deadband;
+		long donor = rig.amountAt(DONOR);
+		long far = rig.amountAt(FAR_END);
+		long fund = rig.amountAt(FUND);
+		if (donor >= floor) {
+			helper.fail("channel 2 must run before the feed: the donor ended at " + donor + " (reserve floor " + floor
+					+ "), the empty box at " + far);
+			return;
+		}
+		if (fund > 2 * tail) {
+			helper.fail("channel 2 is for the boxes: the fund took " + fund + " EU of it, more than twice the tail"
+					+ " of " + tail + " EU the cables can hold; donor " + donor + ", box " + far);
+			return;
+		}
+		if (Math.abs(donor - far) > deadband + tail) {
+			helper.fail("channel 2 did not level the boxes: donor " + donor + ", box " + far + " (allowed gap "
+					+ (deadband + tail) + ")");
 			return;
 		}
 		helper.succeed();

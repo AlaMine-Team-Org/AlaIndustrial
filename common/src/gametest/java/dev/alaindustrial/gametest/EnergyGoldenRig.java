@@ -116,6 +116,19 @@ final class EnergyGoldenRig {
 		recorded.add(pos);
 	}
 
+	/**
+	 * An energy block with no {@code FACING} (an Energy Condenser), placed in its default state, ticked and
+	 * recorded like a store (MOD-731).
+	 */
+	void block(BlockPos pos, Block block) {
+		helper.setBlock(pos, block.defaultBlockState());
+		if (!(be(helper, pos) instanceof EnergyBlockEntity)) {
+			throw new IllegalStateException("energy block did not place at " + pos);
+		}
+		others.add(pos);
+		recorded.add(pos);
+	}
+
 	/** An endpoint placed by the caller that is recorded but never ticked (a multiblock core). */
 	void passive(BlockPos pos) {
 		recorded.add(pos);

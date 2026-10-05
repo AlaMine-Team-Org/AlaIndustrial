@@ -1,6 +1,8 @@
 package dev.alaindustrial.compat.rei;
 
+import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.core.machine.MachineRates;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
 import dev.alaindustrial.recipe.AlloyingRecipe;
 import dev.alaindustrial.recipe.PolymerizingRecipe;
@@ -57,8 +59,14 @@ public class AlaReiCommonPlugin implements REICommonPlugin {
 		// MOD-086: the electric furnace also runs every vanilla smelt (RecipeType.SMELTING fallback), so
 		// its category lists those too — otherwise players opening it see only the mod's recipes and
 		// cannot tell the machine smelts ores, food and sand as well. Each vanilla recipe is mirrored
-		// into an AlaProcessingRecipe carrying the furnace's real EU cost; see VanillaSmeltingMirror
-		// (including why the twelve Iron-Furnace parity duplicates are left in the datapack).
+		// into an AlaProcessingRecipe in the furnace's family; see VanillaSmeltingMirror (including why the
+		// twelve Iron-Furnace parity duplicates are left in the datapack).
+		// MOD-743, owner decision A2: the mirror itself carries no cost (JEI resolves it when it draws), but
+		// this filler runs on the SERVER, so it states the furnace's real EU here, from the server's own
+		// Config, and the wire format stays what older clients read. The client recognises the mirror by
+		// that price and prints the furnace's duration (AlaProcessingDisplay.cost). Known limit: the price
+		// is baked in until /reload rebuilds the displays, so after /ala config reload a mirror shows the
+		// OLD EU, and since that no longer matches the server's new price, the old EU timed at the new rate.
 		// MOD-523: a vanilla smelt a mod recipe already covers is dropped here, or the category would
 		// list those twelve twice — once as the mod recipe, once as the mirror of our own duplicate.
 		// fillMultiple (not fill): a skipped recipe must yield no display at all, and an empty
@@ -70,7 +78,7 @@ public class AlaReiCommonPlugin implements REICommonPlugin {
 					if (mirror == null || VanillaSmeltingMirror.isCoveredByModSmelting(mirror, coverage.get())) {
 						return List.of();
 					}
-					return List.of(new AlaProcessingDisplay(mirror));
+					return List.of(new AlaProcessingDisplay(mirror, vanillaSmeltEu()));
 				});
 		// MOD-019: the Polymerizer's own recipe family — a fluid volume in, an item out.
 		registry.beginRecipeFiller(PolymerizingRecipe.class)
@@ -81,6 +89,16 @@ public class AlaReiCommonPlugin implements REICommonPlugin {
 		// MOD-251: the distillation column's family — one fluid volume in, two fractions out.
 		registry.beginRecipeFiller(dev.alaindustrial.recipe.FluidOutputRecipe.class)
 				.fill(holder -> new FluidOutputDisplay(holder.value()));
+	}
+
+	/**
+	 * EU one vanilla smelt costs in the electric furnace, on this server's balance — the figure
+	 * {@code ElectricFurnaceBlockEntity} ticks away. Read here and not in {@link VanillaSmeltingMirror}
+	 * because this class runs in the server's JVM (MOD-743); the mirror is also built on the client.
+	 */
+	private static int vanillaSmeltEu() {
+		return MachineRates.vanillaSmeltEu(Config.electricFurnaceDuration, Config.machineEuPerTick,
+				Config.globalMachineSpeedMultiplier);
 	}
 
 	/**

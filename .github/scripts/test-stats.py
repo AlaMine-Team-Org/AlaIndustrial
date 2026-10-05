@@ -51,7 +51,8 @@ def load(hour: int, history: dict | None = None):
 
     def curseforge():
         calls["curseforge"] += 1
-        return 4300
+        return 4300, {"11": {"name": "v1 [Fabric]", "downloads": 4000},
+                      "12": {"name": "v1 [NeoForge]", "downloads": 300}}, "curseforge-site"
 
     def analytics():
         calls["history"] += 1
@@ -150,6 +151,79 @@ def main() -> int:
     data = json.loads(target.read_text(encoding="utf-8"))
     check("yesterday recorded, CurseForge carried over",
           data["series"][-1] == [YESTERDAY, 4800, 4146], str(data["series"][-1]))
+
+    print("CurseForge batches are smoothed, the sum is kept (MOD-749, 2026-10-04)")
+    module = load(2)
+    # The real fortnight before the +514: three stalled days, then the catch-up.
+    raw = [83, 86, 84, 57, 102, 66, 40, 91, 43, 114, 89, 105, 107, 118,
+           81, 39, 115, 64, 38, 31, 514]
+    smooth, moved = module.smooth_batches([float(v) for v in raw])
+    check("sum preserved", abs(sum(smooth) - sum(raw)) < 1e-6, f"{sum(smooth)} vs {sum(raw)}")
+    check("catch-up day no longer a spike", smooth[-1] < 2 * 85, f"{smooth[-1]:.0f}")
+    check("stalled days lifted", min(smooth[-4:-1]) > 64, str([round(v) for v in smooth[-4:-1]]))
+    check("days before the week untouched", smooth[:13] == [float(v) for v in raw[:13]])
+    check("moved days flagged", moved[-1] and moved[-2] and not moved[0])
+    check("unknown days stay unknown",
+          module.smooth_batches([None, None, 50.0])[0][:2] == [None, None])
+
+    print("daily rows: exact Modrinth days, flags, no unclosed day")
+    series = [["2026-10-01", 100, 1000], ["2026-10-02", 160, 1050],
+              ["2026-10-04", 260, 1150], ["2026-10-05", 300, None]]
+    daily = module.build_daily(series, {"2026-10-02": 58}, "2026-10-05")
+    dates = [row[0] for row in daily]
+    check("dates", dates == ["2026-10-02", "2026-10-03", "2026-10-04"], str(dates))
+    check("analytics wins for Modrinth", daily[0][1] == 58, str(daily[0]))
+    check("gap shared for both", daily[1][1] == 50 and daily[1][2] == 50 and daily[1][3] == "eg",
+          str(daily[1]))
+    check("today never drawn", "2026-10-05" not in dates)
+    daily = module.build_daily(series, {}, "2026-10-06")
+    check("unknown CurseForge stays null", daily[-1][2] is None and daily[-1][3] == "", str(daily[-1]))
+
+    print("Modrinth analytics answer is parsed slice by slice (POST /v3/analytics)")
+    answer = {"metrics": [
+        [{"source_project": "ACLWFBlU", "metric_kind": "downloads", "downloads": 70}],
+        [],
+        [{"source_project": "ACLWFBlU", "metric_kind": "downloads", "downloads": 64},
+         {"source_project": "ACLWFBlU", "metric_kind": "views", "views": 300}],
+    ], "project_events": []}
+    parsed = module.parse_modrinth_history(answer, datetime.date(2026, 10, 1))
+    check("days from the start, empty slice is zero, other metrics ignored",
+          parsed == {"2026-10-01": 70, "2026-10-02": 0, "2026-10-03": 64}, str(parsed))
+    lead = module.parse_modrinth_history({"metrics": [[], []] + answer["metrics"]},
+                                         datetime.date(2026, 9, 29))
+    check("leading empty days dropped", min(lead) == "2026-10-01", str(lead))
+    hole = module.backfill([["2026-10-01", 100, 50], ["2026-10-04", 200, 80]],
+                           {"2026-09-30": 30, "2026-10-01": 70, "2026-10-02": 40}, "2026-10-05")
+    check("backfill restores only before the first snapshot",
+          [row[0] for row in hole] == ["2026-09-30", "2026-10-01", "2026-10-04"], str(hole))
+
+    print("the CurseForge site source refuses a paging loop")
+    import json as _json
+
+    def fake_get(url, headers=None):
+        return {"pagination": {"totalCount": 3},
+                "data": [{"id": 1, "displayName": "a", "totalDownloads": 5},
+                         {"id": 2, "displayName": "b", "totalDownloads": 7}]}
+    module.get_json = fake_get
+    try:
+        module.fetch_curseforge_files()
+        check("repeated page raises", False, "no error")
+    except ValueError:
+        check("repeated page raises", True)
+
+    print("per-file counters are filed with the row and pruned")
+    module = load(2)
+    folder = pathlib.Path(tempfile.mkdtemp())
+    for i in range(35):
+        module.write_curseforge_files(folder / "cf.json", f"2026-09-{i + 1:02d}" if i < 30 else f"2026-10-{i - 29:02d}",
+                                      {"7": {"name": "v [Fabric]", "downloads": i}}, "t")
+    kept = _json.loads((folder / "cf.json").read_text(encoding="utf-8"))
+    check("keeps the last days only", len(kept["days"]) == module.CF_FILES_KEEP_DAYS, str(len(kept["days"])))
+    check("names kept", kept["names"] == {"7": "v [Fabric]"}, str(kept["names"]))
+    code, data, _ = run(2, list(only_before))
+    check("stats.json carries daily", isinstance(data.get("daily"), list) and data["daily"], str(data.get("daily")))
+    check("source recorded", data["totals"].get("curseforge_source") == "curseforge-site",
+          str(data["totals"]))
 
     print()
     if FAILURES:

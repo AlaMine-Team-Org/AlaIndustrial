@@ -62,6 +62,7 @@ it, so the `player` component of the three triggers' record headers stays a one-
 | `SiteBiome` | `void fill(ServerLevel, ChunkAccess, Holder<Biome>)` | `fillBiomesFromNoise(resolver)` | `fillBiomesFromNoise(resolver, Climate.Sampler)` | MOD-704 |
 | `LineBlockFacts` | `String pushIntent(BlockState)`, `boolean washedAwayByLine(Block)` | the 26.3 push reactions; membership of `#minecraft:washed_away_by_fluids` | the 26.2 push reactions; the `forceSolidOff` flag of the block's properties | MOD-703 |
 | `UseResults` | `boolean isSwingSuccess(InteractionResult)`, `boolean isNoSwingConsume(InteractionResult)` | a `Success` with swing source `PREDICTED` / `NONE` | swing source `CLIENT` / `NONE` | MOD-703 |
+| `LineShovelFacts` | `boolean dousesLitCampfire(Direction, boolean)` | `!sneaking`: the campfire douses by the `#minecraft:douses_campfires` tag (NeoForge: `SHOVEL_DOUSE`, by the same tag) from any face, and a sneaking click skips the block | `face != DOWN`: `ShovelItem.useOn` answers `PASS` for `DOWN` first and ignores sneaking | MOD-744 |
 
 ## `dev.alaindustrial.compat` (fabric/src/gametest, the L3 lane)
 

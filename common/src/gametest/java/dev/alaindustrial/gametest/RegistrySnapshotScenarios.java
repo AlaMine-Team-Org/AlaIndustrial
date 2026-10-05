@@ -37,6 +37,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.MapColor;
 
 /**
  * L2 snapshot of the mod's content registries (MOD-699), checked on both loaders against the reviewed
@@ -49,11 +50,20 @@ import net.minecraft.world.level.block.state.BlockState;
  * source text, not what the loader actually registered. This scenario asks the live registry of the loader
  * it runs on and compares every line: a missing and an added id are both named.
  *
- * <p><b>One line per fact, sorted.</b> {@code block <id> <properties>} for every block (the properties of
- * its default state, so a changed hardness or light level is a visible diff), {@code item <id>
+ * <p><b>One line per fact, sorted.</b> {@code block <id> <properties>} for every block, {@code item <id>
  * <properties>}, {@code block_entity <type>:<block>} for every block a type is valid for, and
  * {@code <registry> <id>} for the rest. Sorting makes a reordered manifest change nothing; the two orders
  * the manifest itself calls load-bearing are asserted separately.
+ *
+ * <p><b>A block's properties</b> (MOD-741; format in {@link RegistrySnapshotBlockLine}) are those of its
+ * {@code BlockBehaviour.Properties} chain, so moving or tidying a chain in a domain file is a visible diff:
+ * destroy time, whether a correct tool is needed for drops ({@code tool=}, from
+ * {@code requiresCorrectToolForDrops()}), light, piston reaction, occlusion, sound, explosion resistance and
+ * map colour on every line; the highest light of any state, friction, the speed, jump and bounce factors and
+ * the lava, replaceable and liquid flags only where they differ. Read on the default state, except
+ * {@code lightmax=}, which walks every state: the lit machines emit light only while they run. Random
+ * ticking is pinned per state by {@link BlockPropsCharacterizationScenarios}, once for both lines, and is
+ * deliberately not repeated here.
  *
  * <p><b>Two invariants no reference can hold</b>, checked first: those load-bearing registration orders,
  * and that every registered entry is held by one of the mod's handles ({@code ModContent},
@@ -100,8 +110,11 @@ public final class RegistrySnapshotScenarios {
 	private static final List<Class<?>> HANDLE_HOLDERS = List.of(ModContent.class, ModSounds.class,
 			ModDataComponents.class, ModEffects.class, ModCriteria.class);
 
-	/** Names for the sound types the mod's blocks use; anything else is recorded as {@code other}. */
-	private static final Map<SoundType, String> SOUND_NAMES = soundNames();
+	/** {@code SoundType} constants by instance; a sound no constant holds is recorded as {@code other}. */
+	private static final Map<SoundType, String> SOUND_NAMES = constantNames(SoundType.class);
+
+	/** {@code MapColor} constants by instance; a colour no constant holds is recorded as {@code id<N>}. */
+	private static final Map<MapColor, String> MAP_COLOR_NAMES = constantNames(MapColor.class);
 
 	/**
 	 * The live registries of this loader match the reviewed reference, line for line.
@@ -196,20 +209,44 @@ public final class RegistrySnapshotScenarios {
 		return lines;
 	}
 
-	// MOD-498: getLightEmission() is deprecated only by NeoForge's patch, in favour of a positional form that
-	// does not exist on Fabric; the default state's own value is exactly what the no-arg form returns.
+	// MOD-498: getLightEmission(), getSoundType(), ignitedByLava(), Block.getExplosionResistance() and
+	// Block.getBounceRestitution() are deprecated only by NeoForge's patch, in favour of positional forms that do not
+	// exist on Fabric; liquid() is deprecated in vanilla too, with no replacement. Each no-argument form returns the
+	// very Properties field Fabric reads, which is what the reference pins — the method reads and does nothing else.
 	@SuppressWarnings("deprecation")
 	private static String blockLine(GameTestHelper helper, Identifier id) {
 		Block block = BuiltInRegistries.BLOCK.getValue(id);
 		BlockState state = block.defaultBlockState();
-		return "block " + id.getPath()
-				+ " destroy=" + state.getDestroySpeed(helper.getLevel(), helper.absolutePos(PROBE))
-				+ " hand=" + yesNo(ItemStack.EMPTY.isCorrectToolForDrops(state))
-				+ " light=" + state.getLightEmission()
-				+ " push=" + state.getPistonPushReaction()
-				+ " occludes=" + yesNo(state.canOcclude())
-				+ " sound=" + SOUND_NAMES.getOrDefault(state.getSoundType(), "other")
-				+ " loot=" + block.getLootTable().map(key -> key.identifier().toString()).orElse("none");
+		int lightMax = 0;
+		for (BlockState possible : block.getStateDefinition().getPossibleStates()) {
+			lightMax = Math.max(lightMax, possible.getLightEmission());
+		}
+		return new RegistrySnapshotBlockLine(
+				id.getPath(),
+				state.getDestroySpeed(helper.getLevel(), helper.absolutePos(PROBE)),
+				state.requiresCorrectToolForDrops(),
+				state.getLightEmission(),
+				lightMax,
+				String.valueOf(state.getPistonPushReaction()),
+				state.canOcclude(),
+				SOUND_NAMES.getOrDefault(state.getSoundType(), "other"),
+				block.getExplosionResistance(),
+				mapColorName(block.defaultMapColor()),
+				block.getFriction(),
+				block.getSpeedFactor(),
+				block.getJumpFactor(),
+				block.getBounceRestitution(),
+				state.ignitedByLava(),
+				state.canBeReplaced(),
+				state.liquid(),
+				block.getLootTable().map(key -> key.identifier().toString()).orElse("none"))
+				.toLine();
+	}
+
+	/** The constant's name, or {@code id<N>} for a colour no {@code MapColor} constant holds. */
+	private static String mapColorName(MapColor color) {
+		String name = MAP_COLOR_NAMES.get(color);
+		return name != null ? name : "id" + color.id;
 	}
 
 	/**
@@ -526,32 +563,25 @@ public final class RegistrySnapshotScenarios {
 		return Collections.unmodifiableMap(registries);
 	}
 
-	private static Map<SoundType, String> soundNames() {
-		Map<SoundType, String> names = new IdentityHashMap<>();
-		names.put(SoundType.AMETHYST, "AMETHYST");
-		names.put(SoundType.ANVIL, "ANVIL");
-		names.put(SoundType.BAMBOO, "BAMBOO");
-		names.put(SoundType.BASALT, "BASALT");
-		names.put(SoundType.CALCITE, "CALCITE");
-		names.put(SoundType.CHAIN, "CHAIN");
-		names.put(SoundType.COPPER, "COPPER");
-		names.put(SoundType.DEEPSLATE, "DEEPSLATE");
-		names.put(SoundType.EMPTY, "EMPTY");
-		names.put(SoundType.GLASS, "GLASS");
-		names.put(SoundType.GRASS, "GRASS");
-		names.put(SoundType.GRAVEL, "GRAVEL");
-		names.put(SoundType.LANTERN, "LANTERN");
-		names.put(SoundType.METAL, "METAL");
-		names.put(SoundType.NETHERRACK, "NETHERRACK");
-		names.put(SoundType.NETHER_ORE, "NETHER_ORE");
-		names.put(SoundType.POLISHED_DEEPSLATE, "POLISHED_DEEPSLATE");
-		names.put(SoundType.ROOTED_DIRT, "ROOTED_DIRT");
-		names.put(SoundType.SAND, "SAND");
-		names.put(SoundType.SCAFFOLDING, "SCAFFOLDING");
-		names.put(SoundType.STONE, "STONE");
-		names.put(SoundType.TUFF, "TUFF");
-		names.put(SoundType.WOOD, "WOOD");
-		names.put(SoundType.WOOL, "WOOL");
+	/**
+	 * The names of {@code type}'s own {@code public static final} constants, by instance. Read by reflection so a
+	 * constant the mod starts using is named the moment it is used, not after someone extends a hand-kept list;
+	 * when two constants hold the same instance the lexicographically smaller name wins, so the line never depends
+	 * on the order {@link Class#getFields()} happens to return.
+	 */
+	static <T> Map<T, String> constantNames(Class<T> type) {
+		Map<T, String> names = new IdentityHashMap<>();
+		for (Field field : type.getFields()) {
+			int mods = field.getModifiers();
+			if (!Modifier.isStatic(mods) || !Modifier.isFinal(mods) || field.getType() != type) {
+				continue;
+			}
+			try {
+				names.merge(type.cast(field.get(null)), field.getName(), (a, b) -> a.compareTo(b) <= 0 ? a : b);
+			} catch (IllegalAccessException e) {
+				throw new IllegalStateException("cannot read " + type.getSimpleName() + "." + field.getName(), e);
+			}
+		}
 		return Collections.unmodifiableMap(names);
 	}
 }

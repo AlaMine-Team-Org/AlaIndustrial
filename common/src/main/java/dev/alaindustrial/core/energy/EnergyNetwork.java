@@ -94,6 +94,12 @@ public final class EnergyNetwork implements GraphNetwork<EnergyNetwork, BlockPos
 	 * stale on its own after one tick without supply, so the flag cannot outlive the fact it records.
 	 */
 	private long lastSupplyTick = Long.MIN_VALUE;
+	/**
+	 * EU the generators put into the cables on this network's latest tick beyond what its machines drew out
+	 * of them (MOD-731): what the sinks outside the cascade may take on the next tick if a cascade runs then.
+	 * Every tick overwrites it, so each tick's surplus is spent at most once.
+	 */
+	private long generatorSurplus;
 
 	/**
 	 * What the discharge plan asks of the blocks around this line: the cascade and feed predicates of
@@ -109,6 +115,11 @@ public final class EnergyNetwork implements GraphNetwork<EnergyNetwork, BlockPos
 		@Override
 		public long feedRate(BlockPos pos) {
 			return EnergyNetwork.this.feedRate(pos);
+		}
+
+		@Override
+		public long generatorSurplus() {
+			return EnergyNetwork.this.generatorSurplus;
 		}
 
 		@Override
@@ -442,9 +453,11 @@ public final class EnergyNetwork implements GraphNetwork<EnergyNetwork, BlockPos
 	 * rotation cursor and publish the telemetry (MOD-665) and the line-full flag. Returns the EU delivered.
 	 */
 	private long moveAndRecord(EnergyLineDistributor<BlockPos> distributor, LineEndpoints.Supply supply,
-			LineEndpoints.Demand demand, DischargePlan<BlockPos> plan, long packetCap, double lossPerBlock) {
-		// [0] delivered in total, [1] of which into storage sinks, [2] drawn out of storage (MOD-665).
-		long[] movedEu = {0L, 0L, 0L};
+			LineEndpoints.Demand demand, List<EnergyLineDistributor.LiveConsumer<BlockPos>> surplusTakers,
+			DischargePlan<BlockPos> plan, long packetCap, double lossPerBlock) {
+		// [0] delivered in total, [1] of which into storage sinks, [2] drawn out of storage (MOD-665),
+		// [3] drawn out of the cables by the machines (MOD-731).
+		long[] movedEu = {0L, 0L, 0L, 0L};
 		EnergyTransactions.get().runCommitting(tx -> {
 			// Serve ALL consumers from the line — machines first (MOD-009 priority), then storage sinks.
 			// Both drain the cable buffers they touch, so a cable between a source and ANY consumer
@@ -452,7 +465,12 @@ public final class EnergyNetwork implements GraphNetwork<EnergyNetwork, BlockPos
 			// of the storage charge bypassing the wires.
 			movedEu[0] += distributor.serveConsumersFromLine(demand.machines(), packetCap, lossPerBlock, tx,
 					producerCursor);
-			long intoStorage = distributor.serveConsumersFromLine(demand.sinks(), packetCap, lossPerBlock, tx,
+			movedEu[3] = distributor.lastServeDrawn();
+			// MOD-731: on a cascade tick the sinks outside it take the generators' surplus, before the stores
+			// level on what is left — the account that keeps a store's charge out of them (DischargePlan).
+			long intoStorage = distributor.serveConsumersFromLine(surplusTakers, packetCap, lossPerBlock, tx,
+					producerCursor, plan.surplusBudget());
+			intoStorage += distributor.serveConsumersFromLine(demand.sinks(), packetCap, lossPerBlock, tx,
 					producerCursor);
 			movedEu[0] += intoStorage;
 			movedEu[1] = intoStorage;
@@ -470,6 +488,7 @@ public final class EnergyNetwork implements GraphNetwork<EnergyNetwork, BlockPos
 		lastTickToStorage = movedEu[1];
 		lastTickFromStorage = movedEu[2];
 		lastTickFed = Collections.unmodifiableSet(new LinkedHashSet<>(distributor.fed()));
+		generatorSurplus = Math.max(0L, distributor.generatorDrawn() - movedEu[3]);
 		// Refresh the cached line-full flag so the next isAwake() on a producer-only network can skip
 		// the O(cables) scan. Only meaningful on the no-consumer path (a consumer keeps the network
 		// awake unconditionally), but the cost is one scan that has already happened inside this tick's
@@ -501,6 +520,7 @@ public final class EnergyNetwork implements GraphNetwork<EnergyNetwork, BlockPos
 		if (producers.isEmpty()) {
 			// No source at all — nothing to serve and nothing to charge the line with.
 			lastTickMoved = 0L;
+			generatorSurplus = 0L;
 			return 0L;
 		}
 		List<EnergyTopologyCache.Endpoint> consumers = topology.consumers();
@@ -516,20 +536,21 @@ public final class EnergyNetwork implements GraphNetwork<EnergyNetwork, BlockPos
 			// No live producer: nothing to serve deterministically. Energy still in the line is delivered
 			// once a producer returns and the network wakes.
 			lastTickMoved = 0L;
+			generatorSurplus = 0L;
 			return 0L;
 		}
 		LineEndpoints.Demand demand = LineEndpoints.demand(consumers, this::storageAt, this::isStorageSink);
 		List<EnergyLineDistributor.LiveConsumer<BlockPos>> sinks = demand.sinks();
 
-		// The three storage discharge channels — backup, cascade, feed — and which stores must sit this tick
-		// out of the serve pass because they discharge into the line (ADR-002, ADR-004): one decision, made
-		// by DischargePlan. The deadband is the strongest grade's segment buffer (MOD-219).
+		// The three storage discharge channels — backup, cascade, feed — and which stores sit this tick out of
+		// the serve pass: discharging into the line (ADR-002, ADR-004) or, under the cascade, not taking it
+		// (MOD-731) — those draw the generators' surplus apart. One decision, by DischargePlan; the deadband is the
+		// strongest grade's segment buffer.
 		DischargePlan<BlockPos> plan = DischargePlan.decide(demand.machineDemand(), supply.genSupply(),
 				supply.storageSources(), sinks, stores, strongestCable.segmentBuffer(), packetCap,
 				balance.storageFeedReserveFraction());
-		if (!supply.storagePositions().isEmpty()) {
-			sinks.removeIf(c -> plan.excludes(c.pos(), supply.storagePositions()));
-		}
+		List<EnergyLineDistributor.LiveConsumer<BlockPos>> surplusTakers = supply.storagePositions().isEmpty()
+				? List.of() : plan.setAside(sinks, supply.storagePositions(), stores::acceptsCascade);
 
 		// Published before the distributor reads propagationOrder / the flow potential, and outside the
 		// committing transaction opened below (ADR-003).
@@ -542,6 +563,6 @@ public final class EnergyNetwork implements GraphNetwork<EnergyNetwork, BlockPos
 			lastSupplyTick = topology.level().getGameTime();
 		}
 		EnergyLineDistributor<BlockPos> distributor = new EnergyLineDistributor<>(lineView(hasSupply));
-		return moveAndRecord(distributor, supply, demand, plan, packetCap, lossPerBlock);
+		return moveAndRecord(distributor, supply, demand, surplusTakers, plan, packetCap, lossPerBlock);
 	}
 }

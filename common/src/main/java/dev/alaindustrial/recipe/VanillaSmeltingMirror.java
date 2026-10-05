@@ -1,6 +1,5 @@
 package dev.alaindustrial.recipe;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.core.machine.MachineRates;
 import dev.alaindustrial.registry.ModRecipes;
@@ -28,8 +27,14 @@ import net.minecraft.world.item.crafting.SmeltingRecipe;
  * vanilla smelt is something the machine really performs. Registering the block as a crafting station
  * for the vanilla category (MOD-076) only makes that visible from the <em>vanilla</em> side; players
  * opening the machine's own category still saw only the mod's own recipes. These mirrors close that
- * gap by presenting each vanilla smelt as an {@link AlaProcessingRecipe} carrying the furnace's real
- * EU cost and duration.
+ * gap by presenting each vanilla smelt as an {@link AlaProcessingRecipe} in the furnace's family.
+ *
+ * <p><b>A mirror carries no cost (MOD-743).</b> Its energy is {@link #FURNACE_DEFAULT_ENERGY}, the
+ * "machine's default operation" the furnace itself runs a vanilla smelt at; the recipe viewer turns it
+ * into EU and time when it draws the card ({@code RecipeViewerCost}), from the server's balance. Baking
+ * the figure in here — from {@code Config} or even from the client's copy of the server balance — froze
+ * the player's own numbers into the card: the viewer builds its cards before the server's config snapshot
+ * arrives, and never rebuilds them after {@code /ala config reload}.
  *
  * <p>The mirrors are display-only: they are built for JEI/REI and never enter the
  * {@link net.minecraft.world.item.crafting.RecipeManager}. The machine keeps using the live vanilla
@@ -68,17 +73,14 @@ public final class VanillaSmeltingMirror {
 	 */
 	private static final SingleRecipeInput NO_INPUT = new SingleRecipeInput(ItemStack.EMPTY);
 
-	private VanillaSmeltingMirror() {
-	}
-
 	/**
-	 * EU one vanilla smelt costs in the electric furnace — {@link MachineRates#vanillaSmeltEu} on its knobs,
-	 * the same figure {@code ElectricFurnaceBlockEntity} ticks away, so the shown cost tracks the real
-	 * one under any speed multiplier.
+	 * The energy every mirror carries: none of its own (MOD-743). {@code ElectricFurnaceBlockEntity} runs a
+	 * vanilla smelt as {@code energy 0}, i.e. at the machine's default operation, and the recipe viewer
+	 * prints that operation's cost from the server's numbers when it draws the card.
 	 */
-	public static int energy() {
-		return MachineRates.vanillaSmeltEu(Config.electricFurnaceDuration, Config.machineEuPerTick,
-				Config.globalMachineSpeedMultiplier);
+	public static final int FURNACE_DEFAULT_ENERGY = 0;
+
+	private VanillaSmeltingMirror() {
 	}
 
 	/**
@@ -107,7 +109,7 @@ public final class VanillaSmeltingMirror {
 				ModRecipes.SMELTING,
 				recipe.input(),
 				ItemStackTemplate.fromStack(result),
-				energy());
+				FURNACE_DEFAULT_ENERGY);
 	}
 
 	/**

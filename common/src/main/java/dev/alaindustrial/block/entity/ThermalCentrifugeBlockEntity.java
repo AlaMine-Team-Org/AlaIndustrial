@@ -168,14 +168,19 @@ public final class ThermalCentrifugeBlockEntity extends MachineBlockEntity
 
 	/**
 	 * One operation tick, already known to run — paid ({@code paid}), or coasting as {@link #onServerTick}
-	 * decided (the heater has only touched its own buffer since, so the spend reaches the same verdict).
+	 * decided. The spend decides that verdict a second time: the heater has only touched its own buffer
+	 * since, so today it agrees, but nothing else holds the two together. Should it decline, the tick takes
+	 * the unpowered branch, {@link #coast()}, and progress stays where it was — at worst one heat tick
+	 * already paid is lost, never a step of an operation nobody paid for (MOD-740).
 	 */
 	private int operate(Level level, AlaProcessingRecipe recipe, ItemStack result, int euPerTick, boolean paid,
 			boolean ready) {
 		// MOD-125/MOD-440: every branch of this tick reports the draw it actually decided on — the
 		// working rate here, the ramp rate in spinUp, the idle trickle in coast, 0 when stopped.
 		recordEuRate(paid ? euPerTick : 0);
-		spendOperationEnergy(level, euPerTick, paid, ready);
+		if (!spendOperationEnergy(level, euPerTick, paid, ready)) {
+			return coast();
+		}
 		progress++;
 		if (progress >= maxProgress) {
 			progress = 0;

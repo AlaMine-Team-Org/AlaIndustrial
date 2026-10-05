@@ -4,9 +4,11 @@ import static dev.alaindustrial.gametest.VisualStandSupport.awaitMenuScreen;
 import static dev.alaindustrial.gametest.VisualStandSupport.takeCleanScreenshot;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import dev.alaindustrial.block.entity.SawmillMode;
 import dev.alaindustrial.client.AlaClientConfig;
 import dev.alaindustrial.client.screen.MachineScreen;
 import dev.alaindustrial.client.screen.ReactorControllerScreen;
+import dev.alaindustrial.client.screen.SawmillScreen;
 import dev.alaindustrial.menu.AssemblerMenu;
 import dev.alaindustrial.menu.MachineMenu;
 import dev.alaindustrial.mixin.client.AbstractContainerScreenAccessor;
@@ -95,6 +97,7 @@ public final class OverlayInputStands {
                 }
                 shootOne(context, subject, Overlay.DRAWER);
             }
+            shootSawmillTooltips(context);
         } finally {
             AlaClientConfig.upgradePanelDX = savedUpgradeDX;
             AlaClientConfig.upgradePanelDY = savedUpgradeDY;
@@ -175,6 +178,128 @@ public final class OverlayInputStands {
         context.waitTicks(1);
         Path path = takeCleanScreenshot(context, name);
         LOG.info("[GUITEST][MOD-716] screenshot {} -> {}", name, path.toAbsolutePath());
+    }
+
+    /** One rig of the sawmill tooltip frames (MOD-738): which overlay is open and where it lies. */
+    private enum TooltipRig {
+        /** Every overlay closed: the positive control, the button must be lit and the tooltip must show. */
+        NONE("none", true),
+        /** The upgrade panel open and dragged left so its body covers the button, on an empty spot of the panel. */
+        UPGRADES_OVER("upgrades_over", false),
+        /** The upgrade panel open where it docks, NOT over the button: the button is deaf all the same. */
+        UPGRADES_DOCKED("upgrades_docked", false),
+        /** The statistics panel open and dragged over the button. */
+        STATS_OVER("stats_over", false);
+
+        private final String tag;
+        private final boolean tooltipExpected;
+
+        TooltipRig(String tag, boolean tooltipExpected) {
+            this.tag = tag;
+            this.tooltipExpected = tooltipExpected;
+        }
+    }
+
+    /**
+     * Upgrade-panel offset that puts its body at x 50..208 of the screen frame (from {@code leftPos}, as
+     * {@link Subject#clickX} is) — over the mode buttons.
+     */
+    private static final int UPGRADES_OVER_DX = -122;
+
+    /**
+     * MOD-738: the sawmill's mode tooltip and hover tint obey the rule its click obeys, {@code frameAcceptsInput}.
+     * For each rig the stand asks {@link SawmillScreen#litModeAt} (the button the tint lights) and
+     * {@link SawmillScreen#modeTooltipAt} at the centre of the second mode button, asserts both answers, logs
+     * {@code [OVERLAY-TOOLTIP] <frame> lit=<mode|none> tooltip=<text|none>} and photographs the frame with the
+     * cursor there.
+     * Called inside {@link #shoot}'s {@code try}, whose {@code finally} restores the shared panel offsets; the
+     * cursor is restored here.
+     *
+     * @covers R-GUI-03
+     */
+    private static void shootSawmillTooltips(ClientGameTestContext context) {
+        Subject sawmill = SUBJECTS.get(0);
+        double[] saved = new double[2];
+        context.runOnClient(mc -> {
+            saved[0] = mc.mouseHandler.xpos();
+            saved[1] = mc.mouseHandler.ypos();
+        });
+        try {
+            for (TooltipRig rig : TooltipRig.values()) {
+                shootSawmillTooltip(context, sawmill, rig);
+            }
+        } finally {
+            context.getInput().setCursorPos(saved[0], saved[1]);
+        }
+    }
+
+    private static void shootSawmillTooltip(ClientGameTestContext context, Subject sawmill, TooltipRig rig) {
+        String name = "gui_overlay_input_sawmill_tooltip_" + rig.tag;
+        LOG.info("[GUITEST][MOD-738] opening {}", name);
+        context.runOnClient(mc -> {
+            AlaClientConfig.upgradePanelDX = rig == TooltipRig.UPGRADES_OVER ? UPGRADES_OVER_DX : 0;
+            AlaClientConfig.upgradePanelDY = 0;
+            // The same drag as shootOne's STATS frame: the statistics panel's corner 20 px before the button.
+            boolean stats = rig == TooltipRig.STATS_OVER;
+            AlaClientConfig.statsPanelDX = stats ? sawmill.clickX() - 20 - STATS_DOCK_X : 0;
+            AlaClientConfig.statsPanelDY = stats ? sawmill.clickY() - 20 - MachineMenu.PANEL_Y : 0;
+            MenuScreens.create(sawmill.type().get(), mc, 0, Component.literal(sawmill.title()));
+            if (!(mc.gui.screen() instanceof AbstractContainerScreen<?> acs
+                    && acs.getMenu() instanceof MachineMenu menu)) {
+                throw new AssertionError("[GUITEST][MOD-738] " + name + ": the sawmill screen did not open");
+            }
+            menu.injectTestData(sawmill.capacity() * 3 / 4, sawmill.capacity(), 0, 0);
+            switch (rig) {
+                case NONE -> { }
+                case UPGRADES_OVER, UPGRADES_DOCKED -> menu.togglePanel();
+                case STATS_OVER -> menu.toggleStatsPanel();
+            }
+        });
+        awaitMenuScreen(context);
+        double[] cursor = new double[2];
+        context.runOnClient(mc -> {
+            if (!(mc.gui.screen() instanceof SawmillScreen screen)) {
+                throw new AssertionError("[GUITEST][MOD-738] " + name + ": the sawmill screen is not open");
+            }
+            var box = (AbstractContainerScreenAccessor) screen;
+            double x = box.alaindustrial$getLeftPos() + sawmill.clickX();
+            double y = box.alaindustrial$getTopPos() + sawmill.clickY();
+            MachineMenu menu = screen.getMenu();
+            boolean upgrades = rig == TooltipRig.UPGRADES_OVER || rig == TooltipRig.UPGRADES_DOCKED;
+            if (menu.isPanelOpen() != upgrades || menu.isStatsPanelOpen() != (rig == TooltipRig.STATS_OVER)) {
+                throw new AssertionError("[GUITEST][MOD-738] " + name + ": wrong overlays open: " + state(screen));
+            }
+            // A rig that does not put the panel where it claims proves nothing: check the footprint first.
+            boolean over = rig == TooltipRig.UPGRADES_OVER || rig == TooltipRig.STATS_OVER;
+            if (covered(screen, x, y) != over) {
+                throw new AssertionError("[GUITEST][MOD-738] " + name + ": expected the point (" + x + ", " + y + ") "
+                        + (over ? "under" : "clear of") + " an open panel; areas " + screen.extraGuiAreas());
+            }
+            SawmillMode lit = screen.litModeAt(x, y);
+            Component tip = screen.modeTooltipAt(x, y);
+            LOG.info("[OVERLAY-TOOLTIP] {} lit={} tooltip={}", name, lit == null ? "none" : lit,
+                    tip == null ? "none" : tip.getString());
+            // The point is the centre of the second button: the tint must light exactly it, or nothing.
+            SawmillMode litExpected = rig.tooltipExpected ? SawmillMode.values()[1] : null;
+            if (lit != litExpected) {
+                throw new AssertionError("[GUITEST][MOD-738] " + name + ": hover tint lights " + lit
+                        + ", expected " + litExpected + " at (" + x + ", " + y + "); " + state(screen));
+            }
+            if ((tip != null) != rig.tooltipExpected) {
+                throw new AssertionError("[GUITEST][MOD-738] " + name + ": mode tooltip "
+                        + (rig.tooltipExpected ? "missing" : "shown (" + tip.getString() + ")")
+                        + " at (" + x + ", " + y + "); " + state(screen));
+            }
+            double scale = mc.getWindow().getGuiScale();
+            cursor[0] = x * scale;
+            cursor[1] = y * scale;
+        });
+        // The cursor is for the eye only: the frame shows whether a tooltip floats over the panel. Pixels are not
+        // compared — a local frame is noisy with the OS cursor.
+        context.getInput().setCursorPos(cursor[0], cursor[1]);
+        context.waitTicks(1);
+        Path path = takeCleanScreenshot(context, name);
+        LOG.info("[GUITEST][MOD-738] screenshot {} -> {}", name, path.toAbsolutePath());
     }
 
     /** Whether a wide exclusion area (an open panel, not a tab) contains the point. */

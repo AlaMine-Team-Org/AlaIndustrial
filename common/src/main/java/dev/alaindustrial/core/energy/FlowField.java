@@ -38,7 +38,10 @@ final class FlowField<P> {
 	private final DistanceField<P> machine;
 	/** True while the sink field is non-empty: the flow is directed toward demand (MOD-252). */
 	private boolean sinkMode;
-	/** Cables in ascending flow potential — the per-tick sweep order (MOD-070); one list, refilled in place. */
+	/**
+	 * Cables in ascending flow potential — the per-tick sweep order (MOD-070); one list, refilled in place.
+	 * Equal potentials: corridor before stranded cables (MOD-730), within each in the order the flood found them.
+	 */
 	private final List<P> propagationOrder = new ArrayList<>();
 	/** Cables no downhill path reaches, farthest from the source first (MOD-318); refilled in place. */
 	private final List<P> strandedOrder = new ArrayList<>();
@@ -97,14 +100,33 @@ final class FlowField<P> {
 
 	/**
 	 * Re-derive the sweep order and the stranded cables from the current fields: ascending sink distance in
-	 * sink mode, descending producer distance in fallback (equal distances in the order the flood reached
-	 * them). {@code cables} is the line's cable set in its own order; the stranded list is collected from it.
+	 * sink mode, descending producer distance in fallback. Equal distances keep the order the flood reached
+	 * them, except that in sink mode a corridor cable goes before a stranded one (MOD-730). {@code cables} is
+	 * the line's cable set in its own order; the stranded list is collected from it.
 	 */
 	void rebuild(Iterable<P> cables) {
 		sinkMode = !sink.isEmpty();
 		propagationOrder.clear();
 		propagationOrder.addAll(sinkMode ? sink.nodesByDistance(true) : producer.nodesByDistance(false));
 		rebuildStrandedOrder(cables);
+		yieldStrandedToCorridor();
+	}
+
+	/**
+	 * At equal sink distance, the corridor sweeps before the dead ends (MOD-730). A spur cable is a legal
+	 * downhill donor of the junction it hangs off, and the flood may list it before the corridor cable that
+	 * feeds the same junction — whether it does depends only on the face order, i.e. on how the build is
+	 * turned. Swept first, the spur takes the room the junction just made, the corridor stalls a tick, and a
+	 * machine downstream gets a packet only every other tick. Corridor first, the spur fills only the room
+	 * the corridor left: what it gives back is exactly the MOD-318 return when demand outgrows the source.
+	 * A stable sort, so ties within the corridor and within the stranded cables keep the flood's order.
+	 */
+	private void yieldStrandedToCorridor() {
+		if (strandedOrder.isEmpty()) {
+			return;
+		}
+		Set<P> stranded = new LinkedHashSet<>(strandedOrder);
+		propagationOrder.sort(Comparator.<P>comparingInt(sink::distanceOrNull).thenComparing(stranded::contains));
 	}
 
 	/**

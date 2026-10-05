@@ -95,6 +95,17 @@ final class EnergyLineDistributor<P> {
 	 */
 	private final List<P> strandedOrder;
 	private final Function<P, Integer> strandedProducerDistance;
+	/**
+	 * What each donor handed downhill in this tick's sweep (MOD-730): the part of a brim-full donor's buffer
+	 * that is the NEXT packet on its way, not surplus — {@link #fillStrandedOneHop} leaves it alone. Filled
+	 * only while there are stranded cables to fill; cleared at the start of every sweep, so a direct call of
+	 * the fill without a sweep sees it empty and behaves as before.
+	 */
+	private final Map<P, Long> forwardedThisTick = new LinkedHashMap<>();
+	/** EU the latest {@link #serveConsumersFromLine} drew out of the cables: delivered plus lost on the way. */
+	private long lastServeDrawn;
+	/** EU the generators put into the cables in the latest {@link #chargeAndPropagateLine} (MOD-731). */
+	private long generatorDrawn;
 
 	/**
 	 * A kernel bound to one tick of one line ({@link LineView}): the network's own view, or a synthetic graph
@@ -131,7 +142,18 @@ final class EnergyLineDistributor<P> {
 	 */
 	long serveConsumersFromLine(List<LiveConsumer<P>> consumers, long packetCap, double lossPerBlock,
 			EnergyPort.Txn tx, int producerCursor) {
-		if (consumers.isEmpty()) {
+		return serveConsumersFromLine(consumers, packetCap, lossPerBlock, tx, producerCursor, Long.MAX_VALUE);
+	}
+
+	/**
+	 * {@link #serveConsumersFromLine(List, long, double, EnergyPort.Txn, int)} drawing at most {@code budget} EU
+	 * out of the cables between all of {@code consumers} — the generators' surplus a sink outside the cascade
+	 * may take on a cascade tick (MOD-731, {@code DischargePlan.drawsSurplus}).
+	 */
+	long serveConsumersFromLine(List<LiveConsumer<P>> consumers, long packetCap, double lossPerBlock,
+			EnergyPort.Txn tx, int producerCursor, long budget) {
+		lastServeDrawn = 0L;
+		if (consumers.isEmpty() || budget <= 0) {
 			return 0L;
 		}
 		// Locality: a consumer draws only from the cable segments it physically touches, NOT the whole
@@ -166,7 +188,22 @@ final class EnergyLineDistributor<P> {
 		if (lineSupply.isEmpty()) {
 			return 0L;
 		}
-		return serveClass(consumers, lineSupply, lineTotal, packetCap, lossPerBlock, tx, producerCursor);
+		// The pool caps the whole class's draw (serveClass never pulls past it), so a budget is a smaller pool.
+		lineTotal[0] = Math.min(lineTotal[0], budget);
+		long pool = lineTotal[0];
+		long moved = serveClass(consumers, lineSupply, lineTotal, packetCap, lossPerBlock, tx, producerCursor);
+		lastServeDrawn = pool - lineTotal[0];
+		return moved;
+	}
+
+	/** EU the latest {@link #serveConsumersFromLine} drew out of the cables, loss included (MOD-731). */
+	long lastServeDrawn() {
+		return lastServeDrawn;
+	}
+
+	/** EU the generators put into the cables in the latest {@link #chargeAndPropagateLine} (MOD-731). */
+	long generatorDrawn() {
+		return generatorDrawn;
 	}
 
 	/**
@@ -207,10 +244,13 @@ final class EnergyLineDistributor<P> {
 		// so the next sweep finds no room, the spur keeps what it was given, and the fill front moves on.
 		// Guarded by fillStrandedOneHop_energizesTheSpurTheDownhillRuleAbandoned, which failed on exactly
 		// that oscillation while this call sat one line lower.
+		//
+		// Surplus is what a donor holds over what the sweep just made it forward (MOD-730): read from the
+		// record the sweep above keeps, so the fill must stay after it in the same tick.
 		fillStrandedOneHop(strandedOrder, strandedProducerDistance, packetCap, tx);
 		// Generators fill the line freely (free energy → inertia); only their draw is docked from the
 		// supply left for storage sinks.
-		chargeLineFrom(generators, packetCap, Long.MAX_VALUE, tx, rotation);
+		generatorDrawn = chargeLineFrom(generators, packetCap, Long.MAX_VALUE, tx, rotation);
 		// Storage discharges into the line ONLY to cover the machine demand generators fall short of
 		// (backup power). When generators already cover it, storageBudget is 0 and no battery bleeds into
 		// the wires — this closes the dual-role wash the audit flagged.
@@ -379,6 +419,7 @@ final class EnergyLineDistributor<P> {
 	 *     one branch everything on every tick — the very starvation this sweep exists to remove.
 	 */
 	private void propagateLineOneHop(long packetCap, EnergyPort.Txn tx, int rotation) {
+		forwardedThisTick.clear();
 		if (propagationOrder.isEmpty()) {
 			return;
 		}
@@ -426,12 +467,26 @@ final class EnergyLineDistributor<P> {
 				continue;
 			}
 			long[] give = shareAmongClaimants(donor.getAmount(), free, machineWard, n, rotation);
-			for (int i = 0; i < n; i++) {
-				if (give[i] > 0) {
-					donor.extract(give[i], tx);
-					claimants[i].insert(give[i], tx);
-				}
+			handOver(pos, donor, claimants, give, n, tx);
+		}
+	}
+
+	/**
+	 * Move each claimant's share out of the donor at {@code pos}; while there are stranded cables to fill,
+	 * record what the donor forwarded for {@link #fillStrandedOneHop} (MOD-730).
+	 */
+	private void handOver(P pos, EnergyBuffer donor, EnergyBuffer[] claimants, long[] give, int n,
+			EnergyPort.Txn tx) {
+		long forwarded = 0;
+		for (int i = 0; i < n; i++) {
+			if (give[i] > 0) {
+				donor.extract(give[i], tx);
+				claimants[i].insert(give[i], tx);
+				forwarded += give[i];
 			}
+		}
+		if (forwarded > 0 && !strandedOrder.isEmpty()) {
+			forwardedThisTick.put(pos, forwarded);
 		}
 	}
 
@@ -538,6 +593,15 @@ final class EnergyLineDistributor<P> {
 	 * strictly-downhill cable neighbour with room (see {@link #donorStillOwedDownhill}). A packet that
 	 * can still advance toward demand is delivery, not surplus.
 	 *
+	 * <p><b>Nor is "nowhere to push right now" (MOD-730).</b> In a corridor running at full throughput every
+	 * cable is brim-full after the sweep and so is every cable below it — each holds the next packet, which
+	 * looks exactly like a corridor that has stalled. A junction in the middle of such a corridor lost its
+	 * packet to the spur every other tick, and the machine downstream ran at half speed. So the surplus is
+	 * what the donor holds OVER what it forwarded downhill in this tick's sweep ({@link #forwardedThisTick}):
+	 * a cable that passed on 12 EU keeps 12 for the next packet; once the machine downstream only trickles
+	 * (passed on 2), the spur gets the other 10. Together with the sweep order — corridor before spur at
+	 * equal potential ({@code FlowField}) — the spur fills from surplus only and never stalls the corridor.
+	 *
 	 * <p>Loss-free, like every other cable-to-cable move: the resistive cost is charged once, per consumer,
 	 * on delivery.
 	 *
@@ -575,7 +639,12 @@ final class EnergyLineDistributor<P> {
 				if (donorStillOwedDownhill(np)) {
 					continue; // MOD-413: full, but its packet can still advance toward demand
 				}
-				long got = from.extract(Math.min(room, from.getAmount()), tx);
+				// MOD-730: what the donor forwarded this tick it was refilled with for the next packet.
+				long spare = from.getAmount() - forwardedThisTick.getOrDefault(np, 0L);
+				if (spare <= 0) {
+					continue;
+				}
+				long got = from.extract(Math.min(room, spare), tx);
 				if (got <= 0) {
 					continue;
 				}
@@ -608,6 +677,9 @@ final class EnergyLineDistributor<P> {
 	 * fill emptied it every single tick. The machine, served at the start of the next tick, then found
 	 * its cable at zero forever, while the network reported full generators and a healthy demand.
 	 * A terminal cable owes its packet too; it just owes it to a consumer rather than to another cable.
+	 *
+	 * <p>Looks one hop down and at this moment only; a donor of a corridor that is running, not stalled, is
+	 * guarded by what it forwarded this tick instead (MOD-730, see {@link #fillStrandedOneHop}).
 	 */
 	private boolean donorStillOwedDownhill(P donorPos) {
 		Integer donorPotential = flowPotential.apply(donorPos);

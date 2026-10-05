@@ -78,6 +78,25 @@ class FlowFieldTest {
 	}
 
 	@Test
+	void aStrandedCableYieldsToTheCorridorAtEqualPotential() {
+		// Corridor 4 - 1 - 2 - 3 (producer on 4, sink on 3) with a spur 0 off the junction 1. The flood from
+		// the sink reaches 1 and lists its neighbours in ascending order, so it finds the spur 0 before the
+		// corridor cable 4 at the same distance — the orientation that halved delivery (MOD-730).
+		Map<Integer, List<Integer>> spur = Map.of(0, List.of(1), 1, List.of(0, 2, 4), 2, List.of(1, 3),
+				3, List.of(2), 4, List.of(1));
+		FlowField<Integer> flow = new FlowField<>(graph(spur), Comparator.naturalOrder());
+		flow.producer().seed(4, 1);
+		flow.producer().flood();
+		flow.sink().seed(3, 1);
+		flow.sink().flood();
+		flow.rebuild(List.of(0, 1, 2, 3, 4));
+		assertEquals(List.of(0), flow.strandedOrder(), "precondition: the spur is stranded");
+		assertEquals(flow.flowPotential(0), flow.flowPotential(4), "precondition: spur and corridor tie");
+		assertEquals(List.of(3, 2, 1, 4, 0), flow.propagationOrder(),
+				"at equal potential the corridor cable sweeps before the stranded one");
+	}
+
+	@Test
 	void aCableAtEqualPotentialIsNotReachable() {
 		// Triangle 1-2-3 with a tail 0 on cable 1; producer on cable 1, sink on cable 2. Cables 1 and 3
 		// are both one hop from the sink: equal potential, so the sweep never moves energy from 1 into 3,
