@@ -78,14 +78,18 @@ public class SawmillScreen extends ProgressMachineScreen<SawmillMenu> {
 	 * Mode buttons are drawn in the FOREGROUND pass (not {@code drawMachineFrame}) because they render
 	 * ghost item icons via {@code graphics.item(...)} — item rendering in this codebase only happens in
 	 * the {@code extractContents} pass (see the upgrade panel in {@link MachineScreen}); drawing items in
-	 * the background layer is not done anywhere and is unreliable. Called after {@code super} so the
-	 * buttons sit on top of the frame; the upgrade panel/gear (also drawn by super) never overlap this
-	 * row (they live in the top-right corner).
+	 * the background layer is not done anywhere and is unreliable. Drawn under every overlay: both panels
+	 * can be dragged across this row and then cover it.
+	 *
+	 * <p>A button answers a click, a tooltip and the hover tint by one rule, {@link #frameAcceptsInput}
+	 * (MOD-738): while it is false the button shows neither the tint nor the tooltip, since a click there
+	 * would not switch the mode. The tint asks {@link #litModeAt}, the same question the tooltip asks.
 	 */
 	@Override
 	protected void drawUnderPanels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		drawProcessingStatus(graphics, this.menu.getStatus(), STATUS_Y);
 		SawmillMode active = this.menu.getMode();
+		SawmillMode lit = litModeAt(mouseX, mouseY);
 		for (SawmillMode m : SawmillMode.values()) {
 			int bx = this.leftPos + buttonX(m.ordinal());
 			int by = this.topPos + BUTTON_Y;
@@ -102,31 +106,46 @@ public class SawmillScreen extends ProgressMachineScreen<SawmillMenu> {
 						GuiStyle.BUTTON_ACTIVE_EDGE);
 			}
 			// Hover tint BEFORE the icon so the item stays crisp on top (matches MachineScreen.drawPanel).
-			if (mouseX >= bx && mouseX < bx + BUTTON_SIZE && mouseY >= by && mouseY < by + BUTTON_SIZE) {
+			if (m == lit) {
 				graphics.fill(bx, by, bx + BUTTON_SIZE, by + BUTTON_SIZE, GuiStyle.HOVER_WASH);
 			}
 			graphics.item(m.iconStack(), bx + 1, by + 1);
 		}
 	}
 
+	/**
+	 * The mode button lit by the hover tint at the point, or {@code null} when no mode button is there or the
+	 * screen is deaf to its own controls ({@link #frameAcceptsInput} — the rule a click obeys, MOD-738). Public as
+	 * the seam the L3 stand checks; {@link #drawUnderPanels} tints exactly this button and
+	 * {@link #modeTooltipAt} names it.
+	 */
+	public SawmillMode litModeAt(double mouseX, double mouseY) {
+		return frameAcceptsInput(mouseX, mouseY) ? buttonAt(mouseX, mouseY) : null;
+	}
+
+	/**
+	 * The mode tooltip at the point: the name of {@link #litModeAt}, or {@code null} where no button is lit.
+	 * Public as the seam the L3 stand checks; {@link #extractTooltip} only hands its answer on.
+	 */
+	public Component modeTooltipAt(double mouseX, double mouseY) {
+		SawmillMode lit = litModeAt(mouseX, mouseY);
+		return lit == null ? null : Component.translatable(lit.translationKey());
+	}
+
 	@Override
 	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		super.extractTooltip(graphics, mouseX, mouseY);
-		if (isOverOpenStatsPanel(mouseX, mouseY)) {
-			return; // the statistics panel covers the buttons and owns this area
-		}
-		SawmillMode hovered = buttonAt(mouseX, mouseY);
-		if (hovered != null) {
-			graphics.setTooltipForNextFrame(this.font, Component.translatable(hovered.translationKey()), mouseX, mouseY);
+		Component tip = modeTooltipAt(mouseX, mouseY);
+		if (tip != null) {
+			graphics.setTooltipForNextFrame(this.font, tip, mouseX, mouseY);
 		}
 	}
 
 	@Override
 	public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
-		// Only claim a click for a mode button when the modal upgrade panel is closed — while it is open
-		// MachineScreen.mouseClicked is modal over its footprint, so defer to super. (The default layout
-		// never overlaps the panel, but the button layout is an open question; this keeps it safe if retuned.)
-		// The open statistics panel is modal too: a button it covers must not answer (MOD-693).
+		// Only claim a click for a mode button when frameAcceptsInput lets it through: the buttons are deaf while
+		// the upgrade panel is open anywhere — it can be dragged over this row — and under the open statistics
+		// panel (MOD-693); otherwise defer to super. The tooltip and the hover tint obey the same rule (MOD-738).
 		if (event.button() == InputConstants.MOUSE_BUTTON_LEFT && frameAcceptsInput(event.x(), event.y())) {
 			SawmillMode clicked = buttonAt(event.x(), event.y());
 			if (clicked != null) {

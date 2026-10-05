@@ -339,8 +339,9 @@ public class CreativeEnergySourceScreen extends MachineScreen<CreativeEnergySour
 	}
 
 	/**
-	 * Both panels silence the switch, the presets and the slider wholesale while open: the statistics one can be
-	 * dragged across this screen, and a click meant for it would otherwise land on a control underneath.
+	 * Both panels silence the switch, the presets and the slider wholesale while open. Neither can open on this
+	 * screen today (no upgrade panel, no statistics tab since MOD-671); the rule stays so a future overlay
+	 * inherits it instead of reopening the controls underneath.
 	 */
 	@Override
 	protected OverlayModality overlayModality() {
@@ -349,9 +350,8 @@ public class CreativeEnergySourceScreen extends MachineScreen<CreativeEnergySour
 
 	@Override
 	public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
-		// Both panels are modal over their footprint and the statistics one can be DRAGGED across this
-		// screen, so a click meant for it would otherwise land on the switch or the slider underneath.
-		// Defer wholesale while either is open, the way the Sawmill defers to the upgrade panel.
+		// An open panel is modal: defer wholesale while either is open (overlayModality), so a click meant for
+		// it never lands on the switch, a preset or the slider underneath.
 		if (event.button() == InputConstants.MOUSE_BUTTON_LEFT && frameAcceptsInput(event.x(), event.y())) {
 			if (over(event.x(), event.y(), TOGGLE_X, TOGGLE_Y, TOGGLE_W, TOGGLE_H)) {
 				send(CreativeEnergySourceMenu.BUTTON_TOGGLE);
@@ -415,7 +415,8 @@ public class CreativeEnergySourceScreen extends MachineScreen<CreativeEnergySour
 	@Override
 	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		super.extractTooltip(graphics, mouseX, mouseY);
-		if (over(mouseX, mouseY, SLIDER_X, SLIDER_Y, SLIDER_W, SLIDER_H)) {
+		// The same rule as a click on the slider (MOD-738): no tooltip for a control that would not answer.
+		if (frameAcceptsInput(mouseX, mouseY) && over(mouseX, mouseY, SLIDER_X, SLIDER_Y, SLIDER_W, SLIDER_H)) {
 			graphics.setTooltipForNextFrame(this.font,
 					Component.translatable("gui.alaindustrial.creative_energy_source.output.tip"),
 					mouseX, mouseY);

@@ -80,7 +80,7 @@ public class AlaProcessingCategory implements DisplayCategory<AlaProcessingDispl
 		// EU cost + intrinsic time, and the success chance where the operation is a gamble (the
 		// incubator). Units (EU / s / %) are symbols — literal, no lang keys.
 		String cost = RecipeViewerLayout.withChance(
-				RecipeViewerLayout.costLabel(display.energy(), display.processingTicks()), display.chance());
+				display.cost().label(), display.chance());
 		widgets.add(Widgets.createLabel(new Point(bounds.getCenterX(),
 				bounds.getY() + RecipeViewerLayout.LABEL_Y), Component.literal(cost))
 				.noShadow().color(0xFF404040, 0xFFBBBBBB));

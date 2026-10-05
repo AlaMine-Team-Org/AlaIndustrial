@@ -1,12 +1,15 @@
 # Changelog
 
-## 0.1.196
+## 0.1.197
 
-<p><img alt="Ala Industrial Minecraft mod: Tech Reborn rubber and sulfur dust going into the Vulcanizer, which turns them into rubber with heat" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.196-mc26.3/release-media/v0.1.196-mc26.3/changelog.png" width="720"></p>
+<p><img alt="Ala Industrial Minecraft mod: before and now panels, two Battery Boxes level with each other while the Teleporter takes only surplus" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.197-mc26.3/release-media/v0.1.197-mc26.3/changelog.png" width="720"></p>
 
-Tech Reborn rubber and sulfur from any mod now work in the Vulcanizer, and the Sawmill and Electric Heater got animated faces.
+Energy network fixes: a spare cable spur no longer slows your machines, and Battery Boxes now share their charge fairly.
 
-### New
+### Bug Fixes
 
-- The Vulcanizer now accepts Tech Reborn rubber in place of raw rubber, and its sulfur slot takes sulfur dust from any mod. A new Rubber page in the recipe viewer explains where rubber comes from.
-- The Sawmill's blade now spins while it works, and a fully heated Electric Heater's coil glows in a slow pulse.
+- On Minecraft 26.3 the mod's ores and tempered iron smelted in the blast furnace twice as fast as vanilla ores: their smelting speed had been doubled by mistake since 0.1.181. They now take vanilla's 5 seconds, and a piece of coal smelts 8 ingots again instead of 16. On Minecraft 26.2 they already did.
+- A spare spur of cable branching off the middle of a line no longer halves the speed of the machine at its end: the spur no longer takes energy that is on its way to the machine, and it charges once the machine is full.
+- Two Battery Boxes now level out properly when a Teleporter, a Charging Station or an Energy Condenser shares their line: while the boxes even out, those blocks take only the generators' surplus instead of draining the fuller box almost to empty.
+- The Sawmill's mode tooltip no longer appears over an open upgrade panel. While the panel is open the mode buttons do not switch the mode, and now they show neither a tooltip nor a hover highlight either, even when the panel is dragged right over them.
+- The recipe viewer now shows the server's costs and times. On a dedicated server with changed machine settings, JEI quoted the Electric Furnace's vanilla smelting cost from the player's own config, and every machine card (in JEI and REI) timed its operation at the player's own rate. Both now follow the server's settings, and REI shows a vanilla smelt's time the same as JEI; in JEI the numbers update when the server reloads its config, without rejoining.

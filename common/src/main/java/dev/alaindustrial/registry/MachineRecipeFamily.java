@@ -32,7 +32,11 @@ public abstract sealed class MachineRecipeFamily<I extends RecipeInput, R extend
 	private final int defaultEnergy;
 	/** Read lazily: the {@link ModContent} slot is rebound by whichever loader registered it. */
 	private final Supplier<Block> station;
-	/** Read lazily: Config values are reloadable, so a captured int would go stale. */
+	/**
+	 * Read lazily: the balance is reloadable, so a captured int would go stale. Every family reads it
+	 * through {@code ServerBalance} (MOD-743) — the rate is shown in the recipe viewers, never used by a
+	 * machine.
+	 */
 	private final IntSupplier euPerTick;
 	private final Function<F, MapCodec<R>> mapCodecFactory;
 	private final Function<F, StreamCodec<RegistryFriendlyByteBuf, R>> streamCodecFactory;
@@ -89,7 +93,18 @@ public abstract sealed class MachineRecipeFamily<I extends RecipeInput, R extend
 		return station;
 	}
 
-	/** What the machine working this family draws per tick. Almost every machine shares one rate. */
+	/**
+	 * What the machine working this family draws per tick, as the SERVER sets it. Almost every machine
+	 * shares one rate.
+	 *
+	 * <p>For the recipe viewers and tooltips only (MOD-743): the machines tick on their own tariff
+	 * ({@code baseEuPerTick}) and never call this. The declarations in {@link ModRecipes} therefore read
+	 * the rate through {@code ServerBalance} — the server's snapshot on a client, the local {@code Config}
+	 * everywhere else — and {@code ArchitectureRules.recipeDataReadsNoBalanceKnob} keeps a {@code Config}
+	 * read out of them: on a dedicated server that is the player's own file. One viewer does call it on the
+	 * server: REI's server-side filler times the distillation column's card ({@code FluidOutputDisplay})
+	 * there and sends the ticks over, which is the server's own rate, but fixed until {@code /reload}.
+	 */
 	public int euPerTick() {
 		return Math.max(1, euPerTick.getAsInt());
 	}
@@ -99,7 +114,8 @@ public abstract sealed class MachineRecipeFamily<I extends RecipeInput, R extend
 	 * recipe viewers print. It has to divide by <em>this family's</em> rate: the incubator draws
 	 * four times what the other machines do, and the shared rate made its 15 seconds read as 60.
 	 * The global speed multiplier is a runtime balance knob and deliberately not applied — the
-	 * viewer shows the recipe's intrinsic time.
+	 * viewer shows the recipe's intrinsic time. Viewer-only, like {@link #euPerTick()}: the rate is the
+	 * server's (MOD-743), read on the client — or, for REI's distillation-column card, on the server.
 	 */
 	public int ticksFor(int energy) {
 		return Math.max(1, energy / euPerTick());

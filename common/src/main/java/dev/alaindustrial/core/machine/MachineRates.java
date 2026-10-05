@@ -42,6 +42,18 @@ public final class MachineRates {
 	}
 
 	/**
+	 * The base length of one operation of a processing machine (the macerator family), before the speed
+	 * multiplier and the chips: a recipe that states its EU runs {@code recipeEnergy ÷ baseEuPerTick}
+	 * ticks, at least 1; one that states none ({@code recipeEnergy <= 0}, the electric furnace's vanilla
+	 * fallback) runs the machine's {@code defaultDuration}. {@code AbstractProcessingMachineBlockEntity}
+	 * ticks by it; it lives here, Minecraft-free, so L1 can hold the recipe viewers to the machine
+	 * ({@code RecipeViewerCostTest}, MOD-743).
+	 */
+	public static int baseDuration(int recipeEnergy, int baseEuPerTick, int defaultDuration) {
+		return recipeEnergy > 0 ? Math.max(1, recipeEnergy / baseEuPerTick) : defaultDuration;
+	}
+
+	/**
 	 * EU one vanilla smelt costs in the electric furnace: its scaled duration times its scaled draw, each
 	 * rounded on its own — exactly what the furnace ticks away, so the recipe-viewer mirrors (MOD-086) quote
 	 * the number the machine spends. Multiplying the raw values would agree only at 1.0 (at x3 a 100-tick,

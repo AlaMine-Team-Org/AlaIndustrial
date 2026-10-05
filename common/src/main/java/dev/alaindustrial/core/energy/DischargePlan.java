@@ -1,9 +1,11 @@
 package dev.alaindustrial.core.energy;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * Which of the three storage discharge channels is open this tick, and how wide (MOD-715, CORE-5; ADR-004).
@@ -11,7 +13,9 @@ import java.util.Set;
  * <ol>
  *   <li><b>backup</b> — {@link #backupBudget()} EU: the machine demand the generators fall short of;</li>
  *   <li><b>cascade</b> — {@link #cascadeAllowances()}: per donor, a fuller store topping up an emptier one
- *       (MOD-314), only when backup is closed;</li>
+ *       (MOD-314), only when backup is closed; the donors and every sink outside the cascade sit the tick
+ *       out, so the EU reaches the stores it was released for (MOD-731, {@link #excludes}) — the sinks outside
+ *       it draw apart no more than {@link #surplusBudget()}, what the generators put in beyond the machines;</li>
  *   <li><b>feed</b> — {@link #feedAllowances()}: per donor, a store trickling into a sink the cascade refuses
  *       (MOD-353), only when both are closed.</li>
  * </ol>
@@ -30,9 +34,12 @@ import java.util.Set;
  * @param backupBudget EU stores may release to cover the machine deficit; 0 when the channel is closed
  * @param cascadeAllowances per donor, EU it may push toward an emptier store; empty when closed
  * @param feedAllowances per donor, EU it may push toward a fund; empty when closed
+ * @param surplusBudget EU the sinks outside the cascade may draw from the line on a cascade tick (MOD-731,
+ *     {@link #drawsSurplus}): {@link Stores#generatorSurplus()}; 0 when the cascade is closed
  * @param <P> the position type the donors and sinks are keyed by
  */
-record DischargePlan<P>(long backupBudget, Map<P, Long> cascadeAllowances, Map<P, Long> feedAllowances) {
+record DischargePlan<P>(long backupBudget, Map<P, Long> cascadeAllowances, Map<P, Long> feedAllowances,
+		long surplusBudget) {
 
 	/** What {@link #decide} needs to know about the blocks around the line. */
 	interface Stores<P> {
@@ -47,6 +54,12 @@ record DischargePlan<P>(long backupBudget, Map<P, Long> cascadeAllowances, Map<P
 		 * the cascade is actually sized, so a tick that never gets there pays no walk over the cables.
 		 */
 		long inFlight();
+
+		/**
+		 * EU the generators put into the line on its previous tick beyond what its machines drew (MOD-731):
+		 * the most the sinks outside the cascade may take on a cascade tick. Asked only when the cascade opens.
+		 */
+		long generatorSurplus();
 	}
 
 	DischargePlan {
@@ -56,6 +69,15 @@ record DischargePlan<P>(long backupBudget, Map<P, Long> cascadeAllowances, Map<P
 			throw new IllegalArgumentException("ADR-004: more than one storage discharge channel open — backup "
 					+ backupBudget + ", cascade " + cascadeAllowances + ", feed " + feedAllowances);
 		}
+		if (surplusBudget < 0 || (surplusBudget > 0 && cascadeAllowances.isEmpty())) {
+			throw new IllegalArgumentException("MOD-731: a surplus budget of " + surplusBudget
+					+ " EU belongs to a cascade tick only — cascade " + cascadeAllowances);
+		}
+	}
+
+	/** A plan whose sinks outside the cascade draw nothing apart: every tick but a cascade one with a surplus. */
+	DischargePlan(long backupBudget, Map<P, Long> cascadeAllowances, Map<P, Long> feedAllowances) {
+		this(backupBudget, cascadeAllowances, feedAllowances, 0L);
 	}
 
 	/**
@@ -93,24 +115,89 @@ record DischargePlan<P>(long backupBudget, Map<P, Long> cascadeAllowances, Map<P
 		if (backup == 0 && cascade.isEmpty() && !storageSources.isEmpty() && !sinks.isEmpty()) {
 			feed = feedAllowances(storageSources, sinks, stores, feedReserve, packetCap);
 		}
-		return new DischargePlan<>(backup, cascade, feed);
+		long surplus = cascade.isEmpty() ? 0L : Math.max(0L, stores.generatorSurplus());
+		return new DischargePlan<>(backup, cascade, feed, surplus);
 	}
 
 	/**
-	 * Whether the sink at {@code pos} must sit this tick out because it is itself discharging into the line
-	 * (ADR-002): every storage source while backup runs, only the donors with an allowance while the cascade
-	 * or the feed runs. Not interchangeable — {@code storageSources} is a pure face-role test, so an EMPTY box
-	 * with a cable on its OUT face is in it, and excluding it under the cascade would keep it from ever
-	 * charging from its full neighbour.
+	 * Whether the sink at {@code pos} must sit this tick out of the serve pass — and so out of the sink field's
+	 * seeds, which read the same list (ADR-003).
+	 *
+	 * <ul>
+	 *   <li><b>backup</b> — every storage source: it is discharging into the line (ADR-002);</li>
+	 *   <li><b>cascade</b> — the donors with an allowance, and every sink that does not accept the cascade
+	 *       (MOD-731): a Teleporter, a Charging Station, an Energy Condenser. The cascade sizes a tap on the
+	 *       donor's side for a box worth levelling, but the line does not know where its EU came from — it
+	 *       serves every waiting sink by room and seeds the field from every one of them. Left in, a fund
+	 *       beside the bus took eleven twelfths of each packet, kept the far box behind a seam of the field,
+	 *       and the donor drained to the empty box's level with no reserve, because the reserve is the feed's
+	 *       (MOD-353). Out of the pass and out of the seeds, the cascade's EU reaches the boxes, and the
+	 *       in-flight correction of {@link #cascadeAllowances} counts energy that really goes where it says.
+	 *       Such a sink is still served, apart, from the generators' surplus ({@link #drawsSurplus});</li>
+	 *   <li><b>feed</b> — the donors with an allowance only: a fund is the feed's destination, and the feed is
+	 *       open for hours, so a store or a condenser beside it keeps its share of the generators' surplus.</li>
+	 * </ul>
+	 *
+	 * <p>One known edge of the cascade branch, accepted (owner, 2026-10-05): the tail. When the cascade closes,
+	 * the EU still in the cables — already counted to the box by the in-flight correction — may reach a fund
+	 * once it is back in the pass. One load of the cables does not bound it: the box comes out short of what it
+	 * was counted, the cascade re-opens for a smaller round, and that round's cables may leak too. On the golden
+	 * {@code fund} rig the fund ended with 52 EU against 48 in the cables at the first closing; the rounds shrink
+	 * by the half step, so the scenarios hold a levelling episode to two loads of the cables.
+	 *
+	 * <p>Not interchangeable with {@code storageSourcePositions} under the cascade: that set is a pure
+	 * face-role test, so an EMPTY box with a cable on its OUT face is in it, and excluding it would keep it
+	 * from ever charging from its full neighbour.
+	 *
+	 * @param acceptsCascade whether the sink at a position may receive the cascade ({@link
+	 *     Stores#acceptsCascade}); asked only while the cascade is open
 	 */
-	boolean excludes(P pos, Set<P> storageSourcePositions) {
+	boolean excludes(P pos, Set<P> storageSourcePositions, Predicate<P> acceptsCascade) {
 		if (backupBudget > 0) {
 			return storageSourcePositions.contains(pos);
 		}
 		if (!cascadeAllowances.isEmpty()) {
-			return cascadeAllowances.containsKey(pos);
+			return cascadeAllowances.containsKey(pos) || !acceptsCascade.test(pos);
 		}
 		return feedAllowances.containsKey(pos);
+	}
+
+	/**
+	 * Whether the sink at {@code pos}, out of the serve pass on this cascade tick ({@link #excludes}), is served
+	 * apart from the generators' surplus — at most {@link #surplusBudget()} EU between all such sinks, from the
+	 * cables each one touches, before the stores (MOD-731; owner, 2026-10-05: a Teleporter charges from the
+	 * generators' surplus even while the boxes level, and a box's charge still never reaches it).
+	 *
+	 * <p>The line cannot tell a generator's EU from a store's (ADR-001), so the budget is an account, not an
+	 * address: the generators' surplus beyond the machines on the previous tick, each tick's surplus spent at
+	 * most once. Over any stretch of ticks these sinks take no more than the generators put in beyond the
+	 * machines, so the rest of what is on the cables — the cascade's EU among it — goes to the stores. Served
+	 * apart, never seeded: seeded, such a sink would put the far box behind a seam of the field again and stop
+	 * the levelling. With no generator on the line the budget is 0 and the sink sits the tick out, as before.
+	 */
+	boolean drawsSurplus(P pos, Predicate<P> acceptsCascade) {
+		return surplusBudget > 0 && !cascadeAllowances.containsKey(pos) && !acceptsCascade.test(pos);
+	}
+
+	/**
+	 * Take out of {@code sinks} every sink that sits this tick out of the serve pass ({@link #excludes}) and
+	 * return those of them that draw the generators' surplus apart ({@link #drawsSurplus}), in list order. Empty
+	 * and not allocated unless there is a surplus budget.
+	 */
+	List<EnergyLineDistributor.LiveConsumer<P>> setAside(List<EnergyLineDistributor.LiveConsumer<P>> sinks,
+			Set<P> storageSourcePositions, Predicate<P> acceptsCascade) {
+		List<EnergyLineDistributor.LiveConsumer<P>> surplusTakers =
+				surplusBudget > 0 ? new ArrayList<>() : List.of();
+		sinks.removeIf(c -> {
+			if (!excludes(c.pos(), storageSourcePositions, acceptsCascade)) {
+				return false;
+			}
+			if (drawsSurplus(c.pos(), acceptsCascade)) {
+				surplusTakers.add(c);
+			}
+			return true;
+		});
+		return surplusTakers;
 	}
 
 	/**

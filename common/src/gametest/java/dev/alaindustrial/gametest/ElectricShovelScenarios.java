@@ -2,6 +2,7 @@ package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.gametest.compat.LineShovelFacts;
 import dev.alaindustrial.item.ToolConfig;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.item.tool.ElectricShovelDiamondTipItem;
@@ -328,15 +329,15 @@ public final class ElectricShovelScenarios {
 	}
 
 	/**
-	 * The state a shovel leaves on every lane, for the cells where all four lanes agree: UP and a side face
-	 * path the six soils and douse the campfire; DOWN never paths (an explicit face check on 26.2, the
-	 * transformer's {@code disallowed_faces} on 26.3). {@code null} = no literal: dousing from DOWN is
-	 * decided by different code on the two lines (the shovel's DOWN check on 26.2, the campfire's own
-	 * {@code douses_campfires} tag test on 26.3), so only the vanilla oracle pins it.
+	 * The state a shovel leaves on this lane, for every cell of the matrix (not sneaking). UP and a side face
+	 * path the six soils; DOWN never paths (an explicit face check on 26.2, the transformer's
+	 * {@code disallowed_faces} on 26.3); a dirt path and stone stay as they are. The lit campfire is the one cell
+	 * the two lines answer differently from DOWN, and its answer is the line's literal,
+	 * {@link LineShovelFacts#dousesLitCampfire} — never "whatever vanilla does" (MOD-744).
 	 */
 	private static BlockState literalShovel(BlockState fixture, Direction face) {
 		if (fixture.is(Blocks.CAMPFIRE)) {
-			return face == Direction.DOWN ? null : fixture.setValue(CampfireBlock.LIT, Boolean.FALSE);
+			return literalCampfire(fixture, face, false);
 		}
 		if (fixture.is(Blocks.DIRT_PATH) || fixture.is(Blocks.STONE) || face == Direction.DOWN) {
 			return fixture;
@@ -344,16 +345,49 @@ public final class ElectricShovelScenarios {
 		return Blocks.DIRT_PATH.defaultBlockState();
 	}
 
+	/** The lit campfire after a dousing shovel's click from {@code face}, as this line's literal says. */
+	private static BlockState literalCampfire(BlockState litCampfire, Direction face, boolean sneaking) {
+		return LineShovelFacts.dousesLitCampfire(face, sneaking)
+				? litCampfire.setValue(CampfireBlock.LIT, Boolean.FALSE)
+				: litCampfire;
+	}
+
+	/**
+	 * Why a vanilla diamond shovel disagreeing with the literal is red: on the campfire it is the accepted line
+	 * difference of MOD-744 that changed on this lane (a game update moved it), anywhere else the rig.
+	 */
+	private static String vanillaMismatch(BlockState fixture, Direction face, boolean sneaking, BlockState vanilla,
+			BlockState literal) {
+		String click = fixture + " from " + face + (sneaking ? " (sneaking)" : "");
+		if (fixture.is(Blocks.CAMPFIRE)) {
+			return "the accepted line difference MOD-744 changed on this lane: a vanilla diamond shovel on " + click
+					+ " left " + vanilla + ", LineShovelFacts.dousesLitCampfire expects " + literal
+					+ " — re-decide the difference, do not just flip the literal";
+		}
+		return "fixture error: a vanilla diamond shovel on " + click + " left " + vanilla + ", expected " + literal;
+	}
+
 	/**
 	 * MOD-704 batch 0 — the face matrix of the shovel, base and diamond tip (not sneaking), charged and
-	 * flat, against a vanilla diamond shovel on the identical fixture, on this lane.
+	 * flat, against a vanilla diamond shovel on the identical fixture, on this lane; then, since MOD-744, the
+	 * lit campfire clicked while sneaking.
+	 *
+	 * <p>Every cell is pinned twice: the vanilla diamond shovel must leave this line's literal (so a change of
+	 * the game on one line is red, not followed silently), and every tool must leave what vanilla left. The
+	 * sneaking pass is the campfire only, because that is where sneaking changes the outcome between the lines
+	 * (26.2 douses in the shovel's {@code useOn}, which a sneak does not skip; 26.3 douses in the campfire, which a
+	 * sneak does). The diamond tip is not compared with vanilla there: its sneaking click is the Silk Touch toggle
+	 * ({@code useOn} answers {@code PASS}), so it leaves the campfire lit on every lane.
 	 *
 	 * @implements MOD-704-RC03 — for every fixture of the matrix (grass, dirt, podzol, mycelium, coarse
 	 *     dirt, rooted dirt, dirt path, stone, a lit campfire) and every face (UP, a side, DOWN), the
 	 *     electric shovel — base and diamond tip, charged and flat — leaves the same block state a vanilla
-	 *     diamond shovel leaves on the same fixture, matches the lane-independent literal where all lanes
-	 *     agree, and spends no EU. Dousing from DOWN is pinned relative to vanilla only: it differs between
-	 *     the lines today (see research.md of MOD-704).
+	 *     diamond shovel leaves on the same fixture, which is this line's literal, and spends no EU.
+	 * @implements MOD-744-RC01 — the lit-campfire cell from DOWN is pinned by the line literal
+	 *     (LineShovelFacts): doused on 26.3, left lit on 26.2, on both loaders, for every tool of the matrix and
+	 *     the vanilla diamond shovel; and a sneaking click on a lit campfire from every face of the matrix with a
+	 *     vanilla diamond shovel or the base electric shovel (charged and flat) leaves it lit on 26.3 and douses
+	 *     it from UP and a side on 26.2, while the diamond tip leaves it lit on both lines, all spending no EU.
 	 */
 	public static void faceMatrixAgreesWithVanillaShovel(GameTestHelper helper) {
 		ServerPlayer player = survivalPlayer(helper);
@@ -364,29 +398,80 @@ public final class ElectricShovelScenarios {
 				clickFresh(helper, player, new ItemStack(Items.DIAMOND_SHOVEL), fixture, face);
 				BlockState vanilla = helper.getBlockState(GROUND);
 				BlockState literal = literalShovel(fixture, face);
-				if (literal != null && vanilla != literal) {
-					helper.fail("fixture error: a vanilla diamond shovel on " + fixture + " from " + face + " left "
-							+ vanilla + ", expected " + literal);
+				if (vanilla != literal) {
+					helper.fail(vanillaMismatch(fixture, face, false, vanilla, literal));
 					return;
 				}
 				for (ItemStack template : tools) {
-					ItemStack tool = template.copy();
-					long before = ItemEnergy.get(tool);
-					clickFresh(helper, player, tool, fixture, face);
-					BlockState after = helper.getBlockState(GROUND);
-					String cell = tool.getItem() + " (" + before + " EU) on " + fixture + " from " + face;
-					if (after != vanilla) {
-						helper.fail(cell + " left " + after + ", a vanilla diamond shovel left " + vanilla);
-						return;
-					}
-					if (ItemEnergy.get(player.getMainHandItem()) != before) {
-						helper.fail(cell + " spent EU on a right-click, which is free");
+					if (!toolLeaves(helper, player, template, fixture, face, vanilla,
+							"a vanilla diamond shovel left " + vanilla)) {
 						return;
 					}
 				}
 			}
 		}
-		helper.succeed();
+		if (sneakingOnCampfire(helper, player, buffer)) {
+			helper.succeed();
+		}
+	}
+
+	/** MOD-744-RC01, the sneaking half: the lit campfire from every face of the matrix. False = already failed. */
+	private static boolean sneakingOnCampfire(GameTestHelper helper, ServerPlayer player, long buffer) {
+		BlockState lit = MATRIX_FIXTURES.getLast();
+		if (!lit.is(Blocks.CAMPFIRE) || !lit.getValue(CampfireBlock.LIT)) {
+			helper.fail("fixture error: the last matrix fixture must be a lit campfire, found " + lit);
+			return false;
+		}
+		player.setShiftKeyDown(true);
+		try {
+			for (Direction face : ElectricHoeScenarios.MATRIX_FACES) {
+				clickFresh(helper, player, new ItemStack(Items.DIAMOND_SHOVEL), lit, face);
+				BlockState vanilla = helper.getBlockState(GROUND);
+				BlockState literal = literalCampfire(lit, face, true);
+				if (vanilla != literal) {
+					helper.fail(vanillaMismatch(lit, face, true, vanilla, literal));
+					return false;
+				}
+				for (ItemStack base : List.of(shovel(buffer), shovel(0))) {
+					if (!toolLeaves(helper, player, base, lit, face, vanilla,
+							"a vanilla diamond shovel left " + vanilla)) {
+						return false;
+					}
+				}
+				for (ItemStack tip : List.of(diamondTipShovel(buffer), diamondTipShovel(0))) {
+					if (!toolLeaves(helper, player, tip, lit, face, lit,
+							"but a sneaking click with the diamond tip is its Silk Touch toggle and leaves " + lit)) {
+						return false;
+					}
+				}
+			}
+		} finally {
+			player.setShiftKeyDown(false);
+		}
+		return true;
+	}
+
+	/**
+	 * Clicks a fresh copy of {@code template} on {@code fixture} from {@code face} and checks that it left
+	 * {@code expected} and spent no EU. False = the helper has already failed, with {@code why} in the message.
+	 */
+	private static boolean toolLeaves(GameTestHelper helper, ServerPlayer player, ItemStack template,
+			BlockState fixture, Direction face, BlockState expected, String why) {
+		ItemStack tool = template.copy();
+		long before = ItemEnergy.get(tool);
+		clickFresh(helper, player, tool, fixture, face);
+		BlockState after = helper.getBlockState(GROUND);
+		String cell = tool.getItem() + " (" + before + " EU) on " + fixture + " from " + face
+				+ (player.isShiftKeyDown() ? " (sneaking)" : "");
+		if (after != expected) {
+			helper.fail(cell + " left " + after + ", " + why);
+			return false;
+		}
+		if (ItemEnergy.get(player.getMainHandItem()) != before) {
+			helper.fail(cell + " spent EU on a right-click, which is free");
+			return false;
+		}
+		return true;
 	}
 
 	// ── MOD-364 — the base tool's EU contract (shared forms, shovel parameters) ──────────────────────

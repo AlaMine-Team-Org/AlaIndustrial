@@ -372,6 +372,9 @@ pitest {
                      'dev.alaindustrial.block.entity.AssemblerStatus',
                      'dev.alaindustrial.client.compat.FluidOutputViewerModel',
                      'dev.alaindustrial.client.compat.RecipeViewerLayout',
+                     // MOD-743: the cost a recipe card prints, resolved at draw time from ServerBalance;
+                     // MC-free on purpose, listed WITH its L1 suite (RecipeViewerCostTest).
+                     'dev.alaindustrial.client.compat.RecipeViewerCost',
                      // MOD-716: the screens' recipe-viewer click area, a plain record; L1 suite GuiRectTest.
                      'dev.alaindustrial.client.screen.GuiRect',
                      // MOD-716: the cable grades' tooltip description, built from CableType alone (MC-free);

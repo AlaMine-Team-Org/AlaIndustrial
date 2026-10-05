@@ -244,6 +244,48 @@ class EnergyLineDistributorCoreTest {
 		assertEquals(18, line.amount(cable), "the whole packet left the cable; the loss is not returned");
 	}
 
+	/**
+	 * MOD-731: a budget caps what one class draws out of the cables between all its consumers, the loss among
+	 * it, and the kernel reports that draw — the account the network keeps of the generators' surplus.
+	 */
+	@Test
+	void serveConsumersFromLine_drawsNoMoreThanItsBudgetAndReportsTheDraw() {
+		Line<Cell> line = grid();
+		Cell cable = at(0, 0, 0);
+		line.cable(cable, 1, 100, 50);
+		Cell consumerPos = at(0, 1, 0);
+		StubPort consumer = machine(1000, 0);
+		EnergyLineDistributor<Cell> d = line.distributor(Map.of(consumerPos, 10));
+		long loss = EnergyShare.cableLoss(20, COPPER_LOSS, 10);
+		assertTrue(loss > 0, "precondition: the budgeted draw loses something on the way");
+
+		long moved = d.serveConsumersFromLine(consumers(consumerPos, consumer, 1000), 32, COPPER_LOSS, txn, 0, 20);
+
+		assertEquals(20 - loss, moved, "a budget of 20 caps a draw the packet cap would let reach 32");
+		assertEquals(30, line.amount(cable), "20 EU left the cable, the loss among them");
+		assertEquals(20, d.lastServeDrawn(), "the draw is reported with its loss, not as what was delivered");
+		assertEquals(0, d.serveConsumersFromLine(consumers(consumerPos, consumer, 1000), 32, COPPER_LOSS, txn, 0, 0),
+				"a budget of 0 draws nothing");
+		assertEquals(0, d.lastServeDrawn());
+		assertEquals(30, line.amount(cable));
+	}
+
+	/** MOD-731: the kernel reports what the generators put into the line — and only theirs, not a store's. */
+	@Test
+	void chargeAndPropagateLine_reportsWhatTheGeneratorsPutIn() {
+		Line<Cell> line = grid();
+		line.cable(at(1, 0, 0), 1, 12, 5);
+		line.cable(at(3, 0, 0), 1, 12, 0);
+		EnergyLineDistributor<Cell> d = line.distributor(Map.of());
+		StubPort store = new StubPort(10_000, 10_000, true, true);
+
+		long fromStore = d.chargeAndPropagateLine(sources(at(0, 0, 0), generator()), sources(at(4, 0, 0), store),
+				DischargePlan.backupOnly(100, 0), 32, txn, 0);
+
+		assertEquals(7, d.generatorDrawn(), "the generator filled the 7 EU of room on its cable");
+		assertEquals(12, fromStore, "the store's backup is reported apart");
+	}
+
 	/** A consumer that takes less than it was offered gives the rest back to the cable, not to the floor. */
 	@Test
 	void serveConsumersFromLine_returnsWhatTheConsumerRefusedToTheLine() {

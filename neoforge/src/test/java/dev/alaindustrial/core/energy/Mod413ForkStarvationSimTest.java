@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -235,6 +236,12 @@ class Mod413ForkStarvationSimTest {
 				}
 				return PosOrder.compare(a.getX(), a.getY(), a.getZ(), b.getX(), b.getY(), b.getZ());
 			});
+			// FlowField.yieldStrandedToCorridor (MOD-730): at equal potential the corridor sweeps first.
+			if (!strandedFillOrder.isEmpty()) {
+				Set<BlockPos> stranded = new LinkedHashSet<>(strandedFillOrder);
+				propagationOrder.sort(Comparator.<BlockPos>comparingInt(sinkDistance::get)
+						.thenComparing(stranded::contains));
+			}
 		}
 
 		private void updateLiveEndpoints(Set<BlockPos> supplying, Set<BlockPos> sinkSeeds,

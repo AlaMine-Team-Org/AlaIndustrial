@@ -159,8 +159,8 @@ public abstract class AbstractProcessingMachineBlockEntity extends MachineBlockE
 		RecipeSolution solution = level instanceof ServerLevel sl
 				? resolveInput(sl, input) : RecipeSolution.empty();
 
-		int baseDuration = solution.hasRecipe() && solution.energy() > 0
-				? Math.max(1, solution.energy() / Config.machineEuPerTick) : defaultDuration;
+		int baseDuration = MachineRates.baseDuration(solution.hasRecipe() ? solution.energy() : 0,
+				Config.machineEuPerTick, defaultDuration);
 		ProcessingCycle.Job job = cycle.job(Config.machineEuPerTick, baseDuration);
 		int euPerTick = job.euPerTick();
 		// MOD-455: a batch recipe (glowstone dust ×4) needs its whole price on hand every tick, not just

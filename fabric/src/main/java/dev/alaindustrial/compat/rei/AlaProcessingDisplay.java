@@ -3,6 +3,7 @@ package dev.alaindustrial.compat.rei;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.IncubatorMode;
+import dev.alaindustrial.client.compat.RecipeViewerCost;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
 import dev.alaindustrial.registry.ModRecipes;
 import java.util.ArrayList;
@@ -35,9 +36,18 @@ public class AlaProcessingDisplay extends BasicDisplay {
 
 	/** Build a display from a live recipe (the common case, used by the server-side filler). */
 	public AlaProcessingDisplay(AlaProcessingRecipe recipe) {
+		this(recipe, recipe.energy());
+	}
+
+	/**
+	 * Build a display stating {@code energy} instead of the recipe's own — a mirrored vanilla smelt, which
+	 * carries no cost, gets the furnace's real EU from the server-side filler (MOD-743, decision A2), so
+	 * what travels to the client is the same number it always was.
+	 */
+	public AlaProcessingDisplay(AlaProcessingRecipe recipe, int energy) {
 		this(inputsOf(recipe),
 				outputsOf(recipe),
-				recipe.kind(), recipe.energy(), recipe.chance());
+				recipe.kind(), energy, recipe.chance());
 	}
 
 	/**
@@ -100,18 +110,18 @@ public class AlaProcessingDisplay extends BasicDisplay {
 		return IncubatorMode.chanceOf(kind, chance);
 	}
 
-	/** Total EU spent to complete one operation (the recipe's nominal cost). */
-	public int energy() {
-		return energy;
-	}
-
 	/**
-	 * Base processing time in ticks, from the recipe family's own EU rate — see
-	 * {@link ModRecipes.Kind#ticksFor(int)}. Dividing by the shared machine rate here used to print the
-	 * incubator's operations four times too long.
+	 * EU and base time of one operation, resolved on the client when the card is built (MOD-743). The EU
+	 * is what the server sent. An electric-furnace display carrying the server's vanilla-smelt price (the
+	 * mirror, priced by {@link AlaReiCommonPlugin}) or no price at all is the furnace's default operation:
+	 * its time is the furnace's duration, as in JEI, not that EU divided by the rate
+	 * ({@link RecipeViewerCost#resolveServerStated} — including the two limits that recognition has). Every
+	 * other card divides its EU by the recipe family's own rate, read from the server's snapshot — the
+	 * shared machine rate used to print the incubator's operations four times too long, and the client's
+	 * own file printed every card's time against a server with another rate.
 	 */
-	public int processingTicks() {
-		return kind.ticksFor(energy);
+	public RecipeViewerCost cost() {
+		return RecipeViewerCost.resolveServerStated(kind == ModRecipes.SMELTING, energy, kind.euPerTick());
 	}
 
 	@Override

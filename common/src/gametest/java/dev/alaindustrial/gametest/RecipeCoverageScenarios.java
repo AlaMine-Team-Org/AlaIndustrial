@@ -65,6 +65,9 @@ public final class RecipeCoverageScenarios {
 								"tc_recie12_electric_furnace_category_lists_each_smelt_once")
 						.fabricId("RecipeCoverageGameTest", "tcRecie12_electricFurnaceCategoryListsEachSmeltOnce")
 						.ticks(20, 40),
+				RosterEntry.of(RecipeCoverageScenarios::tcRecie13_vanillaSmeltMirrorsLeaveTheirCostToTheViewer,
+								"tc_recie13_vanilla_smelt_mirrors_leave_their_cost_to_the_viewer")
+						.ticks(40),
 				RosterEntry.of(RecipeCoverageScenarios::tcRecie05_machineCasingResolves,
 								"tc_recie05_machine_casing_resolves")
 						.fabricId("RecipeCoverageGameTest", "tcRecie05_machineCasingResolves").ticks(20, 40),
@@ -217,6 +220,52 @@ public final class RecipeCoverageScenarios {
 			if (!assertShownExactlyOnce(helper, category, item)) {
 				return;
 			}
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * Why a world test: a mirror that bakes its cost in at registration is wrong even when it bakes the
+	 * "right" number — the viewer registers before the server's config snapshot arrives — and no
+	 * architecture rule can tell a baked {@code ServerBalance} read from a correct one. This scenario reads
+	 * no balance at all (the gametests run in parallel and the balance is global); the pricing itself is
+	 * {@code RecipeViewerCostTest}'s.
+	 *
+	 * @implements TC-RECIE-013 — a mirrored vanilla smelt carries no cost of its own
+	 *     ({@code VanillaSmeltingMirror.FURNACE_DEFAULT_ENERGY}); the recipe viewer prices it from the
+	 *     server's balance when it draws the card. The mod's own smelting recipes keep the energy they state.
+	 * @covers MOD-743
+	 */
+	public static void tcRecie13_vanillaSmeltMirrorsLeaveTheirCostToTheViewer(GameTestHelper helper) {
+		Collection<RecipeHolder<?>> recipes = helper.getLevel().getServer().getRecipeManager().getRecipes();
+		List<RecipeHolder<AlaProcessingRecipe>> mirrors = VanillaSmeltingMirror.mirrorAll(recipes);
+		// Vanilla alone ships far more; the bound only guards "no mirror was checked at all".
+		if (mirrors.size() < 60) {
+			helper.fail("only " + mirrors.size() + " vanilla smelts were mirrored — nothing left to check");
+			return;
+		}
+		for (RecipeHolder<AlaProcessingRecipe> mirror : mirrors) {
+			if (mirror.value().energy() != VanillaSmeltingMirror.FURNACE_DEFAULT_ENERGY) {
+				helper.fail("mirror " + mirror.id().identifier() + " carries " + mirror.value().energy()
+						+ " EU: the cost was baked in at registration, where the server's balance has not "
+						+ "arrived yet — leave it to the recipe viewer (MOD-743)");
+				return;
+			}
+		}
+		int ownSmelts = 0;
+		for (RecipeHolder<?> holder : recipes) {
+			if (holder.value() instanceof AlaProcessingRecipe recipe && recipe.kind() == ModRecipes.SMELTING) {
+				ownSmelts++;
+				if (recipe.energy() <= 0) {
+					helper.fail("mod smelting recipe " + holder.id().identifier() + " states " + recipe.energy()
+							+ " EU — the viewer would price it as a vanilla smelt");
+					return;
+				}
+			}
+		}
+		if (ownSmelts == 0) {
+			helper.fail("no alaindustrial:smelting recipe loaded — the control half of this test checked nothing");
+			return;
 		}
 		helper.succeed();
 	}

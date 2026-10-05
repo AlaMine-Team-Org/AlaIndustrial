@@ -32,6 +32,8 @@ public final class FluidOutputDisplay extends BasicDisplay {
 	private final int processingTicks;
 	private final int inputAmountMb;
 
+	// Runs in REI's server-side filler: the ticks are the server's own rate, sent over and fixed until
+	// /reload — /ala config reload does not reach them (MOD-743, see MachineRecipeFamily.euPerTick).
 	public FluidOutputDisplay(FluidOutputRecipe recipe) {
 		this(inputEntries(model(recipe)), outputEntries(model(recipe)), recipe.kind().id(),
 				recipe.energy(), recipe.kind().ticksFor(recipe.energy()), recipe.amount());

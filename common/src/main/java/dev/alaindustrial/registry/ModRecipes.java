@@ -1,8 +1,8 @@
 package dev.alaindustrial.registry;
 
 import com.mojang.serialization.MapCodec;
-import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.client.ServerBalance;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
 import dev.alaindustrial.recipe.AlloyRecipeInput;
 import dev.alaindustrial.recipe.AlloyingRecipe;
@@ -95,7 +95,7 @@ public final class ModRecipes {
 	 */
 	public static final class Kind extends MachineRecipeFamily<ProcessingRecipeInput, AlaProcessingRecipe, Kind> {
 		private Kind(String id, int defaultEnergy, Supplier<Block> station) {
-			this(id, defaultEnergy, station, () -> Config.machineEuPerTick);
+			this(id, defaultEnergy, station, ServerBalance::machineEuPerTick);
 		}
 
 		private Kind(String id, int defaultEnergy, Supplier<Block> station, IntSupplier euPerTick) {
@@ -121,7 +121,7 @@ public final class ModRecipes {
 	// own draw (4 EU/t against the shared 2), so the kind must be told — energy / euPerTick is what the
 	// recipe viewers print as the operation's length, and a wrong divisor here shows players a wrong time.
 	public static final Kind CENTRIFUGING = family(new Kind("centrifuging", 800,
-			() -> ModContent.THERMAL_CENTRIFUGE.get(), () -> Config.thermalCentrifugeEuPerTick));
+			() -> ModContent.THERMAL_CENTRIFUGE.get(), ServerBalance::thermalCentrifugeEuPerTick));
 	// Sawmill (MOD-150): one Kind per cutting mode (planks/sticks/slabs/stairs). defaultEnergy 160 =
 	// sawmillDuration (80) × machineEuPerTick (2); every shipped sawing JSON sets energy: 160 explicitly.
 	public static final Kind SAWING_PLANKS = family(new Kind("sawing_planks", 160, () -> ModContent.SAWMILL.get()));
@@ -135,11 +135,11 @@ public final class ModRecipes {
 	// The incubator is the one machine with its own draw (8 EU/t against the shared 2), so these three
 	// carry it: energy / euPerTick is what the recipe viewers show as the operation's length.
 	public static final Kind MUTATION_TRANSFORM = family(new Kind("mutation_transform", 2400,
-			() -> ModContent.INCUBATOR.get(), () -> Config.incubatorEuPerTick));
+			() -> ModContent.INCUBATOR.get(), ServerBalance::incubatorEuPerTick));
 	public static final Kind MUTATION_DUPLICATE = family(new Kind("mutation_duplicate", 4000,
-			() -> ModContent.INCUBATOR.get(), () -> Config.incubatorEuPerTick));
+			() -> ModContent.INCUBATOR.get(), ServerBalance::incubatorEuPerTick));
 	public static final Kind MUTATION_CREATE = family(new Kind("mutation_create", 8000,
-			() -> ModContent.INCUBATOR.get(), () -> Config.incubatorEuPerTick));
+			() -> ModContent.INCUBATOR.get(), ServerBalance::incubatorEuPerTick));
 
 	// Fermenter (MOD-146): organic waste → biomass. The water it drinks and the biofuel it brews are
 	// fixed config costs rather than recipe fields — the mod has no recipe family that mixes items and
@@ -164,7 +164,7 @@ public final class ModRecipes {
 		private FluidKind(String id, int defaultEnergy, Supplier<Block> station,
 				Function<FluidKind<R>, MapCodec<R>> mapCodecFactory,
 				Function<FluidKind<R>, StreamCodec<RegistryFriendlyByteBuf, R>> streamCodecFactory) {
-			super(id, defaultEnergy, station, () -> Config.machineEuPerTick, mapCodecFactory, streamCodecFactory);
+			super(id, defaultEnergy, station, ServerBalance::machineEuPerTick, mapCodecFactory, streamCodecFactory);
 		}
 	}
 
@@ -209,7 +209,7 @@ public final class ModRecipes {
 	// The smelter is one of the few machines with its own draw (8 EU/t against the shared 2), so the kind
 	// carries it: energy / euPerTick is what the recipe viewers show as the operation's length.
 	public static final AlloyKind<AlloyingRecipe> ALLOYING = family(new AlloyKind<>(
-			"alloying", 1200, () -> ModContent.ALLOY_SMELTER.get(), () -> Config.alloySmelterEuPerTick,
+			"alloying", 1200, () -> ModContent.ALLOY_SMELTER.get(), ServerBalance::alloySmelterEuPerTick,
 			kind -> AlloyingRecipe.mapCodec(kind),
 			kind -> AlloyingRecipe.streamCodec(kind)));
 

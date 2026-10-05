@@ -1,8 +1,10 @@
 package dev.alaindustrial.client.compat.jei;
 
 import dev.alaindustrial.block.entity.IncubatorMode;
+import dev.alaindustrial.client.compat.RecipeViewerCost;
 import dev.alaindustrial.client.compat.RecipeViewerLayout;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
+import dev.alaindustrial.registry.ModRecipes;
 import java.util.List;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
@@ -103,8 +105,7 @@ final class AlaProcessingJeiCategory implements IRecipeCategory<RecipeHolder<Ala
 		arrow.draw(graphics, RecipeViewerLayout.ARROW_X, RecipeViewerLayout.ARROW_Y);
 		// The chance suffix only appears where the operation is a gamble (the incubator); without it a
 		// duplicate recipe reads as a guaranteed doubling. Symbols, so no lang key — as with EU and s.
-		String cost = RecipeViewerLayout.withChance(
-				RecipeViewerLayout.costLabel(recipe.energy(), processingTicks(recipe)),
+		String cost = RecipeViewerLayout.withChance(cost(recipe).label(),
 				IncubatorMode.chanceOf(recipe.kind(), recipe.chance()));
 		int x = (RecipeViewerLayout.WIDTH - Minecraft.getInstance().font.width(cost)) / 2;
 		graphics.text(Minecraft.getInstance().font, Component.literal(cost), x,
@@ -117,11 +118,14 @@ final class AlaProcessingJeiCategory implements IRecipeCategory<RecipeHolder<Ala
 	}
 
 	/**
-	 * From the recipe family's own EU rate — see {@link dev.alaindustrial.registry.ModRecipes.Kind#ticksFor(int)}.
-	 * Dividing by the shared machine rate here used to print the incubator's operations four times too long.
+	 * EU and time of one operation, resolved now rather than when JEI registered the card (MOD-743): a
+	 * mirrored vanilla smelt carries no cost of its own, and the family's draw per tick is the server's.
+	 * The time divides by the recipe family's own rate — the shared machine rate used to print the
+	 * incubator's operations four times too long.
 	 */
-	private static int processingTicks(AlaProcessingRecipe recipe) {
-		return recipe.kind().ticksFor(recipe.energy());
+	private static RecipeViewerCost cost(AlaProcessingRecipe recipe) {
+		return RecipeViewerCost.resolve(recipe.kind() == ModRecipes.SMELTING, recipe.energy(),
+				recipe.kind().euPerTick());
 	}
 
 }
