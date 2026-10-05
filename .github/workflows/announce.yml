@@ -33,6 +33,11 @@ on:
         required: false
         type: boolean
         default: false
+      media:
+        description: 'Optional image for the post: a release-media/ path on the branch the run uses. Empty = the release image of the version'
+        required: false
+        type: string
+        default: ''
 
 permissions:
   contents: read
@@ -70,6 +75,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           VERSION_INPUT: ${{ inputs.version }}
+          MEDIA_INPUT: ${{ inputs.media || '' }}
         run: |
           set -euo pipefail
           case "$VERSION_INPUT" in
@@ -108,7 +114,16 @@ jobs:
               esac
             done
           fi
-          if [ -n "$MEDIA" ]; then
+          if [ -n "${MEDIA_INPUT:-}" ]; then
+            # A news post may carry its own picture: a file under release-media/ on the run's branch.
+            case "$MEDIA_INPUT" in
+              release-media/*.png|release-media/*.jpg|release-media/*.jpeg|release-media/*.webp|release-media/*.gif) ;;
+              *) echo "::error::media must be a png/jpg/webp/gif under release-media/ (got '$MEDIA_INPUT')"; exit 1 ;;
+            esac
+            [ -f "$MEDIA_INPUT" ] || { echo "::error::$MEDIA_INPUT is not on this branch"; exit 1; }
+            cp "$MEDIA_INPUT" "media-$(basename "$MEDIA_INPUT")"
+            echo "MEDIA=media-$(basename "$MEDIA_INPUT")" >> "$GITHUB_ENV"
+          elif [ -n "$MEDIA" ]; then
             git show "$MT:$MEDIA" > "media-$(basename "$MEDIA")"
             echo "MEDIA=media-$(basename "$MEDIA")" >> "$GITHUB_ENV"
           fi
