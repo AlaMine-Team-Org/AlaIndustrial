@@ -184,11 +184,10 @@ def main() -> int:
         [{"source_project": "ACLWFBlU", "metric_kind": "downloads", "downloads": 70}],
         [],
         [{"source_project": "ACLWFBlU", "metric_kind": "downloads", "downloads": 64},
-         {"source_project": "other", "metric_kind": "downloads", "downloads": 9},
          {"source_project": "ACLWFBlU", "metric_kind": "views", "views": 300}],
     ], "project_events": []}
     parsed = module.parse_modrinth_history(answer, datetime.date(2026, 10, 1))
-    check("days from the start, empty slice is zero, other rows ignored",
+    check("days from the start, empty slice is zero, other metrics ignored",
           parsed == {"2026-10-01": 70, "2026-10-02": 0, "2026-10-03": 64}, str(parsed))
     lead = module.parse_modrinth_history({"metrics": [[], []] + answer["metrics"]},
                                          datetime.date(2026, 9, 29))

@@ -133,7 +133,7 @@ def fetch_modrinth_history() -> dict:
     slices = data.get("metrics") or []
     rows = [row for slice_ in slices for row in slice_]
     print(f"INFO  modrinth analytics answer: {len(slices)} slice(s), {len(rows)} row(s)"
-          + (f", first row keys {sorted(rows[0])}" if rows else ""))
+          + (f", first row {rows[0]}" if rows else ""))
     return parse_modrinth_history(data, start)
 
 
@@ -142,9 +142,11 @@ def parse_modrinth_history(data: dict, start: datetime.date) -> dict:
     out = {}
     for index, slice_ in enumerate(data["metrics"]):
         day = (start + datetime.timedelta(days=index)).isoformat()
+        # The query names one project, so every downloads row is ours. Filtering on
+        # source_project as well dropped them all: the answer spells the id in a form of
+        # its own (2026-10-05: 89 rows read, 0 kept).
         downloads = sum(int(row.get("downloads", 0)) for row in slice_
-                        if row.get("metric_kind") == "downloads"
-                        and row.get("source_project") == MODRINTH_ID)
+                        if row.get("metric_kind") == "downloads")
         # The query starts on a fixed date long before the project existed: the empty
         # days before its first download are not history, and restoring them would
         # draw months of zeros at the start of the chart.
