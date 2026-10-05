@@ -1,7 +1,7 @@
 {
   "type": "alaindustrial:vulcanizing",
   "ingredients": [
-    "alaindustrial:raw_rubber",
+    "#alaindustrial:vulcanizable_rubbers",
     "#c:dusts/sulfur"
   ],
   "input_counts": [

@@ -152,7 +152,13 @@ public final class RecipeViewerInfo {
 				// player has no way to learn that charging a blank is what makes them.
 				crystalPage(ModContent.ENERGY_CRYSTAL, "energy_crystal"),
 				crystalPage(ModContent.LAPOTRON_CRYSTAL, "lapotron_crystal"),
-				crystalPage(ModContent.RESONANT_CRYSTAL, "resonant_crystal"));
+				crystalPage(ModContent.RESONANT_CRYSTAL, "resonant_crystal"),
+				// MOD-746: rubber is a two-step chain with two sources, and the Vulcanizer also takes another
+				// mod's rubber and sulfur. The recipe cards show each step alone; this page shows the chain.
+				new Entry(ModContent.RUBBER, "item.alaindustrial.rubber", List.of(
+						Line.of("jei.alaindustrial.rubber.line1"),
+						Line.of("jei.alaindustrial.rubber.line2"),
+						Line.of("jei.alaindustrial.rubber.line3"))));
 	}
 
 	/**

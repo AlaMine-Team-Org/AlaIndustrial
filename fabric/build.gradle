@@ -87,6 +87,17 @@ dependencies {
     // is unchanged, so the compat bridge and dev-run button work identically.
     compileOnly("maven.modrinth:mOgUt4GM:${modmenu_version}")
     runtimeOnly("maven.modrinth:mOgUt4GM:${modmenu_version}")
+
+    // Tech Reborn in the dev client, opt-in only (MOD-746): `-PwithTechReborn` puts it on the run
+    // classpath to try its rubber in our Vulcanizer. Off by default, so the gametest lanes and CI
+    // never load a second tech mod's worldgen and recipes. Nothing of it reaches the shipped jar; the
+    // mod names its rubber only as an optional tag entry. Fabric-only: Tech Reborn has no NeoForge build.
+    if (project.hasProperty('withTechReborn')) {
+        runtimeOnly("maven.modrinth:techreborn:${techreborn_version}") {
+            exclude group: 'net.fabricmc.fabric-api'
+            exclude group: 'net.fabricmc', module: 'fabric-loader'
+        }
+    }
 }
 
 loom {

@@ -609,6 +609,13 @@ public final class VulcanizerScenarios {
 			helper.fail("vulcanizer input/output slot predicates are not separated");
 			return;
 		}
+		// MOD-746: the rubber slot reads a tag that takes another mod's finished rubber, but never the
+		// mod's own — or rubber would loop through the machine and triple on the electric heater.
+		if (be.canPlaceItem(VulcanizerBlockEntity.RAW_RUBBER_SLOT, rubber)
+				|| be.canPlaceItemThroughFace(VulcanizerBlockEntity.RAW_RUBBER_SLOT, rubber, Direction.UP)) {
+			helper.fail("vulcanizer accepts its own finished rubber as input: a dupe loop");
+			return;
+		}
 		if (be.getSlotsForFace(Direction.DOWN).length != 0
 				|| be.canTakeItemThroughFace(VulcanizerBlockEntity.OUTPUT_SLOT, rubber, Direction.DOWN)) {
 			helper.fail("the heat-facing bottom must expose no automation slots");
