@@ -9,9 +9,20 @@ Sources:
 
   * Modrinth  — public API, no key: project totals, followers and per-version
                 downloads (the latter give the Fabric / NeoForge split).
-  * CurseForge — official API when CURSEFORGE_API_KEY is set (header x-api-key,
-                a Core API key from the CurseForge for Studios console — NOT the
-                upload token), otherwise the keyless cfwidget mirror.
+  * CurseForge — the counters CurseForge's own site serves for every file of the
+                project, summed (MOD-749; keyless); then the official API when
+                CURSEFORGE_API_KEY is set (header x-api-key, a Core API key from the
+                CurseForge for Studios console — NOT the upload token); then the
+                keyless cfwidget mirror. The per-file counters also go to
+                data/curseforge-files.json, so a jump can be traced to a version.
+
+Besides the cumulative snapshots the file carries `daily` (MOD-749): the per-day
+figures the site and the Telegram report draw, computed here once so the two can
+never disagree. Modrinth days come from its analytics (exact calendar days);
+CurseForge has no day-by-day figure at all and releases its counter in batches —
+a few days barely move, then one day catches them all up (2026-10-04: +514 after
++64, +38, +31) — so its days are smoothed and marked as estimates. Totals and the
+sum over any stretch longer than a week are unchanged.
 
 A source that fails does not break the run: the previous known total is carried
 over, so the chart never shows a fake dip. The script exits non-zero only if it
@@ -25,8 +36,10 @@ import argparse
 import datetime
 import http.client
 import json
+import math
 import os
 import pathlib
+import statistics
 import sys
 import urllib.request
 
@@ -34,6 +47,18 @@ import urllib.request
 # slots — 00:37 and the 06:43 catch-up — sit below it; a manual run later in the day
 # needs --force, so it cannot silently mix today's downloads into yesterday.
 REWRITE_WINDOW_HOUR = 8
+
+#: CurseForge batching (MOD-749). A day whose increase exceeds SPIKE_RATIO times the
+#: median of the previous SPIKE_BASELINE_DAYS is a catch-up, not a rush: no release has
+#: ever explained one (0.1.195 drew 44 downloads in the day that showed +514). Its excess
+#: first fills the days of the previous SPIKE_LOOKBACK_DAYS that stayed under the
+#: median, then whatever is left is spread evenly over that week.
+SPIKE_RATIO = 2.0
+SPIKE_BASELINE_DAYS = 14
+SPIKE_LOOKBACK_DAYS = 7
+#: How many days of per-file CurseForge counters data/curseforge-files.json keeps.
+CF_FILES_KEEP_DAYS = 30
+CF_PAGE_SIZE = 50
 
 MODRINTH_ID = "ACLWFBlU"
 CURSEFORGE_ID = 1597723
@@ -117,15 +142,180 @@ def backfill(series: list, history: dict, today: str) -> list:
     return sorted(series + restored, key=lambda row: row[0])
 
 
-def fetch_curseforge() -> int:
-    """Total downloads. Official API when a key is present, cfwidget otherwise."""
+def fetch_curseforge_files() -> dict:
+    """Every file of the project with its download counter, from CurseForge's own site.
+
+    The project total is the sum of these counters (checked 2026-10-05: 427 files,
+    8041, exactly what cfwidget reported). The endpoint pages with `pageIndex` and
+    silently ignores any other paging parameter, so a page that repeats an id it has
+    already seen is a paging failure, not more files — raise instead of looping.
+    """
+    files: dict[str, dict] = {}
+    for page in range(1000):
+        data = get_json(f"https://www.curseforge.com/api/v1/mods/{CURSEFORGE_ID}/files"
+                        f"?pageSize={CF_PAGE_SIZE}&pageIndex={page}"
+                        "&sort=dateCreated&sortDescending=true")
+        batch, total = data["data"], int(data["pagination"]["totalCount"])
+        for item in batch:
+            key = str(item["id"])
+            if key in files:
+                raise ValueError(f"curseforge site paging repeated file {key} on page {page}")
+            files[key] = {"name": str(item["displayName"]), "downloads": int(item["totalDownloads"])}
+        if len(files) >= total or not batch:
+            break
+    if len(files) != total:
+        raise ValueError(f"curseforge site listed {len(files)} of {total} files")
+    return files
+
+
+def fetch_curseforge() -> tuple[int, dict | None, str]:
+    """(total, per-file counters or None, source name), first source that answers."""
+    failures = []
+    try:
+        files = fetch_curseforge_files()
+        return sum(f["downloads"] for f in files.values()), files, "curseforge-site"
+    except SOURCE_ERRORS as exc:
+        failures.append(f"site: {exc}")
     key = os.environ.get("CURSEFORGE_API_KEY", "").strip()
     if key:
-        data = get_json(f"https://api.curseforge.com/v1/mods/{CURSEFORGE_ID}",
-                        {"x-api-key": key, "Accept": "application/json"})
-        return int(data["data"]["downloadCount"])
+        try:
+            data = get_json(f"https://api.curseforge.com/v1/mods/{CURSEFORGE_ID}",
+                            {"x-api-key": key, "Accept": "application/json"})
+            return int(data["data"]["downloadCount"]), None, "curseforge-api"
+        except SOURCE_ERRORS as exc:
+            failures.append(f"api: {exc}")
+    for message in failures:
+        print(f"WARN  curseforge {message} — falling back", file=sys.stderr)
     data = get_json(f"https://api.cfwidget.com/{CURSEFORGE_ID}")
-    return int(data["downloads"]["total"])
+    return int(data["downloads"]["total"]), None, "cfwidget"
+
+
+# ── per-day figures (MOD-749) ─────────────────────────────────────────────────
+
+def _js_round(value: float) -> int:
+    """Math.round, which the site used before: halves go up, never to even."""
+    return int(math.floor(value + 0.5))
+
+
+def _spread(series: list, slot: int) -> list:
+    """Cumulative snapshots -> [date, per-day float or None, spread over a gap?].
+
+    A missing snapshot day shares the increase of its gap evenly, as the site always
+    did: a recovered collection must not draw a spike."""
+    out = []
+    for prev, cur in zip(series, series[1:]):
+        d0 = datetime.date.fromisoformat(prev[0])
+        d1 = datetime.date.fromisoformat(cur[0])
+        gap = max(1, (d1 - d0).days)
+        per = None if prev[slot] is None or cur[slot] is None else (cur[slot] - prev[slot]) / gap
+        for back in range(gap - 1, -1, -1):
+            out.append([(d1 - datetime.timedelta(days=back)).isoformat(), per, gap > 1])
+    return out
+
+
+def smooth_batches(values: list) -> tuple[list, list]:
+    """Spread CurseForge's catch-up days back over the week they belong to.
+
+    `values` is per-day floats (None = unknown, left alone). Returns the smoothed
+    values and a flag per day: True where the figure was moved. The sum over each
+    spike's week is preserved exactly; only its distribution changes."""
+    out = list(values)
+    moved = [False] * len(out)
+    for t, value in enumerate(out):
+        if value is None:
+            continue
+        history = [v for v in values[max(0, t - SPIKE_BASELINE_DAYS):t] if v is not None]
+        if len(history) < 5:
+            continue
+        base = statistics.median(history)
+        if base <= 0 or value <= SPIKE_RATIO * base:
+            continue
+        week = [i for i in range(max(0, t - SPIKE_LOOKBACK_DAYS), t) if out[i] is not None]
+        excess = value - base
+        # 1. the days that stalled get back to the median first
+        deficit = {i: base - out[i] for i in week if out[i] < base}
+        owed = sum(deficit.values())
+        fill = min(excess, owed)
+        if fill > 0:
+            for i, gap in deficit.items():
+                out[i] += fill * gap / owed
+                moved[i] = True
+            excess -= fill
+        # 2. whatever is still left belongs to the week as a whole
+        if excess > 0 and week:
+            share = excess / (len(week) + 1)
+            for i in week:
+                out[i] += share
+                moved[i] = True
+            excess = share
+        out[t] = base + excess
+        moved[t] = True
+    return out, moved
+
+
+def _round_keeping_sum(values: list) -> list:
+    """Whole numbers whose running total follows the exact one (None passes through).
+
+    Rounding each day on its own lets the sum drift by a few downloads; rounding the
+    running total and taking differences keeps every stretch's sum exact."""
+    out, exact, shown = [], 0.0, 0
+    for value in values:
+        if value is None:
+            out.append(None)
+            continue
+        exact += value
+        step = _js_round(exact) - shown
+        shown += step
+        out.append(step)
+    return out
+
+
+def build_daily(series: list, history: dict, today: str) -> list:
+    """[date, modrinth, curseforge or None, flags] per closed day, oldest first.
+
+    flags: "e" = the CurseForge figure is an estimate (batch smoothed or shared over
+    a missed snapshot), "g" = the Modrinth figure was shared over a missed snapshot.
+    A None CurseForge slot means "unknown that day" — the site counts Modrinth alone
+    and says so. Modrinth's analytics gives exact calendar days; it replaces the
+    snapshot difference wherever it has the (closed) day."""
+    mr = _spread(series, 1)
+    cf = _spread(series, 2)
+    cf_values, cf_moved = smooth_batches([row[1] for row in cf])
+    cf_values = _round_keeping_sum(cf_values)
+    rows = []
+    for (date, mr_value, mr_gap), (_, _, cf_gap), cf_value, moved in zip(mr, cf, cf_values, cf_moved):
+        if date >= today:
+            continue
+        exact = history.get(date) if date < today else None
+        flags = ""
+        if cf_value is not None and (moved or cf_gap):
+            flags += "e"
+        if exact is None and mr_gap:
+            flags += "g"
+        rows.append([date,
+                     int(exact) if exact is not None else max(0, _js_round(mr_value or 0)),
+                     None if cf_value is None else max(0, cf_value),
+                     flags])
+    return rows
+
+
+def write_curseforge_files(path: pathlib.Path, day: str, files: dict, stamp: str) -> None:
+    """Keep CF_FILES_KEEP_DAYS days of per-file counters, one day per line."""
+    data = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+    names = dict(data.get("names", {}))
+    days = dict(data.get("days", {}))
+    for key, item in files.items():
+        names[key] = item["name"]
+    days[day] = {key: item["downloads"] for key, item in sorted(files.items(), key=lambda kv: int(kv[0]))}
+    keep = sorted(days)[-CF_FILES_KEEP_DAYS:]
+    days = {d: days[d] for d in keep}
+    live = {key for counters in days.values() for key in counters}
+    names = {key: names[key] for key in sorted(names, key=int) if key in live}
+    rows = ",\n  ".join(json.dumps(d) + ": " + json.dumps(days[d], separators=(",", ":")) for d in keep)
+    text = ("{\n \"generated\": " + json.dumps(stamp) + ",\n \"names\": "
+            + json.dumps(names, ensure_ascii=False, separators=(",", ":"))
+            + ",\n \"days\": {\n  " + rows + "\n }\n}\n")
+    path.write_text(text, encoding="utf-8", newline="\n")
 
 
 def dump(payload: dict) -> str:
@@ -135,10 +325,15 @@ def dump(payload: dict) -> str:
     file is thousands of lines and each daily commit shows a wall of diff. One
     line per day keeps the history readable in `git log -p`.
     """
-    head = json.dumps({k: v for k, v in payload.items() if k != "series"},
+    lists = ("series", "daily")
+    head = json.dumps({k: v for k, v in payload.items() if k not in lists},
                       ensure_ascii=False, indent=1)[1:-1].rstrip().rstrip(",")
-    rows = ",\n  ".join(json.dumps(point, ensure_ascii=False) for point in payload["series"])
-    return "{" + head + ",\n \"series\": [\n  " + rows + "\n ]\n}\n"
+    parts = []
+    for name in lists:
+        if name in payload:
+            rows = ",\n  ".join(json.dumps(point, ensure_ascii=False) for point in payload[name])
+            parts.append("\"" + name + "\": [\n  " + rows + "\n ]")
+    return "{" + head + ",\n " + ",\n ".join(parts) + "\n}\n"
 
 
 def main() -> int:
@@ -183,13 +378,13 @@ def main() -> int:
         print(f"OK    {day} already recorded in full — nothing to do")
         return 0
 
-    modrinth, cf_total, failures = None, None, []
+    modrinth, cf_total, cf_files, cf_source, failures = None, None, None, None, []
     try:
         modrinth = fetch_modrinth()
     except SOURCE_ERRORS as exc:
         failures.append(f"modrinth: {exc}")
     try:
-        cf_total = fetch_curseforge()
+        cf_total, cf_files, cf_source = fetch_curseforge()
     except SOURCE_ERRORS as exc:
         failures.append(f"curseforge: {exc}")
 
@@ -232,13 +427,17 @@ def main() -> int:
 
     # Restore the days that predate the first snapshot (once — later runs find them
     # already present and change nothing).
+    history: dict = {}
     try:
-        series = backfill(series, fetch_modrinth_history(), now.date().isoformat())
+        history = fetch_modrinth_history()
+        series = backfill(series, history, now.date().isoformat())
     except SOURCE_ERRORS as exc:
         print(f"WARN  backfill skipped: {exc}", file=sys.stderr)
 
     totals = dict(previous.get("totals", {}))
     totals.update({"modrinth": mr_total, "curseforge": cf_total})
+    if cf_source:
+        totals["curseforge_source"] = cf_source
     if modrinth:
         loaders = modrinth["loaders"]
         totals["followers"] = modrinth["followers"]
@@ -246,14 +445,21 @@ def main() -> int:
         totals["loaders"] = {"fabric": loaders.get("fabric", 0),
                              "neoforge": loaders.get("neoforge", 0)}
 
+    stamp = (datetime.datetime.now(datetime.timezone.utc)
+             .replace(microsecond=0).isoformat().replace("+00:00", "Z"))
     payload = {
-        "generated": datetime.datetime.now(datetime.timezone.utc)
-                     .replace(microsecond=0).isoformat().replace("+00:00", "Z"),
+        "generated": stamp,
         "totals": totals,
         "series": series,
+        "daily": build_daily(series, history, now.date().isoformat()),
     }
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(dump(payload), encoding="utf-8")
+    # Per-file counters are filed under the day the series row describes, and only
+    # when this run wrote that row: a midday run must not pin today's counters on
+    # yesterday here either.
+    if cf_files and series and series[-1][0] == day and series[-1][2] == cf_total:
+        write_curseforge_files(out.with_name("curseforge-files.json"), day, cf_files, stamp)
     # Report what the FILE ends with, not what was fetched: the two differ whenever a
     # run declines to touch the history (a midday run, a day already recorded), and a
     # log line quoting the fetched numbers would read as if they had been written.

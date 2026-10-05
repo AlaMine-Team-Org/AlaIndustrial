@@ -86,7 +86,9 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/stats.json
+          # data/ holds only what this workflow writes: stats.json and, since MOD-749,
+          # curseforge-files.json (per-file counters, kept for a month).
+          git add data/
           if git diff --staged --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "no change — nothing to commit"
