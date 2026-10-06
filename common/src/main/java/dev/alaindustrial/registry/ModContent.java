@@ -9,6 +9,7 @@ import dev.alaindustrial.menu.EnergyCondenserMenu;
 import dev.alaindustrial.menu.MobRepellerHvMenu;
 import dev.alaindustrial.menu.MobRepellerMenu;
 import dev.alaindustrial.menu.MobRepellerMvMenu;
+import dev.alaindustrial.menu.MobWheelMenu;
 import dev.alaindustrial.menu.MonitorCoreMenu;
 import dev.alaindustrial.menu.CesuMenu;
 import dev.alaindustrial.menu.ChargePadMenu;
@@ -138,6 +139,12 @@ public final class ModContent {
 	public static Supplier<Block> LIGHTNING_ROD_GENERATOR = unbound("LIGHTNING_ROD_GENERATOR");
 	/** MOD-479 — the creative energy source (a QA instrument, not survival content). */
 	public static Supplier<Block> CREATIVE_ENERGY_SOURCE = unbound("CREATIVE_ENERGY_SOURCE");
+	/** MOD-763 — the mob wheel: drive, frame post, running wheel, gate and the invisible assembled cell. */
+	public static Supplier<Block> MOB_WHEEL_CONTROLLER = unbound("MOB_WHEEL_CONTROLLER");
+	public static Supplier<Block> MOB_WHEEL_FRAME = unbound("MOB_WHEEL_FRAME");
+	public static Supplier<Block> MOB_WHEEL_ROTOR = unbound("MOB_WHEEL_ROTOR");
+	public static Supplier<Block> MOB_WHEEL_GATE = unbound("MOB_WHEEL_GATE");
+	public static Supplier<Block> MOB_WHEEL_CELL = unbound("MOB_WHEEL_CELL");
 	public static Supplier<Block> PUMP = unbound("PUMP");
 	public static Supplier<Block> GARDEN_DRONE_STATION = unbound("GARDEN_DRONE_STATION");
 	public static Supplier<Block> FLUID_TANK = unbound("FLUID_TANK");
@@ -701,6 +708,10 @@ public final class ModContent {
 	public static Supplier<BlockItem> GENERATOR_ITEM = unbound("GENERATOR_ITEM");
 	public static Supplier<BlockItem> GEOTHERMAL_GENERATOR_ITEM = unbound("GEOTHERMAL_GENERATOR_ITEM");
 	public static Supplier<BlockItem> WATER_MILL_ITEM = unbound("WATER_MILL_ITEM");
+	public static Supplier<BlockItem> MOB_WHEEL_CONTROLLER_ITEM = unbound("MOB_WHEEL_CONTROLLER_ITEM");
+	public static Supplier<BlockItem> MOB_WHEEL_FRAME_ITEM = unbound("MOB_WHEEL_FRAME_ITEM");
+	public static Supplier<BlockItem> MOB_WHEEL_ROTOR_ITEM = unbound("MOB_WHEEL_ROTOR_ITEM");
+	public static Supplier<BlockItem> MOB_WHEEL_GATE_ITEM = unbound("MOB_WHEEL_GATE_ITEM");
 	public static Supplier<BlockItem> WIND_MILL_ITEM = unbound("WIND_MILL_ITEM");
 	public static Supplier<BlockItem> HIGH_ALTITUDE_WIND_MILL_ITEM = unbound("HIGH_ALTITUDE_WIND_MILL_ITEM");
 	public static Supplier<BlockItem> STORM_WIND_MILL_ITEM = unbound("STORM_WIND_MILL_ITEM");
@@ -844,6 +855,7 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> GENERATOR_BE = unbound("GENERATOR_BE");
 	public static Supplier<BlockEntityType<?>> GEOTHERMAL_GENERATOR_BE = unbound("GEOTHERMAL_GENERATOR_BE");
 	public static Supplier<BlockEntityType<?>> WATER_MILL_BE = unbound("WATER_MILL_BE");
+	public static Supplier<BlockEntityType<?>> MOB_WHEEL_CONTROLLER_BE = unbound("MOB_WHEEL_CONTROLLER_BE");
 	public static Supplier<BlockEntityType<?>> WIND_MILL_BE = unbound("WIND_MILL_BE");
 	public static Supplier<BlockEntityType<?>> HIGH_ALTITUDE_WIND_MILL_BE = unbound("HIGH_ALTITUDE_WIND_MILL_BE");
 	public static Supplier<BlockEntityType<?>> STORM_WIND_MILL_BE = unbound("STORM_WIND_MILL_BE");
@@ -981,6 +993,8 @@ public final class ModContent {
 	public static Supplier<MenuType<GardenDroneStationMenu>> GARDEN_DRONE_STATION_MENU =
 			unbound("GARDEN_DRONE_STATION_MENU");
 	public static Supplier<MenuType<WaterMillMenu>> WATER_MILL_MENU = unbound("WATER_MILL_MENU");
+	public static Supplier<MenuType<MobWheelMenu>> MOB_WHEEL_CONTROLLER_MENU =
+			unbound("MOB_WHEEL_CONTROLLER_MENU");
 	public static Supplier<MenuType<WindMillMenu>> WIND_MILL_MENU = unbound("WIND_MILL_MENU");
 	public static Supplier<MenuType<HighAltitudeWindMillMenu>> HIGH_ALTITUDE_WIND_MILL_MENU =
 			unbound("HIGH_ALTITUDE_WIND_MILL_MENU");

@@ -484,6 +484,43 @@
           ]
         },
         {
+          "id": "mob_wheel_controller",
+          "title": "दौड़ पहिये की ड्राइव",
+          "icon": "alaindustrial:mob_wheel_controller",
+          "pages": [
+            {
+              "type": "text",
+              "title": "दौड़ पहिये की ड्राइव",
+              "text": "खेल की शुरुआत का 3×3×3 LV जनरेटर — हैम्स्टर जैसा लकड़ी का पहिया, जिसके अंदर एक पकड़ा हुआ जीव दौड़ता है। न ईंधन, न बफ़र; धावक थकता है, आराम करता है और नाँद के चारे से फिर ताज़ा हो जाता है।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 0–12 EU/t"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "minecraft:oak_planks",
+                "alaindustrial:wooden_gear",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "minecraft:copper_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:mob_wheel_controller",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "charge_pad",
           "title": "चार्जिंग स्टेशन",
           "icon": "alaindustrial:charge_pad",
@@ -3470,9 +3507,9 @@
               "title": "रेसिपी",
               "recipe_type": "आकारित क्राफ्टिंग",
               "grid": [
-                "#c:glass_panes",
+                "minecraft:glass_pane",
                 "alaindustrial:resonant_crystal",
-                "#c:glass_panes",
+                "minecraft:glass_pane",
                 "alaindustrial:resonance_coil",
                 "alaindustrial:reactor_circuit",
                 "alaindustrial:resonance_coil",
@@ -3664,9 +3701,9 @@
                 "",
                 "alaindustrial:copper_coil",
                 "",
-                "#c:glass_panes",
+                "minecraft:glass_pane",
                 "alaindustrial:empty_chip",
-                "#c:glass_panes",
+                "minecraft:glass_pane",
                 "",
                 "minecraft:redstone",
                 ""
@@ -4009,6 +4046,36 @@
                 ""
               ],
               "result_id": "alaindustrial:iron_gear",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "module_blank",
+          "title": "खाली मॉड्यूल",
+          "icon": "alaindustrial:module_blank",
+          "pages": [
+            {
+              "type": "text",
+              "title": "खाली मॉड्यूल",
+              "text": "खाली मॉड्यूल — वस्तु अपग्रेड का साझा आधार — और उससे बना पहला मॉड्यूल, विद्युत चुंबक का चुंबक फ़िल्टर मॉड्यूल।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "",
+                "minecraft:iron_ingot",
+                "",
+                "minecraft:redstone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:redstone",
+                "",
+                "minecraft:iron_ingot",
+                ""
+              ],
+              "result_id": "alaindustrial:module_blank",
               "result_count": 1
             }
           ]
@@ -4557,13 +4624,13 @@
           ]
         },
         {
-          "id": "fluxweave_chestplate",
-          "title": "फ्लक्स छातीकवच",
+          "id": "fluxweave_armor",
+          "title": "फ्लक्स कवच",
           "icon": "alaindustrial:fluxweave_chestplate",
           "pages": [
             {
               "type": "text",
-              "title": "फ्लक्स छातीकवच",
+              "title": "फ्लक्स कवच",
               "text": "मॉड का पहला पूरा EU कवच सेट — फ्लक्स कपड़े का टोप, छातीकवच, टाँगकवच और जूते; चार्ज सुविधाएँ चालू करता है, सुरक्षा कभी बंद नहीं करता।"
             },
             {
@@ -4573,24 +4640,6 @@
                 "ऊर्जा: 15 000 EU",
                 "बफ़र: 15 000 EU"
               ]
-            },
-            {
-              "type": "recipe",
-              "title": "रेसिपी",
-              "recipe_type": "आकारित क्राफ्टिंग",
-              "grid": [
-                "alaindustrial:fluxweave_cloth",
-                "",
-                "alaindustrial:fluxweave_cloth",
-                "alaindustrial:fluxweave_cloth",
-                "alaindustrial:electronic_circuit",
-                "alaindustrial:fluxweave_cloth",
-                "alaindustrial:tempered_iron",
-                "alaindustrial:battery",
-                "alaindustrial:tempered_iron"
-              ],
-              "result_id": "alaindustrial:fluxweave_chestplate",
-              "result_count": 1
             }
           ]
         },
@@ -4785,7 +4834,7 @@
             {
               "type": "text",
               "title": "रोधक छातीकवच",
-              "text": "स्लाइम में डुबोया चमड़े का कवच — हुड, जैकेट, पतलून और जूते, जो खुली केबल का झटका सोख लेते हैं और ऐसा करते हुए टिकाऊपन खर्च करते हैं।"
+              "text": "स्लाइम में डुबोया चमड़े का कवच — टोप, छातीकवच, टाँगकवच और जूते, जो खुली केबल का झटका सोख लेते हैं और ऐसा करते हुए टिकाऊपन खर्च करते हैं।"
             },
             {
               "type": "stats",
@@ -5258,6 +5307,158 @@
           ]
         },
         {
+          "id": "fluxweave_boots",
+          "title": "फ्लक्स जूते",
+          "icon": "alaindustrial:fluxweave_boots",
+          "pages": [
+            {
+              "type": "text",
+              "title": "फ्लक्स जूते",
+              "text": "फ्लक्स EU जूते — चार्ज रहने पर गिरने की क्षति आधी कर देते हैं; सुरक्षा लोहे के जूतों के स्तर पर ही रहती है।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 15 000 EU",
+                "बफ़र: 15 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:battery",
+                "alaindustrial:fluxweave_cloth",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:fluxweave_boots",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluxweave_chestplate",
+          "title": "फ्लक्स छातीकवच",
+          "icon": "alaindustrial:fluxweave_chestplate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "फ्लक्स छातीकवच",
+              "text": "फ्लक्स EU छातीकवच — चार्ज रहने पर भारी वार नरम करता है और धक्के का प्रतिरोध करता है; सुरक्षा लोहे के छातीकवच के स्तर पर ही रहती है।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 15 000 EU",
+                "बफ़र: 15 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:fluxweave_cloth",
+                "",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:battery",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:fluxweave_chestplate",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluxweave_leggings",
+          "title": "फ्लक्स टाँगकवच",
+          "icon": "alaindustrial:fluxweave_leggings",
+          "pages": [
+            {
+              "type": "text",
+              "title": "फ्लक्स टाँगकवच",
+              "text": "फ्लक्स EU टाँगकवच — चार्ज रहने पर दौड़ की गति बढ़ाता है और कदम-सहायता चालू कर सकता है; सुरक्षा लोहे के टाँगकवच के स्तर पर ही रहती है।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 15 000 EU",
+                "बफ़र: 15 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:battery",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:fluxweave_leggings",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluxweave_helmet",
+          "title": "फ्लक्स टोप",
+          "icon": "alaindustrial:fluxweave_helmet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "फ्लक्स टोप",
+              "text": "फ्लक्स EU टोप — चार्ज रहने पर पानी के नीचे साँस और तेज़ तैराकी देता है; सुरक्षा लोहे के टोप के स्तर पर ही रहती है।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 15 000 EU",
+                "बफ़र: 15 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:battery",
+                "alaindustrial:tempered_iron",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:fluxweave_helmet",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "shielding_chestplate",
           "title": "परिरक्षण छातीकवच",
           "icon": "alaindustrial:shielding_chestplate",
@@ -5265,7 +5466,7 @@
             {
               "type": "text",
               "title": "परिरक्षण छातीकवच",
-              "text": "विकिरण-रोधी सेट — चमड़े, रबर और पीले रंग से बने हुड, जैकेट, पतलून और जूते; यह मात्रा घटाता है, ऐसा करते हुए टिकाऊपन खर्च करता है और पहनने वाले को पूरी तरह ढक देता है।"
+              "text": "विकिरण-रोधी सेट — चमड़े, रबर और पीले रंग से बने टोप, छातीकवच, टाँगकवच और जूते; यह मात्रा घटाता है, ऐसा करते हुए टिकाऊपन खर्च करता है और पहनने वाले को पूरी तरह ढक देता है।"
             },
             {
               "type": "stats",

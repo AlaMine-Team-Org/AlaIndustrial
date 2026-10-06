@@ -484,6 +484,43 @@
           ]
         },
         {
+          "id": "mob_wheel_controller",
+          "title": "跑轮驱动器",
+          "icon": "alaindustrial:mob_wheel_controller",
+          "pages": [
+            {
+              "type": "text",
+              "title": "跑轮驱动器",
+              "text": "早期的 3×3×3 LV 发电机——像仓鼠跑轮一样的木制轮子，里面跑着一只被捕获的生物。没有燃料，也没有缓存；跑者会疲劳、休息，并靠饲料槽里的饲料恢复体力。"
+            },
+            {
+              "type": "stats",
+              "title": "属性",
+              "lines": [
+                "能量：0–12 EU/t"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "minecraft:oak_planks",
+                "alaindustrial:wooden_gear",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "minecraft:copper_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:mob_wheel_controller",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "charge_pad",
           "title": "充电站",
           "icon": "alaindustrial:charge_pad",
@@ -3470,9 +3507,9 @@
               "title": "配方",
               "recipe_type": "有序合成",
               "grid": [
-                "#c:glass_panes",
+                "minecraft:glass_pane",
                 "alaindustrial:resonant_crystal",
-                "#c:glass_panes",
+                "minecraft:glass_pane",
                 "alaindustrial:resonance_coil",
                 "alaindustrial:reactor_circuit",
                 "alaindustrial:resonance_coil",
@@ -3664,9 +3701,9 @@
                 "",
                 "alaindustrial:copper_coil",
                 "",
-                "#c:glass_panes",
+                "minecraft:glass_pane",
                 "alaindustrial:empty_chip",
-                "#c:glass_panes",
+                "minecraft:glass_pane",
                 "",
                 "minecraft:redstone",
                 ""
@@ -4009,6 +4046,36 @@
                 ""
               ],
               "result_id": "alaindustrial:iron_gear",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "module_blank",
+          "title": "空白模块",
+          "icon": "alaindustrial:module_blank",
+          "pages": [
+            {
+              "type": "text",
+              "title": "空白模块",
+              "text": "空白模块——物品升级的通用基础——以及用它制作的第一个模块：电磁铁的磁铁过滤模块。"
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "",
+                "minecraft:iron_ingot",
+                "",
+                "minecraft:redstone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:redstone",
+                "",
+                "minecraft:iron_ingot",
+                ""
+              ],
+              "result_id": "alaindustrial:module_blank",
               "result_count": 1
             }
           ]
@@ -4557,13 +4624,13 @@
           ]
         },
         {
-          "id": "fluxweave_chestplate",
-          "title": "通量织物胸甲",
+          "id": "fluxweave_armor",
+          "title": "通量织物盔甲",
           "icon": "alaindustrial:fluxweave_chestplate",
           "pages": [
             {
               "type": "text",
-              "title": "通量织物胸甲",
+              "title": "通量织物盔甲",
               "text": "本模组第一套完整的 EU 盔甲——通量织物制成的头盔、胸甲、护腿与靴子；充能会开启实用功能，却从不关闭防护。"
             },
             {
@@ -4573,24 +4640,6 @@
                 "能量：15 000 EU",
                 "缓冲：15 000 EU"
               ]
-            },
-            {
-              "type": "recipe",
-              "title": "配方",
-              "recipe_type": "有序合成",
-              "grid": [
-                "alaindustrial:fluxweave_cloth",
-                "",
-                "alaindustrial:fluxweave_cloth",
-                "alaindustrial:fluxweave_cloth",
-                "alaindustrial:electronic_circuit",
-                "alaindustrial:fluxweave_cloth",
-                "alaindustrial:tempered_iron",
-                "alaindustrial:battery",
-                "alaindustrial:tempered_iron"
-              ],
-              "result_id": "alaindustrial:fluxweave_chestplate",
-              "result_count": 1
             }
           ]
         },
@@ -4785,7 +4834,7 @@
             {
               "type": "text",
               "title": "绝缘胸甲",
-              "text": "浸过黏液的皮革护甲——兜帽、外套、长裤和靴子，替你挡下裸线的电击，并为此消耗耐久。"
+              "text": "浸过黏液的皮革护甲——头盔、胸甲、护腿和靴子，替你挡下裸线的电击，并为此消耗耐久。"
             },
             {
               "type": "stats",
@@ -5258,6 +5307,158 @@
           ]
         },
         {
+          "id": "fluxweave_boots",
+          "title": "通量织物靴子",
+          "icon": "alaindustrial:fluxweave_boots",
+          "pages": [
+            {
+              "type": "text",
+              "title": "通量织物靴子",
+              "text": "通量织物 EU 靴子——充能时将摔落伤害减半；防护保持在铁靴子的水平。"
+            },
+            {
+              "type": "stats",
+              "title": "属性",
+              "lines": [
+                "能量：15 000 EU",
+                "缓冲：15 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:battery",
+                "alaindustrial:fluxweave_cloth",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:fluxweave_boots",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluxweave_chestplate",
+          "title": "通量织物胸甲",
+          "icon": "alaindustrial:fluxweave_chestplate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "通量织物胸甲",
+              "text": "通量织物 EU 胸甲——充能时削弱重击并抵抗击退；防护保持在铁胸甲的水平。"
+            },
+            {
+              "type": "stats",
+              "title": "属性",
+              "lines": [
+                "能量：15 000 EU",
+                "缓冲：15 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:fluxweave_cloth",
+                "",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:battery",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:fluxweave_chestplate",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluxweave_leggings",
+          "title": "通量织物护腿",
+          "icon": "alaindustrial:fluxweave_leggings",
+          "pages": [
+            {
+              "type": "text",
+              "title": "通量织物护腿",
+              "text": "通量织物 EU 护腿——充能时提高奔跑速度，并可开启步伐辅助；防护保持在铁护腿的水平。"
+            },
+            {
+              "type": "stats",
+              "title": "属性",
+              "lines": [
+                "能量：15 000 EU",
+                "缓冲：15 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:battery",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:fluxweave_leggings",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluxweave_helmet",
+          "title": "通量织物头盔",
+          "icon": "alaindustrial:fluxweave_helmet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "通量织物头盔",
+              "text": "通量织物 EU 头盔——充能时提供水下呼吸和更快的游泳；防护保持在铁头盔的水平。"
+            },
+            {
+              "type": "stats",
+              "title": "属性",
+              "lines": [
+                "能量：15 000 EU",
+                "缓冲：15 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:battery",
+                "alaindustrial:tempered_iron",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:fluxweave_helmet",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "shielding_chestplate",
           "title": "屏蔽胸甲",
           "icon": "alaindustrial:shielding_chestplate",
@@ -5265,7 +5466,7 @@
             {
               "type": "text",
               "title": "屏蔽胸甲",
-              "text": "防辐射套装——用皮革、橡胶和黄色染料做成的兜帽、外套、长裤和靴子；它能降低剂量，为此消耗耐久，并把穿戴者完全封住。"
+              "text": "防辐射套装——用皮革、橡胶和黄色染料做成的头盔、胸甲、护腿和靴子；它能降低剂量，为此消耗耐久，并把穿戴者完全封住。"
             },
             {
               "type": "stats",

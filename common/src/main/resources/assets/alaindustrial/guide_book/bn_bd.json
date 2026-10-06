@@ -484,6 +484,43 @@
           ]
         },
         {
+          "id": "mob_wheel_controller",
+          "title": "দৌড় চাকার চালক",
+          "icon": "alaindustrial:mob_wheel_controller",
+          "pages": [
+            {
+              "type": "text",
+              "title": "দৌড় চাকার চালক",
+              "text": "খেলার শুরুর দিকের 3×3×3 LV জেনারেটর — হ্যামস্টারের মতো কাঠের চাকা, যার ভেতরে একটি ধরা প্রাণী দৌড়ায়। জ্বালানি নেই, বাফার নেই; দৌড়বিদ ক্লান্ত হয়, বিশ্রাম নেয় এবং খাবারের পাত্রের খাবারে চাঙা হয়।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "শক্তি: 0–12 EU/t"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "minecraft:oak_planks",
+                "alaindustrial:wooden_gear",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "minecraft:copper_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:mob_wheel_controller",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "charge_pad",
           "title": "চার্জিং স্টেশন",
           "icon": "alaindustrial:charge_pad",
@@ -3470,9 +3507,9 @@
               "title": "রেসিপি",
               "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
               "grid": [
-                "#c:glass_panes",
+                "minecraft:glass_pane",
                 "alaindustrial:resonant_crystal",
-                "#c:glass_panes",
+                "minecraft:glass_pane",
                 "alaindustrial:resonance_coil",
                 "alaindustrial:reactor_circuit",
                 "alaindustrial:resonance_coil",
@@ -3664,9 +3701,9 @@
                 "",
                 "alaindustrial:copper_coil",
                 "",
-                "#c:glass_panes",
+                "minecraft:glass_pane",
                 "alaindustrial:empty_chip",
-                "#c:glass_panes",
+                "minecraft:glass_pane",
                 "",
                 "minecraft:redstone",
                 ""
@@ -4009,6 +4046,36 @@
                 ""
               ],
               "result_id": "alaindustrial:iron_gear",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "module_blank",
+          "title": "খালি মডিউল",
+          "icon": "alaindustrial:module_blank",
+          "pages": [
+            {
+              "type": "text",
+              "title": "খালি মডিউল",
+              "text": "খালি মডিউল — আইটেম আপগ্রেডের সাধারণ ভিত্তি — এবং এ থেকে তৈরি প্রথম মডিউল, তড়িৎ চুম্বকের চুম্বক ফিল্টার মডিউল।"
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "",
+                "minecraft:iron_ingot",
+                "",
+                "minecraft:redstone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:redstone",
+                "",
+                "minecraft:iron_ingot",
+                ""
+              ],
+              "result_id": "alaindustrial:module_blank",
               "result_count": 1
             }
           ]
@@ -4557,13 +4624,13 @@
           ]
         },
         {
-          "id": "fluxweave_chestplate",
-          "title": "ফ্লাক্স বুকবর্ম",
+          "id": "fluxweave_armor",
+          "title": "ফ্লাক্স বর্ম",
           "icon": "alaindustrial:fluxweave_chestplate",
           "pages": [
             {
               "type": "text",
-              "title": "ফ্লাক্স বুকবর্ম",
+              "title": "ফ্লাক্স বর্ম",
               "text": "মডের প্রথম সম্পূর্ণ EU বর্ম সেট — ফ্লাক্স কাপড়ের হেলমেট, বুকবর্ম, লেগিংস ও বুট; চার্জ সুবিধা চালু করে, সুরক্ষা কখনও বন্ধ করে না।"
             },
             {
@@ -4573,24 +4640,6 @@
                 "শক্তি: 15 000 EU",
                 "বাফার: 15 000 EU"
               ]
-            },
-            {
-              "type": "recipe",
-              "title": "রেসিপি",
-              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
-              "grid": [
-                "alaindustrial:fluxweave_cloth",
-                "",
-                "alaindustrial:fluxweave_cloth",
-                "alaindustrial:fluxweave_cloth",
-                "alaindustrial:electronic_circuit",
-                "alaindustrial:fluxweave_cloth",
-                "alaindustrial:tempered_iron",
-                "alaindustrial:battery",
-                "alaindustrial:tempered_iron"
-              ],
-              "result_id": "alaindustrial:fluxweave_chestplate",
-              "result_count": 1
             }
           ]
         },
@@ -4785,7 +4834,7 @@
             {
               "type": "text",
               "title": "অন্তরক বক্ষবর্ম",
-              "text": "স্লাইমে ডোবানো চামড়ার বর্ম — হুড, জ্যাকেট, ট্রাউজার ও বুট, যা খোলা কেবলের শক শুষে নেয় এবং তা করতে গিয়ে টেকসইতা খরচ করে।"
+              "text": "স্লাইমে ডোবানো চামড়ার বর্ম — হেলমেট, বুকবর্ম, লেগিংস ও বুট, যা খোলা কেবলের শক শুষে নেয় এবং তা করতে গিয়ে টেকসইতা খরচ করে।"
             },
             {
               "type": "stats",
@@ -5258,6 +5307,158 @@
           ]
         },
         {
+          "id": "fluxweave_boots",
+          "title": "ফ্লাক্স বুট",
+          "icon": "alaindustrial:fluxweave_boots",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ফ্লাক্স বুট",
+              "text": "ফ্লাক্স EU বুট — চার্জ থাকলে পতনের ক্ষতি অর্ধেক করে; সুরক্ষা লোহার বুটের স্তরেই থাকে।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "শক্তি: 15 000 EU",
+                "বাফার: 15 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:battery",
+                "alaindustrial:fluxweave_cloth",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:fluxweave_boots",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluxweave_chestplate",
+          "title": "ফ্লাক্স বুকবর্ম",
+          "icon": "alaindustrial:fluxweave_chestplate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ফ্লাক্স বুকবর্ম",
+              "text": "ফ্লাক্স EU বুকবর্ম — চার্জ থাকলে ভারী আঘাত নরম করে এবং ধাক্কা প্রতিরোধ করে; সুরক্ষা লোহার বুকবর্মের স্তরেই থাকে।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "শক্তি: 15 000 EU",
+                "বাফার: 15 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:fluxweave_cloth",
+                "",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:battery",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:fluxweave_chestplate",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluxweave_leggings",
+          "title": "ফ্লাক্স লেগিংস",
+          "icon": "alaindustrial:fluxweave_leggings",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ফ্লাক্স লেগিংস",
+              "text": "ফ্লাক্স EU লেগিংস — চার্জ থাকলে দৌড়ের গতি বাড়ায় এবং ধাপ-সহায়তা চালু করতে পারে; সুরক্ষা লোহার লেগিংসের স্তরেই থাকে।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "শক্তি: 15 000 EU",
+                "বাফার: 15 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:battery",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:fluxweave_leggings",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluxweave_helmet",
+          "title": "ফ্লাক্স হেলমেট",
+          "icon": "alaindustrial:fluxweave_helmet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ফ্লাক্স হেলমেট",
+              "text": "ফ্লাক্স EU হেলমেট — চার্জ থাকলে পানির নিচে শ্বাস নেওয়া ও দ্রুত সাঁতার দেয়; সুরক্ষা লোহার হেলমেটের স্তরেই থাকে।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "শক্তি: 15 000 EU",
+                "বাফার: 15 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:battery",
+                "alaindustrial:tempered_iron",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:fluxweave_helmet",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "shielding_chestplate",
           "title": "শিল্ডিং বক্ষবর্ম",
           "icon": "alaindustrial:shielding_chestplate",
@@ -5265,7 +5466,7 @@
             {
               "type": "text",
               "title": "শিল্ডিং বক্ষবর্ম",
-              "text": "বিকিরণরোধী সেট — চামড়া, রাবার ও হলুদ রঙে তৈরি হুড, জ্যাকেট, ট্রাউজার ও বুট; এটি মাত্রা কমায়, তা করতে গিয়ে টেকসইতা খরচ করে এবং পরিধানকারীকে সম্পূর্ণ ঢেকে রাখে।"
+              "text": "বিকিরণরোধী সেট — চামড়া, রাবার ও হলুদ রঙে তৈরি হেলমেট, বুকবর্ম, লেগিংস ও বুট; এটি মাত্রা কমায়, তা করতে গিয়ে টেকসইতা খরচ করে এবং পরিধানকারীকে সম্পূর্ণ ঢেকে রাখে।"
             },
             {
               "type": "stats",

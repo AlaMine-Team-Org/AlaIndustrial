@@ -60,6 +60,7 @@ class OffScreenRendererBoxTest {
 	private static final List<String> KNOWN_OFF_SCREEN = List.of(
 			"dev.alaindustrial.client.render.GardenDroneBlockEntityRenderer",
 			"dev.alaindustrial.client.render.IncubatorBlockEntityRenderer",
+			"dev.alaindustrial.client.render.MobWheelBlockEntityRenderer",
 			"dev.alaindustrial.client.render.RadiantSolarPanelBlockEntityRenderer",
 			"dev.alaindustrial.client.render.TeleporterCapsuleDoorRenderer",
 			"dev.alaindustrial.client.render.WaterMillWheelBlockEntityRenderer",

@@ -484,6 +484,43 @@
           ]
         },
         {
+          "id": "mob_wheel_controller",
+          "title": "Bộ truyền động bánh xe chạy",
+          "icon": "alaindustrial:mob_wheel_controller",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Bộ truyền động bánh xe chạy",
+              "text": "Máy phát LV 3×3×3 cho đầu game — một bánh xe gỗ như của chuột hamster, bên trong có một sinh vật bị bắt đang chạy. Không nhiên liệu, không bộ đệm; người chạy sẽ mệt, nghỉ ngơi và hồi sức nhờ thức ăn từ máng ăn."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 0–12 EU/t"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "minecraft:oak_planks",
+                "alaindustrial:wooden_gear",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "minecraft:copper_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:mob_wheel_controller",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "charge_pad",
           "title": "Trạm sạc",
           "icon": "alaindustrial:charge_pad",
@@ -3470,9 +3507,9 @@
               "title": "Công thức",
               "recipe_type": "Chế tạo định hình",
               "grid": [
-                "#c:glass_panes",
+                "minecraft:glass_pane",
                 "alaindustrial:resonant_crystal",
-                "#c:glass_panes",
+                "minecraft:glass_pane",
                 "alaindustrial:resonance_coil",
                 "alaindustrial:reactor_circuit",
                 "alaindustrial:resonance_coil",
@@ -3664,9 +3701,9 @@
                 "",
                 "alaindustrial:copper_coil",
                 "",
-                "#c:glass_panes",
+                "minecraft:glass_pane",
                 "alaindustrial:empty_chip",
-                "#c:glass_panes",
+                "minecraft:glass_pane",
                 "",
                 "minecraft:redstone",
                 ""
@@ -4009,6 +4046,36 @@
                 ""
               ],
               "result_id": "alaindustrial:iron_gear",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "module_blank",
+          "title": "Mô-đun trống",
+          "icon": "alaindustrial:module_blank",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Mô-đun trống",
+              "text": "Mô-đun trống — nền tảng chung cho các nâng cấp vật phẩm — và mô-đun đầu tiên làm từ nó, mô-đun lọc nam châm của nam châm điện."
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "",
+                "minecraft:iron_ingot",
+                "",
+                "minecraft:redstone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:redstone",
+                "",
+                "minecraft:iron_ingot",
+                ""
+              ],
+              "result_id": "alaindustrial:module_blank",
               "result_count": 1
             }
           ]
@@ -4557,13 +4624,13 @@
           ]
         },
         {
-          "id": "fluxweave_chestplate",
-          "title": "Giáp ngực từ thông",
+          "id": "fluxweave_armor",
+          "title": "Bộ giáp từ thông",
           "icon": "alaindustrial:fluxweave_chestplate",
           "pages": [
             {
               "type": "text",
-              "title": "Giáp ngực từ thông",
+              "title": "Bộ giáp từ thông",
               "text": "Bộ giáp EU hoàn chỉnh đầu tiên của bản mod — mũ, giáp ngực, giáp chân và giày bằng vải từ thông; năng lượng bật các tiện ích mà không bao giờ tắt khả năng phòng thủ."
             },
             {
@@ -4573,24 +4640,6 @@
                 "Năng lượng: 15 000 EU",
                 "Bộ đệm: 15 000 EU"
               ]
-            },
-            {
-              "type": "recipe",
-              "title": "Công thức",
-              "recipe_type": "Chế tạo định hình",
-              "grid": [
-                "alaindustrial:fluxweave_cloth",
-                "",
-                "alaindustrial:fluxweave_cloth",
-                "alaindustrial:fluxweave_cloth",
-                "alaindustrial:electronic_circuit",
-                "alaindustrial:fluxweave_cloth",
-                "alaindustrial:tempered_iron",
-                "alaindustrial:battery",
-                "alaindustrial:tempered_iron"
-              ],
-              "result_id": "alaindustrial:fluxweave_chestplate",
-              "result_count": 1
             }
           ]
         },
@@ -4785,7 +4834,7 @@
             {
               "type": "text",
               "title": "Giáp ngực cách điện",
-              "text": "Giáp da nhúng chất nhờn — mũ trùm, áo khoác, quần và giày, hứng cú giật từ cáp trần và hao độ bền khi làm việc đó."
+              "text": "Giáp da nhúng chất nhờn — mũ, giáp ngực, giáp chân và giày, hứng cú giật từ cáp trần và hao độ bền khi làm việc đó."
             },
             {
               "type": "stats",
@@ -5258,6 +5307,158 @@
           ]
         },
         {
+          "id": "fluxweave_boots",
+          "title": "Giày từ thông",
+          "icon": "alaindustrial:fluxweave_boots",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Giày từ thông",
+              "text": "Giày EU từ thông — khi có năng lượng sẽ giảm một nửa sát thương khi ngã; khả năng phòng thủ vẫn ở mức giày sắt."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 15 000 EU",
+                "Bộ đệm: 15 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:battery",
+                "alaindustrial:fluxweave_cloth",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:fluxweave_boots",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluxweave_chestplate",
+          "title": "Giáp ngực từ thông",
+          "icon": "alaindustrial:fluxweave_chestplate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Giáp ngực từ thông",
+              "text": "Giáp ngực EU từ thông — khi có năng lượng sẽ giảm nhẹ đòn nặng và chống bị đẩy lùi; khả năng phòng thủ vẫn ở mức giáp ngực sắt."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 15 000 EU",
+                "Bộ đệm: 15 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:fluxweave_cloth",
+                "",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:battery",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:fluxweave_chestplate",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluxweave_leggings",
+          "title": "Giáp chân từ thông",
+          "icon": "alaindustrial:fluxweave_leggings",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Giáp chân từ thông",
+              "text": "Giáp chân EU từ thông — khi có năng lượng sẽ tăng tốc độ chạy và có thể bật hỗ trợ bước bậc; khả năng phòng thủ vẫn ở mức giáp chân sắt."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 15 000 EU",
+                "Bộ đệm: 15 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:battery",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:fluxweave_leggings",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluxweave_helmet",
+          "title": "Mũ từ thông",
+          "icon": "alaindustrial:fluxweave_helmet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Mũ từ thông",
+              "text": "Mũ EU từ thông — khi có năng lượng sẽ cho thở dưới nước và bơi nhanh hơn; khả năng phòng thủ vẫn ở mức mũ sắt."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 15 000 EU",
+                "Bộ đệm: 15 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:battery",
+                "alaindustrial:tempered_iron",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:fluxweave_helmet",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "shielding_chestplate",
           "title": "Giáp chắn phóng xạ",
           "icon": "alaindustrial:shielding_chestplate",
@@ -5265,7 +5466,7 @@
             {
               "type": "text",
               "title": "Giáp chắn phóng xạ",
-              "text": "Bộ chống phóng xạ — mũ trùm, áo khoác, quần và giày làm từ da, cao su và thuốc nhuộm vàng; nó giảm liều chiếu, hao độ bền khi làm vậy và bịt kín người mặc."
+              "text": "Bộ chống phóng xạ — mũ, giáp ngực, giáp chân và giày làm từ da, cao su và thuốc nhuộm vàng; nó giảm liều chiếu, hao độ bền khi làm vậy và bịt kín người mặc."
             },
             {
               "type": "stats",

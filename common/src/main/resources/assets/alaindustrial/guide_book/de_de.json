@@ -484,6 +484,43 @@
           ]
         },
         {
+          "id": "mob_wheel_controller",
+          "title": "Laufradantrieb",
+          "icon": "alaindustrial:mob_wheel_controller",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Laufradantrieb",
+              "text": "Ein früher 3×3×3-LV-Generator — ein hölzernes Laufrad wie für einen Hamster, in dem ein gefangenes Wesen läuft. Kein Brennstoff und kein Puffer; der Läufer ermüdet, ruht sich aus und kommt mit Futter aus der Futterstelle wieder zu Kräften."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 0–12 EU/t"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "minecraft:oak_planks",
+                "alaindustrial:wooden_gear",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "minecraft:copper_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:mob_wheel_controller",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "charge_pad",
           "title": "Ladestation",
           "icon": "alaindustrial:charge_pad",
@@ -3470,9 +3507,9 @@
               "title": "Rezept",
               "recipe_type": "Geformtes Handwerk",
               "grid": [
-                "#c:glass_panes",
+                "minecraft:glass_pane",
                 "alaindustrial:resonant_crystal",
-                "#c:glass_panes",
+                "minecraft:glass_pane",
                 "alaindustrial:resonance_coil",
                 "alaindustrial:reactor_circuit",
                 "alaindustrial:resonance_coil",
@@ -3664,9 +3701,9 @@
                 "",
                 "alaindustrial:copper_coil",
                 "",
-                "#c:glass_panes",
+                "minecraft:glass_pane",
                 "alaindustrial:empty_chip",
-                "#c:glass_panes",
+                "minecraft:glass_pane",
                 "",
                 "minecraft:redstone",
                 ""
@@ -4009,6 +4046,36 @@
                 ""
               ],
               "result_id": "alaindustrial:iron_gear",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "module_blank",
+          "title": "Leeres Modul",
+          "icon": "alaindustrial:module_blank",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Leeres Modul",
+              "text": "Das leere Modul — die gemeinsame Basis für Gegenstands-Upgrades — und das erste daraus gefertigte Modul, das Magnetfiltermodul des Elektromagneten."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "",
+                "minecraft:iron_ingot",
+                "",
+                "minecraft:redstone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:redstone",
+                "",
+                "minecraft:iron_ingot",
+                ""
+              ],
+              "result_id": "alaindustrial:module_blank",
               "result_count": 1
             }
           ]
@@ -4557,13 +4624,13 @@
           ]
         },
         {
-          "id": "fluxweave_chestplate",
-          "title": "Fluxgewebe-Brustpanzer",
+          "id": "fluxweave_armor",
+          "title": "Fluxgewebe-Rüstung",
           "icon": "alaindustrial:fluxweave_chestplate",
           "pages": [
             {
               "type": "text",
-              "title": "Fluxgewebe-Brustpanzer",
+              "title": "Fluxgewebe-Rüstung",
               "text": "Das erste vollständige EU-Rüstungsset der Mod — Helm, Brustpanzer, Beinschutz und Stiefel aus Fluxgewebe; die Ladung schaltet Zusatzfunktionen ein, ohne je den Schutz abzuschalten."
             },
             {
@@ -4573,24 +4640,6 @@
                 "Energie: 15 000 EU",
                 "Puffer: 15 000 EU"
               ]
-            },
-            {
-              "type": "recipe",
-              "title": "Rezept",
-              "recipe_type": "Geformtes Handwerk",
-              "grid": [
-                "alaindustrial:fluxweave_cloth",
-                "",
-                "alaindustrial:fluxweave_cloth",
-                "alaindustrial:fluxweave_cloth",
-                "alaindustrial:electronic_circuit",
-                "alaindustrial:fluxweave_cloth",
-                "alaindustrial:tempered_iron",
-                "alaindustrial:battery",
-                "alaindustrial:tempered_iron"
-              ],
-              "result_id": "alaindustrial:fluxweave_chestplate",
-              "result_count": 1
             }
           ]
         },
@@ -4785,7 +4834,7 @@
             {
               "type": "text",
               "title": "Isolierbrustpanzer",
-              "text": "In Schleim getauchte Lederrüstung — Kapuze, Jacke, Hose und Stiefel, die den Schlag eines blanken Kabels abfangen und dabei Haltbarkeit verbrauchen."
+              "text": "In Schleim getauchte Lederrüstung — Helm, Brustpanzer, Beinschutz und Stiefel, die den Schlag eines blanken Kabels abfangen und dabei Haltbarkeit verbrauchen."
             },
             {
               "type": "stats",
@@ -5258,6 +5307,158 @@
           ]
         },
         {
+          "id": "fluxweave_boots",
+          "title": "Fluxgewebe-Stiefel",
+          "icon": "alaindustrial:fluxweave_boots",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Fluxgewebe-Stiefel",
+              "text": "Die Fluxgewebe-EU-Stiefel — geladen halbieren sie den Fallschaden; der Schutz bleibt auf dem Niveau von Eisenstiefeln."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 15 000 EU",
+                "Puffer: 15 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:battery",
+                "alaindustrial:fluxweave_cloth",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:fluxweave_boots",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluxweave_chestplate",
+          "title": "Fluxgewebe-Brustpanzer",
+          "icon": "alaindustrial:fluxweave_chestplate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Fluxgewebe-Brustpanzer",
+              "text": "Der Fluxgewebe-EU-Brustpanzer — geladen dämpft er schwere Treffer und widersteht Rückstoß; der Schutz bleibt auf dem Niveau eines Eisenbrustpanzers."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 15 000 EU",
+                "Puffer: 15 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:fluxweave_cloth",
+                "",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:battery",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:fluxweave_chestplate",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluxweave_leggings",
+          "title": "Fluxgewebe-Beinschutz",
+          "icon": "alaindustrial:fluxweave_leggings",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Fluxgewebe-Beinschutz",
+              "text": "Der Fluxgewebe-EU-Beinschutz — geladen erhöht er das Lauftempo und kann eine Stufenhilfe einschalten; der Schutz bleibt auf dem Niveau eines Eisenbeinschutzes."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 15 000 EU",
+                "Puffer: 15 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:battery",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:fluxweave_leggings",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluxweave_helmet",
+          "title": "Fluxgewebe-Helm",
+          "icon": "alaindustrial:fluxweave_helmet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Fluxgewebe-Helm",
+              "text": "Der Fluxgewebe-EU-Helm — geladen gewährt er Unterwasseratmung und schnelleres Schwimmen; der Schutz bleibt auf dem Niveau eines Eisenhelms."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 15 000 EU",
+                "Puffer: 15 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:battery",
+                "alaindustrial:tempered_iron",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:fluxweave_helmet",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "shielding_chestplate",
           "title": "Abschirmbrustplatte",
           "icon": "alaindustrial:shielding_chestplate",
@@ -5265,7 +5466,7 @@
             {
               "type": "text",
               "title": "Abschirmbrustplatte",
-              "text": "Der Strahlenschutzanzug — Kapuze, Jacke, Hose und Stiefel aus Leder, Gummi und gelbem Farbstoff; er senkt die Dosis, verbraucht dabei Haltbarkeit und schließt den Träger vollständig ab."
+              "text": "Der Strahlenschutzanzug — Helm, Brustpanzer, Beinschutz und Stiefel aus Leder, Gummi und gelbem Farbstoff; er senkt die Dosis, verbraucht dabei Haltbarkeit und schließt den Träger vollständig ab."
             },
             {
               "type": "stats",

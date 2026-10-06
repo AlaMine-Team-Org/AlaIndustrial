@@ -4,6 +4,7 @@ import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.DiamondChestBlockEntity;
 import dev.alaindustrial.block.entity.ElectrumChestBlockEntity;
 import dev.alaindustrial.block.entity.EnergyCondenserBlockEntity;
+import dev.alaindustrial.block.entity.MobWheelBlockEntity;
 import dev.alaindustrial.block.entity.RadiantSolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.FluidTankBlockEntity;
 import dev.alaindustrial.block.entity.GardenDroneStationBlockEntity;
@@ -25,6 +26,7 @@ import dev.alaindustrial.block.entity.WorkstationBlockEntity;
 import dev.alaindustrial.client.render.CableAccessoryBlockEntityRenderer;
 import dev.alaindustrial.client.render.ChestBlockEntityRenderer;
 import dev.alaindustrial.client.render.EnergyCondenserBlockEntityRenderer;
+import dev.alaindustrial.client.render.MobWheelBlockEntityRenderer;
 import dev.alaindustrial.client.render.RadiantSolarPanelBlockEntityRenderer;
 import dev.alaindustrial.client.render.CableSleeveTint;
 import dev.alaindustrial.client.render.FluidPipeTint;
@@ -205,6 +207,10 @@ public final class ClientContentManifest {
 			// Drawn by the upper half only; the rest of the bench is chunk geometry.
 			renderer(ContentManifest.blockEntity("upgrade_table", UpgradeTableBlockEntity.class),
 					UpgradeTableBlockEntityRenderer::new),
+			// MOD-763: the assembled mob wheel — frame, running wheel and gate. Drawn by the drive; every
+			// other member's formed model is empty.
+			renderer(ContentManifest.blockEntity("mob_wheel_controller", MobWheelBlockEntity.class),
+					MobWheelBlockEntityRenderer::new),
 			// Garden Drone (MOD-277): the drone is geometry this renderer places above its station,
 			// not an entity.
 			renderer(ContentManifest.blockEntity("garden_drone_station", GardenDroneStationBlockEntity.class),

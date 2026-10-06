@@ -484,6 +484,43 @@
           ]
         },
         {
+          "id": "mob_wheel_controller",
+          "title": "محرك عجلة الجري",
+          "icon": "alaindustrial:mob_wheel_controller",
+          "pages": [
+            {
+              "type": "text",
+              "title": "محرك عجلة الجري",
+              "text": "مولد LV بحجم 3×3×3 لبداية اللعبة — عجلة خشبية كعجلة الهامستر يركض داخلها مخلوق مأسور. بلا وقود وبلا مخزن؛ يتعب العداء ويستريح ويستعيد نشاطه بطعام من المعلف."
+            },
+            {
+              "type": "stats",
+              "title": "المواصفات",
+              "lines": [
+                "الطاقة: 0–12 EU/t"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
+              "grid": [
+                "minecraft:oak_planks",
+                "alaindustrial:wooden_gear",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "minecraft:copper_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:mob_wheel_controller",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "charge_pad",
           "title": "محطة شحن",
           "icon": "alaindustrial:charge_pad",
@@ -3470,9 +3507,9 @@
               "title": "الوصفة",
               "recipe_type": "تصنيع مرتب",
               "grid": [
-                "#c:glass_panes",
+                "minecraft:glass_pane",
                 "alaindustrial:resonant_crystal",
-                "#c:glass_panes",
+                "minecraft:glass_pane",
                 "alaindustrial:resonance_coil",
                 "alaindustrial:reactor_circuit",
                 "alaindustrial:resonance_coil",
@@ -3664,9 +3701,9 @@
                 "",
                 "alaindustrial:copper_coil",
                 "",
-                "#c:glass_panes",
+                "minecraft:glass_pane",
                 "alaindustrial:empty_chip",
-                "#c:glass_panes",
+                "minecraft:glass_pane",
                 "",
                 "minecraft:redstone",
                 ""
@@ -4009,6 +4046,36 @@
                 ""
               ],
               "result_id": "alaindustrial:iron_gear",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "module_blank",
+          "title": "وحدة فارغة",
+          "icon": "alaindustrial:module_blank",
+          "pages": [
+            {
+              "type": "text",
+              "title": "وحدة فارغة",
+              "text": "الوحدة الفارغة — الأساس المشترك لترقيات الأدوات — وأول وحدة تصنع منها، وحدة مرشح المغناطيس للمغناطيس الكهربائي."
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
+              "grid": [
+                "",
+                "minecraft:iron_ingot",
+                "",
+                "minecraft:redstone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:redstone",
+                "",
+                "minecraft:iron_ingot",
+                ""
+              ],
+              "result_id": "alaindustrial:module_blank",
               "result_count": 1
             }
           ]
@@ -4557,13 +4624,13 @@
           ]
         },
         {
-          "id": "fluxweave_chestplate",
-          "title": "صفيحة صدر تدفقية",
+          "id": "fluxweave_armor",
+          "title": "درع تدفقي",
           "icon": "alaindustrial:fluxweave_chestplate",
           "pages": [
             {
               "type": "text",
-              "title": "صفيحة صدر تدفقية",
+              "title": "درع تدفقي",
               "text": "أول طقم درع كامل يعمل بـ EU في المود — خوذة وصفيحة صدر وسروال وحذاء من نسيج التدفق؛ والشحنة تشغل مجموعة قدرات مساعدة دون أن تطفئ الحماية أبدا."
             },
             {
@@ -4573,24 +4640,6 @@
                 "الطاقة: 15 000 EU",
                 "الاحتياطي: 15 000 EU"
               ]
-            },
-            {
-              "type": "recipe",
-              "title": "الوصفة",
-              "recipe_type": "تصنيع مرتب",
-              "grid": [
-                "alaindustrial:fluxweave_cloth",
-                "",
-                "alaindustrial:fluxweave_cloth",
-                "alaindustrial:fluxweave_cloth",
-                "alaindustrial:electronic_circuit",
-                "alaindustrial:fluxweave_cloth",
-                "alaindustrial:tempered_iron",
-                "alaindustrial:battery",
-                "alaindustrial:tempered_iron"
-              ],
-              "result_id": "alaindustrial:fluxweave_chestplate",
-              "result_count": 1
             }
           ]
         },
@@ -4785,7 +4834,7 @@
             {
               "type": "text",
               "title": "درع صدر عازل",
-              "text": "درع جلدي مغموس في اللزج — قلنسوة وسترة وسروال وحذاء تمتص صعقة الكابل العاري وتستهلك متانتها في ذلك."
+              "text": "درع جلدي مغموس في اللزج — خوذة وصفيحة صدر وسروال وحذاء تمتص صعقة الكابل العاري وتستهلك متانتها في ذلك."
             },
             {
               "type": "stats",
@@ -5258,6 +5307,158 @@
           ]
         },
         {
+          "id": "fluxweave_boots",
+          "title": "حذاء تدفقي",
+          "icon": "alaindustrial:fluxweave_boots",
+          "pages": [
+            {
+              "type": "text",
+              "title": "حذاء تدفقي",
+              "text": "حذاء EU التدفقي — وهو مشحون يخفض ضرر السقوط إلى النصف؛ وتبقى الحماية بمستوى الحذاء الحديدي."
+            },
+            {
+              "type": "stats",
+              "title": "المواصفات",
+              "lines": [
+                "الطاقة: 15 000 EU",
+                "الاحتياطي: 15 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:battery",
+                "alaindustrial:fluxweave_cloth",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:fluxweave_boots",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluxweave_chestplate",
+          "title": "صفيحة صدر تدفقية",
+          "icon": "alaindustrial:fluxweave_chestplate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "صفيحة صدر تدفقية",
+              "text": "صفيحة صدر EU التدفقية — وهي مشحونة تخفف الضربات الثقيلة وتقاوم الارتداد؛ وتبقى الحماية بمستوى صفيحة الصدر الحديدية."
+            },
+            {
+              "type": "stats",
+              "title": "المواصفات",
+              "lines": [
+                "الطاقة: 15 000 EU",
+                "الاحتياطي: 15 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
+              "grid": [
+                "alaindustrial:fluxweave_cloth",
+                "",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:battery",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:fluxweave_chestplate",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluxweave_leggings",
+          "title": "سروال تدفقي",
+          "icon": "alaindustrial:fluxweave_leggings",
+          "pages": [
+            {
+              "type": "text",
+              "title": "سروال تدفقي",
+              "text": "سروال EU التدفقي — وهو مشحون يزيد سرعة الجري ويمكنه تشغيل مساعد الصعود؛ وتبقى الحماية بمستوى السروال الحديدي."
+            },
+            {
+              "type": "stats",
+              "title": "المواصفات",
+              "lines": [
+                "الطاقة: 15 000 EU",
+                "الاحتياطي: 15 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
+              "grid": [
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:battery",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:fluxweave_leggings",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluxweave_helmet",
+          "title": "خوذة تدفقية",
+          "icon": "alaindustrial:fluxweave_helmet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "خوذة تدفقية",
+              "text": "خوذة EU التدفقية — وهي مشحونة تمنح التنفس تحت الماء وسباحة أسرع؛ وتبقى الحماية بمستوى الخوذة الحديدية."
+            },
+            {
+              "type": "stats",
+              "title": "المواصفات",
+              "lines": [
+                "الطاقة: 15 000 EU",
+                "الاحتياطي: 15 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
+              "grid": [
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:battery",
+                "alaindustrial:tempered_iron",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:fluxweave_helmet",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "shielding_chestplate",
           "title": "درع صدر واقٍ من الإشعاع",
           "icon": "alaindustrial:shielding_chestplate",
@@ -5265,7 +5466,7 @@
             {
               "type": "text",
               "title": "درع صدر واقٍ من الإشعاع",
-              "text": "الطقم المضاد للإشعاع — قلنسوة وسترة وسروال وحذاء من الجلد والمطاط والصبغة الصفراء؛ يخفض الجرعة ويستهلك متانته في ذلك، ويعزل مرتديه عزلا تاما."
+              "text": "الطقم المضاد للإشعاع — خوذة وصفيحة صدر وسروال وحذاء من الجلد والمطاط والصبغة الصفراء؛ يخفض الجرعة ويستهلك متانته في ذلك، ويعزل مرتديه عزلا تاما."
             },
             {
               "type": "stats",

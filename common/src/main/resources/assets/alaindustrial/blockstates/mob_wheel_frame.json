@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "formed=false": {
+      "model": "alaindustrial:block/mob_wheel_frame"
+    },
+    "formed=true": {
+      "model": "alaindustrial:block/mob_wheel_formed"
+    }
+  }
+}

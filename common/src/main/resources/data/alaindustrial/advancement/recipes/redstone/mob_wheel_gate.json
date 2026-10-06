@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_fence_gate": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "#minecraft:fence_gates"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_fence_gate"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "alaindustrial:mob_wheel_gate"
+    ]
+  }
+}

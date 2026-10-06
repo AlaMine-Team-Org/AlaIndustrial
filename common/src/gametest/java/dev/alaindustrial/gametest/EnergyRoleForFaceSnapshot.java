@@ -72,6 +72,14 @@ final class EnergyRoleForFaceSnapshot {
 			"lightning_rod_generator[lit=false,tipped=false] DUNSWE=ONOOOO",
 			"creative_energy_source[lit=true] DUNSWE=OOOOOO",
 			"creative_energy_source[lit=false] DUNSWE=OOOOOO",
+			"mob_wheel_controller[facing=north,formed=true] DUNSWE=NNNOON",
+			"mob_wheel_controller[facing=north,formed=false] DUNSWE=NNNOON",
+			"mob_wheel_controller[facing=south,formed=true] DUNSWE=NNONNO",
+			"mob_wheel_controller[facing=south,formed=false] DUNSWE=NNONNO",
+			"mob_wheel_controller[facing=west,formed=true] DUNSWE=NNNONO",
+			"mob_wheel_controller[facing=west,formed=false] DUNSWE=NNNONO",
+			"mob_wheel_controller[facing=east,formed=true] DUNSWE=NNONON",
+			"mob_wheel_controller[facing=east,formed=false] DUNSWE=NNONON",
 			"copper_cable[breaker_open=false,down=false,east=false,east_low=false,north=false,north_low"
 					+ "=false,south=false,south_low=false,up=false,west=false,west_low=false] DUNSWE=BBBBBB",
 			"copper_cable@tin_cable[breaker_open=false,down=false,east=false,east_low=false,north=false"

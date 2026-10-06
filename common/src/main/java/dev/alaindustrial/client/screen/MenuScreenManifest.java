@@ -153,6 +153,7 @@ public final class MenuScreenManifest {
 			screen(() -> ModContent.MOB_REPELLER_HV_MENU.get(), MobRepellerHvScreen::new),
 			screen(() -> ModContent.THERMAL_CENTRIFUGE_MENU.get(), ThermalCentrifugeScreen::new),
 			screen(() -> ModContent.LIGHTNING_ROD_GENERATOR_MENU.get(), LightningRodGeneratorScreen::new),
+			screen(() -> ModContent.MOB_WHEEL_CONTROLLER_MENU.get(), MobWheelScreen::new),
 			screen(() -> ModContent.REACTOR_CONTROLLER_MENU.get(), ReactorControllerScreen::new),
 			screen(() -> ModContent.MONITOR_CORE_MENU.get(), MonitorCoreScreen::new),
 			screen(() -> ModContent.CREATIVE_ENERGY_SOURCE_MENU.get(), CreativeEnergySourceScreen::new),

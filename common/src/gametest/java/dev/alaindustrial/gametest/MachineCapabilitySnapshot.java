@@ -59,6 +59,9 @@ final class MachineCapabilitySnapshot {
 			"creative_energy_source: owner=null active=3 items=5 eu=11/13/17/19 panel=0 mute=0 stats=0"
 					+ " oc=0/0 rate=2 dur=200 evolve=-1/-1",
 			"creative_energy_source keys: -Owner -OwnerName -EvolveProgress -EvolveChip",
+			"mob_wheel_controller: owner=Characterizer active=3 items=5 eu=11/13/17/19 panel=0 mute=0"
+					+ " stats=0 oc=0/0 rate=2 dur=200 evolve=-1/-1",
+			"mob_wheel_controller keys: -EvolveProgress -EvolveChip",
 			"macerator: owner=Characterizer active=3 items=5 eu=11/13/17/19 panel=1 mute=1 stats=1"
 					+ " oc=1/3 rate=4 dur=160 evolve=-1/-1",
 			"macerator keys: -EvolveProgress -EvolveChip",

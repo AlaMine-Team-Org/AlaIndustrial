@@ -1,0 +1,58 @@
+{
+  "variants": {
+    "facing=south,formed=false,open=false": {
+      "model": "alaindustrial:block/mob_wheel_gate"
+    },
+    "facing=south,formed=false,open=true": {
+      "model": "alaindustrial:block/mob_wheel_gate_open"
+    },
+    "facing=south,formed=true,open=false": {
+      "model": "alaindustrial:block/mob_wheel_formed"
+    },
+    "facing=south,formed=true,open=true": {
+      "model": "alaindustrial:block/mob_wheel_formed"
+    },
+    "facing=west,formed=false,open=false": {
+      "model": "alaindustrial:block/mob_wheel_gate",
+      "y": 90
+    },
+    "facing=west,formed=false,open=true": {
+      "model": "alaindustrial:block/mob_wheel_gate_open",
+      "y": 90
+    },
+    "facing=west,formed=true,open=false": {
+      "model": "alaindustrial:block/mob_wheel_formed"
+    },
+    "facing=west,formed=true,open=true": {
+      "model": "alaindustrial:block/mob_wheel_formed"
+    },
+    "facing=north,formed=false,open=false": {
+      "model": "alaindustrial:block/mob_wheel_gate",
+      "y": 180
+    },
+    "facing=north,formed=false,open=true": {
+      "model": "alaindustrial:block/mob_wheel_gate_open",
+      "y": 180
+    },
+    "facing=north,formed=true,open=false": {
+      "model": "alaindustrial:block/mob_wheel_formed"
+    },
+    "facing=north,formed=true,open=true": {
+      "model": "alaindustrial:block/mob_wheel_formed"
+    },
+    "facing=east,formed=false,open=false": {
+      "model": "alaindustrial:block/mob_wheel_gate",
+      "y": 270
+    },
+    "facing=east,formed=false,open=true": {
+      "model": "alaindustrial:block/mob_wheel_gate_open",
+      "y": 270
+    },
+    "facing=east,formed=true,open=false": {
+      "model": "alaindustrial:block/mob_wheel_formed"
+    },
+    "facing=east,formed=true,open=true": {
+      "model": "alaindustrial:block/mob_wheel_formed"
+    }
+  }
+}

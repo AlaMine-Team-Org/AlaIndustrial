@@ -37,6 +37,7 @@ final class BlockEntityDisplayNameSnapshot {
 			"lightning_rod_generator @lightning_rod_generator:"
 					+ " block.alaindustrial.lightning_rod_generator",
 			"creative_energy_source @creative_energy_source: block.alaindustrial.creative_energy_source",
+			"mob_wheel_controller @mob_wheel_controller: block.alaindustrial.mob_wheel_controller",
 			"macerator @macerator: block.alaindustrial.macerator",
 			"component_repair_bench @component_repair_bench: block.alaindustrial.component_repair_bench",
 			"upgrade_table @upgrade_table: container.alaindustrial.upgrade_table",

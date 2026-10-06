@@ -2,10 +2,10 @@ package dev.alaindustrial.command.demo;
 
 import dev.alaindustrial.block.ConcentratorPart;
 import dev.alaindustrial.block.ConcentratorStructure;
+import dev.alaindustrial.block.MobWheelStructure;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -19,7 +19,8 @@ import net.minecraft.world.level.block.Blocks;
  *
  * <p>The row is laid out at a pitch of six cells (MOD-659), so every generator has its own bay and a
  * free aisle on each side: coal x=4, geothermal x=10, the four solar panels x=16..34, then the water
- * mill's channel (x=44..48), the concentrator (x=54..55), and the wind row of the next method.
+ * mill's channel (x=44..48), the concentrator (x=54..55), the mob wheel (x=57..59, z=8..10, MOD-763), and the
+ * wind row of the next method.
  *
  * <p>Domain (coding standard, section 1): EnergyGeneration.
  */
@@ -35,14 +36,16 @@ final class GeneratorRowZone implements DemoZone {
 	static final DemoStand.TpPoint WATERMILL_CAMERA =
 			new DemoStand.TpPoint("watermill", 46.0, 6.0, 2.0, 0.0f, 30.0f, false);
 
+	/** The mob wheel's drive (MOD-763): the back-west cell of the 3x3x3 at x=57..59 / z=8..10, gate to the north. */
+	static final int MOB_WHEEL_X = 57;
+	static final int MOB_WHEEL_Z = GEN_Z + 2;
+
 	/** Camera of {@code /ala demo tp concentrator}. */
 	static final DemoStand.TpPoint CONCENTRATOR_CAMERA =
 			new DemoStand.TpPoint("concentrator", 54.0, 5.0, 3.0, 0.0f, 25.0f, false);
 
 	@Override
 	public void build(StandWriter w) {
-		ServerLevel level = w.level();
-		BlockPos origin = w.origin();
 		// MOD-479 — the creative source, at the head of the generator row: the instrument you reach for
 		// when the generator behind it is the thing under test. One row in front of the line and two
 		// cells clear of the first generator, so it touches nothing of the row it is meant to drive.
@@ -104,11 +107,18 @@ final class GeneratorRowZone implements DemoZone {
 		w.set(mx, -1, GEN_Z + 1, FLOOR);
 		w.set(mx, 0, GEN_Z + 1, ModContent.BATTERY_BOX.get());
 
-		// MOD-603: the concentrator grown out into its two-by-two-by-two form — the next bay of the
-		// generator row after the water mill, its 2x2x2 at x=54..55 / z=8..9.
-		// Built the way a player builds it — a grown panel plus seven loose sections — and then handed
-		// to the real assembler, so the stand cannot show a structure the game could not produce.
-		BlockPos structureCore = origin.offset(54, 1, GEN_Z);
+		buildConcentrator(w);
+		buildMobWheel(w);
+	}
+
+	/**
+	 * MOD-603: the concentrator grown out into its two-by-two-by-two form — the next bay of the
+	 * generator row after the water mill, its 2x2x2 at x=54..55 / z=8..9.
+	 * Built the way a player builds it — a grown panel plus seven loose sections — and then handed
+	 * to the real assembler, so the stand cannot show a structure the game could not produce.
+	 */
+	private static void buildConcentrator(StandWriter w) {
+		BlockPos structureCore = w.origin().offset(54, 1, GEN_Z);
 		w.place(structureCore,
 				ModContent.RADIANT_SOLAR_PANEL.get().defaultBlockState());
 		for (ConcentratorPart part : ConcentratorPart.CELLS) {
@@ -118,6 +128,42 @@ final class GeneratorRowZone implements DemoZone {
 			w.place(structureCore.offset(part.worldOffset(Direction.NORTH)),
 					ModContent.CONCENTRATOR_SECTION.get().defaultBlockState());
 		}
-		ConcentratorStructure.tryAssemble(level, structureCore);
+		ConcentratorStructure.tryAssemble(w.level(), structureCore);
+	}
+
+	/**
+	 * MOD-763: the mob wheel, assembled, in the bay after the concentrator — its gate on the north side, toward
+	 * the camera. Built the way a player builds it — the fourteen parts with the thirteen free cells left as air
+	 * — and then handed to the real assembler, which fills those cells with its invisible members. The free
+	 * cells are claimed through the ledger FIRST: the last part placed may already set the assembly off through
+	 * a neighbour update, and an air write after that would take the wheel apart again. No runner is put in: a
+	 * mob on the stand is not part of a rebuild, and the drive's screen then reads "No mob inside". The battery
+	 * box sits on the drive's south port, the way each generator of the row sits on its box.
+	 */
+	private static void buildMobWheel(StandWriter w) {
+		BlockPos drive = w.origin().offset(MOB_WHEEL_X, 1, MOB_WHEEL_Z);
+		Direction facing = Direction.NORTH;
+		for (boolean cells : new boolean[] {true, false}) {
+			for (int x = 0; x < MobWheelStructure.SIZE; x++) {
+				for (int y = 0; y < MobWheelStructure.SIZE; y++) {
+					for (int z = 0; z < MobWheelStructure.SIZE; z++) {
+						MobWheelStructure.Slot slot = MobWheelStructure.slotAt(x, y, z);
+						if ((slot == MobWheelStructure.Slot.CELL) != cells) {
+							continue;
+						}
+						Block block = switch (slot) {
+							case CONTROLLER -> ModContent.MOB_WHEEL_CONTROLLER.get();
+							case FRAME -> ModContent.MOB_WHEEL_FRAME.get();
+							case ROTOR -> ModContent.MOB_WHEEL_ROTOR.get();
+							case GATE -> ModContent.MOB_WHEEL_GATE.get();
+							case CELL -> Blocks.AIR;
+						};
+						w.place(MobWheelStructure.at(drive, facing, x, y, z), block.defaultBlockState());
+					}
+				}
+			}
+		}
+		MobWheelStructure.tryAssemble(w.level(), drive);
+		w.set(MOB_WHEEL_X, 1, MOB_WHEEL_Z + 1, ModContent.BATTERY_BOX.get());
 	}
 }

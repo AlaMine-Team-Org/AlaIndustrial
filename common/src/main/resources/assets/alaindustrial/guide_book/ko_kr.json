@@ -484,6 +484,43 @@
           ]
         },
         {
+          "id": "mob_wheel_controller",
+          "title": "쳇바퀴 구동부",
+          "icon": "alaindustrial:mob_wheel_controller",
+          "pages": [
+            {
+              "type": "text",
+              "title": "쳇바퀴 구동부",
+              "text": "초반용 3×3×3 LV 발전기 — 햄스터 쳇바퀴 같은 나무 바퀴 안에서 붙잡은 생물이 달립니다. 연료도 버퍼도 없습니다. 달리는 생물은 지치고, 쉬고, 먹이통의 먹이로 기운을 되찾습니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 0–12 EU/t"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "minecraft:oak_planks",
+                "alaindustrial:wooden_gear",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "minecraft:copper_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:mob_wheel_controller",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "charge_pad",
           "title": "충전소",
           "icon": "alaindustrial:charge_pad",
@@ -3470,9 +3507,9 @@
               "title": "레시피",
               "recipe_type": "정형 제작",
               "grid": [
-                "#c:glass_panes",
+                "minecraft:glass_pane",
                 "alaindustrial:resonant_crystal",
-                "#c:glass_panes",
+                "minecraft:glass_pane",
                 "alaindustrial:resonance_coil",
                 "alaindustrial:reactor_circuit",
                 "alaindustrial:resonance_coil",
@@ -3664,9 +3701,9 @@
                 "",
                 "alaindustrial:copper_coil",
                 "",
-                "#c:glass_panes",
+                "minecraft:glass_pane",
                 "alaindustrial:empty_chip",
-                "#c:glass_panes",
+                "minecraft:glass_pane",
                 "",
                 "minecraft:redstone",
                 ""
@@ -4009,6 +4046,36 @@
                 ""
               ],
               "result_id": "alaindustrial:iron_gear",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "module_blank",
+          "title": "빈 모듈",
+          "icon": "alaindustrial:module_blank",
+          "pages": [
+            {
+              "type": "text",
+              "title": "빈 모듈",
+              "text": "빈 모듈 — 아이템 강화의 공통 바탕 — 그리고 이것으로 만드는 첫 모듈인 전자석용 자석 필터 모듈."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "",
+                "minecraft:iron_ingot",
+                "",
+                "minecraft:redstone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:redstone",
+                "",
+                "minecraft:iron_ingot",
+                ""
+              ],
+              "result_id": "alaindustrial:module_blank",
               "result_count": 1
             }
           ]
@@ -4557,13 +4624,13 @@
           ]
         },
         {
-          "id": "fluxweave_chestplate",
-          "title": "플럭스 흉갑",
+          "id": "fluxweave_armor",
+          "title": "플럭스 방어구",
           "icon": "alaindustrial:fluxweave_chestplate",
           "pages": [
             {
               "type": "text",
-              "title": "플럭스 흉갑",
+              "title": "플럭스 방어구",
               "text": "이 모드 최초의 완전한 EU 방어구 세트 — 플럭스 천으로 만든 투구, 흉갑, 각반, 장화. 충전은 방어력을 끄지 않은 채 편의 기능만 켠다."
             },
             {
@@ -4573,24 +4640,6 @@
                 "에너지: 15 000 EU",
                 "버퍼: 15 000 EU"
               ]
-            },
-            {
-              "type": "recipe",
-              "title": "레시피",
-              "recipe_type": "정형 제작",
-              "grid": [
-                "alaindustrial:fluxweave_cloth",
-                "",
-                "alaindustrial:fluxweave_cloth",
-                "alaindustrial:fluxweave_cloth",
-                "alaindustrial:electronic_circuit",
-                "alaindustrial:fluxweave_cloth",
-                "alaindustrial:tempered_iron",
-                "alaindustrial:battery",
-                "alaindustrial:tempered_iron"
-              ],
-              "result_id": "alaindustrial:fluxweave_chestplate",
-              "result_count": 1
             }
           ]
         },
@@ -4785,7 +4834,7 @@
             {
               "type": "text",
               "title": "절연 흉갑",
-              "text": "슬라임에 담근 가죽 방어구 — 두건, 재킷, 바지, 부츠. 피복 없는 케이블의 감전을 대신 받아 내며 그만큼 내구도를 씁니다."
+              "text": "슬라임에 담근 가죽 방어구 — 투구, 흉갑, 각반, 장화. 피복 없는 케이블의 감전을 대신 받아 내며 그만큼 내구도를 씁니다."
             },
             {
               "type": "stats",
@@ -5258,6 +5307,158 @@
           ]
         },
         {
+          "id": "fluxweave_boots",
+          "title": "플럭스 장화",
+          "icon": "alaindustrial:fluxweave_boots",
+          "pages": [
+            {
+              "type": "text",
+              "title": "플럭스 장화",
+              "text": "플럭스 EU 장화 — 충전되어 있으면 낙하 피해를 절반으로 줄입니다. 방어력은 철 장화 수준 그대로입니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 15 000 EU",
+                "버퍼: 15 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:battery",
+                "alaindustrial:fluxweave_cloth",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:fluxweave_boots",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluxweave_chestplate",
+          "title": "플럭스 흉갑",
+          "icon": "alaindustrial:fluxweave_chestplate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "플럭스 흉갑",
+              "text": "플럭스 EU 흉갑 — 충전되어 있으면 강한 타격을 누그러뜨리고 밀려남에 버팁니다. 방어력은 철 흉갑 수준 그대로입니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 15 000 EU",
+                "버퍼: 15 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:fluxweave_cloth",
+                "",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:battery",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:fluxweave_chestplate",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluxweave_leggings",
+          "title": "플럭스 각반",
+          "icon": "alaindustrial:fluxweave_leggings",
+          "pages": [
+            {
+              "type": "text",
+              "title": "플럭스 각반",
+              "text": "플럭스 EU 각반 — 충전되어 있으면 달리기 속도가 오르고 계단 보조를 켤 수 있습니다. 방어력은 철 각반 수준 그대로입니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 15 000 EU",
+                "버퍼: 15 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:battery",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:fluxweave_leggings",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluxweave_helmet",
+          "title": "플럭스 투구",
+          "icon": "alaindustrial:fluxweave_helmet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "플럭스 투구",
+              "text": "플럭스 EU 투구 — 충전되어 있으면 수중 호흡과 더 빠른 수영을 줍니다. 방어력은 철 투구 수준 그대로입니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 15 000 EU",
+                "버퍼: 15 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:battery",
+                "alaindustrial:tempered_iron",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:fluxweave_helmet",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "shielding_chestplate",
           "title": "차폐 흉갑",
           "icon": "alaindustrial:shielding_chestplate",
@@ -5265,7 +5466,7 @@
             {
               "type": "text",
               "title": "차폐 흉갑",
-              "text": "방사선 차폐 세트 — 가죽과 고무, 노란 염료로 만든 두건과 재킷, 바지, 부츠. 피폭량을 줄이고 그만큼 내구도를 쓰며, 착용자를 완전히 감쌉니다."
+              "text": "방사선 차폐 세트 — 가죽과 고무, 노란 염료로 만든 투구와 흉갑, 각반, 장화. 피폭량을 줄이고 그만큼 내구도를 쓰며, 착용자를 완전히 감쌉니다."
             },
             {
               "type": "stats",
