@@ -46,6 +46,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.MapColor;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -163,11 +164,25 @@ final class ContentDeclarations {
 	/**
 	 * Wraps a machine/ore/material block's {@code strength/sound/…} chain with the shared base every such
 	 * block carries — {@code requiresCorrectToolForDrops()} (a pickaxe is needed to drop; harvest tier is
-	 * tag-driven). Torch blocks skip this (they break by hand) and use {@link ModBlockProperties#applyTorch}
-	 * directly. {@code setId} is layered by each loader (Fabric from its key; NeoForge from the deferred key).
+	 * tag-driven) and the map colour of a steel body, {@link MapColor#METAL} (MOD-752: what vanilla gives
+	 * iron machinery — anvil, hopper, cauldron). A block of another material names its colour with
+	 * {@link #machine(MapColor, UnaryOperator)}. Torch blocks skip this (they break by hand) and use
+	 * {@link ModBlockProperties#applyTorch} directly. {@code setId} is layered by each loader (Fabric from its
+	 * key; NeoForge from the deferred key).
 	 */
 	static UnaryOperator<BlockBehaviour.Properties> machine(UnaryOperator<BlockBehaviour.Properties> chain) {
-		return p -> chain.apply(p.requiresCorrectToolForDrops());
+		return machine(MapColor.METAL, chain);
+	}
+
+	/**
+	 * {@link #machine(UnaryOperator)} for a block whose top face is not machine steel (MOD-752): the colour
+	 * a filled map draws for it — the vanilla colour of its material, or the one nearest its top face.
+	 * {@link MapColor#NONE} keeps a see-through block (glass, a glass door or dome) off the map, as vanilla
+	 * glass is. A {@code mapColor} call inside {@code chain} still wins: it is applied after this one.
+	 */
+	static UnaryOperator<BlockBehaviour.Properties> machine(MapColor mapColor,
+			UnaryOperator<BlockBehaviour.Properties> chain) {
+		return p -> chain.apply(p.requiresCorrectToolForDrops().mapColor(mapColor));
 	}
 
 	/** An item with a hand-written construction. */

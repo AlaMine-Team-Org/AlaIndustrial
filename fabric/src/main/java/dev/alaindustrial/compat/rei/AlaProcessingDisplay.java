@@ -101,10 +101,9 @@ public class AlaProcessingDisplay extends BasicDisplay {
 	 * Success chance of one attempt, or 0 for the machines that always deliver.
 	 *
 	 * <p>What travels in the display is the recipe's own {@code chance} — unset stays unset — and the
-	 * mode default is applied here, on the client. Resolving it server-side would have been more
-	 * correct in isolation, but JEI has no server-side display pass and reads Config locally, so the
-	 * two loaders printed different numbers against a server with a non-default config. Same source on
-	 * both is worth more than being right on one of them.
+	 * mode default is applied here, on the client, from the server's snapshot (MOD-759): the same call JEI
+	 * makes when it draws the card, so both viewers print the server's default and follow a
+	 * {@code /ala config reload} without the display being rebuilt.
 	 */
 	public double chance() {
 		return IncubatorMode.chanceOf(kind, chance);

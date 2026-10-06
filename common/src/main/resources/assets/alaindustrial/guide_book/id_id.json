@@ -2761,7 +2761,7 @@
             {
               "type": "text",
               "title": "Stasiun Drone Kebun",
-              "text": "Stasiun LV dengan bufer EU tempat drone animasi lepas landas dan berpatroli di lahan pertanian dalam radius 4 blok — mencangkul tanah kosong, menanam benih, memupuk tanaman yang belum matang, dan mengangkut panen yang sudah masak kembali ke stasiun."
+              "text": "Stasiun LV dengan bufer EU tempat drone animasi lepas landas dan berpatroli di lahan pertanian dalam radius 4 blok — mencangkul tanah kosong, menanam benih, memupuk tanaman yang belum matang, mencabut rumput dan semak, dan mengangkut panen yang sudah masak kembali ke stasiun."
             },
             {
               "type": "stats",

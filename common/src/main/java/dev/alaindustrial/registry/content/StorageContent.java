@@ -69,6 +69,7 @@ import dev.alaindustrial.registry.ModBlockProperties;
 import dev.alaindustrial.registry.ModContent;
 import java.util.List;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.MapColor;
 
 /**
  * The Storage domain of the content manifest (MOD-711; coding.md §1, owner decision D5). Storage: energy stores
@@ -97,7 +98,7 @@ public final class StorageContent {
 					machine(p -> p.strength(0.3f, 0.6f).sound(SoundType.COPPER).noOcclusion()),
 					s -> ModContent.ITEM_PIPE_ADVANCED = s);
 	public static final BlockDef<BatteryBoxBlock> BATTERY_BOX = block("battery_box", BatteryBoxBlock::new,
-			machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.WOOD)), s -> ModContent.BATTERY_BOX = s);
+			machine(MapColor.WOOD, p -> p.strength(3.0f, 6.0f).sound(SoundType.WOOD)), s -> ModContent.BATTERY_BOX = s);
 	public static final BlockDef<CesuBlock> CESU = block("cesu", CesuBlock::new,
 			// Metal, and tougher than the LV box it is built from — this tier is a steel shell, not a crate.
 			machine(p -> p.strength(4.0f, 6.0f).sound(SoundType.METAL)), s -> ModContent.CESU = s);
@@ -127,30 +128,32 @@ public final class StorageContent {
 			machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion()),
 			s -> ModContent.SILVER_CHEST = s);
 	public static final BlockDef<GoldChestBlock> GOLD_CHEST = block("gold_chest", GoldChestBlock::new,
-			machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion()), s -> ModContent.GOLD_CHEST = s);
+			machine(MapColor.GOLD, p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion()),
+			s -> ModContent.GOLD_CHEST = s);
 	// Electrum Chest (MOD-409) — the tier above gold. Same block stats; the difference is inside
 	// (81 slots) and in the window (six rows + scrollbar instead of a taller panel).
 	public static final BlockDef<ElectrumChestBlock> ELECTRUM_CHEST = block("electrum_chest", ElectrumChestBlock::new,
-			machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion()),
+			machine(MapColor.RAW_IRON, p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion()),
 			s -> ModContent.ELECTRUM_CHEST = s);
 	// Shielding Chest (MOD-474) — NOT a rung of the storage ladder above: it holds the same 36 slots
 	// as the iron chest and is bought for what it stops, not for what it fits. It is the only place
 	// radioactive material can sit without irradiating everything around it.
 	public static final BlockDef<ShieldingChestBlock> SHIELDING_CHEST =
 			block("shielding_chest", ShieldingChestBlock::new,
-					machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion()),
+					machine(MapColor.COLOR_GRAY, p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion()),
 					s -> ModContent.SHIELDING_CHEST = s);
 	public static final BlockDef<DiamondChestBlock> DIAMOND_CHEST = block("diamond_chest", DiamondChestBlock::new,
 			// MOD-474 — same stats as the storage chests: the shielding is a radiation rule, not armour.
 			// MOD-599: 1200 is the ancient-debris figure — an explosion ray spends its whole budget on
 			// the first block, so TNT and creepers leave the chest and its contents alone. Hardness stays
 			// at the chest family's 3.0 — this is a safe, not a slower block to mine.
-			machine(p -> p.strength(3.0f, 1200.0f)
+			machine(MapColor.DIAMOND, p -> p.strength(3.0f, 1200.0f)
 					.sound(SoundType.METAL).noOcclusion()), s -> ModContent.DIAMOND_CHEST = s);
 	public static final BlockDef<SmartWireBlock> SMART_WIRE = block("smart_wire", SmartWireBlock::new,
 			// MOD-480 — the monitoring wall. The wire is as fragile as the other conduits; the core and
 			// the panels are machine casings.
-			machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion()), s -> ModContent.SMART_WIRE = s);
+			machine(MapColor.COLOR_GRAY, p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion()),
+			s -> ModContent.SMART_WIRE = s);
 	public static final BlockDef<MonitorCoreBlock> MONITOR_CORE = block("monitor_core", MonitorCoreBlock::new,
 			machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)), s -> ModContent.MONITOR_CORE = s);
 	public static final BlockDef<MonitorPanelBlock> MONITOR_PANEL = block("monitor_panel", MonitorPanelBlock::new,

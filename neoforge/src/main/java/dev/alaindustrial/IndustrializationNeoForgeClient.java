@@ -12,11 +12,13 @@ import dev.alaindustrial.registry.neoforge.ModAttachmentsNeoForge;
 import net.minecraft.client.Minecraft;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.ExtractBlockOutlineRenderStateEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
@@ -174,6 +176,30 @@ public final class IndustrializationNeoForgeClient {
 		// API: a static block-shaped preview gains nothing from per-frame submission.
 		NeoForge.EVENT_BUS.addListener(NeoForgeNetworkVisualization::onSubmitCustomGeometry);
 		NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post event) -> NeoForgeCableGhost.tick());
+		// MOD-778: the shared block outlines. LOWEST so every other listener has had its say (and added its
+		// custom renderers) before the outline is decided.
+		NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST, IndustrializationNeoForgeClient::replaceBlockOutline);
+	}
+
+	/**
+	 * Replays the shared {@link ClientContentManifest#BLOCK_OUTLINES} (MOD-778): the first entry that answers
+	 * for the hovered block becomes the extracted outline's shape. The event fires before vanilla builds the
+	 * render state, and cancelling it leaves the field to whoever set it — so the state is built here with
+	 * the event's own translucency, contrast and custom renderers, and vanilla draws it with its usual
+	 * styling. The Fabric client swaps the shape of the extracted state the same way.
+	 */
+	private static void replaceBlockOutline(ExtractBlockOutlineRenderStateEvent event) {
+		for (ClientContentManifest.BlockOutline def : ClientContentManifest.BLOCK_OUTLINES) {
+			net.minecraft.world.phys.shapes.VoxelShape shape =
+					def.shape(event.getLevel(), event.getBlockPos(), event.getBlockState());
+			if (shape != null) {
+				event.getLevelRenderState().blockOutlineRenderState =
+						new net.minecraft.client.renderer.state.level.BlockOutlineRenderState(event.getBlockPos(),
+								event.isInTranslucentPass(), event.isHighContrast(), shape, event.getCustomRenderers());
+				event.setCanceled(true);
+				return;
+			}
+		}
 	}
 
 	/**

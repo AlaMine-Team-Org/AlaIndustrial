@@ -41,6 +41,7 @@ import dev.alaindustrial.registry.ModContent;
 import java.util.List;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.MapColor;
 
 /**
  * The Reactor domain of the content manifest (MOD-711; coding.md §1, owner decision D5). The nuclear line: the
@@ -69,27 +70,29 @@ public final class ReactorContent {
 			// harder to blow up (30.0): the room is what stands between a meltdown and the world, so a
 			// creeper must not be able to open it. Glass and door are the same material, hence the same
 			// numbers — a window is not a weak point, it just costs the same palladium as a wall.
-			machine(p -> p.strength(5.0f, 30.0f).sound(SoundType.METAL)), s -> ModContent.REACTOR_CASING = s);
+			machine(MapColor.COLOR_GRAY, p -> p.strength(5.0f, 30.0f).sound(SoundType.METAL)),
+			s -> ModContent.REACTOR_CASING = s);
 	/** A window that still counts as shell; capped by share, so a room cannot be all windows. */
 	public static final BlockDef<ReactorShellBlock> REACTOR_GLASS = block("reactor_glass", ReactorShellBlock::new,
-			machine(p -> p.strength(5.0f, 30.0f).sound(SoundType.GLASS)
+			machine(MapColor.NONE, p -> p.strength(5.0f, 30.0f).sound(SoundType.GLASS)
 					.noOcclusion()), s -> ModContent.REACTOR_GLASS = s);
 	/** Feedthrough: pipes and cables cross the shell here instead of breaking it (live in stage 3). */
 	public static final BlockDef<ReactorPortBlock> REACTOR_PORT = block("reactor_port", ReactorPortBlock::new,
-			machine(p -> p.strength(5.0f, 30.0f).sound(SoundType.METAL)), s -> ModContent.REACTOR_PORT = s);
+			machine(MapColor.COLOR_GRAY, p -> p.strength(5.0f, 30.0f).sound(SoundType.METAL)),
+			s -> ModContent.REACTOR_PORT = s);
 	/** The airlock — pulse-only, self-closing; a room without one cannot be entered and does not form. */
 	public static final BlockDef<ReactorDoorBlock> REACTOR_DOOR = block("reactor_door", ReactorDoorBlock::new,
-			machine(p -> LineBlockProps.popsOnPush(p).strength(5.0f, 30.0f)
+			machine(MapColor.COLOR_GRAY, p -> LineBlockProps.popsOnPush(p).strength(5.0f, 30.0f)
 					.sound(SoundType.METAL).noOcclusion()), s -> ModContent.REACTOR_DOOR = s);
 	/** The room's brain: scans the shell, reports what is wrong and where. */
 	public static final BlockDef<ReactorControllerBlock> REACTOR_CONTROLLER =
 			block("reactor_controller", ReactorControllerBlock::new,
-					machine(p -> p.strength(5.0f, 30.0f).sound(SoundType.METAL)),
+					machine(MapColor.COLOR_GRAY, p -> p.strength(5.0f, 30.0f).sound(SoundType.METAL)),
 					s -> ModContent.REACTOR_CONTROLLER = s);
 	/** Shell block that lights the inside of the room — and only once the room is sealed. */
 	public static final BlockDef<ReactorLampBlock> REACTOR_LAMP = block("reactor_lamp", ReactorLampBlock::new,
 			// The lamp glows only while its shell passes the scan — light is the room's "done" signal.
-			machine(p -> p.strength(5.0f, 30.0f).sound(SoundType.METAL)
+			machine(MapColor.COLOR_GRAY, p -> p.strength(5.0f, 30.0f).sound(SoundType.METAL)
 					.lightLevel(ReactorLampBlock::lightLevel)), s -> ModContent.REACTOR_LAMP = s);
 	/** The way out: a shielded button that survives what the room is built to contain. */
 	public static final BlockDef<ReactorButtonBlock> REACTOR_BUTTON = block("reactor_button", ReactorButtonBlock::new,
@@ -102,11 +105,12 @@ public final class ReactorContent {
 			block("fuel_rod_assembly", FuelRodAssemblyBlock::new,
 					// A rack, not armour: it lives inside the shell, so it needs none of the shell's toughness.
 					// noOcclusion because the casing is transparent and the rods inside have to be drawn.
-					machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
+					machine(MapColor.COLOR_GRAY, p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
 							.noOcclusion()), s -> ModContent.FUEL_ROD_ASSEMBLY = s);
 
 	public static final BlockDef<ReactorOutletBlock> REACTOR_OUTLET = block("reactor_outlet", ReactorOutletBlock::new,
-			machine(p -> p.strength(5.0f, 30.0f).sound(SoundType.METAL)), s -> ModContent.REACTOR_OUTLET = s);
+			machine(MapColor.COLOR_GRAY, p -> p.strength(5.0f, 30.0f).sound(SoundType.METAL)),
+			s -> ModContent.REACTOR_OUTLET = s);
 	/**
 	 * MOD-471 — ground a reactor accident poisoned. No block item: it is left behind, never placed.
 	 */
@@ -116,7 +120,8 @@ public final class ReactorContent {
 					// to be shovelled away by a player who would rather not wait for it to fade. randomTicks()
 					// is load-bearing — without it the decay in IrradiatedSoilBlock would never run and the
 					// contamination would be permanent.
-					p -> p.strength(0.6f).sound(SoundType.GRAVEL).randomTicks(), s -> ModContent.IRRADIATED_SOIL = s);
+					p -> p.strength(0.6f).mapColor(MapColor.TERRACOTTA_GRAY).sound(SoundType.GRAVEL).randomTicks(),
+					s -> ModContent.IRRADIATED_SOIL = s);
 
 	public static final BlockDef<SteamNozzleBlock> STEAM_NOZZLE = block("steam_nozzle", SteamNozzleBlock::new,
 			// Bolted to the outside of the shell: the shell's toughness, none of its bulk.

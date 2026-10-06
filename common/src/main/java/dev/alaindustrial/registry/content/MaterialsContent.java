@@ -31,6 +31,7 @@ import java.util.List;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.MapColor;
 
 // size-justified: a declarative table under the §10 norm of 600 lines per domain — the manifest entries
 // (134 items) and the four tab runs coding.md §1 files here (crafting components, materials, vanilla
@@ -57,25 +58,34 @@ public final class MaterialsContent {
 
 	// Ores: plain Block, harvest tier is tag-driven.
 	public static final BlockDef<Block> TIN_ORE = block("tin_ore", Block::new,
-			machine(p -> p.strength(3.0f, 3.0f).sound(SoundType.STONE)), s -> ModContent.TIN_ORE = s);
+			machine(MapColor.STONE, p -> p.strength(3.0f, 3.0f).sound(SoundType.STONE)), s -> ModContent.TIN_ORE = s);
 	public static final BlockDef<Block> DEEPSLATE_TIN_ORE = block("deepslate_tin_ore", Block::new,
-			machine(p -> p.strength(4.5f, 3.0f).sound(SoundType.DEEPSLATE)), s -> ModContent.DEEPSLATE_TIN_ORE = s);
+			machine(MapColor.DEEPSLATE, p -> p.strength(4.5f, 3.0f).sound(SoundType.DEEPSLATE)),
+			s -> ModContent.DEEPSLATE_TIN_ORE = s);
 	public static final BlockDef<Block> SILVER_ORE = block("silver_ore", Block::new,
-			machine(p -> p.strength(3.0f, 3.0f).sound(SoundType.STONE)), s -> ModContent.SILVER_ORE = s);
+			machine(MapColor.STONE, p -> p.strength(3.0f, 3.0f).sound(SoundType.STONE)),
+			s -> ModContent.SILVER_ORE = s);
 	public static final BlockDef<Block> DEEPSLATE_SILVER_ORE = block("deepslate_silver_ore", Block::new,
-			machine(p -> p.strength(4.5f, 3.0f).sound(SoundType.DEEPSLATE)), s -> ModContent.DEEPSLATE_SILVER_ORE = s);
+			machine(MapColor.DEEPSLATE, p -> p.strength(4.5f, 3.0f).sound(SoundType.DEEPSLATE)),
+			s -> ModContent.DEEPSLATE_SILVER_ORE = s);
 	public static final BlockDef<Block> NICKEL_ORE = block("nickel_ore", Block::new,
-			machine(p -> p.strength(3.0f, 3.0f).sound(SoundType.STONE)), s -> ModContent.NICKEL_ORE = s);
+			machine(MapColor.STONE, p -> p.strength(3.0f, 3.0f).sound(SoundType.STONE)),
+			s -> ModContent.NICKEL_ORE = s);
 	public static final BlockDef<Block> DEEPSLATE_NICKEL_ORE = block("deepslate_nickel_ore", Block::new,
-			machine(p -> p.strength(4.5f, 3.0f).sound(SoundType.DEEPSLATE)), s -> ModContent.DEEPSLATE_NICKEL_ORE = s);
+			machine(MapColor.DEEPSLATE, p -> p.strength(4.5f, 3.0f).sound(SoundType.DEEPSLATE)),
+			s -> ModContent.DEEPSLATE_NICKEL_ORE = s);
 	public static final BlockDef<Block> SULFUR_ORE = block("sulfur_ore", Block::new,
-			machine(p -> p.strength(3.0f, 3.0f).sound(SoundType.STONE)), s -> ModContent.SULFUR_ORE = s);
+			machine(MapColor.STONE, p -> p.strength(3.0f, 3.0f).sound(SoundType.STONE)),
+			s -> ModContent.SULFUR_ORE = s);
 	public static final BlockDef<Block> DEEPSLATE_SULFUR_ORE = block("deepslate_sulfur_ore", Block::new,
-			machine(p -> p.strength(4.5f, 3.0f).sound(SoundType.DEEPSLATE)), s -> ModContent.DEEPSLATE_SULFUR_ORE = s);
+			machine(MapColor.DEEPSLATE, p -> p.strength(4.5f, 3.0f).sound(SoundType.DEEPSLATE)),
+			s -> ModContent.DEEPSLATE_SULFUR_ORE = s);
 	public static final BlockDef<Block> URANIUM_ORE = block("uranium_ore", Block::new,
-			machine(p -> p.strength(3.0f, 3.0f).sound(SoundType.STONE)), s -> ModContent.URANIUM_ORE = s);
+			machine(MapColor.STONE, p -> p.strength(3.0f, 3.0f).sound(SoundType.STONE)),
+			s -> ModContent.URANIUM_ORE = s);
 	public static final BlockDef<Block> DEEPSLATE_URANIUM_ORE = block("deepslate_uranium_ore", Block::new,
-			machine(p -> p.strength(4.5f, 3.0f).sound(SoundType.DEEPSLATE)), s -> ModContent.DEEPSLATE_URANIUM_ORE = s);
+			machine(MapColor.DEEPSLATE, p -> p.strength(4.5f, 3.0f).sound(SoundType.DEEPSLATE)),
+			s -> ModContent.DEEPSLATE_URANIUM_ORE = s);
 	// MOD-423 — the only Nether ore, hence the only one WITHOUT a deepslate twin: the host rock
 	// there is netherrack/basalt/blackstone, and no deepslate strata exist to carry a second variant.
 	public static final BlockDef<Block> PALLADIUM_ORE = block("palladium_ore", Block::new,
@@ -92,7 +102,8 @@ public final class MaterialsContent {
 			// This buys immunity to EXPLOSIONS only: a wither's body-charge destruction is gated by
 			// #minecraft:wither_immune, not by resistance, so it still breaks palladium — exactly as
 			// it breaks ancient debris. Behavioural parity with debris is the goal, not invulnerability.
-			machine(p -> p.strength(4.5f, 1200.0f).sound(SoundType.NETHER_ORE)), s -> ModContent.PALLADIUM_ORE = s);
+			machine(MapColor.NETHER, p -> p.strength(4.5f, 1200.0f).sound(SoundType.NETHER_ORE)),
+			s -> ModContent.PALLADIUM_ORE = s);
 	// MOD-225 machine casing (crafting base) + MOD-292 MV casing + two decorative plate blocks.
 	public static final BlockDef<Block> MACHINE_CASING = block("machine_casing", Block::new,
 			// MOD-225: machine casing (crafting base for machines) + two decorative plate blocks.
@@ -101,13 +112,15 @@ public final class MaterialsContent {
 			// MOD-292: MV casing — tougher than the LV one, it is the tier-up part.
 			machine(p -> p.strength(6.0f, 8.0f).sound(SoundType.METAL)), s -> ModContent.ADVANCED_MACHINE_CASING = s);
 	public static final BlockDef<Block> SLAG_BLOCK = block("slag_block", Block::new,
-			machine(p -> p.strength(2.5f, 6.0f).sound(SoundType.STONE)), s -> ModContent.SLAG_BLOCK = s);
+			machine(MapColor.DEEPSLATE, p -> p.strength(2.5f, 6.0f).sound(SoundType.STONE)),
+			s -> ModContent.SLAG_BLOCK = s);
 	// MOD-590 — carbon ceramic: the coal sink, and the refractory the heated machines stand on.
 	public static final BlockDef<Block> CARBON_CERAMIC = block("carbon_ceramic", Block::new,
 			// MOD-590 — blast resistance 30, the same number the reactor shell carries, because this is
 			// the wall a player builds that room out of. Five times stone (6) and nowhere near obsidian
 			// (1200): the block is bulk-craftable, so it must not be the end of blast-proofing.
-			machine(p -> p.strength(4.0f, 30.0f).sound(SoundType.CALCITE)), s -> ModContent.CARBON_CERAMIC = s);
+			machine(MapColor.COLOR_BLACK, p -> p.strength(4.0f, 30.0f).sound(SoundType.CALCITE)),
+			s -> ModContent.CARBON_CERAMIC = s);
 
 	/** This domain's blocks, in declaration order — collected since {@code beginBlocks()} above. */
 	private static final List<BlockDef<?>> BLOCKS = endBlocks();

@@ -1,6 +1,7 @@
 package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.block.KokSagyzBlock;
 import dev.alaindustrial.block.entity.GardenDroneStationBlockEntity;
 import dev.alaindustrial.block.entity.GardenDroneStatus;
 import dev.alaindustrial.registry.ModContent;
@@ -11,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
@@ -56,7 +58,21 @@ public final class GardenDroneScenarios {
 								"garden_drone_stands_on_tile_before_flying_home")
 						.fabricId("AlaCommonGameTest", "gardenDroneStandsOnTileBeforeFlyingHome").ticks(20, 300),
 				RosterEntry.of(GardenDroneScenarios::fun11PlantsOnTaggedSoil, "garden_drone_plants_on_tagged_soil")
-						.fabricId("AlaCommonGameTest", "gardenDronePlantsOnTaggedSoil").ticks(20, 40));
+						.fabricId("AlaCommonGameTest", "gardenDronePlantsOnTaggedSoil").ticks(20, 40),
+				RosterEntry.of(GardenDroneScenarios::fun12ClearsGrassForOneHoePoint, "garden_drone_clears_grass")
+						.ticks(40),
+				RosterEntry.of(GardenDroneScenarios::fun13ClearedBushDropLandsInStation,
+								"garden_drone_cleared_bush_drop_lands_in_station")
+						.ticks(40),
+				RosterEntry.of(GardenDroneScenarios::fun14WithoutHoeGrassStays, "garden_drone_without_hoe_keeps_grass")
+						.ticks(40),
+				RosterEntry.of(GardenDroneScenarios::fun15LeavesCropsAndFlowersAlone,
+								"garden_drone_clears_grass_not_crops_or_flowers")
+						.ticks(40),
+				RosterEntry.of(GardenDroneScenarios::fun16FullOutputKeepsGrass, "garden_drone_full_output_keeps_grass")
+						.ticks(40),
+				RosterEntry.of(GardenDroneScenarios::fun17TallGrassClearedWhole, "garden_drone_clears_tall_grass_whole")
+						.ticks(40));
 
 		private Roster() {}
 	}
@@ -488,6 +504,216 @@ public final class GardenDroneScenarios {
 			if (!soil.is(Blocks.ROOTED_DIRT)) {
 				helper.fail("the station reworked tagged soil into " + soil.getBlock()
 						+ "; foreign soil must never be tilled over");
+			}
+			helper.succeed();
+		});
+	}
+
+	// ---------------------------------------------------------------- clearing weeds (MOD-779)
+
+	/** Ticks for one full errand there and back, landing pause included, with a margin of two. */
+	private static final int TICKS_PER_ROUND_TRIP = TICKS_PER_JOB
+			+ GardenDroneStationBlockEntity.MIN_FLIGHT_TICKS + GardenDroneStationBlockEntity.LANDING_PAUSE_TICKS + 2;
+
+	/** Puts {@code plant} on a grass block at {@code ground}, so the plant stands where a field would. */
+	private static void plantOnGrass(GameTestHelper helper, BlockPos ground, BlockState plant) {
+		helper.setBlock(ground, Blocks.GRASS_BLOCK);
+		helper.setBlock(ground.above(), plant);
+	}
+
+	/** The block now at {@code pos}, read from the world rather than from anything the station holds. */
+	private static BlockState at(GameTestHelper helper, BlockPos pos) {
+		return helper.getLevel().getBlockState(helper.absolutePos(pos));
+	}
+
+	/**
+	 * TC-DRONE-001-FUN12 — grass on a grass block is pulled up for one point of the hoe and exactly one
+	 * action's EU (MOD-779). The red-before-green case of the weeding action: without CLEAR the grass
+	 * stands, because the tile under it is not tillable while something grows on it.
+	 *
+	 * @implements TC-DRONE-001-FUN12 — grass is cleared for one hoe point and one action's EU
+	 */
+	public static void fun12ClearsGrassForOneHoePoint(GameTestHelper helper) {
+		withIsolatedZone(() -> {
+			GardenDroneStationBlockEntity station = place(helper);
+			charge(station);
+			long before = station.getEnergyStorage().getAmount();
+			plantOnGrass(helper, PLOT, Blocks.SHORT_GRASS.defaultBlockState());
+
+			AlaGameTestHelper.drive(station, helper, TICKS_PER_JOB);
+
+			if (!at(helper, PLOT.above()).isAir()) {
+				helper.fail("the drone did not clear the grass; found " + at(helper, PLOT.above()).getBlock());
+			}
+			int wear = station.getItem(GardenDroneStationBlockEntity.HOE_SLOT).getDamageValue();
+			if (wear != 1) {
+				helper.fail("clearing the grass wore the hoe by " + wear + " points, expected exactly 1");
+			}
+			long spent = before - station.getEnergyStorage().getAmount();
+			if (spent != Config.gardenDroneEuPerAction) {
+				helper.fail("clearing spent " + spent + " EU, expected exactly one action ("
+						+ Config.gardenDroneEuPerAction + ")");
+			}
+			helper.assertItemEntityNotPresent(Items.WHEAT_SEEDS, PLOT.above(), 2.0);
+			helper.succeed();
+		});
+	}
+
+	/**
+	 * TC-DRONE-001-FUN13 — a weed that always drops something (the firefly bush drops itself) lands in
+	 * the output slots, never in the world: weeding keeps the harvest's no-{@code ItemEntity} contract.
+	 *
+	 * @implements TC-DRONE-001-FUN13 — a cleared firefly bush lands in the station's output slots
+	 */
+	public static void fun13ClearedBushDropLandsInStation(GameTestHelper helper) {
+		withIsolatedZone(() -> {
+			GardenDroneStationBlockEntity station = place(helper);
+			charge(station);
+			plantOnGrass(helper, PLOT, Blocks.FIREFLY_BUSH.defaultBlockState());
+
+			AlaGameTestHelper.drive(station, helper, TICKS_PER_JOB);
+
+			if (at(helper, PLOT.above()).is(Blocks.FIREFLY_BUSH)) {
+				helper.fail("the firefly bush is still standing — the drone did not clear it");
+			}
+			if (!stationHolds(station, Items.FIREFLY_BUSH)) {
+				helper.fail("the cleared firefly bush did not reach the station's output slots");
+			}
+			helper.assertItemEntityNotPresent(Items.FIREFLY_BUSH, PLOT.above(), 2.0);
+			helper.succeed();
+		});
+	}
+
+	/**
+	 * TC-DRONE-001-FUN14 — no hoe, no weeding: clearing is a tool job like tilling and harvesting.
+	 *
+	 * @implements TC-DRONE-001-FUN14 — without a hoe the grass stays and no EU is spent
+	 */
+	public static void fun14WithoutHoeGrassStays(GameTestHelper helper) {
+		withIsolatedZone(() -> {
+			GardenDroneStationBlockEntity station = place(helper);
+			charge(station);
+			station.setItem(GardenDroneStationBlockEntity.HOE_SLOT, ItemStack.EMPTY);
+			long before = station.getEnergyStorage().getAmount();
+			plantOnGrass(helper, PLOT, Blocks.SHORT_GRASS.defaultBlockState());
+
+			AlaGameTestHelper.drive(station, helper, TICKS_PER_JOB);
+
+			if (!at(helper, PLOT.above()).is(Blocks.SHORT_GRASS)) {
+				helper.fail("a station with no hoe cleared the grass anyway");
+			}
+			if (station.getEnergyStorage().getAmount() != before) {
+				helper.fail("a station with no hoe spent EU with nothing to do");
+			}
+			helper.succeed();
+		});
+	}
+
+	/**
+	 * TC-DRONE-001-FUN15 — the weed list is a tag, so the drone tells grass from a planted field: an
+	 * unripe kok-sagyz, a trellis and a poppy in the zone stay, while grass beside them goes. The grass
+	 * is what keeps this case from passing vacuously — a drone that could not weed at all would also
+	 * leave the three alone.
+	 *
+	 * @implements TC-DRONE-001-FUN15 — kok-sagyz, a trellis and a poppy are never weeded
+	 */
+	public static void fun15LeavesCropsAndFlowersAlone(GameTestHelper helper) {
+		withIsolatedZone(() -> {
+			GardenDroneStationBlockEntity station = place(helper);
+			charge(station);
+			BlockPos kokSagyzGround = new BlockPos(2, 2, 0);
+			BlockPos trellisGround = new BlockPos(2, 2, 2);
+			BlockPos grassGround = new BlockPos(0, 2, 1);
+			plantOnGrass(helper, PLOT, Blocks.POPPY.defaultBlockState());
+			plantOnGrass(helper, kokSagyzGround, ModContent.KOK_SAGYZ.get().defaultBlockState()
+					.setValue(KokSagyzBlock.AGE, KokSagyzBlock.AGE_ROSETTE));
+			helper.setBlock(trellisGround, Blocks.FARMLAND);
+			DoublePlantBlock.placeAt(helper.getLevel(), ModContent.TRELLIS.get().defaultBlockState(),
+					helper.absolutePos(trellisGround.above()), 3);
+			plantOnGrass(helper, grassGround, Blocks.SHORT_GRASS.defaultBlockState());
+
+			// Several errands: the grass, then the ground it stood on — and time for a third, wrong one.
+			AlaGameTestHelper.drive(station, helper, 3 * TICKS_PER_ROUND_TRIP);
+
+			if (at(helper, grassGround.above()).is(Blocks.SHORT_GRASS)) {
+				helper.fail("the grass beside the field is still standing — the drone did not weed at all");
+			}
+			if (!at(helper, PLOT.above()).is(Blocks.POPPY)) {
+				helper.fail("the drone pulled up a poppy; found " + at(helper, PLOT.above()).getBlock());
+			}
+			if (!at(helper, kokSagyzGround.above()).is(ModContent.KOK_SAGYZ.get())) {
+				helper.fail("the drone pulled up an unripe kok-sagyz; found "
+						+ at(helper, kokSagyzGround.above()).getBlock());
+			}
+			if (!at(helper, trellisGround.above()).is(ModContent.TRELLIS.get())
+					|| !at(helper, trellisGround.above(2)).is(ModContent.TRELLIS.get())) {
+				helper.fail("the drone pulled up a trellis; found " + at(helper, trellisGround.above()).getBlock()
+						+ " / " + at(helper, trellisGround.above(2)).getBlock());
+			}
+			helper.succeed();
+		});
+	}
+
+	/**
+	 * TC-DRONE-001-FUN16 — with every output slot full the drone does not weed: the grass stays, the
+	 * hoe and the buffer are untouched. Short grass drops nothing seven times in eight, so without the
+	 * full-output check this case would clear it most runs — the check is what makes it hold every run.
+	 *
+	 * @implements TC-DRONE-001-FUN16 — a full output keeps the grass, the hoe and the EU untouched
+	 */
+	public static void fun16FullOutputKeepsGrass(GameTestHelper helper) {
+		withIsolatedZone(() -> {
+			GardenDroneStationBlockEntity station = place(helper);
+			charge(station);
+			for (int i = 0; i < GardenDroneStationBlockEntity.OUTPUT_SLOT_COUNT; i++) {
+				station.setItem(GardenDroneStationBlockEntity.OUTPUT_SLOT_START + i,
+						new ItemStack(Items.COBBLESTONE, 64));
+			}
+			long before = station.getEnergyStorage().getAmount();
+			plantOnGrass(helper, PLOT, Blocks.SHORT_GRASS.defaultBlockState());
+
+			AlaGameTestHelper.drive(station, helper, TICKS_PER_JOB);
+
+			if (!at(helper, PLOT.above()).is(Blocks.SHORT_GRASS)) {
+				helper.fail("the drone weeded with every output slot full");
+			}
+			if (station.getItem(GardenDroneStationBlockEntity.HOE_SLOT).getDamageValue() != 0) {
+				helper.fail("the hoe wore down although nothing was weeded");
+			}
+			if (station.getEnergyStorage().getAmount() != before) {
+				helper.fail("the station spent EU although nothing was weeded");
+			}
+			helper.succeed();
+		});
+	}
+
+	/**
+	 * TC-DRONE-001-FUN17 — tall grass goes whole in one action: both halves stand inside the scan here,
+	 * the drone takes it from the lower half, and the upper one goes with it for one hoe point and one
+	 * action's EU.
+	 *
+	 * @implements TC-DRONE-001-FUN17 — tall grass is cleared whole, from its lower half, in one action
+	 */
+	public static void fun17TallGrassClearedWhole(GameTestHelper helper) {
+		withIsolatedZone(() -> {
+			GardenDroneStationBlockEntity station = place(helper);
+			charge(station);
+			long before = station.getEnergyStorage().getAmount();
+			helper.setBlock(PLOT.below(), Blocks.GRASS_BLOCK);
+			DoublePlantBlock.placeAt(helper.getLevel(), Blocks.TALL_GRASS.defaultBlockState(),
+					helper.absolutePos(PLOT), 3);
+
+			AlaGameTestHelper.drive(station, helper, TICKS_PER_JOB);
+
+			if (!at(helper, PLOT).isAir() || !at(helper, PLOT.above()).isAir()) {
+				helper.fail("tall grass was not cleared whole; found " + at(helper, PLOT).getBlock()
+						+ " / " + at(helper, PLOT.above()).getBlock());
+			}
+			int wear = station.getItem(GardenDroneStationBlockEntity.HOE_SLOT).getDamageValue();
+			long spent = before - station.getEnergyStorage().getAmount();
+			if (wear != 1 || spent != Config.gardenDroneEuPerAction) {
+				helper.fail("tall grass cost " + wear + " hoe points and " + spent + " EU, expected 1 and "
+						+ Config.gardenDroneEuPerAction + " (one action)");
 			}
 			helper.succeed();
 		});

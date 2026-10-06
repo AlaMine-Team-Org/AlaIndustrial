@@ -1,12 +1,16 @@
 package dev.alaindustrial.block.entity;
 
 /**
- * The four jobs the Garden Drone can do to one tile (MOD-277).
+ * The five jobs the Garden Drone can do to one tile (MOD-277, clearing since MOD-779).
  *
  * <p>{@link #PRIORITY_ORDER} is the contract, not an implementation detail: the drone always clears
- * ripe crops before it plants, plants before it fertilizes, and tills last. Harvesting first keeps a
- * finished farm from stalling on a full-but-unripe field; tilling last means the drone only widens
- * the farm once the existing one is fully tended.
+ * ripe crops before it plants, plants before it fertilizes, pulls up weeds after that and tills last.
+ * Harvesting first keeps a finished farm from stalling on a full-but-unripe field; clearing right
+ * before tilling frees the ground the till needs; tilling last means the drone only widens the farm
+ * once the existing one is fully tended.
+ *
+ * <p>The ordinal is persisted as the station's {@code DroneJob}, so a new action goes to the END of the
+ * enum and an existing one is never reordered — a saved job must load as the same action.
  */
 public enum GardenDroneAction {
 	/** Take a ripe crop into the station's output slots. */
@@ -16,8 +20,10 @@ public enum GardenDroneAction {
 	/** Spend one bone meal on an immature crop. */
 	FERTILIZE,
 	/** Turn bare ground into farmland, widening the plot. */
-	TILL;
+	TILL,
+	/** Pull up grass or a bush from the weed tag, its drop into the output slots (MOD-779). */
+	CLEAR;
 
 	/** Evaluation order for one working tick; see the class note for why it is this way round. */
-	public static final GardenDroneAction[] PRIORITY_ORDER = { HARVEST, PLANT, FERTILIZE, TILL };
+	public static final GardenDroneAction[] PRIORITY_ORDER = { HARVEST, PLANT, FERTILIZE, CLEAR, TILL };
 }

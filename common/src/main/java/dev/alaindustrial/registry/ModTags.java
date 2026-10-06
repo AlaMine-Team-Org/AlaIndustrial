@@ -57,6 +57,19 @@ public final class ModTags {
 		 * ever breaks blocks from this tag when they are mature (see {@code ScytheItem}).
 		 */
 		public static final TagKey<Block> SCYTHE_CROPS = key("scythe_crops");
+
+		/**
+		 * Wild growth the Garden Drone pulls up so the ground under it can be tilled (MOD-779): grasses,
+		 * ferns and bare bushes, the firefly bush and leaf litter. Backed by
+		 * {@code data/alaindustrial/tags/block/garden_drone_weeds.json}.
+		 *
+		 * <p><b>A tag, not a class test.</b> Every plant in the game is a {@code VegetationBlock} —
+		 * crops and the mod's own kok-sagyz and trellis included — so a class test would weed the farm
+		 * the drone is meant to tend. No vanilla tag fits either: {@code #replaceable} misses the firefly
+		 * bush, {@code #replaceable_by_trees} takes leaves and flowers. Flowers, saplings, leaves,
+		 * mushrooms and vines stay out on purpose: they are something a player planted or left there.
+		 */
+		public static final TagKey<Block> GARDEN_DRONE_WEEDS = key("garden_drone_weeds");
 		/**
 		 * Uranium ore as it sits in the rock — the source a Geiger counter is carried into a mine for
 		 * (MOD-475).

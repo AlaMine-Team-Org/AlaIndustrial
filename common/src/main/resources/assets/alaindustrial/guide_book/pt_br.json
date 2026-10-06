@@ -2761,7 +2761,7 @@
             {
               "type": "text",
               "title": "Estação de drone jardineiro",
-              "text": "Uma estação LV com buffer de EU da qual decola um drone animado que patrulha as lavouras num raio de 4 blocos — ara a terra livre, planta sementes, fertiliza cultivos imaturos e leva a colheita madura de volta à estação."
+              "text": "Uma estação LV com buffer de EU da qual decola um drone animado que patrulha as lavouras num raio de 4 blocos — ara a terra livre, planta sementes, fertiliza cultivos imaturos, arranca grama e arbustos e leva a colheita madura de volta à estação."
             },
             {
               "type": "stats",

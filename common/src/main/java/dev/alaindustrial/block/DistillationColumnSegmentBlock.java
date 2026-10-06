@@ -68,9 +68,10 @@ public abstract class DistillationColumnSegmentBlock extends BaseEntityBlock {
 	/**
 	 * Round-2 voxel silhouette shared by both segments: the chamfered column with its junction
 	 * flanges and the four port stubs (clicks on a nozzle must land on the tower). Approximate to
-	 * the model geometry — shape and renderer geometry are independent.
+	 * the model geometry — shape and renderer geometry are independent. Package visible for
+	 * {@link DistillationColumnOutline}, which stacks the storeys' shapes into one contour.
 	 */
-	private static final net.minecraft.world.phys.shapes.VoxelShape SHAPE =
+	static final net.minecraft.world.phys.shapes.VoxelShape SHAPE =
 			net.minecraft.world.phys.shapes.Shapes.or(
 					Block.box(1, 0, 1, 15, 1, 15),
 					Block.box(2, 1, 2, 14, 16, 14),

@@ -33,6 +33,12 @@ import org.slf4j.LoggerFactory;
  * the frustum. That cause is guarded on the NeoForge side by {@code TeleporterCapsuleCullingTest} (the box
  * holds the arriving player's eyes) and {@code OffScreenRendererBoxTest} (NeoForge calls that box); this
  * stand guards the rest — a door that stops being drawn from inside for any other reason.
+ *
+ * <p><b>Water behind the shut door (MOD-777).</b> A block entity's translucent geometry is drawn before
+ * the translucent terrain layer, so a door glass that wrote depth hid every water surface behind it. The
+ * stand puts a pool ahead of the capsule and compares the view through the shut door with the same view
+ * of the drained pool: with the water drawn, the pool region changes; with it hidden, the two frames show
+ * the same empty basin.
  */
 @SuppressWarnings("UnstableApiUsage")
 public final class TeleporterCapsuleStand {
@@ -47,6 +53,11 @@ public final class TeleporterCapsuleStand {
 
 	/** Pitches of the inside frames: straight ahead, and two looks down. */
 	private static final int[] PITCHES = {0, 15, 30};
+	/**
+	 * The look down at the pool. From the capsule floor the pool lies 33 to 57 degrees below the horizon,
+	 * seen through the door glass; at this pitch the frame spans 5 to 75 degrees, with no sky in it.
+	 */
+	private static final int POOL_PITCH = 40;
 
 	private TeleporterCapsuleStand() {
 	}
@@ -88,10 +99,82 @@ public final class TeleporterCapsuleStand {
 					+ "TeleporterCapsuleDoorRenderer still submits its glass for a shut door and is not culled. "
 					+ explainWithDiff(clear, purple));
 		}
+		checkWaterBehindDoor(context, singleplayer);
+	}
+
+	/**
+	 * The water of a pool ahead of the capsule stays visible through the shut door (MOD-777).
+	 *
+	 * <p>The basin is black concrete on purpose. Water dims the light on the blocks under it; on a pale
+	 * floor that alone can move the pixels past the tolerance, and the drained frame would differ from a
+	 * frame whose water was hidden. On black the light change stays inside the tolerance, and only the drawn
+	 * water surface can make the two frames differ.
+	 */
+	private static void checkWaterBehindDoor(ClientGameTestContext context, TestSingleplayerContext singleplayer) {
+		TestServerContext server = singleplayer.getServer();
+		assemble(context, singleplayer, "clear", "minecraft:glass");
+		// The pool: two rows of water north of the capsule, where the shut door faces, one block deep.
+		server.runCommand("fill " + (STATION_X - 4) + " " + (STATION_Y - 2) + " " + (STATION_Z - 4) + " "
+				+ (STATION_X + 4) + " " + (STATION_Y - 1) + " " + (STATION_Z - 1) + " minecraft:black_concrete");
+		String pool = "fill " + (STATION_X - 3) + " " + (STATION_Y - 1) + " " + (STATION_Z - 3) + " "
+				+ (STATION_X + 3) + " " + (STATION_Y - 1) + " " + (STATION_Z - 2) + " ";
+		server.runCommand(pool + "minecraft:water");
+		Path water = shootPool(context, singleplayer, "capsule_water_behind_door");
+		server.runCommand(pool + "minecraft:air");
+		Path drained = shootPool(context, singleplayer, "capsule_water_drained");
+		server.runCommand("fill " + (STATION_X - 4) + " " + (STATION_Y - 2) + " " + (STATION_Z - 4) + " "
+				+ (STATION_X + 4) + " " + (STATION_Y - 1) + " " + (STATION_Z - 1) + " minecraft:smooth_stone");
+
+		int differing = differingPixels(water, drained);
+		int required = pixelCount(water) / 10;
+		LOG.info("[GUITEST][CAPSULE] pool with water vs drained, through the shut door: {} px differ, required > {}",
+				differing, required);
+		if (differing <= required) {
+			throw new AssertionError("[GUITEST][CAPSULE] through the shut capsule door, a pool with water and the "
+					+ "same pool drained differ in only " + differing + " px (required > " + required + ", a tenth "
+					+ "of the frame) - the water behind the door glass is not being drawn. Check that the door "
+					+ "glass of TeleporterCapsuleDoorRenderer still uses a render type that writes no depth "
+					+ "(TranslucentTypes.blockSheetNoDepthWrite). " + explainWithDiff(water, drained));
+		}
+	}
+
+	/** From the capsule floor, facing the shut door, looking down at the pool. */
+	private static Path shootPool(ClientGameTestContext context, TestSingleplayerContext singleplayer, String name) {
+		singleplayer.getServer().runCommand("tp @p " + (STATION_X + 0.5) + " "
+				+ (STATION_Y + TeleporterBlock.CAPSULE_FLOOR) + " " + (STATION_Z + 0.5) + " 180 " + POOL_PITCH);
+		L3Chunks.waitRender(singleplayer);
+		context.waitTicks(10);
+		return takeCleanScreenshot(context, name);
 	}
 
 	/** Builds a capsule of {@code glassBlock} and shoots it; returns the frame looking straight ahead. */
 	private static Path shootGlass(ClientGameTestContext context, TestSingleplayerContext singleplayer, String name,
+			String glassBlock) {
+		TestServerContext server = singleplayer.getServer();
+		assemble(context, singleplayer, name, glassBlock);
+
+		Path ahead = null;
+		for (int pitch : PITCHES) {
+			// An arriving player: on the capsule floor, centred, facing the door.
+			server.runCommand("tp @p " + (STATION_X + 0.5) + " " + (STATION_Y + TeleporterBlock.CAPSULE_FLOOR) + " "
+					+ (STATION_Z + 0.5) + " 180 " + pitch);
+			L3Chunks.waitRender(singleplayer);
+			context.waitTicks(10);
+			Path frame = takeCleanScreenshot(context, "capsule_inside_" + name + "_pitch" + pitch);
+			if (pitch == 0) {
+				ahead = frame;
+			}
+		}
+		// The same capsule from outside, facing its door: the renderer's box change must not show here.
+		server.runCommand("tp @p " + (STATION_X + 0.5) + " " + (STATION_Y + 0.4) + " " + (STATION_Z - 3.0) + " 0 10");
+		L3Chunks.waitRender(singleplayer);
+		context.waitTicks(10);
+		takeCleanScreenshot(context, "capsule_outside_" + name);
+		return ahead;
+	}
+
+	/** Places a capsule of {@code glassBlock} on the station and fails unless the client sees it formed. */
+	private static void assemble(ClientGameTestContext context, TestSingleplayerContext singleplayer, String name,
 			String glassBlock) {
 		TestServerContext server = singleplayer.getServer();
 		server.runCommand("fill " + STATION_X + " " + STATION_Y + " " + STATION_Z + " "
@@ -114,25 +197,6 @@ public final class TeleporterCapsuleStand {
 			throw new AssertionError("[GUITEST][CAPSULE] the " + name + " capsule at " + STATION
 					+ " did not assemble on the client - the frames would show loose glass, not the capsule");
 		}
-
-		Path ahead = null;
-		for (int pitch : PITCHES) {
-			// An arriving player: on the capsule floor, centred, facing the door.
-			server.runCommand("tp @p " + (STATION_X + 0.5) + " " + (STATION_Y + TeleporterBlock.CAPSULE_FLOOR) + " "
-					+ (STATION_Z + 0.5) + " 180 " + pitch);
-			L3Chunks.waitRender(singleplayer);
-			context.waitTicks(10);
-			Path frame = takeCleanScreenshot(context, "capsule_inside_" + name + "_pitch" + pitch);
-			if (pitch == 0) {
-				ahead = frame;
-			}
-		}
-		// The same capsule from outside, facing its door: the renderer's box change must not show here.
-		server.runCommand("tp @p " + (STATION_X + 0.5) + " " + (STATION_Y + 0.4) + " " + (STATION_Z - 3.0) + " 0 10");
-		L3Chunks.waitRender(singleplayer);
-		context.waitTicks(10);
-		takeCleanScreenshot(context, "capsule_outside_" + name);
-		return ahead;
 	}
 
 	private static int pixelCount(Path frame) {

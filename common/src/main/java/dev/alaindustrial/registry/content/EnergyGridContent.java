@@ -21,6 +21,7 @@ import dev.alaindustrial.registry.CreativeTabContent.Sink;
 import dev.alaindustrial.registry.ModContent;
 import java.util.List;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.MapColor;
 
 /**
  * The EnergyGrid domain of the content manifest (MOD-711; coding.md §1, owner decision D5). Energy transfer: the
@@ -45,31 +46,33 @@ public final class EnergyGridContent {
 	// conductor's tier/cap/buffer and halves its attenuation.
 	public static final BlockDef<CableBlock> COPPER_CABLE =
 			block("copper_cable", p -> new CableBlock(CableType.COPPER, p),
-					machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion()),
+					machine(MapColor.COLOR_ORANGE, p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion()),
 					s -> ModContent.COPPER_CABLE = s);
 	public static final BlockDef<CableBlock> TIN_CABLE = block("tin_cable", p -> new CableBlock(CableType.TIN, p),
-			machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion()), s -> ModContent.TIN_CABLE = s);
+			machine(MapColor.COLOR_LIGHT_GRAY, p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion()),
+			s -> ModContent.TIN_CABLE = s);
 	public static final BlockDef<CableBlock> GOLD_CABLE = block("gold_cable", p -> new CableBlock(CableType.GOLD, p),
-			machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion()), s -> ModContent.GOLD_CABLE = s);
+			machine(MapColor.GOLD, p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion()),
+			s -> ModContent.GOLD_CABLE = s);
 	public static final BlockDef<CableBlock> ELECTRUM_CABLE =
 			block("electrum_cable", p -> new CableBlock(CableType.ELECTRUM, p),
-					machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion()),
+					machine(MapColor.RAW_IRON, p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion()),
 					s -> ModContent.ELECTRUM_CABLE = s);
 	public static final BlockDef<CableBlock> INSULATED_COPPER_CABLE =
 			block("insulated_copper_cable", p -> new CableBlock(CableType.INSULATED_COPPER, p),
-					machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.WOOL).noOcclusion()),
+					machine(MapColor.COLOR_BLACK, p -> p.strength(0.2f, 0.5f).sound(SoundType.WOOL).noOcclusion()),
 					s -> ModContent.INSULATED_COPPER_CABLE = s);
 	public static final BlockDef<CableBlock> INSULATED_TIN_CABLE =
 			block("insulated_tin_cable", p -> new CableBlock(CableType.INSULATED_TIN, p),
-					machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.WOOL).noOcclusion()),
+					machine(MapColor.COLOR_BLACK, p -> p.strength(0.2f, 0.5f).sound(SoundType.WOOL).noOcclusion()),
 					s -> ModContent.INSULATED_TIN_CABLE = s);
 	public static final BlockDef<CableBlock> INSULATED_GOLD_CABLE =
 			block("insulated_gold_cable", p -> new CableBlock(CableType.INSULATED_GOLD, p),
-					machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.WOOL).noOcclusion()),
+					machine(MapColor.COLOR_BLACK, p -> p.strength(0.2f, 0.5f).sound(SoundType.WOOL).noOcclusion()),
 					s -> ModContent.INSULATED_GOLD_CABLE = s);
 	public static final BlockDef<CableBlock> INSULATED_ELECTRUM_CABLE =
 			block("insulated_electrum_cable", p -> new CableBlock(CableType.INSULATED_ELECTRUM, p),
-					machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.WOOL).noOcclusion()),
+					machine(MapColor.COLOR_BLACK, p -> p.strength(0.2f, 0.5f).sound(SoundType.WOOL).noOcclusion()),
 					s -> ModContent.INSULATED_ELECTRUM_CABLE = s);
 
 	/** This domain's blocks, in declaration order — collected since {@code beginBlocks()} above. */

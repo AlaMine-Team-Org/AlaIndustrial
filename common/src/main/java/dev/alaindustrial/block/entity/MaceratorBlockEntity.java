@@ -36,7 +36,8 @@ public final class MaceratorBlockEntity extends AbstractProcessingMachineBlockEn
 			checkFor(ModRecipes.MACERATION);
 
 	public MaceratorBlockEntity(BlockPos pos, BlockState state) {
-		super(ModContent.MACERATOR_BE.get(), pos, state, EnergyTier.LV, Config.maceratorBuffer, Config.maceratorDuration);
+		super(ModContent.MACERATOR_BE.get(), pos, state, EnergyTier.LV, Config.maceratorBuffer,
+				() -> Config.maceratorDuration);
 	}
 
 	@Override

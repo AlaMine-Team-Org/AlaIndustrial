@@ -2761,7 +2761,7 @@
             {
               "type": "text",
               "title": "Stazione del drone giardiniere",
-              "text": "Una stazione LV con buffer di EU da cui decolla un drone animato che pattuglia i campi in un raggio di 4 blocchi — ara la terra libera, pianta i semi, fertilizza le colture immature e riporta il raccolto maturo alla stazione."
+              "text": "Una stazione LV con buffer di EU da cui decolla un drone animato che pattuglia i campi in un raggio di 4 blocchi — ara la terra libera, pianta i semi, fertilizza le colture immature, estirpa erba e cespugli e riporta il raccolto maturo alla stazione."
             },
             {
               "type": "stats",

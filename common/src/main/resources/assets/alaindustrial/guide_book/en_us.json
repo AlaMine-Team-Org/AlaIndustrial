@@ -2761,7 +2761,7 @@
             {
               "type": "text",
               "title": "Garden Drone Station",
-              "text": "An LV EU-buffered station from which a BER-drawn drone lifts off and patrols farmland within a 4-block radius — tilling free dirt, planting seeds, fertilizing immature crops, and hauling ripe harvest back to the station."
+              "text": "An LV EU-buffered station from which a BER-drawn drone lifts off and patrols farmland within a 4-block radius — tilling free dirt, planting seeds, fertilizing immature crops, clearing grass and bushes, and hauling ripe harvest back to the station."
             },
             {
               "type": "stats",

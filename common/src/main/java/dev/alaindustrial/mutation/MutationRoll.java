@@ -27,6 +27,16 @@ public final class MutationRoll {
 	}
 
 	/**
+	 * Base success chance one incubator recipe runs at (MOD-759): its own {@code chance} when it states one
+	 * (any value {@code >= 0}; the duplicate value classes do), otherwise its mode's default. One formula for
+	 * both sides: the machine passes the mode default from the server's {@code Config}, the recipe viewers
+	 * pass the one from the server's snapshot, so the card cannot quote another rule than the machine rolls.
+	 */
+	public static double recipeBaseChance(double recipeChance, double modeDefault) {
+		return recipeChance >= 0 ? recipeChance : modeDefault;
+	}
+
+	/**
 	 * Success chance of one attempt: the recipe base plus the gene bonus of the input item,
 	 * clamped to {@code cap} so a mutation is never guaranteed.
 	 */

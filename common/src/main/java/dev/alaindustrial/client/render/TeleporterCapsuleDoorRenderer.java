@@ -7,6 +7,7 @@ import dev.alaindustrial.block.CapsuleGlass;
 import dev.alaindustrial.block.TeleporterBlock;
 import dev.alaindustrial.block.TeleporterCapsuleBlock;
 import dev.alaindustrial.block.entity.TeleporterBlockEntity;
+import dev.alaindustrial.compat.client.TranslucentTypes;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -96,7 +97,11 @@ public final class TeleporterCapsuleDoorRenderer
 
 	private static final SpriteId BODY = Sheets.BLOCKS_MAPPER.apply(Industrialization.id("teleporter_capsule_body"));
 	private static final RenderType FRAME_TYPE = BODY.renderType(ignored -> Sheets.cutoutBlockItemSheet());
-	private static final RenderType GLASS_TYPE = Sheets.translucentBlockItemSheet();
+	/**
+	 * The glass tests depth but does not write it (MOD-777). Drawn before the translucent terrain layer, a
+	 * depth-writing pane hid every water surface behind the closed door.
+	 */
+	private static final RenderType GLASS_TYPE = TranslucentTypes.blockSheetNoDepthWrite();
 	private static final Map<CapsuleGlass, SpriteId> GLASS_SPRITES = glassSprites();
 
 	/** One box of the door, as the design builds it. */

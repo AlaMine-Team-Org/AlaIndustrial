@@ -7,6 +7,7 @@ import dev.alaindustrial.core.machine.MachineRates;
 import dev.alaindustrial.recipe.AlaProcessingRecipe;
 import dev.alaindustrial.recipe.ProcessingRecipeInput;
 import dev.alaindustrial.registry.ModRecipes;
+import java.util.function.IntSupplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Containers;
@@ -26,7 +27,10 @@ import net.minecraft.world.level.block.state.BlockState;
  * <ul>
  *   <li><b>Duration</b> — when a recipe is present, {@code maxProgress} = scaled
  *       {@code recipe.energy / machineEuPerTick}; otherwise it falls back to the machine's default
- *       duration so the GUI shows a meaningful bar even while idle.</li>
+ *       duration so the GUI shows a meaningful bar even while idle. Both are read from the live knobs
+ *       every tick (MOD-760): after {@code /ala config reload} an operation in flight keeps the ticks it
+ *       has done (progress is not rescaled) and finishes against the new length, the rule the speed
+ *       multiplier and the overclocker chips follow too.</li>
  *   <li><b>Progress</b> — only advances when EU is available AND the output slot can accept the
  *       result. EU is spent every working tick (energy-first), so a stalled output freezes progress
  *       without burning more energy.</li>
@@ -124,7 +128,12 @@ public abstract class AbstractProcessingMachineBlockEntity extends MachineBlockE
 		}
 	}
 
-	private final int defaultDuration;
+	/**
+	 * The machine's duration knob, read when a tick needs it — never copied into a number (MOD-760). A copy
+	 * taken in the constructor survived {@code /ala config reload}: a loaded furnace kept the old length until
+	 * its chunk reloaded while a freshly placed one ran by the new number.
+	 */
+	private final IntSupplier defaultDuration;
 
 	/** Why the machine is idle, for the screen. Server-authoritative, derived every tick, not persisted. */
 	private ProcessingMachineStatus status = ProcessingMachineStatus.NO_INPUT;
@@ -137,10 +146,10 @@ public abstract class AbstractProcessingMachineBlockEntity extends MachineBlockE
 
 	protected AbstractProcessingMachineBlockEntity(
 			BlockEntityType<?> type, BlockPos pos, BlockState state,
-			EnergyTier tier, long buffer, int defaultDuration) {
+			EnergyTier tier, long buffer, IntSupplier defaultDuration) {
 		super(type, pos, state, tier, SLOT_COUNT, buffer, EnergyTier.LV.maxVoltage(), 0L);
 		this.defaultDuration = defaultDuration;
-		this.maxProgress = MachineRates.duration(defaultDuration, Config.globalMachineSpeedMultiplier);
+		this.maxProgress = MachineRates.duration(defaultDuration.getAsInt(), Config.globalMachineSpeedMultiplier);
 	}
 
 
@@ -160,7 +169,7 @@ public abstract class AbstractProcessingMachineBlockEntity extends MachineBlockE
 				? resolveInput(sl, input) : RecipeSolution.empty();
 
 		int baseDuration = MachineRates.baseDuration(solution.hasRecipe() ? solution.energy() : 0,
-				Config.machineEuPerTick, defaultDuration);
+				Config.machineEuPerTick, defaultDuration.getAsInt());
 		ProcessingCycle.Job job = cycle.job(Config.machineEuPerTick, baseDuration);
 		int euPerTick = job.euPerTick();
 		// MOD-455: a batch recipe (glowstone dust ×4) needs its whole price on hand every tick, not just

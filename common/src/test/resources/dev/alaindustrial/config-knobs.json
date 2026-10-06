@@ -133,7 +133,7 @@
     {"key": "galvanicBathDuration", "section": "machines", "type": "int", "default": 500, "min": 1.0, "exclusive": false, "doc": "Fallback ticks a galvanic bath operation takes at 1.0 speed; shipped recipe energy 1000 / machineEuPerTick 2 = 500."},
     {"key": "galvanicBathWaterPerOp", "section": "machines", "type": "int", "default": 4000, "min": 1.0, "exclusive": false, "doc": "mB of water a galvanic bath consumes per completed operation (not part of the recipe JSON)."},
     {"key": "gardenDroneBuffer", "section": "machines", "type": "int", "default": 4000, "min": 1.0, "exclusive": false, "doc": "Garden Drone station internal EU buffer."},
-    {"key": "gardenDroneEuPerAction", "section": "machines", "type": "int", "default": 8, "min": 1.0, "exclusive": false, "doc": "EU the Garden Drone spends per completed action (till/plant/fertilize/harvest); idle costs nothing."},
+    {"key": "gardenDroneEuPerAction", "section": "machines", "type": "int", "default": 8, "min": 1.0, "exclusive": false, "doc": "EU per completed Garden Drone action (till/plant/fertilize/harvest/weed); idle costs nothing."},
     {"key": "gardenDroneFlightTicksPerBlock", "section": "machines", "type": "int", "default": 11, "min": 0.0, "exclusive": false, "doc": "Ticks the Garden Drone flies per block of distance before its action lands."},
     {"key": "gardenDroneRange", "section": "machines", "type": "int", "default": 4, "min": 1.0, "exclusive": false, "doc": "Garden Drone zone-scan radius in blocks around the station."},
     {"key": "gardenDroneScanIntervalTicks", "section": "machines", "type": "int", "default": 20, "min": 1.0, "exclusive": false, "doc": "Ticks between Garden Drone zone rebuilds after cache invalidation."},

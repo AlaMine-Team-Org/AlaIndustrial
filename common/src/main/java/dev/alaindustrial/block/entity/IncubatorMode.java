@@ -1,6 +1,7 @@
 package dev.alaindustrial.block.entity;
 
-import dev.alaindustrial.Config;
+import dev.alaindustrial.client.ServerBalance;
+import dev.alaindustrial.mutation.MutationRoll;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModRecipes;
 import java.util.Locale;
@@ -13,6 +14,12 @@ import org.jetbrains.annotations.Nullable;
  * <p>Unlike the sawmill — where the mode is a button and a stored field — the incubator derives its
  * mode from the chip sitting in the chip slot. There is nothing to persist: the chip is part of the
  * inventory, so the mode survives a reload for free, and automation can switch it by swapping chips.
+ *
+ * <p><b>Reads no balance knob (MOD-759).</b> The recipe viewers and the chip tooltip draw these numbers on
+ * the client, whose {@code Config} is the player's own file on a dedicated server. So a mode only PICKS
+ * its figure out of three the caller read: the machine passes {@code Config} ({@code IncubatorBlockEntity}),
+ * the client the server's snapshot ({@link #shownBaseChance}, {@link #shownBaseDuration}).
+ * {@code ArchitectureRules.incubatorModeReadsNoBalanceKnob} holds the line.
  */
 public enum IncubatorMode {
 	/** A → B, the cheapest and most reliable operation. */
@@ -34,22 +41,40 @@ public enum IncubatorMode {
 		return kind;
 	}
 
-	/** Ticks one attempt takes in this mode, before the global speed multiplier. */
-	public int baseDuration() {
+	/**
+	 * Ticks one attempt takes in this mode, before the global speed multiplier: this mode's figure among
+	 * the three {@code mutationDuration*} values the caller read.
+	 */
+	public int baseDuration(int transform, int duplicate, int create) {
 		return switch (this) {
-			case TRANSFORM -> Config.mutationDurationTransform;
-			case DUPLICATE -> Config.mutationDurationDuplicate;
-			case CREATE -> Config.mutationDurationCreate;
+			case TRANSFORM -> transform;
+			case DUPLICATE -> duplicate;
+			case CREATE -> create;
 		};
 	}
 
-	/** Default success chance of this mode; an individual recipe may override it. */
-	public double baseChance() {
+	/**
+	 * Default success chance of this mode, among the three {@code mutationChance*} values the caller read;
+	 * an individual recipe may override it ({@link MutationRoll#recipeBaseChance}).
+	 */
+	public double baseChance(double transform, double duplicate, double create) {
 		return switch (this) {
-			case TRANSFORM -> Config.mutationChanceTransform;
-			case DUPLICATE -> Config.mutationChanceDuplicate;
-			case CREATE -> Config.mutationChanceCreate;
+			case TRANSFORM -> transform;
+			case DUPLICATE -> duplicate;
+			case CREATE -> create;
 		};
+	}
+
+	/** {@link #baseDuration(int, int, int)} as the client shows it: the server's numbers (MOD-759). */
+	public int shownBaseDuration() {
+		return baseDuration(ServerBalance.mutationDurationTransform(), ServerBalance.mutationDurationDuplicate(),
+				ServerBalance.mutationDurationCreate());
+	}
+
+	/** {@link #baseChance(double, double, double)} as the client shows it: the server's numbers (MOD-759). */
+	public double shownBaseChance() {
+		return baseChance(ServerBalance.mutationChanceTransform(), ServerBalance.mutationChanceDuplicate(),
+				ServerBalance.mutationChanceCreate());
 	}
 
 	public String translationKey() {
@@ -87,16 +112,17 @@ public enum IncubatorMode {
 	}
 
 	/**
-	 * Success chance a recipe of this family actually runs at: its own {@code chance} when it states
-	 * one (the duplicate value classes do), otherwise the mode default. Returns 0 for a family no mode
-	 * works, which is how the recipe viewers tell "not a gamble" from "45 %".
+	 * Success chance a recipe of this family runs at, as the recipe viewers show it: its own {@code chance}
+	 * when it states one (the duplicate value classes do), otherwise the mode default from the server's
+	 * snapshot, resolved when the card is drawn (MOD-759). Returns 0 for a family no mode works, which is
+	 * how the recipe viewers tell "not a gamble" from "45 %".
 	 */
 	public static double chanceOf(ModRecipes.Kind kind, double recipeChance) {
 		IncubatorMode mode = forKind(kind);
 		if (mode == null) {
 			return 0.0;
 		}
-		return recipeChance >= 0 ? recipeChance : mode.baseChance();
+		return MutationRoll.recipeBaseChance(recipeChance, mode.shownBaseChance());
 	}
 
 	public static IncubatorMode byOrdinal(int ordinal) {

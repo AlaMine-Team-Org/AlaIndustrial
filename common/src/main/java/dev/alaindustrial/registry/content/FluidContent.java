@@ -98,7 +98,7 @@ public final class FluidContent {
 	public static final BlockDef<AdvancedFluidPipeBlock> FLUID_PIPE_ADVANCED = block("fluid_pipe_advanced",
 			AdvancedFluidPipeBlock::new,
 			// MOD-675 — the advanced grade takes the advanced item pipe's numbers: a sturdier body, same family.
-			machine(p -> p.strength(0.3f, 0.6f).sound(SoundType.COPPER).noOcclusion()),
+			machine(MapColor.TERRACOTTA_YELLOW, p -> p.strength(0.3f, 0.6f).sound(SoundType.COPPER).noOcclusion()),
 			s -> ModContent.FLUID_PIPE_ADVANCED = s);
 
 	public static final BlockDef<ReinforcedFluidPipeBlock> REINFORCED_FLUID_PIPE =
@@ -111,7 +111,8 @@ public final class FluidContent {
 	public static final BlockDef<SteamPipeBlock> STEAM_PIPE = block("steam_pipe", SteamPipeBlock::new,
 			// MOD-662 — the steam pipes take their fluid twins' numbers: the family changes what a pipe
 			// carries, not how hard it is to break.
-			machine(p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion()), s -> ModContent.STEAM_PIPE = s);
+			machine(MapColor.TERRACOTTA_LIGHT_GRAY, p -> p.strength(0.2f, 0.5f).sound(SoundType.COPPER).noOcclusion()),
+			s -> ModContent.STEAM_PIPE = s);
 	public static final BlockDef<ReinforcedSteamPipeBlock> REINFORCED_STEAM_PIPE =
 			block("reinforced_steam_pipe", ReinforcedSteamPipeBlock::new,
 					machine(p -> p.strength(1.5f, 12.0f).sound(SoundType.METAL).noOcclusion()),

@@ -38,13 +38,15 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * The Garden Drone Station (MOD-277): a dock block whose drone tends the farmland around it —
- * tilling, planting, fertilizing and harvesting, one tile per working tick.
+ * tilling, planting, fertilizing, harvesting and weeding (MOD-779), one tile per working tick.
  *
  * <p>The drone itself is <b>not an entity</b>. It is drawn by this block entity's renderer, so the server-side state
  * below (target position + phase) is the whole drone: it cannot be lost, killed, duplicated, or stranded in an unloaded
@@ -79,9 +81,9 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 	 */
 	public static final int DRONE_SLOT = OUTPUT_SLOT_START + OUTPUT_SLOT_COUNT;
 	/**
-	 * The hoe the drone tills with. Tilling is the one action that is a <em>tool</em> job rather than a
-	 * consumable one, so it costs the hoe durability exactly as it would in the player's hand — a farm
-	 * that expands itself for free would make the hoe pointless.
+	 * The hoe the drone works with. Tilling, harvesting and clearing weeds are <em>tool</em> jobs rather
+	 * than consumable ones, so each costs the hoe durability as tilling would in the player's hand — a
+	 * farm that tends itself for free would make the hoe pointless.
 	 */
 	public static final int HOE_SLOT = DRONE_SLOT + 1;
 	public static final int SLOT_COUNT = HOE_SLOT + 1;
@@ -206,7 +208,7 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 
 	/**
 	 * Walks the cached tiles from the round-robin cursor and performs the first action that applies,
-	 * in the spec's priority order (harvest before plant before fertilize before till). Returns the
+	 * in the spec's priority order ({@link GardenDroneAction#PRIORITY_ORDER}). Returns the
 	 * number of ticks the station may sleep.
 	 */
 	private int performOneAction(ServerLevel level, BlockPos stationPos) {
@@ -362,6 +364,10 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 			case TILL -> isTillable(state)
 					&& level.getBlockState(target.above()).isAir()
 					&& hasUsableHoe();
+			// A full output is checked here, not only in clearWeed: grass drops nothing most of the time,
+			// so without it a station with no room would still weed — and the drone would never stop
+			// flying to a firefly bush whose drop cannot land.
+			case CLEAR -> hasUsableHoe() && isWeed(state) && !outputFull();
 		};
 	}
 
@@ -373,6 +379,7 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 			case PLANT -> plant(level, target);
 			case FERTILIZE -> fertilize(level, target, state);
 			case TILL -> till(level, target);
+			case CLEAR -> clearWeed(level, target, state);
 		};
 	}
 
@@ -390,7 +397,7 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 		return CropMaturity.isHarvestable(level, target, state);
 	}
 
-	// ---------------------------------------------------------------- the four actions
+	// ---------------------------------------------------------------- the actions
 
 	/**
 	 * Takes a ripe crop without a player and without dropping anything in the world.
@@ -465,6 +472,25 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 	}
 
 	/**
+	 * Pulls up one weed (MOD-779) and banks its drop, all-or-nothing like {@link #harvest}.
+	 *
+	 * <p>{@code target} is always the weed's base: {@link #isWeed} refuses the upper half of tall grass,
+	 * because the loot table pays only from the lower one and destroying it takes the upper half with
+	 * it. The block goes before the drop is committed, so a refused destroy never banks an item; the
+	 * simulation has already proven the commit fits. {@code destroyBlock} without drops gives vanilla's
+	 * break particles and sound and spawns no {@code ItemEntity}.
+	 */
+	private boolean clearWeed(ServerLevel level, BlockPos target, BlockState state) {
+		List<ItemStack> drops = Block.getDrops(state, level, target, level.getBlockEntity(target));
+		if (!insertAll(drops, true) || !level.destroyBlock(target, false)) {
+			return false; // no room, or the world refused — the weed stays, nothing is spent
+		}
+		insertAll(drops, false);
+		wearHoe(level);
+		return true;
+	}
+
+	/**
 	 * Spends one point of the loaded hoe's durability, emptying the slot when it is used up.
 	 *
 	 * <p>The wear goes through vanilla's own {@code hurtAndBreak} rather than a hand-rolled counter.
@@ -517,7 +543,7 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 	}
 
 	/**
-	 * Whether a hoe with life left is loaded; tilling and harvesting refuse to run without one.
+	 * Whether a hoe with life left is loaded; tilling, harvesting and clearing refuse to run without one.
 	 *
 	 * <p>Stated in vanilla's terms ({@link ItemStack#isBroken()}) instead of arithmetic on the damage
 	 * value: a second copy of the break threshold is exactly what drifted out of step with
@@ -583,7 +609,7 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 
 	/**
 	 * Rebuilds {@link #zoneCache} with every tile in range that could ever need work: a crop, bare
-	 * plantable soil, or tillable ground. Filtering here (rather than walking the raw cube every
+	 * plantable soil, tillable ground, or a weed. Filtering here (rather than walking the raw cube every
 	 * tick) is the
 	 * whole point of the cache — a radius-4 zone (9×9×3) is ~240 positions, while the farm inside it is a few
 	 * dozen tiles.
@@ -609,11 +635,11 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 		}
 	}
 
-	/** Whether a tile is worth keeping in the cache — i.e. any of the four actions could ever apply. */
+	/** Whether a tile is worth keeping in the cache — i.e. any of the actions could ever apply. */
 	private boolean isInteresting(ServerLevel level, BlockPos pos) {
 		BlockState state = level.getBlockState(pos);
-		if (state.is(ModTags.Blocks.SCYTHE_CROPS)) {
-			return true; // harvest or fertilize target
+		if (state.is(ModTags.Blocks.SCYTHE_CROPS) || isWeed(state)) {
+			return true; // harvest, fertilize or clear target
 		}
 		if (isTillable(state)) {
 			return true; // till target
@@ -647,6 +673,29 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 	private boolean seedCanSurviveAt(ServerLevel level, BlockPos target) {
 		Block crop = seedBlock();
 		return crop != null && crop.defaultBlockState().canSurvive(level, target);
+	}
+
+	/**
+	 * Wild growth the drone pulls up (MOD-779): the weed tag, never a crop, never under water, and
+	 * only the base of a two-block plant (see {@link #clearWeed}).
+	 */
+	private static boolean isWeed(BlockState state) {
+		return state.is(ModTags.Blocks.GARDEN_DRONE_WEEDS)
+				&& state.getFluidState().isEmpty()
+				&& !state.is(ModTags.Blocks.SCYTHE_CROPS)
+				&& !(state.hasProperty(BlockStateProperties.DOUBLE_BLOCK_HALF)
+						&& state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER);
+	}
+
+	/** Whether every output slot holds a full stack — no drop of any kind could land. */
+	private boolean outputFull() {
+		for (int i = OUTPUT_SLOT_START; i < OUTPUT_SLOT_START + OUTPUT_SLOT_COUNT; i++) {
+			ItemStack slot = items.get(i);
+			if (slot.isEmpty() || slot.getCount() < slot.getMaxStackSize()) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/** Ground the drone converts into farmland. Kept to the two unambiguous cases (MVP). */

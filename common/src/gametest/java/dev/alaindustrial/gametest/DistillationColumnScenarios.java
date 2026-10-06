@@ -2,6 +2,7 @@ package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.DistillationColumnBlock;
+import dev.alaindustrial.block.DistillationColumnOutline;
 import dev.alaindustrial.block.entity.DistillationColumnBlockEntity;
 import dev.alaindustrial.core.fluid.FluidAmounts;
 import dev.alaindustrial.core.fluid.FluidHolder;
@@ -9,6 +10,7 @@ import dev.alaindustrial.core.fluid.FluidLookup;
 import dev.alaindustrial.core.fluid.FluidPort;
 import dev.alaindustrial.core.energy.EnergyTransactions;
 import dev.alaindustrial.core.machine.MachineRates;
+import dev.alaindustrial.menu.DistillationColumnMenu;
 import dev.alaindustrial.registry.ModContent;
 import java.util.List;
 import net.minecraft.core.BlockPos;
@@ -17,12 +19,19 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import static dev.alaindustrial.gametest.AlaGameTestHelper.drive;
 
@@ -74,6 +83,22 @@ public final class DistillationColumnScenarios {
 				RosterEntry.of(DistillationColumnScenarios::sec01SectionBoostsDiesel,
 								"distillation_column_section_boosts_diesel")
 						.fabricId("DistillationColumnGameTest", "tcDist001Sec01_sectionBoostsDiesel").ticks(600),
+				RosterEntry.of(DistillationColumnScenarios::sec02SectionClickOpensColumnScreen,
+								"distillation_column_section_click_opens_column_screen")
+						.fabricId("DistillationColumnGameTest", "tcDist001Sec02_sectionClickOpensColumnScreen")
+						.ticks(20, 60),
+				RosterEntry.of(DistillationColumnScenarios::sec03LoneSectionClickPasses,
+								"distillation_column_lone_section_click_passes")
+						.fabricId("DistillationColumnGameTest", "tcDist001Sec03_loneSectionClickPasses")
+						.ticks(20, 60),
+				RosterEntry.of(DistillationColumnScenarios::sec04WrenchOnSectionCleansColumn,
+								"distillation_column_wrench_on_section_cleans_column")
+						.fabricId("DistillationColumnGameTest", "tcDist001Sec04_wrenchOnSectionCleansColumn")
+						.ticks(20, 60),
+				RosterEntry.of(DistillationColumnScenarios::out01OutlineSpansTheWholeTower,
+								"distillation_column_outline_spans_the_whole_tower")
+						.fabricId("DistillationColumnGameTest", "tcDist001Out01_outlineSpansTheWholeTower")
+						.ticks(20, 60),
 				RosterEntry.of(DistillationColumnScenarios::fou01FouledStopsUntilCleaned,
 								"distillation_column_fouled_stops_until_cleaned")
 						.fabricId("DistillationColumnGameTest", "tcDist001Fou01_fouledStopsUntilCleaned").ticks(1000));
@@ -458,6 +483,144 @@ public final class DistillationColumnScenarios {
 			return;
 		}
 		helper.succeed();
+	}
+
+	// ── SEC02–SEC04 (MOD-778): the section is a storey of the tower — its click belongs to the tower ────
+
+	/** The empty-hand click as vanilla delivers it: the block's state, the player, a hit on its east face. */
+	private static InteractionResult click(GameTestHelper helper, BlockPos rel, ServerPlayer player) {
+		BlockPos abs = helper.absolutePos(rel);
+		BlockState state = helper.getLevel().getBlockState(abs);
+		return state.useWithoutItem(helper.getLevel(), player,
+				new BlockHitResult(Vec3.atCenterOf(abs), Direction.EAST, abs, false));
+	}
+
+	/**
+	 * A click on the Rectification Section opens the column's screen, as a click on the middle or top does.
+	 *
+	 * @implements TC-DIST-001-SEC02 — empty-hand RMB on the section of an assembled tower returns
+	 * {@code SUCCESS} and opens the base's {@code DistillationColumnMenu}.
+	 */
+	public static void sec02SectionClickOpensColumnScreen(GameTestHelper helper) {
+		place(helper);
+		helper.setBlock(BASE.above(3), ModContent.RECTIFICATION_SECTION.get());
+		ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper);
+
+		InteractionResult result = click(helper, BASE.above(3), player);
+
+		if (result != InteractionResult.SUCCESS) {
+			helper.fail("a click on the section of an assembled tower must be SUCCESS, was " + result);
+			return;
+		}
+		if (!(player.containerMenu instanceof DistillationColumnMenu)) {
+			helper.fail("a click on the section must open the column's screen, the open menu is "
+					+ player.containerMenu.getClass().getSimpleName());
+			return;
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * A section with no tower under it opens nothing and passes the click on.
+	 *
+	 * @implements TC-DIST-001-SEC03 — empty-hand RMB on a section standing without a tower returns
+	 * {@code PASS}.
+	 */
+	public static void sec03LoneSectionClickPasses(GameTestHelper helper) {
+		helper.setBlock(BASE.above(3), ModContent.RECTIFICATION_SECTION.get());
+		InteractionResult result = click(helper, BASE.above(3), AlaGameTestHelper.mockPlayerInLevel(helper));
+		if (result != InteractionResult.PASS) {
+			helper.fail("a click on a section with no tower under it must be PASS, was " + result);
+			return;
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * A wrench on the section cleans the column, as it does on any segment.
+	 *
+	 * @implements TC-DIST-001-SEC04 — RMB with a wrench on the section of a fouled tower returns
+	 * {@code SUCCESS} and resets the base's fouling to 0.
+	 */
+	public static void sec04WrenchOnSectionCleansColumn(GameTestHelper helper) {
+		DistillationColumnBlockEntity be = place(helper);
+		helper.setBlock(BASE.above(3), ModContent.RECTIFICATION_SECTION.get());
+		ServerLevel level = helper.getLevel();
+		CompoundTag tag = be.saveCustomOnly(level.registryAccess());
+		tag.putInt("Fouling", DistillationColumnBlockEntity.FOULING_MAX);
+		be.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, level.registryAccess(), tag));
+		ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper);
+		BlockPos section = helper.absolutePos(BASE.above(3));
+
+		InteractionResult result = level.getBlockState(section).useItemOn(new ItemStack(ModContent.WRENCH.get()),
+				level, player, InteractionHand.MAIN_HAND,
+				new BlockHitResult(Vec3.atCenterOf(section), Direction.EAST, section, false));
+
+		if (result != InteractionResult.SUCCESS) {
+			helper.fail("a wrench on the section of a fouled tower must be SUCCESS, was " + result);
+			return;
+		}
+		if (be.getFouling() != 0) {
+			helper.fail("a wrench on the section must clean the column, fouling is " + be.getFouling());
+			return;
+		}
+		helper.succeed();
+	}
+
+	// ── OUT01 (MOD-778): every storey of an assembled tower outlines the whole tower ─────────────────
+
+	/**
+	 * The hover outline's shape: from each storey, the contour reaches from the base's floor to the top of
+	 * the highest storey; a lone blank and a section without a tower keep their own outline.
+	 *
+	 * @implements TC-DIST-001-OUT01 — the outline of any storey of an assembled tower spans the whole
+	 * tower (four storeys with the section, three without); a lone blank or section gets none.
+	 */
+	public static void out01OutlineSpansTheWholeTower(GameTestHelper helper) {
+		place(helper);
+		helper.setBlock(BASE.above(3), ModContent.RECTIFICATION_SECTION.get());
+		for (int storey = 0; storey < 4; storey++) {
+			if (!spans(helper, BASE.above(storey), -storey, 4 - storey)) {
+				return;
+			}
+		}
+		helper.setBlock(BASE.above(3), Blocks.AIR);
+		for (int storey = 0; storey < 3; storey++) {
+			if (!spans(helper, BASE.above(storey), -storey, 3 - storey)) {
+				return;
+			}
+		}
+		BlockPos blank = new BlockPos(3, 2, 1);
+		helper.setBlock(blank, ModContent.DISTILLATION_COLUMN.get());
+		BlockPos loneSection = new BlockPos(3, 2, 3);
+		helper.setBlock(loneSection, ModContent.RECTIFICATION_SECTION.get());
+		for (BlockPos lone : List.of(blank, loneSection)) {
+			BlockPos abs = helper.absolutePos(lone);
+			BlockState state = helper.getLevel().getBlockState(abs);
+			if (DistillationColumnOutline.shape(helper.getLevel(), abs, state) != null) {
+				helper.fail("a lone " + state.getBlock() + " must keep its own outline");
+				return;
+			}
+		}
+		helper.succeed();
+	}
+
+	/** Whether the outline at {@code rel} reaches from {@code minY} to {@code maxY} (blocks, relative). */
+	private static boolean spans(GameTestHelper helper, BlockPos rel, double minY, double maxY) {
+		BlockPos abs = helper.absolutePos(rel);
+		BlockState state = helper.getLevel().getBlockState(abs);
+		VoxelShape shape = DistillationColumnOutline.shape(helper.getLevel(), abs, state);
+		if (shape == null) {
+			helper.fail(state.getBlock() + " of an assembled tower has no tower outline");
+			return false;
+		}
+		AABB box = shape.bounds();
+		if (Math.abs(box.minY - minY) > 1e-6 || Math.abs(box.maxY - maxY) > 1e-6) {
+			helper.fail(state.getBlock() + ": outline spans y " + box.minY + ".." + box.maxY + ", expected "
+					+ minY + ".." + maxY);
+			return false;
+		}
+		return true;
 	}
 
 	// ── FOU01 (round 2): coked up at 100 % — the column stops; a wrench cleaning restarts it ────────

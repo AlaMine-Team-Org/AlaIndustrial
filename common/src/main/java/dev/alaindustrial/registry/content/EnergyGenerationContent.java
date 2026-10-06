@@ -67,6 +67,7 @@ import dev.alaindustrial.registry.ModContent;
 import java.util.List;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.MapColor;
 
 /**
  * The EnergyGeneration domain of the content manifest (MOD-711; coding.md §1, owner decision D5). EU generators
@@ -92,21 +93,23 @@ public final class EnergyGenerationContent {
 			machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
 					.lightLevel(ModBlockProperties::litLight)), s -> ModContent.GENERATOR = s);
 	public static final BlockDef<SolarPanelBlock> SOLAR_PANEL = block("solar_panel", SolarPanelBlock::new,
-			machine(p -> p.strength(5.0f, 6.0f).sound(SoundType.GLASS).noOcclusion()), s -> ModContent.SOLAR_PANEL = s);
+			machine(MapColor.TERRACOTTA_CYAN, p -> p.strength(5.0f, 6.0f).sound(SoundType.GLASS).noOcclusion()),
+			s -> ModContent.SOLAR_PANEL = s);
 	public static final BlockDef<MoonlitSolarPanelBlock> MOONLIT_SOLAR_PANEL =
 			block("moonlit_solar_panel", MoonlitSolarPanelBlock::new,
-					machine(p -> p.strength(5.0f, 6.0f).sound(SoundType.GLASS).noOcclusion()),
+					machine(MapColor.TERRACOTTA_BLUE, p -> p.strength(5.0f, 6.0f).sound(SoundType.GLASS).noOcclusion()),
 					s -> ModContent.MOONLIT_SOLAR_PANEL = s);
 	public static final BlockDef<DaylightSolarPanelBlock> DAYLIGHT_SOLAR_PANEL =
 			block("daylight_solar_panel", DaylightSolarPanelBlock::new,
-					machine(p -> p.strength(5.0f, 6.0f).sound(SoundType.GLASS).noOcclusion()),
+					machine(MapColor.TERRACOTTA_ORANGE,
+							p -> p.strength(5.0f, 6.0f).sound(SoundType.GLASS).noOcclusion()),
 					s -> ModContent.DAYLIGHT_SOLAR_PANEL = s);
 	/** MOD-602 — the day branch's third rung, grown from the daylight panel. */
 	public static final BlockDef<RadiantSolarPanelBlock> RADIANT_SOLAR_PANEL =
 			block("radiant_solar_panel", RadiantSolarPanelBlock::new,
 					// MOD-602 — a raised collector with folding wings, nowhere near a full cube, so noOcclusion is
 					// mandatory (R-PHY-05). Metal rather than glass: most of what you touch is the chassis.
-					machine(p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL).noOcclusion()),
+					machine(MapColor.WARPED_HYPHAE, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL).noOcclusion()),
 					s -> ModContent.RADIANT_SOLAR_PANEL = s);
 
 	/** Filler cell of the assembled Mirror Concentrator (MOD-603) — inert on its own. */
@@ -121,15 +124,16 @@ public final class EnergyGenerationContent {
 					machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
 							.lightLevel(ModBlockProperties::litLight)), s -> ModContent.GEOTHERMAL_GENERATOR = s);
 	public static final BlockDef<WaterMillBlock> WATER_MILL = block("water_mill", WaterMillBlock::new,
-			machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)), s -> ModContent.WATER_MILL = s);
+			machine(MapColor.WOOD, p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)), s -> ModContent.WATER_MILL = s);
 	public static final BlockDef<WindMillBlock> WIND_MILL = block("wind_mill", WindMillBlock::new,
-			machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)), s -> ModContent.WIND_MILL = s);
+			machine(MapColor.WOOD, p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)), s -> ModContent.WIND_MILL = s);
 	public static final BlockDef<HighAltitudeWindMillBlock> HIGH_ALTITUDE_WIND_MILL =
 			block("high_altitude_wind_mill", HighAltitudeWindMillBlock::new,
-					machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)),
+					machine(MapColor.COLOR_CYAN, p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)),
 					s -> ModContent.HIGH_ALTITUDE_WIND_MILL = s);
 	public static final BlockDef<StormWindMillBlock> STORM_WIND_MILL = block("storm_wind_mill", StormWindMillBlock::new,
-			machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)), s -> ModContent.STORM_WIND_MILL = s);
+			machine(MapColor.TERRACOTTA_BLUE, p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.STORM_WIND_MILL = s);
 	public static final BlockDef<LightningRodGeneratorBlock> LIGHTNING_ROD_GENERATOR =
 			block("lightning_rod_generator", LightningRodGeneratorBlock::new,
 					// MOD-386: not a full cube (casing plate + mast), hence noOcclusion — R-PHY-05.
@@ -279,7 +283,8 @@ public final class EnergyGenerationContent {
 	 * would leave the drive describing a structure that is no longer there.
 	 */
 	private static BlockBehaviour.Properties mobWheelPart(BlockBehaviour.Properties p) {
-		return LineBlockProps.pinnedAgainstPistons(p).strength(2.0f, 3.0f).sound(SoundType.WOOD).noOcclusion()
+		return LineBlockProps.pinnedAgainstPistons(p).mapColor(MapColor.WOOD).strength(2.0f, 3.0f)
+				.sound(SoundType.WOOD).noOcclusion()
 				.isSuffocating((state, level, pos) -> false);
 	}
 }

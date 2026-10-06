@@ -7,6 +7,7 @@ import dev.alaindustrial.registry.ModContent;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.OptionalInt;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -47,6 +48,12 @@ import org.jspecify.annotations.Nullable;
  * whole placement: a flat patch of known ground with nothing standing on it, solid rock around the
  * shaft and around the whole lab, and every cell inside the ±1-chunk window this step may write to.
  * A rare find is allowed not to appear in a given spot; it is not allowed to appear half-built.
+ *
+ * <p><b>Reads keep to the same window as writes</b> (MOD-774). Past it a chunk may not have its terrain
+ * yet, so a read there answers with whatever the chunk holds at that moment, and the game logs "unsafe
+ * terrain read". The lab is read one block beyond its own box — by the rock check, and by the template
+ * itself when it fits each placed block to its neighbours — so the hatch is clamped to keep that margin
+ * inside the window too; a lab that cannot fit with it is not placed.
  */
 public final class AbandonedLabPlacer {
 
@@ -91,6 +98,12 @@ public final class AbandonedLabPlacer {
 	/** How far the entrance reaches from the hatch in any horizontal direction, after any rotation. */
 	private static final int ENTRANCE_REACH = 3;
 
+	/**
+	 * How far past its own box the lab is read: the rock check looks at the shell one block thick, and
+	 * {@code StructureTemplate.placeInWorld} reads each placed block's neighbours to update its shape.
+	 */
+	static final int LAB_READ_MARGIN = 1;
+
 	private static final List<Supplier<Block>> DIGITS = List.of(
 			ModContent.ENGRAVED_PLATE_0, ModContent.ENGRAVED_PLATE_1, ModContent.ENGRAVED_PLATE_2,
 			ModContent.ENGRAVED_PLATE_3, ModContent.ENGRAVED_PLATE_4, ModContent.ENGRAVED_PLATE_5,
@@ -127,13 +140,13 @@ public final class AbandonedLabPlacer {
 				.setRotationPivot(shaft.foot())
 				.setIgnoreEntities(true);
 
-		// The lab's extent around its ladder foot once rotated, merged with the entrance's reach.
-		BoundingBox labAroundFoot = template.getBoundingBox(settings, BlockPos.ZERO.subtract(shaft.foot()));
 		ChunkPos chunk = ChunkPos.containing(origin);
-		int hatchX = clampIntoWindow(origin.getX(), chunk.getMinBlockX(), chunk.getMaxBlockX(),
-				Math.min(labAroundFoot.minX(), -ENTRANCE_REACH), Math.max(labAroundFoot.maxX(), ENTRANCE_REACH));
-		int hatchZ = clampIntoWindow(origin.getZ(), chunk.getMinBlockZ(), chunk.getMaxBlockZ(),
-				Math.min(labAroundFoot.minZ(), -ENTRANCE_REACH), Math.max(labAroundFoot.maxZ(), ENTRANCE_REACH));
+		BlockPos column = hatchColumn(origin, template.getBoundingBox(settings, BlockPos.ZERO.subtract(shaft.foot())));
+		if (column == null) {
+			return false;
+		}
+		int hatchX = column.getX();
+		int hatchZ = column.getZ();
 
 		int groundY = level.getHeight(Heightmap.Types.OCEAN_FLOOR_WG, hatchX, hatchZ) - 1;
 		BlockPos hatch = new BlockPos(hatchX, groundY, hatchZ);
@@ -153,7 +166,7 @@ public final class AbandonedLabPlacer {
 			BlockPos templateOrigin = foot.subtract(shaft.foot());
 			BoundingBox labBox = template.getBoundingBox(settings, templateOrigin);
 			int shaftFrom = foot.getY() + topAboveFoot + 1;
-			if (!rockIsSolid(level, labBox.inflatedBy(1)) || !shaftRockIsSolid(level, hatch, shaftFrom)) {
+			if (!rockIsSolid(level, labBox.inflatedBy(LAB_READ_MARGIN)) || !shaftRockIsSolid(level, hatch, shaftFrom)) {
 				continue;
 			}
 			settings.setBoundingBox(writeWindow(level, chunk));
@@ -207,13 +220,32 @@ public final class AbandonedLabPlacer {
 	}
 
 	/**
-	 * The hatch coordinate on one axis: the placement origin, moved just enough that everything from
-	 * {@code reachMin} to {@code reachMax} around it stays inside the ±1-chunk window of this chunk.
+	 * Where the hatch goes (its Y is meaningless): the placement origin, moved so that everything read
+	 * around the hatch — the rotated lab, {@code labAroundFoot}, with the margin it is read past its box,
+	 * merged with the entrance's reach — stays inside the ±1-chunk window; {@code null} when it cannot.
 	 */
-	static int clampIntoWindow(int origin, int chunkMin, int chunkMax, int reachMin, int reachMax) {
+	private static @Nullable BlockPos hatchColumn(BlockPos origin, BoundingBox labAroundFoot) {
+		BoundingBox read = labAroundFoot.inflatedBy(LAB_READ_MARGIN);
+		ChunkPos chunk = ChunkPos.containing(origin);
+		OptionalInt x = clampIntoWindow(origin.getX(), chunk.getMinBlockX(), chunk.getMaxBlockX(),
+				Math.min(read.minX(), -ENTRANCE_REACH), Math.max(read.maxX(), ENTRANCE_REACH));
+		OptionalInt z = clampIntoWindow(origin.getZ(), chunk.getMinBlockZ(), chunk.getMaxBlockZ(),
+				Math.min(read.minZ(), -ENTRANCE_REACH), Math.max(read.maxZ(), ENTRANCE_REACH));
+		return x.isPresent() && z.isPresent() ? new BlockPos(x.getAsInt(), 0, z.getAsInt()) : null;
+	}
+
+	/**
+	 * The hatch coordinate on one axis: the placement origin, moved just enough that everything from
+	 * {@code reachMin} to {@code reachMax} around it stays inside the ±1-chunk window of this chunk —
+	 * or empty when that span is wider than the window and no hatch position keeps it inside.
+	 */
+	static OptionalInt clampIntoWindow(int origin, int chunkMin, int chunkMax, int reachMin, int reachMax) {
 		int lowest = chunkMin - 16 - reachMin;
 		int highest = chunkMax + 16 - reachMax;
-		return Math.max(lowest, Math.min(highest, origin));
+		if (lowest > highest) {
+			return OptionalInt.empty();
+		}
+		return OptionalInt.of(Math.max(lowest, Math.min(highest, origin)));
 	}
 
 	/** The ±1-chunk window a feature of this chunk may write to, full height. */

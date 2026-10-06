@@ -41,6 +41,7 @@ import dev.alaindustrial.registry.ModBlockProperties;
 import dev.alaindustrial.registry.ModContent;
 import java.util.List;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.MapColor;
 
 /**
  * The Agriculture domain of the content manifest (MOD-711; coding.md §1, owner decision D5). Farming: the
@@ -76,7 +77,7 @@ public final class AgricultureContent {
 			// The dome is see-through: noOcclusion keeps the chamber (and the item inside) visible.
 			// A piston must not take it: the dome is half of a multiblock and its glass is remembered
 			// by the base below, so moving it away from its base would strand both.
-			machine(p -> LineBlockProps.pinnedAgainstPistons(p).strength(1.0f, 2.0f)
+			machine(MapColor.NONE, p -> LineBlockProps.pinnedAgainstPistons(p).strength(1.0f, 2.0f)
 					.sound(SoundType.GLASS).noOcclusion()), s -> ModContent.INCUBATOR_DOME = s,
 			hiddenFromPlayers("the incubator places its own dome; the dome has no item"));
 	// Cotton trellis (MOD-280) — the mod's first crop; a two-block plant support, not a machine.
@@ -87,7 +88,7 @@ public final class AgricultureContent {
 			// noCollision: the trellis is a structure the player builds, so it blocks movement like a fence
 			// post rather than being walked through like wheat. A piston must not drag half a two-block
 			// plant away from its other half.
-			p -> LineBlockProps.popsOnPush(p).strength(0.2f).sound(SoundType.GRASS)
+			p -> LineBlockProps.popsOnPush(p).strength(0.2f).mapColor(MapColor.PLANT).sound(SoundType.GRASS)
 					.noOcclusion().randomTicks(), s -> ModContent.TRELLIS = s);
 	// MOD-537 — kok sagyz, the rubber dandelion. Two blocks, three states of one plant: the flower
 	// the player plants, and the root column it grows downward (tip=true is the harvestable end).
@@ -96,12 +97,13 @@ public final class AgricultureContent {
 			// MOD-537 — kok sagyz. A vanilla-flower block: instabreak, walked through, and randomTicks()
 			// is load-bearing (the plant advances on the random tick, like the trellis). A piston must
 			// not drag the flower away from the root column it owns.
-			p -> LineBlockProps.popsOnPush(p).instabreak().sound(SoundType.GRASS)
+			p -> LineBlockProps.popsOnPush(p).instabreak().mapColor(MapColor.PLANT).sound(SoundType.GRASS)
 					.noCollision().randomTicks(), s -> ModContent.KOK_SAGYZ = s);
 	public static final BlockDef<KokSagyzRootBlock> KOK_SAGYZ_ROOT = block("kok_sagyz_root", KokSagyzRootBlock::new,
 			// The root is a full dirt-strength cube and ticks never: growth is driven from the flower
 			// above, so a random tick here would be work nothing reads.
-			p -> p.strength(0.6f).sound(SoundType.ROOTED_DIRT), s -> ModContent.KOK_SAGYZ_ROOT = s,
+			p -> p.strength(0.6f).mapColor(MapColor.DIRT).sound(SoundType.ROOTED_DIRT),
+			s -> ModContent.KOK_SAGYZ_ROOT = s,
 			hiddenFromPlayers("dug, never placed: it grows from the flower; the kok_sagyz_root item is the harvest"));
 
 	// ── MOD-505: the crystal greenhouse. Glass and door come from tags, and what grows is vanilla
@@ -124,14 +126,14 @@ public final class AgricultureContent {
 			block("crystal_farm_glass", CrystalFarmShellBlock::new,
 					// noOcclusion is mandatory on the glazing: a transparent full cube that occludes would cull
 					// the room away behind it and the greenhouse would show nothing (the reactor glass note).
-					machine(p -> LineBlockProps.pinnedAgainstPistons(p).strength(3.0f, 6.0f)
+					machine(MapColor.NONE, p -> LineBlockProps.pinnedAgainstPistons(p).strength(3.0f, 6.0f)
 							.sound(SoundType.GLASS).noOcclusion()), s -> ModContent.CRYSTAL_FARM_GLASS = s);
 	/** The way in: a glazed door in the same frame, so the shell is not broken by a wooden one. */
 	public static final BlockDef<CrystalFarmDoorBlock> CRYSTAL_FARM_DOOR =
 			block("crystal_farm_door", CrystalFarmDoorBlock::new,
 					// A door is never a full cube, so noOcclusion is mandatory; popping on a push keeps a piston
 					// from tearing one half of a two-block door away from the other.
-					machine(p -> LineBlockProps.popsOnPush(p).strength(3.0f, 6.0f)
+					machine(MapColor.NONE, p -> LineBlockProps.popsOnPush(p).strength(3.0f, 6.0f)
 							.sound(SoundType.COPPER).noOcclusion()), s -> ModContent.CRYSTAL_FARM_DOOR = s);
 	/** The room's brain: seals the greenhouse, then grows every seedbed inside it. */
 	public static final BlockDef<CrystalFarmControllerBlock> CRYSTAL_FARM_CONTROLLER =
@@ -143,7 +145,7 @@ public final class AgricultureContent {
 			block("crystal_seedbed", CrystalSeedbedBlock::new,
 					// The bed is a block of amethyst that happens to be machinery, so it sounds like the stone
 					// it is made of rather than like metal — the cue that it is the thing crystals come out of.
-					machine(p -> LineBlockProps.pinnedAgainstPistons(p).strength(3.0f, 6.0f)
+					machine(MapColor.DEEPSLATE, p -> LineBlockProps.pinnedAgainstPistons(p).strength(3.0f, 6.0f)
 							.sound(SoundType.AMETHYST)), s -> ModContent.CRYSTAL_SEEDBED = s);
 	public static final BlockDef<SprinklerBlock> SPRINKLER = block("sprinkler", SprinklerBlock::new,
 			// MOD-525: base plus mast, so the shape is far from a full cube — noOcclusion is mandatory

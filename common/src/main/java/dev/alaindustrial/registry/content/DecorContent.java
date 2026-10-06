@@ -36,6 +36,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.item.StandingAndWallBlockItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.MapColor;
 
 /**
  * The Decor domain of the content manifest (MOD-711; coding.md §1, owner decision D5). Blocks with no machine
@@ -69,11 +70,13 @@ public final class DecorContent {
 					.lightLevel(ModBlockProperties::repellerLight)), s -> ModContent.MOB_REPELLER_HV = s);
 	// Material / decorative full cubes: cube_all model, one texture per block.
 	public static final BlockDef<Block> TEMPERED_IRON_BLOCK = block("tempered_iron_block", Block::new,
-			machine(p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)), s -> ModContent.TEMPERED_IRON_BLOCK = s);
+			machine(MapColor.TERRACOTTA_LIGHT_BLUE, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.TEMPERED_IRON_BLOCK = s);
 	public static final BlockDef<Block> SILVER_PLATE_BLOCK = block("silver_plate_block", Block::new,
 			machine(p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)), s -> ModContent.SILVER_PLATE_BLOCK = s);
 	public static final BlockDef<Block> TEMPERED_IRON_PLATE_BLOCK = block("tempered_iron_plate_block", Block::new,
-			machine(p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)), s -> ModContent.TEMPERED_IRON_PLATE_BLOCK = s);
+			machine(MapColor.TERRACOTTA_LIGHT_BLUE, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.TEMPERED_IRON_PLATE_BLOCK = s);
 	// Enriched Uranium Torch (MOD-085) — vanilla-behaviour torch, light 14, green flame.
 	// The WALL variant must stay directly after the standing one: its properties read the
 	// already-registered standing torch for its loot table and description.
@@ -91,71 +94,71 @@ public final class DecorContent {
 	public static final BlockDef<EngravedPlateBlock> ENGRAVED_PLATE_0 =
 			block("engraved_plate_0", EngravedPlateBlock::new,
 					// MOD-513 — the lab plaque plates: polished deepslate in hardness and sound.
-					machine(p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE)),
+					machine(MapColor.COLOR_GRAY, p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE)),
 					s -> ModContent.ENGRAVED_PLATE_0 = s);
 	public static final BlockDef<EngravedPlateBlock> ENGRAVED_PLATE_1 =
 			block("engraved_plate_1", EngravedPlateBlock::new,
-					machine(p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE)),
+					machine(MapColor.COLOR_GRAY, p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE)),
 					s -> ModContent.ENGRAVED_PLATE_1 = s);
 	public static final BlockDef<EngravedPlateBlock> ENGRAVED_PLATE_2 =
 			block("engraved_plate_2", EngravedPlateBlock::new,
-					machine(p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE)),
+					machine(MapColor.COLOR_GRAY, p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE)),
 					s -> ModContent.ENGRAVED_PLATE_2 = s);
 	public static final BlockDef<EngravedPlateBlock> ENGRAVED_PLATE_3 =
 			block("engraved_plate_3", EngravedPlateBlock::new,
-					machine(p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE)),
+					machine(MapColor.COLOR_GRAY, p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE)),
 					s -> ModContent.ENGRAVED_PLATE_3 = s);
 	public static final BlockDef<EngravedPlateBlock> ENGRAVED_PLATE_4 =
 			block("engraved_plate_4", EngravedPlateBlock::new,
-					machine(p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE)),
+					machine(MapColor.COLOR_GRAY, p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE)),
 					s -> ModContent.ENGRAVED_PLATE_4 = s);
 	public static final BlockDef<EngravedPlateBlock> ENGRAVED_PLATE_5 =
 			block("engraved_plate_5", EngravedPlateBlock::new,
-					machine(p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE)),
+					machine(MapColor.COLOR_GRAY, p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE)),
 					s -> ModContent.ENGRAVED_PLATE_5 = s);
 	public static final BlockDef<EngravedPlateBlock> ENGRAVED_PLATE_6 =
 			block("engraved_plate_6", EngravedPlateBlock::new,
-					machine(p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE)),
+					machine(MapColor.COLOR_GRAY, p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE)),
 					s -> ModContent.ENGRAVED_PLATE_6 = s);
 	public static final BlockDef<EngravedPlateBlock> ENGRAVED_PLATE_7 =
 			block("engraved_plate_7", EngravedPlateBlock::new,
-					machine(p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE)),
+					machine(MapColor.COLOR_GRAY, p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE)),
 					s -> ModContent.ENGRAVED_PLATE_7 = s);
 	public static final BlockDef<EngravedPlateBlock> ENGRAVED_PLATE_8 =
 			block("engraved_plate_8", EngravedPlateBlock::new,
-					machine(p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE)),
+					machine(MapColor.COLOR_GRAY, p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE)),
 					s -> ModContent.ENGRAVED_PLATE_8 = s);
 	public static final BlockDef<EngravedPlateBlock> ENGRAVED_PLATE_9 =
 			block("engraved_plate_9", EngravedPlateBlock::new,
-					machine(p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE)),
+					machine(MapColor.COLOR_GRAY, p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE)),
 					s -> ModContent.ENGRAVED_PLATE_9 = s);
 	public static final BlockDef<EngravedPlateBlock> BROKEN_ENGRAVED_PLATE_W =
 			block("broken_engraved_plate_w", EngravedPlateBlock::new,
-					machine(p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE)),
+					machine(MapColor.COLOR_GRAY, p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE)),
 					s -> ModContent.BROKEN_ENGRAVED_PLATE_W = s);
 	public static final BlockDef<EngravedPlateBlock> BROKEN_ENGRAVED_PLATE_K =
 			block("broken_engraved_plate_k", EngravedPlateBlock::new,
-					machine(p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE)),
+					machine(MapColor.COLOR_GRAY, p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE)),
 					s -> ModContent.BROKEN_ENGRAVED_PLATE_K = s);
 	public static final BlockDef<EngravedPlateBlock> BROKEN_ENGRAVED_PLATE_P =
 			block("broken_engraved_plate_p", EngravedPlateBlock::new,
-					machine(p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE)),
+					machine(MapColor.COLOR_GRAY, p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE)),
 					s -> ModContent.BROKEN_ENGRAVED_PLATE_P = s);
 	public static final BlockDef<EngravedPlateBlock> BROKEN_ENGRAVED_PLATE_B =
 			block("broken_engraved_plate_b", EngravedPlateBlock::new,
-					machine(p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE)),
+					machine(MapColor.COLOR_GRAY, p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE)),
 					s -> ModContent.BROKEN_ENGRAVED_PLATE_B = s);
 	public static final BlockDef<EngravedPlateBlock> BROKEN_ENGRAVED_PLATE_D =
 			block("broken_engraved_plate_d", EngravedPlateBlock::new,
-					machine(p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE)),
+					machine(MapColor.COLOR_GRAY, p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE)),
 					s -> ModContent.BROKEN_ENGRAVED_PLATE_D = s);
 	public static final BlockDef<EngravedPlateBlock> BROKEN_ENGRAVED_PLATE_R =
 			block("broken_engraved_plate_r", EngravedPlateBlock::new,
-					machine(p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE)),
+					machine(MapColor.COLOR_GRAY, p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE)),
 					s -> ModContent.BROKEN_ENGRAVED_PLATE_R = s);
 	public static final BlockDef<EngravedPlateBlock> BROKEN_ENGRAVED_PLATE_M =
 			block("broken_engraved_plate_m", EngravedPlateBlock::new,
-					machine(p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE)),
+					machine(MapColor.COLOR_GRAY, p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE)),
 					s -> ModContent.BROKEN_ENGRAVED_PLATE_M = s);
 
 	/** This domain's blocks, in declaration order — collected since {@code beginBlocks()} above. */
