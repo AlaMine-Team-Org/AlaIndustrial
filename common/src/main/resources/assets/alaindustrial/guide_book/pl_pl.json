@@ -2761,7 +2761,7 @@
             {
               "type": "text",
               "title": "Stacja drona ogrodnika",
-              "text": "Stacja LV z buforem EU, z której startuje animowany dron patrolujący pola uprawne w promieniu 4 bloków — orze wolną ziemię, sadzi nasiona, nawozi niedojrzałe uprawy i znosi dojrzałe plony z powrotem do stacji."
+              "text": "Stacja LV z buforem EU, z której startuje animowany dron patrolujący pola uprawne w promieniu 4 bloków — orze wolną ziemię, sadzi nasiona, nawozi niedojrzałe uprawy, pieli trawę i krzaki i znosi dojrzałe plony z powrotem do stacji."
             },
             {
               "type": "stats",

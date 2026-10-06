@@ -135,6 +135,10 @@ public final class ShotFamilies {
             new Object[] {"capsule_", new Family(ShotGroup.BER, List.of("R-VIS-04"),
                     "Teleporter capsule: the glass of the door and of the fixed facets is drawn, seen from "
                             + "inside looking ahead and looking down, and from outside")},
+            new Object[] {"capsule_water_", new Family(ShotGroup.BER, List.of("R-VIS-04"),
+                    "Water behind the shut capsule door (MOD-777): in capsule_water_behind_door the pool ahead "
+                            + "shows a water surface through the door glass; capsule_water_drained is the same "
+                            + "view of the empty black basin, and the two must differ across the pool")},
             new Object[] {"wmill_",new Family(ShotGroup.BER, List.of("R-VIS-01", "R-VIS-04"),
                     "Water mill wheel: the renderer draws the wheel, it sits in the housing and it is "
                             + "not clipped by the block's own model")},

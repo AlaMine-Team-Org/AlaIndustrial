@@ -399,6 +399,24 @@ public class ArchitectureRules {
 					+ "draws the card (RecipeViewerCost, MOD-743)");
 
 	/**
+	 * The incubator's modes read no balance knob (MOD-759).
+	 *
+	 * <p>The recipe viewers (JEI, REI) and the mutation chip's tooltip draw a mode's chance and duration on
+	 * the client, through {@code IncubatorMode} — one step removed, so neither
+	 * {@link #clientReadsBalanceThroughServerBalance} nor {@link #itemTooltipsReadBalanceThroughServerBalance}
+	 * saw that the mode read {@code Config}: the player's own file on a dedicated server. A mode only picks
+	 * its figure among the values its caller read — {@code Config} in the machine, {@code ServerBalance} on
+	 * the client — so a {@code Config} read creeping back into it, in a viewer's path or not, fails here.
+	 */
+	@ArchTest
+	static final ArchRule incubatorModeReadsNoBalanceKnob = noClasses()
+			.that().haveNameMatching("dev\\.alaindustrial\\.block\\.entity\\.IncubatorMode(\\$.*)?")
+			.should(readBalanceKnobsFromConfig())
+			.because("the recipe viewers and the mutation chip draw the incubator's numbers on the client, whose "
+					+ "Config is the player's own file on a dedicated server: a mode picks among the values its "
+					+ "caller read — Config in IncubatorBlockEntity, ServerBalance on the client (MOD-759)");
+
+	/**
 	 * {@code appendHoverText} itself, or a lambda javac lifted out of it. ArchUnit 1.x already attributes
 	 * a lambda's accesses to the declaring method, so the second arm is a guard for an importer that does
 	 * not; the negative control proves a read inside the lambda is reported either way.

@@ -31,6 +31,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.entity.LivingEntity;
 import dev.alaindustrial.Config;
@@ -91,6 +93,28 @@ public class IncubatorBlock extends LitMachineBlock implements MachineHumProvide
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 		return new IncubatorBlockEntity(pos, state);
+	}
+
+	/**
+	 * Occludes nothing, though {@code canOcclude()} stays true (MOD-776). The model fills the cube only
+	 * in its base band and cornice; between them the casing stands half a pixel to a pixel inside the
+	 * block. A full-cube occlusion shape let vanilla {@code shouldRenderFace} drop the neighbour's whole
+	 * facing side, and the sky showed through those slots. Same defect class as
+	 * {@code UpgradeTableBlock} and {@code TeleporterBlock}: a block must not occlude more than its
+	 * model covers.
+	 */
+	@Override
+	protected VoxelShape getOcclusionShape(BlockState state) {
+		return Shapes.empty();
+	}
+
+	/**
+	 * Keeps the machine opaque to light. A non-full occlusion shape turns {@code isSolidRender()} off,
+	 * and the vanilla default would then let light through at a cost of 1 per block (MOD-776).
+	 */
+	@Override
+	protected int getLightDampening(BlockState state) {
+		return 15;
 	}
 
 	@Override

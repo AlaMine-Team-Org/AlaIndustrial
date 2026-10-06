@@ -15,7 +15,8 @@
     "client.ItemModelsAccessor",
     "client.ItemStackRenderStateAccessor",
     "client.ItemTintSourcesAccessor",
-    "client.LayerRenderStateAccessor"
+    "client.LayerRenderStateAccessor",
+    "client.RenderTypeInvoker"
   ],
   "server": [],
   "injectors": {

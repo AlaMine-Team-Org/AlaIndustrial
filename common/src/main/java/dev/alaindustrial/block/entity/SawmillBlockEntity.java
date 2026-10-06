@@ -63,7 +63,8 @@ public final class SawmillBlockEntity extends AbstractProcessingMachineBlockEnti
 	}
 
 	public SawmillBlockEntity(BlockPos pos, BlockState state) {
-		super(ModContent.SAWMILL_BE.get(), pos, state, EnergyTier.LV, Config.machineBuffer, Config.sawmillDuration);
+		super(ModContent.SAWMILL_BE.get(), pos, state, EnergyTier.LV, Config.machineBuffer,
+				() -> Config.sawmillDuration);
 	}
 
 	@SuppressWarnings("unchecked")

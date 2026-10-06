@@ -78,6 +78,7 @@ import dev.alaindustrial.registry.ModBlockProperties;
 import dev.alaindustrial.registry.ModContent;
 import java.util.List;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.MapColor;
 
 /**
  * The Processing domain of the content manifest (MOD-711; coding.md §1, owner decision D5). Machines that spend
@@ -109,7 +110,7 @@ public final class ProcessingContent {
 			block("teleporter_capsule", dev.alaindustrial.block.TeleporterCapsuleBlock::new,
 					// MOD-112 — the capsule's glass cells, on the dome's terms: see-through, and not for a piston,
 					// which would carry a cell away from the station it belongs to.
-					machine(p -> LineBlockProps.pinnedAgainstPistons(p).strength(1.0f, 2.0f)
+					machine(MapColor.NONE, p -> LineBlockProps.pinnedAgainstPistons(p).strength(1.0f, 2.0f)
 							.sound(SoundType.GLASS).noOcclusion()), s -> ModContent.TELEPORTER_CAPSULE = s,
 					hiddenFromPlayers("a cell of an assembled capsule: the station places it, nobody holds one"));
 	public static final BlockDef<ElectricFurnaceBlock> ELECTRIC_FURNACE =
@@ -148,7 +149,8 @@ public final class ProcessingContent {
 			machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
 					.lightLevel(ModBlockProperties::litLight)), s -> ModContent.VULCANIZER = s);
 	public static final BlockDef<GalvanicBathBlock> GALVANIC_BATH = block("galvanic_bath", GalvanicBathBlock::new,
-			machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)), s -> ModContent.GALVANIC_BATH = s);
+			machine(MapColor.COLOR_CYAN, p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.GALVANIC_BATH = s);
 	public static final BlockDef<ElectricHeaterBlock> ELECTRIC_HEATER =
 			block("electric_heater", ElectricHeaterBlock::new,
 					// MOD-418: the heater's glow is a four-rung thermometer, not the boolean litLight the rest of

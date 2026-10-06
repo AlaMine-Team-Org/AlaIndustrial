@@ -2761,7 +2761,7 @@
             {
               "type": "text",
               "title": "Station de drone jardinier",
-              "text": "Une station LV à tampon d’EU d’où décolle un drone animé qui patrouille les champs dans un rayon de 4 blocs — il laboure la terre libre, plante les graines, fertilise les cultures immatures et rapporte la récolte mûre à la station."
+              "text": "Une station LV à tampon d’EU d’où décolle un drone animé qui patrouille les champs dans un rayon de 4 blocs — il laboure la terre libre, plante les graines, fertilise les cultures immatures, arrache l’herbe et les buissons et rapporte la récolte mûre à la station."
             },
             {
               "type": "stats",

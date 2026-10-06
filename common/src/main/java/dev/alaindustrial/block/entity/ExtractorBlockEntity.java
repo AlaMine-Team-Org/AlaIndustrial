@@ -37,7 +37,8 @@ public final class ExtractorBlockEntity extends AbstractProcessingMachineBlockEn
 			checkFor(ModRecipes.EXTRACTING);
 
 	public ExtractorBlockEntity(BlockPos pos, BlockState state) {
-		super(ModContent.EXTRACTOR_BE.get(), pos, state, EnergyTier.LV, Config.machineBuffer, Config.extractorDuration);
+		super(ModContent.EXTRACTOR_BE.get(), pos, state, EnergyTier.LV, Config.machineBuffer,
+				() -> Config.extractorDuration);
 	}
 
 	@Override

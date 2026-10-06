@@ -3,8 +3,13 @@ package dev.alaindustrial.block;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import dev.alaindustrial.block.entity.DistillationColumnBlockEntity;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -15,9 +20,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jspecify.annotations.Nullable;
 
 /**
  * The Rectification Section (MOD-251 round 2) — an optional fourth storey the player crafts and
@@ -30,14 +37,20 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * losing that support drops it as an item (door-style {@code updateShape}). The base block entity
  * detects it by looking three blocks up; {@code lit} is mirrored by the base, and once the section
  * is present the steam plume moves up here (the top segment yields it).
+ *
+ * <p>Like the middle and top segments, a click on the section belongs to the tower (MOD-778): it opens
+ * the column's screen and a wrench on it cleans the column — both routed to the base below.
  */
 public class RectificationSectionBlock extends Block {
 	public static final MapCodec<RectificationSectionBlock> CODEC =
 			simpleCodec(RectificationSectionBlock::new);
 	public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
-	/** The chamfered column continues, with the tray fins around it (approximate, like the tower). */
-	private static final VoxelShape SHAPE = Shapes.or(
+	/**
+	 * The chamfered column continues, with the tray fins around it (approximate, like the tower). Package
+	 * visible for {@link DistillationColumnOutline}, which stacks the storeys' shapes into one contour.
+	 */
+	static final VoxelShape SHAPE = Shapes.or(
 			Block.box(1, 0, 1, 15, 1, 15),
 			Block.box(2, 1, 2, 14, 15, 14),
 			Block.box(1, 4, 1, 15, 6, 15),
@@ -63,6 +76,46 @@ public class RectificationSectionBlock extends Block {
 	@Override
 	protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
 		return SHAPE;
+	}
+
+	/**
+	 * The tower's base under a section standing on the top segment — one storey below the base of that
+	 * segment — or {@code null} when the section stands on anything else.
+	 */
+	static @Nullable BlockPos basePos(BlockGetter level, BlockPos pos) {
+		return level.getBlockState(pos.below()).getBlock() instanceof DistillationColumnTopBlock top
+				? pos.below(top.offsetToBase() + 1) : null;
+	}
+
+	/** A wrench on the section cleans the column, exactly as on any segment ({@code tryWrenchClean}). */
+	@Override
+	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
+			Player player, InteractionHand hand, BlockHitResult hit) {
+		BlockPos base = basePos(level, pos);
+		if (base != null) {
+			InteractionResult cleaned = DistillationColumnBlock.tryWrenchClean(stack, level, base, player);
+			if (cleaned != InteractionResult.PASS) {
+				return cleaned;
+			}
+		}
+		return super.useItemOn(stack, state, level, pos, player, hand, hit);
+	}
+
+	/**
+	 * The section is a storey of the tower, so clicking it opens the tower's screen, as the middle and top
+	 * segments do; with no tower below it the click passes on.
+	 */
+	@Override
+	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player,
+			BlockHitResult hit) {
+		BlockPos base = basePos(level, pos);
+		if (base == null || !(level.getBlockEntity(base) instanceof DistillationColumnBlockEntity master)) {
+			return InteractionResult.PASS;
+		}
+		if (!level.isClientSide()) {
+			player.openMenu(master);
+		}
+		return InteractionResult.SUCCESS;
 	}
 
 	/** Only on the tower's top segment — the section upgrades a column, it is not a free-standing block. */

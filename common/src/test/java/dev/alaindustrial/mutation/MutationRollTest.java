@@ -146,4 +146,18 @@ class MutationRollTest {
 		assertEquals(MutationGrade.COMMON, MutationGrade.byName("nonsense"));
 		assertEquals(MutationGrade.COMMON, MutationGrade.byName(null));
 	}
+
+	/**
+	 * MOD-759: the rule the machine rolls by and the recipe viewers print by. A recipe's own chance wins —
+	 * zero included, which is a stated "never", not "unset"; only a negative (unset) one takes the mode
+	 * default the caller passes.
+	 */
+	@Test
+	void aRecipesOwnChanceBeatsTheModeDefault() {
+		assertEquals(0.75, MutationRoll.recipeBaseChance(-1.0, 0.75));
+		assertEquals(0.40, MutationRoll.recipeBaseChance(-0.001, 0.40));
+		assertEquals(0.30, MutationRoll.recipeBaseChance(0.30, 0.75));
+		assertEquals(0.0, MutationRoll.recipeBaseChance(0.0, 0.75));
+		assertEquals(1.0, MutationRoll.recipeBaseChance(1.0, 0.25));
+	}
 }

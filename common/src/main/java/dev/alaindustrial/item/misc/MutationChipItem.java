@@ -1,6 +1,5 @@
 package dev.alaindustrial.item.misc;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.IncubatorMode;
 import dev.alaindustrial.client.ServerBalance;
 import dev.alaindustrial.core.machine.MachineRates;
@@ -16,9 +15,9 @@ import net.minecraft.world.item.component.TooltipDisplay;
 /**
  * A mutation chip (MOD-118): the tooltip says which incubator mode the chip selects, with the
  * numbers behind Shift — the same two-layer convention the item pipe set (MOD-108). The figures are
- * read live from {@link Config} so a retuned server describes itself truthfully; the duplicate chip
- * quotes no chance at all, because every shipped duplicate recipe carries its own and the Config
- * default never applies to it.
+ * the server's, read live through {@link ServerBalance} when the tooltip is drawn (MOD-695, MOD-759), so
+ * a retuned server describes itself truthfully to its players; the duplicate chip quotes no chance at
+ * all, because every shipped duplicate recipe carries its own and the mode default never applies to it.
  */
 public class MutationChipItem extends Item {
 
@@ -52,7 +51,7 @@ public class MutationChipItem extends Item {
 			adder.accept(Component.translatable("item.alaindustrial.mutation_chip.tech.chance_varies")
 					.withStyle(ChatFormatting.DARK_GRAY));
 		} else {
-			long percent = Math.round(mode.baseChance() * 100.0);
+			long percent = Math.round(mode.shownBaseChance() * 100.0);
 			adder.accept(Component.translatable("item.alaindustrial.mutation_chip.tech.chance", percent)
 					.withStyle(ChatFormatting.DARK_GRAY));
 		}
@@ -60,7 +59,7 @@ public class MutationChipItem extends Item {
 		// The server's numbers (MOD-695): a tooltip runs on the client, whose Config is its own file.
 		int euPerTick = MachineRates.euPerTick(ServerBalance.incubatorEuPerTick(),
 				ServerBalance.globalMachineSpeedMultiplier());
-		int ticks = ServerBalance.scaledDuration(mode.baseDuration());
+		int ticks = ServerBalance.scaledDuration(mode.shownBaseDuration());
 		String seconds = String.format("%.0f", ticks / 20.0);
 		adder.accept(Component.translatable("item.alaindustrial.mutation_chip.tech.cycle",
 				seconds, (long) euPerTick * ticks).withStyle(ChatFormatting.DARK_GRAY));

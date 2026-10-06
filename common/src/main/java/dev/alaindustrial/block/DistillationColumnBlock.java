@@ -43,9 +43,10 @@ public class DistillationColumnBlock extends AbstractMachineBlock implements Has
 	/**
 	 * Round-2 voxel silhouette: a full-footprint foundation slab, the ~12px chamfered column and
 	 * the four port stubs (so a click on a nozzle lands on the tower, not the block behind it).
-	 * Matches the model geometry approximately — shape and renderer geometry are independent.
+	 * Matches the model geometry approximately — shape and renderer geometry are independent. Package
+	 * visible for {@link DistillationColumnOutline}, which stacks the storeys' shapes into one contour.
 	 */
-	private static final net.minecraft.world.phys.shapes.VoxelShape SHAPE =
+	static final net.minecraft.world.phys.shapes.VoxelShape SHAPE =
 			net.minecraft.world.phys.shapes.Shapes.or(
 					Block.box(0, 0, 0, 16, 3, 16),
 					Block.box(2, 3, 2, 14, 16, 14),

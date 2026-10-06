@@ -105,6 +105,18 @@ class ShotFamiliesTest {
     }
 
     @Test
+    @DisplayName("the MOD-777 water frames have their own family, not the generic capsule one")
+    void capsuleWaterFramesHaveTheirOwnFamily() {
+        ShotFamilies.Family generic = ShotFamilies.of("capsule_inside_clear_pitch0");
+        for (String name : List.of("capsule_water_behind_door", "capsule_water_drained")) {
+            ShotFamilies.Family family = ShotFamilies.of(name);
+            assertNotNull(family, name);
+            assertEquals(ShotGroup.BER, family.group(), name);
+            assertFalse(family.checks().equals(generic.checks()), name + " fell back to the generic capsule_ family");
+        }
+    }
+
+    @Test
     @DisplayName("a screen frame is not filed under the world group and vice versa")
     void groupsAreNotAllTheSame() {
         assertEquals(ShotGroup.GUI, ShotFamilies.of("gui_macerator_empty").group());

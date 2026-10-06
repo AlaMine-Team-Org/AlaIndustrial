@@ -46,7 +46,8 @@ public final class ElectricFurnaceBlockEntity extends AbstractProcessingMachineB
 			RecipeManager.createCheck(RecipeType.SMELTING);
 
 	public ElectricFurnaceBlockEntity(BlockPos pos, BlockState state) {
-		super(ModContent.ELECTRIC_FURNACE_BE.get(), pos, state, EnergyTier.LV, Config.machineBuffer, Config.electricFurnaceDuration);
+		super(ModContent.ELECTRIC_FURNACE_BE.get(), pos, state, EnergyTier.LV, Config.machineBuffer,
+				() -> Config.electricFurnaceDuration);
 	}
 
 	@Override

@@ -2761,7 +2761,7 @@
             {
               "type": "text",
               "title": "Estación de dron jardinero",
-              "text": "Una estación LV con búfer de EU desde la que despega un dron animado que patrulla los cultivos en un radio de 4 bloques — ara la tierra libre, planta semillas, fertiliza los cultivos inmaduros y lleva la cosecha madura de vuelta a la estación."
+              "text": "Una estación LV con búfer de EU desde la que despega un dron animado que patrulla los cultivos en un radio de 4 bloques — ara la tierra libre, planta semillas, fertiliza los cultivos inmaduros, arranca la hierba y los arbustos y lleva la cosecha madura de vuelta a la estación."
             },
             {
               "type": "stats",

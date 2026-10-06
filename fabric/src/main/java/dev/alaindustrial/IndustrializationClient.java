@@ -44,6 +44,7 @@ public class IndustrializationClient implements ClientModInitializer {
 		registerParticleProviders();
 		registerBlockColors();
 		registerClientHooks();
+		registerBlockOutlines();
 		registerBlockEntityRenderers();
 		registerDevWindowTitle();
 		// MOD-133/MOD-483: the dashboard and the skill screen read the local player's synced attachments
@@ -259,6 +260,38 @@ public class IndustrializationClient implements ClientModInitializer {
 						.add(dev.alaindustrial.client.dashboard.InventoryProfileButton.install(screen));
 			}
 		});
+	}
+
+	/**
+	 * Replays the shared {@link ClientContentManifest#BLOCK_OUTLINES} (MOD-778): once vanilla has extracted
+	 * the hovered block's outline, the first entry that answers swaps the drawn shape and keeps the rest of
+	 * the extracted state — position, translucency, contrast — so the outline is styled exactly as vanilla
+	 * draws it. NeoForge does the same on its {@code ExtractBlockOutlineRenderStateEvent}.
+	 */
+	private void registerBlockOutlines() {
+		net.fabricmc.fabric.api.client.rendering.v1.level.LevelExtractionEvents.AFTER_BLOCK_OUTLINE_EXTRACTION
+				.register((context, hit) -> {
+					net.minecraft.client.renderer.state.level.LevelRenderState levelState = context.levelState();
+					net.minecraft.client.renderer.state.level.BlockOutlineRenderState outline =
+							levelState.blockOutlineRenderState;
+					if (outline == null) {
+						return;
+					}
+					net.minecraft.world.level.block.state.BlockState state =
+							context.level().getBlockState(outline.pos());
+					for (ClientContentManifest.BlockOutline def : ClientContentManifest.BLOCK_OUTLINES) {
+						net.minecraft.world.phys.shapes.VoxelShape shape =
+								def.shape(context.level(), outline.pos(), state);
+						if (shape != null) {
+							levelState.blockOutlineRenderState =
+									new net.minecraft.client.renderer.state.level.BlockOutlineRenderState(
+											outline.pos(), outline.isTranslucent(), outline.highContrast(), shape,
+											outline.collisionShape(), outline.occlusionShape(),
+											outline.interactionShape());
+							return;
+						}
+					}
+				});
 	}
 
 	/**

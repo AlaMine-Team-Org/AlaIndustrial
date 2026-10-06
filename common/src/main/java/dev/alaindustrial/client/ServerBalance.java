@@ -349,6 +349,30 @@ public final class ServerBalance {
 		return current.doubleValue("mutationChanceCap", Config.mutationChanceCap);
 	}
 
+	public static double mutationChanceCreate() {
+		return current.doubleValue("mutationChanceCreate", Config.mutationChanceCreate);
+	}
+
+	public static double mutationChanceDuplicate() {
+		return current.doubleValue("mutationChanceDuplicate", Config.mutationChanceDuplicate);
+	}
+
+	public static double mutationChanceTransform() {
+		return current.doubleValue("mutationChanceTransform", Config.mutationChanceTransform);
+	}
+
+	public static int mutationDurationCreate() {
+		return current.intValue("mutationDurationCreate", Config.mutationDurationCreate);
+	}
+
+	public static int mutationDurationDuplicate() {
+		return current.intValue("mutationDurationDuplicate", Config.mutationDurationDuplicate);
+	}
+
+	public static int mutationDurationTransform() {
+		return current.intValue("mutationDurationTransform", Config.mutationDurationTransform);
+	}
+
 	public static double mutationGradeEpic() {
 		return current.doubleValue("mutationGradeEpic", Config.mutationGradeEpic);
 	}

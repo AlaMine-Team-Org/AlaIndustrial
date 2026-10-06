@@ -11,6 +11,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -81,5 +83,22 @@ public class KokSagyzRootBlock extends Block implements EntityBlock {
 		super.playerDestroy(level, player, pos, state, blockEntity, tool);
 		level.setBlockAndUpdate(pos, blockEntity instanceof KokSagyzRootBlockEntity root
 				? root.soil() : Blocks.DIRT.defaultBlockState());
+	}
+
+	/**
+	 * Occludes nothing, though {@code canOcclude()} stays true (MOD-776): the chunk model draws the soil
+	 * this root replaced, and farmland is 15/16 of a block. A full-cube occlusion shape dropped the
+	 * neighbour's facing side and left a sky-blue strip along the field's edge. A block must not occlude
+	 * more than its model covers.
+	 */
+	@Override
+	protected VoxelShape getOcclusionShape(BlockState state) {
+		return Shapes.empty();
+	}
+
+	/** Keeps the root opaque to light, as the ground it replaced: see {@link #getOcclusionShape}. */
+	@Override
+	protected int getLightDampening(BlockState state) {
+		return 15;
 	}
 }

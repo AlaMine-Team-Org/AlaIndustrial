@@ -52,6 +52,11 @@ it, so the `player` component of the three triggers' record headers stays a one-
 | `ModelSubmit` | `<S> void withCrumbling(SubmitNodeCollector, Model<S>, S, PoseStack, int, int, int, SpriteId, SpriteGetter, int, @Nullable CrumblingOverlay)` | `submitModel` without the overlay, then `order(1).submitCrumblingOverlay(…)` | `submitModel(…, outlineColor, crumbling)` | MOD-703 |
 | `Keyboard` | `InputConstants.Type keyMappingType()`, `boolean isDown(int)` | `Type.KEYBOARD` (SDL3 scancodes); `InputConstants.isKeyDown(key)` | `Type.KEYSYM` (GLFW keys); `isKeyDown(window, key)` behind a window check | MOD-703 |
 | `Links` | `void confirmAndOpen(Minecraft, Screen, String)` | `ConfirmLinkScreen(…, URI, …)` and `Blaze3D.openUri(URI)` | `ConfirmLinkScreen(…, String, …)` and `Util.getPlatform().openUri(String)` | MOD-703 |
+| `TranslucentTypes` | `RenderType blockSheetNoDepthWrite()` | a copy of `RenderPipelines.ITEM_TRANSLUCENT` (`com.mojang.renderpearl.api.pipeline`) with `DepthStencilState(depthTest, false)`; the setup of vanilla's `itemTranslucent` on the block atlas with `setOitPipelines(RenderPipelines.OIT_ITEM)` | the same copy from `com.mojang.blaze3d.pipeline`; no OIT, the setup sends it to `OutputTarget.ITEM_ENTITY_TARGET` as vanilla's `itemTranslucent` does | MOD-777 |
+
+`TranslucentTypes` reaches the package-private `RenderType.create` through the invoker
+`mixin.client.RenderTypeInvoker`, whose target signature is the same on both lines, so the invoker itself is
+line-neutral.
 
 ## `dev.alaindustrial.gametest.compat` (common/src/gametest)
 

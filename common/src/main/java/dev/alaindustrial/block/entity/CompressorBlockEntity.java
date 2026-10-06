@@ -36,7 +36,8 @@ public final class CompressorBlockEntity extends AbstractProcessingMachineBlockE
 			checkFor(ModRecipes.COMPRESSING);
 
 	public CompressorBlockEntity(BlockPos pos, BlockState state) {
-		super(ModContent.COMPRESSOR_BE.get(), pos, state, EnergyTier.LV, Config.machineBuffer, Config.compressorDuration);
+		super(ModContent.COMPRESSOR_BE.get(), pos, state, EnergyTier.LV, Config.machineBuffer,
+				() -> Config.compressorDuration);
 	}
 
 	@Override

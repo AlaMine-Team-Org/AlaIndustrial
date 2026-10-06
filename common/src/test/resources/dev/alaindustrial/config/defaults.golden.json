@@ -271,7 +271,7 @@
     "galvanicBathWaterPerOp": 4000,
     "_comment_gardenDroneBuffer": "Garden Drone station internal EU buffer.",
     "gardenDroneBuffer": 4000,
-    "_comment_gardenDroneEuPerAction": "EU the Garden Drone spends per completed action (till/plant/fertilize/harvest); idle costs nothing.",
+    "_comment_gardenDroneEuPerAction": "EU per completed Garden Drone action (till/plant/fertilize/harvest/weed); idle costs nothing.",
     "gardenDroneEuPerAction": 8,
     "_comment_gardenDroneFlightTicksPerBlock": "Ticks the Garden Drone flies per block of distance before its action lands.",
     "gardenDroneFlightTicksPerBlock": 11,

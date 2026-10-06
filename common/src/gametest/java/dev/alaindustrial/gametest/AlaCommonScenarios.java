@@ -15,6 +15,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -213,17 +214,27 @@ public final class AlaCommonScenarios {
 	}
 
 	/**
-	 * R-BRK-02 + R-BRK-09 (common): a bare hand is NOT a correct tool for a drop (no drop by hand),
-	 * while a pickaxe IS — every block is {@code requiresCorrectToolForDrops} + in
-	 * {@code minecraft:mineable/pickaxe}. Tool-harvest gating lives on the item (not in
-	 * {@code Block.getDrops}), so check it via {@link ItemStack#isCorrectToolForDrops}.
+	 * R-BRK-02 + R-BRK-09 (common): a survival player with an EMPTY hand may not harvest a block (no drop
+	 * by hand), while one holding a diamond pickaxe may. The question is asked the way the game asks it:
+	 * {@link net.minecraft.world.entity.player.Player#hasCorrectToolForDrops} is the very gate
+	 * {@code ServerPlayerGameMode.destroyBlock} consults before {@code Block.playerDestroy} drops anything.
+	 * It is true by hand exactly when the block state is not {@code requiresCorrectToolForDrops()} — the
+	 * flag {@code machine(...)} adds — so a block that lost that wrapper goes red here, named.
+	 *
+	 * <p>Neither {@code ItemStack.EMPTY.isCorrectToolForDrops(state)} (always false: an empty stack has no
+	 * tool component) nor {@code Block.getDrops} with an empty stack (loot tables never look at the tool
+	 * gate) can tell such a block apart; MOD-753 replaced the former, which had made this check vacuous.
 	 *
 	 * @implements R-BRK-02 (all blocks) — wrong tool yields no drop
 	 */
 	public static void everyBlockNoDropByHand(GameTestHelper helper) {
 		BlockPos abs = helper.absolutePos(PROBE);
 		var level = helper.getLevel();
-		ItemStack pickaxe = new ItemStack(Items.DIAMOND_PICKAXE);
+		var bareHand = helper.makeMockPlayer(GameType.SURVIVAL);
+		bareHand.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+		var withPickaxe = helper.makeMockPlayer(GameType.SURVIVAL);
+		withPickaxe.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.DIAMOND_PICKAXE));
+		List<String> offenders = new ArrayList<>();
 		for (Identifier id : BuiltInRegistries.BLOCK.keySet()) {
 			if (!Industrialization.MOD_ID.equals(id.getNamespace())) {
 				continue;
@@ -250,6 +261,12 @@ public final class AlaCommonScenarios {
 			if (id.getPath().equals("oil_fire") || id.getPath().equals("soot_layer")) {
 				continue;
 			}
+			// The reactor's button and lever (MOD-468) are vanilla-behaviour controls with no tool
+			// requirement by design (see their ReactorContent declarations and the reactor_lever spec), so
+			// a bare hand harvests them like a vanilla lever; a pickaxe only breaks them faster.
+			if (id.getPath().equals("reactor_button") || id.getPath().equals("reactor_lever")) {
+				continue;
+			}
 			Block block = BuiltInRegistries.BLOCK.getValue(id);
 			// Liquid blocks (MOD-238 oil): fluids are never mined — not requiresCorrectToolForDrops,
 			// not in mineable/pickaxe, no drops at all (vanilla water/lava behave identically), so
@@ -266,12 +283,15 @@ public final class AlaCommonScenarios {
 			helper.setBlock(PROBE, block);
 			var state = level.getBlockState(abs);
 			helper.setBlock(PROBE, Blocks.AIR);
-			if (ItemStack.EMPTY.isCorrectToolForDrops(state)) {
-				helper.fail(id + " counts a bare hand as a correct tool — should need a pickaxe (R-BRK-02)");
+			if (bareHand.hasCorrectToolForDrops(state)) {
+				offenders.add(id + " drops to a bare hand — not requiresCorrectToolForDrops (R-BRK-02)");
 			}
-			if (!pickaxe.isCorrectToolForDrops(state)) {
-				helper.fail(id + " does not accept a pickaxe as a correct tool (R-BRK-09)");
+			if (!withPickaxe.hasCorrectToolForDrops(state)) {
+				offenders.add(id + " does not drop to a diamond pickaxe (R-BRK-09)");
 			}
+		}
+		if (!offenders.isEmpty()) {
+			helper.fail(String.join("; ", offenders));
 		}
 		helper.succeed();
 	}

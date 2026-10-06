@@ -733,15 +733,15 @@ public final class Config {
 			doc = "Incubator internal EU buffer.")
 	public static int incubatorBuffer = 8000;
 	/** Ticks per transform attempt at 1.0 speed (300 x 8 EU/t = 2400 EU). */
-	@Knob(section = Section.MACHINES, min = 1,
+	@Knob(section = Section.MACHINES, clientVisible = true, min = 1,
 			doc = "Ticks an incubator transform attempt takes at 1.0 speed.")
 	public static int mutationDurationTransform = 300;
 	/** Ticks per duplicate attempt at 1.0 speed (500 x 8 EU/t = 4000 EU). */
-	@Knob(section = Section.MACHINES, min = 1,
+	@Knob(section = Section.MACHINES, clientVisible = true, min = 1,
 			doc = "Ticks an incubator duplicate attempt takes at 1.0 speed.")
 	public static int mutationDurationDuplicate = 500;
 	/** Ticks per create attempt at 1.0 speed (1000 x 8 EU/t = 8000 EU). */
-	@Knob(section = Section.MACHINES, min = 1,
+	@Knob(section = Section.MACHINES, clientVisible = true, min = 1,
 			doc = "Ticks an incubator create attempt takes at 1.0 speed.")
 	public static int mutationDurationCreate = 1000;
 	/**
@@ -763,15 +763,15 @@ public final class Config {
 			doc = "Mutation attempts one uranium ingot powers before it burns to ash.")
 	public static int mutationAttemptsPerIngot = 3;
 	/** Base success chance of a transform mutation. */
-	@Knob(section = Section.MACHINES, min = 0.0, floorTo = 0.0,
+	@Knob(section = Section.MACHINES, clientVisible = true, min = 0.0, floorTo = 0.0,
 			doc = "Base success chance of a transform mutation (0..1).")
 	public static double mutationChanceTransform = 0.75;
 	/** Base success chance of a duplicate mutation. */
-	@Knob(section = Section.MACHINES, min = 0.0, floorTo = 0.0,
+	@Knob(section = Section.MACHINES, clientVisible = true, min = 0.0, floorTo = 0.0,
 			doc = "Base success chance of a duplicate mutation (0..1).")
 	public static double mutationChanceDuplicate = 0.45;
 	/** Base success chance of a create mutation. */
-	@Knob(section = Section.MACHINES, min = 0.0, floorTo = 0.0,
+	@Knob(section = Section.MACHINES, clientVisible = true, min = 0.0, floorTo = 0.0,
 			doc = "Base success chance of a create mutation (0..1).")
 	public static double mutationChanceCreate = 0.25;
 	/** Ceiling on the total success chance (base + gene bonus) — a mutation is never guaranteed. */
@@ -801,10 +801,10 @@ public final class Config {
 	@Knob(section = Section.MACHINES, clientVisible = true, min = 1,
 			doc = "Garden Drone station internal EU buffer.")
 	public static int gardenDroneBuffer = 4000;
-	/** EU spent per completed action (till / plant / fertilize / harvest). Demand-driven: an idle
+	/** EU spent per completed action (till / plant / fertilize / harvest / weed). Demand-driven: an idle
 	 * station (nothing to do) spends nothing, same pattern as {@link #electricHeaterEuPerTick}. */
 	@Knob(section = Section.MACHINES, clientVisible = true, min = 1,
-			doc = "EU the Garden Drone spends per completed action (till/plant/fertilize/harvest); idle costs nothing.")
+			doc = "EU per completed Garden Drone action (till/plant/fertilize/harvest/weed); idle costs nothing.")
 	public static int gardenDroneEuPerAction = 8;
 	/** Garden drone scan radius around the station: 4, a tier-1 plot, leaving a wider field to a later tier. */
 	@Knob(section = Section.MACHINES, clientVisible = true, min = 1,

@@ -1,5 +1,6 @@
 package dev.alaindustrial.client;
 
+import dev.alaindustrial.block.DistillationColumnOutline;
 import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.DiamondChestBlockEntity;
 import dev.alaindustrial.block.entity.ElectrumChestBlockEntity;
@@ -62,11 +63,15 @@ import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.renderer.block.FluidModel;
 import net.minecraft.client.resources.model.sprite.Material;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jspecify.annotations.Nullable;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.KeyMapping;
@@ -81,7 +86,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
-// size-justified: a declarative table — seven client lists, one entry per line, each with its record and its
+// size-justified: a declarative table — eight client lists, one entry per line, each with its record and its
 // one factory; splitting it by list would scatter the single place a client registration is declared, which
 // is what MOD-403 and MOD-706 built it to be.
 /**
@@ -105,6 +110,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
  * <p>MOD-706 added the key mappings ({@link #KEY_MAPPINGS}), the HUD layers ({@link #HUD_LAYERS}), the
  * fluid models ({@link #FLUID_MODELS}) and the particle providers ({@link #PARTICLE_PROVIDERS}), which both
  * client entry points used to list by hand — and which {@code loader_parity_check.py} could not see.
+ * MOD-778 added the block outlines ({@link #BLOCK_OUTLINES}).
  *
  * <p><b>Deliberately NOT here</b> (it would cost more than it saves, and it is a single line): the
  * entity renderer for the Stock Display Frame — its handle ({@code ModEntities}/{@code ModEntitiesNeoForge})
@@ -507,4 +513,30 @@ public final class ClientContentManifest {
 			// soul_fire_flame); the colour comes entirely from the particle's own texture.
 			particleProvider(ModParticles.ENRICHED_URANIUM_FLAME, FlameParticle.Provider::new),
 			particleProvider(ModParticles.NUTRIENT_SPRAY, NutrientSprayParticle.Provider::new));
+
+	// ─────────────────────────────────────────────────────────────────────────────────────────
+	// Block outlines (MOD-778)
+	// ─────────────────────────────────────────────────────────────────────────────────────────
+
+	/**
+	 * The outline drawn around a hovered block in place of its own shape — a multiblock's whole contour, say.
+	 * Fabric applies it after {@code LevelExtractionEvents.AFTER_BLOCK_OUTLINE_EXTRACTION}, NeoForge on
+	 * {@code ExtractBlockOutlineRenderStateEvent}; both swap only the drawn shape, so targeting still follows
+	 * the block's {@code getShape}.
+	 */
+	@FunctionalInterface
+	public interface BlockOutline {
+		/** The outline relative to {@code pos}, or {@code null} to keep the block's own. */
+		@Nullable VoxelShape shape(BlockGetter level, BlockPos pos, BlockState state);
+	}
+
+	/** One entry of {@link #BLOCK_OUTLINES} — the call {@code loader_parity_check.py} counts. */
+	private static BlockOutline blockOutline(BlockOutline outline) {
+		return outline;
+	}
+
+	/** Every block outline; the first one that answers for the hovered block wins. */
+	public static final List<BlockOutline> BLOCK_OUTLINES = List.of(
+			// MOD-778: any storey of an assembled distillation column outlines the whole tower.
+			blockOutline(DistillationColumnOutline::shape));
 }

@@ -371,7 +371,8 @@ public final class IncubatorBlockEntity extends MachineBlockEntity implements Ov
 	/** Recipe energy wins when it is set, so a per-recipe override changes the length of the cycle. */
 	private static int durationOf(IncubatorMode mode, @Nullable AlaProcessingRecipe recipe, int euPerTick) {
 		if (recipe == null || recipe.energy() <= 0) {
-			return mode.baseDuration();
+			return mode.baseDuration(Config.mutationDurationTransform, Config.mutationDurationDuplicate,
+					Config.mutationDurationCreate);
 		}
 		return Math.max(1, recipe.energy() / Math.max(1, Config.incubatorEuPerTick));
 	}
@@ -393,9 +394,8 @@ public final class IncubatorBlockEntity extends MachineBlockEntity implements Ov
 	 */
 	private void rollPending(Level level, AlaProcessingRecipe recipe, IncubatorMode mode) {
 		MutationGrade inputGrade = MutationGrades.get(items.get(INPUT_SLOT));
-		// A recipe may state its own chance (the duplicate value classes do); otherwise the mode's
-		// Config default applies.
-		double baseChance = recipe.chance() >= 0 ? recipe.chance() : mode.baseChance();
+		double baseChance = MutationRoll.recipeBaseChance(recipe.chance(), mode.baseChance(
+				Config.mutationChanceTransform, Config.mutationChanceDuplicate, Config.mutationChanceCreate));
 		// MOD-483 Selection: applied to the BASE chance, so the mod's own 0.95 cap still has the last
 		// word — a skill must not push a roll past a ceiling the game deliberately set.
 		double chance = MutationRoll.effectiveChance(
