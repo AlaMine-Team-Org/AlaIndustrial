@@ -360,7 +360,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
 <div class="group-title">能源</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="12 个页面">12</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="13 个页面">13</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>核能设施</span><span class="cat-count" aria-label="15 个页面">15</span></a>
@@ -449,7 +449,9 @@
 
 <p>原版配方作为 <strong>镜像</strong> 进入本类别：它们仅为展示而构建，不会被加入游戏配方注册表，机器实际工作时执行的仍是鲜活的原版配方。因此界面中的数值与实际行为绝不会出现分歧。</p>
 
-<p>按设计，每次熔炼 <strong>仅显示一次</strong>：对于原版熔炉已能用相同输入输出完成的内容（圆石 → 石头、沙子 → 玻璃、raw_copper/gold/iron → 锭），模组不会用自己的配方重复一遍——这些熔炼只存在于原版熔炼中，并以唯一的镜像形式进入本类别。Mekanism Energized Smelter 和 Modern Industrialization 也都采用这种做法，为那些数值上与原版完全相同的熔炼保留单一事实来源（包括 200 EU/FE · 5 秒的定价，镜像与机器取自同一项设置）。</p>
+<p>镜像本身不携带价格：配方窗口在 <strong>绘制卡片时</strong> 按 <strong>服务器</strong> 的设置（、、）计算原版熔炼的 EU/FE 和时间，所有机器卡片上的时间则用 EU/FE 除以服务器的 EU/FE/t 速率（）。在修改过设置的专用服务器上，窗口显示的是服务器的数值，而不是玩家自己配置文件中的数值；在 JEI 中，<code>/ala config reload</code> 之后无需重新进入即可更新。在 REI 中，原版熔炼的价格由服务器随卡片一起发送，窗口根据这个价格识别镜像并显示电炉的时间——与 JEI 中的数值相同。服务器只在 <code>/reload</code> 时重新发送 REI 的卡片，因此在 <code>/ala config reload</code> 与 <code>/reload</code> 之间，REI 中的镜像显示旧价格，时间则是旧价格除以新的 EU/FE/t 速率。</p>
+
+<p>按设计，每次熔炼 <strong>仅显示一次</strong>：对于原版熔炉已能用相同输入输出完成的内容（圆石 → 石头、沙子 → 玻璃、raw_copper/gold/iron → 锭），模组不会用自己的配方重复一遍——这些熔炼只存在于原版熔炼中，并以唯一的镜像形式进入本类别。Mekanism Energized Smelter 和 Modern Industrialization 也都采用这种做法，为那些数值上与原版完全相同的熔炼保留单一事实来源（包括 200 EU/FE · 5 秒的定价，配方窗口按机器运行所依据的同一组服务器设置计算）。</p>
 
 <p><strong>存在重复配方时这条规则如何守住（）。</strong> 为了铁熔炉，十二个模组配方各自带有一份原版重复配方（六种金属粉、五种「原矿 → 锭」以及铁的淬炼）。这类重复配方的镜像不会进入本类别：如果模组配方已经把某个原版熔炼的每一个输入物品都转化为相同产物，那次原版熔炼就会被丢弃。保留下来的是模组配方，这也是对玩家更有利的选择——它的输入是标签（<code>#c:dusts/copper</code>），因此卡片同样覆盖其他模组的铜粉，而重复配方只指名一个具体物品。在本类别的原版物品集中约有 100 个配方； 之后，生橡胶不再纳入 smelting。</p>
 

@@ -360,7 +360,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>Рецепти</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>Профіль гравця</span></a>
 <div class="group-title">Енергія</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="12 сторінок">12</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="13 сторінок">13</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="4 сторінки">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="8 сторінок">8</span></a>
 <a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>Ядерна техніка</span><span class="cat-count" aria-label="15 сторінок">15</span></a>
@@ -447,6 +447,8 @@
 <p>Категорія «Електропіч» у JEI/REI показує <strong>все, що машина реально плавить</strong> — і рецепти моду, і всі ванільні переплавки, причому кожна з ціною електропечі: <strong>200 EU/FE · 5 с</strong> замість ванільних «XP за 10 сек». Клік по стрілці прогресу відкриває цю категорію разом із ванільною.</p>
 
 <p>Ванільні рецепти потрапляють у категорію як <strong>дзеркала</strong>: вони будуються лише для показу й у ігровий реєстр рецептів не додаються — машина в роботі й далі виконує живий ванільний рецепт. Тому числа в інтерфейсі й реальна поведінка не можуть розійтися.</p>
+
+<p>Власної ціни дзеркало не має: вікно рецепта рахує EU/FE і час ванільної плавки <strong>в момент відмальовування</strong> за налаштуваннями <strong>сервера</strong> ( ), а час на картках усіх машин ділить EU/FE на ставку EU/FE/т сервера . На виділеному сервері зі зміненими налаштуваннями вікно показує його числа, а не числа з файлу гравця, і в JEI оновлюється після <code>/ala config reload</code> без перезаходу. У REI ціну ванільної плавки надсилає сервер разом із карткою, а вікно впізнає дзеркало за цією ціною й показує час печі — ті самі числа, що в JEI. Картки REI сервер надсилає заново лише після <code>/reload</code>, тож між <code>/ala config reload</code> і <code>/reload</code> дзеркало в REI показує стару ціну, а час — стару ціну, поділену на нову ставку.</p>
 
 <p>Задумано так, що кожна плавка показана <strong>рівно один раз</strong>: мод не дублює власним рецептом те, що ванільна піч уже робить з тим самим входом і виходом: такі плавки живуть лише у ванільній плавці й потрапляють у категорію єдиним дзеркалом.</p>
 

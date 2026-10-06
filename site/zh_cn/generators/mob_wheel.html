@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="zh_cn" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>跑轮驱动器 — Ala Industrial — 指南</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="打开菜单" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  </div>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../../assets/item/guide_book_3d.png" alt="">全部内容</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/ky7cFDF8JD" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../../assets/platform/discord.svg" alt="Discord"></a>
+    </div>
+    <search class="site-search"><input type="search" data-wiki-search placeholder="搜索维基…" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-label="搜索指南" autocomplete="off" spellcheck="false" data-index="../search-index.json" data-root="../" data-l10n="{&quot;list&quot;:&quot;搜索结果&quot;,&quot;one&quot;:&quot;个页面&quot;,&quot;few&quot;:&quot;个页面&quot;,&quot;many&quot;:&quot;个页面&quot;,&quot;loading&quot;:&quot;正在加载搜索索引…&quot;,&quot;nothing&quot;:&quot;未找到结果&quot;}"></search>
+    <details class="language-menu"><summary aria-label="Language">中文</summary><div class="language-popover"><span>中文</span><a href="../../en/generators/mob_wheel.html">EN</a><a href="../../ru/generators/mob_wheel.html">RU</a><a href="../../uk/generators/mob_wheel.html">UA</a><a href="../../ja_jp/generators/mob_wheel.html">日本語</a><a href="../../es_es/generators/mob_wheel.html">ES</a></div></details>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">浏览</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../../assets/item/tempered_iron_pickaxe.png" alt=""><span>新手入门</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
+<div class="group-title">能源</div>
+<a class="cat-link active" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="13 个页面">13</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
+<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>核能设施</span><span class="cat-count" aria-label="15 个页面">15</span></a>
+<div class="group-title">加工</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>机器</span><span class="cat-count" aria-label="16 个页面">16</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>流体机器</span><span class="cat-count" aria-label="3 个页面">3</span></a>
+<div class="group-title">物流</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>物品物流</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>流体物流</span><span class="cat-count" aria-label="5 个页面">5</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>流体储存</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<div class="group-title">世界与自动化</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="24 个页面">24</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>农业</span><span class="cat-count" aria-label="6 个页面">6</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>高级机器</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<div class="group-title">其他</div>
+<a class="cat-link" href="../construction/index.html"><img class="nav-icon" src="../../assets/item/engraved_plate_0_3d.png" alt=""><span>建筑方块</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="18 个页面">18</span></a>
+<div class="group-title">物品</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="30 个页面">30</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="30 个页面">30</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">首页</a><span class="sep">/</span><a href="../generators/index.html">发电机</a><span class="sep">/</span><span>跑轮驱动器</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../../assets/item/mob_wheel_controller_3d.png" alt="跑轮驱动器" width="64" height="64">
+    <div class="info">
+      <h1>跑轮驱动器</h1>
+      <div class="block-id">alaindustrial:mob_wheel_controller</div>
+      <div class="tags"><span class="tag cat" style="background:#f0b429">发电机</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">已实现</span><span class="tag">tier-lv</span><span class="tag">energy</span><span class="tag">mob</span><span class="tag">multiblock</span></div>
+    </div>
+  </div>
+</div>
+<h2 id="概览">概览</h2>
+
+<p><strong>跑轮</strong> 是一个竖直的木制轮子，就像仓鼠的跑轮，只是按生物的身高放大了。把一只生物引进去，关上 栅栏门——奔跑的生物就会转动轮子，侧面的驱动器把 EU/FE 送入电网。这是第一种既不需要燃料、也不需要 天气和露天的发电机：只要一只活的跑者和一点饲料。</p>
+
+<p>并不是每种生物都愿意跑：哪些生物能当跑者、各自能做到什么，要由玩家自己去发现——靠经验、看驱动器 的界面，之后再借助分析仪，它会揭示一个物种的确切数值。</p>
+
+<p>跑轮便宜、全木制，在游戏一开始就能造。代价是照顾跑者：它会累，在它休息好或吃饱之前，轮子会停下。</p>
+
+<blockquote><strong>小例子：</strong>跑者以本物种的全部功率起跑，到一轮奔跑结束时产出大约降到一半，然后停下。饲料槽里 放一份合适的饲料，下一轮立刻开始；没有饲料时跑者会自己休息——更慢，但免费。</blockquote>
+
+<h2 id="能量">能量</h2>
+
+<p>跑轮只产出能量。输出经由驱动器，它是结构中唯一带接口的方块：接口位于驱动器的两个外侧面——侧面 和背面，与外壳齐平，线缆可以紧贴着接上。</p>
+
+<table><thead><tr><th>项目</th><th>数值</th></tr></thead><tbody><tr><td>内部缓存</td><td>无</td></tr><tr><td>输出</td><td>LV，直接送入电网</td></tr><tr><td>实际发电</td><td>0–12 EU/FE/t，取决于跑者、它的体力和周围的条件</td></tr></tbody></table>
+
+<p><strong>没有缓存。</strong>驱动器最多只保存一刻的产出，并立刻提供给电网。电网没取走的部分就会丢失，而跑者照样 消耗体力：没有用电设备的跑轮只是让生物白跑。</p>
+
+<p>即使最强的跑者处在最有利的条件下，也不会超过铜缆的通过能力，所以在铜缆上不会有任何损失。</p>
+
+<h2 id="发电">发电</h2>
+
+<p>只有当生物<strong>明显在奔跑</strong>时，跑轮才产出能量。站着不动的生物、正在歇息的生物、分心的生物、精疲力竭 的生物以及空轮子都产出 0。住户只有一个：通道里的第二只生物不会增加产出。</p>
+
+<p>奔跑中的生物每刻的产出：</p>
+
+<pre><code class="lang-">物种功率 × 条件加成 × 节奏 × (0.5 + 0.5 × 体力比例)，最后向下取整一次</code></pre>
+
+<p>体力满时给出全部功率，到一轮奔跑结束时产出大约降到一半。</p>
+
+<h3 id="跑者的性情">跑者的性情</h3>
+
+<p>每个物种只有一套参数：同一物种的所有个体都一样，没有个体差异。物种之间在以下几方面不同：</p>
+
+<ul><li><strong>功率</strong>——跑者体力满时给出多少 EU/FE/t；</li><li><strong>耐力</strong>——满体力时能跑多少刻；</li><li><strong>恢复速度</strong>——精疲力竭的跑者自己恢复得有多快；</li><li><strong>节奏</strong>——有的跑得均匀，有的一阵一阵（产出围绕平均值跳动），有的时不时停下来喘口气，有的把 轮子转得明显更快；</li><li><strong>特性</strong>——有些物种有自己的特点，可能有用，也可能危险。</li></ul>
+
+<p>通常强壮的跑者很快就累，而耐跑的跑者功率低。哪个物种有什么不同，跑轮不会告诉你：驱动器的界面只 显示肉眼能看到的东西。</p>
+
+<h3 id="条件加成">条件加成</h3>
+
+<p>有些跑者适合特定的条件——一天中的时段、天气或跑轮所在地的气候。在自己适合的条件下，这样的跑者会 获得功率加成；其余时间没有加成。节奏和耐力不随条件改变。</p>
+
+<h3 id="疲劳">疲劳</h3>
+
+<p>体力在<strong>奔跑的每一刻</strong>都会消耗——不管电网是否取走了能量。新来的生物体力是满的，所以第一轮奔跑 不需要饲料。体力耗尽时，生物停下，轮子也停下；生物不会死亡，也不会受到伤害。歇息时以及跑者分心 时，体力不消耗——也不恢复。</p>
+
+<p>体力属于<strong>这一只具体的生物</strong>：放走一个跑者再把同一只抓回来，它回来时还是一样累。新的生物从满 体力开始。</p>
+
+<h3 id="休息">休息</h3>
+
+<p>精疲力竭的生物会在轮子里自己休息，不用出来。满体力大约在一个游戏日内恢复；恢复快的物种能快好几 倍，恢复慢的则要超过一天。只有体力<strong>全满</strong>时才会重新开跑。</p>
+
+<h3 id="干草">干草</h3>
+
+<p>结构周围 <strong>2 格</strong>内的干草捆能让休息加快 <strong>4</strong> 倍。干草不会消耗。它不影响奔跑中的体力——只影响休息。</p>
+
+<h2 id="结构">结构</h2>
+
+<p>跑轮是由四种方块组成的 3×3×3 建筑。玩家要放置 <strong>14 个方块</strong>；立方体其余 13 格必须<strong>空着</strong>：空气、 草、蕨、花、雪层和其他小型植物都不碍事——组装时它们会被破坏并掉落物品。格子里有水或岩浆时无法 组装。跑轮可以朝任意方向放置：它会像驱动器一样转向玩家，而组装好的轮子始终横跨奔跑方向。</p>
+
+<p>以下坐标为标准坐标：<code>X/Y/Z</code> 从 0 到 2，轮轴沿 <code>Z</code> 方向，栅栏门朝向 <code>+Z</code>，驱动器位于后方右侧。 结构可以朝向四个方位中的任意一个；镜像搭建不被接受。</p>
+
+<table><thead><tr><th>方块</th><th>是什么</th><th>位置</th><th>数量</th></tr></thead><tbody><tr><td>跑轮驱动器</td><td>带 LV 接口、饲料槽和全部逻辑的木制外壳</td><td><code>(2,0,0)</code></td><td>1</td></tr><tr><td>跑轮框架</td><td>框架的立柱</td><td>四根三格高的角柱，驱动器所在格除外</td><td>11</td></tr><tr><td>跑轮</td><td>转子本身，放在立方体正中</td><td><code>(1,1,1)</code></td><td>1</td></tr><tr><td>跑轮栅栏门</td><td>唯一的入口和出口</td><td><code>(1,0,2)</code></td><td>1</td></tr><tr><td>跑轮单元</td><td>组装好的结构中不可见的填充；玩家拿不到</td><td>其余所有格</td><td>—</td></tr></tbody></table>
+
+<h3 id="组装与拆解">组装与拆解</h3>
+
+<p>只要 14 个方块都到位，结构就会自动组装：每当放置任何部件、以及相邻方块发生变化时，驱动器都会进行 检查。组装好的结构会用不可见的<strong>跑轮单元</strong>填满空格，并整体绘制——框架、旋转的转子、栅栏门。</p>
+
+<p>只要缺少任何一个部件，结构就会拆散：单元消失，部件恢复为未组装的外观，住户被放走。单元不会掉落 任何东西。</p>
+
+<p>空手右键未组装的驱动器，快捷栏上方会提示缺什么：要放哪个部件、要清除哪个方块，或者在哪里排掉液体。</p>
+
+<h3 id="碰撞">碰撞</h3>
+
+<p>组装好的结构中，立柱和单元都是完整方块，只有生物的通道例外：</p>
+
+<table><thead><tr><th>格子</th><th>碰撞</th></tr></thead><tbody><tr><td><code>(1,0,1)</code>——轮底</td><td>一直到所绘轮子奔跑面的地板</td></tr><tr><td><code>(1,1,1)</code>——转子</td><td>无</td></tr><tr><td><code>(1,1,2)</code>——栅栏门上方</td><td>无</td></tr><tr><td><code>(1,2,1)</code>、<code>(1,2,2)</code>——地板上方和栅栏门上方</td><td>无：约两格高的生物能站在抬高的地板上</td></tr><tr><td><code>(1,0,2)</code>——栅栏门</td><td>关闭时 1.5 格高，和原版栅栏门一样；打开时无</td></tr></tbody></table>
+
+<h2 id="住户">住户</h2>
+
+<h3 id="谁能跑">谁能跑</h3>
+
+<p>只有<strong>部分</strong>生物能在轮子里跑，而且只限成年个体。第一个条件是体型：生物必须能穿过栅栏门并在通道 里站直，所以太宽和太高的进不去。第二个条件是脾气：体型合适的生物中谁愿意跑，跑轮不会提示。不会跑 的生物在栅栏门关上时根本不会被抓住，仍是一只普通的生物。</p>
+
+<p>驱动器界面会用物种名称来称呼抓到的跑者。</p>
+
+<h3 id="捕获">捕获</h3>
+
+<p>栅栏门打开时，生物是自由的。可以用任何原版方式把它引进来：用食物引诱、用拴绳牵进来、让它跟着你。</p>
+
+<p><strong>通道</strong>是轮底这一列（地板和转子格）以及栅栏门格中关闭门板内侧以内的部分。碰撞箱碰到通道的合适 生物，会在<strong>栅栏门关上时</strong>被捕获，并且<strong>只要栅栏门关着、轮子是空的</strong>就一直会被捕获（每 5 刻检查 一次）：可以把生物推进去或放进去再随手关门，也可以先关门再把它赶进去。会选取离中心最近的一只，并 立刻放到地板正中。关闭门板外面的生物不会被捕获。住户只有一个；通道里的其他生物仍是普通生物。</p>
+
+<p><strong>拴绳。</strong>用拴绳牵着合适生物的玩家右键组装好的跑轮的任何部分——生物就会进入轮内，栅栏门关上， 拴绳还给玩家（创造模式下不归还）。如果轮子已被占用，快捷栏上方会出现提示。</p>
+
+<h3 id="固定">固定</h3>
+
+<p>栅栏门关着时，跑轮把生物固定在自己的地板上：脚正好踩在奔跑面上，没有速度、不会下落，也没有路径。 生物奔跑时，身体、头部和视线严格沿着轮子的转动方向。它不会再自行消失（就像带命名牌的生物）。它 自己的行为不会被关闭：跑轮只固定它的位置，一旦打开栅栏门，就只是不再固定它。</p>
+
+<p><strong>打开栅栏门是停下跑轮的唯一方法。</strong>没有单独的刹车、拉杆或开关。</p>
+
+<h3 id="危险的跑者">危险的跑者</h3>
+
+<p>敌对生物在轮子里依然是敌对的。如果附近——<strong>6 格</strong>以内——有它视为目标的玩家，它就会<strong>分心</strong>：奔跑 和产出停止，体力不消耗，跑者会自己转向玩家并发起攻击。近战时它只能打到紧贴栏杆的人；弓箭手和施法 者会直接从轮子里远程攻击。目标消失后，跑者会重新开跑。此时驱动器界面显示状态"分心"。</p>
+
+<p>跑者自己会施放的法术，跑轮不会压制——它召唤出的生物和平常一样危险。</p>
+
+<p>有些跑者在停下时比其他跑者更危险：这样的跑者奔跑时很安分，但一旦体力耗尽、分心，或在有玩家靠近 时停住不动——它可能会爆炸并毁掉轮子。给不安分的跑者喂食，用漏斗更安全，不必走近轮子。</p>
+
+<h3 id="死亡与区块卸载">死亡与区块卸载</h3>
+
+<ul><li><strong>生物死亡</strong>——轮子立刻失去住户并停下。结构完好。</li><li><strong>区块卸载</strong>——轮子随之停下。加载后，轮子会寻找自己的生物；如果 100 刻内都没找到，就视为丢失。 这种情况下结构同样完好。</li></ul>
+
+<h2 id="饲料槽">饲料槽</h2>
+
+<p>驱动器里有一个槽位。饲料可以手动放入，也可以用漏斗送入。</p>
+
+<ul><li>饲料必须<strong>适合跑者</strong>：每个物种有自己的食谱，同一种食物对一个跑者是饲料，对另一个则不是。哪种 饲料适合哪个物种，是玩家要自己摸索的内容之一。</li><li>饲料<strong>只在跑者完全精疲力竭时</strong>才会消耗——正好一整份，体力立刻恢复到最大。不会提前吃，效果也不 会叠加。</li><li>当前住户不吃的饲料<strong>不会消耗</strong>，留在槽里等待。空轮子接受任何至少有一种跑者会吃的饲料。</li><li>每种食物的一整份各不相同——从一个稀有物品到几个普通物品——但每一整份的效果都一样：体力全满。</li></ul>
+
+<p>饲料槽里的干草捆是饲料；用于休息的，是放在结构<strong>旁边</strong>的干草捆。</p>
+
+<h2 id="木材种类">木材种类</h2>
+
+<p>跑轮可以用游戏中的任何木材制作，并会染成相应的颜色。默认是橡木。</p>
+
+<p>手持任意木材的木板右键组装好的结构的任何部分，会把<strong>所有木质部分</strong>重新染色：框架、轮圈、奔跑踏板、 栅栏门和驱动器外壳。消耗一块木板（创造模式下不消耗）。铜、铁、轮轴、绳索和接口保持原色。</p>
+
+<p>支持 Minecraft 26.3 的所有木材种类——共十三种，包括杨木。木材种类保存在驱动器中，重新加载世界后 仍会保留。</p>
+
+<h2 id="物品栏">物品栏</h2>
+
+<table><thead><tr><th>槽位</th><th>接受</th><th>数量</th></tr></thead><tbody><tr><td>饲料槽</td><td>至少有一种跑者会吃的饲料</td><td>一组</td></tr></tbody></table>
+
+<p>没有其他槽位：没有燃料，没有升级，没有芯片。</p>
+
+<h2 id="界面">界面</h2>
+
+<p>右键驱动器或组装好的结构中除栅栏门以外的任何其他部分即可打开：右键栅栏门会打开或关上它。界面显示 肉眼能看到的东西——而不是物种资料：</p>
+
+<ul><li>饲料槽；</li><li>当前跑者的物种名称；</li><li>当前住户的体力条；</li><li>奔跑速度和当前产出（EU/FE/t）；</li><li>状态行——奔跑中、短暂歇息、分心、精疲力竭、在干草捆旁休息、内部没有生物、生物丢失或未组装。</li></ul>
+
+<p>没有任何设置：驱动器故意做得很简陋，没有模式也没有升级。一个物种的确切数值——功率、耐力、恢复、 节奏、饲料和特性——将由未来的分析仪揭示。</p>
+
+<h2 id="方块属性">方块属性</h2>
+
+<p>所有部件都是木制的，用斧破坏。</p>
+
+<table><thead><tr><th>字段</th><th>数值</th></tr></thead><tbody><tr><td>未组装部件的形状</td><td>与各自的模型一致：驱动器是比完整方块矮一像素的方块，框架是 4×4 像素的细立柱，跑轮是 14×14×14 像素的方块，栅栏门是横跨通道的门板，关闭时高 1.5 格，和原版栅栏门一样</td></tr><tr><td>组装后结构的形状</td><td>见上文"碰撞"</td></tr><tr><td>透明度</td><td>所有部件都是 ——组装好的结构由驱动器整体绘制</td></tr><tr><td>硬度</td><td>2.0</td></tr><tr><td>活塞</td><td>推不动任何部件</td></tr><tr><td>工具</td><td>斧；镐也可以</td></tr><tr><td>掉落</td><td>部件掉落自身；跑轮单元不掉落任何东西</td></tr></tbody></table>
+
+<h2 id="外观">外观</h2>
+
+<p>开放式的磨坊框架：带两侧轮圈和木制奔跑踏板的十面竖直轮子，可见的轮轴及其背面的横梁，框架的四根 角柱，前方栅栏门两侧的矮栅栏，以及后角一个简单的驱动器，铜接口与外壳齐平。生物奔跑时轮子转动， 生物停下时轮子也停下；快速的跑者会把它转得明显更快。模型和纹理均为原创，专为本模组制作。</p>
+
+<h2 id="声音">声音</h2>
+
+<p>跑轮没有自己的声音。栅栏门开关时使用原版栅栏门的声音。</p>
+
+<h2 id="配方">配方</h2>
+
+<table><thead><tr><th>物品</th><th>合成格</th><th>材料</th></tr></thead><tbody><tr><td>跑轮驱动器</td><td><code>P G P / P C P / P U P</code></td><td>P — 木板，G — <a href="../components/metal_gears.html">木齿轮</a>，C — <a href="../energy-transfer/copper_cable.html">铜缆</a>，U — 铜锭</td></tr><tr><td>跑轮框架 ×6</td><td><code>S P S / S P S / S P S</code></td><td>S — 木棍，P — 木板</td></tr><tr><td>跑轮</td><td><code>P S P / S G S / P S P</code></td><td>P — 木板，S — 木棍，G — 木齿轮</td></tr><tr><td>跑轮栅栏门</td><td>无序合成</td><td>任意木材的原版栅栏门 + 2 根木棍</td></tr></tbody></table>
+
+<p>一整个跑轮需要一个驱动器、两次框架合成（12 根立柱，需要 11 根）、一个跑轮和一扇栅栏门。</p>
+
+<h2 id="相关内容">相关内容</h2>
+
+<ul><li><a href="water_mill.html">水车</a>——同样是不需要燃料的早期发电机，但靠流水驱动。</li><li><a href="generator.html">发电机</a>——更稳定且带缓存，但要烧燃料。</li><li><a href="../energy-transfer/copper_cable.html">铜缆</a>——从驱动器连到用电设备最简单的线缆。</li></ul>
+
+<h2>合成</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="跑轮驱动器 alaindustrial:mob_wheel_controller" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="任意木板"><img src="../../assets/item/oak_planks_3d.png" alt="任意木板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="木齿轮"><img src="../../assets/item/wooden_gear_3d.png" alt="木齿轮" width="32" height="32"></div> <div class="cell" title="任意木板"><img src="../../assets/item/oak_planks_3d.png" alt="任意木板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意木板"><img src="../../assets/item/oak_planks_3d.png" alt="任意木板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="铜缆"><img src="../../assets/item/copper_cable_3d.png" alt="铜缆" width="32" height="32"></div> <div class="cell" title="任意木板"><img src="../../assets/item/oak_planks_3d.png" alt="任意木板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意木板"><img src="../../assets/item/oak_planks_3d.png" alt="任意木板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铜锭"><img src="../../assets/item/copper_ingot_3d.png" alt="任意铜锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意木板"><img src="../../assets/item/oak_planks_3d.png" alt="任意木板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="跑轮驱动器"><img src="../../assets/item/mob_wheel_controller_3d.png" alt="跑轮驱动器" width="32" height="32"></div><div class="result-name">跑轮驱动器</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>

@@ -360,7 +360,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="12 ページ">12</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="13 ページ">13</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>原子力</span><span class="cat-count" aria-label="15 ページ">15</span></a>
@@ -507,7 +507,7 @@
 
 <p><strong>ケーブル経由で貯蔵庫は余剰だけをステーションへ渡します — すなわち自身の蓄えの半分を超える分。</strong> これは意図的です：ステーションのバッファは 500 000 EU/FE で、エネルギー貯蔵庫の 20 000 に対し、 この閾値がなければ 1 基のステーションが拠点のバンク全体を吸い尽くし、機械を電源断にします。 ステーションを完全に満たしたいなら — エネルギー貯蔵庫を <strong>隣接</strong> させてください：直接接触は 速度も閾値も制限されず、これはプレイヤーが「全部よこせ」と言う直接の手段です。</p>
 
-<p>機械は常に優先です：同じネットワークで何かが稼働している間、ステーションは残りからエネルギーを 受け取るだけです。</p>
+<p>機械は常に優先です：同じネットワークで何かが稼働している間、ステーションは残りからエネルギーを 受け取るだけです。また、同じライン上の2つのエネルギー貯蔵庫が互いに均等化している間、ステーションは それらから何も受け取りません——その移送も、上の表の給電もです。発電機の余剰（機械の必要分を超えて 発電機が生み出す分）は、その間も届きます。貯蔵庫が揃うと、再び上の表のとおりに給電されます。</p>
 
 <h2 id="関連項目">関連項目</h2>
 

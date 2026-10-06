@@ -360,7 +360,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
 <div class="group-title">能源</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="12 个页面">12</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="13 个页面">13</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>核能设施</span><span class="cat-count" aria-label="15 个页面">15</span></a>
@@ -426,6 +426,8 @@
 <h2 id="界面">界面</h2>
 
 <p>界面复用 <a href="electric_furnace.html">电力熔炉</a> 的设计：能量储备、进度、输入槽和输出槽，中间是 <strong>锯片</strong> 形式的进度指示器，从左向右填充。槽位下方是一排 <strong>4 个模式按钮</strong>，带幽灵图标（木板/木棍/半砖/楼梯）；当前活动模式会高亮，每个按钮都有悬浮提示。</p>
+
+<p>升级面板打开期间——无论它停在哪里——模式按钮都不响应：点击不会切换模式，悬停既没有高亮也没有悬浮提示。被打开的统计面板盖住的按钮同样如此。悬浮提示不会许诺按钮做不到的事。</p>
 
 <p>槽位与模式按钮之间的状态行会说明机器停工的原因："材料数量不足"、"没有匹配的配方"、"输出已堵塞"、"没有能量"。机器完全空着时不会画出这一行——空槽本身已经说明了一切。关于能量的提示不会在缓存刚见底时就出现，而要等它空上一小会儿：供电勉强够用的机器是走一刻停一刻地干活的，跟着闪烁的文字反而会谎报停摆。</p>
 

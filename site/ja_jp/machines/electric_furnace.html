@@ -360,7 +360,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="12 ページ">12</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="13 ページ">13</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>原子力</span><span class="cat-count" aria-label="15 ページ">15</span></a>
@@ -449,7 +449,9 @@
 
 <p>バニラのレシピは <strong>ミラー</strong> としてカテゴリに入ります。これらは表示用にだけ構築され、ゲームのレシピレジストリには追加されません — 機械は稼働中も引き続き実際のバニラのレシピを実行します。そのため、インターフェースの数値と実際の挙動が食い違うことはありません。</p>
 
-<p>設計上、各製錬は <strong>正確に1回だけ</strong> 表示されるはずです。モッドは、バニラのかまどが同じ入力と出力で既に行っていること（丸石 → 石、砂 → ガラス、raw_copper/gold/iron → インゴット）を独自のレシピで重複させません。そのような製錬はバニラの製錬だけに存在し、カテゴリには単一のミラーとして入ります。Mekanism の Energized Smelter も Modern Industrialization も同じやり方で、バニラと数値的に同一の製錬についての単一の情報源を保っています（ミラーが取り出す 200 EU/FE · 5秒という価格も、機械がティックするのと同じ設定から来ています）。</p>
+<p>ミラー自体は価格を持ちません。レシピ画面はバニラ製錬の EU/FE と時間を <strong>カードを描画する時点で</strong> <strong>サーバー</strong> の設定（、、）から計算し、すべての機械のカードの時間は EU/FE をサーバーの EU/FE/t で割って求めます（）。設定を変更した専用サーバーでは、画面にはプレイヤー自身の設定ファイルではなくサーバーの数値が表示され、JEI では <code>/ala config reload</code> の後に再接続なしで更新されます。REI ではバニラ製錬の価格をサーバーがカードと一緒に送り、画面はその価格でミラーを見分けて電気炉の時間を表示します（JEI と同じ数値）。REI のカードをサーバーが送り直すのは <code>/reload</code> の時だけなので、<code>/ala config reload</code> から <code>/reload</code> までの間、REI のミラーは古い価格を表示し、時間は古い価格を新しい EU/FE/t で割った値になります。</p>
+
+<p>設計上、各製錬は <strong>正確に1回だけ</strong> 表示されるはずです。モッドは、バニラのかまどが同じ入力と出力で既に行っていること（丸石 → 石、砂 → ガラス、raw_copper/gold/iron → インゴット）を独自のレシピで重複させません。そのような製錬はバニラの製錬だけに存在し、カテゴリには単一のミラーとして入ります。Mekanism の Energized Smelter も Modern Industrialization も同じやり方で、バニラと数値的に同一の製錬についての単一の情報源を保っています（200 EU/FE · 5秒という価格も、機械が動作するのと同じサーバー設定からレシピ画面が計算します）。</p>
 
 <p><strong>重複レシピがある場所でこの原則をどう保っているか（）。</strong> 鉄のかまどのために、12 個のモッドレシピがそれぞれバニラの重複レシピを持っています（6 種類の粉、5 種類の「原石 → インゴット」、そして鉄の焼き入れ）。その重複レシピのミラーはカテゴリに入りません。入力アイテムのすべてをモッドのレシピが既に同じスタックへ変えているバニラ製錬は、そこで捨てられるからです。残るのはモッドのレシピで、これはプレイヤーに有利な選択でもあります。入力がタグ（<code>#c:dusts/copper</code>）なので、他のモッドの銅粉もそのカードが覆いますが、重複レシピは 1 つの具体的なアイテムしか指しません。バニラのアイテムセットでカテゴリには約100のレシピがあります。 以降、生ゴムは製錬に含まれません。</p>
 

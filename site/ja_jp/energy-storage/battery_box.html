@@ -360,7 +360,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="12 ページ">12</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="13 ページ">13</span></a>
 <a class="cat-link active" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>原子力</span><span class="cat-count" aria-label="15 ページ">15</span></a>
@@ -431,7 +431,7 @@
 
 <p>カスケードのルールはケーブルがなくても成り立ちます：2 台の貯蔵库を出力と入力で隣接させれば、同じように振る舞います。これは 2 つの異なる挙動ではなく、同じ挙動です。</p>
 
-<p>カスケードに参加するのは貯蔵库だけです。テレポーターも貯蔵ブロックですが、余剰から自力で蓄電し、貯蔵库からは自動では満たされません——満杯の貯蔵库がプレイヤーの知らない間に流出するのを防ぐためです。</p>
+<p>カスケードに参加するのは貯蔵库だけです。テレポーターも貯蔵ブロックですが、余剰から自力で蓄電し、貯蔵库からは自動では満たされません——満杯の貯蔵库がプレイヤーの知らない間に流出するのを防ぐためです。そのため、<strong>同じライン上の貯蔵庫どうしが均等化している間、そのラインのテレポーター、充電ステーション、エネルギー凝縮器は貯蔵庫から何も受け取りません</strong>：貯蔵庫間の移送も、ゆっくりした給電もです。発電機の余剰——機械の必要分を超えて発電機が生み出す分——は、その間も届きます。貯蔵庫が揃うと、テレポーターとステーションは、容量の半分を超えて蓄えた貯蔵庫からのゆっくりした給電（上記参照）も再び受け取ります。凝縮器はこの給電を自分で開くことはありませんが、同じラインでテレポーターやステーションへの給電が流れていると、自分の入力に応じた分け前を受け取ります。</p>
 
 <h2 id="インベントリ">インベントリ</h2>
 

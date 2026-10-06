@@ -360,7 +360,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>Recetas</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>Perfil del jugador</span></a>
 <div class="group-title">Energía</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>Generadores</span><span class="cat-count" aria-label="12 páginas">12</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>Generadores</span><span class="cat-count" aria-label="13 páginas">13</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>Almacenamiento de energía</span><span class="cat-count" aria-label="4 páginas">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>Transferencia de energía</span><span class="cat-count" aria-label="8 páginas">8</span></a>
 <a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>Energía nuclear</span><span class="cat-count" aria-label="15 páginas">15</span></a>
@@ -426,6 +426,8 @@
 <h2 id="interfaz">Interfaz</h2>
 
 <p>La pantalla tiene su propia interfaz: búfer de energía, ranuras de entrada y salida, y entre ellas un indicador de progreso en forma de <strong>hoja de sierra</strong> que se llena de izquierda a derecha. Una fila de <strong>4 botones de modo</strong> con iconos fantasma (tablón/palo/losa/escaleras) está bajo las ranuras; el modo activo queda resaltado y cada botón tiene su tooltip.</p>
+
+<p>Mientras el panel de mejoras está abierto — esté donde esté —, los botones de modo no responden: un clic no cambia el modo, y al pasar el cursor no hay ni resaltado ni tooltip. Lo mismo vale para un botón tapado por el panel de estadísticas abierto. Un tooltip nunca promete lo que el botón no hará.</p>
 
 <p>La línea de estado entre las ranuras y los botones de modo explica por qué la máquina está parada: «Falta material», «Ninguna receta coincide», «Salida bloqueada», «Sin energía». Una máquina vacía no lleva línea alguna — una ranura vacía habla por sí sola. La línea de energía no aparece en el momento en que el búfer se vacía, sino solo cuando lleva un rato vacío: una máquina con energía justa funciona un tick sí y otro no, y un rótulo parpadeando con ella mentiría sobre una parada.</p>
 

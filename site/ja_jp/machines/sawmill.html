@@ -360,7 +360,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="12 ページ">12</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="13 ページ">13</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>原子力</span><span class="cat-count" aria-label="15 ページ">15</span></a>
@@ -426,6 +426,8 @@
 <h2 id="インターフェース">インターフェース</h2>
 
 <p>画面は <a href="electric_furnace.html">電気かまど</a> のインターフェースを再利用します：エネルギー量、進行状況、入力スロットと出力スロット、その間に左から右に埋まる <strong>丸鋸</strong> 型の進行インジケーター。スロットの下には、ghost アイコン（板/棒/ハーフブロック/階段）付きの <strong>4つのモードボタン</strong> が並び、アクティブなモードがハイライトされ、各ボタンにツールチップがあります。</p>
+
+<p>アップグレードパネルが開いている間は、それがどこにあってもモードボタンは反応しません：クリックしてもモードは切り替わらず、カーソルを重ねてもハイライトもツールチップも出ません。開いた統計パネルに覆われたボタンも同様です。ツールチップは、ボタンができないことを約束しません。</p>
 
 <p>スロットとモードボタンの間にあるステータス行が停止の理由を説明します：「素材の数が足りません」「対応するレシピがありません」「出力が塞がれています」「エネルギーがありません」。機械が空のときこの行は描画されません——空のスロットを見れば分かるからです。エネルギーについての表示はバッファが尽きた瞬間ではなく、空の状態がしばらく続いてから出ます：電力がぎりぎりの機械は1ティックおきに動くので、それに合わせて点滅する文字はかえって停止していると嘘をつくことになります。</p>
 

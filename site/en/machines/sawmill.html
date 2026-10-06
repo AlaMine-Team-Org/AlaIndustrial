@@ -360,7 +360,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="12 pages">12</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="13 pages">13</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>Nuclear</span><span class="cat-count" aria-label="15 pages">15</span></a>
@@ -426,6 +426,8 @@
 <h2 id="interface">Interface</h2>
 
 <p>The screen has its own GUI: energy buffer, input and output slots, and between them a <strong>saw blade</strong> progress indicator that fills left to right. A row of <strong>4 mode buttons</strong> with ghost icons (plank/stick/slab/stairs) sits below the slots; the active mode is highlighted and each button has a tooltip.</p>
+
+<p>While the upgrade panel is open — wherever it lies — the mode buttons are deaf: a click does not switch the mode, and hovering gives neither a highlight nor a tooltip. So is a button covered by the open statistics panel. A tooltip never promises what the button will not do.</p>
 
 <p>The status line between the slots and the mode buttons explains why the machine stands idle: "Not enough material", "No matching recipe", "Output is blocked", "No energy". An empty machine gets no line at all — an empty slot speaks for itself. The energy line does not appear the moment the buffer runs dry, but only once it has stayed empty for a while: a machine that barely has enough power runs one tick on, one tick off, and a caption blinking along with it would lie about a stall.</p>
 
