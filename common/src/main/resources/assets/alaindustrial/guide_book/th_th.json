@@ -484,6 +484,43 @@
           ]
         },
         {
+          "id": "mob_wheel_controller",
+          "title": "ตัวขับวงล้อวิ่ง",
+          "icon": "alaindustrial:mob_wheel_controller",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ตัวขับวงล้อวิ่ง",
+              "text": "เครื่องกำเนิดไฟฟ้า LV ขนาด 3×3×3 สำหรับช่วงต้นเกม — วงล้อไม้แบบวงล้อหนูแฮมสเตอร์ ที่มีสิ่งมีชีวิตที่จับมาได้วิ่งอยู่ข้างใน ไม่ใช้เชื้อเพลิงและไม่มีบัฟเฟอร์ ผู้วิ่งจะเหนื่อย พัก และกลับมามีแรงด้วยอาหารจากรางอาหาร"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 0–12 EU ต่อทิก"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:oak_planks",
+                "alaindustrial:wooden_gear",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "minecraft:oak_planks",
+                "minecraft:copper_ingot",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:mob_wheel_controller",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "charge_pad",
           "title": "สถานีชาร์จ",
           "icon": "alaindustrial:charge_pad",
@@ -3470,9 +3507,9 @@
               "title": "สูตร",
               "recipe_type": "การคราฟต์แบบมีรูปแบบ",
               "grid": [
-                "#c:glass_panes",
+                "minecraft:glass_pane",
                 "alaindustrial:resonant_crystal",
-                "#c:glass_panes",
+                "minecraft:glass_pane",
                 "alaindustrial:resonance_coil",
                 "alaindustrial:reactor_circuit",
                 "alaindustrial:resonance_coil",
@@ -3664,9 +3701,9 @@
                 "",
                 "alaindustrial:copper_coil",
                 "",
-                "#c:glass_panes",
+                "minecraft:glass_pane",
                 "alaindustrial:empty_chip",
-                "#c:glass_panes",
+                "minecraft:glass_pane",
                 "",
                 "minecraft:redstone",
                 ""
@@ -4009,6 +4046,36 @@
                 ""
               ],
               "result_id": "alaindustrial:iron_gear",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "module_blank",
+          "title": "โมดูลเปล่า",
+          "icon": "alaindustrial:module_blank",
+          "pages": [
+            {
+              "type": "text",
+              "title": "โมดูลเปล่า",
+              "text": "โมดูลเปล่า — ฐานร่วมของการอัปเกรดไอเท็ม — และโมดูลแรกที่ทำจากมัน คือโมดูลตัวกรองแม่เหล็กของแม่เหล็กไฟฟ้า"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "",
+                "minecraft:iron_ingot",
+                "",
+                "minecraft:redstone",
+                "alaindustrial:electronic_circuit",
+                "minecraft:redstone",
+                "",
+                "minecraft:iron_ingot",
+                ""
+              ],
+              "result_id": "alaindustrial:module_blank",
               "result_count": 1
             }
           ]
@@ -4557,13 +4624,13 @@
           ]
         },
         {
-          "id": "fluxweave_chestplate",
-          "title": "เสื้อเกราะฟลักซ์วีฟ",
+          "id": "fluxweave_armor",
+          "title": "ชุดเกราะฟลักซ์วีฟ",
           "icon": "alaindustrial:fluxweave_chestplate",
           "pages": [
             {
               "type": "text",
-              "title": "เสื้อเกราะฟลักซ์วีฟ",
+              "title": "ชุดเกราะฟลักซ์วีฟ",
               "text": "ชุดเกราะ EU เต็มชุดแรกของม็อดนี้ — หมวก เสื้อเกราะ กางเกง และรองเท้าฟลักซ์วีฟ ประจุจะเปิดใช้ชุดอุปกรณ์เสริมโดยไม่เคยปิดการป้องกันเลย"
             },
             {
@@ -4573,24 +4640,6 @@
                 "พลังงาน: 15,000 EU",
                 "บัฟเฟอร์: 15,000 EU"
               ]
-            },
-            {
-              "type": "recipe",
-              "title": "สูตร",
-              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
-              "grid": [
-                "alaindustrial:fluxweave_cloth",
-                "",
-                "alaindustrial:fluxweave_cloth",
-                "alaindustrial:fluxweave_cloth",
-                "alaindustrial:electronic_circuit",
-                "alaindustrial:fluxweave_cloth",
-                "alaindustrial:tempered_iron",
-                "alaindustrial:battery",
-                "alaindustrial:tempered_iron"
-              ],
-              "result_id": "alaindustrial:fluxweave_chestplate",
-              "result_count": 1
             }
           ]
         },
@@ -4785,7 +4834,7 @@
             {
               "type": "text",
               "title": "เสื้อเกราะหุ้มฉนวน",
-              "text": "เกราะหนังที่ชุบในสไลม์ — หมวกคลุม เสื้อ กางเกง และรองเท้าที่ดูดซับไฟช็อตจากสายเปลือย โดยแลกกับความทนทานที่ลดลง"
+              "text": "เกราะหนังที่ชุบในสไลม์ — หมวก เสื้อเกราะ กางเกง และรองเท้าที่ดูดซับไฟช็อตจากสายเปลือย โดยแลกกับความทนทานที่ลดลง"
             },
             {
               "type": "stats",
@@ -5258,6 +5307,158 @@
           ]
         },
         {
+          "id": "fluxweave_boots",
+          "title": "รองเท้าฟลักซ์วีฟ",
+          "icon": "alaindustrial:fluxweave_boots",
+          "pages": [
+            {
+              "type": "text",
+              "title": "รองเท้าฟลักซ์วีฟ",
+              "text": "รองเท้า EU ฟลักซ์วีฟ — เมื่อมีประจุจะลดความเสียหายจากการตกลงครึ่งหนึ่ง การป้องกันยังอยู่ระดับเดียวกับรองเท้าเหล็ก"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 15,000 EU",
+                "บัฟเฟอร์: 15,000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:battery",
+                "alaindustrial:fluxweave_cloth",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:fluxweave_boots",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluxweave_chestplate",
+          "title": "เสื้อเกราะฟลักซ์วีฟ",
+          "icon": "alaindustrial:fluxweave_chestplate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เสื้อเกราะฟลักซ์วีฟ",
+              "text": "เสื้อเกราะ EU ฟลักซ์วีฟ — เมื่อมีประจุจะลดแรงการโจมตีหนักและต้านการกระเด็น การป้องกันยังอยู่ระดับเดียวกับเสื้อเกราะเหล็ก"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 15,000 EU",
+                "บัฟเฟอร์: 15,000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:fluxweave_cloth",
+                "",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:battery",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:fluxweave_chestplate",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluxweave_leggings",
+          "title": "กางเกงฟลักซ์วีฟ",
+          "icon": "alaindustrial:fluxweave_leggings",
+          "pages": [
+            {
+              "type": "text",
+              "title": "กางเกงฟลักซ์วีฟ",
+              "text": "กางเกง EU ฟลักซ์วีฟ — เมื่อมีประจุจะเพิ่มความเร็วในการวิ่งและเปิดตัวช่วยก้าวขั้นได้ การป้องกันยังอยู่ระดับเดียวกับกางเกงเหล็ก"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 15,000 EU",
+                "บัฟเฟอร์: 15,000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:battery",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:fluxweave_leggings",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluxweave_helmet",
+          "title": "หมวกฟลักซ์วีฟ",
+          "icon": "alaindustrial:fluxweave_helmet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "หมวกฟลักซ์วีฟ",
+              "text": "หมวก EU ฟลักซ์วีฟ — เมื่อมีประจุจะให้หายใจใต้น้ำและว่ายน้ำได้เร็วขึ้น การป้องกันยังอยู่ระดับเดียวกับหมวกเหล็ก"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 15,000 EU",
+                "บัฟเฟอร์: 15,000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:fluxweave_cloth",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:battery",
+                "alaindustrial:tempered_iron",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:fluxweave_helmet",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "shielding_chestplate",
           "title": "เสื้อเกราะกำบังรังสี",
           "icon": "alaindustrial:shielding_chestplate",
@@ -5265,7 +5466,7 @@
             {
               "type": "text",
               "title": "เสื้อเกราะกำบังรังสี",
-              "text": "ชุดต้านรังสี — หมวกคลุม เสื้อ กางเกง และรองเท้าที่ทำจากหนัง ยาง และสีย้อมเหลือง มันช่วยลดปริมาณรังสีที่ได้รับ โดยแลกกับความทนทาน และปิดผนึกผู้สวมใส่ไว้อย่างสมบูรณ์"
+              "text": "ชุดต้านรังสี — หมวก เสื้อเกราะ กางเกง และรองเท้าที่ทำจากหนัง ยาง และสีย้อมเหลือง มันช่วยลดปริมาณรังสีที่ได้รับ โดยแลกกับความทนทาน และปิดผนึกผู้สวมใส่ไว้อย่างสมบูรณ์"
             },
             {
               "type": "stats",

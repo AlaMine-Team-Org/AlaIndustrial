@@ -526,6 +526,8 @@ pitest {
             'dev.alaindustrial.client.render.WorkstationGeometry',
             'dev.alaindustrial.client.render.RadiantSolarPanelGeometry',
             'dev.alaindustrial.client.render.UpgradeTableGeometry',
+            // MOD-763: the mob wheel's formed structure, written by tools/gen_mob_wheel_assets.py.
+            'dev.alaindustrial.client.render.MobWheelGeometry',
             // MOD-468: the reactor room's world adapter — it resolves BlockState/Level to ask
             // "what shell block stands here". The geometry it delegates to (RoomScan) is deliberately
             // Minecraft-free and stays IN the run, covered by RoomScanTest; this half is covered by the

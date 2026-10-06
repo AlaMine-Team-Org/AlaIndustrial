@@ -129,6 +129,11 @@
     "alaindustrial:broken_engraved_plate_b",
     "alaindustrial:broken_engraved_plate_d",
     "alaindustrial:broken_engraved_plate_r",
-    "alaindustrial:broken_engraved_plate_m"
+    "alaindustrial:broken_engraved_plate_m",
+    "alaindustrial:mob_wheel_controller",
+    "alaindustrial:mob_wheel_frame",
+    "alaindustrial:mob_wheel_rotor",
+    "alaindustrial:mob_wheel_gate",
+    "alaindustrial:mob_wheel_cell"
   ]
 }

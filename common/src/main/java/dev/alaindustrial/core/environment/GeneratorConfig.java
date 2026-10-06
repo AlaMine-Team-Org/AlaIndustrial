@@ -420,6 +420,26 @@ public final class GeneratorConfig {
 	@Knob(section = Section.GENERATORS, clientVisible = true, min = 1,
 			doc = "Water mill EU buffer. Applies to newly placed blocks.")
 	public static int waterMillBuffer = 4000;
+
+	// --- Mob wheel (MOD-763): a 3x3x3 running wheel turned by one mob shut in it ---
+	// Each species' numbers live in the table of MobWheelProfile (D8); these knobs scale the whole roster.
+	// The wheel keeps no EU buffer of its own, so there is no buffer knob.
+	@Knob(section = Section.GENERATORS, min = 0,
+			doc = "Mob wheel output of every species, in percent of its table power (100 = as designed).")
+	public static int mobWheelEuMultiplierPercent = 100;
+	@Knob(section = Section.GENERATORS, min = 1,
+			doc = "Mob wheel stamina of every species, in percent of its table stamina (100 = as designed).")
+	public static int mobWheelStaminaMultiplierPercent = 100;
+	@Knob(section = Section.GENERATORS, min = 0,
+			doc = "Extra percent of power a mob wheel runner gets while the condition its kind favours holds.")
+	public static int mobWheelBonusPercent = 50;
+	@Knob(section = Section.GENERATORS, min = 1,
+			doc = "Ticks an exhausted mob needs to rest back to full on its own, before its kind's own rest"
+					+ " multiplier and hay.")
+	public static int mobWheelRestTicks = 24000;
+	@Knob(section = Section.GENERATORS, min = 1,
+			doc = "How many times faster an exhausted mob rests with a hay bale within 2 blocks of the wheel.")
+	public static int mobWheelHayRestMultiplier = 4;
 	@Knob(section = Section.GENERATORS, clientVisible = true, min = 1,
 			doc = "Wind mill (T1) EU buffer. Applies to newly placed blocks.")
 	public static int windMillBuffer = 4000;

@@ -1,0 +1,31 @@
+{
+  "variants": {
+    "facing=south,formed=false": {
+      "model": "alaindustrial:block/mob_wheel_controller"
+    },
+    "facing=south,formed=true": {
+      "model": "alaindustrial:block/mob_wheel_formed"
+    },
+    "facing=west,formed=false": {
+      "model": "alaindustrial:block/mob_wheel_controller",
+      "y": 90
+    },
+    "facing=west,formed=true": {
+      "model": "alaindustrial:block/mob_wheel_formed"
+    },
+    "facing=north,formed=false": {
+      "model": "alaindustrial:block/mob_wheel_controller",
+      "y": 180
+    },
+    "facing=north,formed=true": {
+      "model": "alaindustrial:block/mob_wheel_formed"
+    },
+    "facing=east,formed=false": {
+      "model": "alaindustrial:block/mob_wheel_controller",
+      "y": 270
+    },
+    "facing=east,formed=true": {
+      "model": "alaindustrial:block/mob_wheel_formed"
+    }
+  }
+}

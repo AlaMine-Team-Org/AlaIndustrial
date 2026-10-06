@@ -99,6 +99,14 @@ final class MenuChannelValuesSnapshot {
 			"creative_energy_source charged [0]: 4096 8192 0 0 1 128",
 			"creative_energy_source charged getters: energy=4096 capacity=8192 progress=0/0",
 			"creative_energy_source charged menu[0]: getOutputLimit=128 isSourceEnabled=true",
+			"mob_wheel_controller placed [0]: 0 12 0 0 0 0 0",
+			"mob_wheel_controller placed getters: energy=0 capacity=12 progress=0/0",
+			"mob_wheel_controller placed menu[0]: getProductionRate=0 getSpeedPercent=0"
+					+ " getStaminaPermille=0",
+			"mob_wheel_controller charged [0]: 6 12 0 0 0 0 0",
+			"mob_wheel_controller charged getters: energy=6 capacity=12 progress=0/0",
+			"mob_wheel_controller charged menu[0]: getProductionRate=0 getSpeedPercent=0"
+					+ " getStaminaPermille=0",
 			"macerator placed [0]: 0 800 0 150 1",
 			"macerator placed getters: energy=0 capacity=800 progress=0/150",
 			"macerator charged [0]: 400 800 0 150 1",

@@ -111,6 +111,9 @@ public final class MachineGuiStands {
         // ── Water Mill — the status row in every state it can show (MOD-354) ─────────
         WaterMillGuiStand.checkWaterMillStatusRow(context);
 
+        // ── Mob Wheel Drive — stamina, the display and the status row (MOD-763) ─────
+        MobWheelGuiStand.shootStates(context);
+
         // ── Wind Mills (T1 + both T2) — the same row, in every state it can DRAW (MOD-371) ──
         WindMillGuiStand.checkWindMillStatusRows(context);
 

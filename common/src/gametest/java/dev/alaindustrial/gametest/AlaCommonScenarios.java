@@ -176,6 +176,11 @@ public final class AlaCommonScenarios {
 			if (id.getPath().equals("teleporter_capsule")) {
 				continue;
 			}
+			// The Mob Wheel's cells (MOD-763) are placed by the assembly in the wheel's empty cells and
+			// vanish when it comes apart: no block item, an empty loot table, nothing to drop by design.
+			if (id.getPath().equals("mob_wheel_cell")) {
+				continue;
+			}
 			// The Distillation Column's middle/top segments (MOD-251) are placed by the base and have
 			// empty loot tables on purpose: breaking ANY segment drops the whole tower as the base's
 			// item (with tank contents). The one-drop contract is asserted in the column's own gametest.
@@ -315,6 +320,12 @@ public final class AlaCommonScenarios {
 			// The Teleporter Capsule's glass cells (MOD-112): no block item on purpose — the station builds
 			// them from glass. Their loot table exists and hands that glass back.
 			if (id.getPath().equals("teleporter_capsule")) {
+				continue;
+			}
+			// The Mob Wheel's cells (MOD-763): no block item on purpose — the assembly fills the wheel's
+			// empty cells with them. A solid cell is an invisible full-cube wall that must NOT occlude: the
+			// drive's renderer draws the wheel's frame through it, and an occluding cell would cull it away.
+			if (id.getPath().equals("mob_wheel_cell")) {
 				continue;
 			}
 			// The Distillation Column's middle/top segments (MOD-251): no block items on purpose — the

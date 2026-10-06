@@ -63,6 +63,7 @@ final class BlockEntitySlotLayoutSnapshot {
 			"mob_repeller: size=6 upgrades=1 battery=5 menu=yes overclockable=no batteryFed=yes",
 			"mob_repeller_hv: size=6 upgrades=1 battery=5 menu=yes overclockable=no batteryFed=yes",
 			"mob_repeller_mv: size=6 upgrades=1 battery=5 menu=yes overclockable=no batteryFed=yes",
+			"mob_wheel_controller: size=1 upgrades=- battery=- menu=yes overclockable=no batteryFed=no",
 			"monitor_core: size=10 upgrades=- battery=- menu=yes overclockable=no batteryFed=no",
 			"monitor_panel: size=- upgrades=- battery=- menu=no overclockable=no batteryFed=no",
 			"moonlit_solar_panel: size=4 upgrades=0 battery=- menu=yes overclockable=no batteryFed=no",

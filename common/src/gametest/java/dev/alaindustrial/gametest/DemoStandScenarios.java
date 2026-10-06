@@ -1,6 +1,7 @@
 package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.block.MobWheelStructure;
 import dev.alaindustrial.block.TrellisBlock;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.block.entity.ElectricFurnaceBlockEntity;
@@ -185,23 +186,8 @@ public final class DemoStandScenarios {
 			}
 		}
 
-		// --- every camera point of /ala demo tp stands in open air (MOD-659) ---
-		// The stand is 88 wide and every point is a hand-tuned position, so a zone that grows into one
-		// would drop the tester into a wall. Points in front of the stand (z < 0) stand over whatever
-		// terrain the world has and are not this test's business.
-		for (DemoStand.TpPoint point : DemoStand.TP_POINTS) {
-			if (point.dz() < 0) {
-				continue;
-			}
-			BlockPos feet = origin.offset((int) Math.floor(point.dx()), (int) Math.floor(point.dy()),
-					(int) Math.floor(point.dz()));
-			if (!helper.getLevel().getBlockState(feet).isAir() || !helper.getLevel().getBlockState(feet.above()).isAir()) {
-				helper.fail("the '" + point.name() + "' camera point stands inside "
-						+ BuiltInRegistries.BLOCK.getKey(helper.getLevel().getBlockState(feet).getBlock())
-						+ " at local " + (feet.getX() - origin.getX()) + "," + (feet.getY() - origin.getY()) + ","
-						+ (feet.getZ() - origin.getZ()) + " — move it");
-			}
-		}
+		assertMobWheelAssembled(helper, origin);
+		assertCamerasInOpenAir(helper, origin);
 
 		// --- coverage: every registered mod block is somewhere in the stand envelope ---
 		Set<Identifier> missing = new HashSet<>();
@@ -432,6 +418,39 @@ public final class DemoStandScenarios {
 			assertLoopPipes(helper, origin, new int[][] {{3, 3, 33}}, ModContent.STEAM_PIPE.get(), "ordinary steam");
 			helper.succeed();
 		});
+	}
+
+	/**
+	 * MOD-763: the mob wheel the stand builds actually ASSEMBLES. Blind spot of the coverage scan: the item-less
+	 * row stands a loose mob_wheel_cell of its own, so every mob wheel block would still be "somewhere on the
+	 * stand" if the assembly on the generator row had failed and left fourteen loose parts.
+	 */
+	private static void assertMobWheelAssembled(GameTestHelper helper, BlockPos origin) {
+		BlockState wheelDrive = helper.getLevel().getBlockState(origin.offset(57, 1, 10));
+		if (!wheelDrive.is(ModContent.MOB_WHEEL_CONTROLLER.get()) || !wheelDrive.getValue(MobWheelStructure.FORMED)) {
+			helper.fail("the demo stand's mob wheel is not assembled, its drive cell holds " + wheelDrive);
+		}
+	}
+
+	/**
+	 * Every camera point of /ala demo tp stands in open air (MOD-659). The stand is 88 wide and every point is a
+	 * hand-tuned position, so a zone that grows into one would drop the tester into a wall. Points in front of
+	 * the stand (z &lt; 0) stand over whatever terrain the world has and are not this test's business.
+	 */
+	private static void assertCamerasInOpenAir(GameTestHelper helper, BlockPos origin) {
+		for (DemoStand.TpPoint point : DemoStand.TP_POINTS) {
+			if (point.dz() < 0) {
+				continue;
+			}
+			BlockPos feet = origin.offset((int) Math.floor(point.dx()), (int) Math.floor(point.dy()),
+					(int) Math.floor(point.dz()));
+			if (!helper.getLevel().getBlockState(feet).isAir() || !helper.getLevel().getBlockState(feet.above()).isAir()) {
+				helper.fail("the '" + point.name() + "' camera point stands inside "
+						+ BuiltInRegistries.BLOCK.getKey(helper.getLevel().getBlockState(feet).getBlock())
+						+ " at local " + (feet.getX() - origin.getX()) + "," + (feet.getY() - origin.getY()) + ","
+						+ (feet.getZ() - origin.getZ()) + " — move it");
+			}
+		}
 	}
 
 	/** Each listed cell of the demo reactor loop still holds a pipe of {@code block}. */

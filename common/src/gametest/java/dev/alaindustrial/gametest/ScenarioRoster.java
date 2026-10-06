@@ -121,6 +121,8 @@ public final class ScenarioRoster {
 			MenuDataWidthScenarios.Roster.ENTRIES,
 			MobRepellerScenarios.Roster.ENTRIES,
 			MobSpawnEquipmentScenarios.Roster.ENTRIES,
+			MobWheelRunnerScenarios.Roster.ENTRIES,
+			MobWheelScenarios.Roster.ENTRIES,
 			MockPlayerScenarios.Roster.ENTRIES,
 			Mod353DiagnosticScenarios.Roster.ENTRIES,
 			MonitorNetworkScenarios.Roster.ENTRIES,

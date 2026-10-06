@@ -1603,6 +1603,26 @@ tooltip.alaindustrial.tier_lv {green}
 tooltip.alaindustrial.range(8) {gray}
 == alaindustrial:mob_repeller_hv plain : none
 == alaindustrial:mob_repeller_mv plain : none
+== alaindustrial:mob_wheel_controller plain
+-- plain eu
+tooltip.alaindustrial.mob_wheel_no_buffer {dark_gray}
+tooltip.alaindustrial.mob_wheel_recolour {dark_gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.mob_wheel_no_buffer {dark_gray}
+tooltip.alaindustrial.mob_wheel_recolour {dark_gray}
+tooltip.alaindustrial.tier_lv {green}
+-- plain no-eu
+tooltip.alaindustrial.mob_wheel_no_buffer {dark_gray}
+tooltip.alaindustrial.mob_wheel_recolour {dark_gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.mob_wheel_no_buffer {dark_gray}
+tooltip.alaindustrial.mob_wheel_recolour {dark_gray}
+tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:mob_wheel_frame plain : none
+== alaindustrial:mob_wheel_gate plain : none
+== alaindustrial:mob_wheel_rotor plain : none
 == alaindustrial:module_blank plain : none
 == alaindustrial:monitor_core plain : none
 == alaindustrial:monitor_panel plain : none

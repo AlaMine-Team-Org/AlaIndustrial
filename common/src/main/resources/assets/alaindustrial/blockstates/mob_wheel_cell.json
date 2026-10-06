@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "shape=solid": {
+      "model": "alaindustrial:block/mob_wheel_formed"
+    },
+    "shape=floor": {
+      "model": "alaindustrial:block/mob_wheel_formed"
+    },
+    "shape=open": {
+      "model": "alaindustrial:block/mob_wheel_formed"
+    }
+  }
+}

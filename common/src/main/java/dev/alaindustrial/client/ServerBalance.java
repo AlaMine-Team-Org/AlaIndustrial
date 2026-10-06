@@ -9,6 +9,8 @@ import dev.alaindustrial.item.ToolConfig;
 import java.util.Map;
 import java.util.Optional;
 
+// size-justified: one three-line accessor per client-visible knob, named exactly as the knob — the shape
+// ClientVisibleKnobsRules checks; splitting it would only scatter that one-to-one table.
 /**
  * The balance numbers the client SHOWS (MOD-695): the server's, once it has sent them, and the local
  * {@link Config} until then.

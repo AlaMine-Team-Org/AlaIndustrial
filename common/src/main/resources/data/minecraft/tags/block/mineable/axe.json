@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "alaindustrial:mob_wheel_controller",
+    "alaindustrial:mob_wheel_frame",
+    "alaindustrial:mob_wheel_rotor",
+    "alaindustrial:mob_wheel_gate",
+    "alaindustrial:mob_wheel_cell"
+  ]
+}
