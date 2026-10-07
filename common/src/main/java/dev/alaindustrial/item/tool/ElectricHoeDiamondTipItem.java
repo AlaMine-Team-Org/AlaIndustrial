@@ -35,11 +35,11 @@ import dev.alaindustrial.item.energy.PoweredToolTooltip;
  * per-till drain all carry over with no change to the energy layer.
  *
  * <h2>Why the extra ability is irrigation and not Silk Touch</h2>
- * The other two upgrades both got a switchable Silk Touch mode, and copying it here would have been dead
- * weight: every block in {@code #minecraft:mineable/hoe} (hay, leaves, sponge, moss, nether wart block,
- * dried kelp) already drops itself without any enchantment, so silk-touching them changes nothing. There
- * is no ore to double and no sapling roll to suppress. What the hoe alone has is <b>tilling</b>, so that
- * is where the upgrade earns its keep.
+ * The other two upgrades both got a switchable Silk Touch mode, and copying it here would not pay off: in
+ * {@code #minecraft:mineable/hoe} only the sculk family and leaves fail to drop themselves without Silk
+ * Touch, and the ordinary enchantment already goes on the hoe ({@code #minecraft:hoes} is in
+ * {@code #minecraft:enchantable/mining_loot}). A switchable mode for so few blocks is not worth it. What
+ * the hoe alone has is <b>tilling</b>, so that is where the upgrade earns its keep.
  *
  * <h2>What "instant irrigation" is worth — the vanilla numbers behind it</h2>
  * Disassembled from the 26.2 mojmap jar before this class was written (project rule 1), because the value

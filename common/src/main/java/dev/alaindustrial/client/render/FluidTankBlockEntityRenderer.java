@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.FluidTankBlockEntity;
+import dev.alaindustrial.compat.client.TranslucentTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -43,8 +44,6 @@ public final class FluidTankBlockEntityRenderer
 	private static final float GLASS_MAX = 13.0F / 16.0F;
 	private static final SpriteId GLASS_SPRITE =
 			Sheets.BLOCKS_MAPPER.apply(Industrialization.id("fluid_tank_glass"));
-	private static final RenderType GLASS_RENDER_TYPE =
-			GLASS_SPRITE.renderType(ignored -> Sheets.translucentBlockItemSheet());
 
 	private final SpriteGetter sprites;
 
@@ -99,12 +98,28 @@ public final class FluidTankBlockEntityRenderer
 	public void submit(State state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
 		if (state.visible && state.sprite != null) {
 			float top = BOTTOM + state.height;
+			// The fluid writes depth on purpose (MOD-780): a liquid drawn without it would let the pond behind the
+			// tank be blended over the lava in it. At 85-94 % opacity the water behind is hardly visible anyway.
 			collector.submitCustomGeometry(poseStack, Sheets.translucentBlockItemSheet(),
 					(pose, consumer) -> renderPrism(pose, consumer, state.sprite, state.color, state.light, top));
 		}
 		TextureAtlasSprite glass = sprites.get(GLASS_SPRITE);
-		collector.submitCustomGeometry(poseStack, GLASS_RENDER_TYPE,
+		collector.submitCustomGeometry(poseStack, glassType(state.visible && state.sprite != null),
 				(pose, consumer) -> renderGlass(pose, consumer, glass, state.glassLight));
+	}
+
+	/**
+	 * The glass's render type, chosen by whether the fluid is drawn this frame (MOD-780).
+	 *
+	 * <p>Translucent custom geometry is batched per render type, in no fixed order between types. A pane on
+	 * a type of its own could therefore be drawn before the fluid, and the fluid would then be blended over
+	 * the front pane. While the fluid is drawn, the glass shares its sheet, so both go into one buffer sorted
+	 * back to front (water behind a filled tank stays hidden, which at the fluid's opacity cannot be seen).
+	 * An empty tank has nothing to share with: its glass does not write depth, so water behind it shows
+	 * (drawn before the translucent terrain layer, a depth-writing pane hid it, as the capsule door in MOD-777).
+	 */
+	private static RenderType glassType(boolean fluidDrawn) {
+		return fluidDrawn ? Sheets.translucentBlockItemSheet() : TranslucentTypes.blockSheetNoDepthWrite();
 	}
 
 	private static void renderGlass(PoseStack.Pose pose, VertexConsumer out, TextureAtlasSprite sprite, int light) {

@@ -83,14 +83,14 @@ public class GardenDroneStationScreen extends MachineScreen<GardenDroneStationMe
 
 	/**
 	 * One line naming what the station is doing. The station diagnoses its own state server-side; the
-	 * screen only picks a colour — red for a hard stop (no power), amber for a refill the player can
-	 * fix, plain for working or finished.
+	 * screen only picks a colour — red for a hard stop (no power), amber for something the player can
+	 * fix by hand (a refill, or emptying a full output — MOD-782), plain for working or finished.
 	 */
 	private Component statusLine() {
 		GardenDroneStatus status = this.menu.getStatus();
 		ChatFormatting colour = switch (status) {
 			case NO_ENERGY, NO_DRONE -> ChatFormatting.RED;
-			case NO_RESOURCES -> ChatFormatting.GOLD;
+			case NO_RESOURCES, OUTPUT_FULL -> ChatFormatting.GOLD;
 			case WORKING, IDLE -> ChatFormatting.DARK_GRAY;
 		};
 		return Component.translatable(status.translationKey()).withStyle(colour);

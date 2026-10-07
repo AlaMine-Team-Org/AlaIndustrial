@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.ReactorDoorBlock;
 import dev.alaindustrial.block.entity.ReactorDoorBlockEntity;
+import dev.alaindustrial.compat.client.TranslucentTypes;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -61,9 +62,15 @@ public final class ReactorDoorBlockEntityRenderer
 	 * 22 pixels of alpha 105 (the slit) against a solid plate; on a cutout sheet those pixels come out
 	 * fully opaque and the window disappears, which is exactly what {@code force_translucent} in the
 	 * old baked model was there to prevent.
+	 *
+	 * <p>The top tile is drawn in two passes (MOD-780). A translucent pass that writes depth hid the coolant
+	 * behind the door — it is drawn before the translucent terrain layer — so the tile goes without depth
+	 * writes, as the capsule door's glass does. But 212 of its 256 texels are a solid plate, and without
+	 * depth that water would then be blended over the plate. So {@link #TOP_SOLID_TYPE} first draws only
+	 * the plate and writes its depth, and {@link #TOP_TYPE} then draws the whole tile, blending the slit.
 	 */
-	private static final RenderType TOP_TYPE =
-			PANEL_TOP.renderType(ignored -> Sheets.translucentBlockItemSheet());
+	private static final RenderType TOP_SOLID_TYPE = TranslucentTypes.blockSheetSolidTexels();
+	private static final RenderType TOP_TYPE = TranslucentTypes.blockSheetNoDepthWrite();
 	private static final RenderType BOTTOM_TYPE =
 			PANEL_BOTTOM.renderType(ignored -> Sheets.cutoutBlockItemSheet());
 
@@ -128,6 +135,8 @@ public final class ReactorDoorBlockEntityRenderer
 		}
 		// Where the two texture tiles meet, in door space: one block down from the panel's top edge.
 		float seam = state.panelTop - 1.0f;
+		submitTile(state, poseStack, collector, PANEL_TOP, TOP_SOLID_TYPE, 0.0f,
+				Math.max(windowBottom, seam), windowTop);
 		submitTile(state, poseStack, collector, PANEL_TOP, TOP_TYPE, 0.0f,
 				Math.max(windowBottom, seam), windowTop);
 		submitTile(state, poseStack, collector, PANEL_BOTTOM, BOTTOM_TYPE, 1.0f,

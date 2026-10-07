@@ -446,6 +446,7 @@
   "gui.alaindustrial.garden_drone_station.status.no_drone": "드론 없음",
   "gui.alaindustrial.garden_drone_station.status.no_energy": "전력 없음",
   "gui.alaindustrial.garden_drone_station.status.no_resources": "자재 부족",
+  "gui.alaindustrial.garden_drone_station.status.output_full": "출력 가득 참",
   "gui.alaindustrial.garden_drone_station.status.working": "작동 중",
   "gui.alaindustrial.incubator.charge": "조사 충전량: %s / %s",
   "gui.alaindustrial.incubator.mode.create": "생성",

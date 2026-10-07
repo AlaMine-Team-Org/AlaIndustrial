@@ -446,6 +446,7 @@
   "gui.alaindustrial.garden_drone_station.status.no_drone": "ไม่มีโดรนจอดอยู่",
   "gui.alaindustrial.garden_drone_station.status.no_energy": "ไม่มีไฟ",
   "gui.alaindustrial.garden_drone_station.status.no_resources": "วัสดุหมด",
+  "gui.alaindustrial.garden_drone_station.status.output_full": "ช่องผลลัพธ์เต็ม",
   "gui.alaindustrial.garden_drone_station.status.working": "กำลังทำงาน",
   "gui.alaindustrial.incubator.charge": "ประจุการฉายรังสี: %s / %s",
   "gui.alaindustrial.incubator.mode.create": "การสร้าง",

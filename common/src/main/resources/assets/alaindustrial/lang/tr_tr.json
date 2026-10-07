@@ -446,6 +446,7 @@
   "gui.alaindustrial.garden_drone_station.status.no_drone": "Takılı dron yok",
   "gui.alaindustrial.garden_drone_station.status.no_energy": "Güç yok",
   "gui.alaindustrial.garden_drone_station.status.no_resources": "Malzeme bitti",
+  "gui.alaindustrial.garden_drone_station.status.output_full": "Çıkış dolu",
   "gui.alaindustrial.garden_drone_station.status.working": "Çalışıyor",
   "gui.alaindustrial.incubator.charge": "Işınlama yükü: %s / %s",
   "gui.alaindustrial.incubator.mode.create": "Yaratım",

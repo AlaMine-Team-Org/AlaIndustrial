@@ -23,6 +23,16 @@ class GardenDroneStatusTest {
 				GardenDroneStatus.NO_ENERGY.translationKey());
 		assertEquals("gui.alaindustrial.garden_drone_station.status.no_drone",
 				GardenDroneStatus.NO_DRONE.translationKey());
+		assertEquals("gui.alaindustrial.garden_drone_station.status.output_full",
+				GardenDroneStatus.OUTPUT_FULL.translationKey());
+	}
+
+	@Test
+	void outputFullIsAppendedAndBlocking() {
+		// MOD-782: appended after NO_DRONE so the five older ordinals keep their saved meaning.
+		assertEquals(4, GardenDroneStatus.NO_DRONE.ordinal());
+		assertEquals(5, GardenDroneStatus.OUTPUT_FULL.ordinal());
+		assertTrue(GardenDroneStatus.OUTPUT_FULL.isBlocking());
 	}
 
 	@Test

@@ -446,6 +446,7 @@
   "gui.alaindustrial.garden_drone_station.status.no_drone": "कोई ड्रोन नहीं लगा",
   "gui.alaindustrial.garden_drone_station.status.no_energy": "बिजली नहीं",
   "gui.alaindustrial.garden_drone_station.status.no_resources": "सामग्री खत्म",
+  "gui.alaindustrial.garden_drone_station.status.output_full": "निर्गम भरा है",
   "gui.alaindustrial.garden_drone_station.status.working": "काम कर रहा है",
   "gui.alaindustrial.incubator.charge": "विकिरण चार्ज: %s / %s",
   "gui.alaindustrial.incubator.mode.create": "सृजन",

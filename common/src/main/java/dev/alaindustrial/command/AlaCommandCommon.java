@@ -2,6 +2,7 @@ package dev.alaindustrial.command;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -103,6 +104,7 @@ public final class AlaCommandCommon {
 		tree.then(profileTree());
 		if (demoEnabled) {
 			tree.then(demoTree());
+			tree.then(flyTree());
 		}
 		dispatcher.register(tree);
 	}
@@ -215,6 +217,40 @@ public final class AlaCommandCommon {
 		msg.append("\n").append(field(Component.literal("Generator types").withStyle(LABEL), val(stats.producedByGenerator().size())));
 		return msg;
 	}
+
+	/**
+	 * The dev-only {@code /ala fly [multiplier]} subtree: scales the creative flying speed so a tester can
+	 * cross huge distances. No argument toggles between vanilla speed and {@link #FAST_FLY_MULTIPLIER};
+	 * an argument sets an exact multiplier of vanilla ({@code 1} = vanilla). The change goes through
+	 * {@code onUpdateAbilities()}, which syncs it to the client, so singleplayer and a dedicated dev
+	 * server behave alike. Registered only with the demo tree, i.e. never for players. Plain English
+	 * feedback by the same op/diagnostic convention as {@link #demoTree()}.
+	 */
+	private static LiteralArgumentBuilder<CommandSourceStack> flyTree() {
+		return Commands.literal("fly")
+				.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+				.executes(ctx -> {
+					ServerPlayer player = ctx.getSource().getPlayerOrException();
+					boolean fast = player.getAbilities().getFlyingSpeed() > VANILLA_FLY_SPEED * 1.5F;
+					return setFlySpeed(ctx.getSource(), player, fast ? 1.0F : FAST_FLY_MULTIPLIER);
+				})
+				.then(Commands.argument("multiplier", FloatArgumentType.floatArg(0.1F, 200.0F))
+						.executes(ctx -> setFlySpeed(ctx.getSource(), ctx.getSource().getPlayerOrException(),
+								FloatArgumentType.getFloat(ctx, "multiplier"))));
+	}
+
+	private static int setFlySpeed(CommandSourceStack source, ServerPlayer player, float multiplier) {
+		player.getAbilities().setFlyingSpeed(VANILLA_FLY_SPEED * multiplier);
+		player.onUpdateAbilities();
+		source.sendSuccess(() -> Component.literal(multiplier == 1.0F
+				? "Flying speed: vanilla."
+				: "Flying speed: x" + multiplier + " (creative flight; /ala fly to toggle back).")
+				.withStyle(HEADER), false);
+		return Command.SINGLE_SUCCESS;
+	}
+
+	private static final float VANILLA_FLY_SPEED = 0.05F;
+	private static final float FAST_FLY_MULTIPLIER = 20.0F;
 
 	/**
 	 * The {@code /ala demo} subtree (MOD-058): build/clear the generated showcase stand and jump

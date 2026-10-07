@@ -446,6 +446,7 @@
   "gui.alaindustrial.garden_drone_station.status.no_drone": "Ingen drönare dockad",
   "gui.alaindustrial.garden_drone_station.status.no_energy": "Ingen ström",
   "gui.alaindustrial.garden_drone_station.status.no_resources": "Slut på förråd",
+  "gui.alaindustrial.garden_drone_station.status.output_full": "Utmatning full",
   "gui.alaindustrial.garden_drone_station.status.working": "Arbetar",
   "gui.alaindustrial.incubator.charge": "Bestrålningsladdning: %s / %s",
   "gui.alaindustrial.incubator.mode.create": "Skapelse",

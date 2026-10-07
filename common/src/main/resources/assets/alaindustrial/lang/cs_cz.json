@@ -446,6 +446,7 @@
   "gui.alaindustrial.garden_drone_station.status.no_drone": "Žádný dron v doku",
   "gui.alaindustrial.garden_drone_station.status.no_energy": "Bez napájení",
   "gui.alaindustrial.garden_drone_station.status.no_resources": "Došly zásoby",
+  "gui.alaindustrial.garden_drone_station.status.output_full": "Výstup je plný",
   "gui.alaindustrial.garden_drone_station.status.working": "Pracuje",
   "gui.alaindustrial.incubator.charge": "Náboj ozáření: %s / %s",
   "gui.alaindustrial.incubator.mode.create": "Stvoření",

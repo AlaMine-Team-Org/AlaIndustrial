@@ -446,6 +446,7 @@
   "gui.alaindustrial.garden_drone_station.status.no_drone": "Chưa lắp drone",
   "gui.alaindustrial.garden_drone_station.status.no_energy": "Không có điện",
   "gui.alaindustrial.garden_drone_station.status.no_resources": "Hết vật tư",
+  "gui.alaindustrial.garden_drone_station.status.output_full": "Đầu ra đã đầy",
   "gui.alaindustrial.garden_drone_station.status.working": "Đang hoạt động",
   "gui.alaindustrial.incubator.charge": "Năng lượng chiếu xạ: %s / %s",
   "gui.alaindustrial.incubator.mode.create": "Sáng tạo",

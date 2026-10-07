@@ -7,6 +7,7 @@ import dev.alaindustrial.block.CableArmReach;
 import dev.alaindustrial.block.CableBlock;
 import dev.alaindustrial.block.CableColors;
 import dev.alaindustrial.block.entity.CableBlockEntity;
+import dev.alaindustrial.compat.client.TranslucentTypes;
 import dev.alaindustrial.core.energy.CableType;
 import dev.alaindustrial.core.energy.ShockGuardMaterial;
 import java.util.ArrayList;
@@ -22,7 +23,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
-import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -344,17 +344,26 @@ public final class CableAccessoryBlockEntityRenderer
 		if (spriteId == null) {
 			return;
 		}
-		// Stained and plain glass have real alpha; drawing them on the cutout sheet would slam every
-		// pixel to fully opaque and lose the tint that point 4 of the feedback is about.
-		RenderType renderType = spriteId.renderType(ignored ->
-				state.translucent ? Sheets.translucentBlockItemSheet() : Sheets.cutoutBlockItemSheet());
 		TextureAtlasSprite sprite = sprites.get(spriteId);
 		int light = state.lightCoords;
 		float x0 = state.extendWest ? 0.0F : INSET;
 		float x1 = state.extendEast ? 1.0F : 1.0F - INSET;
 		float z0 = state.extendNorth ? 0.0F : INSET;
 		float z1 = state.extendSouth ? 1.0F : 1.0F - INSET;
-		submitNodeCollector.submitCustomGeometry(poseStack, renderType,
+		if (!state.translucent) {
+			submitNodeCollector.submitCustomGeometry(poseStack,
+					spriteId.renderType(ignored -> Sheets.cutoutBlockItemSheet()),
+					(pose, consumer) -> renderPlate(pose, consumer, sprite, light, x0, x1, z0, z1));
+			return;
+		}
+		// Stained and plain glass have real alpha; drawing them on the cutout sheet would slam every
+		// pixel to fully opaque and lose the tint that point 4 of the feedback is about. The glass goes
+		// without depth writes, or water behind it — drawn after it, in the translucent terrain layer —
+		// would vanish (MOD-780, as the capsule door in MOD-777). Plain glass has a solid frame, which
+		// the first pass draws with its depth so that water behind is not blended over the frame.
+		submitNodeCollector.submitCustomGeometry(poseStack, TranslucentTypes.blockSheetSolidTexels(),
+				(pose, consumer) -> renderPlate(pose, consumer, sprite, light, x0, x1, z0, z1));
+		submitNodeCollector.submitCustomGeometry(poseStack, TranslucentTypes.blockSheetNoDepthWrite(),
 				(pose, consumer) -> renderPlate(pose, consumer, sprite, light, x0, x1, z0, z1));
 	}
 

@@ -446,6 +446,7 @@
   "gui.alaindustrial.garden_drone_station.status.no_drone": "Geen drone gedockt",
   "gui.alaindustrial.garden_drone_station.status.no_energy": "Geen stroom",
   "gui.alaindustrial.garden_drone_station.status.no_resources": "Voorraad op",
+  "gui.alaindustrial.garden_drone_station.status.output_full": "Uitvoer vol",
   "gui.alaindustrial.garden_drone_station.status.working": "Actief",
   "gui.alaindustrial.incubator.charge": "Bestralingslading: %s / %s",
   "gui.alaindustrial.incubator.mode.create": "Creatie",

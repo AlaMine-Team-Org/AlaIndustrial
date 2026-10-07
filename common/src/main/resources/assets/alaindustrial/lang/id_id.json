@@ -446,6 +446,7 @@
   "gui.alaindustrial.garden_drone_station.status.no_drone": "Tidak ada drone terpasang",
   "gui.alaindustrial.garden_drone_station.status.no_energy": "Tidak ada daya",
   "gui.alaindustrial.garden_drone_station.status.no_resources": "Persediaan habis",
+  "gui.alaindustrial.garden_drone_station.status.output_full": "Keluaran penuh",
   "gui.alaindustrial.garden_drone_station.status.working": "Bekerja",
   "gui.alaindustrial.incubator.charge": "Muatan iradiasi: %s / %s",
   "gui.alaindustrial.incubator.mode.create": "Penciptaan",

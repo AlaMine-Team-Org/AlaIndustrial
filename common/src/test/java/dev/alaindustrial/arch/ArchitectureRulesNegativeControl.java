@@ -11,6 +11,7 @@ import static dev.alaindustrial.arch.ArchitectureRules.readBalanceKnobsFromConfi
 import static dev.alaindustrial.arch.ArchitectureRules.startsAnotherManifestInitialiser;
 import static dev.alaindustrial.arch.ArchitectureRules.useUnorderedCollections;
 import static dev.alaindustrial.arch.ArchitectureRules.writeAKnobField;
+import static dev.alaindustrial.arch.TranslucentSheetRules.callTheDepthWritingSheet;
 import static dev.alaindustrial.arch.VersionedApiRules.callAFacadeOnlyMember;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -28,6 +29,7 @@ import com.tngtech.archunit.core.importer.Locations;
 import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.lang.EvaluationResult;
 import dev.alaindustrial.Config;
+import dev.alaindustrial.arch.TranslucentSheetRules.AllowedSite;
 import dev.alaindustrial.arch.VersionedApiRules.FacadeOnlyMember;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -200,6 +202,52 @@ class ArchitectureRulesNegativeControl {
 							call.getTargetOwner(), call.getName(), call.getTarget().getRawParameterTypes())));
 			assertTrue(callsOne, entry.getKey() + " calls none of the members listed for it in "
 					+ "VersionedApiRules.FACADE_ONLY_MEMBERS — the ban on them would be a tautology on this line");
+		}
+	}
+
+	/**
+	 * MOD-780 — {@code renderersDrawGlassWithoutDepthWrites}: the condition reports the three shapes in which a
+	 * renderer reaches the depth-writing sheet ({@code DepthWritingSheetViolator}: a direct call, a call inside a
+	 * lambda — which ArchUnit files under the method that declares the lambda, here the static initialiser, not
+	 * under the synthetic {@code lambda$...} method — and a method reference),
+	 * and lets an allowed site and the cutout sheet through ({@code LiquidSheetUser}). The stand-in plays
+	 * {@code Sheets}, which this lane's classpath does not carry.
+	 */
+	@Test
+	void depthWritingSheetConditionFailsOutsideTheAllowedSitesOnly() {
+		String sheet = FIXTURE_PACKAGE + ".sheet";
+		List<AllowedSite> allowed = List.of(new AllowedSite(sheet + ".LiquidSheetUser", "submitLiquid", "a liquid"));
+		String report = evaluateExpectingViolation(noClasses()
+				.that().resideInAPackage(sheet)
+				.should(callTheDepthWritingSheet(sheet + ".StandInSheets", "translucentBlockItemSheet", allowed)));
+
+		String violator = sheet + ".DepthWritingSheetViolator.";
+		assertTrue(report.contains("StandInSheets.translucentBlockItemSheet in " + violator + "direct("), report);
+		assertTrue(report.contains("StandInSheets.translucentBlockItemSheet in " + violator + "<clinit>("), report);
+		assertTrue(report.contains("a reference to StandInSheets.translucentBlockItemSheet in " + violator
+				+ "reference("), report);
+		assertFalse(report.contains("LiquidSheetUser"), report);
+		assertFalse(report.contains("cutoutBlockItemSheet"), report);
+	}
+
+	/**
+	 * MOD-780 — every allowed site of {@code renderersDrawGlassWithoutDepthWrites} still calls the depth-writing
+	 * sheet in the production classes. A liquid moved to another method, or a site renamed, would otherwise
+	 * leave a stale exception behind; and a {@code Sheets} owner or method name spelled wrong in the rule makes
+	 * every site fail here instead of making the ban silently empty.
+	 */
+	@Test
+	void everyAllowedLiquidSiteStillCallsTheDepthWritingSheet() {
+		for (AllowedSite site : TranslucentSheetRules.LIQUID_SITES) {
+			assertTrue(productionClasses.contain(site.owner()), site.owner() + " is not a production class");
+			boolean calls = productionClasses.get(site.owner()).getCodeUnits().stream()
+					.filter(site::matches)
+					.flatMap(codeUnit -> codeUnit.getMethodCallsFromSelf().stream())
+					.anyMatch(call -> call.getTargetOwner().getName().equals(TranslucentSheetRules.SHEETS)
+							&& call.getName().equals(TranslucentSheetRules.DEPTH_WRITING_SHEET));
+			assertTrue(calls, site.owner() + "." + site.method() + " no longer calls Sheets."
+					+ TranslucentSheetRules.DEPTH_WRITING_SHEET + "() — drop its entry from "
+					+ "TranslucentSheetRules.LIQUID_SITES");
 		}
 	}
 

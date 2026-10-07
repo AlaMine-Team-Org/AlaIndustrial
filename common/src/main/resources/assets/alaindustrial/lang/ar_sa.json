@@ -446,6 +446,7 @@
   "gui.alaindustrial.garden_drone_station.status.no_drone": "لا درون مرابط",
   "gui.alaindustrial.garden_drone_station.status.no_energy": "لا طاقة",
   "gui.alaindustrial.garden_drone_station.status.no_resources": "نفدت المؤن",
+  "gui.alaindustrial.garden_drone_station.status.output_full": "المخرج ممتلئ",
   "gui.alaindustrial.garden_drone_station.status.working": "يعمل",
   "gui.alaindustrial.incubator.charge": "شحنة التشعيع: %s / %s",
   "gui.alaindustrial.incubator.mode.create": "تكوين",

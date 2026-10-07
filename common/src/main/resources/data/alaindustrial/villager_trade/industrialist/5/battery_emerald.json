@@ -1,0 +1,16 @@
+{
+  "wants": {
+    "id": "alaindustrial:battery",
+    "count": 16.0,
+    "components": {
+      "alaindustrial:pouch_energy": 2000
+    }
+  },
+  "gives": {
+    "id": "minecraft:emerald",
+    "count": 18
+  },
+  "max_uses": 3.0,
+  "xp": 30.0,
+  "reputation_discount": 0.02
+}

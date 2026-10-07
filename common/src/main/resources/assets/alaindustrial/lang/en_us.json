@@ -437,6 +437,7 @@
   "gui.alaindustrial.garden_drone_station.status.no_drone": "No drone docked",
   "gui.alaindustrial.garden_drone_station.status.no_energy": "No power",
   "gui.alaindustrial.garden_drone_station.status.no_resources": "Out of supplies",
+  "gui.alaindustrial.garden_drone_station.status.output_full": "Output full",
   "gui.alaindustrial.garden_drone_station.status.working": "Working",
   "gui.alaindustrial.incubator.charge": "Irradiation charge: %s / %s",
   "gui.alaindustrial.incubator.mode.create": "Creation",

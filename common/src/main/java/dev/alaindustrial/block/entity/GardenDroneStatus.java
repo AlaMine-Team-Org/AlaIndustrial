@@ -26,7 +26,14 @@ public enum GardenDroneStatus implements StatusLine {
 	/** Not enough EU buffered to pay for a single action. */
 	NO_ENERGY,
 	/** No drone docked — the station is a base station with nothing to send out. */
-	NO_DRONE;
+	NO_DRONE,
+	/**
+	 * The output slots have no room for what the drone would bring back (MOD-782). Harvesting and
+	 * weeding wait until something is taken out of an output slot; the station still plants, fertilizes
+	 * and tills, and shows this when none of those has work and a ripe crop or a weed in range is waiting
+	 * for room. Appended last: ordinals are persisted and synced.
+	 */
+	OUTPUT_FULL;
 
 	private static final GardenDroneStatus[] VALUES = values();
 
