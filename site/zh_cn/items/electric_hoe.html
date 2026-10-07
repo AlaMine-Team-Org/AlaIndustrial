@@ -401,13 +401,13 @@
 
 <p>锄能做两件事，每件都消耗 <strong>50 EU/FE</strong>：</p>
 
-<ul><li><strong>锄地。</strong> 右键点击泥土、草地或土路可将其变为农田；灰化土变为泥土；缠根泥土变为泥土并掉落垂根。</li><li><strong>破坏方块。</strong> 锄以 9.0 的速度破坏 <code>#minecraft:mineable/hoe</code>——对比钻石锄的 8.0，包括干草块、树叶、海绵、苔藓、下界疣块、干海带。</li></ul>
+<ul><li><strong>锄地。</strong> 右键点击泥土、草地或土路可将其变为农田；砂土变为泥土；缠根泥土变为泥土并掉落垂根。</li><li><strong>破坏方块。</strong> 锄以 9.0 的速度破坏 <code>#minecraft:mineable/hoe</code> 标签的方块（例如干草块、树叶、苔藓、海绵、幽匿块），对比钻石锄的 8.0。</li></ul>
 
 <p>满电量为 <strong>10 000 EU/FE</strong>，约可使用 <strong>200 次</strong>。</p>
 
 <p>没电的锄在它的两种角色中表现不同，这是有意为之：</p>
 
-<ul><li><strong>破坏</strong>依然可以——以徒手速度（1.0），采集等级和所有掉落都保留；</li><li><strong>锄地</strong>无法完成——快捷栏上方会显示红色提示"电量不足以锄地"。</li></ul>
+<ul><li><strong>破坏</strong>依然可以——以徒手速度（1.0），采集等级和所有掉落都保留；</li><li><strong>锄地</strong>无法完成（创造模式除外）——快捷栏上方会显示红色提示"电量不足以锄地"。</li></ul>
 
 <p>这与<a href="electric_drill.html">电钻</a>的火把机制同理：没电时挖掘会降级，而右键动作需要电量。锄地才是锄的核心，如果它免费，那这件工具整局游戏都不会消耗一个 EU/FE。</p>
 
@@ -419,7 +419,7 @@
 
 <table><thead><tr><th>项目</th><th>数值</th></tr></thead><tbody><tr><td>角色</td><td>带 EU/FE 缓存的手持工具：充能器的消费者</td></tr><tr><td>缓存</td><td>10 000 EU/FE</td></tr><tr><td>充电</td><td>储能库槽位 / 穿戴的背包，≤ 32 EU/FE/刻（受 LV 上限约束）→ 满电约 16 秒</td></tr><tr><td>消耗</td><td>每个成功破坏的方块 50 EU/FE，每次成功锄地 50 EU/FE</td></tr><tr><td>被动放电</td><td>无</td></tr><tr><td>组件</td><td>（Long，persistent + networkSynchronized）——本模组所有电力物品共用的组件</td></tr></tbody></table>
 
-<p>消耗<strong>仅在服务端</strong>扣除，且<strong>仅针对硬度非零的方块</strong>。在创造模式下不消耗电量（）。</p>
+<p>消耗<strong>仅在服务端</strong>扣除：破坏方块时<strong>仅针对硬度非零的方块</strong>，锄地时按每次实际发生的转化扣除。在创造模式下不消耗电量（）。</p>
 
 <h2 id="物品栏">物品栏</h2>
 
@@ -431,13 +431,13 @@
 
 <h2 id="配方">配方</h2>
 
-<p>合成：框架与其余三件相同，但中心是钻石锄：上方一行铁锭，两侧是两枚<a href="../components/battery.html">电池</a>，下方是两件<a href="../components/copper_coil.html">铜线圈</a>和一张<a href="../components/electronic_circuit.html">电子电路</a>。电池中持有的电量会带入成品锄中。当玩家拥有铜线圈、电子电路或钻石锄时，配方会在配方书中解锁。</p>
+<p>合成：框架与其余三件相同，但中心是钻石锄：上方一行铁锭，两侧是两枚<a href="../components/battery.html">电池</a>，下方是两件<a href="../components/copper_coil.html">铜线圈</a>和一张<a href="../components/electronic_circuit.html">电子电路</a>。电池中持有的电量会带入成品锄中。当玩家获得过铜线圈、电子电路和钻石锄这三样物品之后，配方会在配方书中解锁。</p>
 
 <ul><li><strong>修复</strong>——不适用：没有耐久，没什么可修；"修复"就是 EU/FE 充电。</li></ul>
 
 <h2 id="行为">行为</h2>
 
-<ul><li><strong>锄地及其它右键转化——消耗 50 EU/FE。</strong> 泥土、草地、土路 → 农田；灰化土 → 泥土；缠根泥土 → 泥土 + 垂根，与原版锄头完全一致。<strong>只有当转化真正发生时</strong>才扣电量：点在石墙上或已经锄过的农田上都不会动缓存。电量不够时锄不会锄地，并会在快捷栏上方提示——就像电钻放火把那样，但<strong>仅限指向可锄方块时</strong>：没电的锄右键点在石头、箱子或别的方块上会直接放行，既不提示也不拦截，副手物品照常生效（）。</li><li><strong>破坏方块：</strong> 当电量 ≥ 50 EU/FE 时，锄以 9.0 的速度破坏 <code>#minecraft:mineable/hoe</code>（钻石锄为 8.0）。每破这样一个方块扣 50 EU/FE。</li><li><strong>没电的锄：</strong> 电量低于 50 EU/FE 时以徒手速度（1.0）破坏，但采集等级和掉落都保留，且不消耗 EU/FE。此时效率附魔不起作用（原版门槛为 <code>speed &gt; 1.0</code>）。没电的锄不能锄地——见上文。</li><li><strong>充电：</strong> 储能库的充能槽和穿在身上的能量背包都会自动接受锄，最高 32 EU/FE/刻。</li><li><strong>攻击：</strong> 像原版锄一样——不是武器（伤害 1，攻击速度 4）。挥击<strong>不消耗 EU/FE</strong>，也不磨损锄。</li><li><strong>附魔：</strong> 锄属于 <code>#minecraft:hoes</code>，因此附魔台和铁砧把它当作锄。耐久和经验修补在不损坏的锄上毫无用处，但也没有害处。</li><li><strong>作物收割——不支持。</strong> 这是<a href="scythe.html">大镰刀</a>的工作，它就是为此而做；没必要在锄里复制一遍。</li><li><strong>指示：</strong> 图标下方的横条显示电量（黄色，LV 颜色）。悬浮提示——"电量：X / 10 000 EU/FE"，归零时显示红色"已放电"。纹理在零电量时切换为"熄灭"样式。</li><li><strong>丢弃/死亡/重新登录：</strong> 电量保存在物品中，会保留。</li><li><strong>创造模式：</strong> 不消耗电量。</li></ul>
+<ul><li><strong>锄地及其它右键转化——消耗 50 EU/FE。</strong> 泥土、草地、土路 → 农田；砂土 → 泥土；缠根泥土 → 泥土 + 垂根。转化与你所玩的游戏版本和加载器上的原版锄头一致：泥土、草地、土路和砂土上方必须是空气；其他模组添加的转化也会自动生效。<strong>只有当转化真正发生时</strong>才扣电量：点在石墙上或已经锄过的农田上都不会动缓存。电量不够时锄不会锄地，并会在快捷栏上方提示——就像电钻放火把那样，但<strong>仅限指向可锄方块时</strong>：没电的锄右键点在石头、箱子或别的方块上会直接放行，既不提示也不拦截，副手物品照常生效（）。</li><li><strong>破坏方块：</strong> 当电量 ≥ 50 EU/FE 时，锄以 9.0 的速度破坏 <code>#minecraft:mineable/hoe</code>（钻石锄为 8.0）。每破这样一个方块扣 50 EU/FE。</li><li><strong>没电的锄：</strong> 电量低于 50 EU/FE 时以徒手速度（1.0）破坏，但采集等级和掉落都保留，且不消耗 EU/FE。此时效率附魔不起作用（原版门槛为 <code>speed &gt; 1.0</code>）。在创造模式以外，没电的锄不能锄地——见上文。</li><li><strong>充电：</strong> 储能库的充能槽和穿在身上的能量背包都会自动接受锄，最高 32 EU/FE/刻。</li><li><strong>攻击：</strong> 像原版锄一样——不是武器（伤害 1，攻击速度 4）。挥击<strong>不消耗 EU/FE</strong>，也不磨损锄。</li><li><strong>附魔：</strong> 锄属于 <code>#minecraft:hoes</code>，因此附魔台和铁砧把它当作锄。耐久和经验修补在不损坏的锄上毫无用处，但也没有害处。</li><li><strong>作物收割——不支持。</strong> 这是<a href="scythe.html">大镰刀</a>的工作，它就是为此而做；没必要在锄里复制一遍。</li><li><strong>指示：</strong> 图标下方的横条显示电量（黄色，LV 颜色）。悬浮提示——"电量：X / 10 000 EU/FE"，归零时显示红色"已放电"。纹理在零电量时切换为"熄灭"样式。</li><li><strong>丢弃/死亡/重新登录：</strong> 电量保存在物品中，会保留。</li><li><strong>创造模式：</strong> 不消耗也不检查电量——缓存为空也能锄地。</li></ul>
 
 <h2 id="金刚石涂层升级">金刚石涂层（升级）</h2>
 
@@ -451,11 +451,11 @@
 
 <p>升级的价值正在于此：在原版里，在远离水源的地方耕地又不立刻种下作物几乎毫无意义——耕地会干涸并塌回泥土。 金刚石涂层电动锄让每块新耕地直接拥有满湿度，既带来更快的生长（原版在湿润土地上作物长得更快），也留出 七个随机刻的余量，之后耕地才可能回退。</p>
 
-<p>这是<strong>起步优势，而不是洒水器</strong>。此后湿度按原版的正常节奏下降；升级既不会持续补水，也不能取代田边的水源。 它同样不会给已有的耕地浇水——该效果只在它自己刚刚变成耕地的方块上触发，且必须是真正扣除了电量的耕作。 没电的锄头浇不了任何东西。</p>
+<p>这是<strong>起步优势，而不是洒水器</strong>。此后湿度按原版的正常节奏下降；升级既不会持续补水，也不能取代田边的水源。 它同样不会给已有的耕地浇水——该效果只在它自己刚刚变成耕地的方块上触发，且必须是真正发生了的耕作（非创造模式下即已扣除电量）。 在创造模式以外，没电的锄头浇不了任何东西。</p>
 
 <p>另外：耕作<strong>砂土</strong>和<strong>缠根泥土</strong>得到的是普通泥土而非耕地（这是原版自身的规则），因此该效果不适用——那里 没有可浇的东西。</p>
 
-<p><strong>为什么不是精准采集（像电钻和链锯那样）。</strong> 那两个升级的第二项机制是可切换的精准采集，而对锄头来说它形同 虚设：其作用域内的所有方块（<code>#minecraft:mineable/hoe</code>——干草、树叶、海绵、苔藓、下界疣块、干海带块）本来 就会掉落自身，无需任何附魔。既没有可翻倍的，也没有可抑制的。因此本升级强化的是只有锄头才有的能力——耕作。</p>
+<p><strong>为什么不是精准采集（像电钻和链锯那样）。</strong> 那两个升级的第二项机制是可切换的精准采集。锄头对精准采集的需求很窄： 在其作用域（<code>#minecraft:mineable/hoe</code> 标签）的方块中，没有它就不掉落自身的只有幽匿系列方块（<code>sculk</code>、 <code>sculk_catalyst</code>、<code>sculk_vein</code>、<code>sculk_shrieker</code>、<code>sculk_sensor</code>、<code>calibrated_sculk_sensor</code>），以及树叶—— 没有精准采集或剪刀时，树叶不会掉落自身，最多掉落树苗、木棍或苹果。这用普通的精准采集附魔就够了：锄头属于 <code>#minecraft:hoes</code>， 因而也属于 <code>#minecraft:enchantable/mining_loot</code>，附魔台和铁砧都能把它附到锄头上——基础型和升级型一样。 为这么少的方块做一个可切换模式并不划算，因此本升级强化的是只有锄头才有的能力——耕作。</p>
 
 <p><strong>原样继承：</strong> 10 000 EU/FE 缓冲、每方块 50 EU/FE 与每次耕作 50 EU/FE、32 EU/FE/刻 的输入、相同的充电位置、没有耐久度、 电量耗尽时以徒手速度工作、创造模式行为，以及原版锄头的攻击属性（它不是武器）。该升级没有自己的配置项。</p>
 
@@ -467,11 +467,11 @@
 
 <h2 id="进阶">进阶</h2>
 
-<ul><li>本系列第四件也是最后一件电动工具：<a href="electric_drill.html">电钻</a>负责石头，<a href="electric_chainsaw.html">链锯</a>负责木材，<a href="electric_shovel.html">铲</a>负责泥土，锄负责农田。</li><li>在<a href="../energy-storage/battery_box.html">储能库</a>和电池之后可用：没有 LV 基础设施就无法合成与充电。</li><li>LV 等级。其余电力物品（军刀/纳米弓/纳米激光剑）属于未来工作。</li></ul>
+<ul><li>本系列第四件也是最后一件电动工具：<a href="electric_drill.html">电钻</a>负责石头，<a href="electric_chainsaw.html">链锯</a>负责木材，<a href="electric_shovel.html">铲</a>负责泥土，锄负责农田。</li><li>在<a href="../energy-storage/battery_box.html">储能库</a>和电池之后可用：没有 LV 基础设施就无法合成与充电。</li><li>LV 等级。此后系列又加入了<a href="electric_saber.html">电动军刀</a>和<a href="electric_bow.html">电动弓</a>。</li></ul>
 
 <h2 id="相关内容">相关内容</h2>
 
-<ul><li><a href="electric_drill.html">电钻</a>——系列中负责石料的部分，每方块消耗相同。</li><li><a href="electric_chainsaw.html">电动链锯</a>——系列中负责木材的部分。</li><li><a href="electric_shovel.html">电动铲</a>——负责泥土的部分；同样使用右键委托，但它的动作免费，而锄的是付费。</li><li><a href="scythe.html">大镰刀</a>——收割作物的工具，锄无法替代它。</li><li><a href="../energy-storage/battery_box.html">储能库</a>——锄的充电来源（充能槽）。</li></ul>
+<ul><li><a href="electric_drill.html">电钻</a>——系列中负责石料的部分，每方块消耗相同。</li><li><a href="electric_chainsaw.html">电动链锯</a>——系列中负责木材的部分。</li><li><a href="electric_shovel.html">电动铲</a>——负责泥土的部分；它的右键机制相同，但它的动作免费，而锄的是付费。</li><li><a href="scythe.html">大镰刀</a>——收割作物的工具，锄无法替代它。</li><li><a href="../energy-storage/battery_box.html">储能库</a>——锄的充电来源（充能槽）。</li></ul>
 
 <h2>合成</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="电动锄 alaindustrial:electric_hoe" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="电池"><img src="../../assets/item/battery_3d.png" alt="电池" width="32" height="32"></div> <div class="cell" title="钻石锄"><img src="../../assets/item/diamond_hoe_3d.png" alt="钻石锄" width="32" height="32"></div> <div class="cell" title="电池"><img src="../../assets/item/battery_3d.png" alt="电池" width="32" height="32"></div> <div class="cell" title="铜线圈"><img src="../../assets/item/copper_coil_3d.png" alt="铜线圈" width="32" height="32"></div> <div class="cell" title="电子电路"><img src="../../assets/item/electronic_circuit_3d.png" alt="电子电路" width="32" height="32"></div> <div class="cell" title="铜线圈"><img src="../../assets/item/copper_coil_3d.png" alt="铜线圈" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="电动锄"><img src="../../assets/item/electric_hoe_3d.png" alt="电动锄" width="32" height="32"></div><div class="result-name">电动锄</div></div></div></div></div>

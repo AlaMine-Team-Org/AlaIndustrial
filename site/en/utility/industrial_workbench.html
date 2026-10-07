@@ -421,6 +421,14 @@
 
 <table><thead><tr><th>Level</th><th>Trade pool (2 rolled at random)</th></tr></thead><tbody><tr><td>Novice</td><td>8 × Raw Tin · 24 × Coal Dust · 12 × Copper Dust → Emerald</td></tr><tr><td>Apprentice</td><td>3 × Silver Ingot · 3 × Nickel Ingot · 10 × Lapis Dust → Emerald</td></tr><tr><td>Journeyman</td><td>2 × Uranium Ingot · 4 × Gold Dust · 6 × Iron Dust → Emerald</td></tr><tr><td>Expert</td><td>1 × Tempered Iron Pickaxe → Emerald · 8 × Diamond Dust → Emerald · 6 Emeralds → Tempered Iron</td></tr><tr><td>Master</td><td>5 Emeralds → Electronic Circuit · 3 Emeralds → 2 Copper Coils · 4 Emeralds → Iron Gear</td></tr></tbody></table>
 
+<p><strong>Energy order (a fixed trade).</strong> On top of the two random trades, <strong>every</strong> Industrialist at Novice, Journeyman and Master level has one more: he buys <strong>fully charged</strong> <a href="../components/battery.html">Batteries</a> for emeralds. A half-charged or empty battery is refused; a stack of full ones is fine. Energy itself is cheap (2 000 EU/FE is about a sixth of a coal in a Generator), so the villager pays for the battery as a finished product — tin, redstone and cable.</p>
+
+<table><thead><tr><th>Level</th><th>Trade</th><th>Uses before restock</th></tr></thead><tbody><tr><td>Novice</td><td>3 full Batteries → 1 Emerald</td><td>12</td></tr><tr><td>Journeyman</td><td>1 full Battery → 1 Emerald</td><td>16</td></tr><tr><td>Master (wholesale)</td><td>16 full Batteries (a full stack) → 18 Emeralds</td><td>3</td></tr></tbody></table>
+
+<p>The price floats the vanilla way: sell a lot to one villager and after the restock he asks for more batteries for the same pay; leave him alone and the price comes back. There is no reverse trade (emeralds → charged battery). The trade is added when the villager gains the level, so an Industrialist who passed a level before the mod update only gets it on the levels still ahead of him.</p>
+
+<blockquote><strong>Server with a changed battery capacity.</strong> The trade wants exactly 2 000 EU/FE, while the battery's capacity is the setting. <strong>Lower</strong> it and no full battery reaches 2 000 EU/FE, so the villager stops taking batteries at all. <strong>Raise</strong> it (to 4 000, say) and the villager takes batteries charged to exactly 2 000 EU/FE — no longer full — and refuses the truly full ones. The same holds after <code>/ala config reload</code>. Either way, fix the number in the trade files with a datapack.</blockquote>
+
 <p>Every metal is bought in exactly one item form (no raw/ingot double-dipping), and the trades are data-driven (<code>trade_set/</code>) — server owners can rebalance them with a datapack, no rebuild needed.</p>
 
 <h2 id="village-house">Village House</h2>

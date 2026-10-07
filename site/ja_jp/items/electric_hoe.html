@@ -401,13 +401,13 @@
 
 <p>クワは2つのことを行い、どちらも<strong>1回あたり 50 EU/FE</strong> を消費します。</p>
 
-<ul><li><strong>耕起。</strong> 土、草、土の道を右クリックすると農地になります。炭素土は土に、根付いた土は垂れ根付きの土になります。</li><li><strong>ブロックの破壊。</strong> クワは <code>#minecraft:mineable/hoe</code> を速度 9.0（ダイヤモンドは 8.0）で破壊します。対象は干し草、葉、スポンジ、苔、ネザーウォートブロック、乾燥昆布などです。</li></ul>
+<ul><li><strong>耕起。</strong> 土、草、土の道を右クリックすると農地になります。粗い土は土に、根付いた土は土になり垂れ根を落とします。</li><li><strong>ブロックの破壊。</strong> クワは <code>#minecraft:mineable/hoe</code> タグのブロック（例：干し草、葉、苔、スポンジ、スカルク）を速度 9.0（ダイヤモンドは 8.0）で破壊します。</li></ul>
 
 <p>満充電時のバッファは <strong>10 000 EU/FE</strong> で、1回の充電あたり約 <strong>200 回</strong> の使用が可能です。</p>
 
 <p>放電したクワは2つの役割で異なる挙動を示します。これは意図的なものです。</p>
 
-<ul><li><strong>破壊</strong>は継続します。素手速度（1.0）で、採掘レベルとドロップはすべて維持されます。</li><li><strong>耕起</strong>はできません。農地の代わりに、ホットバー上の行に赤い「耕起するための充電が不足しています」と表示されます。</li></ul>
+<ul><li><strong>破壊</strong>は継続します。素手速度（1.0）で、採掘レベルとドロップはすべて維持されます。</li><li><strong>耕起</strong>はできません（クリエイティブ以外）。農地の代わりに、ホットバー上の行に赤い「耕起するための充電が不足しています」と表示されます。</li></ul>
 
 <p><a href="electric_drill.html">電動ドリル</a>の松明と同じ仕組みで、放電時は採掘が低下し、右クリックのアクションには充電が必要です。耕起はクワの本質であり、無料であればゲーム全体で1 EU/FE も消費しないことになります。</p>
 
@@ -419,7 +419,7 @@
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>役割</td><td>EU/FE バッファを持つ手持ちツール：充電器にとっての消費者</td></tr><tr><td>バッファ</td><td>10 000 EU/FE</td></tr><tr><td>充電</td><td>エネルギー貯蔵庫のスロット / 装備したパック、≤ 32 EU/FE/ティック（LV の上限による制約）→ 満充電まで約16秒</td></tr><tr><td>消費</td><td>正常に破壊したブロックごとに 50 EU/FE および正常な耕起ごとに 50 EU/FE</td></tr><tr><td>パッシブ放電</td><td>なし</td></tr><tr><td>コンポーネント</td><td>（Long、persistent + networkSynchronized）——本MODの全電力アイテムが共有するコンポーネント</td></tr></tbody></table>
 
-<p>消費は<strong>サーバー側でのみ</strong>、かつ<strong>硬度が非ゼロのブロックに対してのみ</strong>差し引かれます。クリエイティブモードでは充電を消費しません（）。</p>
+<p>消費は<strong>サーバー側でのみ</strong>差し引かれます。破壊では<strong>硬度が非ゼロのブロックに対してのみ</strong>、耕起では実際に行われた変換ごとに差し引かれます。クリエイティブモードでは充電を消費しません（）。</p>
 
 <h2 id="インベントリ">インベントリ</h2>
 
@@ -431,13 +431,13 @@
 
 <h2 id="レシピ">レシピ</h2>
 
-<p>クラフト：他の3つと同じ枠組みですが、中央はダイヤモンドのクワです。上段に鉄インゴットの列、両脇に<a href="../components/battery.html">バッテリー</a>を2つ、下段に<a href="../components/copper_coil.html">銅コイル</a>を2つと<a href="../components/electronic_circuit.html">電子回路</a>を配置します。バッテリーが持つ充電は完成品のクワに引き継がれます。プレイヤーが銅コイル、電子回路、またはダイヤモンドのクワを入手するとレシピ帳で解放されます。</p>
+<p>クラフト：他の3つと同じ枠組みですが、中央はダイヤモンドのクワです。上段に鉄インゴットの列、両脇に<a href="../components/battery.html">バッテリー</a>を2つ、下段に<a href="../components/copper_coil.html">銅コイル</a>を2つと<a href="../components/electronic_circuit.html">電子回路</a>を配置します。バッテリーが持つ充電は完成品のクワに引き継がれます。プレイヤーが銅コイル、電子回路、ダイヤモンドのクワの3つすべてを入手するとレシピ帳で解放されます。</p>
 
 <ul><li><strong>修理</strong>——該当なし：耐久値がないため修理するものがなく、「修理」は EU/FE の充電を指します。</li></ul>
 
 <h2 id="挙動">挙動</h2>
 
-<ul><li><strong>耕起およびその他の右クリック変換——50 EU/FE がかかります。</strong> 土、草、土の道 → 農地、炭素土 → 土、根付いた土 → 土 + 垂れ根、バニラのクワと全く同じです。充電は<strong>変換が実際に発生したときのみ</strong>差し引かれます。石の壁やすでに耕された農地をクリックしてもバッファは変更されません。充電が不足するとクワは耕やさず、ドリルの松明と同様にホットバー上で通知します。ただし通知するのは<strong>耕せるブロックを右クリックしたときだけ</strong>です。放電したクワで石やチェストなどを右クリックしても、メッセージも横取りもなくそのまま通過するため、オフハンドのアイテムは正常に機能します（）。</li><li><strong>ブロックの破壊：</strong> 充電が ≥ 50 EU/FE の間、クワは <code>#minecraft:mineable/hoe</code> を速度 9.0（ダイヤモンドは 8.0）で破壊します。このようなブロックごとに 50 EU/FE が差し引かれます。</li><li><strong>放電したクワ：</strong> 充電が 50 EU/FE 未満では素手速度（1.0）で破壊しますが、採掘レベルとドロップは維持され、EU/FE は消費されません。このとき効率強化のエンチャントは機能しません（バニラのしきい値 <code>speed &gt; 1.0</code>）。放電したクワでは耕やせません。上記を参照してください。</li><li><strong>充電：</strong> エネルギー貯蔵庫の充電スロットと装備したエネルギーパックは自動的にクワを受け付け、最大 32 EU/FE/ティックまで充電します。</li><li><strong>攻撃：</strong> バニラのクワと同様に武器ではなく（ダメージ 1、攻撃速度 4）。打撃は<strong>EU/FE を消費せず</strong>、クワを摩耗させません。</li><li><strong>エンチャント：</strong> クワは <code>#minecraft:hoes</code> に属するため、エンチャントテーブルと金床はクワとして扱います。耐久・修繕は壊れないクワでは無意味ですが、無害です。</li><li><strong>収穫——対応していません。</strong> これは<a href="scythe.html">大鎌</a>の役割であり、そのために作られています。クワに重複させることはしませんでした。</li><li><strong>表示：</strong> アイコン下のバーが充電量を示します（黄色、LV 色）。ツールチップには「充電量：X / 10 000 EU/FE」、ゼロでは赤色の「放電済み」と表示されます。テクスチャはゼロ充電で「消灯」状態に切り替わります。</li><li><strong>ドロップ／死亡／再ログイン：</strong> 充電量はアイテムに保存され、保持されます。</li><li><strong>クリエイティブ：</strong> 充電を消費しません。</li></ul>
+<ul><li><strong>耕起およびその他の右クリック変換——50 EU/FE がかかります。</strong> 土、草、土の道 → 農地、粗い土 → 土、根付いた土 → 土 + 垂れ根。変換はプレイ中のゲームバージョンとローダーのバニラのクワと同じで、土・草・土の道・粗い土は上に空気が必要です。他の MOD が追加した変換もそのまま機能します。充電は<strong>変換が実際に発生したときのみ</strong>差し引かれます。石の壁やすでに耕された農地をクリックしてもバッファは変更されません。充電が不足するとクワは耕やさず、ドリルの松明と同様にホットバー上で通知します。ただし通知するのは<strong>耕せるブロックを右クリックしたときだけ</strong>です。放電したクワで石やチェストなどを右クリックしても、メッセージも横取りもなくそのまま通過するため、オフハンドのアイテムは正常に機能します（）。</li><li><strong>ブロックの破壊：</strong> 充電が ≥ 50 EU/FE の間、クワは <code>#minecraft:mineable/hoe</code> を速度 9.0（ダイヤモンドは 8.0）で破壊します。このようなブロックごとに 50 EU/FE が差し引かれます。</li><li><strong>放電したクワ：</strong> 充電が 50 EU/FE 未満では素手速度（1.0）で破壊しますが、採掘レベルとドロップは維持され、EU/FE は消費されません。このとき効率強化のエンチャントは機能しません（バニラのしきい値 <code>speed &gt; 1.0</code>）。クリエイティブ以外では、放電したクワでは耕やせません。上記を参照してください。</li><li><strong>充電：</strong> エネルギー貯蔵庫の充電スロットと装備したエネルギーパックは自動的にクワを受け付け、最大 32 EU/FE/ティックまで充電します。</li><li><strong>攻撃：</strong> バニラのクワと同様に武器ではなく（ダメージ 1、攻撃速度 4）。打撃は<strong>EU/FE を消費せず</strong>、クワを摩耗させません。</li><li><strong>エンチャント：</strong> クワは <code>#minecraft:hoes</code> に属するため、エンチャントテーブルと金床はクワとして扱います。耐久・修繕は壊れないクワでは無意味ですが、無害です。</li><li><strong>収穫——対応していません。</strong> これは<a href="scythe.html">大鎌</a>の役割であり、そのために作られています。クワに重複させることはしませんでした。</li><li><strong>表示：</strong> アイコン下のバーが充電量を示します（黄色、LV 色）。ツールチップには「充電量：X / 10 000 EU/FE」、ゼロでは赤色の「放電済み」と表示されます。テクスチャはゼロ充電で「消灯」状態に切り替わります。</li><li><strong>ドロップ／死亡／再ログイン：</strong> 充電量はアイテムに保存され、保持されます。</li><li><strong>クリエイティブ：</strong> 充電を消費せず、確認もしません。バッファが空でも耕せます。</li></ul>
 
 <h2 id="ダイヤモンドチップアップグレード">ダイヤモンドチップ（アップグレード）</h2>
 
@@ -451,11 +451,11 @@
 
 <p>アップグレードの価値はここにあります。バニラでは、水から離れた場所を耕してすぐに植えないのはほぼ無意味で、 畑は乾いて土へ崩れてしまいます。ダイヤモンドチップのクワは新しい畑に最初から満水分を与えるため、成長の 高速化（バニラは湿った土のほうが作物が速く育ちます）と、畑が土に戻り始めるまでのランダムティック7回分の 余裕の両方が手に入ります。</p>
 
-<p>これは<strong>スプリンクラーではなく、出だしの優位</strong>です。水分量はその後バニラ通りの間隔で減っていきます。 アップグレードがそれを補充することはなく、畑のそばの水を代替するものでもありません。既存の農地に水を 与えることもありません — 効果は自分自身が農地に変えたブロックにのみ、しかも耕作の電力が実際に消費された 場合にのみ発動します。充電切れのクワでは何も潤せません。</p>
+<p>これは<strong>スプリンクラーではなく、出だしの優位</strong>です。水分量はその後バニラ通りの間隔で減っていきます。 アップグレードがそれを補充することはなく、畑のそばの水を代替するものでもありません。既存の農地に水を 与えることもありません — 効果は自分自身が農地に変えたブロックにのみ、しかも耕作が実際に行われた場合（クリエイティブ以外では 電力が支払われた場合）にのみ発動します。クリエイティブ以外では、充電切れのクワでは何も潤せません。</p>
 
 <p>なお、<strong>粗い土</strong>と<strong>根付いた土</strong>を耕すと農地ではなく普通の土になります（これはバニラ自身の仕様です）ので、 そこには効果が及びません — 潤す対象がありません。</p>
 
-<p><strong>なぜドリルやチェーンソーのようなシルクタッチではないのか。</strong> それらのアップグレードの2つ目の機構は 切り替え式のシルクタッチですが、クワにとっては空振りになります。クワの担当ブロック （<code>#minecraft:mineable/hoe</code> — 干草、葉、スポンジ、苔、ネザーウォートブロック、乾燥した昆布）は、 エンチャントなしでもすべてそのままドロップするからです。増やすものも、抑えるものもありません。そのため 本アップグレードは、クワだけが持つ「耕作」を強化します。</p>
+<p><strong>なぜドリルやチェーンソーのようなシルクタッチではないのか。</strong> それらのアップグレードの2つ目の機構は 切り替え式のシルクタッチです。クワにとってシルクタッチが必要な場面はごく限られます。担当ブロック （<code>#minecraft:mineable/hoe</code> タグ）のうち、シルクタッチなしでそれ自身をドロップしないのは、スカルク系の ブロック（<code>sculk</code>、<code>sculk_catalyst</code>、<code>sculk_vein</code>、<code>sculk_shrieker</code>、<code>sculk_sensor</code>、 <code>calibrated_sculk_sensor</code>）と、シルクタッチもハサミもなければそれ自身を落とさない葉（落ちるのはせいぜい苗木、棒、リンゴ）だけです。 それには通常のシルクタッチのエンチャントで足ります。クワは <code>#minecraft:hoes</code>、つまり <code>#minecraft:enchantable/mining_loot</code> に含まれるため、エンチャントテーブルと金床でクワに付けられます （基本型にもアップグレードにも同様に）。この程度のブロックのために切り替え式モードを設けても割に合わない ため、本アップグレードはクワだけが持つ「耕作」を強化します。</p>
 
 <p><strong>変更なく継承されるもの：</strong> 10 000 EU/FE のバッファ、ブロックあたり 50 EU/FE と耕作1回あたり 50 EU/FE、32 EU/FE/tick の受け入れ、同じ充電場所、耐久値がないこと、バッファが空のときは素手の速度で動作すること、クリエイティブでの 挙動、バニラのクワと同じ攻撃性能（武器ではありません）。このアップグレード専用の設定キーはありません。</p>
 
@@ -467,11 +467,11 @@
 
 <h2 id="進行">進行</h2>
 
-<ul><li>同ラインの4つ目で最後の電動ツールです。<a href="electric_drill.html">ドリル</a>——石、<a href="electric_chainsaw.html">チェーンソー</a>——木、<a href="electric_shovel.html">ショベル</a>——土、クワ——農地。</li><li><a href="../energy-storage/battery_box.html">エネルギー貯蔵庫</a>とバッテリーの後に利用可能です。LV インフラなしにはクラフトも充電もできません。</li><li>LV 等級。残りの電動アイテム（サーベル／ナノボウ／ヴァジュラ）は今後の課題です。</li></ul>
+<ul><li>同ラインの4つ目で最後の電動ツールです。<a href="electric_drill.html">ドリル</a>——石、<a href="electric_chainsaw.html">チェーンソー</a>——木、<a href="electric_shovel.html">ショベル</a>——土、クワ——農地。</li><li><a href="../energy-storage/battery_box.html">エネルギー貯蔵庫</a>とバッテリーの後に利用可能です。LV インフラなしにはクラフトも充電もできません。</li><li>LV 等級。その後、ラインには<a href="electric_saber.html">電動サーベル</a>と<a href="electric_bow.html">電動弓</a>が加わりました。</li></ul>
 
 <h2 id="関連項目">関連項目</h2>
 
-<ul><li><a href="electric_drill.html">電動ドリル</a>——ラインの石担当で、ブロックごとの消費も同じ。</li><li><a href="electric_chainsaw.html">電動チェーンソー</a>——ラインの木担当。</li><li><a href="electric_shovel.html">電動ショベル</a>——土担当。右クリック委譲の仕掛けは同じですが、そちらは無料、クワは有料です。</li><li><a href="scythe.html">大鎌</a>——収穫用のツールで、クワは代わりになりません。</li><li><a href="../energy-storage/battery_box.html">エネルギー貯蔵庫</a>——クワの充電源（charge スロット）。</li></ul>
+<ul><li><a href="electric_drill.html">電動ドリル</a>——ラインの石担当で、ブロックごとの消費も同じ。</li><li><a href="electric_chainsaw.html">電動チェーンソー</a>——ラインの木担当。</li><li><a href="electric_shovel.html">電動ショベル</a>——土担当。右クリックの仕組みは同じですが、そちらは無料、クワは有料です。</li><li><a href="scythe.html">大鎌</a>——収穫用のツールで、クワは代わりになりません。</li><li><a href="../energy-storage/battery_box.html">エネルギー貯蔵庫</a>——クワの充電源（charge スロット）。</li></ul>
 
 <h2>クラフト</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="電動クワ alaindustrial:electric_hoe" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">定型クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="いずれかの鉄インゴット"><img src="../../assets/item/iron_ingot_3d.png" alt="いずれかの鉄インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかの鉄インゴット"><img src="../../assets/item/iron_ingot_3d.png" alt="いずれかの鉄インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかの鉄インゴット"><img src="../../assets/item/iron_ingot_3d.png" alt="いずれかの鉄インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="電池"><img src="../../assets/item/battery_3d.png" alt="電池" width="32" height="32"></div> <div class="cell" title="ダイヤモンドのクワ"><img src="../../assets/item/diamond_hoe_3d.png" alt="ダイヤモンドのクワ" width="32" height="32"></div> <div class="cell" title="電池"><img src="../../assets/item/battery_3d.png" alt="電池" width="32" height="32"></div> <div class="cell" title="銅コイル"><img src="../../assets/item/copper_coil_3d.png" alt="銅コイル" width="32" height="32"></div> <div class="cell" title="電子回路"><img src="../../assets/item/electronic_circuit_3d.png" alt="電子回路" width="32" height="32"></div> <div class="cell" title="銅コイル"><img src="../../assets/item/copper_coil_3d.png" alt="銅コイル" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="電動クワ"><img src="../../assets/item/electric_hoe_3d.png" alt="電動クワ" width="32" height="32"></div><div class="result-name">電動クワ</div></div></div></div></div>
