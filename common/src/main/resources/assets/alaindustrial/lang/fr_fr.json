@@ -1676,5 +1676,17 @@
   "message.alaindustrial.mob_wheel.occupied": "La roue d'exercice a déjà une créature : ouvrez d'abord le portillon pour la faire sortir",
   "message.alaindustrial.mob_wheel.ready": "La roue d'exercice est assemblée",
   "tooltip.alaindustrial.mob_wheel_no_buffer": "Sans stockage : l'énergie que le réseau ne prend pas est perdue",
-  "tooltip.alaindustrial.mob_wheel_recolour": "Clic droit sur la roue assemblée avec des planches de n'importe quel bois pour la recolorer"
+  "tooltip.alaindustrial.mob_wheel_recolour": "Clic droit sur la roue assemblée avec des planches de n'importe quel bois pour la recolorer",
+  "block.alaindustrial.piezo_plate": "Plaque piézo",
+  "block.alaindustrial.silent_piezo_plate": "Plaque piézo silencieuse",
+  "tooltip.alaindustrial.piezo_plate_press": "Des EU à chaque nouveau pas",
+  "tooltip.alaindustrial.silent_piezo_plate_quiet": "Sans clic",
+  "tooltip.alaindustrial.piezo_plate_connect": "Câble : à côté ou sous le sol",
+  "tooltip.alaindustrial.piezo_plate_wrench": "La clé montre les plaques",
+  "tooltip.alaindustrial.piezo_press": "%s EU par créature · %s EU par objet",
+  "message.alaindustrial.piezo_plate.placed_connected": "Plaques piézo: %s · connectées",
+  "message.alaindustrial.piezo_plate.placed_no_outlet": "Plaques piézo: %s · branchez un câble à côté ou sous le sol",
+  "hud.alaindustrial.piezo_plate.ok": "Plaques piézo: %1$s · %2$s/%3$s EU · sorties: %4$s",
+  "hud.alaindustrial.piezo_plate.no_outlet": "Plaques piézo: %1$s · %2$s/%3$s EU · pas de câble",
+  "hud.alaindustrial.piezo_plate.full": "Plaques piézo: %1$s · pleines, les appuis sont perdus"
 }

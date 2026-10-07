@@ -32,6 +32,7 @@ public class IndustrializationClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		dev.alaindustrial.client.RootSoilModels.init();
+		dev.alaindustrial.client.PiezoPlateModels.init();
 		initClientConfig();
 		registerFluidRendering();
 		// MOD-248: the submerged-in-oil look. Loader-neutral (a client mixin + a vanilla fog

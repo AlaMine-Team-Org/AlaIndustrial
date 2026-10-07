@@ -521,6 +521,43 @@
           ]
         },
         {
+          "id": "piezo_plate",
+          "title": "แป้นเหยียบพีโซ",
+          "icon": "alaindustrial:piezo_plate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "แป้นเหยียบพีโซ",
+              "text": "แผ่นกดที่ให้ EU เล็กน้อยทุกครั้งที่ถูกกดใหม่ แผ่นที่อยู่ติดกันจะรวมพลังงานเป็นทางเดียวและส่งต่อผ่านสายเคเบิลเส้นเดียว — วางข้าง ๆ หรือซ่อนไว้ใต้พื้น เมื่อมองจากด้านบนจะดูเหมือนบล็อกที่มันวางอยู่"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 0–0.5 EU ต่อทิก"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบไม่มีรูปแบบ",
+              "grid": [
+                "minecraft:stone_pressure_plate",
+                "minecraft:quartz",
+                "alaindustrial:copper_cable",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:piezo_plate",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "charge_pad",
           "title": "สถานีชาร์จ",
           "icon": "alaindustrial:charge_pad",

@@ -1676,5 +1676,17 @@
   "message.alaindustrial.mob_wheel.occupied": "দৌড় চাকায় আগে থেকেই একটি প্রাণী আছে — আগে ফটক খুলে সেটিকে বের করুন",
   "message.alaindustrial.mob_wheel.ready": "দৌড় চাকা সম্পূর্ণ হয়েছে",
   "tooltip.alaindustrial.mob_wheel_no_buffer": "কোনো সঞ্চয় নেই: নেটওয়ার্ক যে শক্তি নেয় না তা হারিয়ে যায়",
-  "tooltip.alaindustrial.mob_wheel_recolour": "রং বদলাতে একত্র করা চাকায় যেকোনো কাঠের তক্তা দিয়ে ডান-ক্লিক করুন"
+  "tooltip.alaindustrial.mob_wheel_recolour": "রং বদলাতে একত্র করা চাকায় যেকোনো কাঠের তক্তা দিয়ে ডান-ক্লিক করুন",
+  "block.alaindustrial.piezo_plate": "পিজো চাপ-ফলক",
+  "block.alaindustrial.silent_piezo_plate": "নীরব পিজো চাপ-ফলক",
+  "tooltip.alaindustrial.piezo_plate_press": "প্রতিটি নতুন পদক্ষেপে EU",
+  "tooltip.alaindustrial.silent_piezo_plate_quiet": "ক্লিকের শব্দ নেই",
+  "tooltip.alaindustrial.piezo_plate_connect": "তার: পাশে বা মেঝের নিচে",
+  "tooltip.alaindustrial.piezo_plate_wrench": "রেঞ্চ পাতগুলো দেখায়",
+  "tooltip.alaindustrial.piezo_press": "প্রাণী %s EU · বস্তু %s EU",
+  "message.alaindustrial.piezo_plate.placed_connected": "পিজো পাত: %s · সংযুক্ত",
+  "message.alaindustrial.piezo_plate.placed_no_outlet": "পিজো পাত: %s · পাশে বা মেঝের নিচে তার লাগান",
+  "hud.alaindustrial.piezo_plate.ok": "পিজো পাত: %1$s · %2$s/%3$s EU · আউটপুট: %4$s",
+  "hud.alaindustrial.piezo_plate.no_outlet": "পিজো পাত: %1$s · %2$s/%3$s EU · তার নেই",
+  "hud.alaindustrial.piezo_plate.full": "পিজো পাত: %1$s · পূর্ণ, চাপ নষ্ট হচ্ছে"
 }

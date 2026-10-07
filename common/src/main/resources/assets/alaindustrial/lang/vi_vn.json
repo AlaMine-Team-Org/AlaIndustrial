@@ -1676,5 +1676,17 @@
   "message.alaindustrial.mob_wheel.occupied": "Bánh xe chạy đã có sinh vật — hãy mở cổng để thả nó ra trước",
   "message.alaindustrial.mob_wheel.ready": "Bánh xe chạy đã lắp xong",
   "tooltip.alaindustrial.mob_wheel_no_buffer": "Không có bộ lưu trữ: năng lượng mà mạng không nhận sẽ bị mất",
-  "tooltip.alaindustrial.mob_wheel_recolour": "Chuột phải vào bánh xe đã lắp bằng ván của bất kỳ loại gỗ nào để đổi màu"
+  "tooltip.alaindustrial.mob_wheel_recolour": "Chuột phải vào bánh xe đã lắp bằng ván của bất kỳ loại gỗ nào để đổi màu",
+  "block.alaindustrial.piezo_plate": "Tấm Áp Điện",
+  "block.alaindustrial.silent_piezo_plate": "Tấm Áp Điện Im Lặng",
+  "tooltip.alaindustrial.piezo_plate_press": "EU từ mỗi bước chân mới",
+  "tooltip.alaindustrial.silent_piezo_plate_quiet": "Không kêu tách",
+  "tooltip.alaindustrial.piezo_plate_connect": "Cáp: bên cạnh hoặc dưới sàn",
+  "tooltip.alaindustrial.piezo_plate_wrench": "Cờ lê cho thấy các tấm",
+  "tooltip.alaindustrial.piezo_press": "%s EU mỗi sinh vật · %s EU mỗi vật phẩm",
+  "message.alaindustrial.piezo_plate.placed_connected": "Tấm áp điện: %s · đã nối",
+  "message.alaindustrial.piezo_plate.placed_no_outlet": "Tấm áp điện: %s · nối cáp bên cạnh hoặc dưới sàn",
+  "hud.alaindustrial.piezo_plate.ok": "Tấm áp điện: %1$s · %2$s/%3$s EU · đầu ra: %4$s",
+  "hud.alaindustrial.piezo_plate.no_outlet": "Tấm áp điện: %1$s · %2$s/%3$s EU · không có cáp",
+  "hud.alaindustrial.piezo_plate.full": "Tấm áp điện: %1$s · đầy, lần nhấn bị mất"
 }

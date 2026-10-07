@@ -521,6 +521,43 @@
           ]
         },
         {
+          "id": "piezo_plate",
+          "title": "Placa Piezoelétrica",
+          "icon": "alaindustrial:piezo_plate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Placa Piezoelétrica",
+              "text": "Uma placa de pressão que dá uma pequena porção de EU a cada nova pisada; placas vizinhas juntam sua energia em um só caminho e a entregam por um único cabo — ao lado ou escondido sob o piso. Vista de cima, ela assume a aparência do bloco em que está apoiada."
+            },
+            {
+              "type": "stats",
+              "title": "Estatísticas",
+              "lines": [
+                "Energia: 0–0.5 EU/t"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação sem forma",
+              "grid": [
+                "minecraft:stone_pressure_plate",
+                "minecraft:quartz",
+                "alaindustrial:copper_cable",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:piezo_plate",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "charge_pad",
           "title": "Estação de Carregamento",
           "icon": "alaindustrial:charge_pad",

@@ -521,6 +521,43 @@
           ]
         },
         {
+          "id": "piezo_plate",
+          "title": "পিজো চাপ-ফলক",
+          "icon": "alaindustrial:piezo_plate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "পিজো চাপ-ফলক",
+              "text": "একটি চাপ-পাত যা প্রতিটি নতুন চাপে অল্প পরিমাণ EU দেয়; পাশাপাশি পাতগুলো তাদের শক্তি একটি পথে জমা করে এবং একটি তারের মাধ্যমে পাঠায় — পাশে অথবা মেঝের নিচে লুকানো। উপর থেকে এটি যে ব্লকের উপর বসানো, তার চেহারা নেয়।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "শক্তি: 0–0.5 EU/t"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিহীন ক্রাফটিং",
+              "grid": [
+                "minecraft:stone_pressure_plate",
+                "minecraft:quartz",
+                "alaindustrial:copper_cable",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:piezo_plate",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "charge_pad",
           "title": "চার্জিং স্টেশন",
           "icon": "alaindustrial:charge_pad",

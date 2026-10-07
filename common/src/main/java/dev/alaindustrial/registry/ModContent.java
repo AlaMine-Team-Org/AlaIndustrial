@@ -145,6 +145,8 @@ public final class ModContent {
 	public static Supplier<Block> MOB_WHEEL_ROTOR = unbound("MOB_WHEEL_ROTOR");
 	public static Supplier<Block> MOB_WHEEL_GATE = unbound("MOB_WHEEL_GATE");
 	public static Supplier<Block> MOB_WHEEL_CELL = unbound("MOB_WHEEL_CELL");
+	public static Supplier<Block> PIEZO_PLATE = unbound("PIEZO_PLATE");
+	public static Supplier<Block> SILENT_PIEZO_PLATE = unbound("SILENT_PIEZO_PLATE");
 	public static Supplier<Block> PUMP = unbound("PUMP");
 	public static Supplier<Block> GARDEN_DRONE_STATION = unbound("GARDEN_DRONE_STATION");
 	public static Supplier<Block> FLUID_TANK = unbound("FLUID_TANK");
@@ -712,6 +714,8 @@ public final class ModContent {
 	public static Supplier<BlockItem> MOB_WHEEL_FRAME_ITEM = unbound("MOB_WHEEL_FRAME_ITEM");
 	public static Supplier<BlockItem> MOB_WHEEL_ROTOR_ITEM = unbound("MOB_WHEEL_ROTOR_ITEM");
 	public static Supplier<BlockItem> MOB_WHEEL_GATE_ITEM = unbound("MOB_WHEEL_GATE_ITEM");
+	public static Supplier<BlockItem> PIEZO_PLATE_ITEM = unbound("PIEZO_PLATE_ITEM");
+	public static Supplier<BlockItem> SILENT_PIEZO_PLATE_ITEM = unbound("SILENT_PIEZO_PLATE_ITEM");
 	public static Supplier<BlockItem> WIND_MILL_ITEM = unbound("WIND_MILL_ITEM");
 	public static Supplier<BlockItem> HIGH_ALTITUDE_WIND_MILL_ITEM = unbound("HIGH_ALTITUDE_WIND_MILL_ITEM");
 	public static Supplier<BlockItem> STORM_WIND_MILL_ITEM = unbound("STORM_WIND_MILL_ITEM");
@@ -856,6 +860,7 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> GEOTHERMAL_GENERATOR_BE = unbound("GEOTHERMAL_GENERATOR_BE");
 	public static Supplier<BlockEntityType<?>> WATER_MILL_BE = unbound("WATER_MILL_BE");
 	public static Supplier<BlockEntityType<?>> MOB_WHEEL_CONTROLLER_BE = unbound("MOB_WHEEL_CONTROLLER_BE");
+	public static Supplier<BlockEntityType<?>> PIEZO_PLATE_BE = unbound("PIEZO_PLATE_BE");
 	public static Supplier<BlockEntityType<?>> WIND_MILL_BE = unbound("WIND_MILL_BE");
 	public static Supplier<BlockEntityType<?>> HIGH_ALTITUDE_WIND_MILL_BE = unbound("HIGH_ALTITUDE_WIND_MILL_BE");
 	public static Supplier<BlockEntityType<?>> STORM_WIND_MILL_BE = unbound("STORM_WIND_MILL_BE");

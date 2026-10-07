@@ -1676,5 +1676,17 @@
   "message.alaindustrial.mob_wheel.occupied": "في عجلة الجري مخلوق بالفعل — افتح البوابة أولاً لإخراجه",
   "message.alaindustrial.mob_wheel.ready": "اكتملت عجلة الجري",
   "tooltip.alaindustrial.mob_wheel_no_buffer": "بلا تخزين: الطاقة التي لا تأخذها الشبكة تضيع",
-  "tooltip.alaindustrial.mob_wheel_recolour": "انقر بالزر الأيمن على العجلة المجمعة بألواح من أي نوع خشب لتغيير لونها"
+  "tooltip.alaindustrial.mob_wheel_recolour": "انقر بالزر الأيمن على العجلة المجمعة بألواح من أي نوع خشب لتغيير لونها",
+  "block.alaindustrial.piezo_plate": "صفيحة ضغط كهرضغطية",
+  "block.alaindustrial.silent_piezo_plate": "صفيحة ضغط كهرضغطية صامتة",
+  "tooltip.alaindustrial.piezo_plate_press": "EU مع كل خطوة جديدة",
+  "tooltip.alaindustrial.silent_piezo_plate_quiet": "بلا نقرة",
+  "tooltip.alaindustrial.piezo_plate_connect": "الكابل: بجانبها أو تحت الأرضية",
+  "tooltip.alaindustrial.piezo_plate_wrench": "المفتاح يُظهر الصفائح",
+  "tooltip.alaindustrial.piezo_press": "%s EU للكائن · %s EU للعنصر",
+  "message.alaindustrial.piezo_plate.placed_connected": "صفائح كهروضغطية: %s · متصلة",
+  "message.alaindustrial.piezo_plate.placed_no_outlet": "صفائح كهروضغطية: %s · صِل كابلًا بجانبها أو تحت الأرضية",
+  "hud.alaindustrial.piezo_plate.ok": "صفائح كهروضغطية: %1$s · %2$s/%3$s EU · مخارج: %4$s",
+  "hud.alaindustrial.piezo_plate.no_outlet": "صفائح كهروضغطية: %1$s · %2$s/%3$s EU · لا كابل",
+  "hud.alaindustrial.piezo_plate.full": "صفائح كهروضغطية: %1$s · ممتلئة، تضيع الضغطات"
 }

@@ -1676,5 +1676,17 @@
   "message.alaindustrial.mob_wheel.occupied": "Roda lari sudah berisi makhluk — buka pintunya dulu untuk mengeluarkannya",
   "message.alaindustrial.mob_wheel.ready": "Roda lari sudah lengkap",
   "tooltip.alaindustrial.mob_wheel_no_buffer": "Tanpa penyimpanan: energi yang tidak diambil jaringan akan hilang",
-  "tooltip.alaindustrial.mob_wheel_recolour": "Klik kanan roda yang sudah dirakit dengan papan kayu jenis apa pun untuk mengubah warnanya"
+  "tooltip.alaindustrial.mob_wheel_recolour": "Klik kanan roda yang sudah dirakit dengan papan kayu jenis apa pun untuk mengubah warnanya",
+  "block.alaindustrial.piezo_plate": "Pelat Piezo",
+  "block.alaindustrial.silent_piezo_plate": "Pelat Piezo Senyap",
+  "tooltip.alaindustrial.piezo_plate_press": "EU dari setiap langkah baru",
+  "tooltip.alaindustrial.silent_piezo_plate_quiet": "Tanpa bunyi klik",
+  "tooltip.alaindustrial.piezo_plate_connect": "Kabel: di samping atau di bawah lantai",
+  "tooltip.alaindustrial.piezo_plate_wrench": "Kunci menunjukkan pelat",
+  "tooltip.alaindustrial.piezo_press": "%s EU per makhluk · %s EU per item",
+  "message.alaindustrial.piezo_plate.placed_connected": "Pelat piezo: %s · terhubung",
+  "message.alaindustrial.piezo_plate.placed_no_outlet": "Pelat piezo: %s · pasang kabel di samping atau di bawah lantai",
+  "hud.alaindustrial.piezo_plate.ok": "Pelat piezo: %1$s · %2$s/%3$s EU · keluaran: %4$s",
+  "hud.alaindustrial.piezo_plate.no_outlet": "Pelat piezo: %1$s · %2$s/%3$s EU · tanpa kabel",
+  "hud.alaindustrial.piezo_plate.full": "Pelat piezo: %1$s · penuh, tekanan terbuang"
 }

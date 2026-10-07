@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_quartz": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:quartz"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_quartz"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "alaindustrial:piezo_plate"
+    ]
+  }
+}

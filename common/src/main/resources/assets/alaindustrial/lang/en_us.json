@@ -1676,5 +1676,17 @@
   "message.alaindustrial.mob_wheel.occupied": "The mob wheel already has a runner — open the gate to let it out first",
   "message.alaindustrial.mob_wheel.ready": "The mob wheel is complete",
   "tooltip.alaindustrial.mob_wheel_no_buffer": "No storage: energy the network does not take is lost",
-  "tooltip.alaindustrial.mob_wheel_recolour": "Right-click the assembled wheel with planks of any wood to recolour it"
+  "tooltip.alaindustrial.mob_wheel_recolour": "Right-click the assembled wheel with planks of any wood to recolour it",
+  "block.alaindustrial.piezo_plate": "Piezo Plate",
+  "block.alaindustrial.silent_piezo_plate": "Silent Piezo Plate",
+  "tooltip.alaindustrial.piezo_plate_press": "EU from every new step",
+  "tooltip.alaindustrial.silent_piezo_plate_quiet": "No click",
+  "tooltip.alaindustrial.piezo_plate_connect": "Cable: beside or under the floor",
+  "tooltip.alaindustrial.piezo_plate_wrench": "The wrench shows the plates",
+  "tooltip.alaindustrial.piezo_press": "%s EU per mob · %s EU per item",
+  "message.alaindustrial.piezo_plate.placed_connected": "Piezo plates: %s · connected",
+  "message.alaindustrial.piezo_plate.placed_no_outlet": "Piezo plates: %s · connect a cable beside or under the floor",
+  "hud.alaindustrial.piezo_plate.ok": "Piezo plates: %1$s · %2$s/%3$s EU · outlets: %4$s",
+  "hud.alaindustrial.piezo_plate.no_outlet": "Piezo plates: %1$s · %2$s/%3$s EU · no cable",
+  "hud.alaindustrial.piezo_plate.full": "Piezo plates: %1$s · full, presses are lost"
 }

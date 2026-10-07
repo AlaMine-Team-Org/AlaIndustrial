@@ -521,6 +521,43 @@
           ]
         },
         {
+          "id": "piezo_plate",
+          "title": "Pelat Piezo",
+          "icon": "alaindustrial:piezo_plate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Pelat Piezo",
+              "text": "Pelat tekan yang memberi sedikit EU setiap kali ditekan lagi; pelat-pelat yang bersebelahan menggabungkan energinya menjadi satu jalur dan menyalurkannya lewat satu kabel — di sampingnya atau tersembunyi di bawah lantai. Dari atas, pelat ini meniru tampilan blok tempatnya diletakkan."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Energi: 0–0.5 EU/t"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Tanpa Pola",
+              "grid": [
+                "minecraft:stone_pressure_plate",
+                "minecraft:quartz",
+                "alaindustrial:copper_cable",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:piezo_plate",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "charge_pad",
           "title": "Stasiun Pengisian Daya",
           "icon": "alaindustrial:charge_pad",

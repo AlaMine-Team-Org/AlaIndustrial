@@ -1676,5 +1676,17 @@
   "message.alaindustrial.mob_wheel.occupied": "ในวงล้อวิ่งมีม็อบอยู่แล้ว — เปิดประตูปล่อยมันออกมาก่อน",
   "message.alaindustrial.mob_wheel.ready": "วงล้อวิ่งประกอบเสร็จแล้ว",
   "tooltip.alaindustrial.mob_wheel_no_buffer": "ไม่มีที่เก็บพลังงาน: พลังงานที่เครือข่ายไม่รับจะสูญไป",
-  "tooltip.alaindustrial.mob_wheel_recolour": "คลิกขวาที่วงล้อที่ประกอบแล้วด้วยไม้กระดานชนิดใดก็ได้เพื่อเปลี่ยนสี"
+  "tooltip.alaindustrial.mob_wheel_recolour": "คลิกขวาที่วงล้อที่ประกอบแล้วด้วยไม้กระดานชนิดใดก็ได้เพื่อเปลี่ยนสี",
+  "block.alaindustrial.piezo_plate": "แป้นเหยียบพีโซ",
+  "block.alaindustrial.silent_piezo_plate": "แป้นเหยียบพีโซแบบเงียบ",
+  "tooltip.alaindustrial.piezo_plate_press": "ได้ EU ทุกก้าวใหม่",
+  "tooltip.alaindustrial.silent_piezo_plate_quiet": "ไม่มีเสียงคลิก",
+  "tooltip.alaindustrial.piezo_plate_connect": "สายเคเบิล: ข้าง ๆ หรือใต้พื้น",
+  "tooltip.alaindustrial.piezo_plate_wrench": "ประแจแสดงแผ่น",
+  "tooltip.alaindustrial.piezo_press": "สิ่งมีชีวิต %s EU · ไอเท็ม %s EU",
+  "message.alaindustrial.piezo_plate.placed_connected": "แผ่นพีโซ: %s · เชื่อมต่อแล้ว",
+  "message.alaindustrial.piezo_plate.placed_no_outlet": "แผ่นพีโซ: %s · ต่อสายเคเบิลข้าง ๆ หรือใต้พื้น",
+  "hud.alaindustrial.piezo_plate.ok": "แผ่นพีโซ: %1$s · %2$s/%3$s EU · ทางออก: %4$s",
+  "hud.alaindustrial.piezo_plate.no_outlet": "แผ่นพีโซ: %1$s · %2$s/%3$s EU · ไม่มีสายเคเบิล",
+  "hud.alaindustrial.piezo_plate.full": "แผ่นพีโซ: %1$s · เต็ม แรงกดสูญเปล่า"
 }

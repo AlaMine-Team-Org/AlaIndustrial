@@ -521,6 +521,43 @@
           ]
         },
         {
+          "id": "piezo_plate",
+          "title": "壓電壓力板",
+          "icon": "alaindustrial:piezo_plate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "壓電壓力板",
+              "text": "每次被重新踩下都會產生少量 EU 的壓力板；相鄰的壓力板把能量匯成一條路徑，透過一根電纜送出——放在旁邊或藏在地板下。從上方看，它會呈現所放置方塊的外觀。"
+            },
+            {
+              "type": "stats",
+              "title": "數據",
+              "lines": [
+                "能量：0–0.5 EU/t"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "無序合成",
+              "grid": [
+                "minecraft:stone_pressure_plate",
+                "minecraft:quartz",
+                "alaindustrial:copper_cable",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:piezo_plate",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "charge_pad",
           "title": "充電站",
           "icon": "alaindustrial:charge_pad",

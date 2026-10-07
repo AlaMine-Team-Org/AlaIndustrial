@@ -397,6 +397,14 @@ public final class ServerBalance {
 		return current.floatValue("overclockerSpeedFactor", Config.overclockerSpeedFactor);
 	}
 
+	public static int piezoPlateLivingPressEu() {
+		return current.intValue("piezoPlateLivingPressEu", GeneratorConfig.piezoPlateLivingPressEu);
+	}
+
+	public static int piezoPlateObjectPressEu() {
+		return current.intValue("piezoPlateObjectPressEu", GeneratorConfig.piezoPlateObjectPressEu);
+	}
+
 	public static int polymerizerDuration() {
 		return current.intValue("polymerizerDuration", Config.polymerizerDuration);
 	}

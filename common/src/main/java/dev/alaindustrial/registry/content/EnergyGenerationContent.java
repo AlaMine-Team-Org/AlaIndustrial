@@ -24,6 +24,7 @@ import dev.alaindustrial.block.MobWheelFrameBlock;
 import dev.alaindustrial.block.MobWheelGateBlock;
 import dev.alaindustrial.block.MobWheelRotorBlock;
 import dev.alaindustrial.block.MoonlitSolarPanelBlock;
+import dev.alaindustrial.block.PiezoPlateBlock;
 import dev.alaindustrial.block.RadiantSolarPanelBlock;
 import dev.alaindustrial.block.SolarPanelBlock;
 import dev.alaindustrial.block.StormWindMillBlock;
@@ -37,6 +38,7 @@ import dev.alaindustrial.block.entity.HighAltitudeWindMillBlockEntity;
 import dev.alaindustrial.block.entity.LightningRodGeneratorBlockEntity;
 import dev.alaindustrial.block.entity.MobWheelBlockEntity;
 import dev.alaindustrial.block.entity.MoonlitSolarPanelBlockEntity;
+import dev.alaindustrial.block.entity.PiezoPlateBlockEntity;
 import dev.alaindustrial.block.entity.RadiantSolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.SolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.StormWindMillBlockEntity;
@@ -165,6 +167,12 @@ public final class EnergyGenerationContent {
 			MobWheelCellBlock::new, machine(EnergyGenerationContent::mobWheelPart), s -> ModContent.MOB_WHEEL_CELL = s,
 			hiddenFromPlayers("cell of an assembled mob wheel: the structure places it"));
 
+	/** MOD-764 — a pressure plate that makes a small EU pulse on every new press; the silent twin is quiet. */
+	public static final BlockDef<PiezoPlateBlock> PIEZO_PLATE = block("piezo_plate", PiezoPlateBlock::loud,
+			EnergyGenerationContent::piezoPlate, s -> ModContent.PIEZO_PLATE = s);
+	public static final BlockDef<PiezoPlateBlock> SILENT_PIEZO_PLATE = block("silent_piezo_plate",
+			PiezoPlateBlock::silent, EnergyGenerationContent::piezoPlate, s -> ModContent.SILENT_PIEZO_PLATE = s);
+
 	/** This domain's blocks, in declaration order — collected since {@code beginBlocks()} above. */
 	private static final List<BlockDef<?>> BLOCKS = endBlocks();
 
@@ -187,7 +195,9 @@ public final class EnergyGenerationContent {
 			blockItem("mob_wheel_controller", s -> ModContent.MOB_WHEEL_CONTROLLER_ITEM = s),
 			blockItem("mob_wheel_frame", s -> ModContent.MOB_WHEEL_FRAME_ITEM = s),
 			blockItem("mob_wheel_rotor", s -> ModContent.MOB_WHEEL_ROTOR_ITEM = s),
-			blockItem("mob_wheel_gate", s -> ModContent.MOB_WHEEL_GATE_ITEM = s));
+			blockItem("mob_wheel_gate", s -> ModContent.MOB_WHEEL_GATE_ITEM = s),
+			blockItem("piezo_plate", s -> ModContent.PIEZO_PLATE_ITEM = s),
+			blockItem("silent_piezo_plate", s -> ModContent.SILENT_PIEZO_PLATE_ITEM = s));
 
 	private static final List<BlockEntityDef<?>> BLOCK_ENTITIES = List.of(
 			blockEntity("generator", GeneratorBlockEntity.class, GeneratorBlockEntity::new,
@@ -219,7 +229,9 @@ public final class EnergyGenerationContent {
 					CreativeEnergySourceBlockEntity::new, s -> ModContent.CREATIVE_ENERGY_SOURCE_BE = s,
 					CREATIVE_ENERGY_SOURCE),
 			blockEntity("mob_wheel_controller", MobWheelBlockEntity.class, MobWheelBlockEntity::new,
-					s -> ModContent.MOB_WHEEL_CONTROLLER_BE = s, MOB_WHEEL_CONTROLLER));
+					s -> ModContent.MOB_WHEEL_CONTROLLER_BE = s, MOB_WHEEL_CONTROLLER),
+			blockEntity("piezo_plate", PiezoPlateBlockEntity.class, PiezoPlateBlockEntity::new,
+					s -> ModContent.PIEZO_PLATE_BE = s, PIEZO_PLATE, SILENT_PIEZO_PLATE));
 
 	private static final List<MenuDef<?>> MENUS = List.of(
 			menu("generator", GeneratorMenu::new, s -> ModContent.GENERATOR_MENU = s),
@@ -274,6 +286,8 @@ public final class EnergyGenerationContent {
 		show(out, ModContent.MOB_WHEEL_FRAME_ITEM);
 		show(out, ModContent.MOB_WHEEL_ROTOR_ITEM);
 		show(out, ModContent.MOB_WHEEL_GATE_ITEM);
+		show(out, ModContent.PIEZO_PLATE_ITEM);
+		show(out, ModContent.SILENT_PIEZO_PLATE_ITEM);
 	}
 
 	/**
@@ -282,6 +296,15 @@ public final class EnergyGenerationContent {
 	 * the mob whose head is inside the structure, and pinned against pistons — a piston that moved one part
 	 * would leave the drive describing a structure that is no longer there.
 	 */
+	/**
+	 * Properties of both piezo plates (MOD-764), the stone pressure plate's: no collision, breaks fast but drops
+	 * only to a pickaxe, pops when a piston pushes it.
+	 */
+	private static BlockBehaviour.Properties piezoPlate(BlockBehaviour.Properties p) {
+		return LineBlockProps.popsOnPush(p).mapColor(MapColor.STONE).noCollision().strength(0.5f)
+				.requiresCorrectToolForDrops();
+	}
+
 	private static BlockBehaviour.Properties mobWheelPart(BlockBehaviour.Properties p) {
 		return LineBlockProps.pinnedAgainstPistons(p).mapColor(MapColor.WOOD).strength(2.0f, 3.0f)
 				.sound(SoundType.WOOD).noOcclusion()

@@ -1676,5 +1676,17 @@
   "message.alaindustrial.mob_wheel.occupied": "Im Laufrad läuft schon eine Kreatur — zuerst das Tor öffnen und sie herauslassen",
   "message.alaindustrial.mob_wheel.ready": "Das Laufrad ist fertig gebaut",
   "tooltip.alaindustrial.mob_wheel_no_buffer": "Kein Speicher: Energie, die das Netz nicht abnimmt, geht verloren",
-  "tooltip.alaindustrial.mob_wheel_recolour": "Rechtsklick mit Brettern einer beliebigen Holzart auf das gebaute Laufrad färbt es um"
+  "tooltip.alaindustrial.mob_wheel_recolour": "Rechtsklick mit Brettern einer beliebigen Holzart auf das gebaute Laufrad färbt es um",
+  "block.alaindustrial.piezo_plate": "Piezoplatte",
+  "block.alaindustrial.silent_piezo_plate": "Leise Piezoplatte",
+  "tooltip.alaindustrial.piezo_plate_press": "EU bei jedem neuen Schritt",
+  "tooltip.alaindustrial.silent_piezo_plate_quiet": "Kein Klicken",
+  "tooltip.alaindustrial.piezo_plate_connect": "Kabel: daneben oder unter dem Boden",
+  "tooltip.alaindustrial.piezo_plate_wrench": "Der Schraubenschlüssel zeigt die Platten",
+  "tooltip.alaindustrial.piezo_press": "%s EU pro Mob · %s EU pro Gegenstand",
+  "message.alaindustrial.piezo_plate.placed_connected": "Piezoplatten: %s · verbunden",
+  "message.alaindustrial.piezo_plate.placed_no_outlet": "Piezoplatten: %s · Kabel daneben oder unter dem Boden anschließen",
+  "hud.alaindustrial.piezo_plate.ok": "Piezoplatten: %1$s · %2$s/%3$s EU · Ausgänge: %4$s",
+  "hud.alaindustrial.piezo_plate.no_outlet": "Piezoplatten: %1$s · %2$s/%3$s EU · kein Kabel",
+  "hud.alaindustrial.piezo_plate.full": "Piezoplatten: %1$s · voll, Drücke gehen verloren"
 }

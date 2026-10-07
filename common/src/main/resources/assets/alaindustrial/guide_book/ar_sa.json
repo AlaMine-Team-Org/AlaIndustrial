@@ -521,6 +521,43 @@
           ]
         },
         {
+          "id": "piezo_plate",
+          "title": "صفيحة ضغط كهرضغطية",
+          "icon": "alaindustrial:piezo_plate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "صفيحة ضغط كهرضغطية",
+              "text": "صفيحة ضغط تمنح كمية صغيرة من EU عند كل ضغطة جديدة؛ تجمع الصفائح المتجاورة طاقتها في مسار واحد وتمررها عبر كابل واحد — بجانبها أو مخفي تحت الأرضية. ومن الأعلى تأخذ مظهر الكتلة التي تستقر عليها."
+            },
+            {
+              "type": "stats",
+              "title": "المواصفات",
+              "lines": [
+                "الطاقة: 0–0.5 EU/t"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع غير مرتب",
+              "grid": [
+                "minecraft:stone_pressure_plate",
+                "minecraft:quartz",
+                "alaindustrial:copper_cable",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:piezo_plate",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "charge_pad",
           "title": "محطة شحن",
           "icon": "alaindustrial:charge_pad",

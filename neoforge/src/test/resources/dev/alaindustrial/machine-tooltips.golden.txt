@@ -1700,6 +1700,24 @@ tooltip.alaindustrial.network_analyzer.moved(30) {gray}
 == alaindustrial:palladium_ingot plain : none
 == alaindustrial:palladium_ore plain : none
 == alaindustrial:palladium_plate plain : none
+== alaindustrial:piezo_plate plain
+-- plain eu
+tooltip.alaindustrial.piezo_plate_press {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.piezo_plate_press {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.piezo_press(10, 2) {gray}
+tooltip.alaindustrial.piezo_plate_connect {dark_gray}
+tooltip.alaindustrial.piezo_plate_wrench {dark_gray}
+-- plain no-eu
+tooltip.alaindustrial.piezo_plate_press {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.piezo_plate_press {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.piezo_plate_connect {dark_gray}
+tooltip.alaindustrial.piezo_plate_wrench {dark_gray}
 == alaindustrial:polymerizer plain
 -- plain eu
 tooltip.alaindustrial.energy_input(2) {gray}
@@ -1907,6 +1925,28 @@ tooltip.alaindustrial.battery_pouch.usage_extract {gray}
 tooltip.alaindustrial.battery_pouch.charge(2000, 2000) {gold}
 tooltip.alaindustrial.shielding_pouch.shielded {green}
 tooltip.alaindustrial.shielding_pouch.not_a_suit {yellow}
+== alaindustrial:silent_piezo_plate plain
+-- plain eu
+tooltip.alaindustrial.piezo_plate_press {gray}
+tooltip.alaindustrial.silent_piezo_plate_quiet {dark_gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.piezo_plate_press {gray}
+tooltip.alaindustrial.silent_piezo_plate_quiet {dark_gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.piezo_press(10, 2) {gray}
+tooltip.alaindustrial.piezo_plate_connect {dark_gray}
+tooltip.alaindustrial.piezo_plate_wrench {dark_gray}
+-- plain no-eu
+tooltip.alaindustrial.piezo_plate_press {gray}
+tooltip.alaindustrial.silent_piezo_plate_quiet {dark_gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.piezo_plate_press {gray}
+tooltip.alaindustrial.silent_piezo_plate_quiet {dark_gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.piezo_plate_connect {dark_gray}
+tooltip.alaindustrial.piezo_plate_wrench {dark_gray}
 == alaindustrial:silver_chest plain
 -- plain eu
 tooltip.alaindustrial.hold_shift {dark_gray}

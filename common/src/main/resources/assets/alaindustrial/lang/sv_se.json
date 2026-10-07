@@ -1676,5 +1676,17 @@
   "message.alaindustrial.mob_wheel.occupied": "Löphjulet har redan en varelse — öppna grinden först och släpp ut den",
   "message.alaindustrial.mob_wheel.ready": "Löphjulet är färdigbyggt",
   "tooltip.alaindustrial.mob_wheel_no_buffer": "Ingen lagring: energi som nätet inte tar emot går förlorad",
-  "tooltip.alaindustrial.mob_wheel_recolour": "Högerklicka på det monterade hjulet med plankor av valfritt trä för att färga om det"
+  "tooltip.alaindustrial.mob_wheel_recolour": "Högerklicka på det monterade hjulet med plankor av valfritt trä för att färga om det",
+  "block.alaindustrial.piezo_plate": "Piezoplatta",
+  "block.alaindustrial.silent_piezo_plate": "Tyst piezoplatta",
+  "tooltip.alaindustrial.piezo_plate_press": "EU för varje nytt steg",
+  "tooltip.alaindustrial.silent_piezo_plate_quiet": "Inget klick",
+  "tooltip.alaindustrial.piezo_plate_connect": "Kabel: bredvid eller under golvet",
+  "tooltip.alaindustrial.piezo_plate_wrench": "Skiftnyckeln visar plattorna",
+  "tooltip.alaindustrial.piezo_press": "%s EU per varelse · %s EU per föremål",
+  "message.alaindustrial.piezo_plate.placed_connected": "Piezoplattor: %s · anslutna",
+  "message.alaindustrial.piezo_plate.placed_no_outlet": "Piezoplattor: %s · anslut en kabel bredvid eller under golvet",
+  "hud.alaindustrial.piezo_plate.ok": "Piezoplattor: %1$s · %2$s/%3$s EU · utgångar: %4$s",
+  "hud.alaindustrial.piezo_plate.no_outlet": "Piezoplattor: %1$s · %2$s/%3$s EU · ingen kabel",
+  "hud.alaindustrial.piezo_plate.full": "Piezoplattor: %1$s · fulla, tryck går förlorade"
 }

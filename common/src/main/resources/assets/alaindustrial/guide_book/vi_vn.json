@@ -521,6 +521,43 @@
           ]
         },
         {
+          "id": "piezo_plate",
+          "title": "Tấm Áp Điện",
+          "icon": "alaindustrial:piezo_plate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tấm Áp Điện",
+              "text": "Một tấm áp lực cho một ít EU mỗi lần bị nhấn mới; các tấm cạnh nhau gom năng lượng thành một lối đi và chuyển đi qua một sợi cáp duy nhất — đặt bên cạnh hoặc giấu dưới sàn. Nhìn từ trên xuống, nó mang dáng vẻ của khối mà nó nằm trên."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 0–0.5 EU/t"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo không định hình",
+              "grid": [
+                "minecraft:stone_pressure_plate",
+                "minecraft:quartz",
+                "alaindustrial:copper_cable",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:piezo_plate",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "charge_pad",
           "title": "Trạm sạc",
           "icon": "alaindustrial:charge_pad",

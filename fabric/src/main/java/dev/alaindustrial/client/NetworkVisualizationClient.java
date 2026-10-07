@@ -34,5 +34,8 @@ public final class NetworkVisualizationClient {
 		// per-frame read of the world in front of the player, with no state of its own.
 		ConcentratorSchematicRenderer.submitFrame(context.submitNodeCollector(),
 				context.levelState().cameraRenderState);
+		// MOD-764: the wrench's x-ray of piezo plates rides the same frame point.
+		dev.alaindustrial.client.render.PiezoPlateXray.submitFrame(context.submitNodeCollector(),
+				context.levelState().cameraRenderState);
 	}
 }

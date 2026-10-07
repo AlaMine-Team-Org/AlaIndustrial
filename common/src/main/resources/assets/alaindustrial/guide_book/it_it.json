@@ -521,6 +521,43 @@
           ]
         },
         {
+          "id": "piezo_plate",
+          "title": "Pedana piezoelettrica",
+          "icon": "alaindustrial:piezo_plate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Pedana piezoelettrica",
+              "text": "Una pedana a pressione che dà una piccola porzione di EU a ogni nuova pressione; le pedane vicine uniscono la loro energia in un unico percorso e la cedono tramite un solo cavo, accanto o nascosto sotto il pavimento. Vista dall'alto assume l'aspetto del blocco su cui poggia."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiche",
+              "lines": [
+                "Energia: 0–0.5 EU/t"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione non sagomata",
+              "grid": [
+                "minecraft:stone_pressure_plate",
+                "minecraft:quartz",
+                "alaindustrial:copper_cable",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:piezo_plate",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "charge_pad",
           "title": "Stazione di ricarica",
           "icon": "alaindustrial:charge_pad",

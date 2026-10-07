@@ -1676,5 +1676,17 @@
   "message.alaindustrial.mob_wheel.occupied": "跑轮里已经有生物了 — 请先打开栅栏门把它放出来",
   "message.alaindustrial.mob_wheel.ready": "跑轮已组装完成",
   "tooltip.alaindustrial.mob_wheel_no_buffer": "无储能：网络未接收的能量会损失",
-  "tooltip.alaindustrial.mob_wheel_recolour": "手持任意木材的木板右键点击已组装的跑轮可改变其颜色"
+  "tooltip.alaindustrial.mob_wheel_recolour": "手持任意木材的木板右键点击已组装的跑轮可改变其颜色",
+  "block.alaindustrial.piezo_plate": "压电压力板",
+  "block.alaindustrial.silent_piezo_plate": "静音压电压力板",
+  "tooltip.alaindustrial.piezo_plate_press": "每次新踩下产生 EU",
+  "tooltip.alaindustrial.silent_piezo_plate_quiet": "无咔哒声",
+  "tooltip.alaindustrial.piezo_plate_connect": "电缆：旁边或地板下",
+  "tooltip.alaindustrial.piezo_plate_wrench": "扳手可显示压力板",
+  "tooltip.alaindustrial.piezo_press": "生物 %s EU · 物品 %s EU",
+  "message.alaindustrial.piezo_plate.placed_connected": "压电压力板：%s · 已连接",
+  "message.alaindustrial.piezo_plate.placed_no_outlet": "压电压力板：%s · 在旁边或地板下接电缆",
+  "hud.alaindustrial.piezo_plate.ok": "压电压力板：%1$s · %2$s/%3$s EU · 输出：%4$s",
+  "hud.alaindustrial.piezo_plate.no_outlet": "压电压力板：%1$s · %2$s/%3$s EU · 无电缆",
+  "hud.alaindustrial.piezo_plate.full": "压电压力板：%1$s · 已满，踩踏能量丢失"
 }

@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    "alaindustrial:piezo_plate",
+    "minecraft:string",
+    "minecraft:string"
+  ],
+  "result": {
+    "id": "alaindustrial:silent_piezo_plate"
+  }
+}

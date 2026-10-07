@@ -521,6 +521,43 @@
           ]
         },
         {
+          "id": "piezo_plate",
+          "title": "Piezoplatte",
+          "icon": "alaindustrial:piezo_plate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Piezoplatte",
+              "text": "Eine Druckplatte, die bei jedem neuen Druck eine kleine Portion EU liefert; benachbarte Platten bündeln ihre Energie zu einem Pfad und geben sie über ein einziges Kabel weiter — daneben oder versteckt unter dem Boden. Von oben nimmt sie das Aussehen des Blocks an, auf dem sie liegt."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 0–0.5 EU/t"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Formloses Handwerk",
+              "grid": [
+                "minecraft:stone_pressure_plate",
+                "minecraft:quartz",
+                "alaindustrial:copper_cable",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:piezo_plate",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "charge_pad",
           "title": "Ladestation",
           "icon": "alaindustrial:charge_pad",

@@ -93,6 +93,7 @@ public final class IndustrializationNeoForgeClient {
 		modBus.addListener(this::registerMenuScreens);
 		dev.alaindustrial.client.neoforge.NeoForgeRootSoilModels.init();
 		modBus.addListener(dev.alaindustrial.client.neoforge.NeoForgeRootSoilModels::onBake);
+		modBus.addListener(dev.alaindustrial.client.neoforge.NeoForgePiezoPlateModels::onBake);
 		// MOD-248: the submerged-in-oil look (screen overlay + near-black fog). Both halves live in
 		// common/ behind a client mixin, because Fabric has no fog/screen-effect API and one
 		// implementation must serve both loaders. NeoForge's IClientFluidTypeExtensions overlay hook

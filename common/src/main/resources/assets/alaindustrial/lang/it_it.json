@@ -1676,5 +1676,17 @@
   "message.alaindustrial.mob_wheel.occupied": "La ruota da corsa ha già una creatura: apri prima il cancelletto per farla uscire",
   "message.alaindustrial.mob_wheel.ready": "La ruota da corsa è completa",
   "tooltip.alaindustrial.mob_wheel_no_buffer": "Nessun accumulo: l'energia che la rete non prende va persa",
-  "tooltip.alaindustrial.mob_wheel_recolour": "Clic destro sulla ruota assemblata con assi di qualsiasi legno per ricolorarla"
+  "tooltip.alaindustrial.mob_wheel_recolour": "Clic destro sulla ruota assemblata con assi di qualsiasi legno per ricolorarla",
+  "block.alaindustrial.piezo_plate": "Pedana piezoelettrica",
+  "block.alaindustrial.silent_piezo_plate": "Pedana piezoelettrica silenziosa",
+  "tooltip.alaindustrial.piezo_plate_press": "EU a ogni nuovo passo",
+  "tooltip.alaindustrial.silent_piezo_plate_quiet": "Nessun clic",
+  "tooltip.alaindustrial.piezo_plate_connect": "Cavo: accanto o sotto il pavimento",
+  "tooltip.alaindustrial.piezo_plate_wrench": "La chiave mostra le pedane",
+  "tooltip.alaindustrial.piezo_press": "%s EU per creatura · %s EU per oggetto",
+  "message.alaindustrial.piezo_plate.placed_connected": "Pedane piezo: %s · collegate",
+  "message.alaindustrial.piezo_plate.placed_no_outlet": "Pedane piezo: %s · collega un cavo accanto o sotto il pavimento",
+  "hud.alaindustrial.piezo_plate.ok": "Pedane piezo: %1$s · %2$s/%3$s EU · uscite: %4$s",
+  "hud.alaindustrial.piezo_plate.no_outlet": "Pedane piezo: %1$s · %2$s/%3$s EU · nessun cavo",
+  "hud.alaindustrial.piezo_plate.full": "Pedane piezo: %1$s · piene, le pressioni vanno perse"
 }

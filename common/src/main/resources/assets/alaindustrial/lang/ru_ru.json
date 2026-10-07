@@ -1676,5 +1676,17 @@
   "message.alaindustrial.mob_wheel.occupied": "В колесе уже есть бегун — сначала откройте калитку и выпустите его",
   "message.alaindustrial.mob_wheel.ready": "Беговое колесо собрано",
   "tooltip.alaindustrial.mob_wheel_no_buffer": "Без накопителя: энергия, которую не забрала сеть, теряется",
-  "tooltip.alaindustrial.mob_wheel_recolour": "ПКМ досками любой породы по собранному колесу — перекрасить его"
+  "tooltip.alaindustrial.mob_wheel_recolour": "ПКМ досками любой породы по собранному колесу — перекрасить его",
+  "block.alaindustrial.piezo_plate": "Пьезоплита",
+  "block.alaindustrial.silent_piezo_plate": "Тихая пьезоплита",
+  "tooltip.alaindustrial.piezo_plate_press": "EU за каждый новый шаг",
+  "tooltip.alaindustrial.silent_piezo_plate_quiet": "Без щелчка",
+  "tooltip.alaindustrial.piezo_plate_connect": "Кабель — сбоку или под полом",
+  "tooltip.alaindustrial.piezo_plate_wrench": "Ключ показывает плиты",
+  "tooltip.alaindustrial.piezo_press": "%s EU существо · %s EU предмет",
+  "message.alaindustrial.piezo_plate.placed_connected": "Пьезоплит: %s · подключено",
+  "message.alaindustrial.piezo_plate.placed_no_outlet": "Пьезоплит: %s · подключите кабель сбоку или под полом",
+  "hud.alaindustrial.piezo_plate.ok": "Пьезоплит: %1$s · %2$s/%3$s EU · выходов: %4$s",
+  "hud.alaindustrial.piezo_plate.no_outlet": "Пьезоплит: %1$s · %2$s/%3$s EU · нет кабеля",
+  "hud.alaindustrial.piezo_plate.full": "Пьезоплит: %1$s · полно, нажатия теряются"
 }

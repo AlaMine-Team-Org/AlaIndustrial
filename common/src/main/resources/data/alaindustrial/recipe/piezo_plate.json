@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    "minecraft:stone_pressure_plate",
+    "minecraft:quartz",
+    "alaindustrial:copper_cable"
+  ],
+  "result": {
+    "id": "alaindustrial:piezo_plate"
+  }
+}

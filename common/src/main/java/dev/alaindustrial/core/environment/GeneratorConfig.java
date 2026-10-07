@@ -454,4 +454,22 @@ public final class GeneratorConfig {
 	@Knob(section = Section.GENERATORS, clientVisible = true, min = 1,
 			doc = "Mirror Concentrator EU buffer. Applies to newly placed blocks.")
 	public static int radiantBuffer = 16000;
+
+	// --- Piezo plate (MOD-764): a pressure plate that gives a small EU pulse on every new press ---
+	// One press per plate per release cycle; a held plate earns nothing, so traffic, not plates, sets output.
+	@Knob(section = Section.GENERATORS, clientVisible = true, min = 0,
+			doc = "EU a piezo plate makes when a living entity presses it anew (after it was fully released).")
+	public static int piezoPlateLivingPressEu = 10;
+	@Knob(section = Section.GENERATORS, clientVisible = true, min = 0,
+			doc = "EU a piezo plate makes when only non-living entities (items, arrows, minecarts) press it anew.")
+	public static int piezoPlateObjectPressEu = 2;
+	@Knob(section = Section.GENERATORS, min = 1,
+			doc = "EU each piezo plate stores; a group of plates holds the sum. Applies to newly placed plates.")
+	public static int piezoPlateBuffer = 100;
+	@Knob(section = Section.GENERATORS, min = 1,
+			doc = "EU/t a whole group of connected piezo plates can hand to its outlets, all outlets together.")
+	public static int piezoGroupOutputPerTick = 32;
+	@Knob(section = Section.GENERATORS, min = 1,
+			doc = "Most piezo plates one group can join; a larger path splits into several groups.")
+	public static int piezoGroupMaxPlates = 64;
 }

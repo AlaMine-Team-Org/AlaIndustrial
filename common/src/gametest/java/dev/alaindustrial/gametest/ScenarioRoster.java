@@ -136,6 +136,7 @@ public final class ScenarioRoster {
 			OverclockerEffectScenarios.Roster.ENTRIES,
 			OverclockerPanelScenarios.Roster.ENTRIES,
 			PersistenceScenarios.Roster.ENTRIES,
+			PiezoPlateScenarios.Roster.ENTRIES,
 			PipeEnergyRoleScenarios.Roster.ENTRIES,
 			PipeLowArmScenarios.Roster.ENTRIES,
 			PistonPushReactionScenarios.Roster.ENTRIES,

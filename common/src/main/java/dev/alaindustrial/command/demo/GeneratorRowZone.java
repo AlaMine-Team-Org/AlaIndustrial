@@ -3,6 +3,7 @@ package dev.alaindustrial.command.demo;
 import dev.alaindustrial.block.ConcentratorPart;
 import dev.alaindustrial.block.ConcentratorStructure;
 import dev.alaindustrial.block.MobWheelStructure;
+import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -44,6 +45,8 @@ final class GeneratorRowZone implements DemoZone {
 	static final DemoStand.TpPoint CONCENTRATOR_CAMERA =
 			new DemoStand.TpPoint("concentrator", 54.0, 5.0, 3.0, 0.0f, 25.0f, false);
 
+	// size-justified: the row is read left to right as the player walks it — one bay after another, each with the
+	// reason it stands where it does; the larger builds (mill, concentrator, wheel, piezo path) are already methods.
 	@Override
 	public void build(StandWriter w) {
 		// MOD-479 — the creative source, at the head of the generator row: the instrument you reach for
@@ -58,6 +61,8 @@ final class GeneratorRowZone implements DemoZone {
 		w.set(10, 1, GEN_Z, ModContent.GEOTHERMAL_GENERATOR.get());
 		w.fillSlot(10, 1, GEN_Z, 0, new ItemStack(Items.LAVA_BUCKET));
 		w.set(10, 1, GEN_Z + 1, ModContent.BATTERY_BOX.get());
+
+		buildPiezoPath(w);
 
 		// Four solar panels, one bay each. Under open sky by construction: nothing on this row is taller
 		// than the wind pillars at the far end, and the channel's dam (MOD-597 — it once roofed the fourth
@@ -140,6 +145,17 @@ final class GeneratorRowZone implements DemoZone {
 	 * mob on the stand is not part of a rebuild, and the drive's screen then reads "No mob inside". The battery
 	 * box sits on the drive's south port, the way each generator of the row sits on its box.
 	 */
+	/**
+	 * MOD-764 — a short piezo path between the geothermal bay and the solar row: a plate and its silent twin
+	 * joined into one path, handing their store to the battery box at its east end.
+	 */
+	private static void buildPiezoPath(StandWriter w) {
+		w.set(12, 1, GEN_Z, ModContent.PIEZO_PLATE.get());
+		w.set(13, 1, GEN_Z, ModContent.SILENT_PIEZO_PLATE.get());
+		w.place(w.origin().offset(14, 1, GEN_Z), ModContent.BATTERY_BOX.get().defaultBlockState()
+				.setValue(HorizontalMachineBlock.FACING, Direction.WEST));
+	}
+
 	private static void buildMobWheel(StandWriter w) {
 		BlockPos drive = w.origin().offset(MOB_WHEEL_X, 1, MOB_WHEEL_Z);
 		Direction facing = Direction.NORTH;
