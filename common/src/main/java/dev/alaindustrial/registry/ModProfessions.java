@@ -3,11 +3,14 @@ package dev.alaindustrial.registry;
 import com.google.common.collect.ImmutableSet;
 import dev.alaindustrial.Industrialization;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import java.util.Optional;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
+import net.minecraft.world.entity.npc.villager.VillagerData;
 import net.minecraft.world.entity.npc.villager.VillagerProfession;
 import net.minecraft.world.item.trading.TradeSet;
 
@@ -45,6 +48,28 @@ public final class ModProfessions {
 	public static final ResourceKey<TradeSet> INDUSTRIALIST_LEVEL_3 = tradeSet("industrialist/level_3");
 	public static final ResourceKey<TradeSet> INDUSTRIALIST_LEVEL_4 = tradeSet("industrialist/level_4");
 	public static final ResourceKey<TradeSet> INDUSTRIALIST_LEVEL_5 = tradeSet("industrialist/level_5");
+
+	/**
+	 * The fixed trade set of a level (MOD-772): {@code trade_set/industrialist/level_N_fixed}. Unlike the
+	 * level's own set, which deals {@code amount} trades at random from its pool, every trade of this set
+	 * goes to every Industrialist reaching the level — added on top of the random ones by
+	 * {@code VillagerFixedTradesMixin}. Levels without a file simply have no fixed trades.
+	 */
+	public static ResourceKey<TradeSet> fixedTradeSet(int level) {
+		return tradeSet("industrialist/level_" + level + "_fixed");
+	}
+
+	/**
+	 * The fixed trade set a villager gets for the level being filled: present only for an Industrialist
+	 * whose level has a {@code level_N_fixed} file loaded (a datapack may add or remove one).
+	 */
+	public static Optional<ResourceKey<TradeSet>> fixedTradesFor(VillagerData data, RegistryAccess access) {
+		if (!data.profession().is(INDUSTRIALIST)) {
+			return Optional.empty();
+		}
+		ResourceKey<TradeSet> key = fixedTradeSet(data.level());
+		return access.lookupOrThrow(Registries.TRADE_SET).containsKey(key) ? Optional.of(key) : Optional.empty();
+	}
 
 	private static ResourceKey<TradeSet> tradeSet(String path) {
 		return ResourceKey.create(Registries.TRADE_SET, Industrialization.id(path));

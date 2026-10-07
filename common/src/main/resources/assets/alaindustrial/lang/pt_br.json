@@ -446,6 +446,7 @@
   "gui.alaindustrial.garden_drone_station.status.no_drone": "Nenhum drone acoplado",
   "gui.alaindustrial.garden_drone_station.status.no_energy": "Sem energia",
   "gui.alaindustrial.garden_drone_station.status.no_resources": "Sem suprimentos",
+  "gui.alaindustrial.garden_drone_station.status.output_full": "Saída cheia",
   "gui.alaindustrial.garden_drone_station.status.working": "Trabalhando",
   "gui.alaindustrial.incubator.charge": "Carga de irradiação: %s / %s",
   "gui.alaindustrial.incubator.mode.create": "Criação",

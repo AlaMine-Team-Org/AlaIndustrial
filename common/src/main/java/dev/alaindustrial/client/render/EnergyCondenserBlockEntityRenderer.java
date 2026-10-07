@@ -5,6 +5,7 @@ import com.mojang.math.Axis;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.EnergyCondenserBlockEntity;
 import dev.alaindustrial.compat.client.Poses;
+import dev.alaindustrial.compat.client.TranslucentTypes;
 import dev.alaindustrial.core.machine.RotorSpin;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -53,10 +54,10 @@ public final class EnergyCondenserBlockEntityRenderer
 	/**
 	 * The force field around the cell is the only translucent part — one cube per stage, drawn at
 	 * 39 % alpha straight out of the texture. It goes last so the solid crystal behind it is already
-	 * in the depth buffer.
+	 * in the depth buffer. It tests depth but does not write it (MOD-780, as the capsule door in MOD-777):
+	 * drawn before the translucent terrain layer, a depth-writing field hid the water behind the machine.
 	 */
-	private static final RenderType FIELD_TYPE =
-			SPRITE.renderType(ignored -> Sheets.translucentBlockItemSheet());
+	private static final RenderType FIELD_TYPE = TranslucentTypes.blockSheetNoDepthWrite();
 
 	/** One turn per three seconds in the source animation — 60 ticks, so six degrees a tick. */
 	private static final float SPIN_RADIANS_PER_TICK = (float) (Math.PI * 2.0 / 60.0);

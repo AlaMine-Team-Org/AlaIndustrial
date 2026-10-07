@@ -446,6 +446,7 @@
   "gui.alaindustrial.garden_drone_station.status.no_drone": "Brak zadokowanego drona",
   "gui.alaindustrial.garden_drone_station.status.no_energy": "Brak zasilania",
   "gui.alaindustrial.garden_drone_station.status.no_resources": "Brak zapasów",
+  "gui.alaindustrial.garden_drone_station.status.output_full": "Wyjście pełne",
   "gui.alaindustrial.garden_drone_station.status.working": "Pracuje",
   "gui.alaindustrial.incubator.charge": "Ładunek napromieniowania: %s / %s",
   "gui.alaindustrial.incubator.mode.create": "Tworzenie",

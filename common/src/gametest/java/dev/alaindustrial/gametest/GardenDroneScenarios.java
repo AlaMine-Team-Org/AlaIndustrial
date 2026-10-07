@@ -72,6 +72,15 @@ public final class GardenDroneScenarios {
 				RosterEntry.of(GardenDroneScenarios::fun16FullOutputKeepsGrass, "garden_drone_full_output_keeps_grass")
 						.ticks(40),
 				RosterEntry.of(GardenDroneScenarios::fun17TallGrassClearedWhole, "garden_drone_clears_tall_grass_whole")
+						.ticks(40),
+				RosterEntry.of(GardenDroneScenarios::fun18OutputWithNoRoomStopsTheFlights,
+								"garden_drone_output_without_room_stops_flights")
+						.ticks(40),
+				RosterEntry.of(GardenDroneScenarios::fun19FullOutputWithOnlyWeedsSaysOutputFull,
+								"garden_drone_full_output_with_weeds_says_output_full")
+						.ticks(40),
+				RosterEntry.of(GardenDroneScenarios::fun20TakingFromOutputResumesTheHarvest,
+								"garden_drone_resumes_after_output_emptied")
 						.ticks(40));
 
 		private Roster() {}
@@ -714,6 +723,153 @@ public final class GardenDroneScenarios {
 			if (wear != 1 || spent != Config.gardenDroneEuPerAction) {
 				helper.fail("tall grass cost " + wear + " hoe points and " + spent + " EU, expected 1 and "
 						+ Config.gardenDroneEuPerAction + " (one action)");
+			}
+			helper.succeed();
+		});
+	}
+
+	/** The base's idle sleep ({@code EnergyBlockEntity.IDLE_SLEEP_TICKS}, protected), copied for timing only. */
+	private static final int IDLE_BACKOFF_TICKS = 40;
+
+	/**
+	 * Ticks for several complete round trips at the isolated zone's speed: the out leg, the landing
+	 * pause and the return leg, three times over, plus the idle back-off between attempts. A station
+	 * that keeps re-trying a refused harvest launches again within this window; one that stopped does not.
+	 */
+	private static final int TICKS_FOR_SEVERAL_TRIPS =
+			3 * (2 * GardenDroneStationBlockEntity.MIN_FLIGHT_TICKS
+					+ GardenDroneStationBlockEntity.LANDING_PAUSE_TICKS + 2) + 2 * IDLE_BACKOFF_TICKS;
+
+	/**
+	 * Fills every output slot with 63 dirt: no slot is a full stack, so a check for "every slot full"
+	 * does not fire, yet nothing a crop drops can land — the only way to learn that is to try.
+	 */
+	private static void fillOutputWithoutRoom(GardenDroneStationBlockEntity station) {
+		for (int i = 0; i < GardenDroneStationBlockEntity.OUTPUT_SLOT_COUNT; i++) {
+			station.setItem(GardenDroneStationBlockEntity.OUTPUT_SLOT_START + i, new ItemStack(Items.DIRT, 63));
+		}
+	}
+
+	/** Drives {@code ticks} ticks one at a time and counts how many times the drone left the dock. */
+	private static int countLaunches(GardenDroneStationBlockEntity station, GameTestHelper helper, int ticks) {
+		int launches = 0;
+		boolean airborne = station.droneTarget() != null;
+		for (int i = 0; i < ticks; i++) {
+			AlaGameTestHelper.drive(station, helper, 1);
+			boolean now = station.droneTarget() != null;
+			if (now && !airborne) {
+				launches++;
+			}
+			airborne = now;
+		}
+		return launches;
+	}
+
+	/**
+	 * TC-DRONE-001-FUN18 — a ripe crop whose drop has no room in the output costs at most one flight
+	 * (MOD-782). The refused harvest blocks the output, so the drone stays docked instead of flying to
+	 * the crop forever with the status saying "Working"; no EU and no hoe wear are spent.
+	 *
+	 * @implements TC-DRONE-001-FUN18 — no room in the output: at most one flight, status OUTPUT_FULL
+	 */
+	public static void fun18OutputWithNoRoomStopsTheFlights(GameTestHelper helper) {
+		withIsolatedZone(() -> {
+			GardenDroneStationBlockEntity station = place(helper);
+			charge(station);
+			fillOutputWithoutRoom(station);
+			long before = station.getEnergyStorage().getAmount();
+			helper.setBlock(PLOT, Blocks.FARMLAND);
+			helper.setBlock(PLOT.above(), Blocks.WHEAT.defaultBlockState()
+					.setValue(CropBlock.AGE, CropBlock.MAX_AGE));
+
+			int launches = countLaunches(station, helper, TICKS_FOR_SEVERAL_TRIPS);
+
+			if (launches > 1) {
+				helper.fail("the drone flew " + launches
+						+ " times to a crop whose drop could not land, expected at most 1");
+			}
+			if (station.status() != GardenDroneStatus.OUTPUT_FULL) {
+				helper.fail("the status is " + station.status()
+						+ " with no room in the output, expected OUTPUT_FULL");
+			}
+			if (!at(helper, PLOT.above()).is(Blocks.WHEAT)) {
+				helper.fail("the crop was taken although its drop had no room");
+			}
+			if (station.getEnergyStorage().getAmount() != before) {
+				helper.fail("the station spent EU on a harvest that could not land");
+			}
+			if (station.getItem(GardenDroneStationBlockEntity.HOE_SLOT).getDamageValue() != 0) {
+				helper.fail("the hoe wore down on a harvest that could not land");
+			}
+			helper.succeed();
+		});
+	}
+
+	/**
+	 * TC-DRONE-001-FUN19 — every output slot full and only weeds left: the screen says the output is
+	 * full rather than "Farm tended" (MOD-782). The weed stays, nothing is spent.
+	 *
+	 * @implements TC-DRONE-001-FUN19 — full output with only weeds in range: status OUTPUT_FULL, not IDLE
+	 */
+	public static void fun19FullOutputWithOnlyWeedsSaysOutputFull(GameTestHelper helper) {
+		withIsolatedZone(() -> {
+			GardenDroneStationBlockEntity station = place(helper);
+			charge(station);
+			for (int i = 0; i < GardenDroneStationBlockEntity.OUTPUT_SLOT_COUNT; i++) {
+				station.setItem(GardenDroneStationBlockEntity.OUTPUT_SLOT_START + i,
+						new ItemStack(Items.COBBLESTONE, 64));
+			}
+			long before = station.getEnergyStorage().getAmount();
+			plantOnGrass(helper, PLOT, Blocks.SHORT_GRASS.defaultBlockState());
+
+			AlaGameTestHelper.drive(station, helper, TICKS_PER_JOB);
+
+			if (station.status() != GardenDroneStatus.OUTPUT_FULL) {
+				helper.fail("the status is " + station.status()
+						+ " with every output slot full, expected OUTPUT_FULL");
+			}
+			if (!at(helper, PLOT.above()).is(Blocks.SHORT_GRASS)) {
+				helper.fail("the drone weeded with every output slot full");
+			}
+			if (station.getEnergyStorage().getAmount() != before) {
+				helper.fail("the station spent EU although nothing was weeded");
+			}
+			helper.succeed();
+		});
+	}
+
+	/**
+	 * TC-DRONE-001-FUN20 — taking items out of the output lifts the block and the drone goes back to the
+	 * crop it had to leave (MOD-782). The slots are emptied through {@code setItem}, the path a shift
+	 * click and the Fabric transfer API take — one that never calls {@code removeItem}, so a station
+	 * that only listened there would stay blocked.
+	 *
+	 * @implements TC-DRONE-001-FUN20 — taking from a blocked output resumes the harvest
+	 */
+	public static void fun20TakingFromOutputResumesTheHarvest(GameTestHelper helper) {
+		withIsolatedZone(() -> {
+			GardenDroneStationBlockEntity station = place(helper);
+			charge(station);
+			fillOutputWithoutRoom(station);
+			helper.setBlock(PLOT, Blocks.FARMLAND);
+			helper.setBlock(PLOT.above(), Blocks.WHEAT.defaultBlockState()
+					.setValue(CropBlock.AGE, CropBlock.MAX_AGE));
+
+			AlaGameTestHelper.drive(station, helper, TICKS_FOR_SEVERAL_TRIPS);
+			if (station.status() != GardenDroneStatus.OUTPUT_FULL) {
+				helper.fail("before unloading the status is " + station.status() + ", expected OUTPUT_FULL");
+			}
+			// Two whole slots: a wheat drop can be wheat plus seeds, two item types that need a slot each.
+			station.setItem(GardenDroneStationBlockEntity.OUTPUT_SLOT_START, ItemStack.EMPTY);
+			station.setItem(GardenDroneStationBlockEntity.OUTPUT_SLOT_START + 1, ItemStack.EMPTY);
+
+			AlaGameTestHelper.drive(station, helper, TICKS_FOR_SEVERAL_TRIPS);
+
+			if (at(helper, PLOT.above()).is(Blocks.WHEAT)) {
+				helper.fail("the output was emptied but the drone never went back for the ripe crop");
+			}
+			if (!stationHolds(station, Items.WHEAT)) {
+				helper.fail("the harvest after unloading did not reach the station's output slots");
 			}
 			helper.succeed();
 		});

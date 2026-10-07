@@ -59,7 +59,8 @@ import org.jetbrains.annotations.Nullable;
  *     that drew power while idle would poison the network's flow field (MOD-214).</li>
  * <li><b>The harvest never spawns an {@code ItemEntity}.</b> Drops are computed server-side and
  *     inserted straight into the output slots; the crop block is only removed once every stack has
- *     landed. A full output means the crop simply stays in the ground.</li>
+ *     landed. A full output means the crop simply stays in the ground, and the output is blocked
+ *     until something is taken out, so the drone stops flying to it (MOD-782).</li>
  * <li><b>The zone is cached.</b> A full re-scan of a radius-4 zone is ~240 positions; doing that
  *     every tick on a large farm is exactly the kind of thing that eats a server. The cache holds
  *     the tiles worth looking at and is rebuilt on an interval (player edits) or invalidated in
@@ -159,6 +160,9 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 	/** True while the drone is on its way home after the action landed. */
 	private boolean returning;
 
+	/** Whether harvesting and weeding wait for room in the output (MOD-782); the rules are in the class. */
+	private final GardenDroneOutputBlock outputBlock = new GardenDroneOutputBlock();
+
 	public GardenDroneStationBlockEntity(BlockPos pos, BlockState state) {
 		super(dev.alaindustrial.registry.ModContent.GARDEN_DRONE_STATION_BE.get(), pos, state,
 				EnergyTier.LV, SLOT_COUNT, Config.gardenDroneBuffer,
@@ -193,6 +197,9 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 		if (rescanCountdown <= 0) {
 			rebuildZoneCache(serverLevel, pos);
 			rescanCountdown = Math.max(1, Config.gardenDroneScanIntervalTicks);
+		}
+		if (outputBlock.refresh(outputItemCount(), outputFull())) {
+			setChangedQuietly();
 		}
 		// No drone, no work. The dock keeps its inventory and buffer, it just has nothing to fly.
 		if (!hasDrone()) {
@@ -264,9 +271,44 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 			return setStatus(GardenDroneStatus.WORKING);
 		}
 		clearJob();
-		// Distinguish "nothing left to do" from "I would work but the hoppers are empty", so the player
-		// can tell a finished farm from a stalled one without opening the GUI.
-		return setStatus(needsResources() ? GardenDroneStatus.NO_RESOURCES : GardenDroneStatus.IDLE);
+		return setStatus(idleStatus(level));
+	}
+
+	/**
+	 * Why nothing applied. Distinguishes "nothing left to do" from "I would work but the hoppers are
+	 * empty", so the player can tell a finished farm from a stalled one without opening the GUI.
+	 *
+	 * <p>{@link GardenDroneStatus#OUTPUT_FULL} (MOD-782) is shown only while the output is blocked AND a
+	 * ripe crop or a weed in range is waiting for it — a blocked output over a tended farm holds nothing
+	 * up, so it reads as tended or out of supplies as before. When it does show, it outranks an empty seed
+	 * or fertilizer slot: it holds up the harvest, the job the drone puts first, and only the player can
+	 * clear it. This is also the one place an empty-output block is retried
+	 * ({@link GardenDroneOutputBlock#retryIfEmpty}), so a refused drop costs one flight per idle back-off.
+	 */
+	private GardenDroneStatus idleStatus(ServerLevel level) {
+		if (outputBlock.isBlocked() && hasWorkWaitingForRoom(level)) {
+			if (outputBlock.retryIfEmpty(outputItemCount())) {
+				setChangedQuietly();
+			}
+			return GardenDroneStatus.OUTPUT_FULL;
+		}
+		return needsResources() ? GardenDroneStatus.NO_RESOURCES : GardenDroneStatus.IDLE;
+	}
+
+	/** Whether a harvest or a weeding would apply in range if the output were not blocked (MOD-782). */
+	private boolean hasWorkWaitingForRoom(ServerLevel level) {
+		if (!hasUsableHoe()) {
+			return false;
+		}
+		for (BlockPos candidate : zoneCache) {
+			if (level.isLoaded(candidate)) {
+				BlockState state = level.getBlockState(candidate);
+				if (isHarvestTarget(level, candidate, state) || isWeed(state)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	/** Sends the drone out: records the job and how long the flight takes at the configured speed. */
@@ -351,7 +393,9 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 		return switch (action) {
 			// Harvesting wears the hoe exactly as tilling does, so it needs one for the same reason:
 			// a tool that is consumed by an action but not required for it makes no sense to the player.
-			case HARVEST -> hasUsableHoe() && isHarvestTarget(level, target, state);
+			// A blocked output (MOD-782) stops the harvest before the flight, not at the crop: a refused
+			// harvest spends nothing, so without this the drone would fly to the same crop forever.
+			case HARVEST -> hasUsableHoe() && !outputBlock.isBlocked() && isHarvestTarget(level, target, state);
 			// The CROP decides what ground it takes, not a tag kept here (round 8): wheat still wants
 			// farmland because its own canSurvive says so, and kok-sagyz takes plain dirt, grass or
 			// its own leftover root because its canSurvive says THAT. One oracle, and a seed the
@@ -364,10 +408,11 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 			case TILL -> isTillable(state)
 					&& level.getBlockState(target.above()).isAir()
 					&& hasUsableHoe();
-			// A full output is checked here, not only in clearWeed: grass drops nothing most of the time,
+			// A blocked output is checked here, not only in clearWeed: grass drops nothing most of the time,
 			// so without it a station with no room would still weed — and the drone would never stop
-			// flying to a firefly bush whose drop cannot land.
-			case CLEAR -> hasUsableHoe() && isWeed(state) && !outputFull();
+			// flying to a firefly bush whose drop cannot land. A full output counts as blocked
+			// (GardenDroneOutputBlock#refresh), as the outputFull() check here said before MOD-782.
+			case CLEAR -> hasUsableHoe() && !outputBlock.isBlocked() && isWeed(state);
 		};
 	}
 
@@ -412,7 +457,8 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 	private boolean harvest(ServerLevel level, BlockPos target, BlockState state) {
 		List<ItemStack> drops = Block.getDrops(state, level, target, level.getBlockEntity(target));
 		if (!insertAll(drops, true)) {
-			return false; // no room — leave the crop in the ground, spend nothing
+			blockOutput(); // no room — leave the crop in the ground, spend nothing, stop flying to it
+			return false;
 		}
 		insertAll(drops, false);
 		if (!level.setBlockAndUpdate(target, Blocks.AIR.defaultBlockState())) {
@@ -482,8 +528,12 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 	 */
 	private boolean clearWeed(ServerLevel level, BlockPos target, BlockState state) {
 		List<ItemStack> drops = Block.getDrops(state, level, target, level.getBlockEntity(target));
-		if (!insertAll(drops, true) || !level.destroyBlock(target, false)) {
-			return false; // no room, or the world refused — the weed stays, nothing is spent
+		if (!insertAll(drops, true)) {
+			blockOutput(); // no room — the weed stays, nothing is spent
+			return false;
+		}
+		if (!level.destroyBlock(target, false)) {
+			return false; // the world refused: not a question of room, so the output stays open
 		}
 		insertAll(drops, false);
 		wearHoe(level);
@@ -687,6 +737,21 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 						&& state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER);
 	}
 
+	/** Blocks the output at its current item count (MOD-782); taking anything out lifts it again. */
+	private void blockOutput() {
+		outputBlock.block(outputItemCount());
+		setChangedQuietly();
+	}
+
+	/** Items across the output slots, the snapshot the output block is compared against. */
+	private int outputItemCount() {
+		int total = 0;
+		for (int i = OUTPUT_SLOT_START; i < OUTPUT_SLOT_START + OUTPUT_SLOT_COUNT; i++) {
+			total += items.get(i).getCount();
+		}
+		return total;
+	}
+
 	/** Whether every output slot holds a full stack — no drop of any kind could land. */
 	private boolean outputFull() {
 		for (int i = OUTPUT_SLOT_START; i < OUTPUT_SLOT_START + OUTPUT_SLOT_COUNT; i++) {
@@ -854,6 +919,7 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 		output.putLong("FlightStart", flightStart);
 		output.putInt("FlightTotal", flightTotal);
 		output.putBoolean("Returning", returning);
+		output.putInt("OutputBlockedAt", outputBlock.saved());
 	}
 
 	@Override
@@ -868,6 +934,9 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 		flightStart = input.getLongOr("FlightStart", 0L);
 		flightTotal = input.getIntOr("FlightTotal", 0);
 		returning = input.getBooleanOr("Returning", false);
+		// MOD-782: a world saved before the key existed loads as not blocked; the first refused harvest
+		// blocks it again.
+		outputBlock.restore(input.getIntOr("OutputBlockedAt", GardenDroneOutputBlock.NOT_BLOCKED));
 	}
 
 	// ---------------------------------------------------------------- menu

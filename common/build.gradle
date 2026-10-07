@@ -255,6 +255,9 @@ pitest {
                      // MOD-692: whether a block's energy counters run. MC-free rule class, added with
                      // the class and its L1 suite (StatsCounterGateTest).
                      'dev.alaindustrial.block.entity.StatsCounterGate',
+                     // MOD-782: when the garden drone's output is blocked and when that lifts. MC-free
+                     // rule class, added with the class and its L1 suite (GardenDroneOutputBlockTest).
+                     'dev.alaindustrial.block.entity.GardenDroneOutputBlock',
                      // MOD-672: the cable arm's reach into the assembled teleporter. MC-free so its
                      // L1 suite (TeleporterCableArmTest) can re-measure the model and pin it.
                      'dev.alaindustrial.block.TeleporterCableArm',

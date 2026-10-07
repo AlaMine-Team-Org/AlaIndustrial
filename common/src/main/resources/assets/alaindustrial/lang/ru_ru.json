@@ -437,6 +437,7 @@
   "gui.alaindustrial.garden_drone_station.status.no_drone": "Дрон не установлен",
   "gui.alaindustrial.garden_drone_station.status.no_energy": "Нет энергии",
   "gui.alaindustrial.garden_drone_station.status.no_resources": "Расходники кончились",
+  "gui.alaindustrial.garden_drone_station.status.output_full": "Выход заполнен",
   "gui.alaindustrial.garden_drone_station.status.working": "Работает",
   "gui.alaindustrial.incubator.charge": "Заряд облучения: %s / %s",
   "gui.alaindustrial.incubator.mode.create": "Создание",

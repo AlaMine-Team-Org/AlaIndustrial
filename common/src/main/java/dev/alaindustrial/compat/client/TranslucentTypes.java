@@ -33,13 +33,29 @@ import net.minecraft.client.renderer.rendertype.RenderType;
  * the block atlas, including {@code RenderPipelines.OIT_ITEM}: with the "Improved Transparency" option on,
  * a translucent type without an order-independent pipeline set throws when it is drawn. {@code
  * RenderType.create} is package-private, hence {@link RenderTypeInvoker}.
+ *
+ * <p><b>A surface with solid texels needs a second pass (MOD-780).</b> A texel at full alpha drawn with
+ * {@link #blockSheetNoDepthWrite()} leaves no depth either, so water behind it is later blended over it: the
+ * plate of the reactor door would turn blue wherever the coolant stands behind it. Such a surface is drawn
+ * twice — first with {@link #blockSheetSolidTexels()}, which keeps only its solid texels and writes their
+ * depth, then whole with {@link #blockSheetNoDepthWrite()}, which redraws those texels unchanged (alpha 1
+ * replaces) and blends the translucent ones. The first pass has no blending, so it goes to the solid feature
+ * phase and its depth is in place before any translucent geometry, the terrain's water included.
  */
 public final class TranslucentTypes {
 
 	/** Vanilla's {@code itemTranslucent} alpha cutout: a texel this transparent is discarded, not blended. */
 	private static final float ALPHA_CUTOUT = 0.1f;
 
+	/**
+	 * The solid-texel pass keeps a texel only from this alpha up. Above the most opaque translucent texel the
+	 * mod draws (tinted glass, 200/255) and below a fully solid one (255/255), so a translucent texel never
+	 * turns opaque in the first pass.
+	 */
+	private static final float SOLID_TEXEL_CUTOUT = 0.9f;
+
 	private static final RenderType BLOCK_SHEET_NO_DEPTH_WRITE = blockSheetType();
+	private static final RenderType BLOCK_SHEET_SOLID_TEXELS = solidTexelsType();
 
 	private TranslucentTypes() {
 	}
@@ -50,6 +66,15 @@ public final class TranslucentTypes {
 	 */
 	public static RenderType blockSheetNoDepthWrite() {
 		return BLOCK_SHEET_NO_DEPTH_WRITE;
+	}
+
+	/**
+	 * An opaque, lit, overlay-aware type for quads in the {@code ENTITY} vertex format textured from the
+	 * block atlas, which draws only the texels at least {@value #SOLID_TEXEL_CUTOUT} opaque and writes their
+	 * depth — the first pass of a surface that mixes solid and translucent texels (see the class doc).
+	 */
+	public static RenderType blockSheetSolidTexels() {
+		return BLOCK_SHEET_SOLID_TEXELS;
 	}
 
 	private static RenderType blockSheetType() {
@@ -77,5 +102,32 @@ public final class TranslucentTypes {
 				.sortOnUpload()
 				.createRenderSetup();
 		return RenderTypeInvoker.alaindustrial$create("alaindustrial_item_translucent_no_depth_write", setup);
+	}
+
+	/**
+	 * Vanilla's {@code RenderPipelines.ITEM_CUTOUT} — no blending, depth written — with a higher alpha cutout.
+	 * The setup is vanilla's {@code itemCutout} on the block atlas without {@code affectsCrumbling}: the second
+	 * pass covers the whole surface and carries the crack overlay, which drawn twice would darken.
+	 */
+	private static RenderType solidTexelsType() {
+		RenderPipeline source = RenderPipelines.ITEM_CUTOUT;
+		var builder = RenderPipeline.builder()
+				.withLocation(Industrialization.id("pipeline/item_cutout_solid_texels"))
+				.withVertexShader(source.getShaders().get(ShaderType.VERTEX))
+				.withFragmentShader(source.getShaders().get(ShaderType.FRAGMENT))
+				.withVertexBinding(0, source.getVertexFormatBinding(0))
+				.withPrimitiveTopology(source.getPrimitiveTopology())
+				.withPolygonMode(source.getPolygonMode())
+				.withCull(source.isCull())
+				.withShaderDefine("ALPHA_CUTOUT", SOLID_TEXEL_CUTOUT)
+				.withColorTargetState(ColorTargetState.DEFAULT)
+				.withDepthStencilState(source.getDepthStencilState());
+		source.getBindGroupLayouts().forEach(builder::withBindGroupLayout);
+		RenderSetup setup = RenderSetup.builder(builder.build())
+				.withTexture("Sampler0", Sheets.BLOCKS_MAPPER.sheet())
+				.useLightmap()
+				.useOverlay()
+				.createRenderSetup();
+		return RenderTypeInvoker.alaindustrial$create("alaindustrial_item_cutout_solid_texels", setup);
 	}
 }

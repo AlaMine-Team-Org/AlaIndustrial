@@ -8,6 +8,7 @@ import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.block.LitMachineBlock;
 import dev.alaindustrial.block.entity.IncubatorBlockEntity;
 import dev.alaindustrial.compat.client.Poses;
+import dev.alaindustrial.compat.client.TranslucentTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.BlockAndTintGetter;
@@ -91,8 +92,6 @@ public final class IncubatorBlockEntityRenderer
 	private static final int RING_COLOR = 0xB063D863;
 	private static final SpriteId RING_SPRITE =
 			Sheets.BLOCKS_MAPPER.apply(Industrialization.id("incubator_glass"));
-	private static final RenderType RING_RENDER_TYPE =
-			RING_SPRITE.renderType(ignored -> Sheets.translucentBlockItemSheet());
 
 	/**
 	 * The front-panel equaliser. Its bars live in {@link IncubatorScreenGeometry} rather than in the
@@ -140,8 +139,6 @@ public final class IncubatorBlockEntityRenderer
 	private static final float GAUGE_GLASS_Z = 0.86F;
 	/** A stable alpha over the fluid's registered RGB, as the portable tank does. */
 	private static final int GAUGE_WATER_ALPHA = 0xD8000000;
-	private static final RenderType GAUGE_GLASS_RENDER_TYPE =
-			RING_SPRITE.renderType(ignored -> Sheets.translucentBlockItemSheet());
 
 	/** The game time is wrapped before it reaches a float — a raw tick count loses sub-tick precision
 	 * after a few real-world days and the animation starts stepping. */
@@ -266,7 +263,10 @@ public final class IncubatorBlockEntityRenderer
 			poseStack.pushPose();
 			poseStack.translate(0.5F, RING_Y, 0.5F);
 			Poses.rotate(poseStack, Axis.YP.rotation(state.ringAngle));
-			collector.submitCustomGeometry(poseStack, RING_RENDER_TYPE,
+			// The ring floats inside the bath (y 2.56 px over the dome floor, within the bath's footprint), so
+			// it shares the bath's sheet while the bath is drawn — see glassType.
+			collector.submitCustomGeometry(poseStack,
+					glassType(state.formed && state.waterFill > 0.0F && state.waterSprite != null),
 					(pose, consumer) -> renderRing(pose, consumer, sprite));
 			poseStack.popPose();
 		}
@@ -312,6 +312,10 @@ public final class IncubatorBlockEntityRenderer
 	 * the water sits the same way round however the machine was placed. Drawn as a closed prism with
 	 * both windings, because the translucent sheet culls back faces and the wall nearest the camera
 	 * would otherwise vanish as the player walks round it.
+	 *
+	 * <p>The bath writes depth on purpose (MOD-780), unlike the glass around it: a liquid drawn without
+	 * depth writes would let water standing behind the incubator be blended over its own, and through a
+	 * bath this dense the water behind is hardly visible anyway.
 	 */
 	private void submitBath(State state, PoseStack poseStack, SubmitNodeCollector collector) {
 		if (!state.formed || state.waterFill <= 0.0F || state.waterSprite == null) {
@@ -390,6 +394,10 @@ public final class IncubatorBlockEntityRenderer
 	 * <p>Turned by the same yaw as the front panel, so the window stays beside the inlet whichever way
 	 * the machine was placed. The pane is drawn whether or not there is water — an empty gauge is
 	 * information too, and a window that vanishes when the tank runs dry reads as a glitch.
+	 *
+	 * <p>The water writes depth (MOD-780): a liquid without depth writes would let water standing behind the
+	 * machine be blended over its own, and at 85 % opacity the water behind is hardly visible anyway. The
+	 * pane shares the water's sheet while there is water, see {@link #glassType}.
 	 */
 	private void submitGauge(State state, PoseStack poseStack, SubmitNodeCollector collector) {
 		TextureAtlasSprite glass = sprites.get(RING_SPRITE);
@@ -402,9 +410,23 @@ public final class IncubatorBlockEntityRenderer
 			collector.submitCustomGeometry(poseStack, Sheets.translucentBlockItemSheet(),
 					(pose, consumer) -> renderGaugeWater(pose, consumer, water, state));
 		}
-		collector.submitCustomGeometry(poseStack, GAUGE_GLASS_RENDER_TYPE,
+		collector.submitCustomGeometry(poseStack, glassType(state.waterFill > 0.0F && state.waterSprite != null),
 				(pose, consumer) -> renderGaugePane(pose, consumer, glass, state.gaugeLight));
 		poseStack.popPose();
+	}
+
+	/**
+	 * The render type of glass in front of, or inside, this machine's own water — the ring in the bath, the
+	 * sight glass's pane over the gauge water (MOD-780).
+	 *
+	 * <p>Translucent custom geometry is batched per render type, in no fixed order between types. Glass on a
+	 * type of its own could be drawn before the water, which would then be blended over it. While the water
+	 * is drawn, the glass shares its sheet, so both go into one buffer sorted back to front. Without water
+	 * there is nothing to share with: the glass does not write depth, so water standing behind the machine
+	 * shows (drawn before the translucent terrain layer, depth-writing glass hid it, as in MOD-777).
+	 */
+	private static RenderType glassType(boolean waterDrawn) {
+		return waterDrawn ? Sheets.translucentBlockItemSheet() : TranslucentTypes.blockSheetNoDepthWrite();
 	}
 
 	private static void renderGaugeWater(PoseStack.Pose pose, VertexConsumer out,
