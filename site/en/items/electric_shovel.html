@@ -360,7 +360,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="13 pages">13</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="14 pages">14</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>Nuclear</span><span class="cat-count" aria-label="15 pages">15</span></a>
@@ -411,11 +411,11 @@
 
 <table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Buffer</td><td>10 000 EU/FE</td></tr><tr><td>Charging</td><td>Battery Box slot / worn pack, fills in ~16 s</td></tr><tr><td>Cost</td><td>20 EU/FE per block broken</td></tr><tr><td>Passive drain</td><td>none</td></tr></tbody></table>
 
-<p>Instant-break blocks — snow layers, grass — are <strong>free</strong>, just as they never wear a vanilla shovel. In creative no EU/FE is spent.</p>
+<p>Only blocks that break instantly (hardness exactly 0) are <strong>free</strong> — a torch, short grass, a sapling — just as they never wear a vanilla shovel. <strong>A snow layer is not free:</strong> its hardness is 0.1, so every layer costs the full 20 EU/FE. In creative no EU/FE is spent.</p>
 
 <h2 id="how-it-behaves">How it behaves</h2>
 
-<ul><li><strong>Digging:</strong> with at least 20 EU/FE it digs <code>#minecraft:mineable/shovel</code> at speed 9.0. Each such block costs 20 EU/FE.</li><li><strong>Flat shovel:</strong> below 20 EU/FE it digs at hand speed (1.0) but keeps its mining level and drops, and spends nothing. Efficiency does not apply there — vanilla only grants it above speed 1.0.</li><li><strong>Dirt paths and campfire dousing work.</strong> Right-click grass, dirt, podzol, mycelium or rooted dirt to make a path; right-click a lit campfire to put it out — exactly like a vanilla shovel, and free of charge. Charging EU/FE for it would contradict the rule this whole line is built on: a flat tool still works.</li><li><strong>Charging:</strong> the Battery Box charge slot and a worn Energy Pack both accept it automatically, up to 32 EU/FE/t.</li><li><strong>Attack:</strong> hits like a diamond shovel (2.5 damage, 1.0 attack speed); attacking spends no EU/FE and causes no wear.</li><li><strong>Enchanting:</strong> it sits in <code>#minecraft:shovels</code>, so the table and anvil treat it as a shovel.</li><li><strong>Readout:</strong> the bar shows charge; the tooltip reads the exact numbers, or a red "Empty" at zero, and the texture switches to its unpowered variant.</li></ul>
+<ul><li><strong>Digging:</strong> with at least 20 EU/FE it digs <code>#minecraft:mineable/shovel</code> at speed 9.0. Each such block costs 20 EU/FE.</li><li><strong>Flat shovel:</strong> below 20 EU/FE it digs at hand speed (1.0) but keeps its mining level and drops, and spends nothing. Efficiency does not apply there — vanilla only grants it above speed 1.0.</li><li><strong>Dirt paths and campfire dousing work.</strong> Right-click grass, dirt, coarse dirt, podzol, mycelium or rooted dirt to make a path; right-click a lit campfire to put it out — exactly like a vanilla shovel on the version of the game you play, and free of charge. Charging EU/FE for it would contradict the rule this whole line is built on: a flat tool still works. A click on the bottom face of a block makes no path on either version. Campfires differ between the game versions, and the shovel follows the vanilla shovel of its version:<ul><li><strong>Minecraft 26.3:</strong> the campfire goes out from a click on any face, the bottom one included, but not from sneak + right-click;</li><li><strong>Minecraft 26.2:</strong> the campfire goes out from sneak + right-click too, but not from a click on its bottom face.</li></ul></li><li><strong>Charging:</strong> the Battery Box charge slot and a worn Energy Pack both accept it automatically, up to 32 EU/FE/t.</li><li><strong>Attack:</strong> hits like a diamond shovel (2.5 damage, 1.0 attack speed); attacking spends no EU/FE and causes no wear.</li><li><strong>Enchanting:</strong> it sits in <code>#minecraft:shovels</code>, so the table and anvil treat it as a shovel.</li><li><strong>Readout:</strong> the bar shows charge; the tooltip reads the exact numbers, or a red "Empty" at zero, and the texture switches to its unpowered variant.</li></ul>
 
 <h2 id="inventory">Inventory</h2>
 
@@ -451,7 +451,7 @@
 
 <p>The mode is visible without guesswork: while it is on, the item carries the enchantment glint and lists "Silk Touch I" in its tooltip (the mode <em>is</em> the real vanilla enchantment, not a separate parallel flag), and a dedicated tooltip line shows the state and reminds you of the sneak + right-click control. Switching plays a click and prints a line above the hotbar.</p>
 
-<p><strong>Paths and campfires stay on the plain right-click.</strong> The one control difference: <strong>sneak + right-click on a block switches the mode and makes no path</strong>. A plain right-click without sneaking still lays a dirt path and douses a campfire, exactly as on the base shovel and just as free of charge.</p>
+<p><strong>Paths and campfires stay on the plain right-click.</strong> The one control difference: <strong>sneak + right-click on a block switches the mode, makes no path and does not douse a campfire</strong> — on both game versions. A plain right-click without sneaking still lays a dirt path and douses a campfire, exactly as on the base shovel and just as free of charge.</p>
 
 <p><strong>Inherited unchanged:</strong> the 10 000 EU/FE buffer, 20 EU/FE per block, 32 EU/FE/t intake, the same charging spots, no durability, hand-speed digging (1.0) on an empty buffer with drops preserved, creative behaviour, and the attack profile of a diamond shovel. The upgrade has no config keys of its own: the energy layer tells tools apart by their base class, so all three numbers are shared with the base shovel.</p>
 
@@ -463,7 +463,7 @@
 
 <h2 id="progression">Progression</h2>
 
-<ul><li>The third powered tool: the drill covers stone, the chainsaw covers wood, the shovel covers earth — the LV line now spans all three basic materials.</li><li>Needs LV infrastructure first — without the <a href="../energy-storage/battery_box.html">Battery Box</a> and a battery it can be neither crafted nor charged.</li><li>LV tier. The remaining electric tools (hoe/saber/nano bow) are future work.</li></ul>
+<ul><li>The third powered tool: the drill covers stone, the chainsaw covers wood, the shovel covers earth — the LV line now spans all three basic materials.</li><li>Needs LV infrastructure first — without the <a href="../energy-storage/battery_box.html">Battery Box</a> and a battery it can be neither crafted nor charged.</li><li>LV tier. The line later grew an <a href="electric_hoe.html">Electric Hoe</a>, an <a href="electric_saber.html">Electric Saber</a> and an <a href="electric_bow.html">Electric Bow</a>.</li></ul>
 
 <h2 id="related">Related</h2>
 

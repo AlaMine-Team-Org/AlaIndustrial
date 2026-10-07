@@ -360,7 +360,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="13 ページ">13</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>原子力</span><span class="cat-count" aria-label="15 ページ">15</span></a>
@@ -449,7 +449,7 @@
 
 <p>異なるシルエットの二層マルチブロックです：重い機械的下半身と軽いガラス製チャンバーの上半身 — 「立方体 2 つの積み重ね」でなく。</p>
 
-<ul><li><strong>基台</strong> — 51 要素の技術的な台座です：作業面にスクリーンとカートリッジ、側面に通気口、中段は上下の 全幅の帯のあいだで半ピクセルだけ窪んでいます。外形は依然として <strong>完全な 16³ 立方体</strong> です： コリジョンは完全で、隣接ブロックを遮蔽し、光も完全に遮ります。窪んだ帯は開口ではなく溝であり、 上下を全幅の帯が塞ぐため、隣を遮蔽しても視界に何かが開くことはありません。背面には栄養バスの 給水口と、その脇の覗き窓があります：水位はメニューを開かずに外から読めます。</li><li><strong>ドーム</strong> — 太い横桟のない透明なチャンバーで、ガラスの胴、2 段の肩、小さな蓋から成ります。 <strong>完全な立方体ではない</strong> ため 。形状とコリジョンは輪郭どおりに段状です（モデルから 生成される 5 個のボックス）。タグ <code>c:glass</code> の任意のガラスから自動で設置されます。 元のガラスの種類は記憶されるため：<ul><li>マルチブロック解体時 — <strong>ちょうどあなたのガラス</strong> が戻ります — 何も失われません。</li><li><strong>色付きガラスがドームを着色</strong> — 新レシピなしの 17 色：16 色の色付き板ガラスと無色。 フレームと蓋の金属キャップは常に暗い金属です（そのキャップの下の薄いガラス板は胴と一緒に着色されます）。</li></ul></li><li>被照射アイテムはチャンバー中央に浮遊し、ゆっくり回転。稼働時 — パーティクル、発光の脈動、 そしてチャンバー床の上で回転するリング状エミッタ。</li></ul>
+<ul><li><strong>基台</strong> — 51 要素の技術的な台座です：作業面にスクリーンとカートリッジ、側面に通気口、中段は上下の 全幅の帯のあいだで半ピクセルだけ窪んでいます。コリジョンは <strong>完全な 16³ 立方体</strong> で、光も完全に 遮りますが、モデルは立方体を満たしていません：台座と軒のあいだでは筐体がブロックの内側へ半ピクセル から 1 ピクセル下がっており、縦の辺では隙間が開いています。そのため遮蔽形状（） は空です：ブロックは遮蔽ブロックのまま（）ですが、隣接ブロックの面を一つも隠しません 隙間から見えるのは空ではなく隣の壁です。光の減衰は 15 に固定されています（）： そうしないと、不完全な遮蔽形状のせいで 1 に下がってしまいます。背面には栄養バスの 給水口と、その脇の覗き窓があります：水位はメニューを開かずに外から読めます。</li><li><strong>ドーム</strong> — 太い横桟のない透明なチャンバーで、ガラスの胴、2 段の肩、小さな蓋から成ります。 <strong>完全な立方体ではない</strong> ため 。形状とコリジョンは輪郭どおりに段状です（モデルから 生成される 5 個のボックス）。タグ <code>c:glass</code> の任意のガラスから自動で設置されます。 元のガラスの種類は記憶されるため：<ul><li>マルチブロック解体時 — <strong>ちょうどあなたのガラス</strong> が戻ります — 何も失われません。</li><li><strong>色付きガラスがドームを着色</strong> — 新レシピなしの 17 色：16 色の色付き板ガラスと無色。 フレームと蓋の金属キャップは常に暗い金属です（そのキャップの下の薄いガラス板は胴と一緒に着色されます）。</li></ul></li><li>被照射アイテムはチャンバー中央に浮遊し、ゆっくり回転。稼働時 — パーティクル、発光の脈動、 そしてチャンバー床の上で回転するリング状エミッタ。</li></ul>
 
 <h2 id="音">音</h2>
 

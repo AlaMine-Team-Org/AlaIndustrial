@@ -360,7 +360,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
 <div class="group-title">能源</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="13 个页面">13</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>核能设施</span><span class="cat-count" aria-label="15 个页面">15</span></a>
@@ -449,7 +449,7 @@
 
 <p>双层多方块，轮廓不同：沉重的机械下部和轻盈的玻璃腔室上部——不是「两个立方体叠在一起」。</p>
 
-<ul><li><strong>底座</strong>——由 51 个元素构成的技术基座：工作面上有屏幕和弹匣，侧面有通风口，中段在上下两条满幅 带之间内凹半个像素。从外部看它仍是<strong>完整的 16³ 立方体</strong>：碰撞体完整，方块遮挡邻居并完全阻隔 光线。内凹的带是凹槽而非开口，上下被满幅带封住，因此遮挡邻居不会向视线暴露任何东西。背面是营养 液槽的进水口和旁边的观察窗：不打开界面也能从外面看出水位。</li><li><strong>穹顶</strong>——没有粗横梁的透明腔室：玻璃筒身、两级肩部和紧凑的顶盖。<strong>不是完整立方体</strong>，因此 ；其形状与碰撞体按轮廓逐级收进（由模型生成的五个盒体）。由任意 <code>c:glass</code> 标签 玻璃自动放置。原始玻璃类型会被记住，因此：<ul><li>拆解多方块时返还<strong>恰好你的玻璃</strong>——不丢失任何东西；</li><li><strong>彩色玻璃给穹顶染色</strong>——17 种着色变体，无需新配方：16 种染色玻璃加无色。框架和顶盖的 金属罩始终是深色金属（金属罩下方的薄玻璃板会与筒身一同染色）。</li></ul></li><li>被辐照物品在腔室中央悬浮并缓慢旋转；工作时——粒子、辉光脉动，以及在腔室地板上方旋转的 发射器环。</li></ul>
+<ul><li><strong>底座</strong>——由 51 个元素构成的技术基座：工作面上有屏幕和弹匣，侧面有通风口，中段在上下两条满幅 带之间内凹半个像素。碰撞体是<strong>完整的 16³ 立方体</strong>，方块也完全阻隔光线，但模型并未填满立方体： 在底座与檐口之间，外壳向方块内侧缩进半个到一个像素，竖向棱边处是贯通的缝隙。因此它的遮挡形状 （）为空：方块仍属于遮挡方块（），但不会隐藏邻居的任何一个面——透过 缝隙看到的是旁边的墙，而不是天空。光照衰减固定为 15（）：否则不完整的遮挡形状 会把它降到 1。背面是营养 液槽的进水口和旁边的观察窗：不打开界面也能从外面看出水位。</li><li><strong>穹顶</strong>——没有粗横梁的透明腔室：玻璃筒身、两级肩部和紧凑的顶盖。<strong>不是完整立方体</strong>，因此 ；其形状与碰撞体按轮廓逐级收进（由模型生成的五个盒体）。由任意 <code>c:glass</code> 标签 玻璃自动放置。原始玻璃类型会被记住，因此：<ul><li>拆解多方块时返还<strong>恰好你的玻璃</strong>——不丢失任何东西；</li><li><strong>彩色玻璃给穹顶染色</strong>——17 种着色变体，无需新配方：16 种染色玻璃加无色。框架和顶盖的 金属罩始终是深色金属（金属罩下方的薄玻璃板会与筒身一同染色）。</li></ul></li><li>被辐照物品在腔室中央悬浮并缓慢旋转；工作时——粒子、辉光脉动，以及在腔室地板上方旋转的 发射器环。</li></ul>
 
 <h2 id="声音">声音</h2>
 

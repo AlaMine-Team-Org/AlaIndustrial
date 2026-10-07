@@ -360,7 +360,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
 <div class="group-title">能源</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="13 个页面">13</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>核能设施</span><span class="cat-count" aria-label="15 个页面">15</span></a>
@@ -399,29 +399,33 @@
 
 <p><strong>园艺无人机基站</strong>——1×1 的方块底座（如同扫地机器人的基座），无人机会从中升空并巡视基站 周围半径 4 格的区域。无人机不是 Entity，而是由基站本身的 绘制的对象 视觉上它看起来和移动起来都像飞行器，但物理上始终「属于」基站方块，无法离开其区域。</p>
 
-<p>玩家把种子和骨粉放进基站，接上 EU/FE——无人机就会自己维护农田：犁空闲的土地、在合适土壤 上方的空格子里播种、用骨粉加速未成熟作物的生长，并把成熟作物直接运回其输出槽（世界中不出现 <code>ItemEntity</code>）。它取代了计划中但未实现的「自动作物护理」（<code>crop_matron</code>）和「收割机」 （<code>crop_harvester</code>）——一个方块替代两个，不重复机制。</p>
+<p>玩家把种子和骨粉放进基站，接上 EU/FE——无人机就会自己维护农田：犁空闲的土地、在合适土壤 上方的空格子里播种、用骨粉加速未成熟作物的生长、清除让下方土地无法犁的草和灌木，并把成熟作物直接运回其输出槽（世界中不出现 <code>ItemEntity</code>）。它取代了计划中但未实现的「自动作物护理」（<code>crop_matron</code>）和「收割机」 （<code>crop_harvester</code>）——一个方块替代两个，不重复机制。</p>
 
 <h2 id="能量">能量</h2>
 
 <table><thead><tr><th>字段</th><th>数值</th></tr></thead><tbody><tr><td>角色</td><td>带缓存的消费者</td></tr><tr><td>缓存（EU/FE）</td><td>4000（）</td></tr><tr><td>最大输入（EU/FE/刻）</td><td>32（LV）</td></tr><tr><td>最大输出（EU/FE/刻）</td><td>n/a（不输出）</td></tr><tr><td>每次行动 EU/FE</td><td><strong>8</strong>（）</td></tr></tbody></table>
 
-<p>基站作为普通消费者在所有工作面上接入能源网络。EU/FE 仅<strong>为实际执行的动作</strong>扣除——犁地、 种植、施肥或采集一格——遵循<a href="../machines/electric_heater.html">电热器</a>的模式：空闲（区域内 无事可做——种子/肥料耗尽，或所有格子已处理）消耗 0 EU/FE，基站会进入休眠 进入 idle-sleep，不浪费能量，也不变成网络的寄生槽。</p>
+<p>基站作为普通消费者在所有工作面上接入能源网络。EU/FE 仅<strong>为实际执行的动作</strong>扣除——犁地、 种植、施肥、采集或除草一格——遵循<a href="../machines/electric_heater.html">电热器</a>的模式：空闲（区域内 无事可做——种子/肥料耗尽，或所有格子已处理）消耗 0 EU/FE，基站会进入休眠 进入 idle-sleep，不浪费能量，也不变成网络的寄生槽。</p>
 
 <h2 id="加工">加工</h2>
 
-<p>基站不使用加工配方系统——取而代之，每次无人机起飞（找到目标时）对区域中的一个格子执行 四种动作之一。</p>
+<p>基站不使用加工配方系统——取而代之，每次无人机起飞（找到目标时）对区域中的一个格子执行 五种动作之一。</p>
 
 <table><thead><tr><th>字段</th><th>数值</th></tr></thead><tbody><tr><td>配方类型</td><td>无（非配方机器）</td></tr><tr><td>每次起飞动作数</td><td>1（一个动作——一个格子）</td></tr><tr><td>自动卸载</td><td>是（作物直接进入基站输出槽）</td></tr></tbody></table>
 
-<p><strong>锄是两种动作的工具。</strong> 犁地和采集作物各消耗锄槽中 1 点耐久，<strong>无锄不执行</strong>：会因动作 而消耗但对动作不必要的工具，对玩家来说难以理解。种植和施肥不需要锄。</p>
+<p><strong>锄是三种动作的工具。</strong> 犁地、采集作物和除草各消耗锄槽中 1 点耐久，<strong>无锄不执行</strong>：会因动作 而消耗但对动作不必要的工具，对玩家来说难以理解。种植和施肥不需要锄。</p>
 
 <p><strong>锄会用到尽头——然后槽位空出来。</strong> 基站消耗最后 1 点耐久后，锄会<strong>损坏并从槽中消失</strong>， 与在玩家手中完全一样：带损坏音效和粒子。这不是装饰，而是自动化的条件——空槽可从漏斗接受 新锄，农场可无人值守运行。磨损走原版路径，因此<strong>Unbreaking 附魔生效</strong>：附魔锄在基站中 和在手中一样耐用。已损坏的锄槽不接受——否则它会永久占用槽位。</p>
 
 <p><strong>动作优先级</strong>（按此顺序检查，执行第一个匹配的）：</p>
 
-<ol><li><strong>采集</strong>——区域内有成熟作物的格子（需要锄）。</li><li><strong>种植</strong>——<code>#minecraft:supports_crops</code> 中土壤上方的空格子 + 槽中有合适的种子。</li><li><strong>施肥</strong>——未成熟作物的格子 + 槽中有骨粉。</li><li><strong>犁地</strong>——原版泥土或草的格子（需要锄；将其转为耕地）。</li></ol>
+<ol><li><strong>采集</strong>——区域内有成熟作物的格子（需要锄）。</li><li><strong>种植</strong>——<code>#minecraft:supports_crops</code> 中土壤上方的空格子 + 槽中有合适的种子。</li><li><strong>施肥</strong>——未成熟作物的格子 + 槽中有骨粉。</li><li><strong>除草</strong>——杂草标签中的草或灌木（需要锄，且输出槽有空位）。</li><li><strong>犁地</strong>——上方为空的原版泥土或草方块格子（需要锄；将其转为耕地）。</li></ol>
 
-<p>此顺序保证「农场自我维护」无中断：若没有作为第四动作的犁地，玩家首次扩展田地时该承诺 就会破裂。</p>
+<p>此顺序保证「农场自我维护」无中断：若犁地不是最后一个动作，玩家首次扩展田地时该承诺 就会破裂；除草紧挨在它之前，因为占住待犁土地上方格子的正是杂草。</p>
+
+<p><strong>除草（）。</strong> 无人机会拔除野生植被——否则其下方的土地永远无法犁：没有这一步，沼泽或 热带草原上的田地会永远长满杂草。杂草是 <code>#</code> 标签中的方块：矮草丛 和高草丛、蕨和大型蕨、枯萎的灌木、灌木丛、萤火虫灌木丛、矮枯草丛和高枯草丛、枯叶堆，以及（游戏中 存在时的）红灌木。这份名单是标签而非方块类：游戏中的所有植物——包括作物以及本模组的青胶蒲公英和 棚架——都属于同一个类，按类判断会把农田本身也除掉。<strong>永远不碰：</strong> 花、树苗、树叶、蘑菇和藤蔓（玩家 种下或留下的东西），以及无人机作为作物采集的一切——作物、青胶蒲公英及其根、棚架。数据包可以扩展该标签。</p>
+
+<ul><li><strong>代价</strong>——与任何动作相同：锄的 1 点耐久和 EU/FE。<strong>这是对原版的有意偏离：</strong> 在玩家手中，锄不会因草而磨损；而在这里，每次除草都和犁地、采集一样是工具活。</li><li><strong>两格高的植物</strong>（高草丛、大型蕨）一次动作整株清除：目标始终是下半部分——只有它掉落战利品—— 上半部分随之一起消失。</li><li><strong>掉落物</strong>——即徒手（不用剪刀）破坏该植物时的掉落（草有 1/8 概率掉小麦种子、枯萎的灌木掉木棍、 萤火虫灌木丛掉落自身、枯叶堆）——进入基站的输出槽；世界中不会出现 <code>ItemEntity</code>。植物会发出原版的 破坏声音和粒子。</li><li><strong>输出已满时不除草，与采集一样：</strong> 如果四个输出槽都放满整组物品，杂草保留，锄和 EU/FE 都不消耗；如果 某株杂草的掉落放不下，这株杂草就留在原地。总会掉落东西的杂草（萤火虫灌木丛、枯叶堆）可能塞满输出， 这样的田里的基站需要清空。</li></ul>
 
 <p><strong>种植土壤是原版标签，而非方块（）。</strong> 种植（以及区域缓存中的格子筛选）把 <code>#minecraft:supports_crops</code> 中的任何方块都当作土壤——作物自身正是用同一个标签判断自己 能否立在方块上。因此无人机和作物在「什么算土地」上不会分歧：Farmer's Delight 的 rich soil farmland（以及任何加入该标签的模组土壤）无人机都当作原生农田来处理——不需要 任何一行知道外来 id 的代码。<strong>犁地不跟随该标签</strong>：只有原版的泥土和草才会被转为原版 耕地，外来土壤无人机绝不翻动——玩家的 rich soil 是用骨粉换来的，基站不应毁掉它。</p>
 
@@ -429,7 +433,7 @@
 
 <p><strong>飞行声音。</strong> 无人机在空中时，能听到轻柔的循环螺旋桨声，且<strong>来自无人机本身</strong>——声源随其 移动，而非挂在基站上。这是正确的：无人机飞出数格并从头顶掠过，若嗡嗡声来自基座则会被读作 错误。听觉半径 8 格、音量 0.22——模组中最低：这是唯一一个自己开向玩家的声音，也是唯一一个 几乎整个工作周期都在响的声音。在基座上以及无人机停留在被处理格子上的那几刻——安静。</p>
 
-<p><strong>犁地声音。</strong> 犁地时，无人机会发出与玩家手动锄地相同的原版锄声（<code>minecraft:item.hoe.till</code>） 音量和 pitch 也相同。四个动作中只有犁地配音：它有明确的原版参考，而种植、施肥和采集 没有。</p>
+<p><strong>犁地声音。</strong> 犁地时，无人机会发出与玩家手动锄地相同的原版锄声（<code>minecraft:item.hoe.till</code>） 音量和 pitch 也相同。只有犁地有自己的锄声：它有明确的原版参考，而种植、施肥和采集 没有。除草的声音就是植物本身被破坏时的声音。</p>
 
 <p>完成工作后，无人机<strong>在格子上停留 6 刻</strong>，然后才返航。没有这一停顿，动作和返航段会在同一刻 开始：无人机在一帧内既触碰农田又从其上脱离，读起来像弹跳而非机器做活。停顿只在远端—— 在基座上它会改变动作发生的刻，而那正是所有测试场景计数的刻。</p>
 
@@ -443,7 +447,7 @@
 
 <h2 id="物品栏">物品栏</h2>
 
-<table><thead><tr><th>槽位</th><th>接受</th><th>数量</th></tr></thead><tbody><tr><td>种子（0）</td><td>带对应作物种子标签的物品</td><td>至一叠</td></tr><tr><td>肥料（1）</td><td><code>minecraft:bone_meal</code></td><td>至一叠</td></tr><tr><td>无人机（6）</td><td>——没有它基站不工作</td><td>1</td></tr><tr><td>锄（7）</td><td>任何锄（<code>#minecraft:hoes</code>）；在犁地和采集时消耗</td><td>1</td></tr><tr><td>输出 1–4（2–5）</td><td>仅基站自动插入（作物）；外部手动/自动化插入被阻止</td><td>各至一叠</td></tr></tbody></table>
+<table><thead><tr><th>槽位</th><th>接受</th><th>数量</th></tr></thead><tbody><tr><td>种子（0）</td><td>带对应作物种子标签的物品</td><td>至一叠</td></tr><tr><td>肥料（1）</td><td><code>minecraft:bone_meal</code></td><td>至一叠</td></tr><tr><td>无人机（6）</td><td>——没有它基站不工作</td><td>1</td></tr><tr><td>锄（7）</td><td>任何锄（<code>#minecraft:hoes</code>）；在犁地、采集和除草时消耗</td><td>1</td></tr><tr><td>输出 1–4（2–5）</td><td>仅基站自动插入（作物和除草掉落物）；外部手动/自动化插入被阻止</td><td>各至一叠</td></tr></tbody></table>
 
 <p>四个输出槽而非一个——成熟作物一次动作可能产生多种类型的物品（例如小麦会分别给出小麦本 身和小麦种子）；模组机器基础模型不支持单一槽位混合内容。掉落物插入输出槽是两遍式的 （「先模拟所有堆叠容量 → 仅在全成功时变更」），输出满时不会有部分作物丢失。</p>
 
@@ -467,7 +471,7 @@
 
 <h2 id="相关内容">相关内容</h2>
 
-<ul><li><a href="sprinkler.html">喷灌器</a>——同一块田里的邻居，两者职责不重叠。无人机站是<strong>点式工人</strong>：一次动作只作用一格，用骨粉和 EU/FE 付费，它翻地、播种、收割。喷灌器是<strong>被动范围</strong>：既不碰土也不碰庄稼，只让周围一切生长的东西长得更快，付的是营养液。它们本来就该摆在一起。</li><li><a href="../items/scythe.html">大镰刀</a>——可复用作物成熟度谓词的来源。</li><li><a href="trellis.html">棚架</a>——本模组中已有的 <code>BonemealableBlock</code> 先例。</li><li><a href="incubator.html">培育舱</a>——带按索引标签验证的多槽物品栏和超出基础的 <code>ContainerData</code> 的范例。</li><li><a href="../fluid-machines/pump.html">抽水泵</a>——带限制的区域扫描范例，以及机器在自己的 tick 中 无玩家地改变世界方块的唯一先例。</li><li><a href="../machines/electric_heater.html">电热器</a>——「仅因有用的刻消耗 EU/FE」（需求驱动）的范例。</li></ul>
+<ul><li><a href="sprinkler.html">喷灌器</a>——同一块田里的邻居，两者职责不重叠。无人机站是<strong>点式工人</strong>：一次动作只作用一格，用骨粉和 EU/FE 付费，它翻地、播种、除草、收割。喷灌器是<strong>被动范围</strong>：既不碰土也不碰庄稼，只让周围一切生长的东西长得更快，付的是营养液。它们本来就该摆在一起。</li><li><a href="../items/scythe.html">大镰刀</a>——可复用作物成熟度谓词的来源。</li><li><a href="trellis.html">棚架</a>——本模组中已有的 <code>BonemealableBlock</code> 先例。</li><li><a href="incubator.html">培育舱</a>——带按索引标签验证的多槽物品栏和超出基础的 <code>ContainerData</code> 的范例。</li><li><a href="../fluid-machines/pump.html">抽水泵</a>——带限制的区域扫描范例，以及机器在自己的 tick 中 无玩家地改变世界方块的唯一先例。</li><li><a href="../machines/electric_heater.html">电热器</a>——「仅因有用的刻消耗 EU/FE」（需求驱动）的范例。</li></ul>
 
 <h2>合成</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="园艺无人机基站 alaindustrial:garden_drone_station" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="任意铜锭"><img src="../../assets/item/copper_ingot_3d.png" alt="任意铜锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铜锭"><img src="../../assets/item/copper_ingot_3d.png" alt="任意铜锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="电子电路"><img src="../../assets/item/electronic_circuit_3d.png" alt="电子电路" width="32" height="32"></div> <div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="园艺无人机基站"><img src="../../assets/item/garden_drone_station_3d.png" alt="园艺无人机基站" width="32" height="32"></div><div class="result-name">园艺无人机基站</div></div></div></div></div>

@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ja_jp" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>圧電感圧板 — Ala Industrial — ガイド</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="メニューを開く" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  </div>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../../assets/item/guide_book_3d.png" alt="">すべてのコンテンツ</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/ky7cFDF8JD" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../../assets/platform/discord.svg" alt="Discord"></a>
+    </div>
+    <search class="site-search"><input type="search" data-wiki-search placeholder="ウィキを検索…" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-label="ガイドを検索" autocomplete="off" spellcheck="false" data-index="../search-index.json" data-root="../" data-l10n="{&quot;list&quot;:&quot;検索結果&quot;,&quot;one&quot;:&quot;ページ&quot;,&quot;few&quot;:&quot;ページ&quot;,&quot;many&quot;:&quot;ページ&quot;,&quot;loading&quot;:&quot;検索インデックスを読み込み中…&quot;,&quot;nothing&quot;:&quot;見つかりません&quot;}"></search>
+    <details class="language-menu"><summary aria-label="Language">日本語</summary><div class="language-popover"><span>日本語</span><a href="../../en/generators/piezo_plate.html">EN</a><a href="../../ru/generators/piezo_plate.html">RU</a><a href="../../uk/generators/piezo_plate.html">UA</a><a href="../../zh_cn/generators/piezo_plate.html">中文</a><a href="../../es_es/generators/piezo_plate.html">ES</a></div></details>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">ブラウズ</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../../assets/item/tempered_iron_pickaxe.png" alt=""><span>はじめに</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
+<div class="group-title">エネルギー</div>
+<a class="cat-link active" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="14 ページ">14</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
+<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>原子力</span><span class="cat-count" aria-label="15 ページ">15</span></a>
+<div class="group-title">加工</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>マシン</span><span class="cat-count" aria-label="16 ページ">16</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>液体マシン</span><span class="cat-count" aria-label="3 ページ">3</span></a>
+<div class="group-title">物流</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>アイテム輸送</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>液体輸送</span><span class="cat-count" aria-label="5 ページ">5</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>液体貯蔵</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<div class="group-title">世界と自動化</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>素材</span><span class="cat-count" aria-label="24 ページ">24</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>農業</span><span class="cat-count" aria-label="6 ページ">6</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>高度なマシン</span><span class="cat-count" aria-label="1 ページ">1</span></a>
+<div class="group-title">その他</div>
+<a class="cat-link" href="../construction/index.html"><img class="nav-icon" src="../../assets/item/engraved_plate_0_3d.png" alt=""><span>建築ブロック</span><span class="cat-count" aria-label="1 ページ">1</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="18 ページ">18</span></a>
+<div class="group-title">アイテム</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="30 ページ">30</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="30 ページ">30</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">ホーム</a><span class="sep">/</span><a href="../generators/index.html">発電機</a><span class="sep">/</span><span>圧電感圧板</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../../assets/item/piezo_plate_3d.png" alt="圧電感圧板" width="64" height="64">
+    <div class="info">
+      <h1>圧電感圧板</h1>
+      <div class="block-id">alaindustrial:piezo_plate</div>
+      <div class="tags"><span class="tag cat" style="background:#f0b429">発電機</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">実装済み</span><span class="tag">tier-lv</span><span class="tag">energy</span><span class="tag">redstone</span><span class="tag">mob</span></div>
+    </div>
+  </div>
+</div>
+<h2 id="概要">概要</h2>
+
+<p><strong>圧電感圧板</strong>は、発電もこなす感圧板です。プレイヤー・Mob・アイテムが新たに踏むたびに、感圧板は少量の EUを生み出します。レッドストーン信号はバニラの石の感圧板と同じように出すので、同じ感圧板が罠にも 発電所にもなります。</p>
+
+<p>エネルギーは感圧板の枚数ではなく<strong>通行量</strong>で決まります。感圧板の上に立ち止まったMobがエネルギーを 出すのは一度だけですが、感圧板の通路を流れるMobの群れは、どの感圧板でも一歩ごとにエネルギーを 出します。拠点の廊下に1枚置けばささやかなおまけに、Mobトラップの通路に敷けば目に見える電源に なります。</p>
+
+<p>隣り合う感圧板はひとつの<strong>圧電通路</strong>として働きます。通路のすべての感圧板のエネルギーは、ひとつの 接続 — いずれかの感圧板の横にあるケーブル、または床ブロックの下に隠したケーブル — から出ていきます。 上から見ると感圧板は載っているブロックと同じ見た目になるので、通路はほとんど見えません。 <a href="../items/wrench.html">レンチ</a>を手に持つと、壁越しに光って見えます。</p>
+
+<blockquote><strong>ミニ例:</strong> Mobトラップの通路に感圧板20枚、Mobが途切れずに流れていれば、通路はおよそ2–5 EU/FE/tを 出します。どれか1枚の床下にケーブルを1本通せば、すべてを<a href="../energy-storage/battery_box.html">エネルギー貯蔵庫</a> へ運べます。</blockquote>
+
+<h2 id="エネルギー">エネルギー</h2>
+
+<p>感圧板はエネルギーを生産するだけです。他からのエネルギーは受け取らず、自分を通して流すこともしません。</p>
+
+<table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>生き物(プレイヤー、Mob)が踏んだとき</td><td>10 EU/FE</td></tr><tr><td>アイテム・矢・トロッコだけが踏んだとき</td><td>2 EU/FE</td></tr><tr><td>感圧板1枚の蓄え</td><td>100 EU/FE</td></tr><tr><td>通路の蓄え</td><td>感圧板の蓄えの合計(64枚で6400 EU/FE)</td></tr><tr><td>通路の出力</td><td>LV、通路全体で最大32 EU/FE/t</td></tr><tr><td>ティア</td><td>LV</td></tr></tbody></table>
+
+<p>感圧板はそれぞれ自分の踏まれた分を蓄えます。受け取り先のある感圧板が通路全体のエネルギーを集めて 先へ渡します。感圧板の蓄えが満杯になると、その感圧板の次の踏み込みは失われます — だから通路には 出力先が必要です。壊れた感圧板が失うのは自分の中にあった分だけで、通路の残りは蓄えを保ちます。</p>
+
+<h2 id="発電">発電</h2>
+
+<p>エネルギーを生むのは<strong>新しい踏み込み</strong> — 感圧板が離された状態から押された状態に変わる瞬間です。</p>
+
+<ul><li><strong>乗り続けても何も出ません。</strong> 誰かが上に立っている間、感圧板は押されたままで、新しい分は出しま せん。次の分は感圧板が完全に離されたあとです。</li><li><strong>群れでも1回です。</strong> 同時に何体が乗っていても、踏み込みは1回です。</li><li><strong>感圧板ごとに1回です。</strong> 10枚の通路を走り抜けたMobは10枚を踏み、10回分を出します。感圧板の間で 共通の「待ち時間」はありません。</li><li><strong>生き物は満額を出し</strong>、アイテム・矢・トロッコだけの踏み込みはその5分の1です。感圧板の上に生き物が 1体でもいれば満額です。</li><li><strong>置かれたアイテムは感圧板を押したままにします。</strong> 感圧板に落としたアイテムは1回だけ踏み込みを 出し、あとは邪魔になるだけです: そこにある間、新しい踏み込みはありません。</li></ul>
+
+<p>押された感圧板はバニラと同じく1秒に1回自分を確認し直します。そのため1枚の感圧板は物理的に<strong>1秒に 1回</strong>より多くは踏まれず、Mobからは0.5 EU/FE/tを超えません。発電量を決めるのは感圧板ではなく生き物の流れ です。</p>
+
+<h2 id="圧電通路">圧電通路</h2>
+
+<p>横で接している感圧板どうしは<strong>通路</strong>になります。通路はひとつの共有の蓄えです: どの感圧板の エネルギーも、その通路のどの接続からでも出ていけます。感圧板ごとに別々のケーブルは要りません。</p>
+
+<ul><li>斜めや上下ではつながりません — 同じ高さで横どうしだけです。</li><li>1つの通路は最大<strong>64枚</strong>です。それより長い列はいくつかの通路に分かれ、それぞれに出力先が必要です。</li><li>通路が運ぶのは自分の感圧板のエネルギーだけです。通路の一端にあるケーブルや発電機のエネルギーは 反対の端へは届きません: 感圧板は導線ではありません。</li><li>通路のすべての出力先を合わせても渡せるのは最大32 EU/FE/tです。これは64枚の満杯の通路が最も密な Mobの流れで生み出せる量とちょうど同じなので、接続された通路でエネルギーが滞ることはありません。</li></ul>
+
+<h2 id="接続">接続</h2>
+
+<p>受け取り先のある感圧板を、このModは<strong>出力先</strong>と呼びます。次の2つの接続のどちらかを1つでも持つ 感圧板が出力先です。</p>
+
+<p><strong>横から。</strong> 感圧板の4つの側面のどれかにぴったり接したケーブル・機械・蓄電ブロック。ケーブルは どの発電機に対してもそうするように、感圧板へ腕を伸ばします。</p>
+
+<p><strong>床越しに。</strong> 感圧板のすぐ下のブロックが<strong>床</strong>です: 石・板材・羊毛のような普通のブロックです。床の 下(つまり感圧板の2ブロック下)にあるケーブルや機械は、床越しに感圧板を見つけます。ケーブルは床へ 腕を伸ばしません — 配線は完全に隠れたままで、これは意図どおりです。</p>
+
+<ul><li>床は普通のブロックでなければなりません。感圧板の下が機械・チェスト・中身を持つ他のブロックなら、 それを越えた接続はありません: そうしたブロックは自分の面を持っています。</li><li>ケーブルや蓄電ブロックの上に直接置いた感圧板は出力先になりません。</li><li>1つの面でしかエネルギーを受け取らない蓄電ブロック(<a href="../energy-storage/battery_box.html">エネルギー貯蔵庫</a> など)は、床下に<strong>入力面を上に向けて</strong>置いてください。</li><li>感圧板を置いたあとで床下に通したケーブルは、数秒で通路が気づきます。</li></ul>
+
+<p>感圧板の上面はエネルギーを出しません: 感圧板は歩くためのものです。</p>
+
+<h2 id="偽装">偽装</h2>
+
+<p>上から見ると、感圧板は<strong>載っているブロックの薄い切れ端</strong>のように見えます: 石の上なら石の感圧板、 ピンクの羊毛の上ならピンクの羊毛の感圧板、草の上ならそのバイオームの色をした草の感圧板です。模様は 周りの床の模様に続いているので、通路は床とほとんど見分けがつきません。下のブロックを替えると、 感圧板の見た目も一緒に変わります。</p>
+
+<p>写し取るのは中身を持たない<strong>完全な不透明ブロック</strong>だけです。ガラス・ハーフブロック・葉・チェスト・ ケーブル・機械など、そうしたブロックの上では、感圧板は自分のテクスチャを見せます: ネザークォーツの 結晶と銅の配線をあしらった鋼の板です。インベントリでは常に自分のアイコンです。</p>
+
+<p>感圧板は目立ちません: パーティクルも火花も光もありません。見えるのは、踏まれたときに沈むことだけです。</p>
+
+<h2 id="レンチの透視">レンチの透視</h2>
+
+<p>偽装した通路は見失いやすいので、透視機能があります。どちらかの手に<a href="../items/wrench.html">レンチ</a>を 持っている間、周りの圧電感圧板が<strong>ブロック越しに</strong>強調表示されます — 水平8ブロック・垂直4ブロックの 範囲で、最大160枚です。強調表示はなめらかに現れて消え、レンチがなければ表示されません。</p>
+
+
+<table><thead><tr><th>色</th><th>意味</th></tr></thead><tbody><tr><td>緑</td><td>出力先があり、蓄えに空きがある — すべて正常</td></tr><tr><td>琥珀色</td><td>出力先がない: 踏み込みは蓄えられるが、どこにも行かない</td></tr><tr><td>赤</td><td>通路の蓄えが満杯: 新しい踏み込みは失われる</td></tr></tbody></table>
+
+<p>各出力先からは受け取り先へ白い線が伸びます: 横なら隣へ、下なら床越しに隠れたケーブルや機械へ。</p>
+
+<p>レンチを持って感圧板を見ると、ホットバーの横に1行が表示されます: 通路の感圧板の枚数、蓄えにある エネルギーと容量、出力先の数です。</p>
+
+<p>プレイヤーが感圧板を置くと、ホットバーの上に一瞬だけ1行が表示されます: 通路がいま何枚になったか、 接続されているかどうか。感圧板はそれ以外のメッセージを出しません。</p>
+
+<h2 id="静音圧電感圧板">静音圧電感圧板</h2>
+
+<p><strong>静音圧電感圧板</strong>は、同じ感圧板をフェルトで覆ったものです。踏まれたときも離されたときも<strong>カチッと 鳴らず</strong>、自分では<strong>スカルクセンサーへの振動を出しません</strong> — バニラの羊毛のように。生き物の足音は これまでどおりスカルクに聞こえます: 足音はどこを歩いても、それ自体が振動を出すからです。</p>
+
+<p>それ以外はまったく同じです: 同じ量を出し、同じように偽装し、普通の感圧板と一緒に同じ通路に入ります。 偽装していないときはフェルトの縁で見分けられます。</p>
+
+<h2 id="ブロック属性">ブロック属性</h2>
+
+<table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>形状</td><td>バニラと同じ薄い板: 14×1×14ピクセル、押されると高さ0.5ピクセル</td></tr><tr><td>当たり判定</td><td>なし — バニラと同じく通り抜けられる</td></tr><tr><td>支え</td><td>バニラの感圧板と同じ: 上面がしっかりしたブロックが必要で、支えがなければアイテムとして落ちる</td></tr><tr><td>硬さ</td><td>0.5</td></tr><tr><td>ツール</td><td>ツルハシ。なしでも壊れるが何もドロップしない</td></tr><tr><td>ドロップ</td><td>感圧板そのもの(偽装なしの通常アイコン)</td></tr><tr><td>ピストン</td><td>ピストンに押されるとアイテムとして外れる</td></tr><tr><td>水</td><td>感圧板を通り抜けて流れず、押し流しもしない</td></tr><tr><td>レッドストーン</td><td>押されている間は信号15</td></tr></tbody></table>
+
+<p>水流を使うMobトラップでは: 感圧板はMobが泳ぐ場所ではなく、足で歩く場所に置きます。</p>
+
+<h2 id="サウンド">サウンド</h2>
+
+<p>普通の圧電感圧板は、バニラの石の感圧板と同じく踏まれたときと離されたときにカチッと鳴ります。静音の ものは鳴りません。</p>
+
+<h2 id="レシピ">レシピ</h2>
+
+<table><thead><tr><th>アイテム</th><th>レシピ</th></tr></thead><tbody><tr><td>圧電感圧板</td><td>不定形: 石の感圧板 + ネザークォーツ + <a href="../energy-transfer/copper_cable.html">銅ケーブル</a></td></tr><tr><td>静音圧電感圧板</td><td>不定形: 圧電感圧板 + 糸×2</td></tr></tbody></table>
+
+<h2 id="関連項目">関連項目</h2>
+
+<ul><li><a href="mob_wheel.html">回し車</a> — これも「動き」で発電する発電機: Mobが車輪の中を走ります。</li><li><a href="../energy-transfer/copper_cable.html">銅ケーブル</a> — 通路を横から、または床下からつなぎます。</li><li><a href="../energy-storage/battery_box.html">エネルギー貯蔵庫</a> — 通路のエネルギーを蓄えます。</li><li><a href="../items/wrench.html">レンチ</a> — 壁越しの感圧板の強調表示をオンにします。</li><li><a href="solar_panel.html">ソーラーパネル</a> — 比較用: 通行量なしで安定して少しずつ発電します。</li></ul>
+
+<h2>クラフト</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="圧電感圧板 alaindustrial:piezo_plate" data-type="minecraft:crafting_shapeless"><div class="recipe-header"><span class="recipe-type">不定形クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell placeholder" title="石の感圧板" aria-label="石の感圧板"><span>stone </span></div> <div class="cell" title="ネザークォーツ"><img src="../../assets/item/quartz_3d.png" alt="ネザークォーツ" width="32" height="32"></div> <div class="cell" title="銅ケーブル"><img src="../../assets/item/copper_cable_3d.png" alt="銅ケーブル" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="圧電感圧板"><img src="../../assets/item/piezo_plate_3d.png" alt="圧電感圧板" width="32" height="32"></div><div class="result-name">圧電感圧板</div></div></div></div></div>
+<h2>用途</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="静音圧電感圧板 alaindustrial:silent_piezo_plate" data-type="minecraft:crafting_shapeless"><div class="recipe-header"><span class="recipe-type">不定形クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="圧電感圧板"><img src="../../assets/item/piezo_plate_3d.png" alt="圧電感圧板" width="32" height="32"></div> <div class="cell" title="糸"><img src="../../assets/item/string_3d.png" alt="糸" width="32" height="32"></div> <div class="cell" title="糸"><img src="../../assets/item/string_3d.png" alt="糸" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="静音圧電感圧板"><img src="../../assets/item/silent_piezo_plate_3d.png" alt="静音圧電感圧板" width="32" height="32"></div><div class="result-name">静音圧電感圧板</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>

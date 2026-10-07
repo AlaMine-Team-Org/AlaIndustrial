@@ -360,7 +360,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="13 ページ">13</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>原子力</span><span class="cat-count" aria-label="15 ページ">15</span></a>
@@ -407,7 +407,7 @@
 
 <table><thead><tr><th>セグメント</th><th>役割</th><th>液体</th></tr></thead><tbody><tr><td>上段</td><td>凝縮器</td><td><strong>ディーゼル — 出力</strong></td></tr><tr><td>中段</td><td>原料受け入れ</td><td><strong>石油 — 入力</strong></td></tr><tr><td>下段</td><td>基部キューブ（「頭脳」）</td><td><strong>重油 — 出力</strong> + エネルギー入力</td></tr></tbody></table>
 
-<ul><li><strong>手で組み立てます</strong>（ラウンド3）：クラフトするのはセグメントブロック1種類だけ。<strong>セグメントを3つ積み重ねる</strong>と塔がひとりでに組み上がります（最下段が基部「頭脳」になり、上の2つは中段と上段のセクションに変わり、金床の鳴る音が響きます）。単独のセグメントは不活性なブランク段です：ポートもメニューもなく、クリックすると組み立ての続け方をヒントで教えてくれます。</li><li>分解はその鏡写しです：どのセグメントを壊しても塔は<strong>退化</strong>します — 壊した段はセグメントのアイテムとして落ち、残りはその場でブランク段に戻り、基部は<strong>タンクとコークスの汚れを内部に保持</strong>します。何も消えず、何も複製されません。</li><li>GUI は組み上がった塔の <strong>どの</strong> セグメントをクリックしても開きます。</li><li><strong>精留セクション</strong>（別途クラフトするブロック）は頂部の <strong>上に</strong> 設置します — 塔は4ブロックの高さに伸び、損失は 10 % から 5 % に下がります：蒸留1回ごとに <strong>ディーゼル +50 mB</strong>（750/200）。蒸気はセクションへ移ります。セクションは独自のドロップを持つ通常のブロックです。外せばボーナスも消えます。</li></ul>
+<ul><li><strong>手で組み立てます</strong>（ラウンド3）：クラフトするのはセグメントブロック1種類だけ。<strong>セグメントを3つ積み重ねる</strong>と塔がひとりでに組み上がります（最下段が基部「頭脳」になり、上の2つは中段と上段のセクションに変わり、金床の鳴る音が響きます）。単独のセグメントは不活性なブランク段です：ポートもメニューもなく、クリックすると組み立ての続け方をヒントで教えてくれます。</li><li>分解はその鏡写しです：どのセグメントを壊しても塔は<strong>退化</strong>します — 壊した段はセグメントのアイテムとして落ち、残りはその場でブランク段に戻り、基部は<strong>タンクとコークスの汚れを内部に保持</strong>します。何も消えず、何も複製されません。</li><li>GUI は組み上がった塔の <strong>どの</strong> 段（精留セクションを含む）をクリックしても開きます。どの段に照準を合わせても塔 <strong>全体</strong> の輪郭がハイライトされます（精留セクションがあればそれも含む）。単独のブランク段や、下に塔のない精留セクションは自分のブロックだけです。</li><li><strong>精留セクション</strong>（別途クラフトするブロック）は頂部の <strong>上に</strong> 設置します — 塔は4ブロックの高さに伸び、損失は 10 % から 5 % に下がります：蒸留1回ごとに <strong>ディーゼル +50 mB</strong>（750/200）。蒸気はセクションへ移ります。セクションは独自のドロップを持つ通常のブロックです。外せばボーナスも消えます。</li></ul>
 
 <h2 id="エネルギー">エネルギー</h2>
 
@@ -439,7 +439,7 @@
 
 <h2 id="メンテナンス">メンテナンス</h2>
 
-<p>蒸留のたびに塔には <strong>コークスの汚れ</strong> が溜まります（+2 %）。<strong>100 %</strong>（≈50 操作）に達すると塔は「コークス詰まり」ステータスで停止します — EU/FE は消費されず、原料も減りません。任意のセグメントを <strong>レンチで右クリック</strong> すると汚れを掻き出せます：塔はきれいになり、プレイヤーは <strong>石炭 1–3 個</strong> を受け取ります（個数は汚れの度合いに依存）。レンチでのシフト右クリックは従来どおり塔の解体です。汚れ具合は GUI のメーターに表示され、再ログイン後 <strong>も、塔を壊した後も</strong> 保持されます — 置き直しは掃除の代わりになりません。</p>
+<p>蒸留のたびに塔には <strong>コークスの汚れ</strong> が溜まります（+2 %）。<strong>100 %</strong>（≈50 操作）に達すると塔は「コークス詰まり」ステータスで停止します — EU/FE は消費されず、原料も減りません。塔の任意の段（精留セクションを含む）を <strong>レンチで右クリック</strong> すると汚れを掻き出せます：塔はきれいになり、プレイヤーは <strong>石炭 1–3 個</strong> を受け取ります（個数は汚れの度合いに依存）。レンチでのシフト右クリックは従来どおり塔の解体です。汚れ具合は GUI のメーターに表示され、再ログイン後 <strong>も、塔を壊した後も</strong> 保持されます — 置き直しは掃除の代わりになりません。</p>
 
 <h2 id="インベントリ">インベントリ</h2>
 

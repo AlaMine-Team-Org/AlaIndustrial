@@ -360,7 +360,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
 <div class="group-title">エネルギー</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="13 ページ">13</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>原子力</span><span class="cat-count" aria-label="15 ページ">15</span></a>
@@ -399,29 +399,33 @@
 
 <p><strong>ガーデンドローンステーション</strong>は 1×1 のドックブロック（ロボット掃除機のベースステーションのようなもので）、 そこからドローンが離陸し、ステーション周囲半径 4 ブロックの範囲を巡回します。ドローンはエンティティでなく、 ステーション自体の が描画するオブジェクトです — 見た目も動きも飛行装置のように 見えますが、物理的には常にステーションブロックに「属し」、その領域を離れることはできません。</p>
 
-<p>プレイヤーはステーションに種と骨粉を入れ、EU/FE を接続します — あとはドローンが自ら農場を維持します： 空いている土を耕し、適切な土の上の空きマスに種を蒔き、未成熟の作物を骨粉で成長させ、成熟した収穫物を そのまま出力スロットへ運びます（ワールド内に <code>ItemEntity</code> は発生しません）。計画されていたが未実装の 「作物自動管理」（<code>crop_matron</code>）と「収穫機」（<code>crop_harvester</code>）を置き換えます — 2 つではなく 1 つの ブロックで、メカニクスの重複なしに。</p>
+<p>プレイヤーはステーションに種と骨粉を入れ、EU/FE を接続します — あとはドローンが自ら農場を維持します： 空いている土を耕し、適切な土の上の空きマスに種を蒔き、未成熟の作物を骨粉で成長させ、下の土を耕せなく している草や茂みを刈り取り、成熟した収穫物をそのまま出力スロットへ運びます（ワールド内に <code>ItemEntity</code> は発生しません）。計画されていたが未実装の 「作物自動管理」（<code>crop_matron</code>）と「収穫機」（<code>crop_harvester</code>）を置き換えます — 2 つではなく 1 つの ブロックで、メカニクスの重複なしに。</p>
 
 <h2 id="エネルギー">エネルギー</h2>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>役割</td><td>バッファ付き消費者</td></tr><tr><td>バッファ（EU/FE）</td><td>4000（）</td></tr><tr><td>最大入力（EU/FE/ティック）</td><td>32（LV）</td></tr><tr><td>最大出力（EU/FE/ティック）</td><td>n/a（放出しない）</td></tr><tr><td>動作あたりの EU/FE</td><td><strong>8</strong>（）</td></tr></tbody></table>
 
-<p>ステーションはすべての稼働面で通常の消費者としてエネルギーネットワークに接続します。EU/FE は <strong>実際に実行された動作</strong> — 耕起、植え付け、施肥、1 マスの収穫 — に対してのみ引き落とされ、 <a href="../machines/electric_heater.html">電気ヒーター</a>のパターンに倣います：アイドル（範囲内にやることがない — 種/肥料切れ、または全マスがすでに対処済み）は 0 EU/FE で、ステーションはスリープに入り でアイドルスリープに入り、無駄にエネルギーを消費せず、ネットワークの寄生吸い口にもなりません。</p>
+<p>ステーションはすべての稼働面で通常の消費者としてエネルギーネットワークに接続します。EU/FE は <strong>実際に実行された動作</strong> — 1 マスの耕起、植え付け、施肥、収穫、除草 — に対してのみ引き落とされ、 <a href="../machines/electric_heater.html">電気ヒーター</a>のパターンに倣います：アイドル（範囲内にやることがない — 種/肥料切れ、または全マスがすでに対処済み）は 0 EU/FE で、ステーションはスリープに入り でアイドルスリープに入り、無駄にエネルギーを消費せず、ネットワークの寄生吸い口にもなりません。</p>
 
 <h2 id="加工">加工</h2>
 
-<p>ステーションは加工レシピシステムを使いません — 代わりに、（目標が見つかった）各飛行で、 範囲内の 1 マスに対する 4 つの動作のいずれか 1 つを実行します。</p>
+<p>ステーションは加工レシピシステムを使いません — 代わりに、（目標が見つかった）各飛行で、 範囲内の 1 マスに対する 5 つの動作のいずれか 1 つを実行します。</p>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>レシピタイプ</td><td>なし（レシピ型機械でない）</td></tr><tr><td>飛行あたりの動作</td><td>1（1 動作 = 1 マス）</td></tr><tr><td>自動取出し</td><td>はい（収穫物は直接ステーションの出力スロットへ）</td></tr></tbody></table>
 
-<p><strong>クワは 2 動作のツールです。</strong> 耕起と収穫はクワスロットから耐久値 1 を消費し、<strong>クワなしでは実行できません</strong>： 動作で消費されるが必須でないツールは、プレイヤーに分かりにくいものです。植え付けと施肥はクワを 必要としません。</p>
+<p><strong>クワは 3 動作のツールです。</strong> 耕起、収穫、除草はクワスロットから耐久値 1 を消費し、<strong>クワなしでは実行できません</strong>： 動作で消費されるが必須でないツールは、プレイヤーに分かりにくいものです。植え付けと施肥はクワを 必要としません。</p>
 
 <p><strong>クワは使い切ると — スロットが空になります。</strong> ステーションが最後の耐久値を消費すると、クワは <strong>壊れてスロットから消えます</strong> — プレイヤー手中と同じように、破壊音とパーティクル付き。これは化粧でなく、 自動化の条件です — 空のスロットはホッパーから新しいクワを受け付け、農場は無人で稼働します。摩耗は バニラ経路のため、<strong>耐久（Unbreaking）エンチャントが考慮されます</strong>：エンチャントされたクワはステーション でも手中と同じ寿命を持ちます。すでに壊れたクワはスロットが受け付けません — さもなければ永遠に スロットを占拠するでしょう。</p>
 
 <p><strong>動作の優先順位</strong>（この順序でチェックされ、最初に合致したものを実行）：</p>
 
-<ol><li><strong>収穫</strong> — 範囲内の成熟した作物のマス（クワ必須）。</li><li><strong>植え付け</strong> — <code>#minecraft:supports_crops</code> の土の上の空きマス + スロットに適切な種がある。</li><li><strong>施肥</strong> — 未成熟作物のマス + スロットに骨粉がある。</li><li><strong>耕起</strong> — バニラの土または草のマス（クワ必須。耕地に変える）。</li></ol>
+<ol><li><strong>収穫</strong> — 範囲内の成熟した作物のマス（クワ必須）。</li><li><strong>植え付け</strong> — <code>#minecraft:supports_crops</code> の土の上の空きマス + スロットに適切な種がある。</li><li><strong>施肥</strong> — 未成熟作物のマス + スロットに骨粉がある。</li><li><strong>除草</strong> — 雑草タグの草または茂み（クワと出力スロットの空きが必須）。</li><li><strong>耕起</strong> — 上に何もないバニラの土または草ブロックのマス（クワ必須。耕地に変える）。</li></ol>
 
-<p>この順序により、「農場は自らを維持する」ことが切れ目なく保証されます：耕起が第 4 動作でなければ、 プレイヤーが農場を広げた最初の瞬間に約束が崩れていました。</p>
+<p>この順序により、「農場は自らを維持する」ことが切れ目なく保証されます：耕起が最後の動作でなければ、 プレイヤーが農場を広げた最初の瞬間に約束が崩れていました。除草がその直前にあるのは、耕すべき土の 上のマスをふさいでいるのがまさに雑草だからです。</p>
+
+<p><strong>除草（）。</strong> ドローンは、そのままでは下の土をいつまでも耕せなくする野生の植物を刈り取ります。 これがなければ、沼地やサバンナの畑は永遠に草だらけのままです。雑草とは <code>#</code> タグのブロックです：背の低い草と背の高い草、シダと大きなシダ、 枯れ木、茂み、ホタルの茂み、背の低い枯れ草と背の高い枯れ草、落ち葉、そして（ゲームに存在する場合は） 赤色の低木。リストはタグであってブロックのクラスではありません：ゲーム内の植物は作物も本 Mod の コクサギスや支柱も含めてすべて同じクラスで、クラスで判定すれば農場そのものを除草してしまいます。 <strong>決して触れないもの：</strong> 花、苗木、葉、キノコ、ツタ（プレイヤーが植えたか残したもの）、そしてドローンが 作物として収穫するもの — 作物、コクサギスとその根、支柱。タグはデータパックで拡張できます。</p>
+
+<ul><li><strong>コスト</strong> — 他の動作と同じく、クワの耐久値 1 と EU/FE。<strong>これはバニラからの 意図的な逸脱です：</strong> プレイヤーの手ではクワは草で摩耗しませんが、ここでは除草のたびに耕起や収穫と 同じくツールを使う作業になります。</li><li><strong>2 ブロックの植物</strong>（背の高い草、大きなシダ）は 1 回の動作で丸ごと取り除かれます：対象は常に 下半分で — ドロップを出すのは下半分だけ — 上半分も一緒に消えます。</li><li><strong>ドロップ</strong> — ハサミなしで手で壊したときに植物が出すもの（草からは 8 回に 1 回小麦の種、枯れ木からは 棒、ホタルの茂みはそれ自体、落ち葉）— はステーションの出力スロットに入り、ワールドに <code>ItemEntity</code> は 現れません。植物はバニラと同じ破壊音とパーティクルを出します。</li><li><strong>出力が満杯なら、収穫と同じく除草も行われません：</strong> 4 つの出力スロットすべてがフルスタックで 埋まっていれば雑草は残り、クワも EU/FE も消費されません。特定の雑草のドロップが入らなければ、その雑草は その場に残ります。常に何かを落とす雑草（ホタルの茂み、落ち葉）は出力を埋めることがあり、そういう畑の ステーションは中身を空ける必要があります。</li></ul>
 
 <p><strong>植え付けの土はバニラのタグであってブロックではない（）。</strong> 植え付け（および 範囲キャッシュのマス選別）は <code>#minecraft:supports_crops</code> に含まれる任意のブロックを土と みなします — 作物自身がブロックの上に立てるかを判断するのと同じタグです。そのため ドローンと作物は「何を土とみなすか」で食い違いません：Farmer's Delight の rich soil farmland（およびこのタグに追加された任意のモッドの土）を、ドローンはネイティブの 農地と同じように世話します — 外来 id を知る一行もないままに。<strong>耕起はこのタグに従い ません</strong>：バニラの耕地に変えられるのはバニラの土と草だけで、外来の土をドローンが掘り 返すことは決してありません — rich soil はプレイヤーが骨粉で得たものであり、ステーションが それを破壊してはなりません。</p>
 
@@ -429,7 +433,7 @@
 
 <p><strong>飛行音。</strong> ドローンが空中にある間、静かなループするプロペラ音が聞こえ、それは <strong>ドローン自体から</strong> 発生します — 音源がステーションに固定でなく、ドローンと一緒に移動します。これが正しい姿です： ドローンは数ブロック離れ、頭上を直通し、着陸場からの羽音であればエラーと読めるでしょう。可聴範囲 8 ブロック、音量 0.22 — モッドで最低です：これは自らプレイヤーの元へ来る唯一の音で、ほぼ全稼働サイクル 鳴り続ける唯一の音です。ドック上と、ドローンが処理済みマスに留まるティックでは静寂です。</p>
 
-<p><strong>耕起音。</strong> ドローンはマスを耕す際、プレイヤーが手でクワを使うのと同じバニラのクワ音 （<code>minecraft:item.hoe.till</code>）を — 同じ音量、同じピッチで — 出します。4 動作のうち耕起だけが鳴ります： 明確なバニラ基準があるのは耕起のみで、植え付け、施肥、収穫には基準がありません。</p>
+<p><strong>耕起音。</strong> ドローンはマスを耕す際、プレイヤーが手でクワを使うのと同じバニラのクワ音 （<code>minecraft:item.hoe.till</code>）を — 同じ音量、同じピッチで — 出します。クワ固有の音があるのは耕起だけです： 明確なバニラ基準があるのは耕起のみで、植え付け、施肥、収穫には基準がありません。除草は、植物そのものが 壊れるときの音で鳴ります。</p>
 
 <p>作業を終えると、ドローンは <strong>マスに 6 ティック留まり</strong>、それから戻り始めます。この一時停止がなければ 動作と帰路の腕が同じティックに始まっていました：ドローンが農場に触れて離れるのが 1 フレーム内で、 それは機械が作業しているのでなく跳ね返るように読めました。一時停止は遠端にのみあります — ドックに あれば動作が起きるティアをずらすことで、すべてのテストシナリオが数えるまさにそのティックです。</p>
 
@@ -443,7 +447,7 @@
 
 <h2 id="インベントリ">インベントリ</h2>
 
-<table><thead><tr><th>スロット</th><th>受け入れ</th><th>数</th></tr></thead><tbody><tr><td>種（0）</td><td>該当作物の種タグ付きアイテム</td><td>スタックまで</td></tr><tr><td>肥料（1）</td><td><code>minecraft:bone_meal</code></td><td>スタックまで</td></tr><tr><td>ドローン（6）</td><td>— これがないとステーションは動かない</td><td>1</td></tr><tr><td>クワ（7）</td><td>任意のクワ（<code>#minecraft:hoes</code>）。耕起と収穫で消費</td><td>1</td></tr><tr><td>出力 1–4（2–5）</td><td>ステーションによる自動挿入のみ（収穫物）。外部からの手動/自動挿入は不可</td><td>各スタックまで</td></tr></tbody></table>
+<table><thead><tr><th>スロット</th><th>受け入れ</th><th>数</th></tr></thead><tbody><tr><td>種（0）</td><td>該当作物の種タグ付きアイテム</td><td>スタックまで</td></tr><tr><td>肥料（1）</td><td><code>minecraft:bone_meal</code></td><td>スタックまで</td></tr><tr><td>ドローン（6）</td><td>— これがないとステーションは動かない</td><td>1</td></tr><tr><td>クワ（7）</td><td>任意のクワ（<code>#minecraft:hoes</code>）。耕起、収穫、除草で消費</td><td>1</td></tr><tr><td>出力 1–4（2–5）</td><td>ステーションによる自動挿入のみ（収穫物と除草のドロップ）。外部からの手動/自動挿入は不可</td><td>各スタックまで</td></tr></tbody></table>
 
 <p>出力スロットが 1 つでなく 4 つ — 成熟した作物は 1 動作で複数タイプのアイテムを出すことがあるため （例：小麦は小麦本体と小麦の種を別々に）。モッドの機械基盤モデルで混合内容の単一スロットはサポート されていません。出力スロットへのドロップ挿入は 2 パス（「全スタックの容量をシミュレート → 完全成功時 のみ改変」）で、出力が満杯の際の収穫物の部分損失はありません。</p>
 
@@ -467,7 +471,7 @@
 
 <h2 id="関連項目">関連項目</h2>
 
-<ul><li><a href="sprinkler.html">スプリンクラー</a> — 同じ畑に並ぶ隣人で、役割は重なりません。ステーションは<strong>一点働き</strong>：1マスに1アクション、骨粉とEUで支払い、耕し、植え、収穫します。スプリンクラーは<strong>受動的な範囲</strong>：土にも作物にも触れず、周囲で育つものすべてを速めるだけで、支払いは養液です。両者は並べて置くためのものです。</li><li><a href="../items/scythe.html">大鎌</a> — 再利用可能な作物成熟度述語の供給源。</li><li><a href="trellis.html">トレリス</a> — モッド内の既存の <code>BonemealableBlock</code> の先例。</li><li><a href="incubator.html">インキュベーター</a> — インデックスでタグ検証するマルチスロットインベントリと 基盤より広い <code>ContainerData</code> の見本。</li><li><a href="../fluid-machines/pump.html">ポンプ</a> — リミット付き範囲走査の見本と、機械が自身のティックからプレイヤー なしでワールドブロックを変更する唯一の先例。</li><li><a href="../machines/electric_heater.html">電気ヒーター</a> — 「有用ティックでのみ EU/FE」（需要駆動）の見本。</li></ul>
+<ul><li><a href="sprinkler.html">スプリンクラー</a> — 同じ畑に並ぶ隣人で、役割は重なりません。ステーションは<strong>一点働き</strong>：1マスに1アクション、骨粉とEUで支払い、耕し、植え、除草し、収穫します。スプリンクラーは<strong>受動的な範囲</strong>：土にも作物にも触れず、周囲で育つものすべてを速めるだけで、支払いは養液です。両者は並べて置くためのものです。</li><li><a href="../items/scythe.html">大鎌</a> — 再利用可能な作物成熟度述語の供給源。</li><li><a href="trellis.html">トレリス</a> — モッド内の既存の <code>BonemealableBlock</code> の先例。</li><li><a href="incubator.html">インキュベーター</a> — インデックスでタグ検証するマルチスロットインベントリと 基盤より広い <code>ContainerData</code> の見本。</li><li><a href="../fluid-machines/pump.html">ポンプ</a> — リミット付き範囲走査の見本と、機械が自身のティックからプレイヤー なしでワールドブロックを変更する唯一の先例。</li><li><a href="../machines/electric_heater.html">電気ヒーター</a> — 「有用ティックでのみ EU/FE」（需要駆動）の見本。</li></ul>
 
 <h2>クラフト</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="ガーデンドローンステーション alaindustrial:garden_drone_station" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">定型クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="いずれかの銅インゴット"><img src="../../assets/item/copper_ingot_3d.png" alt="いずれかの銅インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかの鉄インゴット"><img src="../../assets/item/iron_ingot_3d.png" alt="いずれかの鉄インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかの銅インゴット"><img src="../../assets/item/copper_ingot_3d.png" alt="いずれかの銅インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかの鉄インゴット"><img src="../../assets/item/iron_ingot_3d.png" alt="いずれかの鉄インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="電子回路"><img src="../../assets/item/electronic_circuit_3d.png" alt="電子回路" width="32" height="32"></div> <div class="cell" title="いずれかの鉄インゴット"><img src="../../assets/item/iron_ingot_3d.png" alt="いずれかの鉄インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかの鉄インゴット"><img src="../../assets/item/iron_ingot_3d.png" alt="いずれかの鉄インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかの鉄インゴット"><img src="../../assets/item/iron_ingot_3d.png" alt="いずれかの鉄インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかの鉄インゴット"><img src="../../assets/item/iron_ingot_3d.png" alt="いずれかの鉄インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="ガーデンドローンステーション"><img src="../../assets/item/garden_drone_station_3d.png" alt="ガーデンドローンステーション" width="32" height="32"></div><div class="result-name">ガーデンドローンステーション</div></div></div></div></div>

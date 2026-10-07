@@ -360,7 +360,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
 <div class="group-title">能源</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="13 个页面">13</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>核能设施</span><span class="cat-count" aria-label="15 个页面">15</span></a>
@@ -411,7 +411,7 @@
 
 <table><thead><tr><th>项目</th><th>数值</th></tr></thead><tbody><tr><td>角色</td><td>带 EU/FE 缓存的手持工具：充能器的消费者</td></tr><tr><td>缓存</td><td>10 000 EU/FE</td></tr><tr><td>充电</td><td>储能库槽位 / 穿戴的背包，≤ 32 EU/FE/刻（受 LV 上限约束）→ 满电约 16 秒</td></tr><tr><td>消耗</td><td>每个成功破坏的方块 20 EU/FE</td></tr><tr><td>被动放电</td><td>无</td></tr><tr><td>组件</td><td>（Long，persistent + networkSynchronized）——本模组所有电力物品共用的组件</td></tr></tbody></table>
 
-<p>消耗<strong>仅在服务端</strong>扣除，且<strong>仅针对硬度非零的方块</strong>：像雪层和草这种瞬间破坏的方块免费——就像它们不会磨损原版铲子一样。在创造模式下不消耗电量（）。</p>
+<p>消耗<strong>仅在服务端</strong>扣除，且<strong>仅针对硬度非零的方块</strong>。只有瞬间破坏的方块（硬度恰好为 0）免费——火把、矮草丛、树苗——就像它们不会磨损原版铲子一样。<strong>雪层并不免费：</strong>它的硬度为 0.1，每一层都要扣满 20 EU/FE。在创造模式下不消耗电量（）。</p>
 
 <h2 id="物品栏">物品栏</h2>
 
@@ -429,7 +429,7 @@
 
 <h2 id="行为">行为</h2>
 
-<ul><li><strong>挖掘：</strong> 当电量 ≥ 20 EU/FE 时，铲子以 9.0 的速度挖掘 <code>#minecraft:mineable/shovel</code>（钻石铲为 8.0）。每挖这样一个方块扣 20 EU/FE。</li><li><strong>没电的铲子：</strong> 电量低于 20 EU/FE 时以徒手速度（1.0）挖掘，但采集等级和掉落都保留，且不消耗 EU/FE。此时效率附魔不起作用（原版门槛为 <code>speed &gt; 1.0</code>）。</li><li><strong>造土路与扑灭营火——可用。</strong> 右键点击草、泥土、灰化土、菌丝或缠根泥土会形成土路；右键点击燃烧的营火会扑灭它——与原版铲子完全一致。这是<strong>免费</strong>的：这种动作不消耗电量，因为木铲也能造土路，而整条系列都建立在"没电的工具仍能工作"的规则之上。</li><li><strong>充电：</strong> 储能库的充能槽和穿在身上的能量背包都会自动接受铲子，最高 32 EU/FE/刻。</li><li><strong>攻击：</strong> 像钻石铲一样攻击（伤害 2.5，攻击速度 1.0），但挥击<strong>不消耗 EU/FE</strong>，也不磨损铲子。</li><li><strong>附魔：</strong> 铲子属于 <code>#minecraft:shovels</code>，因此附魔台和铁砧把它当作铲子。耐久和经验修补在不损坏的铲子上毫无用处，但也没有害处。</li><li><strong>指示：</strong> 图标下方的横条显示电量（黄色，LV 颜色）。悬浮提示——"电量：X / 10 000 EU/FE"，归零时显示红色"已放电"。纹理在零电量时切换为"熄灭"样式。</li><li><strong>丢弃/死亡/重新登录：</strong> 电量保存在物品中，会保留。</li><li><strong>创造模式：</strong> 不消耗电量——就像原版铲在创造模式下不掉耐久。</li></ul>
+<ul><li><strong>挖掘：</strong> 当电量 ≥ 20 EU/FE 时，铲子以 9.0 的速度挖掘 <code>#minecraft:mineable/shovel</code>（钻石铲为 8.0）。每挖这样一个方块扣 20 EU/FE。</li><li><strong>没电的铲子：</strong> 电量低于 20 EU/FE 时以徒手速度（1.0）挖掘，但采集等级和掉落都保留，且不消耗 EU/FE。此时效率附魔不起作用（原版门槛为 <code>speed &gt; 1.0</code>）。</li><li><strong>造土路与扑灭营火——可用。</strong> 右键点击草、泥土、砂土、灰化土、菌丝或缠根泥土会形成土路；右键点击燃烧的营火会扑灭它——与你所玩游戏版本的原版铲子完全一致。这是<strong>免费</strong>的：这种动作不消耗电量，因为木铲也能造土路，而整条系列都建立在"没电的工具仍能工作"的规则之上。 点击方块底面在两个版本上都不会造土路。扑灭营火在两个游戏版本之间有所不同，铲子遵循各自版本的原版铲子：<ul><li><strong>Minecraft 26.3：</strong>从任意一面点击（包括底面）都会扑灭营火，但 Shift + 右键不会；</li><li><strong>Minecraft 26.2：</strong>Shift + 右键也会扑灭营火，但点击营火底面不会。</li></ul></li><li><strong>充电：</strong> 储能库的充能槽和穿在身上的能量背包都会自动接受铲子，最高 32 EU/FE/刻。</li><li><strong>攻击：</strong> 像钻石铲一样攻击（伤害 2.5，攻击速度 1.0），但挥击<strong>不消耗 EU/FE</strong>，也不磨损铲子。</li><li><strong>附魔：</strong> 铲子属于 <code>#minecraft:shovels</code>，因此附魔台和铁砧把它当作铲子。耐久和经验修补在不损坏的铲子上毫无用处，但也没有害处。</li><li><strong>指示：</strong> 图标下方的横条显示电量（黄色，LV 颜色）。悬浮提示——"电量：X / 10 000 EU/FE"，归零时显示红色"已放电"。纹理在零电量时切换为"熄灭"样式。</li><li><strong>丢弃/死亡/重新登录：</strong> 电量保存在物品中，会保留。</li><li><strong>创造模式：</strong> 不消耗电量——就像原版铲在创造模式下不掉耐久。</li></ul>
 
 <h2 id="金刚石涂层升级">金刚石涂层（升级）</h2>
 
@@ -451,7 +451,7 @@
 
 <p>模式状态无需猜测：开启时物品会获得附魔光辉和悬浮提示中的"精准采集 I"字样（模式本身就是真正的原版附魔，而非独立的并行标志），另外悬浮提示中还有一行单独显示状态并提醒 Shift + 右键。切换伴随咔哒声和快捷栏上方的消息。</p>
 
-<p><strong>造土路与扑灭营火仍在普通右键上。</strong> 操作上的唯一差异：<strong>Shift + 右键点击方块会切换模式，并且不会造土路</strong>。不带 Shift 的普通右键依然会铺出土路并扑灭营火——与基础电动铲完全一致，同样免费。</p>
+<p><strong>造土路与扑灭营火仍在普通右键上。</strong> 操作上的唯一差异：<strong>Shift + 右键点击方块会切换模式，不会造土路，也不会扑灭营火</strong>（两个游戏版本均如此）。不带 Shift 的普通右键依然会铺出土路并扑灭营火——与基础电动铲完全一致，同样免费。</p>
 
 <p><strong>原样继承：</strong> 10 000 EU/FE 缓冲（）、每方块 20 EU/FE（）、32 EU/FE/刻 的输入（）、相同的充电位置、没有耐久度、电量耗尽时以徒手速度（1.0）工作且保留掉落、创造模式行为，以及钻石铲的攻击属性。该升级没有自己的配置项：能量层按基类区分工具，因此这三个数值与基础电动铲共用。</p>
 
@@ -463,7 +463,7 @@
 
 <h2 id="进阶">进阶</h2>
 
-<ul><li>本模组第三件电动工具：<a href="electric_drill.html">电钻</a>负责石头，<a href="electric_chainsaw.html">链锯</a>负责木材，铲子负责泥土。LV 系列在三大主要材料上已闭环。</li><li>在<a href="../energy-storage/battery_box.html">储能库</a>和电池之后可用：没有 LV 基础设施就无法合成与充电。</li><li>LV 等级。其余电动工具（锄/军刀/纳米弓）属于未来工作。</li></ul>
+<ul><li>本模组第三件电动工具：<a href="electric_drill.html">电钻</a>负责石头，<a href="electric_chainsaw.html">链锯</a>负责木材，铲子负责泥土。LV 系列在三大主要材料上已闭环。</li><li>在<a href="../energy-storage/battery_box.html">储能库</a>和电池之后可用：没有 LV 基础设施就无法合成与充电。</li><li>LV 等级。此后系列又加入了<a href="electric_hoe.html">电动锄</a>、<a href="electric_saber.html">电动军刀</a>和<a href="electric_bow.html">电动弓</a>。</li></ul>
 
 <h2 id="相关内容">相关内容</h2>
 

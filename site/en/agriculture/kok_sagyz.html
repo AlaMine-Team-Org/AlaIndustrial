@@ -301,7 +301,7 @@
 <a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>Recipes</span></a>
 <a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>Player Profile</span></a>
 <div class="group-title">Energy</div>
-<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="13 pages">13</span></a>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="14 pages">14</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="8 pages">8</span></a>
 <a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>Nuclear</span><span class="cat-count" aria-label="15 pages">15</span></a>
@@ -448,7 +448,7 @@
 
 <h2 id="block-properties">Block properties</h2>
 
-<table><thead><tr><th>Property</th><th>Value</th></tr></thead><tbody><tr><td>Flower</td><td>solid model, no collision, <code>age</code> 0..3, random ticks</td></tr><tr><td>Root block</td><td>full cube that looks like the ground it replaced, <code>tip</code> property, non-ticking block entity holding that ground</td></tr><tr><td>Column</td><td>1×3: flower + 2 root blocks</td></tr><tr><td>Soil</td><td><code>#minecraft:dirt</code>, grass/podzol/mycelium/mud, <code>#minecraft:sand</code>, <code>#minecraft:supports_crops</code>; one block is enough</td></tr></tbody></table>
+<table><thead><tr><th>Property</th><th>Value</th></tr></thead><tbody><tr><td>Flower</td><td>solid model, no collision, <code>age</code> 0..3, random ticks</td></tr><tr><td>Root block</td><td>full collision cube that looks like the ground it replaced; empty occlusion shape (that ground can be 15/16 tall — farmland), dampens light fully (15); <code>tip</code> property, non-ticking block entity holding that ground</td></tr><tr><td>Column</td><td>1×3: flower + 2 root blocks</td></tr><tr><td>Soil</td><td><code>#minecraft:dirt</code>, grass/podzol/mycelium/mud, <code>#minecraft:sand</code>, <code>#minecraft:supports_crops</code>; one block is enough</td></tr></tbody></table>
 
 <h2 id="related">Related</h2>
 
