@@ -1676,5 +1676,17 @@
   "message.alaindustrial.mob_wheel.occupied": "La rueda de ejercicio ya tiene una criatura: abre primero la puerta para dejarla salir",
   "message.alaindustrial.mob_wheel.ready": "La rueda de ejercicio está montada",
   "tooltip.alaindustrial.mob_wheel_no_buffer": "Sin almacenamiento: la energía que la red no recibe se pierde",
-  "tooltip.alaindustrial.mob_wheel_recolour": "Clic derecho en la rueda montada con tablones de cualquier madera para cambiar su color"
+  "tooltip.alaindustrial.mob_wheel_recolour": "Clic derecho en la rueda montada con tablones de cualquier madera para cambiar su color",
+  "block.alaindustrial.piezo_plate": "Placa piezoeléctrica",
+  "block.alaindustrial.silent_piezo_plate": "Placa piezoeléctrica silenciosa",
+  "tooltip.alaindustrial.piezo_plate_press": "EU con cada nueva pisada",
+  "tooltip.alaindustrial.silent_piezo_plate_quiet": "Sin clic",
+  "tooltip.alaindustrial.piezo_plate_connect": "Cable: al lado o bajo el suelo",
+  "tooltip.alaindustrial.piezo_plate_wrench": "La llave muestra las placas",
+  "tooltip.alaindustrial.piezo_press": "%s EU por criatura · %s EU por objeto",
+  "message.alaindustrial.piezo_plate.placed_connected": "Placas piezo: %s · conectadas",
+  "message.alaindustrial.piezo_plate.placed_no_outlet": "Placas piezo: %s · conecta un cable al lado o bajo el suelo",
+  "hud.alaindustrial.piezo_plate.ok": "Placas piezo: %1$s · %2$s/%3$s EU · salidas: %4$s",
+  "hud.alaindustrial.piezo_plate.no_outlet": "Placas piezo: %1$s · %2$s/%3$s EU · sin cable",
+  "hud.alaindustrial.piezo_plate.full": "Placas piezo: %1$s · llenas, se pierden pisadas"
 }

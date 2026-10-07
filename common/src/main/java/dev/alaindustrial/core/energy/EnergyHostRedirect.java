@@ -46,14 +46,16 @@ public interface EnergyHostRedirect {
 
 	/**
 	 * Where the energy seen at {@code pos} through {@code face} really lives: the host for a redirecting
-	 * block, {@code pos} itself for any other block, and {@code null} when a redirecting face exposes
-	 * nothing or its host is not loaded — a structure can straddle a chunk border.
+	 * block, the {@link FloorPortLender} above a plain floor block seen from below (MOD-764), {@code pos}
+	 * itself for any other block, and {@code null} when a redirecting face exposes nothing or its host is not
+	 * loaded — a structure can straddle a chunk border.
 	 */
 	@Nullable
 	static BlockPos hostOf(Level level, BlockPos pos, Direction face) {
 		BlockState state = level.getBlockState(pos);
 		if (!(state.getBlock() instanceof EnergyHostRedirect redirect)) {
-			return pos;
+			BlockPos lender = FloorPortLender.lenderThroughFloor(level, pos, state, face);
+			return lender != null ? lender : pos;
 		}
 		BlockPos host = redirect.energyHost(state, pos, face);
 		return host != null && level.isLoaded(host) ? host : null;

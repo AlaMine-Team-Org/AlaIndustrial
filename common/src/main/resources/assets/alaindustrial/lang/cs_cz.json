@@ -1676,5 +1676,17 @@
   "message.alaindustrial.mob_wheel.occupied": "V běžeckém kole už je stvoření – nejdřív otevři branku a vypusť ho",
   "message.alaindustrial.mob_wheel.ready": "Běžecké kolo je sestavené",
   "tooltip.alaindustrial.mob_wheel_no_buffer": "Bez úložiště: energie, kterou síť nepřevezme, se ztratí",
-  "tooltip.alaindustrial.mob_wheel_recolour": "Pravým kliknutím prkny libovolného dřeva na sestavené kolo ho přebarvíš"
+  "tooltip.alaindustrial.mob_wheel_recolour": "Pravým kliknutím prkny libovolného dřeva na sestavené kolo ho přebarvíš",
+  "block.alaindustrial.piezo_plate": "Piezoelektrická deska",
+  "block.alaindustrial.silent_piezo_plate": "Tichá piezoelektrická deska",
+  "tooltip.alaindustrial.piezo_plate_press": "EU za každý nový krok",
+  "tooltip.alaindustrial.silent_piezo_plate_quiet": "Bez cvaknutí",
+  "tooltip.alaindustrial.piezo_plate_connect": "Kabel: vedle nebo pod podlahou",
+  "tooltip.alaindustrial.piezo_plate_wrench": "Klíč ukazuje desky",
+  "tooltip.alaindustrial.piezo_press": "%s EU tvor · %s EU předmět",
+  "message.alaindustrial.piezo_plate.placed_connected": "Piezodesky: %s · připojeno",
+  "message.alaindustrial.piezo_plate.placed_no_outlet": "Piezodesky: %s · připoj kabel vedle nebo pod podlahu",
+  "hud.alaindustrial.piezo_plate.ok": "Piezodesky: %1$s · %2$s/%3$s EU · výstupů: %4$s",
+  "hud.alaindustrial.piezo_plate.no_outlet": "Piezodesky: %1$s · %2$s/%3$s EU · bez kabelu",
+  "hud.alaindustrial.piezo_plate.full": "Piezodesky: %1$s · plno, stisky se ztrácejí"
 }

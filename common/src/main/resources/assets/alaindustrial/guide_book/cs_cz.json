@@ -521,6 +521,43 @@
           ]
         },
         {
+          "id": "piezo_plate",
+          "title": "Piezoelektrická deska",
+          "icon": "alaindustrial:piezo_plate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Piezoelektrická deska",
+              "text": "Nášlapná deska, která při každém novém sešlápnutí dá malou dávku EU; sousední desky slučují energii do jedné cesty a předávají ji jediným kabelem — vedle nich nebo skrytým pod podlahou. Shora přebírá vzhled bloku, na kterém leží."
+            },
+            {
+              "type": "stats",
+              "title": "Parametry",
+              "lines": [
+                "Energie: 0–0.5 EU/t"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Výroba bez vzoru",
+              "grid": [
+                "minecraft:stone_pressure_plate",
+                "minecraft:quartz",
+                "alaindustrial:copper_cable",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:piezo_plate",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "charge_pad",
           "title": "Nabíjecí stanice",
           "icon": "alaindustrial:charge_pad",

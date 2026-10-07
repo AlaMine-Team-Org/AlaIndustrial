@@ -1676,5 +1676,17 @@
   "message.alaindustrial.mob_wheel.occupied": "W kołowrotku jest już stworzenie — najpierw otwórz furtkę i je wypuść",
   "message.alaindustrial.mob_wheel.ready": "Kołowrotek jest zmontowany",
   "tooltip.alaindustrial.mob_wheel_no_buffer": "Bez magazynu: energia, której sieć nie odbierze, przepada",
-  "tooltip.alaindustrial.mob_wheel_recolour": "Kliknij PPM deskami dowolnego drewna na zmontowany kołowrotek, aby zmienić jego kolor"
+  "tooltip.alaindustrial.mob_wheel_recolour": "Kliknij PPM deskami dowolnego drewna na zmontowany kołowrotek, aby zmienić jego kolor",
+  "block.alaindustrial.piezo_plate": "Płyta piezoelektryczna",
+  "block.alaindustrial.silent_piezo_plate": "Cicha płyta piezoelektryczna",
+  "tooltip.alaindustrial.piezo_plate_press": "EU za każdy nowy krok",
+  "tooltip.alaindustrial.silent_piezo_plate_quiet": "Bez kliknięcia",
+  "tooltip.alaindustrial.piezo_plate_connect": "Kabel: obok lub pod podłogą",
+  "tooltip.alaindustrial.piezo_plate_wrench": "Klucz pokazuje płyty",
+  "tooltip.alaindustrial.piezo_press": "%s EU stworzenie · %s EU przedmiot",
+  "message.alaindustrial.piezo_plate.placed_connected": "Płyty piezo: %s · podłączone",
+  "message.alaindustrial.piezo_plate.placed_no_outlet": "Płyty piezo: %s · podłącz kabel obok lub pod podłogą",
+  "hud.alaindustrial.piezo_plate.ok": "Płyty piezo: %1$s · %2$s/%3$s EU · wyjść: %4$s",
+  "hud.alaindustrial.piezo_plate.no_outlet": "Płyty piezo: %1$s · %2$s/%3$s EU · brak kabla",
+  "hud.alaindustrial.piezo_plate.full": "Płyty piezo: %1$s · pełne, naciski przepadają"
 }

@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_piezo_plate": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:piezo_plate"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_piezo_plate"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "alaindustrial:silent_piezo_plate"
+    ]
+  }
+}

@@ -521,6 +521,43 @@
           ]
         },
         {
+          "id": "piezo_plate",
+          "title": "पीज़ो दाब पट्ट",
+          "icon": "alaindustrial:piezo_plate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "पीज़ो दाब पट्ट",
+              "text": "एक दबाव प्लेट जो हर नए दबाव पर थोड़ी EU देती है; पास-पास की प्लेटें अपनी ऊर्जा एक रास्ते में जोड़ती हैं और उसे एक ही केबल से आगे देती हैं — बगल में या फ़र्श के नीचे छिपी। ऊपर से यह उस ब्लॉक जैसी दिखती है जिस पर रखी है।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 0–0.5 EU/t"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "बिना आकार की क्राफ्टिंग",
+              "grid": [
+                "minecraft:stone_pressure_plate",
+                "minecraft:quartz",
+                "alaindustrial:copper_cable",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:piezo_plate",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "charge_pad",
           "title": "चार्जिंग स्टेशन",
           "icon": "alaindustrial:charge_pad",

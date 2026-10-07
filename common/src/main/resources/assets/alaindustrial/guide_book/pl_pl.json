@@ -521,6 +521,43 @@
           ]
         },
         {
+          "id": "piezo_plate",
+          "title": "Płyta piezoelektryczna",
+          "icon": "alaindustrial:piezo_plate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Płyta piezoelektryczna",
+              "text": "Płyta naciskowa, która przy każdym nowym nacisku daje małą porcję EU; sąsiednie płyty łączą energię w jedną ścieżkę i oddają ją jednym kablem — obok albo ukrytym pod podłogą. Z góry przybiera wygląd bloku, na którym leży."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Energia: 0–0.5 EU/t"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie bez wzoru",
+              "grid": [
+                "minecraft:stone_pressure_plate",
+                "minecraft:quartz",
+                "alaindustrial:copper_cable",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:piezo_plate",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "charge_pad",
           "title": "Stacja ładowania",
           "icon": "alaindustrial:charge_pad",

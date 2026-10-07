@@ -67,6 +67,7 @@ final class BlockEntitySlotLayoutSnapshot {
 			"monitor_core: size=10 upgrades=- battery=- menu=yes overclockable=no batteryFed=no",
 			"monitor_panel: size=- upgrades=- battery=- menu=no overclockable=no batteryFed=no",
 			"moonlit_solar_panel: size=4 upgrades=0 battery=- menu=yes overclockable=no batteryFed=no",
+			"piezo_plate: size=- upgrades=- battery=- menu=no overclockable=no batteryFed=no",
 			"polymerizer: size=8 upgrades=3 battery=7 menu=yes overclockable=yes batteryFed=yes",
 			"pump: size=9 upgrades=4 battery=8 menu=yes overclockable=no batteryFed=yes",
 			"radiant_solar_panel: size=4 upgrades=0 battery=- menu=yes overclockable=no batteryFed=no",

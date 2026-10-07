@@ -1676,5 +1676,17 @@
   "message.alaindustrial.mob_wheel.occupied": "Het looprad heeft al een wezen — open eerst de poort om het eruit te laten",
   "message.alaindustrial.mob_wheel.ready": "Het looprad is compleet",
   "tooltip.alaindustrial.mob_wheel_no_buffer": "Geen opslag: energie die het netwerk niet afneemt, gaat verloren",
-  "tooltip.alaindustrial.mob_wheel_recolour": "Rechtsklik met planken van elke houtsoort op het gebouwde looprad om het te verkleuren"
+  "tooltip.alaindustrial.mob_wheel_recolour": "Rechtsklik met planken van elke houtsoort op het gebouwde looprad om het te verkleuren",
+  "block.alaindustrial.piezo_plate": "Piëzoplaat",
+  "block.alaindustrial.silent_piezo_plate": "Stille piëzoplaat",
+  "tooltip.alaindustrial.piezo_plate_press": "EU bij elke nieuwe stap",
+  "tooltip.alaindustrial.silent_piezo_plate_quiet": "Geen klik",
+  "tooltip.alaindustrial.piezo_plate_connect": "Kabel: ernaast of onder de vloer",
+  "tooltip.alaindustrial.piezo_plate_wrench": "De moersleutel toont de platen",
+  "tooltip.alaindustrial.piezo_press": "%s EU per wezen · %s EU per voorwerp",
+  "message.alaindustrial.piezo_plate.placed_connected": "Piëzoplaten: %s · verbonden",
+  "message.alaindustrial.piezo_plate.placed_no_outlet": "Piëzoplaten: %s · sluit een kabel ernaast of onder de vloer aan",
+  "hud.alaindustrial.piezo_plate.ok": "Piëzoplaten: %1$s · %2$s/%3$s EU · uitgangen: %4$s",
+  "hud.alaindustrial.piezo_plate.no_outlet": "Piëzoplaten: %1$s · %2$s/%3$s EU · geen kabel",
+  "hud.alaindustrial.piezo_plate.full": "Piëzoplaten: %1$s · vol, drukken gaan verloren"
 }

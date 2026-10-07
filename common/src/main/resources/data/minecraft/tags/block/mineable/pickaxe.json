@@ -134,6 +134,8 @@
     "alaindustrial:mob_wheel_frame",
     "alaindustrial:mob_wheel_rotor",
     "alaindustrial:mob_wheel_gate",
-    "alaindustrial:mob_wheel_cell"
+    "alaindustrial:mob_wheel_cell",
+    "alaindustrial:piezo_plate",
+    "alaindustrial:silent_piezo_plate"
   ]
 }

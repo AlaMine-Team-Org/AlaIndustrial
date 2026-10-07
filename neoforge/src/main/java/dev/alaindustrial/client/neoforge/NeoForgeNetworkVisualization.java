@@ -42,5 +42,8 @@ public final class NeoForgeNetworkVisualization {
 		// per-frame read of the world in front of the player, with no state of its own.
 		ConcentratorSchematicRenderer.submitFrame(event.getSubmitNodeCollector(),
 				event.getLevelRenderState().cameraRenderState);
+		// MOD-764: the wrench's x-ray of piezo plates rides the same frame point.
+		dev.alaindustrial.client.render.PiezoPlateXray.submitFrame(event.getSubmitNodeCollector(),
+				event.getLevelRenderState().cameraRenderState);
 	}
 }

@@ -1676,5 +1676,17 @@
   "message.alaindustrial.mob_wheel.occupied": "Koşu çarkında zaten bir canlı var — önce kapıyı açıp onu dışarı çıkarın",
   "message.alaindustrial.mob_wheel.ready": "Koşu çarkı tamamlandı",
   "tooltip.alaindustrial.mob_wheel_no_buffer": "Depolama yok: ağın almadığı enerji kaybolur",
-  "tooltip.alaindustrial.mob_wheel_recolour": "Rengini değiştirmek için kurulu çarka herhangi bir ağacın tahtasıyla sağ tıklayın"
+  "tooltip.alaindustrial.mob_wheel_recolour": "Rengini değiştirmek için kurulu çarka herhangi bir ağacın tahtasıyla sağ tıklayın",
+  "block.alaindustrial.piezo_plate": "Piezo Plaka",
+  "block.alaindustrial.silent_piezo_plate": "Sessiz Piezo Plaka",
+  "tooltip.alaindustrial.piezo_plate_press": "Her yeni adımda EU",
+  "tooltip.alaindustrial.silent_piezo_plate_quiet": "Tık sesi yok",
+  "tooltip.alaindustrial.piezo_plate_connect": "Kablo: yanında ya da zeminin altında",
+  "tooltip.alaindustrial.piezo_plate_wrench": "Anahtar plakaları gösterir",
+  "tooltip.alaindustrial.piezo_press": "Canlı başına %s EU · eşya başına %s EU",
+  "message.alaindustrial.piezo_plate.placed_connected": "Piezo plakalar: %s · bağlı",
+  "message.alaindustrial.piezo_plate.placed_no_outlet": "Piezo plakalar: %s · yanına ya da zeminin altına kablo bağla",
+  "hud.alaindustrial.piezo_plate.ok": "Piezo plakalar: %1$s · %2$s/%3$s EU · çıkış: %4$s",
+  "hud.alaindustrial.piezo_plate.no_outlet": "Piezo plakalar: %1$s · %2$s/%3$s EU · kablo yok",
+  "hud.alaindustrial.piezo_plate.full": "Piezo plakalar: %1$s · dolu, basışlar kayboluyor"
 }

@@ -52,6 +52,8 @@ import dev.alaindustrial.client.hud.ElectricDrillHud;
 import dev.alaindustrial.client.hud.EnergyPackHud;
 import dev.alaindustrial.client.hud.TeleportFadeHud;
 import dev.alaindustrial.client.render.ConcentratorSchematicRenderer;
+import dev.alaindustrial.client.render.PiezoPlateTint;
+import dev.alaindustrial.client.render.PiezoPlateXray;
 import dev.alaindustrial.client.render.RootInspection;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.client.particle.NutrientSprayParticle;
@@ -333,7 +335,10 @@ public final class ClientContentManifest {
 			new BlockTintDef(List.of(CableSleeveTint.INSTANCE), () -> ModContent.INSULATED_COPPER_CABLE.get()),
 			new BlockTintDef(List.of(CableSleeveTint.INSTANCE), () -> ModContent.INSULATED_TIN_CABLE.get()),
 			new BlockTintDef(List.of(CableSleeveTint.INSTANCE), () -> ModContent.INSULATED_GOLD_CABLE.get()),
-			new BlockTintDef(List.of(CableSleeveTint.INSTANCE), () -> ModContent.INSULATED_ELECTRUM_CABLE.get()));
+			new BlockTintDef(List.of(CableSleeveTint.INSTANCE), () -> ModContent.INSULATED_ELECTRUM_CABLE.get()),
+			// MOD-764: a camouflaged piezo plate takes the tint of the floor block it copies.
+			new BlockTintDef(PiezoPlateTint.SOURCES, () -> ModContent.PIEZO_PLATE.get()),
+			new BlockTintDef(PiezoPlateTint.SOURCES, () -> ModContent.SILENT_PIEZO_PLATE.get()));
 
 	// ─────────────────────────────────────────────────────────────────────────────────────────
 	// Key mappings (MOD-706)
@@ -405,6 +410,8 @@ public final class ClientContentManifest {
 	public static final List<HudLayerDef> HUD_LAYERS = List.of(
 			// MOD-605: what the root under the crosshair is doing.
 			hudLayer("root_inspection", RootInspection::renderHud, HudPlacement.LAST),
+			// MOD-764: the focused piezo plate's group while the wrench is in hand.
+			hudLayer("piezo_plate_xray", PiezoPlateXray::renderHud, HudPlacement.LAST),
 			// MOD-603: the concentrator's assembly hint.
 			hudLayer("concentrator_assembly", ConcentratorSchematicRenderer::renderHud, HudPlacement.LAST),
 			// MOD-106: the screen going dark as a jump lands.

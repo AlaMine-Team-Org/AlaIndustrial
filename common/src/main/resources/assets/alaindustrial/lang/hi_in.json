@@ -1676,5 +1676,17 @@
   "message.alaindustrial.mob_wheel.occupied": "दौड़ पहिये में पहले से एक जीव है — पहले फाटक खोलकर उसे बाहर निकालें",
   "message.alaindustrial.mob_wheel.ready": "दौड़ पहिया पूरा जुड़ गया",
   "tooltip.alaindustrial.mob_wheel_no_buffer": "कोई भंडार नहीं: जो ऊर्जा नेटवर्क नहीं लेता, वह नष्ट हो जाती है",
-  "tooltip.alaindustrial.mob_wheel_recolour": "रंग बदलने के लिए जुड़े पहिये पर किसी भी लकड़ी के तख्तों से राइट-क्लिक करें"
+  "tooltip.alaindustrial.mob_wheel_recolour": "रंग बदलने के लिए जुड़े पहिये पर किसी भी लकड़ी के तख्तों से राइट-क्लिक करें",
+  "block.alaindustrial.piezo_plate": "पीज़ो दाब पट्ट",
+  "block.alaindustrial.silent_piezo_plate": "शांत पीज़ो दाब पट्ट",
+  "tooltip.alaindustrial.piezo_plate_press": "हर नए कदम पर EU",
+  "tooltip.alaindustrial.silent_piezo_plate_quiet": "क्लिक की आवाज़ नहीं",
+  "tooltip.alaindustrial.piezo_plate_connect": "केबल: बगल में या फ़र्श के नीचे",
+  "tooltip.alaindustrial.piezo_plate_wrench": "रिंच प्लेटें दिखाता है",
+  "tooltip.alaindustrial.piezo_press": "जीव पर %s EU · वस्तु पर %s EU",
+  "message.alaindustrial.piezo_plate.placed_connected": "पीज़ो प्लेटें: %s · जुड़ी हैं",
+  "message.alaindustrial.piezo_plate.placed_no_outlet": "पीज़ो प्लेटें: %s · बगल में या फ़र्श के नीचे केबल जोड़ें",
+  "hud.alaindustrial.piezo_plate.ok": "पीज़ो प्लेटें: %1$s · %2$s/%3$s EU · आउटपुट: %4$s",
+  "hud.alaindustrial.piezo_plate.no_outlet": "पीज़ो प्लेटें: %1$s · %2$s/%3$s EU · केबल नहीं",
+  "hud.alaindustrial.piezo_plate.full": "पीज़ो प्लेटें: %1$s · भरी हुई, दबाव व्यर्थ"
 }

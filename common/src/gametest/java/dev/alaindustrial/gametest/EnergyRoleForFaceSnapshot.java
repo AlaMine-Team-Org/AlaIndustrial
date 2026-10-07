@@ -80,6 +80,10 @@ final class EnergyRoleForFaceSnapshot {
 			"mob_wheel_controller[facing=west,formed=false] DUNSWE=NNNONO",
 			"mob_wheel_controller[facing=east,formed=true] DUNSWE=NNONON",
 			"mob_wheel_controller[facing=east,formed=false] DUNSWE=NNONON",
+			"piezo_plate[powered=true] DUNSWE=ONOOOO",
+			"piezo_plate[powered=false] DUNSWE=ONOOOO",
+			"piezo_plate@silent_piezo_plate[powered=true] DUNSWE=ONOOOO",
+			"piezo_plate@silent_piezo_plate[powered=false] DUNSWE=ONOOOO",
 			"copper_cable[breaker_open=false,down=false,east=false,east_low=false,north=false,north_low"
 					+ "=false,south=false,south_low=false,up=false,west=false,west_low=false] DUNSWE=BBBBBB",
 			"copper_cable@tin_cable[breaker_open=false,down=false,east=false,east_low=false,north=false"

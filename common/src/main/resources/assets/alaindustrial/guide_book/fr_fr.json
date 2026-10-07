@@ -521,6 +521,43 @@
           ]
         },
         {
+          "id": "piezo_plate",
+          "title": "Plaque piézo",
+          "icon": "alaindustrial:piezo_plate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Plaque piézo",
+              "text": "Une plaque de pression qui donne une petite portion d'EU à chaque nouvelle pression ; les plaques voisines mettent leur énergie en commun dans un seul chemin et la transmettent par un seul câble — à côté ou caché sous le sol. Vue d'en haut, elle prend l'aspect du bloc sur lequel elle repose."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiques",
+              "lines": [
+                "Énergie : 0–0.5 EU/t"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication non façonnée",
+              "grid": [
+                "minecraft:stone_pressure_plate",
+                "minecraft:quartz",
+                "alaindustrial:copper_cable",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:piezo_plate",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "charge_pad",
           "title": "Station de recharge",
           "icon": "alaindustrial:charge_pad",

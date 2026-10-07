@@ -1676,5 +1676,17 @@
   "message.alaindustrial.mob_wheel.occupied": "A roda de corrida já tem uma criatura — abra o portão primeiro para soltá-la",
   "message.alaindustrial.mob_wheel.ready": "A roda de corrida está montada",
   "tooltip.alaindustrial.mob_wheel_no_buffer": "Sem armazenamento: a energia que a rede não recebe é perdida",
-  "tooltip.alaindustrial.mob_wheel_recolour": "Clique com o botão direito na roda montada com tábuas de qualquer madeira para mudar a cor"
+  "tooltip.alaindustrial.mob_wheel_recolour": "Clique com o botão direito na roda montada com tábuas de qualquer madeira para mudar a cor",
+  "block.alaindustrial.piezo_plate": "Placa Piezoelétrica",
+  "block.alaindustrial.silent_piezo_plate": "Placa Piezoelétrica Silenciosa",
+  "tooltip.alaindustrial.piezo_plate_press": "EU a cada novo passo",
+  "tooltip.alaindustrial.silent_piezo_plate_quiet": "Sem clique",
+  "tooltip.alaindustrial.piezo_plate_connect": "Cabo: ao lado ou sob o piso",
+  "tooltip.alaindustrial.piezo_plate_wrench": "A chave mostra as placas",
+  "tooltip.alaindustrial.piezo_press": "%s EU por criatura · %s EU por item",
+  "message.alaindustrial.piezo_plate.placed_connected": "Placas piezo: %s · conectadas",
+  "message.alaindustrial.piezo_plate.placed_no_outlet": "Placas piezo: %s · conecte um cabo ao lado ou sob o piso",
+  "hud.alaindustrial.piezo_plate.ok": "Placas piezo: %1$s · %2$s/%3$s EU · saídas: %4$s",
+  "hud.alaindustrial.piezo_plate.no_outlet": "Placas piezo: %1$s · %2$s/%3$s EU · sem cabo",
+  "hud.alaindustrial.piezo_plate.full": "Placas piezo: %1$s · cheias, pisadas se perdem"
 }

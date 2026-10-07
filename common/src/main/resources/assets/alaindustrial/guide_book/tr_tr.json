@@ -521,6 +521,43 @@
           ]
         },
         {
+          "id": "piezo_plate",
+          "title": "Piezo Plaka",
+          "icon": "alaindustrial:piezo_plate",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Piezo Plaka",
+              "text": "Her yeni basışta küçük bir miktar EU veren bir baskı plakası; komşu plakalar enerjilerini tek bir yolda toplar ve tek bir kabloyla iletir — yanlarında ya da zeminin altına gizlenmiş. Yukarıdan bakınca üzerinde durduğu bloğun görünümünü alır."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: 0–0.5 EU/t"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilsiz Üretim",
+              "grid": [
+                "minecraft:stone_pressure_plate",
+                "minecraft:quartz",
+                "alaindustrial:copper_cable",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:piezo_plate",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "charge_pad",
           "title": "Şarj İstasyonu",
           "icon": "alaindustrial:charge_pad",

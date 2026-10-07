@@ -1676,5 +1676,17 @@
   "message.alaindustrial.mob_wheel.occupied": "回し車にはすでにMobがいます — 先にゲートを開けて外に出してください",
   "message.alaindustrial.mob_wheel.ready": "回し車が完成しました",
   "tooltip.alaindustrial.mob_wheel_no_buffer": "蓄電なし: ネットワークが受け取らなかったエネルギーは失われます",
-  "tooltip.alaindustrial.mob_wheel_recolour": "組み立てた回し車を任意の木の板材で右クリックすると色が変わります"
+  "tooltip.alaindustrial.mob_wheel_recolour": "組み立てた回し車を任意の木の板材で右クリックすると色が変わります",
+  "block.alaindustrial.piezo_plate": "圧電感圧板",
+  "block.alaindustrial.silent_piezo_plate": "静音圧電感圧板",
+  "tooltip.alaindustrial.piezo_plate_press": "新しく踏むたびにEU",
+  "tooltip.alaindustrial.silent_piezo_plate_quiet": "クリック音なし",
+  "tooltip.alaindustrial.piezo_plate_connect": "ケーブル：横か床下",
+  "tooltip.alaindustrial.piezo_plate_wrench": "レンチで板が見える",
+  "tooltip.alaindustrial.piezo_press": "モブ %s EU · アイテム %s EU",
+  "message.alaindustrial.piezo_plate.placed_connected": "ピエゾ感圧板: %s · 接続済み",
+  "message.alaindustrial.piezo_plate.placed_no_outlet": "ピエゾ感圧板: %s · 横か床下にケーブルをつなぐ",
+  "hud.alaindustrial.piezo_plate.ok": "ピエゾ感圧板: %1$s · %2$s/%3$s EU · 出力: %4$s",
+  "hud.alaindustrial.piezo_plate.no_outlet": "ピエゾ感圧板: %1$s · %2$s/%3$s EU · ケーブルなし",
+  "hud.alaindustrial.piezo_plate.full": "ピエゾ感圧板: %1$s · 満杯、踏んでも失われる"
 }

@@ -579,6 +579,9 @@ pitest {
             // Level and asks the Level whether the host is loaded, so every mutant it has is a
             // NO_COVERAGE in the MC-free run. Covered by the concentrator scenarios on both loaders.
             'dev.alaindustrial.core.energy.EnergyHostRedirect',
+            // MOD-764: the floor lender, a static rule reading two BlockStates from a Level — every one of its
+            // few mutants is NO_COVERAGE in the MC-free run. Covered by PiezoPlateScenarios on both loaders.
+            'dev.alaindustrial.core.energy.FloorPortLender',
             'dev.alaindustrial.core.energy.DirectAdjacencyDistributor', // was EnergyNet (renamed MOD-168 #7)
             'dev.alaindustrial.core.energy.EnergyNetwork',
             'dev.alaindustrial.core.energy.EnergyPortHost',

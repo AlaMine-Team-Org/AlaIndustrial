@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "powered=false": {
+      "model": "alaindustrial:block/silent_piezo_plate"
+    },
+    "powered=true": {
+      "model": "alaindustrial:block/silent_piezo_plate_down"
+    }
+  }
+}
