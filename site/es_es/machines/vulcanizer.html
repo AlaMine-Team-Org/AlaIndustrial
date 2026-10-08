@@ -365,7 +365,7 @@
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>Transferencia de energía</span><span class="cat-count" aria-label="8 páginas">8</span></a>
 <a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>Energía nuclear</span><span class="cat-count" aria-label="15 páginas">15</span></a>
 <div class="group-title">Procesamiento</div>
-<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>Máquinas</span><span class="cat-count" aria-label="16 páginas">16</span></a>
+<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>Máquinas</span><span class="cat-count" aria-label="17 páginas">17</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>Máquinas de fluidos</span><span class="cat-count" aria-label="3 páginas">3</span></a>
 <div class="group-title">Logística</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>Transporte de objetos</span><span class="cat-count" aria-label="2 páginas">2</span></a>
@@ -414,6 +414,8 @@
 <p>Cada nivel consume exactemente <strong>1 caucho en bruto + 4 polvos de azufre</strong>. El calor multiplica la salida pero no el precio del lote, así que una fuente de calor más fuerte es la forma principal de estirar el azufre que has encontrado.</p>
 
 <p>El Calentador eléctrico destaca en esta tabla: hasta que se ha calentado <strong>no es fuente de calor en absoluto</strong>, y la máquina encima espera. El calentamiento tarda unos diez segundos, pero después el Vulcanizador funciona a ×3 directamente. Los detalles están en <a href="electric_heater.html">su propia página</a>.</p>
+
+<p>Con la habilidad «Ciclo resistente» el Vulcanizador termina una operación con lo que queda de su propia carga, pero el Calentador eléctrico sigue cobrando cada tick que hace avanzar el progreso: la habilidad perdona el suministro de EU/FE, no el calor. Sin calor no hay progreso.</p>
 
 <p>Si el nivel de calor <strong>baja</strong> durante una operación, el progreso se reinicia sin peligro con el nuevo multiplicador; reiniciar no consume los ingredientes. Si el nivel <strong>sube</strong>, el lote termina tranquilamente con el multiplicador con el que empezó y la mejora va al siguiente — así que cambiar el calor en el último tick no eleva la salida de una operación casi terminada.</p>
 

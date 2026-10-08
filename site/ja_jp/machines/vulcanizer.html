@@ -365,7 +365,7 @@
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
 <a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>原子力</span><span class="cat-count" aria-label="15 ページ">15</span></a>
 <div class="group-title">加工</div>
-<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>マシン</span><span class="cat-count" aria-label="16 ページ">16</span></a>
+<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>マシン</span><span class="cat-count" aria-label="17 ページ">17</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>液体マシン</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <div class="group-title">物流</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>アイテム輸送</span><span class="cat-count" aria-label="2 ページ">2</span></a>
@@ -414,6 +414,8 @@
 <p>どのレベルでも消費は同じ：<strong>生ゴム ×1 + 硫黄の粉 ×4</strong>。加熱は産出を乗算しますが、バッチのコストは乗算しないため、強い熱源は集めた硫黄を長持ちさせる主な手段です。</p>
 
 <p>電気ヒーターはこの表のなかで別格です：予熱が終わるまでは<strong>そもそも熱源ではなく</strong>、その上の機械は待つことになります。予熱には約10秒かかりますが、そのあと加硫機はすぐに ×3 で動きます。詳細は<a href="electric_heater.html">専用ページ</a>を参照してください。</p>
+
+<p>スキル「粘り強いサイクル」があると、加硫機は自身の残りの充電で操作を最後まで進めますが、進行状況を進めるティックごとに電気ヒーターの代金は支払われます。このスキルが免除するのは EU/FE の供給であって、熱ではありません。熱がなければ進行もしません。</p>
 
 <p>操作中に加熱レベルが<strong>下がった</strong>場合、進行状況は新しい乗数で安全に最初からやり直します。再開時に材料は消費されません。加熱レベルが<strong>上がった</strong>場合、そのバッチは開始時の乗数のまま最後まで進み、上昇分は次のバッチに回ります — そのため、最後のティックで熱源を差し替えても、ほぼ完了した操作の産出は上がりません。</p>
 

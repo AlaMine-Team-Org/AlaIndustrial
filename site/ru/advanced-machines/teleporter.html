@@ -365,7 +365,7 @@
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="8 страниц">8</span></a>
 <a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>Ядерная техника</span><span class="cat-count" aria-label="15 страниц">15</span></a>
 <div class="group-title">Переработка</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="16 страниц">16</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="17 страниц">17</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>Машины для жидкостей</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <div class="group-title">Логистика</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>Логистика предметов</span><span class="cat-count" aria-label="2 страницы">2</span></a>
@@ -509,6 +509,8 @@
 <p><strong>Через кабель накопитель отдаёт станции только излишек — то, что выше половины его запаса.</strong> Это сделано намеренно: у станции буфер 500 000 EU/FE против 20 000 у энергохранилища, и без такого порога одна станция выкачала бы весь банк базы, оставив машины без питания. Если хочется залить станцию целиком — поставьте энергохранилище <strong>вплотную</strong> к ней: прямое примыкание не ограничено ни скоростью, ни порогом, и это прямой способ игрока сказать «отдай всё».</p>
 
 <p>Машины всегда в приоритете: пока на той же сети что-то работает, станция получает энергию только из того, что осталось. И пока два энергохранилища на той же линии выравниваются между собой, станция не получает из них ничего — ни их перекачки, ни питания по таблице выше; излишек генераторов (то, что они дают сверх нужд машин) она получает и в это время. Когда хранилища сравнялись, они снова питают её по таблице выше.</p>
+
+<p>А когда генераторов не хватает машинам и энергохранилище их подстраховывает, станция, пока это продолжается, получает только излишек генераторов — то, что они дают сверх нужд машин; запас хранилища достаётся машинам.</p>
 
 <h2 id="связанное">Связанное</h2>
 

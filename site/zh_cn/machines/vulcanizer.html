@@ -365,7 +365,7 @@
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
 <a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>核能设施</span><span class="cat-count" aria-label="15 个页面">15</span></a>
 <div class="group-title">加工</div>
-<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>机器</span><span class="cat-count" aria-label="16 个页面">16</span></a>
+<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>机器</span><span class="cat-count" aria-label="17 个页面">17</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>流体机器</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <div class="group-title">物流</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>物品物流</span><span class="cat-count" aria-label="2 个页面">2</span></a>
@@ -414,6 +414,8 @@
 <p>任意等级下的消耗都相同：<strong>1 份生橡胶 + 4 份硫磺粉</strong>。加热会乘算产出而非批次成本，因此更强的热源是延长已采集硫磺使用时间的主要手段。</p>
 
 <p>电热器在这张表里比较特殊：在预热完成之前，它<strong>根本不是热源</strong>，它上方的机器只能等待。预热大约需要十秒，但之后硫化机立刻就以 ×3 运转。细节见<a href="electric_heater.html">它自己的页面</a>。</p>
+
+<p>拥有技能「坚韧循环」时，硫化机会用自身剩余的电量把操作做完，但每一个推进进度的刻仍要向电热器付费：该技能免除的是 EU/FE 供给，而不是热量。没有热量，就没有进度。</p>
 
 <p>如果操作过程中加热等级<strong>下降</strong>，进度会以新的倍率安全地从头开始，重启时原料不会被消耗。如果等级<strong>上升</strong>，这一批仍会按开始时的倍率从容跑完，提升留给下一批——因此在最后一刻更换热源，并不会提高即将完成的操作的产出。</p>
 

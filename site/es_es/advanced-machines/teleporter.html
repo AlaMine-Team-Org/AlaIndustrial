@@ -365,7 +365,7 @@
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>Transferencia de energía</span><span class="cat-count" aria-label="8 páginas">8</span></a>
 <a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>Energía nuclear</span><span class="cat-count" aria-label="15 páginas">15</span></a>
 <div class="group-title">Procesamiento</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>Máquinas</span><span class="cat-count" aria-label="16 páginas">16</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>Máquinas</span><span class="cat-count" aria-label="17 páginas">17</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>Máquinas de fluidos</span><span class="cat-count" aria-label="3 páginas">3</span></a>
 <div class="group-title">Logística</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>Transporte de objetos</span><span class="cat-count" aria-label="2 páginas">2</span></a>
@@ -508,6 +508,8 @@
 <p><strong>Por cable, un almacén solo entrega su excedente: lo que tenga por encima de la mitad.</strong> Es deliberado: el búfer de la estación son 500 000 EU/FE contra los 20 000 de un Almacén de energía, y sin ese suelo una sola estación vaciaría el banco de toda la base y dejaría las máquinas a oscuras. Para llenarla del todo, ponle un almacén <strong>pegado directamente</strong>: la vía directa no tiene ni límite de ritmo ni reserva, y es la forma explícita del jugador de decir «tómate lo todo».</p>
 
 <p>Las máquinas siempre van primero: mientras algo trabaje en la misma red, la estación solo se carga con el resto. Y mientras dos almacenes de energía de la misma línea se igualan entre sí, la estación no recibe nada de ellos — ni su trasvase ni la alimentación de la tabla de arriba; el excedente de los generadores (lo que producen por encima de lo que piden las máquinas) le sigue llegando mientras tanto. Cuando los almacenes quedan igualados, vuelven a alimentarla como indica la tabla de arriba.</p>
+
+<p>Y cuando los generadores no alcanzan para las máquinas y un almacén de energía las respalda, mientras dure eso la estación solo recibe el excedente de los generadores — lo que producen por encima de lo que piden las máquinas; la reserva del almacén va a las máquinas.</p>
 
 <h2 id="relacionado">Relacionado</h2>
 
