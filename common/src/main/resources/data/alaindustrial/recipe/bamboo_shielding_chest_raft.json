@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "chest_boat",
+  "ingredients": [
+    "alaindustrial:shielding_chest",
+    "minecraft:bamboo_raft"
+  ],
+  "result": {
+    "id": "alaindustrial:bamboo_shielding_chest_raft"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "minecraft:item/bamboo_raft",
+    "layer1": "alaindustrial:item/electrum_chest_raft_overlay"
+  }
+}

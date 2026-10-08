@@ -306,6 +306,13 @@ public final class IndustrializationNeoForgeClient {
 		event.registerEntityRenderer(
 				dev.alaindustrial.registry.neoforge.ModEntitiesNeoForge.STOCK_DISPLAY_FRAME.get(),
 				dev.alaindustrial.client.render.StockDisplayFrameRenderer::new);
+		// Chest boats (MOD-785) — counterpart to the Fabric registration in IndustrializationClient.
+		for (dev.alaindustrial.entity.ChestBoatVariants.Variant variant
+				: dev.alaindustrial.entity.ChestBoatVariants.ALL) {
+			event.registerEntityRenderer(
+					dev.alaindustrial.registry.neoforge.ModEntitiesNeoForge.CHEST_BOATS.get(variant.id()).get(),
+					context -> dev.alaindustrial.client.render.ModChestBoatRenderer.create(context, variant));
+		}
 	}
 
 	/**

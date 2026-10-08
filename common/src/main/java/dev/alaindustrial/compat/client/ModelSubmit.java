@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.resources.model.sprite.SpriteGetter;
 import net.minecraft.client.resources.model.sprite.SpriteId;
+import net.minecraft.resources.Identifier;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -29,5 +30,15 @@ public final class ModelSubmit {
 			ModelFeatureRenderer.@Nullable CrumblingOverlay crumbling) {
 		collector.submitModel(model, state, poseStack, lightCoords, overlayCoords, tintedColor, sprite,
 				sprites, outlineColor, crumbling);
+	}
+
+	/**
+	 * Submits a model textured straight from {@code texture} (not an atlas sprite), with no breaking overlay
+	 * — an entity part such as the boat's water patch (MOD-785). On 26.3 that is the seven-argument
+	 * {@code submitModel}; 26.2 has the same call with a trailing {@code CrumblingOverlay}, here {@code null}.
+	 */
+	public static <S> void textured(SubmitNodeCollector collector, Model<? super S> model, S state,
+			PoseStack poseStack, Identifier texture, int lightCoords, int overlayCoords, int outlineColor) {
+		collector.submitModel(model, state, poseStack, texture, lightCoords, overlayCoords, outlineColor, null);
 	}
 }

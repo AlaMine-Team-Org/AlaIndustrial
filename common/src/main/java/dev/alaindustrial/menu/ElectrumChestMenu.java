@@ -48,6 +48,20 @@ public class ElectrumChestMenu extends AbstractScrollingChestMenu {
 	 */
 	public static ElectrumChestMenu server(int syncId, Inventory playerInventory,
 			ElectrumChestBlockEntity chest) {
+		return windowed(syncId, playerInventory, chest,
+				ContainerLevelAccess.create(chest.getLevel(), chest.getBlockPos()));
+	}
+
+	/**
+	 * Server side over a chest boat's container (MOD-785): the same sliding window, but there is no
+	 * block — validity is the boat's own distance check, reached through {@link StorageWindow#stillValid}.
+	 */
+	public static ElectrumChestMenu forEntity(int syncId, Inventory playerInventory, Container chest) {
+		return windowed(syncId, playerInventory, chest, ContainerLevelAccess.NULL);
+	}
+
+	private static ElectrumChestMenu windowed(int syncId, Inventory playerInventory, Container chest,
+			ContainerLevelAccess access) {
 		StorageWindow window = new StorageWindow(chest, VISIBLE_ROWS);
 		ContainerData data = new ContainerData() {
 			@Override
@@ -67,7 +81,6 @@ public class ElectrumChestMenu extends AbstractScrollingChestMenu {
 				return DATA_COUNT;
 			}
 		};
-		return new ElectrumChestMenu(syncId, playerInventory, window,
-				ContainerLevelAccess.create(chest.getLevel(), chest.getBlockPos()), window, data);
+		return new ElectrumChestMenu(syncId, playerInventory, window, access, window, data);
 	}
 }

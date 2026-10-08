@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "chest_boat",
+  "ingredients": [
+    "alaindustrial:shielding_chest",
+    "minecraft:pale_oak_boat"
+  ],
+  "result": {
+    "id": "alaindustrial:pale_oak_shielding_chest_boat"
+  }
+}

@@ -342,5 +342,12 @@ public class IndustrializationClient implements ClientModInitializer {
 		net.minecraft.client.renderer.entity.EntityRenderers.register(
 				dev.alaindustrial.registry.ModEntities.STOCK_DISPLAY_FRAME,
 				dev.alaindustrial.client.render.StockDisplayFrameRenderer::new);
+		// Chest boats (MOD-785): vanilla boat model + the mod chest model, composed per wood × chest pair.
+		for (dev.alaindustrial.entity.ChestBoatVariants.Variant variant
+				: dev.alaindustrial.entity.ChestBoatVariants.ALL) {
+			net.minecraft.client.renderer.entity.EntityRenderers.register(
+					dev.alaindustrial.registry.ModEntities.CHEST_BOATS.get(variant.id()),
+					context -> dev.alaindustrial.client.render.ModChestBoatRenderer.create(context, variant));
+		}
 	}
 }

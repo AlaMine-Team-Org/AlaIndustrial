@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "chest_boat",
+  "ingredients": [
+    "alaindustrial:electrum_chest",
+    "minecraft:dark_oak_boat"
+  ],
+  "result": {
+    "id": "alaindustrial:dark_oak_electrum_chest_boat"
+  }
+}
