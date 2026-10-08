@@ -1,12 +1,16 @@
 package dev.alaindustrial.registry.neoforge;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.entity.ChestBoatVariants;
+import dev.alaindustrial.entity.ModChestBoat;
 import dev.alaindustrial.entity.StockDisplayFrameEntity;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -33,6 +37,24 @@ public final class ModEntitiesNeoForge {
 							.updateInterval(Integer.MAX_VALUE)
 							.build(ResourceKey.create(Registries.ENTITY_TYPE,
 									Industrialization.id("stock_display_frame"))));
+
+	/** The chest boats (MOD-785) — same pairs, ids and builder values as the Fabric {@code ModEntities}. */
+	public static final Map<String, DeferredHolder<EntityType<?>, EntityType<ModChestBoat>>> CHEST_BOATS =
+			registerChestBoats();
+
+	private static Map<String, DeferredHolder<EntityType<?>, EntityType<ModChestBoat>>> registerChestBoats() {
+		Map<String, DeferredHolder<EntityType<?>, EntityType<ModChestBoat>>> holders = new LinkedHashMap<>();
+		for (ChestBoatVariants.Variant variant : ChestBoatVariants.ALL) {
+			holders.put(variant.id(), ENTITY_TYPES.register(variant.id(),
+					() -> EntityType.Builder.<ModChestBoat>of(variant::create, MobCategory.MISC)
+							.noLootTable()
+							.sized(1.375F, 0.5625F)
+							.eyeHeight(0.5625F)
+							.clientTrackingRange(10)
+							.build(ResourceKey.create(Registries.ENTITY_TYPE, Industrialization.id(variant.id())))));
+		}
+		return holders;
+	}
 
 	private ModEntitiesNeoForge() {
 	}

@@ -613,6 +613,76 @@ public final class ModContent {
 	public static Supplier<Item> FILLED_VACUUM_CAPSULE = unbound("FILLED_VACUUM_CAPSULE");
 	// Stock Display Frame (MOD-066) — placement item for the frame entity below.
 	public static Supplier<Item> STOCK_DISPLAY_FRAME_ITEM = unbound("STOCK_DISPLAY_FRAME_ITEM");
+	// Chest boats (MOD-785) — a vanilla boat carrying a mod chest, one item per wood × chest pair of
+	// ChestBoatVariants; the entity is ModChestBoat.
+	// BEGIN GENERATED chest boats (tools/gen_chest_boats.py)
+	public static Supplier<Item> OAK_IRON_CHEST_BOAT = unbound("OAK_IRON_CHEST_BOAT");
+	public static Supplier<Item> SPRUCE_IRON_CHEST_BOAT = unbound("SPRUCE_IRON_CHEST_BOAT");
+	public static Supplier<Item> BIRCH_IRON_CHEST_BOAT = unbound("BIRCH_IRON_CHEST_BOAT");
+	public static Supplier<Item> JUNGLE_IRON_CHEST_BOAT = unbound("JUNGLE_IRON_CHEST_BOAT");
+	public static Supplier<Item> ACACIA_IRON_CHEST_BOAT = unbound("ACACIA_IRON_CHEST_BOAT");
+	public static Supplier<Item> CHERRY_IRON_CHEST_BOAT = unbound("CHERRY_IRON_CHEST_BOAT");
+	public static Supplier<Item> DARK_OAK_IRON_CHEST_BOAT = unbound("DARK_OAK_IRON_CHEST_BOAT");
+	public static Supplier<Item> PALE_OAK_IRON_CHEST_BOAT = unbound("PALE_OAK_IRON_CHEST_BOAT");
+	public static Supplier<Item> MANGROVE_IRON_CHEST_BOAT = unbound("MANGROVE_IRON_CHEST_BOAT");
+	public static Supplier<Item> POPLAR_IRON_CHEST_BOAT = unbound("POPLAR_IRON_CHEST_BOAT");
+	public static Supplier<Item> BAMBOO_IRON_CHEST_RAFT = unbound("BAMBOO_IRON_CHEST_RAFT");
+	public static Supplier<Item> OAK_SILVER_CHEST_BOAT = unbound("OAK_SILVER_CHEST_BOAT");
+	public static Supplier<Item> SPRUCE_SILVER_CHEST_BOAT = unbound("SPRUCE_SILVER_CHEST_BOAT");
+	public static Supplier<Item> BIRCH_SILVER_CHEST_BOAT = unbound("BIRCH_SILVER_CHEST_BOAT");
+	public static Supplier<Item> JUNGLE_SILVER_CHEST_BOAT = unbound("JUNGLE_SILVER_CHEST_BOAT");
+	public static Supplier<Item> ACACIA_SILVER_CHEST_BOAT = unbound("ACACIA_SILVER_CHEST_BOAT");
+	public static Supplier<Item> CHERRY_SILVER_CHEST_BOAT = unbound("CHERRY_SILVER_CHEST_BOAT");
+	public static Supplier<Item> DARK_OAK_SILVER_CHEST_BOAT = unbound("DARK_OAK_SILVER_CHEST_BOAT");
+	public static Supplier<Item> PALE_OAK_SILVER_CHEST_BOAT = unbound("PALE_OAK_SILVER_CHEST_BOAT");
+	public static Supplier<Item> MANGROVE_SILVER_CHEST_BOAT = unbound("MANGROVE_SILVER_CHEST_BOAT");
+	public static Supplier<Item> POPLAR_SILVER_CHEST_BOAT = unbound("POPLAR_SILVER_CHEST_BOAT");
+	public static Supplier<Item> BAMBOO_SILVER_CHEST_RAFT = unbound("BAMBOO_SILVER_CHEST_RAFT");
+	public static Supplier<Item> OAK_GOLD_CHEST_BOAT = unbound("OAK_GOLD_CHEST_BOAT");
+	public static Supplier<Item> SPRUCE_GOLD_CHEST_BOAT = unbound("SPRUCE_GOLD_CHEST_BOAT");
+	public static Supplier<Item> BIRCH_GOLD_CHEST_BOAT = unbound("BIRCH_GOLD_CHEST_BOAT");
+	public static Supplier<Item> JUNGLE_GOLD_CHEST_BOAT = unbound("JUNGLE_GOLD_CHEST_BOAT");
+	public static Supplier<Item> ACACIA_GOLD_CHEST_BOAT = unbound("ACACIA_GOLD_CHEST_BOAT");
+	public static Supplier<Item> CHERRY_GOLD_CHEST_BOAT = unbound("CHERRY_GOLD_CHEST_BOAT");
+	public static Supplier<Item> DARK_OAK_GOLD_CHEST_BOAT = unbound("DARK_OAK_GOLD_CHEST_BOAT");
+	public static Supplier<Item> PALE_OAK_GOLD_CHEST_BOAT = unbound("PALE_OAK_GOLD_CHEST_BOAT");
+	public static Supplier<Item> MANGROVE_GOLD_CHEST_BOAT = unbound("MANGROVE_GOLD_CHEST_BOAT");
+	public static Supplier<Item> POPLAR_GOLD_CHEST_BOAT = unbound("POPLAR_GOLD_CHEST_BOAT");
+	public static Supplier<Item> BAMBOO_GOLD_CHEST_RAFT = unbound("BAMBOO_GOLD_CHEST_RAFT");
+	public static Supplier<Item> OAK_ELECTRUM_CHEST_BOAT = unbound("OAK_ELECTRUM_CHEST_BOAT");
+	public static Supplier<Item> SPRUCE_ELECTRUM_CHEST_BOAT = unbound("SPRUCE_ELECTRUM_CHEST_BOAT");
+	public static Supplier<Item> BIRCH_ELECTRUM_CHEST_BOAT = unbound("BIRCH_ELECTRUM_CHEST_BOAT");
+	public static Supplier<Item> JUNGLE_ELECTRUM_CHEST_BOAT = unbound("JUNGLE_ELECTRUM_CHEST_BOAT");
+	public static Supplier<Item> ACACIA_ELECTRUM_CHEST_BOAT = unbound("ACACIA_ELECTRUM_CHEST_BOAT");
+	public static Supplier<Item> CHERRY_ELECTRUM_CHEST_BOAT = unbound("CHERRY_ELECTRUM_CHEST_BOAT");
+	public static Supplier<Item> DARK_OAK_ELECTRUM_CHEST_BOAT = unbound("DARK_OAK_ELECTRUM_CHEST_BOAT");
+	public static Supplier<Item> PALE_OAK_ELECTRUM_CHEST_BOAT = unbound("PALE_OAK_ELECTRUM_CHEST_BOAT");
+	public static Supplier<Item> MANGROVE_ELECTRUM_CHEST_BOAT = unbound("MANGROVE_ELECTRUM_CHEST_BOAT");
+	public static Supplier<Item> POPLAR_ELECTRUM_CHEST_BOAT = unbound("POPLAR_ELECTRUM_CHEST_BOAT");
+	public static Supplier<Item> BAMBOO_ELECTRUM_CHEST_RAFT = unbound("BAMBOO_ELECTRUM_CHEST_RAFT");
+	public static Supplier<Item> OAK_DIAMOND_CHEST_BOAT = unbound("OAK_DIAMOND_CHEST_BOAT");
+	public static Supplier<Item> SPRUCE_DIAMOND_CHEST_BOAT = unbound("SPRUCE_DIAMOND_CHEST_BOAT");
+	public static Supplier<Item> BIRCH_DIAMOND_CHEST_BOAT = unbound("BIRCH_DIAMOND_CHEST_BOAT");
+	public static Supplier<Item> JUNGLE_DIAMOND_CHEST_BOAT = unbound("JUNGLE_DIAMOND_CHEST_BOAT");
+	public static Supplier<Item> ACACIA_DIAMOND_CHEST_BOAT = unbound("ACACIA_DIAMOND_CHEST_BOAT");
+	public static Supplier<Item> CHERRY_DIAMOND_CHEST_BOAT = unbound("CHERRY_DIAMOND_CHEST_BOAT");
+	public static Supplier<Item> DARK_OAK_DIAMOND_CHEST_BOAT = unbound("DARK_OAK_DIAMOND_CHEST_BOAT");
+	public static Supplier<Item> PALE_OAK_DIAMOND_CHEST_BOAT = unbound("PALE_OAK_DIAMOND_CHEST_BOAT");
+	public static Supplier<Item> MANGROVE_DIAMOND_CHEST_BOAT = unbound("MANGROVE_DIAMOND_CHEST_BOAT");
+	public static Supplier<Item> POPLAR_DIAMOND_CHEST_BOAT = unbound("POPLAR_DIAMOND_CHEST_BOAT");
+	public static Supplier<Item> BAMBOO_DIAMOND_CHEST_RAFT = unbound("BAMBOO_DIAMOND_CHEST_RAFT");
+	public static Supplier<Item> OAK_SHIELDING_CHEST_BOAT = unbound("OAK_SHIELDING_CHEST_BOAT");
+	public static Supplier<Item> SPRUCE_SHIELDING_CHEST_BOAT = unbound("SPRUCE_SHIELDING_CHEST_BOAT");
+	public static Supplier<Item> BIRCH_SHIELDING_CHEST_BOAT = unbound("BIRCH_SHIELDING_CHEST_BOAT");
+	public static Supplier<Item> JUNGLE_SHIELDING_CHEST_BOAT = unbound("JUNGLE_SHIELDING_CHEST_BOAT");
+	public static Supplier<Item> ACACIA_SHIELDING_CHEST_BOAT = unbound("ACACIA_SHIELDING_CHEST_BOAT");
+	public static Supplier<Item> CHERRY_SHIELDING_CHEST_BOAT = unbound("CHERRY_SHIELDING_CHEST_BOAT");
+	public static Supplier<Item> DARK_OAK_SHIELDING_CHEST_BOAT = unbound("DARK_OAK_SHIELDING_CHEST_BOAT");
+	public static Supplier<Item> PALE_OAK_SHIELDING_CHEST_BOAT = unbound("PALE_OAK_SHIELDING_CHEST_BOAT");
+	public static Supplier<Item> MANGROVE_SHIELDING_CHEST_BOAT = unbound("MANGROVE_SHIELDING_CHEST_BOAT");
+	public static Supplier<Item> POPLAR_SHIELDING_CHEST_BOAT = unbound("POPLAR_SHIELDING_CHEST_BOAT");
+	public static Supplier<Item> BAMBOO_SHIELDING_CHEST_RAFT = unbound("BAMBOO_SHIELDING_CHEST_RAFT");
+	// END GENERATED chest boats
 	// Scythe (MOD-068) — AOE foliage-clearing tool, six material tiers. Behaviour lives in
 	// dev.alaindustrial.item.tool.ScytheItem (common); each loader registers the six items.
 	public static Supplier<Item> SCYTHE_WOOD = unbound("SCYTHE_WOOD");

@@ -3,6 +3,7 @@ package dev.alaindustrial.registry.content;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.compat.LineBlockProps;
+import dev.alaindustrial.entity.ChestBoatVariants;
 import dev.alaindustrial.entity.StockDisplayFrameEntity;
 import dev.alaindustrial.item.misc.DurableComponentItem;
 import dev.alaindustrial.item.misc.HintItem;
@@ -30,9 +31,11 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.vehicle.boat.AbstractBoat;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.BoatItem;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -403,6 +406,33 @@ final class ContentDeclarations {
 					+ "the display-frame item cannot be built");
 		}
 		return (EntityType<StockDisplayFrameEntity>) type;
+	}
+
+	/**
+	 * A chest boat (MOD-785): the vanilla {@code BoatItem} over the pair's entity type, one per stack like
+	 * the vanilla boats. The id must be a pair of {@code ChestBoatVariants} — a typo throws at class-init.
+	 * The entity type is resolved by id inside the factory, for the same ordering reason as the display
+	 * frame's.
+	 */
+	static ItemDef chestBoat(String id, Consumer<Supplier<Item>> bind) {
+		ChestBoatVariants.byId(id);
+		return new ItemDef(id, p -> new BoatItem(chestBoatType(id), p.stacksTo(1)), bind, null);
+	}
+
+	/**
+	 * A chest boat's entity type (MOD-785), typed for the vanilla {@code BoatItem}. Same unchecked-but-safe
+	 * cast as {@link #stockDisplayFrameType()}: each id is registered from exactly one place per loader,
+	 * always with a {@code ModChestBoat} factory.
+	 */
+	@SuppressWarnings("unchecked")
+	static EntityType<? extends AbstractBoat> chestBoatType(String path) {
+		Identifier key = Industrialization.id(path);
+		EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.getValue(key);
+		if (type == null) {
+			throw new IllegalStateException("ItemDef: entity type '" + key + "' is not registered (yet) — "
+					+ "the chest-boat item cannot be built");
+		}
+		return (EntityType<? extends AbstractBoat>) type;
 	}
 
 	/**

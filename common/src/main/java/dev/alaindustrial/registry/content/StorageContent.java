@@ -4,6 +4,7 @@ import static dev.alaindustrial.registry.content.ContentDeclarations.beginBlocks
 import static dev.alaindustrial.registry.content.ContentDeclarations.block;
 import static dev.alaindustrial.registry.content.ContentDeclarations.blockEntity;
 import static dev.alaindustrial.registry.content.ContentDeclarations.blockItem;
+import static dev.alaindustrial.registry.content.ContentDeclarations.chestBoat;
 import static dev.alaindustrial.registry.content.ContentDeclarations.endBlocks;
 import static dev.alaindustrial.registry.content.ContentDeclarations.item;
 import static dev.alaindustrial.registry.content.ContentDeclarations.machine;
@@ -186,6 +187,75 @@ public final class StorageContent {
 			blockItem("electrum_chest", s -> ModContent.ELECTRUM_CHEST_ITEM = s),
 			blockItem("shielding_chest", s -> ModContent.SHIELDING_CHEST_ITEM = s),
 			blockItem("diamond_chest", s -> ModContent.DIAMOND_CHEST_ITEM = s),
+			// MOD-785 — a boat carrying a mod chest, one per wood × chest pair of ChestBoatVariants.
+			// BEGIN GENERATED chest boats (tools/gen_chest_boats.py)
+			chestBoat("oak_iron_chest_boat", s -> ModContent.OAK_IRON_CHEST_BOAT = s),
+			chestBoat("spruce_iron_chest_boat", s -> ModContent.SPRUCE_IRON_CHEST_BOAT = s),
+			chestBoat("birch_iron_chest_boat", s -> ModContent.BIRCH_IRON_CHEST_BOAT = s),
+			chestBoat("jungle_iron_chest_boat", s -> ModContent.JUNGLE_IRON_CHEST_BOAT = s),
+			chestBoat("acacia_iron_chest_boat", s -> ModContent.ACACIA_IRON_CHEST_BOAT = s),
+			chestBoat("cherry_iron_chest_boat", s -> ModContent.CHERRY_IRON_CHEST_BOAT = s),
+			chestBoat("dark_oak_iron_chest_boat", s -> ModContent.DARK_OAK_IRON_CHEST_BOAT = s),
+			chestBoat("pale_oak_iron_chest_boat", s -> ModContent.PALE_OAK_IRON_CHEST_BOAT = s),
+			chestBoat("mangrove_iron_chest_boat", s -> ModContent.MANGROVE_IRON_CHEST_BOAT = s),
+			chestBoat("poplar_iron_chest_boat", s -> ModContent.POPLAR_IRON_CHEST_BOAT = s),
+			chestBoat("bamboo_iron_chest_raft", s -> ModContent.BAMBOO_IRON_CHEST_RAFT = s),
+			chestBoat("oak_silver_chest_boat", s -> ModContent.OAK_SILVER_CHEST_BOAT = s),
+			chestBoat("spruce_silver_chest_boat", s -> ModContent.SPRUCE_SILVER_CHEST_BOAT = s),
+			chestBoat("birch_silver_chest_boat", s -> ModContent.BIRCH_SILVER_CHEST_BOAT = s),
+			chestBoat("jungle_silver_chest_boat", s -> ModContent.JUNGLE_SILVER_CHEST_BOAT = s),
+			chestBoat("acacia_silver_chest_boat", s -> ModContent.ACACIA_SILVER_CHEST_BOAT = s),
+			chestBoat("cherry_silver_chest_boat", s -> ModContent.CHERRY_SILVER_CHEST_BOAT = s),
+			chestBoat("dark_oak_silver_chest_boat", s -> ModContent.DARK_OAK_SILVER_CHEST_BOAT = s),
+			chestBoat("pale_oak_silver_chest_boat", s -> ModContent.PALE_OAK_SILVER_CHEST_BOAT = s),
+			chestBoat("mangrove_silver_chest_boat", s -> ModContent.MANGROVE_SILVER_CHEST_BOAT = s),
+			chestBoat("poplar_silver_chest_boat", s -> ModContent.POPLAR_SILVER_CHEST_BOAT = s),
+			chestBoat("bamboo_silver_chest_raft", s -> ModContent.BAMBOO_SILVER_CHEST_RAFT = s),
+			chestBoat("oak_gold_chest_boat", s -> ModContent.OAK_GOLD_CHEST_BOAT = s),
+			chestBoat("spruce_gold_chest_boat", s -> ModContent.SPRUCE_GOLD_CHEST_BOAT = s),
+			chestBoat("birch_gold_chest_boat", s -> ModContent.BIRCH_GOLD_CHEST_BOAT = s),
+			chestBoat("jungle_gold_chest_boat", s -> ModContent.JUNGLE_GOLD_CHEST_BOAT = s),
+			chestBoat("acacia_gold_chest_boat", s -> ModContent.ACACIA_GOLD_CHEST_BOAT = s),
+			chestBoat("cherry_gold_chest_boat", s -> ModContent.CHERRY_GOLD_CHEST_BOAT = s),
+			chestBoat("dark_oak_gold_chest_boat", s -> ModContent.DARK_OAK_GOLD_CHEST_BOAT = s),
+			chestBoat("pale_oak_gold_chest_boat", s -> ModContent.PALE_OAK_GOLD_CHEST_BOAT = s),
+			chestBoat("mangrove_gold_chest_boat", s -> ModContent.MANGROVE_GOLD_CHEST_BOAT = s),
+			chestBoat("poplar_gold_chest_boat", s -> ModContent.POPLAR_GOLD_CHEST_BOAT = s),
+			chestBoat("bamboo_gold_chest_raft", s -> ModContent.BAMBOO_GOLD_CHEST_RAFT = s),
+			chestBoat("oak_electrum_chest_boat", s -> ModContent.OAK_ELECTRUM_CHEST_BOAT = s),
+			chestBoat("spruce_electrum_chest_boat", s -> ModContent.SPRUCE_ELECTRUM_CHEST_BOAT = s),
+			chestBoat("birch_electrum_chest_boat", s -> ModContent.BIRCH_ELECTRUM_CHEST_BOAT = s),
+			chestBoat("jungle_electrum_chest_boat", s -> ModContent.JUNGLE_ELECTRUM_CHEST_BOAT = s),
+			chestBoat("acacia_electrum_chest_boat", s -> ModContent.ACACIA_ELECTRUM_CHEST_BOAT = s),
+			chestBoat("cherry_electrum_chest_boat", s -> ModContent.CHERRY_ELECTRUM_CHEST_BOAT = s),
+			chestBoat("dark_oak_electrum_chest_boat", s -> ModContent.DARK_OAK_ELECTRUM_CHEST_BOAT = s),
+			chestBoat("pale_oak_electrum_chest_boat", s -> ModContent.PALE_OAK_ELECTRUM_CHEST_BOAT = s),
+			chestBoat("mangrove_electrum_chest_boat", s -> ModContent.MANGROVE_ELECTRUM_CHEST_BOAT = s),
+			chestBoat("poplar_electrum_chest_boat", s -> ModContent.POPLAR_ELECTRUM_CHEST_BOAT = s),
+			chestBoat("bamboo_electrum_chest_raft", s -> ModContent.BAMBOO_ELECTRUM_CHEST_RAFT = s),
+			chestBoat("oak_diamond_chest_boat", s -> ModContent.OAK_DIAMOND_CHEST_BOAT = s),
+			chestBoat("spruce_diamond_chest_boat", s -> ModContent.SPRUCE_DIAMOND_CHEST_BOAT = s),
+			chestBoat("birch_diamond_chest_boat", s -> ModContent.BIRCH_DIAMOND_CHEST_BOAT = s),
+			chestBoat("jungle_diamond_chest_boat", s -> ModContent.JUNGLE_DIAMOND_CHEST_BOAT = s),
+			chestBoat("acacia_diamond_chest_boat", s -> ModContent.ACACIA_DIAMOND_CHEST_BOAT = s),
+			chestBoat("cherry_diamond_chest_boat", s -> ModContent.CHERRY_DIAMOND_CHEST_BOAT = s),
+			chestBoat("dark_oak_diamond_chest_boat", s -> ModContent.DARK_OAK_DIAMOND_CHEST_BOAT = s),
+			chestBoat("pale_oak_diamond_chest_boat", s -> ModContent.PALE_OAK_DIAMOND_CHEST_BOAT = s),
+			chestBoat("mangrove_diamond_chest_boat", s -> ModContent.MANGROVE_DIAMOND_CHEST_BOAT = s),
+			chestBoat("poplar_diamond_chest_boat", s -> ModContent.POPLAR_DIAMOND_CHEST_BOAT = s),
+			chestBoat("bamboo_diamond_chest_raft", s -> ModContent.BAMBOO_DIAMOND_CHEST_RAFT = s),
+			chestBoat("oak_shielding_chest_boat", s -> ModContent.OAK_SHIELDING_CHEST_BOAT = s),
+			chestBoat("spruce_shielding_chest_boat", s -> ModContent.SPRUCE_SHIELDING_CHEST_BOAT = s),
+			chestBoat("birch_shielding_chest_boat", s -> ModContent.BIRCH_SHIELDING_CHEST_BOAT = s),
+			chestBoat("jungle_shielding_chest_boat", s -> ModContent.JUNGLE_SHIELDING_CHEST_BOAT = s),
+			chestBoat("acacia_shielding_chest_boat", s -> ModContent.ACACIA_SHIELDING_CHEST_BOAT = s),
+			chestBoat("cherry_shielding_chest_boat", s -> ModContent.CHERRY_SHIELDING_CHEST_BOAT = s),
+			chestBoat("dark_oak_shielding_chest_boat", s -> ModContent.DARK_OAK_SHIELDING_CHEST_BOAT = s),
+			chestBoat("pale_oak_shielding_chest_boat", s -> ModContent.PALE_OAK_SHIELDING_CHEST_BOAT = s),
+			chestBoat("mangrove_shielding_chest_boat", s -> ModContent.MANGROVE_SHIELDING_CHEST_BOAT = s),
+			chestBoat("poplar_shielding_chest_boat", s -> ModContent.POPLAR_SHIELDING_CHEST_BOAT = s),
+			chestBoat("bamboo_shielding_chest_raft", s -> ModContent.BAMBOO_SHIELDING_CHEST_RAFT = s),
+			// END GENERATED chest boats
 			// MOD-480 — the monitoring wall, likewise appended at the tail.
 			blockItem("smart_wire", s -> ModContent.SMART_WIRE_ITEM = s),
 			blockItem("monitor_core", s -> ModContent.MONITOR_CORE_ITEM = s),
@@ -279,6 +349,83 @@ public final class StorageContent {
 		// the player, so it belongs with storage rather than among the processing machines.
 		show(out, ModContent.CHARGE_PAD_ITEM);
 		show(out, ModContent.ENERGY_CONDENSER_ITEM);
+	}
+
+	/**
+	 * 6b - the chest boats (MOD-785): every wood with the iron chest, then the next chest up the ladder.
+	 *
+	 * <p>size-justified: one tab run listed entry by entry, written by tools/gen_chest_boats.py from
+	 * ChestBoatVariants; its order IS the content.
+	 */
+	public static void chestBoats(Sink out) {
+		// BEGIN GENERATED chest boats (tools/gen_chest_boats.py)
+		show(out, ModContent.OAK_IRON_CHEST_BOAT);
+		show(out, ModContent.SPRUCE_IRON_CHEST_BOAT);
+		show(out, ModContent.BIRCH_IRON_CHEST_BOAT);
+		show(out, ModContent.JUNGLE_IRON_CHEST_BOAT);
+		show(out, ModContent.ACACIA_IRON_CHEST_BOAT);
+		show(out, ModContent.CHERRY_IRON_CHEST_BOAT);
+		show(out, ModContent.DARK_OAK_IRON_CHEST_BOAT);
+		show(out, ModContent.PALE_OAK_IRON_CHEST_BOAT);
+		show(out, ModContent.MANGROVE_IRON_CHEST_BOAT);
+		show(out, ModContent.POPLAR_IRON_CHEST_BOAT);
+		show(out, ModContent.BAMBOO_IRON_CHEST_RAFT);
+		show(out, ModContent.OAK_SILVER_CHEST_BOAT);
+		show(out, ModContent.SPRUCE_SILVER_CHEST_BOAT);
+		show(out, ModContent.BIRCH_SILVER_CHEST_BOAT);
+		show(out, ModContent.JUNGLE_SILVER_CHEST_BOAT);
+		show(out, ModContent.ACACIA_SILVER_CHEST_BOAT);
+		show(out, ModContent.CHERRY_SILVER_CHEST_BOAT);
+		show(out, ModContent.DARK_OAK_SILVER_CHEST_BOAT);
+		show(out, ModContent.PALE_OAK_SILVER_CHEST_BOAT);
+		show(out, ModContent.MANGROVE_SILVER_CHEST_BOAT);
+		show(out, ModContent.POPLAR_SILVER_CHEST_BOAT);
+		show(out, ModContent.BAMBOO_SILVER_CHEST_RAFT);
+		show(out, ModContent.OAK_GOLD_CHEST_BOAT);
+		show(out, ModContent.SPRUCE_GOLD_CHEST_BOAT);
+		show(out, ModContent.BIRCH_GOLD_CHEST_BOAT);
+		show(out, ModContent.JUNGLE_GOLD_CHEST_BOAT);
+		show(out, ModContent.ACACIA_GOLD_CHEST_BOAT);
+		show(out, ModContent.CHERRY_GOLD_CHEST_BOAT);
+		show(out, ModContent.DARK_OAK_GOLD_CHEST_BOAT);
+		show(out, ModContent.PALE_OAK_GOLD_CHEST_BOAT);
+		show(out, ModContent.MANGROVE_GOLD_CHEST_BOAT);
+		show(out, ModContent.POPLAR_GOLD_CHEST_BOAT);
+		show(out, ModContent.BAMBOO_GOLD_CHEST_RAFT);
+		show(out, ModContent.OAK_ELECTRUM_CHEST_BOAT);
+		show(out, ModContent.SPRUCE_ELECTRUM_CHEST_BOAT);
+		show(out, ModContent.BIRCH_ELECTRUM_CHEST_BOAT);
+		show(out, ModContent.JUNGLE_ELECTRUM_CHEST_BOAT);
+		show(out, ModContent.ACACIA_ELECTRUM_CHEST_BOAT);
+		show(out, ModContent.CHERRY_ELECTRUM_CHEST_BOAT);
+		show(out, ModContent.DARK_OAK_ELECTRUM_CHEST_BOAT);
+		show(out, ModContent.PALE_OAK_ELECTRUM_CHEST_BOAT);
+		show(out, ModContent.MANGROVE_ELECTRUM_CHEST_BOAT);
+		show(out, ModContent.POPLAR_ELECTRUM_CHEST_BOAT);
+		show(out, ModContent.BAMBOO_ELECTRUM_CHEST_RAFT);
+		show(out, ModContent.OAK_DIAMOND_CHEST_BOAT);
+		show(out, ModContent.SPRUCE_DIAMOND_CHEST_BOAT);
+		show(out, ModContent.BIRCH_DIAMOND_CHEST_BOAT);
+		show(out, ModContent.JUNGLE_DIAMOND_CHEST_BOAT);
+		show(out, ModContent.ACACIA_DIAMOND_CHEST_BOAT);
+		show(out, ModContent.CHERRY_DIAMOND_CHEST_BOAT);
+		show(out, ModContent.DARK_OAK_DIAMOND_CHEST_BOAT);
+		show(out, ModContent.PALE_OAK_DIAMOND_CHEST_BOAT);
+		show(out, ModContent.MANGROVE_DIAMOND_CHEST_BOAT);
+		show(out, ModContent.POPLAR_DIAMOND_CHEST_BOAT);
+		show(out, ModContent.BAMBOO_DIAMOND_CHEST_RAFT);
+		show(out, ModContent.OAK_SHIELDING_CHEST_BOAT);
+		show(out, ModContent.SPRUCE_SHIELDING_CHEST_BOAT);
+		show(out, ModContent.BIRCH_SHIELDING_CHEST_BOAT);
+		show(out, ModContent.JUNGLE_SHIELDING_CHEST_BOAT);
+		show(out, ModContent.ACACIA_SHIELDING_CHEST_BOAT);
+		show(out, ModContent.CHERRY_SHIELDING_CHEST_BOAT);
+		show(out, ModContent.DARK_OAK_SHIELDING_CHEST_BOAT);
+		show(out, ModContent.PALE_OAK_SHIELDING_CHEST_BOAT);
+		show(out, ModContent.MANGROVE_SHIELDING_CHEST_BOAT);
+		show(out, ModContent.POPLAR_SHIELDING_CHEST_BOAT);
+		show(out, ModContent.BAMBOO_SHIELDING_CHEST_RAFT);
+		// END GENERATED chest boats
 	}
 
 	/** 6 - item logistics: the pipe first, then what it moves things between. */

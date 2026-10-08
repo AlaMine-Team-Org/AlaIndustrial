@@ -1,3 +1,9 @@
+== alaindustrial:acacia_diamond_chest_boat plain : none
+== alaindustrial:acacia_electrum_chest_boat plain : none
+== alaindustrial:acacia_gold_chest_boat plain : none
+== alaindustrial:acacia_iron_chest_boat plain : none
+== alaindustrial:acacia_shielding_chest_boat plain : none
+== alaindustrial:acacia_silver_chest_boat plain : none
 == alaindustrial:advanced_circuit plain : none
 == alaindustrial:advanced_machine_casing plain : none
 == alaindustrial:alignment_chip_day plain : none
@@ -34,6 +40,12 @@ tooltip.alaindustrial.hold_shift {dark_gray}
 -- shift no-eu
 tooltip.alaindustrial.tier_mv {green}
 == alaindustrial:assembly_blueprint plain : none
+== alaindustrial:bamboo_diamond_chest_raft plain : none
+== alaindustrial:bamboo_electrum_chest_raft plain : none
+== alaindustrial:bamboo_gold_chest_raft plain : none
+== alaindustrial:bamboo_iron_chest_raft plain : none
+== alaindustrial:bamboo_shielding_chest_raft plain : none
+== alaindustrial:bamboo_silver_chest_raft plain : none
 == alaindustrial:basic_bearing plain : none
 == alaindustrial:battery plain
 -- plain eu
@@ -162,6 +174,12 @@ tooltip.alaindustrial.battery_pouch.usage_extract {gray}
 tooltip.alaindustrial.battery_pouch.charge(2000, 2000) {gold}
 == alaindustrial:biofuel_bucket plain : none
 == alaindustrial:biomass plain : none
+== alaindustrial:birch_diamond_chest_boat plain : none
+== alaindustrial:birch_electrum_chest_boat plain : none
+== alaindustrial:birch_gold_chest_boat plain : none
+== alaindustrial:birch_iron_chest_boat plain : none
+== alaindustrial:birch_shielding_chest_boat plain : none
+== alaindustrial:birch_silver_chest_boat plain : none
 == alaindustrial:broken_engraved_plate_b plain : none
 == alaindustrial:broken_engraved_plate_d plain : none
 == alaindustrial:broken_engraved_plate_k plain : none
@@ -219,6 +237,12 @@ tooltip.alaindustrial.energy_output(128) {gray}
 tooltip.alaindustrial.hold_shift {dark_gray}
 -- shift no-eu
 tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:cherry_diamond_chest_boat plain : none
+== alaindustrial:cherry_electrum_chest_boat plain : none
+== alaindustrial:cherry_gold_chest_boat plain : none
+== alaindustrial:cherry_iron_chest_boat plain : none
+== alaindustrial:cherry_shielding_chest_boat plain : none
+== alaindustrial:cherry_silver_chest_boat plain : none
 == alaindustrial:choke plain : none
 == alaindustrial:choke_advanced plain : none
 == alaindustrial:choke_reinforced plain : none
@@ -314,6 +338,12 @@ tooltip.alaindustrial.core_barrel.role {gray}
 == alaindustrial:cupronickel_ingot plain : none
 == alaindustrial:cupronickel_plate plain : none
 == alaindustrial:cupronickel_reinforced_plate plain : none
+== alaindustrial:dark_oak_diamond_chest_boat plain : none
+== alaindustrial:dark_oak_electrum_chest_boat plain : none
+== alaindustrial:dark_oak_gold_chest_boat plain : none
+== alaindustrial:dark_oak_iron_chest_boat plain : none
+== alaindustrial:dark_oak_shielding_chest_boat plain : none
+== alaindustrial:dark_oak_silver_chest_boat plain : none
 == alaindustrial:daylight_solar_panel plain
 -- plain eu
 tooltip.alaindustrial.energy_output_day_only(4) {gray}
@@ -1549,6 +1579,12 @@ tooltip.alaindustrial.jetpack.charge(30000, 30000) {gold}
 -- shift no-eu
 tooltip.alaindustrial.jetpack.usage {gray}
 tooltip.alaindustrial.jetpack.charge(30000, 30000) {gold}
+== alaindustrial:jungle_diamond_chest_boat plain : none
+== alaindustrial:jungle_electrum_chest_boat plain : none
+== alaindustrial:jungle_gold_chest_boat plain : none
+== alaindustrial:jungle_iron_chest_boat plain : none
+== alaindustrial:jungle_shielding_chest_boat plain : none
+== alaindustrial:jungle_silver_chest_boat plain : none
 == alaindustrial:kok_sagyz_root plain : none
 == alaindustrial:kok_sagyz_seeds plain : none
 == alaindustrial:lapis_dust plain : none
@@ -1587,6 +1623,12 @@ tooltip.alaindustrial.hold_shift {dark_gray}
 tooltip.alaindustrial.tier_lv {green}
 == alaindustrial:machine_casing plain : none
 == alaindustrial:magnet_filter_module plain : none
+== alaindustrial:mangrove_diamond_chest_boat plain : none
+== alaindustrial:mangrove_electrum_chest_boat plain : none
+== alaindustrial:mangrove_gold_chest_boat plain : none
+== alaindustrial:mangrove_iron_chest_boat plain : none
+== alaindustrial:mangrove_shielding_chest_boat plain : none
+== alaindustrial:mangrove_silver_chest_boat plain : none
 == alaindustrial:mob_repeller plain
 -- plain eu
 tooltip.alaindustrial.energy_input(8) {gray}
@@ -1692,10 +1734,22 @@ tooltip.alaindustrial.network_analyzer.moved(30) {gray}
 == alaindustrial:nickel_ore plain : none
 == alaindustrial:nickel_plate plain : none
 == alaindustrial:nutrient_solution_bucket plain : none
+== alaindustrial:oak_diamond_chest_boat plain : none
+== alaindustrial:oak_electrum_chest_boat plain : none
+== alaindustrial:oak_gold_chest_boat plain : none
+== alaindustrial:oak_iron_chest_boat plain : none
+== alaindustrial:oak_shielding_chest_boat plain : none
+== alaindustrial:oak_silver_chest_boat plain : none
 == alaindustrial:oil_bucket plain : none
 == alaindustrial:overclocker_chip_i plain : none
 == alaindustrial:overclocker_chip_ii plain : none
 == alaindustrial:overclocker_chip_iii plain : none
+== alaindustrial:pale_oak_diamond_chest_boat plain : none
+== alaindustrial:pale_oak_electrum_chest_boat plain : none
+== alaindustrial:pale_oak_gold_chest_boat plain : none
+== alaindustrial:pale_oak_iron_chest_boat plain : none
+== alaindustrial:pale_oak_shielding_chest_boat plain : none
+== alaindustrial:pale_oak_silver_chest_boat plain : none
 == alaindustrial:palladium_dust plain : none
 == alaindustrial:palladium_ingot plain : none
 == alaindustrial:palladium_ore plain : none
@@ -1733,6 +1787,12 @@ tooltip.alaindustrial.energy_per_op(400) {gray}
 tooltip.alaindustrial.hold_shift {dark_gray}
 -- shift no-eu
 tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:poplar_diamond_chest_boat plain : none
+== alaindustrial:poplar_electrum_chest_boat plain : none
+== alaindustrial:poplar_gold_chest_boat plain : none
+== alaindustrial:poplar_iron_chest_boat plain : none
+== alaindustrial:poplar_shielding_chest_boat plain : none
+== alaindustrial:poplar_silver_chest_boat plain : none
 == alaindustrial:pump plain
 -- plain eu
 tooltip.alaindustrial.pump_cost(1000) {gray}
@@ -2002,6 +2062,12 @@ tooltip.alaindustrial.hold_shift {dark_gray}
 -- shift no-eu
 tooltip.alaindustrial.tank_mb(4000) {gray}
 tooltip.alaindustrial.range(4) {gray}
+== alaindustrial:spruce_diamond_chest_boat plain : none
+== alaindustrial:spruce_electrum_chest_boat plain : none
+== alaindustrial:spruce_gold_chest_boat plain : none
+== alaindustrial:spruce_iron_chest_boat plain : none
+== alaindustrial:spruce_shielding_chest_boat plain : none
+== alaindustrial:spruce_silver_chest_boat plain : none
 == alaindustrial:stats_chip plain : none
 == alaindustrial:steam_nozzle plain : none
 == alaindustrial:steam_pipe plain : none

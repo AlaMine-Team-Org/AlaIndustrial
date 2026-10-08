@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "minecraft:item/cherry_boat",
+    "layer1": "alaindustrial:item/shielding_chest_boat_overlay"
+  }
+}

@@ -86,7 +86,9 @@ public abstract class AbstractChestMenu extends AbstractContainerMenu {
 
 	@Override
 	public boolean stillValid(Player player) {
-		return AbstractContainerMenu.stillValid(access, player, ownerBlock.get());
+		// The container's own check comes first: for a chest boat (MOD-785) the access is NULL — there is
+		// no block — and the boat's distance/removed test is the only thing that closes the screen.
+		return chest.stillValid(player) && AbstractContainerMenu.stillValid(access, player, ownerBlock.get());
 	}
 
 	@Override

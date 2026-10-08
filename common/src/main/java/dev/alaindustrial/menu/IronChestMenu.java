@@ -28,6 +28,15 @@ public class IronChestMenu extends AbstractChestMenu {
 				new SimpleContainer(IronChestBlockEntity.CONTAINER_SIZE), ContainerLevelAccess.NULL);
 	}
 
+	/**
+	 * Server side over a container that is not a block — a chest boat (MOD-785). There is no block to
+	 * stay near, so validity is the container's own check (distance to the boat, boat not removed).
+	 */
+	public static IronChestMenu forEntity(int syncId, Inventory playerInventory, Container chest) {
+		return new IronChestMenu(ModContent.IRON_CHEST_MENU.get(), syncId, playerInventory, chest,
+				ContainerLevelAccess.NULL);
+	}
+
 	private IronChestMenu(MenuType<?> type, int syncId, Inventory playerInventory, Container chest,
 			ContainerLevelAccess access) {
 		super(type, syncId, playerInventory, chest, access, ROWS, () -> ModContent.IRON_CHEST.get());

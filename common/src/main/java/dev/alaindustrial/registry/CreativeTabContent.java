@@ -145,6 +145,8 @@ public final class CreativeTabContent {
 		FluidContent.fluidCarriers(out);
 		// 6 - item logistics: the containers the pipe serves.
 		StorageContent.itemLogistics(out);
+		// 6b - the chest boats (MOD-785): the mod chests again, on the water.
+		StorageContent.chestBoats(out);
 		// 7 - what the player holds: hand tools first (no charge needed), then the powered gear.
 		ToolsAndGearContent.handTools(out);
 		ToolsAndGearContent.poweredGear(out);

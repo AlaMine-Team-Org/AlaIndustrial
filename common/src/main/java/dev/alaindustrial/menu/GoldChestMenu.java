@@ -28,6 +28,12 @@ public class GoldChestMenu extends AbstractChestMenu {
 				new SimpleContainer(GoldChestBlockEntity.CONTAINER_SIZE), ContainerLevelAccess.NULL);
 	}
 
+	/** Server side over a chest boat's container (MOD-785) — validity is the boat's own check. */
+	public static GoldChestMenu forEntity(int syncId, Inventory playerInventory, Container chest) {
+		return new GoldChestMenu(ModContent.GOLD_CHEST_MENU.get(), syncId, playerInventory, chest,
+				ContainerLevelAccess.NULL);
+	}
+
 	private GoldChestMenu(MenuType<?> type, int syncId, Inventory playerInventory, Container chest,
 			ContainerLevelAccess access) {
 		super(type, syncId, playerInventory, chest, access, ROWS, () -> ModContent.GOLD_CHEST.get());

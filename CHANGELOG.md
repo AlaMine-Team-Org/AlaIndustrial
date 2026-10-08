@@ -1,16 +1,11 @@
 # Changelog
 
-## 0.1.201
+## 0.1.202
 
-<p><img alt="Ala Industrial Minecraft mod: Industrialist master villager trade screen buying sixteen charged batteries for emeralds" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.201-mc26.3/release-media/v0.1.201-mc26.3/changelog.png" width="720"></p>
+<p><img alt="Ala Industrial Minecraft mod: six boats on the water by a wooden pier, each carrying a different chest from the mod" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.202-mc26.3/release-media/v0.1.202-mc26.3/changelog.png" width="720"></p>
 
-Industrialist villagers now buy charged batteries, the gardener drone knows when its output is full, and water shows through the mod's glass again.
+Any chest from the mod can now ride on any vanilla boat.
 
 ### New
 
-- The Industrialist villager now always offers an energy order at levels 1, 3 and 5: he buys fully charged batteries for emeralds (3 for 1, then 1 for 1, and 16 for 18 wholesale at master level). Partly charged batteries are refused. Villagers get it as they reach those levels.
-
-### Bug Fixes
-
-- Water and stained glass are visible again behind the glass of tanks and the incubator, the condenser's force field, the reactor door's vision slit and the cable guard glass.
-- The gardener drone no longer flies back and forth when its station's output is full: the station shows Output full and resumes harvesting as soon as anything is taken out.
+- Chest boats for the mod's chests: put an iron, silver, gold, electrum, diamond or shielding chest on any vanilla boat or the bamboo raft. The boat holds as much as its chest, opens the chest's own screen and sails like a vanilla chest boat; craft it from a boat and the chest.

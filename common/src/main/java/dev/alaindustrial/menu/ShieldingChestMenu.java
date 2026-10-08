@@ -29,6 +29,12 @@ public class ShieldingChestMenu extends AbstractChestMenu {
 				new SimpleContainer(ShieldingChestBlockEntity.CONTAINER_SIZE), ContainerLevelAccess.NULL);
 	}
 
+	/** Server side over a chest boat's container (MOD-785) — validity is the boat's own check. */
+	public static ShieldingChestMenu forEntity(int syncId, Inventory playerInventory, Container chest) {
+		return new ShieldingChestMenu(ModContent.SHIELDING_CHEST_MENU.get(), syncId, playerInventory, chest,
+				ContainerLevelAccess.NULL);
+	}
+
 	private ShieldingChestMenu(MenuType<?> type, int syncId, Inventory playerInventory, Container chest,
 			ContainerLevelAccess access) {
 		super(type, syncId, playerInventory, chest, access, ROWS, () -> ModContent.SHIELDING_CHEST.get());
