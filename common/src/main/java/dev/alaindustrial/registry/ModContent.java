@@ -47,6 +47,7 @@ import dev.alaindustrial.menu.StormWindMillMenu;
 import dev.alaindustrial.menu.TeleporterRemoteMenu;
 import dev.alaindustrial.menu.TeleporterStationMenu;
 import dev.alaindustrial.menu.ReactorControllerMenu;
+import dev.alaindustrial.menu.BlockBreakerMenu;
 import dev.alaindustrial.menu.ThermalCentrifugeMenu;
 import dev.alaindustrial.menu.WaterMillMenu;
 import dev.alaindustrial.menu.WindMillMenu;
@@ -208,6 +209,7 @@ public final class ModContent {
 	public static Supplier<Block> COMPONENT_REPAIR_BENCH = unbound("COMPONENT_REPAIR_BENCH");
 	// Upgrade Table (MOD-482) — two stacked casings; the lower half is the machine.
 	public static Supplier<Block> UPGRADE_TABLE = unbound("UPGRADE_TABLE");
+	public static Supplier<Block> BLOCK_BREAKER = unbound("BLOCK_BREAKER");
 	public static Supplier<Block> CANNING_MACHINE = unbound("CANNING_MACHINE");
 	public static Supplier<Block> SAWMILL = unbound("SAWMILL");
 	/** MOD-275 — the first MV machine: stamps crafting-table recipes from blueprints. */
@@ -846,6 +848,7 @@ public final class ModContent {
 	public static Supplier<BlockItem> CARBON_CERAMIC_ITEM = unbound("CARBON_CERAMIC_ITEM");
 	public static Supplier<BlockItem> COMPONENT_REPAIR_BENCH_ITEM = unbound("COMPONENT_REPAIR_BENCH_ITEM");
 	public static Supplier<BlockItem> UPGRADE_TABLE_ITEM = unbound("UPGRADE_TABLE_ITEM");
+	public static Supplier<BlockItem> BLOCK_BREAKER_ITEM = unbound("BLOCK_BREAKER_ITEM");
 	public static Supplier<BlockItem> CANNING_MACHINE_ITEM = unbound("CANNING_MACHINE_ITEM");
 	public static Supplier<BlockItem> SAWMILL_ITEM = unbound("SAWMILL_ITEM");
 	public static Supplier<BlockItem> ASSEMBLER_ITEM = unbound("ASSEMBLER_ITEM");
@@ -958,6 +961,7 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> RECYCLER_BE = unbound("RECYCLER_BE");
 	public static Supplier<BlockEntityType<?>> COMPONENT_REPAIR_BENCH_BE = unbound("COMPONENT_REPAIR_BENCH_BE");
 	public static Supplier<BlockEntityType<?>> UPGRADE_TABLE_BE = unbound("UPGRADE_TABLE_BE");
+	public static Supplier<BlockEntityType<?>> BLOCK_BREAKER_BE = unbound("BLOCK_BREAKER_BE");
 	public static Supplier<BlockEntityType<?>> CANNING_MACHINE_BE = unbound("CANNING_MACHINE_BE");
 	public static Supplier<BlockEntityType<?>> SAWMILL_BE = unbound("SAWMILL_BE");
 	public static Supplier<BlockEntityType<?>> ASSEMBLER_BE = unbound("ASSEMBLER_BE");
@@ -1023,6 +1027,8 @@ public final class ModContent {
 			unbound("COMPONENT_REPAIR_BENCH_MENU");
 	public static Supplier<MenuType<UpgradeTableMenu>> UPGRADE_TABLE_MENU =
 			unbound("UPGRADE_TABLE_MENU");
+	public static Supplier<MenuType<BlockBreakerMenu>> BLOCK_BREAKER_MENU =
+			unbound("BLOCK_BREAKER_MENU");
 	public static Supplier<MenuType<CanningMachineMenu>> CANNING_MACHINE_MENU = unbound("CANNING_MACHINE_MENU");
 	public static Supplier<MenuType<SawmillMenu>> SAWMILL_MENU = unbound("SAWMILL_MENU");
 	public static Supplier<MenuType<AssemblerMenu>> ASSEMBLER_MENU = unbound("ASSEMBLER_MENU");

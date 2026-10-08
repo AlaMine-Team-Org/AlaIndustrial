@@ -92,4 +92,46 @@ class ReadoutFormatTest {
 		assertEquals("00:00", ReadoutFormat.clock(0, 0));
 		assertEquals("23:59", ReadoutFormat.clock(23, 59));
 	}
+
+	/**
+	 * MOD-722: a window rate under 1 EU/t used to print as 0 on a working machine. The station's real
+	 * window — one 8 EU action in 40 ticks — is the first case.
+	 *
+	 * @implements MOD-722-RATE — fractions below 10, whole numbers from 10, "<0.1" for a tiny non-zero
+	 *     amount, "0" only when nothing moved
+	 * @covers MOD-722
+	 */
+	@Test
+	void rateKeepsFractionsOfAnEuPerTick() {
+		assertEquals("0.2", ReadoutFormat.rate(8, 40), "one drone action in a 40-tick window");
+		assertEquals("0.4", ReadoutFormat.rate(16, 40));
+		assertEquals("<0.1", ReadoutFormat.rate(1, 40), "1 EU in 40 ticks rounds to 0.0 but is not nothing");
+		assertEquals("<0.1", ReadoutFormat.rate(3, 40), "0.075 EU/t");
+		assertEquals("0.1", ReadoutFormat.rate(4, 40), "the first value that shows a digit");
+		assertEquals("0", ReadoutFormat.rate(0, 40), "zero only when nothing moved");
+		assertEquals("0", ReadoutFormat.rate(-5, 40), "a negative amount is clamped, never printed");
+	}
+
+	/** @implements MOD-722-RATE — the band edge rounds down, so 9.96 does not print as "10.0" */
+	@Test
+	void rateSwitchesToWholeNumbersAtTen() {
+		assertEquals("8.0", ReadoutFormat.rate(320, 40), "an exact rate below 10 keeps its decimal");
+		assertEquals("9.9", ReadoutFormat.rate(399, 40), "9.975 rounds down inside the decimal band");
+		assertEquals("10", ReadoutFormat.rate(400, 40), "the threshold itself is a whole number");
+		assertEquals("12", ReadoutFormat.rate(499, 40), "12.475 rounds down");
+		assertEquals("2048", ReadoutFormat.rate(2048L * 40, 40));
+		assertEquals("1000000000000", ReadoutFormat.rate(40_000_000_000_000L, 40), "past int range");
+	}
+
+	/** @implements MOD-722-RATE — the decimal point is a point under any default locale */
+	@Test
+	void rateIgnoresTheDefaultLocale() {
+		Locale previous = Locale.getDefault();
+		try {
+			Locale.setDefault(Locale.GERMANY);
+			assertEquals("0.4", ReadoutFormat.rate(16, 40));
+		} finally {
+			Locale.setDefault(previous);
+		}
+	}
 }

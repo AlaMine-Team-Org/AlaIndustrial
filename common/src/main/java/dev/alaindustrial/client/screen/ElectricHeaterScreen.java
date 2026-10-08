@@ -161,8 +161,7 @@ public class ElectricHeaterScreen extends MachineScreen<ElectricHeaterMenu> {
 	}
 
 	@Override
-	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-		super.extractTooltip(graphics, mouseX, mouseY);
+	protected void gaugeTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		if (isHovering(THERMO_X, THERMO_BOTTOM - THERMO_H, THERMO_W, THERMO_H, mouseX, mouseY)) {
 			graphics.setTooltipForNextFrame(this.font,
 					Component.translatable("gui.alaindustrial.electric_heater.tooltip",

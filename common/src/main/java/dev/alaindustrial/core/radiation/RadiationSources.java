@@ -68,8 +68,7 @@ public final class RadiationSources {
 	public record Source(Vec3 at, int strength) {
 	}
 
-	private RadiationSources() {
-	}
+	private RadiationSources() {}
 
 	/** Everything in the world irradiating this entity where it stands. */
 	public static int exposureAt(ServerLevel level, Entity target, int radius) {
@@ -91,12 +90,7 @@ public final class RadiationSources {
 	 * see a hazard before walking into it, which is what an instrument is for.
 	 */
 	public static int exposureAt(ServerLevel level, Entity target, int radius, int groundReach) {
-		List<Source> sources = new ArrayList<>();
-		collectRods(level, target.position(), radius, sources);
-		collectGround(level, target.position(), radius, groundReach, sources);
-		collectFallout(level, target.position(), radius, sources);
-		collectContainers(level, target.position(), radius, groundReach, sources);
-		return doseFrom(level, target, sources, radius);
+		return doseFrom(level, target, sourcesAround(level, target.position(), radius, groundReach), radius);
 	}
 
 	/**
@@ -104,12 +98,18 @@ public final class RadiationSources {
 	 * {@link #exposureAt}, but a wall damps rather than deletes (MOD-579).
 	 */
 	public static int detectedAt(ServerLevel level, Entity target, int radius, int groundReach) {
+		return detectedFrom(level, target, sourcesAround(level, target.position(), radius, groundReach), radius);
+	}
+
+	/** Every source near a point — ONE list, so the dose and the counter cannot disagree on what radiates. */
+	private static List<Source> sourcesAround(ServerLevel level, Vec3 at, int radius, int groundReach) {
 		List<Source> sources = new ArrayList<>();
-		collectRods(level, target.position(), radius, sources);
-		collectGround(level, target.position(), radius, groundReach, sources);
-		collectFallout(level, target.position(), radius, sources);
-		collectContainers(level, target.position(), radius, groundReach, sources);
-		return detectedFrom(level, target, sources, radius);
+		collectRods(level, at, radius, sources);
+		collectGround(level, at, radius, groundReach, sources);
+		collectFallout(level, at, radius, sources);
+		collectContainers(level, at, radius, groundReach, sources);
+		RadiationVehicles.collectVehicles(level, at, radius, groundReach, sources);
+		return sources;
 	}
 
 	/**

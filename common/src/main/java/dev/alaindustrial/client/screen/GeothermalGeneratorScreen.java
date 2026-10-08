@@ -82,8 +82,7 @@ public class GeothermalGeneratorScreen extends MachineScreen<GeothermalGenerator
 	}
 
 	@Override
-	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-		super.extractTooltip(graphics, mouseX, mouseY);
+	protected void gaugeTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		// Left bar — lava burn buffer as millibuckets. Derive mB from the progress/maxProgress ratio
 		// (tank = 10000 mB) so it stays correct even if geothermalBurnTicks changes in config.
 		int maxProgress = this.menu.getMaxProgress();

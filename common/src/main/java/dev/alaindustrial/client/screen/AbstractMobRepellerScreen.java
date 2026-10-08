@@ -191,9 +191,8 @@ public abstract class AbstractMobRepellerScreen<T extends MobRepellerMenu> exten
 	}
 
 	@Override
-	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-		super.extractTooltip(graphics, mouseX, mouseY);
-		if (frameAcceptsInput(mouseX, mouseY) && overButton(mouseX, mouseY)) {
+	protected void controlTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+		if (overButton(mouseX, mouseY)) {
 			graphics.setTooltipForNextFrame(this.font,
 					Component.translatable(domeShown()
 							? "gui.alaindustrial.mob_repeller.dome.hide"
@@ -202,11 +201,10 @@ public abstract class AbstractMobRepellerScreen<T extends MobRepellerMenu> exten
 		}
 	}
 
+	/** The base calls this only where the open statistics panel does not cover the button (MOD-693, MOD-762). */
 	@Override
-	public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
-		// The open statistics panel is modal: the button it covers must not toggle the dome (MOD-693).
-		if (event.button() == InputConstants.MOUSE_BUTTON_LEFT && frameAcceptsInput(event.x(), event.y())
-				&& overButton(event.x(), event.y())
+	protected boolean controlClicked(MouseButtonEvent event, boolean doubleClick) {
+		if (event.button() == InputConstants.MOUSE_BUTTON_LEFT && overButton(event.x(), event.y())
 				&& this.minecraft != null && this.minecraft.gameMode != null) {
 			this.minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId,
 					MobRepellerMenu.BUTTON_TOGGLE_DOME);
@@ -215,6 +213,6 @@ public abstract class AbstractMobRepellerScreen<T extends MobRepellerMenu> exten
 					SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, domeShown() ? 0.9F : 1.1F));
 			return true;
 		}
-		return super.mouseClicked(event, doubleClick);
+		return false;
 	}
 }

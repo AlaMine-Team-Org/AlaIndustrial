@@ -37,6 +37,7 @@ final class MiscZone implements DemoZone {
 		storageCabinet(w);
 		pumpChain(w);
 		torchAndChargers(w);
+		blockBreaker(w);
 		garden(w);
 		fluidPools(w);
 		teleporterStation(w);
@@ -94,6 +95,14 @@ final class MiscZone implements DemoZone {
 		w.set(69, 3, Z, ModContent.MOB_REPELLER.get());
 		w.set(70, 3, Z, ModContent.MOB_REPELLER_MV.get());
 		w.set(71, 3, Z, ModContent.MOB_REPELLER_HV.get());
+	}
+
+	/**
+	 * The block breaker (MOD-787), x=73, between the pump chain and the torches. Placed by the stand,
+	 * not a player, so it has no owner and stands still; it is here to be looked at, not to dig the stand.
+	 */
+	private static void blockBreaker(StandWriter w) {
+		w.set(73, 1, Z, ModContent.BLOCK_BREAKER.get());
 	}
 
 	/** The standing and wall torches, the charging station and the energy condenser. */

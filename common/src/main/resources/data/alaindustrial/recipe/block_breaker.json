@@ -1,0 +1,7 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"key": { "P": "minecraft:oak_planks", "G": "alaindustrial:wooden_gear", "K": "minecraft:stone_pickaxe", "C": "alaindustrial:copper_cable", "R": "#c:dusts/redstone" },
+	"pattern": ["PCP","GKG","PRP"],
+	"result": { "id": "alaindustrial:block_breaker" }
+}

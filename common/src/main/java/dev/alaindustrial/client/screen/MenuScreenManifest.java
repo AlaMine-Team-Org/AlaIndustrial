@@ -109,6 +109,7 @@ public final class MenuScreenManifest {
 			screen(() -> ModContent.UPGRADE_TABLE_MENU.get(), UpgradeTableScreen::new),
 			screen(() -> ModContent.CANNING_MACHINE_MENU.get(), CanningMachineScreen::new),
 			screen(() -> ModContent.SAWMILL_MENU.get(), SawmillScreen::new),
+			screen(() -> ModContent.BLOCK_BREAKER_MENU.get(), BlockBreakerScreen::new),
 			screen(() -> ModContent.ASSEMBLER_MENU.get(), AssemblerScreen::new),
 			screen(() -> ModContent.INCUBATOR_MENU.get(), IncubatorScreen::new),
 			screen(() -> ModContent.POLYMERIZER_MENU.get(), PolymerizerScreen::new),

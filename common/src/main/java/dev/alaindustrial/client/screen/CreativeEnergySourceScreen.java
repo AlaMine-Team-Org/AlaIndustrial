@@ -2,7 +2,7 @@ package dev.alaindustrial.client.screen;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import dev.alaindustrial.Industrialization;
-import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.client.ServerBalance;
 import dev.alaindustrial.menu.CreativeEnergySourceMenu;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -141,8 +141,8 @@ public class CreativeEnergySourceScreen extends MachineScreen<CreativeEnergySour
 	/**
 	 * Output the screen should display: what the player asked for, until the server confirms it.
 	 *
-	 * <p>Held as EU rather than as a slider step on purpose. A preset is whatever {@code EnergyTier}
-	 * currently reads out of the config, which a server may have tuned to a number the 32 EU grid of the
+	 * <p>Held as EU rather than as a slider step on purpose. A preset is the server's tier voltage
+	 * ({@code ServerBalance}, MOD-761), which a server may have tuned to a number the 32 EU grid of the
 	 * slider cannot express; storing the step would round it, the confirmation below would then never
 	 * match, and the readout would sit on a wrong figure for the whole timeout.
 	 */
@@ -201,10 +201,10 @@ public class CreativeEnergySourceScreen extends MachineScreen<CreativeEnergySour
 		// the direct push is capped by the tier of the source, both 512 at the top of this mod. A higher
 		// setting is not wasted — it is shared out among several neighbours — but no single machine will
 		// ever see more than this, and saying otherwise sends testers hunting a bug that is not there.
-		if (output > (int) EnergyTier.HV.maxVoltage()) {
+		if (output > ServerBalance.tierHvVoltage()) {
 			wrappedText(graphics, WARNING_Y,
 					Component.translatable("gui.alaindustrial.creative_energy_source.cable_warning",
-							(int) EnergyTier.HV.maxVoltage()),
+							ServerBalance.tierHvVoltage()),
 					GuiStyle.TEXT_DIM);
 		}
 	}
@@ -294,9 +294,9 @@ public class CreativeEnergySourceScreen extends MachineScreen<CreativeEnergySour
 
 	private static int presetValue(int index) {
 		return switch (index) {
-			case 0 -> (int) EnergyTier.LV.maxVoltage();
-			case 1 -> (int) EnergyTier.MV.maxVoltage();
-			default -> (int) EnergyTier.HV.maxVoltage();
+			case 0 -> ServerBalance.tierLvVoltage();
+			case 1 -> ServerBalance.tierMvVoltage();
+			default -> ServerBalance.tierHvVoltage();
 		};
 	}
 
@@ -348,11 +348,13 @@ public class CreativeEnergySourceScreen extends MachineScreen<CreativeEnergySour
 		return OverlayModality.ANY_PANEL_OPEN;
 	}
 
+	/**
+	 * An open panel is modal: the base calls this only while neither is open (overlayModality), so a click meant
+	 * for it never lands on the switch, a preset or the slider underneath (MOD-762).
+	 */
 	@Override
-	public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
-		// An open panel is modal: defer wholesale while either is open (overlayModality), so a click meant for
-		// it never lands on the switch, a preset or the slider underneath.
-		if (event.button() == InputConstants.MOUSE_BUTTON_LEFT && frameAcceptsInput(event.x(), event.y())) {
+	protected boolean controlClicked(MouseButtonEvent event, boolean doubleClick) {
+		if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
 			if (over(event.x(), event.y(), TOGGLE_X, TOGGLE_Y, TOGGLE_W, TOGGLE_H)) {
 				send(CreativeEnergySourceMenu.BUTTON_TOGGLE);
 				return true;
@@ -375,7 +377,7 @@ public class CreativeEnergySourceScreen extends MachineScreen<CreativeEnergySour
 				return true;
 			}
 		}
-		return super.mouseClicked(event, doubleClick);
+		return false;
 	}
 
 	@Override
@@ -400,23 +402,21 @@ public class CreativeEnergySourceScreen extends MachineScreen<CreativeEnergySour
 	}
 
 	@Override
-	public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+	protected boolean controlScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
 		// Ignored mid-drag: the whole contract of the slider is that a drag sends nothing until it ends.
-		if (scrollY != 0 && !dragging && frameAcceptsInput(mouseX, mouseY)
-				&& over(mouseX, mouseY, SLIDER_X, SLIDER_Y, SLIDER_W, SLIDER_H)) {
+		if (scrollY != 0 && !dragging && over(mouseX, mouseY, SLIDER_X, SLIDER_Y, SLIDER_W, SLIDER_H)) {
 			// Reads currentStep(), which is already pending-aware, so a burst of wheel clicks steps from
 			// the value on screen instead of bouncing off whatever the server last confirmed.
 			requestStep(currentStep() + (int) Math.signum(scrollY));
 			return true;
 		}
-		return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
+		return false;
 	}
 
+	/** The same rule as a click on the slider (MOD-738): the base asks it only where a click would answer. */
 	@Override
-	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-		super.extractTooltip(graphics, mouseX, mouseY);
-		// The same rule as a click on the slider (MOD-738): no tooltip for a control that would not answer.
-		if (frameAcceptsInput(mouseX, mouseY) && over(mouseX, mouseY, SLIDER_X, SLIDER_Y, SLIDER_W, SLIDER_H)) {
+	protected void controlTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+		if (over(mouseX, mouseY, SLIDER_X, SLIDER_Y, SLIDER_W, SLIDER_H)) {
 			graphics.setTooltipForNextFrame(this.font,
 					Component.translatable("gui.alaindustrial.creative_energy_source.output.tip"),
 					mouseX, mouseY);

@@ -1,3 +1,4 @@
 #
-#Fri Oct 02 18:47:31 EEST 2026
+#Thu Oct 08 14:23:27 EEST 2026
+no\ classes\ should\ reach\ a\ balance\ knob\ from\ client\ code,\ because\ on\ a\ dedicated\ server\ Config\ holds\ the\ player's\ own\ file\:\ a\ number\ the\ client\ shows\ comes\ from\ dev.alaindustrial.client.ServerBalance,\ handed\ to\ the\ class\ that\ formats\ it\ \u2014\ never\ from\ a\ class\ that\ reads\ Config\ on\ the\ client's\ behalf\ (MOD-761)=e6a26dc7-55c2-4d0f-8d48-ac4a84574f75
 no\ classes\ that\ reside\ in\ a\ package\ 'dev.alaindustrial.core..'\ should\ depend\ on\ classes\ that\ reside\ in\ any\ package\ ['dev.alaindustrial.block..',\ 'dev.alaindustrial.registry..'],\ because\ core\ is\ the\ lowest\ layer\ of\ game\ logic\ (coding.md\ \u00A73,\ ADR-039)\:\ a\ core\ class\ that\ names\ a\ block\ or\ the\ registry\ has\ to\ change\ for\ every\ new\ block,\ and\ drags\ the\ block\ layer\ into\ everything\ that\ only\ wanted\ the\ core.\ Declare\ an\ interface\ in\ core\ (CableNode,\ FluidPipeNode,\ StorageEndpoint,\ EnergyPortHost)\ and\ implement\ it\ in\ the\ block=1399736a-8760-44e3-b2e9-0ac215899f3d

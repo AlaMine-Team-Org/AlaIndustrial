@@ -222,10 +222,10 @@ public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu
 		return OverlayModality.STATS_PANEL_OPEN;
 	}
 
+	/** Not under an open statistics panel: the base asks frameAcceptsInput before calling this (MOD-762). */
 	@Override
-	public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
-		// Not under an open statistics panel: it can be dragged over the strip, and a click on it belongs to it.
-		if (event.button() == InputConstants.MOUSE_BUTTON_LEFT && frameAcceptsInput(event.x(), event.y())) {
+	protected boolean controlClicked(MouseButtonEvent event, boolean doubleClick) {
+		if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
 			int tab = tabAt(event.x(), event.y());
 			if (tab >= 0) {
 				if (tab != selected) {
@@ -234,11 +234,9 @@ public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu
 				selectPage(tab);
 				return true;
 			}
-			if (pages.get(selected).mouseClicked(event)) {
-				return true;
-			}
+			return pages.get(selected).mouseClicked(event);
 		}
-		return super.mouseClicked(event, doubleClick);
+		return false;
 	}
 
 	@Override
@@ -248,28 +246,27 @@ public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu
 		return handled;
 	}
 
-	/** The wheel goes to the open tab first — the «Log» tab scrolls its list with it (MOD-622). */
+	/**
+	 * The wheel goes to the open tab first — the «Log» tab scrolls its list with it (MOD-622). Since MOD-762 it is
+	 * gated by frameAcceptsInput like the clicks; the statistics panel cannot open here, so nothing changes.
+	 */
 	@Override
-	public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
-		if (pages.get(selected).mouseScrolled(mouseX, mouseY, scrollY)) {
-			return true;
-		}
-		return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
+	protected boolean controlScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+		return pages.get(selected).mouseScrolled(mouseX, mouseY, scrollY);
 	}
 
+	/**
+	 * The tab strip and the open page. Asked after the vanilla slot tooltip since MOD-762 (it used to be asked
+	 * before); the order is unobservable here: this screen has no slots, no energy bar and no overlay.
+	 */
 	@Override
-	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-		if (frameAcceptsInput(mouseX, mouseY)) {
-			int tab = tabAt(mouseX, mouseY);
-			if (tab >= 0) {
-				graphics.setTooltipForNextFrame(this.font, pages.get(tab).title(), mouseX, mouseY);
-				return;
-			}
-			if (pages.get(selected).tooltip(graphics, mouseX, mouseY)) {
-				return;
-			}
+	protected void controlTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+		int tab = tabAt(mouseX, mouseY);
+		if (tab >= 0) {
+			graphics.setTooltipForNextFrame(this.font, pages.get(tab).title(), mouseX, mouseY);
+			return;
 		}
-		super.extractTooltip(graphics, mouseX, mouseY);
+		pages.get(selected).tooltip(graphics, mouseX, mouseY);
 	}
 
 	/** The strip sticks out to the left of the frame, where JEI and REI park their bookmarks. */

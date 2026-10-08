@@ -110,8 +110,7 @@ public class LightningRodGeneratorScreen extends MachineScreen<LightningRodGener
 	}
 
 	@Override
-	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-		super.extractTooltip(graphics, mouseX, mouseY);
+	protected void gaugeTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		if (this.isHovering(CAP_X, CAP_BOTTOM - CAP_H, CAP_W, CAP_H, mouseX, mouseY)) {
 			graphics.setTooltipForNextFrame(this.font,
 					Component.translatable("gui.alaindustrial.lightning_rod.capacitor",

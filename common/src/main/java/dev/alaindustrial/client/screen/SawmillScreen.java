@@ -125,7 +125,7 @@ public class SawmillScreen extends ProgressMachineScreen<SawmillMenu> {
 
 	/**
 	 * The mode tooltip at the point: the name of {@link #litModeAt}, or {@code null} where no button is lit.
-	 * Public as the seam the L3 stand checks; {@link #extractTooltip} only hands its answer on.
+	 * Public as the seam the L3 stand checks; {@link #controlTooltip} only hands its answer on.
 	 */
 	public Component modeTooltipAt(double mouseX, double mouseY) {
 		SawmillMode lit = litModeAt(mouseX, mouseY);
@@ -133,20 +133,21 @@ public class SawmillScreen extends ProgressMachineScreen<SawmillMenu> {
 	}
 
 	@Override
-	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-		super.extractTooltip(graphics, mouseX, mouseY);
+	protected void controlTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		Component tip = modeTooltipAt(mouseX, mouseY);
 		if (tip != null) {
 			graphics.setTooltipForNextFrame(this.font, tip, mouseX, mouseY);
 		}
 	}
 
+	/**
+	 * The base calls this only where frameAcceptsInput lets a click through: the buttons are deaf while the upgrade
+	 * panel is open anywhere — it can be dragged over this row — and under the open statistics panel (MOD-693,
+	 * MOD-762). The tooltip and the hover tint obey the same rule (MOD-738).
+	 */
 	@Override
-	public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
-		// Only claim a click for a mode button when frameAcceptsInput lets it through: the buttons are deaf while
-		// the upgrade panel is open anywhere — it can be dragged over this row — and under the open statistics
-		// panel (MOD-693); otherwise defer to super. The tooltip and the hover tint obey the same rule (MOD-738).
-		if (event.button() == InputConstants.MOUSE_BUTTON_LEFT && frameAcceptsInput(event.x(), event.y())) {
+	protected boolean controlClicked(MouseButtonEvent event, boolean doubleClick) {
+		if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
 			SawmillMode clicked = buttonAt(event.x(), event.y());
 			if (clicked != null) {
 				if (clicked != this.menu.getMode() && this.minecraft != null && this.minecraft.gameMode != null) {
@@ -155,6 +156,6 @@ public class SawmillScreen extends ProgressMachineScreen<SawmillMenu> {
 				return true;
 			}
 		}
-		return super.mouseClicked(event, doubleClick);
+		return false;
 	}
 }

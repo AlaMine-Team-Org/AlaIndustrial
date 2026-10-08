@@ -11,6 +11,7 @@ import dev.alaindustrial.core.heat.HeatSource;
 import dev.alaindustrial.block.entity.WorldHeatSources;
 import dev.alaindustrial.core.machine.MachineRates;
 import dev.alaindustrial.registry.ModContent;
+import dev.alaindustrial.skill.SkillSlot;
 import java.util.Arrays;
 import java.util.List;
 import net.minecraft.advancements.AdvancementHolder;
@@ -94,7 +95,11 @@ public final class VulcanizerScenarios {
 						.fabricId("VulcanizerGameTest", "tcVulc001Fun03_rubberProductionAdvancement").ticks(300),
 				RosterEntry.of(VulcanizerScenarios::tcHeater002Fun01_soundFollowsSpendingNotHeat,
 								"vulcanizer_tc_heater002_fun01_sound_follows_spending_not_heat")
-						.fabricId("VulcanizerGameTest", "tcHeater002Fun01_soundFollowsSpendingNotHeat").ticks(20, 200));
+						.fabricId("VulcanizerGameTest", "tcHeater002Fun01_soundFollowsSpendingNotHeat").ticks(20, 200),
+				RosterEntry.of(VulcanizerScenarios::skl01ResilientCycleTickPaysTheHeater,
+						"mod751_vulcanizer_coasting_tick_pays_the_heater").ticks(100),
+				RosterEntry.of(VulcanizerScenarios::skl02TrickleWithoutResilientCycleFreezes,
+						"mod751_vulcanizer_trickle_without_skill_freezes").ticks(100));
 
 		private Roster() {}
 	}
@@ -718,6 +723,115 @@ public final class VulcanizerScenarios {
 		}
 		if (idle.getValue(ElectricHeaterBlock.GLOW) == HeaterGlow.COLD) {
 			helper.fail("the light follows temperature and must still be lit while the coils are hot");
+		}
+		helper.succeed();
+	}
+
+	// ── Resilient Cycle against the electric heater (MOD-751) ─────────────────────────────────────
+
+	/**
+	 * A stocked machine over a hot heater, owned by a survival player holding {@code slots} of the
+	 * Mechanic branch, driven on a full buffer past the Resilient Cycle threshold; null (test failed) when
+	 * the rig never got there.
+	 */
+	private static ElectricHeaterBlockEntity pastHalfwayOverHeater(GameTestHelper helper, VulcanizerBlockEntity be,
+			SkillSlot... slots) {
+		OperationEnergyScenarios.own(be, OperationEnergyScenarios.mechanic(helper, slots));
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
+		stock(be, 1);
+		ElectricHeaterBlockEntity heater = hotHeater(helper, be);
+		if (!OperationEnergyScenarios.pastHalfway(new OperationEnergyScenarios.Rig(be, () -> { }), helper,
+				operationTicks())) {
+			helper.fail("the vulcanizer never passed the Resilient Cycle threshold (progress "
+					+ be.getDataAccess().get(2) + ", status " + be.status() + ")");
+			return null;
+		}
+		heater.getEnergyStorage().setAmountUntracked(heaterEu());
+		return heater;
+	}
+
+	/**
+	 * TC-VULC-001-SKL01 — a tick Resilient Cycle runs on a trickle still buys its heat (MOD-751).
+	 *
+	 * <p>The skill waives the machine's own supply, never the heater's product: past halfway the buffer is
+	 * cut below one tick's draw, the heater below is left to pay from its own charge, and every operation
+	 * tick must cost it exactly one tariff until the batch finishes. Before MOD-751 the heat was drawn
+	 * only on a PAID tick, so the whole coasting half ran on free heat. Then the other half of the rule, on
+	 * the heat gate's own refusal: the heater is still found as a source, but cannot pay an overclocked
+	 * tick, so the coasting batch stands still and the heater spends nothing.
+	 *
+	 * @implements TC-VULC-001-SKL01 — a coasting tick pays the electric heater; no heat, no progress.
+	 */
+	public static void skl01ResilientCycleTickPaysTheHeater(GameTestHelper helper) {
+		VulcanizerBlockEntity be = placeMachine(helper);
+		ElectricHeaterBlockEntity heater = pastHalfwayOverHeater(helper, be, SkillSlot.CAP);
+		if (heater == null) {
+			return;
+		}
+		int tariff = OperationEnergyScenarios.heaterTariff();
+		OperationEnergyScenarios.HeatLedger ledger = OperationEnergyScenarios.trickleAgainstHeater(be, heater,
+				helper, operationTicks());
+		if (!ledger.finished() || ledger.unpaidTicks() != 0
+				|| ledger.heaterSpent() != (long) tariff * ledger.operationTicks()) {
+			helper.fail("a coasting tick must pay the heater one tariff (" + tariff + " EU) and finish the "
+					+ "batch; " + ledger.describe());
+			return;
+		}
+
+		// The next batch, with one overclocker: the heater holds exactly one BASE tariff, so the machine still
+		// finds it as a heat source (resolve asks for the base price) but the tick costs the overclocked price,
+		// and consumeForProgress refuses. The batch must stand exactly where it was — not advance on heat
+		// nobody paid for, and not restart either, because the heat level it was priced at is still there.
+		be.setItem(be.upgradeSlotStart(), new ItemStack(ModContent.OVERCLOCKER_CHIP_I.get()));
+		heater = pastHalfwayOverHeater(helper, be, SkillSlot.CAP);
+		if (heater == null) {
+			return;
+		}
+		if (be.overclockerCount() != 1) {
+			helper.fail("setup failed: the vulcanizer must run one overclocker, runs " + be.overclockerCount());
+			return;
+		}
+		heater.getEnergyStorage().setAmountUntracked(tariff);
+		if (WorldHeatSources.resolve(helper.getLevel(), helper.absolutePos(MACHINE)) != HeatSource.ELECTRIC_HEATER) {
+			helper.fail("setup failed: a hot heater holding one base tariff must still resolve as a heat source");
+			return;
+		}
+		int progress = be.getDataAccess().get(2);
+		ItemStack output = be.getItem(VulcanizerBlockEntity.OUTPUT_SLOT).copy();
+		for (int i = 0; i < 5; i++) {
+			be.getEnergyStorage().setAmountUntracked(1L);
+			drive(be, helper, 1);
+		}
+		if (be.getDataAccess().get(2) != progress
+				|| !ItemStack.matches(output, be.getItem(VulcanizerBlockEntity.OUTPUT_SLOT))
+				|| heater.getEnergyStorage().getAmount() != tariff) {
+			helper.fail("a coasting tick the heater cannot pay for must leave the batch where it stood: progress "
+					+ progress + " -> " + be.getDataAccess().get(2) + ", output " + output + " -> "
+					+ be.getItem(VulcanizerBlockEntity.OUTPUT_SLOT) + ", heater "
+					+ heater.getEnergyStorage().getAmount() + " EU");
+			return;
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * The control for {@link #skl01ResilientCycleTickPaysTheHeater}: without Resilient Cycle the same trickle
+	 * past halfway freezes the batch (R-NRG-10) and the heater spends nothing — so the first scenario's
+	 * heat bill is the skill's, not the rig's.
+	 */
+	public static void skl02TrickleWithoutResilientCycleFreezes(GameTestHelper helper) {
+		VulcanizerBlockEntity be = placeMachine(helper);
+		ElectricHeaterBlockEntity heater = pastHalfwayOverHeater(helper, be);
+		if (heater == null) {
+			return;
+		}
+		int progress = be.getDataAccess().get(2);
+		OperationEnergyScenarios.HeatLedger ledger = OperationEnergyScenarios.trickleAgainstHeater(be, heater,
+				helper, operationTicks());
+		if (ledger.operationTicks() != 0 || be.getDataAccess().get(2) != progress || ledger.heaterSpent() != 0) {
+			helper.fail("without the skill a trickle below one tick's draw must freeze the batch at " + progress
+					+ " and leave the heater untouched; " + ledger.describe());
+			return;
 		}
 		helper.succeed();
 	}

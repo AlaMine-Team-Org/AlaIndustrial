@@ -1,6 +1,5 @@
 package dev.alaindustrial.block;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.core.item.PipeFaceRender;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -25,8 +24,8 @@ public final class AdvancedFluidPipeBlock extends FluidPipeBlock {
 	}
 
 	@Override
-	public int segmentCapacity() {
-		return Math.max(1, Config.fluidPipeAdvancedSegmentBuffer);
+	public int segmentCapacity(int basic, int advanced) {
+		return Math.max(1, advanced);
 	}
 
 	@Override

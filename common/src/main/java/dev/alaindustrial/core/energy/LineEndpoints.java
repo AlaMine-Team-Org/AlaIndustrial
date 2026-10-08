@@ -45,9 +45,10 @@ final class LineEndpoints {
 	 * with a cabled OUT face). Generators feed the line and charge storage; a store discharges through one
 	 * of three mutually exclusive channels — why three and not one is ADR-004.
 	 *
-	 * @param storagePositions the dual-role nodes, so the sink pass can tell a battery that is discharging
-	 *     into this very line from an ordinary consumer (ADR-002: a node that donates must not also be
-	 *     served, or it drinks its own discharge back out of the neighbouring cable)
+	 * @param storagePositions the stores with a face that can discharge into the line, so the discharge plan
+	 *     can tell a store that may be donating from an ordinary sink (ADR-002: a node that donates must not
+	 *     also be served, or it drinks its own discharge back out of the neighbouring cable) — on a backup tick
+	 *     every sink sits the serve pass out and only these draw no surplus apart (MOD-756)
 	 * @param supplying the producers that actually HOLD EU this tick — the seeds of the flow field, not every
 	 *     face capable of extraction (ADR-003, point 2)
 	 * @param genSupply the generators' supply, each host counted once (MOD-608)
@@ -64,8 +65,9 @@ final class LineEndpoints {
 
 	/**
 	 * The demand side, partitioned: pure machines (served first, MOD-009) vs storage sinks (served after
-	 * them, ADR-002). {@link #sinks()} is mutable: the discharge plan removes from it the stores that sit this
-	 * tick out because they discharge into the line.
+	 * them, ADR-002). {@link #sinks()} is mutable: the discharge plan removes from it the sinks that sit this
+	 * tick out of the serve pass and the seeds — a donor, every sink on a backup tick (MOD-756), the sinks
+	 * outside a cascade (MOD-731).
 	 */
 	record Demand(List<EnergyLineDistributor.LiveConsumer<BlockPos>> machines,
 			List<EnergyLineDistributor.LiveConsumer<BlockPos>> sinks, long machineDemand) {

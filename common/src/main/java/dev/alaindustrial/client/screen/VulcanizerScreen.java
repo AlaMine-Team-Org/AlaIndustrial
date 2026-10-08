@@ -75,8 +75,7 @@ public final class VulcanizerScreen extends ProgressMachineScreen<VulcanizerMenu
 	}
 
 	@Override
-	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-		super.extractTooltip(graphics, mouseX, mouseY);
+	protected void gaugeTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		if (isHovering(HEAT_X, HEAT_Y, HEAT_W, HEAT_H, mouseX, mouseY)) {
 			HeatSource heat = menu.getHeatSource();
 			graphics.setTooltipForNextFrame(font,

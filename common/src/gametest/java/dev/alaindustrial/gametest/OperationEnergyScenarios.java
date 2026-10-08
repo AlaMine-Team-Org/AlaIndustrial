@@ -11,6 +11,7 @@ import dev.alaindustrial.block.entity.StorageModuleBlockEntity;
 import dev.alaindustrial.block.entity.ThermalCentrifugeBlockEntity;
 import dev.alaindustrial.core.fluid.FluidAmounts;
 import dev.alaindustrial.core.fluid.FluidHolder;
+import dev.alaindustrial.core.machine.MachineRates;
 import dev.alaindustrial.item.assembler.AssemblyBlueprintItem;
 import dev.alaindustrial.item.assembler.BlueprintPattern;
 import dev.alaindustrial.registry.ModContent;
@@ -102,7 +103,9 @@ public final class OperationEnergyScenarios {
 				RosterEntry.of(OperationEnergyScenarios::thermalCentrifugeResilientCycleFinishesOnATrickle,
 								"operation_energy_thermal_centrifuge_resilient_cycle")
 						.fabricId("OperationEnergyGameTest", "thermalCentrifugeResilientCycleFinishesOnATrickle")
-						.ticks(100));
+						.ticks(100),
+				RosterEntry.of(OperationEnergyScenarios::thermalCentrifugeResilientCycleTickPaysTheHeater,
+								"mod751_thermal_centrifuge_coasting_tick_pays_the_heater").ticks(100));
 
 		private Roster() {}
 	}
@@ -129,7 +132,7 @@ public final class OperationEnergyScenarios {
 		return owner;
 	}
 
-	private static void own(MachineBlockEntity be, ServerPlayer owner) {
+	static void own(MachineBlockEntity be, ServerPlayer owner) {
 		be.setOwner(owner.getUUID(), owner.getGameProfile().name());
 	}
 
@@ -428,11 +431,11 @@ public final class OperationEnergyScenarios {
 	private static final long TRICKLE_EU = 1;
 
 	/** A machine and whatever its neighbour needs to keep working. */
-	private record Rig(MachineBlockEntity be, Runnable topUp) {
+	record Rig(MachineBlockEntity be, Runnable topUp) {
 	}
 
 	/** Funded ticks until progress passes the Resilient Cycle threshold, stopping short of the end. */
-	private static boolean pastHalfway(Rig rig, GameTestHelper helper, int maxTicks) {
+	static boolean pastHalfway(Rig rig, GameTestHelper helper, int maxTicks) {
 		for (int i = 0; i < maxTicks; i++) {
 			rig.topUp().run();
 			rig.be().getEnergyStorage().setAmountUntracked(rig.be().getEnergyStorage().getCapacity());
@@ -459,6 +462,55 @@ public final class OperationEnergyScenarios {
 			}
 		}
 		return false;
+	}
+
+	/** What a trickle against a heater that is never refilled bought: operation ticks, how many went unbilled. */
+	record HeatLedger(int operationTicks, int unpaidTicks, long heaterSpent, boolean finished) {
+		String describe() {
+			return operationTicks + " operation ticks, " + unpaidTicks + " of them without the heater's tariff, "
+					+ "heater spent " + heaterSpent + " EU, finished=" + finished;
+		}
+	}
+
+	/** One heat tick's price under a machine with no overclockers — the heater's bill per operation tick. */
+	static int heaterTariff() {
+		return MachineRates.euPerTick(Config.electricHeaterEuPerTick, Config.globalMachineSpeedMultiplier);
+	}
+
+	/**
+	 * {@link #TRICKLE_EU} before every tick, the heater below NOT refilled, until the operation completes
+	 * (MOD-751).
+	 *
+	 * <p>A tick that moves the bar (or completes the operation) is an operation tick, and it must cost the heater
+	 * exactly {@link #heaterTariff()}: the heat is the heater's product, and Resilient Cycle waives only the
+	 * machine's own supply. The heater is read before and after every tick, so a tick that runs on heat
+	 * nobody paid for is counted when it happens rather than hidden in a total. Refilling it each tick —
+	 * what the plain trickle rigs do — would leave the heat gate's question unasked.
+	 */
+	static HeatLedger trickleAgainstHeater(MachineBlockEntity be, ElectricHeaterBlockEntity heater,
+			GameTestHelper helper, int maxTicks) {
+		long done = be.totalItemsProcessed();
+		long heaterStart = heater.getEnergyStorage().getAmount();
+		int operationTicks = 0;
+		int unpaid = 0;
+		for (int i = 0; i < maxTicks; i++) {
+			be.getEnergyStorage().setAmountUntracked(TRICKLE_EU);
+			long heaterBefore = heater.getEnergyStorage().getAmount();
+			int progress = progressOf(be);
+			drive(be, helper, 1);
+			boolean finished = be.totalItemsProcessed() != done;
+			if (progressOf(be) != progress || finished) {
+				operationTicks++;
+				if (heaterBefore - heater.getEnergyStorage().getAmount() != heaterTariff()) {
+					unpaid++;
+				}
+			}
+			if (finished) {
+				break;
+			}
+		}
+		return new HeatLedger(operationTicks, unpaid, heaterStart - heater.getEnergyStorage().getAmount(),
+				be.totalItemsProcessed() != done);
 	}
 
 	/**
@@ -531,5 +583,34 @@ public final class OperationEnergyScenarios {
 		assertCoasting(helper, "thermal centrifuge", new Rig(skilled.be(), skilled::topUp),
 				new Rig(control.be(), control::topUp),
 				skilled.be().effectiveDuration(Config.thermalCentrifugeDuration));
+	}
+
+	/**
+	 * Every tick Resilient Cycle runs on a trickle is a tick of heat the heater sells (MOD-712, pinned by
+	 * MOD-751): past halfway the buffer is cut to a trickle and the heater is left to pay from its own
+	 * charge, and each operation tick must cost it exactly one tariff. The scenario above refills the heater
+	 * before every tick, so a heat gate that asked "can the machine pay?" instead of "does the tick run?"
+	 * finished there as well; here it counts its unbilled ticks.
+	 */
+	public static void thermalCentrifugeResilientCycleTickPaysTheHeater(GameTestHelper helper) {
+		Centrifuge rig = centrifuge(helper, RIG, mechanic(helper, SkillSlot.CAP));
+		int duration = rig.be().effectiveDuration(Config.thermalCentrifugeDuration);
+		if (spinUp(helper, rig) < 0) {
+			return;
+		}
+		if (!pastHalfway(new Rig(rig.be(), rig::topUp), helper, duration)) {
+			helper.fail("thermal centrifuge: never passed the Resilient Cycle threshold (progress "
+					+ progressOf(rig.be()) + ")");
+			return;
+		}
+		rig.topUp();
+		HeatLedger ledger = trickleAgainstHeater(rig.be(), rig.heater(), helper, duration + SLACK_TICKS);
+		if (!ledger.finished() || ledger.unpaidTicks() != 0
+				|| ledger.heaterSpent() != (long) heaterTariff() * ledger.operationTicks()) {
+			helper.fail("thermal centrifuge: a coasting tick must pay the heater one tariff ("
+					+ heaterTariff() + " EU) and finish the operation; " + ledger.describe());
+			return;
+		}
+		helper.succeed();
 	}
 }

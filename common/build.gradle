@@ -354,6 +354,8 @@ pitest {
                      // written against. Same shape as Overclockable: a pure interface, targeted here and
                      // listed in NO_MUTABLE_BYTECODE, so a future default method is mutated, not lost.
                      'dev.alaindustrial.menu.WindMillReadout',
+                     // MOD-722: the statistics panel's packet timer and window EU, MC-free; StatsWindowTest.
+                     'dev.alaindustrial.menu.stats.StatsWindow',
                      'dev.alaindustrial.block.entity.DistillationColumnStatus',
                      'dev.alaindustrial.block.entity.ElectricHeaterStatus',
                      'dev.alaindustrial.block.entity.GalvanicBathStatus',
@@ -541,6 +543,12 @@ pitest {
             'dev.alaindustrial.client.render.UpgradeTableGeometry',
             // MOD-763: the mob wheel's formed structure, written by tools/gen_mob_wheel_assets.py.
             'dev.alaindustrial.client.render.MobWheelGeometry',
+            // MOD-787: the block breaker's moving parts, written by
+            // tools/model_sources/block_breaker/build_block_breaker.py — generated number tables like the above.
+            'dev.alaindustrial.client.render.BlockBreakerGeometry',
+            // MOD-787: the fake-player seam — its one method takes a ServerLevel and returns a ServerPlayer,
+            // so L1 cannot call it; the both-lane block breaker scenarios break through it on each loader.
+            'dev.alaindustrial.core.world.FakePlayers',
             // MOD-468: the reactor room's world adapter — it resolves BlockState/Level to ask
             // "what shell block stands here". The geometry it delegates to (RoomScan) is deliberately
             // Minecraft-free and stays IN the run, covered by RoomScanTest; this half is covered by the
@@ -577,6 +585,10 @@ pitest {
             'dev.alaindustrial.core.radiation.RadiationMobs',
             'dev.alaindustrial.core.radiation.RadiationSources',
             'dev.alaindustrial.core.radiation.RadiationTicker',
+            // MOD-786: moving containers (chest boats, minecarts, pack animals) — entity queries and item
+            // stacks only; the ceiling it applies is RadiationCore.containerLeak, mutated where it lives.
+            // Covered by the L2 R-RAD-26..29 scenarios on both loaders.
+            'dev.alaindustrial.core.radiation.RadiationVehicles',
             'dev.alaindustrial.core.energy.EnergyLookup',
             // MOD-608: the multiblock-cell redirect. Its one body, hostOf, reads a BlockState from a
             // Level and asks the Level whether the host is loaded, so every mutant it has is a
@@ -698,6 +710,11 @@ pitest {
             // current architecture, and their behaviour is covered by L2 gametests on both loaders.
             'dev.alaindustrial.core.fluid.FluidNetwork',
             'dev.alaindustrial.core.fluid.FluidNetworkManager',
+            // MOD-734: the fluid network's topology cache, split out of FluidNetwork and MC-coupled the
+            // same way (ServerLevel, BlockPos, Direction throughout); covered by the fluid-line L2 sets.
+            'dev.alaindustrial.core.fluid.FluidLineTopology',
+            // MOD-734: the cached flow field over that topology (BlockPos, Direction); same coverage.
+            'dev.alaindustrial.core.fluid.FluidFlowField',
             // MOD-662: the pipe families and the one-off steam-line migration. Both read the world
             // (block entities, block states, Fluid.is on a tag), so L1 cannot load them; the families,
             // the migration's seven cases and the wave are covered by SteamPipeScenarios on both lanes.

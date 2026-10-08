@@ -11,7 +11,10 @@ import java.util.function.Predicate;
  * Which of the three storage discharge channels is open this tick, and how wide (MOD-715, CORE-5; ADR-004).
  *
  * <ol>
- *   <li><b>backup</b> — {@link #backupBudget()} EU: the machine demand the generators fall short of;</li>
+ *   <li><b>backup</b> — {@link #backupBudget()} EU: the machine demand the generators fall short of; every
+ *       sink sits the tick out, so the stores' EU reaches the machines (MOD-756, {@link #excludes}) — the sinks
+ *       that are not discharging stores draw apart no more than {@link #surplusBudget()}, the sinks' credit
+ *       ({@link Stores#sinkCredit()});</li>
  *   <li><b>cascade</b> — {@link #cascadeAllowances()}: per donor, a fuller store topping up an emptier one
  *       (MOD-314), only when backup is closed; the donors and every sink outside the cascade sit the tick
  *       out, so the EU reaches the stores it was released for (MOD-731, {@link #excludes}) — the sinks outside
@@ -19,6 +22,11 @@ import java.util.function.Predicate;
  *   <li><b>feed</b> — {@link #feedAllowances()}: per donor, a store trickling into a sink the cascade refuses
  *       (MOD-353), only when both are closed.</li>
  * </ol>
+ *
+ * <p>A fourth state is not a channel: <b>settling</b> ({@link #settling()}, MOD-756) — every channel closed in
+ * the middle of a backup episode ({@link Stores#backupEpisode()}). Its funds sit the tick out as on a backup
+ * tick and draw apart only their credit, so a fund that walls the machine off between two backup ticks cannot
+ * collect the store's charge from the cables, nor take the generators' EU the machine then goes short of.
  *
  * <p><b>The mutual exclusion lives in two places, on purpose (ADR-004).</b> {@link #decide} computes a later
  * channel only when the earlier ones are closed; the record itself refuses to exist with more than one
@@ -34,12 +42,14 @@ import java.util.function.Predicate;
  * @param backupBudget EU stores may release to cover the machine deficit; 0 when the channel is closed
  * @param cascadeAllowances per donor, EU it may push toward an emptier store; empty when closed
  * @param feedAllowances per donor, EU it may push toward a fund; empty when closed
- * @param surplusBudget EU the sinks outside the cascade may draw from the line on a cascade tick (MOD-731,
- *     {@link #drawsSurplus}): {@link Stores#generatorSurplus()}; 0 when the cascade is closed
+ * @param surplusBudget EU the sinks set aside may draw from the line (MOD-731, MOD-756, {@link #drawsSurplus}):
+ *     on a cascade tick {@link Stores#generatorSurplus()}, on a backup or settling tick the sinks' credit
+ *     {@link Stores#sinkCredit()}; 0 otherwise
+ * @param settling every channel closed in the middle of a backup episode
  * @param <P> the position type the donors and sinks are keyed by
  */
 record DischargePlan<P>(long backupBudget, Map<P, Long> cascadeAllowances, Map<P, Long> feedAllowances,
-		long surplusBudget) {
+		long surplusBudget, boolean settling) {
 
 	/** What {@link #decide} needs to know about the blocks around the line. */
 	interface Stores<P> {
@@ -60,6 +70,25 @@ record DischargePlan<P>(long backupBudget, Map<P, Long> cascadeAllowances, Map<P
 		 * the most the sinks outside the cascade may take on a cascade tick. Asked only when the cascade opens.
 		 */
 		long generatorSurplus();
+
+		/**
+		 * Whether the line is in a backup episode (MOD-756): a store backed its machines up on some tick, and no
+		 * cascade or feed has opened since. False on a line where no store ever backed a machine up.
+		 */
+		default boolean backupEpisode() {
+			return false;
+		}
+
+		/**
+		 * The sinks' credit in the current backup episode (MOD-756): what the generators put into the line since
+		 * it began beyond what the machines and the sinks drew, never above what the cables hold, negative while
+		 * the stores' backup is still unpaid. The most the sinks may take apart on a backup or settling tick
+		 * (when positive): over an episode they take no more than the generators gave beyond the machines, so a
+		 * store's backup reaches the machines only. Asked only on a backup or settling tick.
+		 */
+		default long sinkCredit() {
+			return 0L;
+		}
 	}
 
 	DischargePlan {
@@ -69,13 +98,25 @@ record DischargePlan<P>(long backupBudget, Map<P, Long> cascadeAllowances, Map<P
 			throw new IllegalArgumentException("ADR-004: more than one storage discharge channel open — backup "
 					+ backupBudget + ", cascade " + cascadeAllowances + ", feed " + feedAllowances);
 		}
-		if (surplusBudget < 0 || (surplusBudget > 0 && cascadeAllowances.isEmpty())) {
-			throw new IllegalArgumentException("MOD-731: a surplus budget of " + surplusBudget
-					+ " EU belongs to a cascade tick only — cascade " + cascadeAllowances);
+		if (settling && open > 0) {
+			throw new IllegalArgumentException("MOD-756: a settling tick has every channel closed — backup "
+					+ backupBudget + ", cascade " + cascadeAllowances + ", feed " + feedAllowances);
+		}
+		if (surplusBudget < 0 || (surplusBudget > 0 && cascadeAllowances.isEmpty() && backupBudget == 0
+				&& !settling)) {
+			throw new IllegalArgumentException("MOD-731, MOD-756: a surplus budget of " + surplusBudget
+					+ " EU belongs to a cascade, backup or settling tick only — cascade " + cascadeAllowances
+					+ ", backup " + backupBudget);
 		}
 	}
 
-	/** A plan whose sinks outside the cascade draw nothing apart: every tick but a cascade one with a surplus. */
+	/** A plan that is not settling. */
+	DischargePlan(long backupBudget, Map<P, Long> cascadeAllowances, Map<P, Long> feedAllowances,
+			long surplusBudget) {
+		this(backupBudget, cascadeAllowances, feedAllowances, surplusBudget, false);
+	}
+
+	/** A plan whose set-aside sinks draw nothing apart. */
 	DischargePlan(long backupBudget, Map<P, Long> cascadeAllowances, Map<P, Long> feedAllowances) {
 		this(backupBudget, cascadeAllowances, feedAllowances, 0L);
 	}
@@ -115,8 +156,14 @@ record DischargePlan<P>(long backupBudget, Map<P, Long> cascadeAllowances, Map<P
 		if (backup == 0 && cascade.isEmpty() && !storageSources.isEmpty() && !sinks.isEmpty()) {
 			feed = feedAllowances(storageSources, sinks, stores, feedReserve, packetCap);
 		}
-		long surplus = cascade.isEmpty() ? 0L : Math.max(0L, stores.generatorSurplus());
-		return new DischargePlan<>(backup, cascade, feed, surplus);
+		if (!cascade.isEmpty()) {
+			return new DischargePlan<>(0L, cascade, feed, Math.max(0L, stores.generatorSurplus()));
+		}
+		boolean settling = backup == 0 && feed.isEmpty() && !sinks.isEmpty() && stores.backupEpisode();
+		if (backup > 0 || settling) {
+			return new DischargePlan<>(backup, cascade, feed, Math.max(0L, stores.sinkCredit()), settling);
+		}
+		return new DischargePlan<>(backup, cascade, feed, 0L);
 	}
 
 	/**
@@ -124,7 +171,21 @@ record DischargePlan<P>(long backupBudget, Map<P, Long> cascadeAllowances, Map<P
 	 * seeds, which read the same list (ADR-003).
 	 *
 	 * <ul>
-	 *   <li><b>backup</b> — every storage source: it is discharging into the line (ADR-002);</li>
+	 *   <li><b>backup</b> — every sink (MOD-756): what a store releases on a backup tick is for the machines. A
+	 *       storage source is discharging into the line (ADR-002); left in, a Teleporter took its share of what
+	 *       the box released for the machine, by room, and seeded the sink field — where it sat closer to the
+	 *       source than the machine it walled the machine off for good, the backup channel never closed, and the
+	 *       box drained into the fund past its reserve (the reserve is the feed's, MOD-353; backup has none). The
+	 *       sinks that are not discharging stores still draw the generators' surplus apart ({@link
+	 *       #drawsSurplus}): backup opens on the machines' free room, not on what the line can carry to them, so
+	 *       a generator stronger than the machines' cables has EU to spare on a backup tick. The budget is the
+	 *       sinks' credit over the backup episode ({@link Stores#sinkCredit()}): a budget of last tick's surplus
+	 *       let a fund that walls the machine off take the generators' EU in an ordinary pass and the box's
+	 *       release on the next backup tick;</li>
+	 *   <li><b>settling</b> — every sink that does not take the cascade (a fund: Teleporter, Charging Station,
+	 *       Energy Condenser): the episode's ledger holds between backup ticks too, and a fund out of the seeds no
+	 *       longer walls the machine off (MOD-756). A box stays in the pass and the seeds — it levels and charges
+	 *       as before, and a fork toward it keeps its share (MOD-254);</li>
 	 *   <li><b>cascade</b> — the donors with an allowance, and every sink that does not accept the cascade
 	 *       (MOD-731): a Teleporter, a Charging Station, an Energy Condenser. The cascade sizes a tap on the
 	 *       donor's side for a box worth levelling, but the line does not know where its EU came from — it
@@ -145,16 +206,19 @@ record DischargePlan<P>(long backupBudget, Map<P, Long> cascadeAllowances, Map<P
 	 * {@code fund} rig the fund ended with 52 EU against 48 in the cables at the first closing; the rounds shrink
 	 * by the half step, so the scenarios hold a levelling episode to two loads of the cables.
 	 *
-	 * <p>Not interchangeable with {@code storageSourcePositions} under the cascade: that set is a pure
-	 * face-role test, so an EMPTY box with a cable on its OUT face is in it, and excluding it would keep it
-	 * from ever charging from its full neighbour.
+	 * <p>Under the cascade not interchangeable with "every storage source": that set is a pure face-role test,
+	 * so an EMPTY box with a cable on its OUT face is in it, and excluding it would keep it from ever charging
+	 * from its full neighbour.
 	 *
 	 * @param acceptsCascade whether the sink at a position may receive the cascade ({@link
 	 *     Stores#acceptsCascade}); asked only while the cascade is open
 	 */
-	boolean excludes(P pos, Set<P> storageSourcePositions, Predicate<P> acceptsCascade) {
+	boolean excludes(P pos, Predicate<P> acceptsCascade) {
 		if (backupBudget > 0) {
-			return storageSourcePositions.contains(pos);
+			return true;
+		}
+		if (settling) {
+			return !acceptsCascade.test(pos);
 		}
 		if (!cascadeAllowances.isEmpty()) {
 			return cascadeAllowances.containsKey(pos) || !acceptsCascade.test(pos);
@@ -163,9 +227,9 @@ record DischargePlan<P>(long backupBudget, Map<P, Long> cascadeAllowances, Map<P
 	}
 
 	/**
-	 * Whether the sink at {@code pos}, out of the serve pass on this cascade tick ({@link #excludes}), is served
-	 * apart from the generators' surplus — at most {@link #surplusBudget()} EU between all such sinks, from the
-	 * cables each one touches, before the stores (MOD-731; owner, 2026-10-05: a Teleporter charges from the
+	 * Whether the sink at {@code pos}, out of the serve pass on this cascade or backup tick ({@link #excludes}), is
+	 * served apart from the generators' surplus — at most {@link #surplusBudget()} EU between all such sinks,
+	 * from the cables each one touches, before the stores (MOD-731; owner, 2026-10-05: a Teleporter charges from the
 	 * generators' surplus even while the boxes level, and a box's charge still never reaches it).
 	 *
 	 * <p>The line cannot tell a generator's EU from a store's (ADR-001), so the budget is an account, not an
@@ -174,9 +238,26 @@ record DischargePlan<P>(long backupBudget, Map<P, Long> cascadeAllowances, Map<P
 	 * machines, so the rest of what is on the cables — the cascade's EU among it — goes to the stores. Served
 	 * apart, never seeded: seeded, such a sink would put the far box behind a seam of the field again and stop
 	 * the levelling. With no generator on the line the budget is 0 and the sink sits the tick out, as before.
+	 *
+	 * <p>On a backup tick (MOD-756) every sink but a storage source draws: the stores' EU is the machines', and
+	 * the account keeps it theirs; a storage source discharging into the line must not drink its own discharge
+	 * (ADR-002). On a settling tick nobody discharges, and every fund set aside draws. Seeding is the same story
+	 * as on a cascade tick — a seeded fund closer to the source than the machine walls the machine off. The
+	 * budget on both is the sinks' credit over the backup episode ({@link Stores#sinkCredit()}).
+	 *
+	 * @param storageSourcePositions the stores that can discharge into the line this tick (backup only)
 	 */
-	boolean drawsSurplus(P pos, Predicate<P> acceptsCascade) {
-		return surplusBudget > 0 && !cascadeAllowances.containsKey(pos) && !acceptsCascade.test(pos);
+	boolean drawsSurplus(P pos, Set<P> storageSourcePositions, Predicate<P> acceptsCascade) {
+		if (surplusBudget <= 0) {
+			return false;
+		}
+		if (backupBudget > 0) {
+			return !storageSourcePositions.contains(pos);
+		}
+		if (settling) {
+			return !acceptsCascade.test(pos);
+		}
+		return !cascadeAllowances.containsKey(pos) && !acceptsCascade.test(pos);
 	}
 
 	/**
@@ -189,10 +270,10 @@ record DischargePlan<P>(long backupBudget, Map<P, Long> cascadeAllowances, Map<P
 		List<EnergyLineDistributor.LiveConsumer<P>> surplusTakers =
 				surplusBudget > 0 ? new ArrayList<>() : List.of();
 		sinks.removeIf(c -> {
-			if (!excludes(c.pos(), storageSourcePositions, acceptsCascade)) {
+			if (!excludes(c.pos(), acceptsCascade)) {
 				return false;
 			}
-			if (drawsSurplus(c.pos(), acceptsCascade)) {
+			if (drawsSurplus(c.pos(), storageSourcePositions, acceptsCascade)) {
 				surplusTakers.add(c);
 			}
 			return true;

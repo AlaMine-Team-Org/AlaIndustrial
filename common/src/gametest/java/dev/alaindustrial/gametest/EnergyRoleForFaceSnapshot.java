@@ -335,6 +335,18 @@ final class EnergyRoleForFaceSnapshot {
 			"workstation[facing=east,lit=false,part=single] DUNSWE=NNNNNN",
 			"workstation[facing=east,lit=false,part=lower] DUNSWE=IIIIIN",
 			"workstation[facing=east,lit=false,part=upper] DUNSWE=NNNNNN",
+			"block_breaker[facing=north,lit=true] DUNSWE=IINIII",
+			"block_breaker[facing=north,lit=false] DUNSWE=IINIII",
+			"block_breaker[facing=east,lit=true] DUNSWE=IIIIIN",
+			"block_breaker[facing=east,lit=false] DUNSWE=IIIIIN",
+			"block_breaker[facing=south,lit=true] DUNSWE=IIINII",
+			"block_breaker[facing=south,lit=false] DUNSWE=IIINII",
+			"block_breaker[facing=west,lit=true] DUNSWE=IIIINI",
+			"block_breaker[facing=west,lit=false] DUNSWE=IIIINI",
+			"block_breaker[facing=up,lit=true] DUNSWE=INIIII",
+			"block_breaker[facing=up,lit=false] DUNSWE=INIIII",
+			"block_breaker[facing=down,lit=true] DUNSWE=NIIIII",
+			"block_breaker[facing=down,lit=false] DUNSWE=NIIIII",
 			"fluid_pipe[down_mode=disabled,east_mode=disabled,filled=false,north_mode=disabled,south_mo"
 					+ "de=disabled,up_mode=disabled,west_mode=disabled] DUNSWE=NNNNNN",
 			"fluid_pipe@fluid_pipe_advanced[down_mode=disabled,east_mode=disabled,filled=false,north_mo"

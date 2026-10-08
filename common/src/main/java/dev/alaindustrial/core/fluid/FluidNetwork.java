@@ -1,12 +1,10 @@
 package dev.alaindustrial.core.fluid;
 
 import dev.alaindustrial.core.energy.EnergyTransactions;
-import dev.alaindustrial.core.item.PipeFaceMode;
-import dev.alaindustrial.core.net.DistanceField;
+import dev.alaindustrial.core.fluid.FluidLineTopology.Endpoint;
 import dev.alaindustrial.core.net.GraphNetwork;
 import dev.alaindustrial.core.net.NodeSet;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
@@ -28,33 +26,44 @@ import net.minecraft.server.level.ServerLevel;
  */
 public final class FluidNetwork implements GraphNetwork<FluidNetwork, BlockPos> {
 
-	/** An endpoint outside the pipe graph: the pipe position, the face, and which way it may move. */
-	private record Endpoint(BlockPos pipe, Direction side) {
-	}
-
 	private final ServerLevel level;
 	/** The pipes and the "refresh the endpoints" flag (MOD-715, batch 11). */
 	private final NodeSet<BlockPos> nodes = new NodeSet<>();
 	private final Set<BlockPos> pipes = nodes.nodes();
 	private final List<Endpoint> sources = new ArrayList<>();
 	private final List<Endpoint> sinks = new ArrayList<>();
+	/** The segments and their joins, read at refresh instead of on every hop (MOD-734). */
+	private final FluidLineTopology topology;
+	private final Runnable markStale = this::markDirty;
 
-	private static final Comparator<Endpoint> STABLE_ORDER = Comparator
-			.comparingInt((Endpoint e) -> e.pipe().getX())
-			.thenComparingInt(e -> e.pipe().getY())
-			.thenComparingInt(e -> e.pipe().getZ())
-			.thenComparingInt(e -> e.side().ordinal());
+	/** Which way fluid flows, flooded only when the hungry sinks or the topology change (MOD-734). */
+	private final FluidFlowField field;
+	/** The hungry sinks' segments this tick, in seed order. */
+	private final List<BlockPos> hungrySeeds = new ArrayList<>();
+	/** Scratch list of a donor's eligible neighbours, reused across donors and ticks. */
+	private final List<FluidPipeNode> nearer = new ArrayList<>(6);
 
-	/**
-	 * Hops from every segment to the nearest sink segment whose consumer takes fluid this tick, refilled by
-	 * {@link #distanceFromHungrySinks} (MOD-715: the shared {@link DistanceField}, walked exactly as the
-	 * hand-written BFS it replaces). Equal distances are swept in {@link BlockPos#asLong} order, as they were.
+	/*
+	 * Sleep (MOD-734, ADR-047). The network sleeps once a tick moved nothing; while it sleeps, isAwake asks
+	 * the endpoints the tick's own questions under a simulated transaction, and a write into a segment from
+	 * outside a tick wakes it at once. There is deliberately no periodic real tick: an error in the probe
+	 * must show up in FluidNetworkSleepScenarios, not be papered over every N ticks.
 	 */
-	private final DistanceField<BlockPos> sinkDistance = new DistanceField<>(this::unreachedConnectedPipes,
-			Comparator.comparingLong(BlockPos::asLong));
+	/** The last tick moved nothing, and nothing has written into a segment since. */
+	private boolean idle;
+	/** Net mB moved by the tick in progress. */
+	private long movedThisTick;
+	/** The line's fluid as the last tick's field saw it ({@link FluidHolder#EMPTY} for an empty line). */
+	private FluidHolder lineFluid = FluidHolder.EMPTY;
+	/** The hungry sink segments of the tick that fell asleep — what the probe compares against. */
+	private final List<BlockPos> idleHungry = new ArrayList<>();
+	/** Scratch for the probe's own count of hungry sinks. */
+	private final List<BlockPos> probeHungry = new ArrayList<>();
 
 	public FluidNetwork(ServerLevel level) {
 		this.level = level;
+		this.topology = new FluidLineTopology(level);
+		this.field = new FluidFlowField(topology);
 	}
 
 	public ServerLevel level() {
@@ -106,109 +115,138 @@ public final class FluidNetwork implements GraphNetwork<FluidNetwork, BlockPos> 
 	}
 
 	/**
-	 * A network is worth ticking when it has any endpoint or any fluid still in flight. A line whose
-	 * segments are empty and whose ends are idle costs nothing.
+	 * Whether this tick could move anything (MOD-734, ADR-047). A network whose last tick moved nothing
+	 * sleeps; asleep, it asks every sink and source the question the tick would — simulated — and the
+	 * consumers which of them are hungry. Any answer that differs from the tick that fell asleep wakes it.
+	 * O(endpoints), never O(segments).
+	 *
+	 * <p>A foreign port that throws while being asked counts as "awake": the guarded tick meets it next
+	 * ({@code NetworkTickGuard}, MOD-186), where the failure is isolated and logged.
 	 */
 	@Override
 	public boolean isAwake() {
-		if (nodes.isDirty()) {
+		if (nodes.isDirty() || !idle) {
 			return true;
 		}
-		if (!sources.isEmpty() || !sinks.isEmpty()) {
+		try {
+			return endpointsWouldMove();
+		} catch (RuntimeException failure) {
 			return true;
 		}
-		for (BlockPos pos : pipes) {
-			FluidPipeNode pipe = pipeAt(pos);
-			if (pipe != null && pipe.lineBuffer().amount > 0) {
+	}
+
+	/** A segment of this network was written from outside its tick (MOD-734): tick again. */
+	public void wake() {
+		idle = false;
+	}
+
+	/** The asleep network's probe: what the tick would do at its ends, asked and never moved. */
+	private boolean endpointsWouldMove() {
+		for (Endpoint sink : sinks) {
+			if (serve(sink, true) > 0) {
+				return true;
+			}
+		}
+		if (!lineFluid.isEmpty()) {
+			collectHungrySinks(lineFluid, probeHungry);
+			if (!probeHungry.equals(idleHungry)) {
+				return true;
+			}
+		}
+		for (Endpoint source : sources) {
+			if (fill(source, true) > 0) {
 				return true;
 			}
 		}
 		return false;
 	}
 
+	/**
+	 * How many fluid-network ticks are on THIS thread's stack right now (MOD-734). A segment whose buffer
+	 * commits while it is above zero leaves its visible state to the {@link #settleSegments() settle} at the
+	 * end of the tick; outside a tick it settles at once. Per thread, not one shared counter: the server
+	 * ticks its networks on one thread, and a tick on any other — a second server in the same JVM, a
+	 * benchmark — must neither defer nor un-defer this one's segments.
+	 */
+	private static final ThreadLocal<int[]> TICKS_IN_PROGRESS = ThreadLocal.withInitial(() -> new int[1]);
+
+	/** Whether a fluid-network tick is running on the calling thread — see {@link #TICKS_IN_PROGRESS}. */
+	public static boolean isTicking() {
+		return TICKS_IN_PROGRESS.get()[0] > 0;
+	}
+
 	/** One tick. A fluid network has no throughput counter, so the frame's telemetry slot stays at zero. */
 	@Override
 	public long tick() {
-		refreshIfDirty();
-		serveSinks();
-		propagateOneHop();
-		fillFromSources();
+		int[] ticking = TICKS_IN_PROGRESS.get();
+		ticking[0]++;
+		movedThisTick = 0;
+		try {
+			refreshIfDirty();
+			serveSinks();
+			propagateOneHop();
+			fillFromSources();
+			idle = movedThisTick == 0;
+			if (idle) {
+				idleHungry.clear();
+				idleHungry.addAll(hungrySeeds);
+			}
+		} finally {
+			ticking[0]--;
+			settleSegments();
+		}
 		return 0L;
+	}
+
+	/** Let every segment apply what its commits during this tick put off ({@link FluidPipeNode#settle}). */
+	private void settleSegments() {
+		for (int i = 0; i < topology.size(); i++) {
+			FluidPipeNode pipe = segment(i);
+			if (pipe != null) {
+				pipe.settle();
+			}
+		}
 	}
 
 	private void refreshIfDirty() {
 		if (!nodes.isDirty()) {
 			return;
 		}
+		// The flag is cleared first so that a mark made while the world is read is kept, and set again when
+		// the read throws (a foreign port's capability may, MOD-186): the topology then keeps the previous
+		// layout whole, and the next tick reads again (MOD-734 review).
 		nodes.clearDirty();
-		sources.clear();
-		sinks.clear();
-		for (BlockPos pos : pipes) {
-			FluidPipeNode pipe = pipeAt(pos);
-			if (pipe == null) {
-				continue;
-			}
-			for (Direction dir : Direction.values()) {
-				BlockPos neighbour = pos.relative(dir);
-				if (pipes.contains(neighbour) || !level.isLoaded(neighbour)) {
-					continue;
-				}
-				PipeFaceMode mode = pipe.faceMode(dir);
-				if (mode == PipeFaceMode.DISABLED) {
-					continue;
-				}
-				// MOD-662: a pipe outside this network is never an endpoint — a steam line laid against a
-				// water line would otherwise find its neighbour's buffer through the fluid lookup and
-				// trade with it. Nor is a port that serves only the other family.
-				if (level.getBlockEntity(neighbour) instanceof FluidPipeNode || !pipe.connects(dir)) {
-					continue;
-				}
-				FluidPort port = FluidLookup.get().find(level, neighbour, dir.getOpposite());
-				if (port == null) {
-					continue;
-				}
-				// NEUTRAL asks the port which way it goes, and takes the answer only when there is no
-				// question: a one-way port has a role whether or not anybody wrenched it. Ordinary tanks
-				// answer "both" and still wait for the wrench, which is right — there the direction is a
-				// decision, and guessing it would move a player's fluid the wrong way. But the reactor's
-				// parts are one-way by construction (a column drinks water and gives steam, an exhaust
-				// only takes), and making the player configure a fitting that has no second option is a
-				// step that can only be got wrong.
-				boolean extract = mode == PipeFaceMode.EXTRACT
-						|| (mode == PipeFaceMode.NEUTRAL && port.supportsExtraction()
-								&& !port.supportsInsertion());
-				boolean insert = mode == PipeFaceMode.INSERT
-						|| (mode == PipeFaceMode.NEUTRAL && port.supportsInsertion()
-								&& !port.supportsExtraction());
-				if (extract && port.supportsExtraction()) {
-					sources.add(new Endpoint(pos.immutable(), dir));
-				} else if (insert && port.supportsInsertion()) {
-					sinks.add(new Endpoint(pos.immutable(), dir));
-				}
-			}
+		try {
+			topology.rebuild(pipes, sources, sinks);
+		} catch (RuntimeException failure) {
+			nodes.markDirty();
+			throw failure;
 		}
-		// Stable order so round-robin cursors do not jump when the set is rebuilt.
-		sources.sort(STABLE_ORDER);
-		sinks.sort(STABLE_ORDER);
+		field.invalidate();
 	}
 
 	/** Push each segment's contents into any sink it feeds. */
 	private void serveSinks() {
 		for (Endpoint sink : sinks) {
-			FluidPipeNode pipe = pipeAt(sink.pipe());
-			if (pipe == null || pipe.lineBuffer().amount <= 0) {
-				continue;
-			}
-			BlockPos target = sink.pipe().relative(sink.side());
-			if (!level.isLoaded(target)) {
-				continue;
-			}
-			FluidPort port = FluidLookup.get().find(level, target, sink.side().getOpposite());
-			if (port == null || !port.supportsInsertion()) {
-				continue;
-			}
-			moveFluid(pipe.lineBuffer(), port, pipe.lineBuffer().fluid, pipe.lineBuffer().amount);
+			serve(sink, false);
 		}
+	}
+
+	/** Push the sink segment's contents into its consumer — or, {@code simulate}d, ask how much would go. */
+	private long serve(Endpoint sink, boolean simulate) {
+		FluidPipeNode pipe = segment(sink.segment());
+		if (pipe == null || pipe.lineBuffer().amount <= 0) {
+			return 0;
+		}
+		BlockPos target = sink.neighbour();
+		if (!level.isLoaded(target)) {
+			return 0;
+		}
+		FluidPort port = FluidLookup.get().find(level, target, sink.side().getOpposite());
+		if (port == null || !port.supportsInsertion()) {
+			return 0;
+		}
+		return move(pipe.lineBuffer(), port, pipe.lineBuffer().fluid, pipe.lineBuffer().amount, simulate);
 	}
 
 	/**
@@ -233,30 +271,26 @@ public final class FluidNetwork implements GraphNetwork<FluidNetwork, BlockPos> 
 	 * <p>With no consumer taking anything the line fills evenly, as it always did ({@link #levelOneHop}).
 	 */
 	private void propagateOneHop() {
-		DistanceField<BlockPos> distance = distanceFromHungrySinks();
-		if (distance.isEmpty()) {
+		if (!distanceFromHungrySinks()) {
 			levelOneHop();
 			return;
 		}
-		for (BlockPos pos : distance.sortByDistance(distance.distances().keySet(), false)) {
-			int d = distance.distanceOrNull(pos);
-			if (d == 0) {
-				continue;   // a sink segment empties into its consumer in serveSinks
-			}
-			FluidPipeNode from = pipeAt(pos);
+		// The sweep holds no sink segment: those empty into their consumers in serveSinks.
+		for (int index : field.sweep()) {
+			int d = field.hops(index);
+			FluidPipeNode from = segment(index);
 			if (from == null || from.lineBuffer().amount <= 0) {
 				continue;
 			}
 			FluidHolder fluid = from.lineBuffer().fluid;
-			List<FluidPipeNode> nearer = new ArrayList<>(6);
+			nearer.clear();
 			long totalRoom = 0;
-			for (Direction dir : Direction.values()) {
-				BlockPos next = pos.relative(dir);
-				Integer nd = distance.distanceOrNull(next);
-				if (nd == null || nd != d - 1 || !from.connects(dir)) {
+			for (Direction dir : FluidLineTopology.DIRECTIONS) {
+				int next = topology.neighbour(index, dir);
+				if (next == FluidLineTopology.NONE || field.hops(next) != d - 1 || !topology.joins(index, dir)) {
 					continue;
 				}
-				FluidPipeNode to = pipeAt(next);
+				FluidPipeNode to = segment(next);
 				if (to == null || (to.lineBuffer().amount > 0 && !to.lineBuffer().fluid.equals(fluid))) {
 					continue;
 				}
@@ -281,52 +315,48 @@ public final class FluidNetwork implements GraphNetwork<FluidNetwork, BlockPos> 
 	}
 
 	/**
-	 * Distance, in hops, from every segment to the nearest sink segment whose consumer accepts the
-	 * network's fluid this tick. Empty when nothing is in the line or no consumer takes anything.
+	 * Bring {@link #field} up to date: the distance, in hops, from every segment to the nearest sink segment
+	 * whose consumer accepts the network's fluid this tick. Returns {@code false} —
+	 * no field — when nothing is in the line or no consumer takes anything. The consumers are asked every
+	 * tick; the flood runs only when their answer or the topology changed.
 	 */
-	private DistanceField<BlockPos> distanceFromHungrySinks() {
-		sinkDistance.clear();
+	private boolean distanceFromHungrySinks() {
 		FluidHolder anyFluid = FluidHolder.EMPTY;
-		for (BlockPos pos : pipes) {
-			FluidPipeNode pipe = pipeAt(pos);
+		for (int i = 0; i < topology.size(); i++) {
+			FluidPipeNode pipe = segment(i);
 			if (pipe != null && pipe.lineBuffer().amount > 0) {
 				anyFluid = pipe.lineBuffer().fluid;
 				break;
 			}
 		}
+		lineFluid = anyFluid;
+		hungrySeeds.clear();
 		if (anyFluid.isEmpty()) {
-			return sinkDistance;
+			return false;
 		}
-		for (Endpoint sink : sinks) {
-			if (!sinkDistance.contains(sink.pipe()) && consumerAccepts(sink, anyFluid)) {
-				sinkDistance.seed(sink.pipe(), 0);
-			}
+		collectHungrySinks(anyFluid, hungrySeeds);
+		if (hungrySeeds.isEmpty()) {
+			return false;
 		}
-		sinkDistance.flood();
-		return sinkDistance;
+		field.update(hungrySeeds);
+		return true;
 	}
 
-	/**
-	 * The segments of this network one hop from {@code pos} that the flood has not reached yet and whose
-	 * facing side joins back, in {@link Direction} order — the graph {@link #sinkDistance} floods. Skipping a
-	 * reached segment before asking its block entity keeps the lookups the hand-written BFS made.
-	 */
-	private List<BlockPos> unreachedConnectedPipes(BlockPos pos) {
-		List<BlockPos> out = new ArrayList<>(6);
-		for (Direction dir : Direction.values()) {
-			BlockPos n = pos.relative(dir);
-			if (pipes.contains(n) && !sinkDistance.contains(n) && connects(n, dir.getOpposite())) {
-				out.add(n);
+	/** The segments of the sinks whose consumer takes {@code anyFluid} now, in sink order, each once. */
+	private void collectHungrySinks(FluidHolder anyFluid, List<BlockPos> out) {
+		out.clear();
+		for (Endpoint sink : sinks) {
+			if (!out.contains(sink.pipe()) && consumerAccepts(sink, anyFluid)) {
+				out.add(sink.pipe());
 			}
 		}
-		return out;
 	}
 
 	/** Whether the consumer behind {@code sink} would take some fluid now — asked, never moved. */
 	private boolean consumerAccepts(Endpoint sink, FluidHolder networkFluid) {
-		FluidPipeNode pipe = pipeAt(sink.pipe());
+		FluidPipeNode pipe = segment(sink.segment());
 		FluidHolder offered = pipe != null && pipe.lineBuffer().amount > 0 ? pipe.lineBuffer().fluid : networkFluid;
-		BlockPos target = sink.pipe().relative(sink.side());
+		BlockPos target = sink.neighbour();
 		if (!level.isLoaded(target)) {
 			return false;
 		}
@@ -344,22 +374,20 @@ public final class FluidNetwork implements GraphNetwork<FluidNetwork, BlockPos> 
 	 * (the gap, the {@code <= 1} threshold, the halving) lives in {@link FluidFlowMath}.
 	 */
 	private void levelOneHop() {
-		List<BlockPos> ordered = new ArrayList<>(pipes);
 		// asLong, not the translation-invariant PosOrder rule — kept deliberately (MOD-313): equalising
 		// halves the difference on every hop, so the pass converges to the same levels whatever order it
-		// visits in. All this sort owes is to be total and stable. See ItemNetwork.ENDPOINT_ORDER.
-		ordered.sort(Comparator.comparingLong(BlockPos::asLong));
-		for (BlockPos pos : ordered) {
-			FluidPipeNode from = pipeAt(pos);
+		// visits in. All this order owes is to be total and stable. See ItemNetwork.ENDPOINT_ORDER.
+		for (int index : topology.asLongOrder()) {
+			FluidPipeNode from = segment(index);
 			if (from == null || from.lineBuffer().amount <= 0) {
 				continue;
 			}
-			for (Direction dir : Direction.values()) {
-				BlockPos nextPos = pos.relative(dir);
-				if (!pipes.contains(nextPos) || !from.connects(dir)) {
+			for (Direction dir : FluidLineTopology.DIRECTIONS) {
+				int next = topology.neighbour(index, dir);
+				if (next == FluidLineTopology.NONE || !topology.joins(index, dir)) {
 					continue;
 				}
-				FluidPipeNode to = pipeAt(nextPos);
+				FluidPipeNode to = segment(next);
 				if (to == null) {
 					continue;
 				}
@@ -379,31 +407,36 @@ public final class FluidNetwork implements GraphNetwork<FluidNetwork, BlockPos> 
 	/** Pull from each source into the segment that touches it. */
 	private void fillFromSources() {
 		for (Endpoint source : sources) {
-			FluidPipeNode pipe = pipeAt(source.pipe());
-			if (pipe == null) {
-				continue;
-			}
-			long room = FluidFlowMath.room(pipe.lineBuffer().getCapacity(), pipe.lineBuffer().amount);
-			if (FluidFlowMath.noRoomLeft(room)) {
-				continue;
-			}
-			BlockPos donor = source.pipe().relative(source.side());
-			if (!level.isLoaded(donor)) {
-				continue;
-			}
-			FluidPort port = FluidLookup.get().find(level, donor, source.side().getOpposite());
-			if (port == null || !port.supportsExtraction()) {
-				continue;
-			}
-			// A segment already holding something only accepts more of the same; an empty one takes
-			// whatever the donor offers. Normalising flowing→source here keeps a line from stalling
-			// forever against a neighbour that stores the flowing variant of the same fluid.
-			FluidHolder wanted = pipe.lineBuffer().amount > 0 ? pipe.lineBuffer().fluid : normalise(port.fluid());
-			if (wanted.isEmpty()) {
-				continue;
-			}
-			moveFluid(port, pipe.lineBuffer(), wanted, room);
+			fill(source, false);
 		}
+	}
+
+	/** Pull from the source into the segment touching it — or, {@code simulate}d, ask how much would come. */
+	private long fill(Endpoint source, boolean simulate) {
+		FluidPipeNode pipe = segment(source.segment());
+		if (pipe == null) {
+			return 0;
+		}
+		long room = FluidFlowMath.room(pipe.lineBuffer().getCapacity(), pipe.lineBuffer().amount);
+		if (FluidFlowMath.noRoomLeft(room)) {
+			return 0;
+		}
+		BlockPos donor = source.neighbour();
+		if (!level.isLoaded(donor)) {
+			return 0;
+		}
+		FluidPort port = FluidLookup.get().find(level, donor, source.side().getOpposite());
+		if (port == null || !port.supportsExtraction()) {
+			return 0;
+		}
+		// A segment already holding something only accepts more of the same; an empty one takes
+		// whatever the donor offers. Normalising flowing→source here keeps a line from stalling
+		// forever against a neighbour that stores the flowing variant of the same fluid.
+		FluidHolder wanted = pipe.lineBuffer().amount > 0 ? pipe.lineBuffer().fluid : normalise(port.fluid());
+		if (wanted.isEmpty()) {
+			return 0;
+		}
+		return move(port, pipe.lineBuffer(), wanted, room, simulate);
 	}
 
 	/** Normalise a flowing fluid to its source form so identity comparisons match (MOD-151). */
@@ -417,25 +450,29 @@ public final class FluidNetwork implements GraphNetwork<FluidNetwork, BlockPos> 
 	}
 
 	private void moveFluid(FluidPort from, FluidPort to, FluidHolder fluid, long amount) {
-		if (amount <= 0 || fluid.isEmpty()) {
-			return;
-		}
-		EnergyTransactions.get().runCommitting(txn -> FluidMover.move(from, to, fluid, amount, txn));
-	}
-
-	private FluidPipeNode pipeAt(BlockPos pos) {
-		if (!level.isLoaded(pos)) {
-			return null;
-		}
-		return level.getBlockEntity(pos) instanceof FluidPipeNode pipe ? pipe : null;
+		move(from, to, fluid, amount, false);
 	}
 
 	/**
-	 * Whether the face of the segment at {@code pos} pointing in {@code dir} joins it to its neighbour — the
-	 * segment's own rule ({@link FluidPipeNode#connects}). Every caller asks about a member of {@link #pipes},
-	 * whose segment is loaded with its block entity: a segment that unloads or breaks leaves the set first.
+	 * Move up to {@code amount} in its own committed transaction and count the net result toward the
+	 * tick's "moved anything"; {@code simulate} rolls back instead and counts nothing. Net, not gross
+	 * (MOD-283): a refused move whose extraction was refunded is 0.
 	 */
-	private boolean connects(BlockPos pos, Direction dir) {
-		return level.getBlockEntity(pos) instanceof FluidPipeNode pipe && pipe.connects(dir);
+	private long move(FluidPort from, FluidPort to, FluidHolder fluid, long amount, boolean simulate) {
+		if (amount <= 0 || fluid.isEmpty()) {
+			return 0;
+		}
+		if (simulate) {
+			return EnergyTransactions.get().simulate(txn -> FluidMover.move(from, to, fluid, amount, txn));
+		}
+		long[] moved = {0};
+		EnergyTransactions.get().runCommitting(txn -> moved[0] = FluidMover.move(from, to, fluid, amount, txn));
+		movedThisTick += moved[0];
+		return moved[0];
+	}
+
+	/** The live segment at {@code index} of {@link #topology}; a stale reference marks the network dirty. */
+	private FluidPipeNode segment(int index) {
+		return topology.segment(index, markStale);
 	}
 }

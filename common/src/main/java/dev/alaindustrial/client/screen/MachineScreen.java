@@ -35,8 +35,17 @@ import net.minecraft.world.item.ItemStack;
  * drawn last on top and asked for input first — so a new overlay is a class and one entry in
  * {@link #overlays}, and none of the eight hooks names a concrete controller.
  *
- * <p>A screen with controls of its own draws them in {@link #drawUnderPanels} (below every overlay) and asks
- * {@link #frameAcceptsInput} before answering a click, a scroll or a hover.
+ * <p>A screen with controls of its own draws them in {@link #drawUnderPanels} (below every overlay) and answers
+ * a hover, a click or a scroll through {@link #controlTooltip}, {@link #controlClicked} and
+ * {@link #controlScrolled}. The base asks the overlays and {@link #frameAcceptsInput} first and calls the hook
+ * only for a point they leave free, and the three input methods it does that in are {@code final}, so a screen
+ * cannot forget the rule (MOD-762). A read-only gauge (a tank, a heat bar) answers its hover in
+ * {@link #gaugeTooltip}, which no overlay modality silences beyond the overlays' own footprints.
+ *
+ * <p>Not yet under the same guarantee: {@code mouseDragged} and {@code mouseReleased} are not final and have no
+ * hooks, and the base does not route {@code keyPressed} at all. The creative energy source's drag and release run
+ * before the overlays, and the reactor controller hands every release to its page unconditionally — harmless
+ * today (the drag starts only from a gated click; the reactor has no overlay), tracked as MOD-793.
  */
 public abstract class MachineScreen<T extends MachineMenu> extends AbstractContainerScreen<T> {
 
@@ -292,8 +301,9 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 
 	/**
 	 * Hover tooltip "X / max EU" (lang key {@code gui.alaindustrial.energy}) over the bar interior.
-	 * Mirrors the per-screen {@code isHovering(...)} block that every bar screen duplicated. Call from
-	 * an {@code extractTooltip} override after {@code super}.
+	 * Mirrors the per-screen {@code isHovering(...)} block that every bar screen duplicated. The base calls it
+	 * for {@link #energyBar()}; a screen that switches that off ({@link #energyTooltip()}) calls it from its
+	 * own tooltip hook.
 	 */
 	protected void renderEnergyTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY, EnergyBarSpec spec) {
 		if (this.isHovering(spec.barX(), spec.barBottom() - EnergyBarSpec.HEIGHT,
@@ -534,8 +544,15 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 		return true;
 	}
 
+	/**
+	 * The one order every machine screen's tooltips follow (MOD-762): an overlay's handle, then an open overlay
+	 * body, each the whole tooltip at its point; then the vanilla slot tooltip, the energy bar, this screen's own
+	 * controls ({@link #controlTooltip}, only where {@link #frameAcceptsInput} lets input through) and its
+	 * gauges ({@link #gaugeTooltip}). Final, so no screen can answer a hover before the overlays or past the
+	 * modality rule; within one frame the first tooltip set is the one shown.
+	 */
 	@Override
-	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+	protected final void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		// A handle's tooltip is the whole tooltip; an open body is modal over its footprint and shows only its
 		// own — the top body is asked first.
 		for (ScreenOverlay overlay : overlays) {
@@ -554,17 +571,42 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 		if (bar != null && energyTooltip()) {
 			renderEnergyTooltip(graphics, mouseX, mouseY, bar);
 		}
+		if (frameAcceptsInput(mouseX, mouseY)) {
+			controlTooltip(graphics, mouseX, mouseY);
+		}
+		gaugeTooltip(graphics, mouseX, mouseY);
+	}
+
+	/**
+	 * Tooltips of this screen's own controls — buttons, tabs, a slider, the zones a click answers on. Called only
+	 * for a point no overlay claimed and {@link #frameAcceptsInput} accepts, so it needs no modality check of its
+	 * own; it answers by the same rule {@link #controlClicked} does.
+	 */
+	protected void controlTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+	}
+
+	/**
+	 * Tooltips of this screen's read-only gauges (tanks, heat, charge, progress). Called for every point no
+	 * overlay claimed, whatever {@link #overlayModality} says: a gauge takes no input, and {@link #isHovering}
+	 * already goes quiet under an open overlay's footprint.
+	 */
+	protected void gaugeTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 	}
 
 	/** Suppress the machine's bar tooltips (energy/fluid) when the mouse is over an open panel. */
 	@Override
 	protected boolean isHovering(int left, int top, int w, int h, double mx, double my) {
+		return !overlayCovers(mx, my) && super.isHovering(left, top, w, h, mx, my);
+	}
+
+	/** Whether an open overlay's footprint holds the point. */
+	private boolean overlayCovers(double mx, double my) {
 		for (ScreenOverlay overlay : overlays) {
 			if (overlay.coversPoint(mx, my)) {
-				return false;
+				return true;
 			}
 		}
-		return super.isHovering(left, top, w, h, mx, my);
+		return false;
 	}
 
 	// --- Recipe-viewer exclusion (MOD-080): absolute screen rects the viewers must keep clear ---
@@ -587,8 +629,12 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 
 	// --- Input: gear, modal panel (buttons, slots, drag), click routing ---
 
+	/**
+	 * Final for the reason {@link #extractTooltip} is (MOD-762): the overlays take a click first, a screen's own
+	 * control ({@link #controlClicked}) only where {@link #frameAcceptsInput} lets it through, vanilla the rest.
+	 */
 	@Override
-	public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+	public final boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
 		// Handles first (the drawer key, the gear, the statistics tab — they never overlap), then the open
 		// bodies from the top one down: a body is modal over its footprint and takes every click there.
 		for (ScreenOverlay overlay : overlays) {
@@ -601,7 +647,36 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 				return true;
 			}
 		}
+		if (frameAcceptsInput(event.x(), event.y()) && controlClicked(event, doubleClick)) {
+			return true;
+		}
 		return super.mouseClicked(event, doubleClick);
+	}
+
+	/**
+	 * A click on this screen's own controls; true claims it. Called only after every overlay passed on it and
+	 * {@link #frameAcceptsInput} accepted the point, so it needs no modality check of its own.
+	 */
+	protected boolean controlClicked(MouseButtonEvent event, boolean doubleClick) {
+		return false;
+	}
+
+	/**
+	 * Final for the reason {@link #extractTooltip} is (MOD-762): a wheel over an open overlay's footprint, or
+	 * where {@link #frameAcceptsInput} refuses, never reaches {@link #controlScrolled}.
+	 */
+	@Override
+	public final boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+		if (!overlayCovers(mouseX, mouseY) && frameAcceptsInput(mouseX, mouseY)
+				&& controlScrolled(mouseX, mouseY, scrollX, scrollY)) {
+			return true;
+		}
+		return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
+	}
+
+	/** A wheel over this screen's own controls; true claims it. Called only for a point free of overlays. */
+	protected boolean controlScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+		return false;
 	}
 
 	@Override

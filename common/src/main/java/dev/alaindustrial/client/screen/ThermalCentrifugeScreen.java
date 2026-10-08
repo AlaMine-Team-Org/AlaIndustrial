@@ -71,8 +71,7 @@ public class ThermalCentrifugeScreen extends ProgressMachineScreen<ThermalCentri
 
 	/** Hovering the rotor gauge names it and gives the exact percentage — the bar alone reads as decoration. */
 	@Override
-	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-		super.extractTooltip(graphics, mouseX, mouseY);
+	protected void gaugeTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		if (isHovering(SPIN_X, SPIN_BOTTOM - SPIN_H, SPIN_W, SPIN_H, mouseX, mouseY)) {
 			graphics.setTooltipForNextFrame(font,
 					Component.translatable("gui.alaindustrial.thermal_centrifuge.spin",

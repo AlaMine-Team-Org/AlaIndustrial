@@ -66,6 +66,7 @@ public final class VulcanizerBlockEntity extends MachineBlockEntity
 				? Math.max(1, recipe.energy() / Config.machineEuPerTick)
 				: Config.vulcanizerDuration;
 		ProcessingCycle.Job job = cycle.job(Config.machineEuPerTick, baseDuration);
+		maxProgress = job.duration(); // read by the coasting rule below; the cycle sets the same value again
 
 		ItemStack result = ItemStack.EMPTY;
 		boolean canWork = false;
@@ -78,10 +79,11 @@ public final class VulcanizerBlockEntity extends MachineBlockEntity
 			readyExceptEnergy = heatSource.level() > 0 && recipe.hasEnough(input)
 					&& canOutput(OUTPUT_SLOT, result);
 			canWork = readyExceptEnergy && energy.getAmount() >= job.euPerTick();
-			if (canWork && !WorldHeatSources.consumeForProgress(level, pos, heatSource, overclockerCount())) {
+			// A tick Resilient Cycle runs on stored charge buys its heat too (MOD-751, as the centrifuge); with
+			// no heat the supply is not the only thing missing, so the tick must not coast either.
+			boolean runs = canWork || OperationEnergy.coasts(this, level, readyExceptEnergy);
+			if (runs && !WorldHeatSources.consumeForProgress(level, pos, heatSource, overclockerCount())) {
 				canWork = false;
-				// The heat this operation needed is gone, so the supply is no longer the only thing
-				// missing: an unpowered machine must not coast past a dead burner either.
 				readyExceptEnergy = false;
 				heatSource = HeatSource.NONE;
 			}

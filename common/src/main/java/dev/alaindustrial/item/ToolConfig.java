@@ -18,13 +18,13 @@ public final class ToolConfig {
 	/** Shielding Pouch storage capacity in weight units, same bundle math as the Battery Pouch.
 	 * 128 = two stacks of ordinary items, which is the mining trip the pouch exists for: enough for
 	 * the ore a player digs out in one run without turning into bulk uranium logistics. */
-	@Knob(section = Section.TOOLS, min = 1,
+	@Knob(section = Section.TOOLS, clientVisible = true, min = 1,
 			doc = "Shielding Pouch item-storage capacity in weight units (one ordinary item = 1).")
 	public static int shieldingPouchCapacity = 128;
 	// --- Battery Pouch (MOD-052, powered item) ---
 	/** Pouch storage capacity in weight units (vanilla-bundle math: one item weighs 64/maxStackSize).
 	 * 128 = exactly twice a vanilla bundle, ≈ two stacks of ordinary items. */
-	@Knob(section = Section.TOOLS, min = 1,
+	@Knob(section = Section.TOOLS, clientVisible = true, min = 1,
 			doc = "Battery Pouch item-storage capacity in weight units (one ordinary item = 1).")
 	public static int lvPouchCapacity = 128;
 	/** Pouch EU buffer. At the 1 EU/s passive drain this is ~33 min of carrying items — well past a
@@ -262,12 +262,12 @@ public final class ToolConfig {
 	public static int magnetInputRate = 32;
 	/** Pull radius in blocks around the carrier (a sphere — up, down and sideways). Tier 1 covers 5
 	 * blocks; the advanced grade has its own {@link #magnetAdvancedRange} (MOD-580). */
-	@Knob(section = Section.TOOLS, min = 1,
+	@Knob(section = Section.TOOLS, clientVisible = true, min = 1,
 			doc = "Electromagnet pull radius in blocks around the carrier.")
 	public static int magnetRange = 5;
 	/** EU spent per item actually pulled, each tick it is being drawn in. An idle scan (nothing in range)
 	 * is free, so the magnet is a consumable and not a free vacuum. Small next to the large buffer. */
-	@Knob(section = Section.TOOLS, min = 1,
+	@Knob(section = Section.TOOLS, clientVisible = true, min = 1,
 			doc = "EU the electromagnet spends per item pulled each scan tick (an idle scan is free).")
 	public static int magnetEuPerItem = 2;
 	/** How often (ticks) the magnet scans for and pulls nearby drops. 1 = every tick, for a smooth, fast
@@ -285,15 +285,15 @@ public final class ToolConfig {
 			doc = "Max EU/t the advanced electromagnet accepts while charging in a slot.")
 	public static int magnetAdvancedInputRate = 128;
 	/** Pull radius of the advanced magnet: 9 against the basic 5, still leaving pipes and the sorter a job. */
-	@Knob(section = Section.TOOLS, min = 1,
+	@Knob(section = Section.TOOLS, clientVisible = true, min = 1,
 			doc = "Advanced electromagnet pull radius in blocks around the carrier.")
 	public static int magnetAdvancedRange = 9;
 	/** EU per item pulled by the advanced grade. Same tariff as the basic one: reach is what you bought. */
-	@Knob(section = Section.TOOLS, min = 1,
+	@Knob(section = Section.TOOLS, clientVisible = true, min = 1,
 			doc = "EU the advanced electromagnet spends per item pulled each scan tick.")
 	public static int magnetAdvancedEuPerItem = 2;
 	/** EU per experience orb pulled; above an item on purpose, so a mob farm is not a free ride. */
-	@Knob(section = Section.TOOLS, min = 1,
+	@Knob(section = Section.TOOLS, clientVisible = true, min = 1,
 			doc = "EU the advanced electromagnet spends per experience orb pulled.")
 	public static int magnetAdvancedEuPerOrb = 4;
 	/**

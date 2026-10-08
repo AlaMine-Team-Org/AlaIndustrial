@@ -167,9 +167,7 @@ public class IncubatorScreen extends MachineScreen<IncubatorMenu> {
 	}
 
 	@Override
-	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-		super.extractTooltip(graphics, mouseX, mouseY);
-
+	protected void gaugeTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		int height = pipCount() * (PIP_SIZE + PIP_GAP) - PIP_GAP;
 		if (isHovering(PIP_X, PIP_Y, PIP_SIZE, height, mouseX, mouseY)) {
 			graphics.setTooltipForNextFrame(this.font,

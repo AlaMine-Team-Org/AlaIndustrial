@@ -128,10 +128,10 @@ public class MobWheelScreen extends MachineScreen<MobWheelMenu> {
 		ghostHint(graphics, MobWheelBlockEntity.FEED_SLOT, hint);
 	}
 
+	/** The stamina bar is a gauge like any other: no input, so no overlay modality beyond the overlays' footprints. */
 	@Override
-	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-		super.extractTooltip(graphics, mouseX, mouseY);
-		if (frameAcceptsInput(mouseX, mouseY) && this.isHovering(STAMINA_X, STAMINA_BOTTOM - EnergyBarSpec.HEIGHT,
+	protected void gaugeTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+		if (this.isHovering(STAMINA_X, STAMINA_BOTTOM - EnergyBarSpec.HEIGHT,
 				EnergyBarSpec.WIDTH, EnergyBarSpec.HEIGHT, mouseX, mouseY)) {
 			graphics.setTooltipForNextFrame(this.font,
 					Component.translatable("gui.alaindustrial.mob_wheel.stamina", this.menu.getStaminaPermille() / 10),

@@ -57,6 +57,46 @@ final class GoldenRig {
 	private long lastDrawn;
 	/** {@code EnergyNetwork.generatorSurplus}: generator injection beyond the machines' draw, last tick. */
 	private long generatorSurplus;
+	/** {@code EnergyNetwork.backupEpisode} and {@code sinkCredit}: the backup episode's ledger (MOD-756). */
+	private boolean backupEpisode;
+	private long sinkCredit;
+
+	/** The blocks around the line as the discharge plan asks for them — production's {@code decide} reads them. */
+	private final DischargePlan.Stores<BlockPos> planStores = new DischargePlan.Stores<>() {
+		@Override
+		public boolean acceptsCascade(BlockPos pos) {
+			return byPos(pos).cascade();
+		}
+
+		@Override
+		public long feedRate(BlockPos pos) {
+			return byPos(pos).feedRate();
+		}
+
+		@Override
+		public long inFlight() {
+			long inFlight = 0;
+			for (EnergyBuffer buf : buffers.values()) {
+				inFlight += buf.getAmount();
+			}
+			return inFlight;
+		}
+
+		@Override
+		public long generatorSurplus() {
+			return generatorSurplus;
+		}
+
+		@Override
+		public boolean backupEpisode() {
+			return backupEpisode;
+		}
+
+		@Override
+		public long sinkCredit() {
+			return sinkCredit;
+		}
+	};
 
 	GoldenRig(String name) {
 		this.name = name;
@@ -275,19 +315,10 @@ final class GoldenRig {
 				machineDemand += room;
 			}
 		}
-		long backup = DischargePlan.backupBudget(machineDemand, genSupply);
-		Map<BlockPos, Long> cascade = new LinkedHashMap<>();
-		if (backup == 0 && !stores.isEmpty() && !sinks.isEmpty()) {
-			cascade = cascadeAllowances(stores, sinks);
-		}
-		Map<BlockPos, Long> feed = new LinkedHashMap<>();
-		if (backup == 0 && cascade.isEmpty() && !stores.isEmpty() && !sinks.isEmpty()) {
-			feed = feedAllowances(stores, sinks);
-		}
-		// Which sinks sit the tick out, and which of them draw the generators' surplus apart, is production's
-		// own rule, not a copy of it (MOD-731).
-		DischargePlan<BlockPos> plan = new DischargePlan<>(backup, cascade, feed,
-				cascade.isEmpty() ? 0 : generatorSurplus);
+		// Which channel opens, which sinks sit the tick out and which of them draw apart: production's own
+		// DischargePlan.decide over this rig's stores, not a copy of it.
+		DischargePlan<BlockPos> plan = DischargePlan.decide(machineDemand, genSupply, stores, sinks, planStores,
+				CABLE_BUFFER, PACKET_CAP, FEED_RESERVE);
 		List<EnergyLineDistributor.LiveConsumer<BlockPos>> surplusTakers = storePositions.isEmpty()
 				? List.of() : plan.setAside(sinks, storePositions, pos -> byPos(pos).cascade());
 		Set<BlockPos> nowSinks = new LinkedHashSet<>();
@@ -309,65 +340,20 @@ final class GoldenRig {
 		lastMoved = kernel.serveConsumersFromLine(machines, PACKET_CAP, LOSS, txn, cursor);
 		long machinesDrew = kernel.lastServeDrawn();
 		lastMoved += kernel.serveConsumersFromLine(surplusTakers, PACKET_CAP, LOSS, txn, cursor,
-				plan.surplusBudget()) + kernel.serveConsumersFromLine(sinks, PACKET_CAP, LOSS, txn, cursor);
+				plan.surplusBudget());
+		long apartDrew = kernel.lastServeDrawn();
+		lastMoved += kernel.serveConsumersFromLine(sinks, PACKET_CAP, LOSS, txn, cursor);
 		lastDrawn = kernel.chargeAndPropagateLine(generators, stores, plan, PACKET_CAP, txn, cursor);
 		generatorSurplus = Math.max(0, kernel.generatorDrawn() - machinesDrew);
+		backupEpisode = plan.cascadeAllowances().isEmpty() && plan.feedAllowances().isEmpty()
+				&& (backupEpisode || plan.backupBudget() > 0);
+		sinkCredit = backupEpisode ? Math.min(cables.size() * CABLE_BUFFER,
+				sinkCredit + kernel.generatorDrawn() - machinesDrew - apartDrew) : 0;
 		cursor = (cursor + 1) & Integer.MAX_VALUE;
 	}
 
 	private End byPos(BlockPos pos) {
 		return endAt(pos);
-	}
-
-	private Map<BlockPos, Long> cascadeAllowances(List<EnergyLineDistributor.LiveProducer<BlockPos>> donors,
-			List<EnergyLineDistributor.LiveConsumer<BlockPos>> sinks) {
-		Map<BlockPos, Long> out = new LinkedHashMap<>();
-		long inFlight = 0;
-		for (EnergyBuffer buf : buffers.values()) {
-			inFlight += buf.getAmount();
-		}
-		for (EnergyLineDistributor.LiveProducer<BlockPos> donor : donors) {
-			if (!byPos(donor.pos()).cascade()) {
-				continue;
-			}
-			long best = 0;
-			for (EnergyLineDistributor.LiveConsumer<BlockPos> sink : sinks) {
-				if (sink.pos().equals(donor.pos()) || !byPos(sink.pos()).cascade()) {
-					continue;
-				}
-				long sinkCapacity = sink.storage().getCapacity();
-				long sinkAmount = Math.min(sinkCapacity, sink.storage().getAmount() + inFlight);
-				best = Math.max(best, CascadeShare.allowance(donor.storage().getAmount(),
-						donor.storage().getCapacity(), sinkAmount, sinkCapacity, CABLE_BUFFER, PACKET_CAP));
-			}
-			if (best > 0) {
-				out.put(donor.pos(), best);
-			}
-		}
-		return out;
-	}
-
-	private Map<BlockPos, Long> feedAllowances(List<EnergyLineDistributor.LiveProducer<BlockPos>> donors,
-			List<EnergyLineDistributor.LiveConsumer<BlockPos>> sinks) {
-		Map<BlockPos, Long> out = new LinkedHashMap<>();
-		for (EnergyLineDistributor.LiveProducer<BlockPos> donor : donors) {
-			if (byPos(donor.pos()).feedRate() > 0) {
-				continue;
-			}
-			long best = 0;
-			for (EnergyLineDistributor.LiveConsumer<BlockPos> sink : sinks) {
-				long rate = byPos(sink.pos()).feedRate();
-				if (sink.pos().equals(donor.pos()) || rate <= 0) {
-					continue;
-				}
-				best = Math.max(best, StorageFeedShare.feedAllowance(donor.storage().getAmount(),
-						donor.storage().getCapacity(), FEED_RESERVE, sink.room(), rate, PACKET_CAP));
-			}
-			if (best > 0) {
-				out.put(donor.pos(), best);
-			}
-		}
-		return out;
 	}
 
 	/** One golden line: every cable in geometric order, then every endpoint, then the tick's two totals. */

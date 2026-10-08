@@ -50,7 +50,8 @@ public class ItemPipeBlockItem extends BlockItem {
 					.withStyle(ChatFormatting.DARK_GRAY));
 			return;
 		}
-		int batch = Math.max(1, tier().itemsPerTransfer());
+		int batch = Math.max(1, tier().itemsPerTransfer(ServerBalance.itemPipeItemsPerTransfer(),
+				ServerBalance.itemPipeAdvancedItemsPerTransfer()));
 		int interval = Math.max(1, ServerBalance.itemPipeTransferIntervalTicks());
 		// Throughput as items per second, one decimal: 2 items / 20 ticks reads as "2.0/s". Computed from
 		// the live config so a retuned server is described truthfully.

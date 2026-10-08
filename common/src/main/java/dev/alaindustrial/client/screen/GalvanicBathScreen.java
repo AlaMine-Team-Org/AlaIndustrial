@@ -103,8 +103,7 @@ public class GalvanicBathScreen extends MachineScreen<GalvanicBathMenu> {
 	}
 
 	@Override
-	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-		super.extractTooltip(graphics, mouseX, mouseY);
+	protected void gaugeTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		// Tank gauge — fluid name + level in millibuckets. Hovering an EMPTY tank still explains itself,
 		// because "why is nothing happening" is most often "there is no water in it".
 		if (this.isHovering(FLUID_X, FLUID_BOTTOM - FLUID_H, FLUID_W, FLUID_H, mouseX, mouseY)) {

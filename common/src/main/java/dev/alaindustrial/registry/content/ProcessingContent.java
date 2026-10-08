@@ -12,6 +12,7 @@ import static dev.alaindustrial.registry.content.TabEntries.show;
 
 import dev.alaindustrial.block.AlloySmelterBlock;
 import dev.alaindustrial.block.AssemblerBlock;
+import dev.alaindustrial.block.BlockBreakerBlock;
 import dev.alaindustrial.block.CanningMachineBlock;
 import dev.alaindustrial.block.ComponentRepairBenchBlock;
 import dev.alaindustrial.block.CompressorBlock;
@@ -32,6 +33,7 @@ import dev.alaindustrial.block.VulcanizerBlock;
 import dev.alaindustrial.block.WorkstationBlock;
 import dev.alaindustrial.block.entity.AlloySmelterBlockEntity;
 import dev.alaindustrial.block.entity.AssemblerBlockEntity;
+import dev.alaindustrial.block.entity.BlockBreakerBlockEntity;
 import dev.alaindustrial.block.entity.CanningMachineBlockEntity;
 import dev.alaindustrial.block.entity.ComponentRepairBenchBlockEntity;
 import dev.alaindustrial.block.entity.CompressorBlockEntity;
@@ -53,6 +55,7 @@ import dev.alaindustrial.block.entity.WorkstationBlockEntity;
 import dev.alaindustrial.compat.LineBlockProps;
 import dev.alaindustrial.menu.AlloySmelterMenu;
 import dev.alaindustrial.menu.AssemblerMenu;
+import dev.alaindustrial.menu.BlockBreakerMenu;
 import dev.alaindustrial.menu.CanningMachineMenu;
 import dev.alaindustrial.menu.ComponentRepairBenchMenu;
 import dev.alaindustrial.menu.CompressorMenu;
@@ -187,6 +190,12 @@ public final class ProcessingContent {
 			machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)), s -> ModContent.UPGRADE_TABLE = s);
 
 	/** This domain's blocks, in declaration order — collected since {@code beginBlocks()} above. */
+	// MOD-787 — breaks the block in front of it with the tool in its slot; faces any of six ways.
+	public static final BlockDef<BlockBreakerBlock> BLOCK_BREAKER =
+			block("block_breaker", BlockBreakerBlock::new,
+					machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)),
+					s -> ModContent.BLOCK_BREAKER = s);
+
 	private static final List<BlockDef<?>> BLOCKS = endBlocks();
 
 	private static final List<ItemDef> ITEMS = List.of(
@@ -212,7 +221,9 @@ public final class ProcessingContent {
 			// MOD-145 — the Recycler, its three grades of slag, its ash and the three blade grades.
 			blockItem("recycler", s -> ModContent.RECYCLER_ITEM = s),
 			// MOD-482 — appended at the very tail; the order of this list is the registration order.
-			blockItem("upgrade_table", s -> ModContent.UPGRADE_TABLE_ITEM = s));
+			blockItem("upgrade_table", s -> ModContent.UPGRADE_TABLE_ITEM = s),
+			// MOD-787 — appended at the very tail; the order of this list is the registration order.
+			blockItem("block_breaker", s -> ModContent.BLOCK_BREAKER_ITEM = s));
 
 	private static final List<BlockEntityDef<?>> BLOCK_ENTITIES = List.of(
 			blockEntity("macerator", MaceratorBlockEntity.class, MaceratorBlockEntity::new,
@@ -260,7 +271,10 @@ public final class ProcessingContent {
 			// MOD-656: the workbench's memory of the last recipe crafted on it.
 			blockEntity("industrial_workbench", IndustrialWorkbenchBlockEntity.class,
 					IndustrialWorkbenchBlockEntity::new,
-					s -> ModContent.INDUSTRIAL_WORKBENCH_BE = s, INDUSTRIAL_WORKBENCH));
+					s -> ModContent.INDUSTRIAL_WORKBENCH_BE = s, INDUSTRIAL_WORKBENCH),
+			blockEntity("block_breaker", BlockBreakerBlockEntity.class,
+					BlockBreakerBlockEntity::new,
+					s -> ModContent.BLOCK_BREAKER_BE = s, BLOCK_BREAKER));
 
 	private static final List<MenuDef<?>> MENUS = List.of(
 			menu("macerator", MaceratorMenu::new, s -> ModContent.MACERATOR_MENU = s),
@@ -284,7 +298,9 @@ public final class ProcessingContent {
 			menu("galvanic_bath", GalvanicBathMenu::new, s -> ModContent.GALVANIC_BATH_MENU = s),
 			menu("teleporter_station", TeleporterStationMenu::new, s -> ModContent.TELEPORTER_STATION_MENU = s),
 			// MOD-424 — the thermal centrifuge: rotor gauge + status line over the usual two slots.
-			menu("thermal_centrifuge", ThermalCentrifugeMenu::new, s -> ModContent.THERMAL_CENTRIFUGE_MENU = s));
+			menu("thermal_centrifuge", ThermalCentrifugeMenu::new, s -> ModContent.THERMAL_CENTRIFUGE_MENU = s),
+			// MOD-787 — the block breaker: tool slot, break progress, redstone-mode button.
+			menu("block_breaker", BlockBreakerMenu::new, s -> ModContent.BLOCK_BREAKER_MENU = s));
 
 	/** Everything this domain declares; {@link dev.alaindustrial.registry.ContentManifest#DOMAINS} joins it in. */
 	public static final Domain DOMAIN = new Domain("Processing", BLOCKS, ITEMS, BLOCK_ENTITIES, MENUS);
@@ -314,9 +330,11 @@ public final class ProcessingContent {
 		show(out, ModContent.ELECTRIC_HEATER_ITEM);
 		// MOD-275 - the first MV machine, last of the cubes because it sits a tier above the rest.
 		show(out, ModContent.ASSEMBLER_ITEM);
+		// MOD-787 - works on the world rather than on an item; a shaped model, so with the shaped ones.
 		// --- shaped models close the group (MOD-574); the family itself stays here, one row down.
 		// MOD-424 - the centrifuge stands ON the heater above and does nothing without one.
 		show(out, ModContent.THERMAL_CENTRIFUGE_ITEM);
+		show(out, ModContent.BLOCK_BREAKER_ITEM);
 	}
 
 	/**

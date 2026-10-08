@@ -17,7 +17,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
  *
  * <p><b>Why it still costs almost nothing.</b> It rides {@code MachineMenu.broadcastChanges()}, which
  * vanilla already calls once per tick for an OPEN menu and never for a closed one, throttled there to
- * one packet every {@code STATS_SYNC_INTERVAL_TICKS}. No block scans the player list, and a machine
+ * one packet every {@code StatsWindow.INTERVAL_TICKS}. No block scans the player list, and a machine
  * nobody is watching produces no traffic at all.
  *
  * <p>{@code containerId} guards against the packet landing on the wrong screen: a player who closes one
@@ -33,8 +33,10 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
  * @param energyGenerated EU the block produced itself, lifetime (exceeds {@code energyOut} by whatever a
  *     full buffer discarded — the use-it-or-lose-it loss worth showing the player)
  * @param energyConsumed EU the block spent on its own work, lifetime
- * @param euRate average EU/t over the window just elapsed, not the instantaneous tick — a generator that
- *     delivers in bursts is unreadable otherwise
+ * @param euOverWindow EU produced plus consumed over the window just elapsed ({@code StatsWindow}), not an
+ *     instantaneous tick — a generator that delivers in bursts is unreadable otherwise. Raw EU rather than
+ *     EU/t, so an average under 1 EU/t survives the trip: the client divides by the window (MOD-722)
+ * @param windowTicks game ticks the window really spanned — the divisor, so a late or early packet stays honest
  * @param peakEuRate highest per-tick rate since the block entity loaded (session, never persisted)
  * @param connections direct-face connections, sources in the low 16 bits and sinks in the next 16
  * @param itemsProcessed completed operations, lifetime (carried now, drawn when the machines task lands)
@@ -46,7 +48,8 @@ public record MachineStatsPayload(
 		long energyOut,
 		long energyGenerated,
 		long energyConsumed,
-		int euRate,
+		long euOverWindow,
+		int windowTicks,
 		int peakEuRate,
 		int connections,
 		long itemsProcessed) implements CustomPacketPayload {
@@ -60,7 +63,8 @@ public record MachineStatsPayload(
 			ByteBufCodecs.VAR_LONG, MachineStatsPayload::energyOut,
 			ByteBufCodecs.VAR_LONG, MachineStatsPayload::energyGenerated,
 			ByteBufCodecs.VAR_LONG, MachineStatsPayload::energyConsumed,
-			ByteBufCodecs.VAR_INT, MachineStatsPayload::euRate,
+			ByteBufCodecs.VAR_LONG, MachineStatsPayload::euOverWindow,
+			ByteBufCodecs.VAR_INT, MachineStatsPayload::windowTicks,
 			ByteBufCodecs.VAR_INT, MachineStatsPayload::peakEuRate,
 			ByteBufCodecs.VAR_INT, MachineStatsPayload::connections,
 			ByteBufCodecs.VAR_LONG, MachineStatsPayload::itemsProcessed,

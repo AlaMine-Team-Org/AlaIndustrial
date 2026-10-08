@@ -76,7 +76,7 @@ public final class Config {
 	public static int pumpLitHoldTicks = 60;
 
 	/** Portable passive tank capacity (MOD-111): 8 buckets, intentionally below machine tanks (10). */
-	@Knob(section = Section.LOGISTICS, min = 1,
+	@Knob(section = Section.LOGISTICS, clientVisible = true, min = 1,
 			doc = "Portable fluid tank capacity in mB (1000 mB = 1 bucket). Applies to newly placed tanks.")
 	public static int fluidTankCapacity = 8000;
 
@@ -84,7 +84,7 @@ public final class Config {
 	 * Advanced portable tank capacity (MOD-612): 16 buckets, twice the basic — the mod's x2 logistics step,
 	 * and just above a machine tank on purpose.
 	 */
-	@Knob(section = Section.LOGISTICS, min = 1,
+	@Knob(section = Section.LOGISTICS, clientVisible = true, min = 1,
 			doc = "Advanced fluid tank capacity in mB (1000 mB = 1 bucket). Applies to newly placed tanks.")
 	public static int fluidTankAdvancedCapacity = 16000;
 
@@ -217,7 +217,7 @@ public final class Config {
 	 * Per-cable live EU buffer, which is also the segment throughput (MOD-070, ADR-001). Tiny so cables are
 	 * never storage; separate from the tier's machine capacity. New cables only.
 	 */
-	@Knob(section = Section.CABLES, min = 1,
+	@Knob(section = Section.CABLES, clientVisible = true, min = 1,
 			doc = "Per-cable working EU buffer — the live transport-segment buffer (MOD-070). Tiny by design so a wall of cables can't be used as bulk storage. Applies to newly placed cables.")
 	public static int cableBuffer = 12;
 
@@ -226,7 +226,7 @@ public final class Config {
 	 * Items a pipe network moves per transfer, every {@link #itemPipeTransferIntervalTicks}: 2 items/s, the
 	 * passive starter tier (MOD-104). Grades step x2 (MOD-581).
 	 */
-	@Knob(section = Section.LOGISTICS, min = 1,
+	@Knob(section = Section.LOGISTICS, clientVisible = true, min = 1,
 			doc = "Items an item-pipe network moves per transfer. With the interval below this sets throughput.")
 	public static int itemPipeItemsPerTransfer = 2;
 
@@ -242,7 +242,7 @@ public final class Config {
 	 * Items an ADVANCED pipe network moves per transfer (MOD-581): 4/s. A network runs at its WEAKEST pipe,
 	 * hence the visibly thicker pipe.
 	 */
-	@Knob(section = Section.LOGISTICS, min = 1,
+	@Knob(section = Section.LOGISTICS, clientVisible = true, min = 1,
 			doc = "Items an ADVANCED item-pipe network moves per transfer. A network runs at its weakest pipe.")
 	public static int itemPipeAdvancedItemsPerTransfer = 4;
 
@@ -259,7 +259,7 @@ public final class Config {
 	 * Working buffer, and throughput, of one ADVANCED fluid-pipe segment (MOD-675): 100 mB/t. A line flows at
 	 * its thinnest segment by physics (MOD-677), hence the thicker pipe.
 	 */
-	@Knob(section = Section.LOGISTICS, min = 1,
+	@Knob(section = Section.LOGISTICS, clientVisible = true, min = 1,
 			doc = "Per-segment buffer of the ADVANCED fluid pipe in mB — also its throughput. An ordinary pipe in the line slows it. Applies to newly placed pipes.")
 	public static int fluidPipeAdvancedSegmentBuffer = 100;
 
@@ -378,7 +378,7 @@ public final class Config {
 	 * Ceramic plates per carbon briquette in the quench press (MOD-590/594), the only way to break one; four
 	 * plates make a block.
 	 */
-	@Knob(section = Section.MACHINES, min = 1,
+	@Knob(section = Section.MACHINES, clientVisible = true, min = 1,
 			doc = "Plates one carbon briquette yields when a piston fires into the water it floats in.")
 	public static int ceramicPlatesFromPress = 4;
 	@Knob(section = Section.MACHINES, clientVisible = true, min = 1,
@@ -852,6 +852,21 @@ public final class Config {
 	@Knob(section = Section.MACHINES, min = 1,
 			doc = "Mob Repeller HV field upkeep in EU per tick.")
 	public static int mobRepellerEuPerTickHv = 64;
+	// --- Block Breaker (MOD-787) ---
+	/** EU per tick while the block breaker is breaking; nothing while it waits. A stone block under a
+	 * stone pickaxe takes 12 ticks, so ~96 EU a block — twice the electric drill's price, the cost of
+	 * not swinging the tool yourself. */
+	@Knob(section = Section.MACHINES, clientVisible = true, min = 1,
+			doc = "Block Breaker EU per tick while breaking (nothing while idle).")
+	public static int blockBreakerEuPerTick = 8;
+	/** Internal EU buffer of the block breaker. */
+	@Knob(section = Section.MACHINES, clientVisible = true, min = 1,
+			doc = "Block Breaker internal EU buffer.")
+	public static int blockBreakerBuffer = 800;
+	/** Pause after each broken block before the next one starts. */
+	@Knob(section = Section.MACHINES, min = 0,
+			doc = "Block Breaker pause in ticks after each broken block.")
+	public static int blockBreakerPauseTicks = 10;
 	/** Internal EU buffer of the LV block. */
 	@Knob(section = Section.MACHINES, clientVisible = true, min = 1,
 			doc = "Mob Repeller LV internal EU buffer.")
@@ -1102,15 +1117,15 @@ public final class Config {
 	 * Max packet voltage and per-tick transfer cap of the LV tier, the universal ceiling beside per-block
 	 * buffers; read live by {@link dev.alaindustrial.core.energy.EnergyTier#maxVoltage()}.
 	 */
-	@Knob(section = Section.NETWORK, min = 1,
+	@Knob(section = Section.NETWORK, clientVisible = true, min = 1,
 			doc = "Max packet voltage (EU) and per-tick transfer cap for the LV tier (cable, generator, machine, storage). EnergyTier.LV reads it live.")
 	public static int tierLvVoltage = 32;
 	/** Max packet voltage for the MV tier. 4× LV by convention. EnergyTier.MV reads it live. */
-	@Knob(section = Section.NETWORK, min = 1,
+	@Knob(section = Section.NETWORK, clientVisible = true, min = 1,
 			doc = "Max packet voltage for the MV tier (4x LV by convention). EnergyTier.MV reads it live.")
 	public static int tierMvVoltage = 128;
 	/** Max packet voltage for the HV tier. 4× MV by convention. EnergyTier.HV reads it live. */
-	@Knob(section = Section.NETWORK, min = 1,
+	@Knob(section = Section.NETWORK, clientVisible = true, min = 1,
 			doc = "Max packet voltage for the HV tier (4x MV by convention). EnergyTier.HV reads it live.")
 	public static int tierHvVoltage = 512;
 	/** Default internal buffer capacity for LV machines that do not override it. EnergyTier.LV reads it live. */
@@ -1131,7 +1146,7 @@ public final class Config {
 	 * Fraction of throughput lost per copper cable block, compounding with distance and capped so a positive
 	 * flow always delivers at least 1 EU (MOD-073, PERFORMANCE.md): 32 EU loses 5 over 10 cables.
 	 */
-	@Knob(section = Section.CABLES, min = 0.0, floorTo = 0.0,
+	@Knob(section = Section.CABLES, clientVisible = true, min = 0.0, floorTo = 0.0,
 			doc = "Fraction of throughput attenuated per copper cable block (0.02 = 2% of the remaining flow per block).")
 	public static double copperCableLossPerBlock = 0.02;
 	/** Master safety switch for contact damage and its particles/sound on energized bare cables. */
@@ -1164,7 +1179,7 @@ public final class Config {
 	 * Multiplier on the bare grade's loss when the whole governing grade is insulated: 0.5 halves loss without
 	 * changing tier, cap or throughput (MOD-259).
 	 */
-	@Knob(section = Section.CABLES, min = 0.0, floorTo = 0.0,
+	@Knob(section = Section.CABLES, clientVisible = true, min = 0.0, floorTo = 0.0,
 			doc = "Multiplier applied to bare-cable attenuation for rubber-insulated tin/copper cables (0.5 = half the loss; throughput and packet cap are unchanged).")
 	public static double insulationLossMultiplier = 0.5;
 
@@ -1212,7 +1227,7 @@ public final class Config {
 	 * Tin cable segment buffer, which is its throughput (MOD-070): 8 EU/t, narrower than copper, above a solar
 	 * farm and below a fuel generator's burst.
 	 */
-	@Knob(section = Section.CABLES, min = 1,
+	@Knob(section = Section.CABLES, clientVisible = true, min = 1,
 			doc = "Per-segment working EU buffer of a tin cable = its real throughput (8 EU/t, narrower than copper's 12).")
 	public static int tinCableBuffer = 8;
 	/**
@@ -1226,35 +1241,35 @@ public final class Config {
 	 * Fraction lost per tin cable block: about 3.3x gentler than copper, tin's whole point; a 1 EU trickle
 	 * loses nothing.
 	 */
-	@Knob(section = Section.CABLES, min = 0.0, floorTo = 0.0,
+	@Knob(section = Section.CABLES, clientVisible = true, min = 0.0, floorTo = 0.0,
 			doc = "Fraction of throughput attenuated per tin cable block (0.006 = 0.6% of the remaining flow per block; a 1 EU/t solar trickle floors to zero loss).")
 	public static double tinCableLossPerBlock = 0.006;
 	/**
 	 * Gold cable segment buffer, its throughput: 4x copper, mirroring the LV -> MV step. Gold's craft cost,
 	 * not its buffer, keeps a grid from being storage.
 	 */
-	@Knob(section = Section.CABLES, min = 1,
+	@Knob(section = Section.CABLES, clientVisible = true, min = 1,
 			doc = "Per-segment working EU buffer of a gold (MV) cable = its real throughput (48 EU/t, 4x copper).")
 	public static int goldCableBuffer = 48;
 	/**
 	 * Fraction lost per gold cable block: worse than copper by design, gold buys throughput, not distance. Its
 	 * packet cap is {@link #tierMvVoltage}.
 	 */
-	@Knob(section = Section.CABLES, min = 0.0, floorTo = 0.0,
+	@Knob(section = Section.CABLES, clientVisible = true, min = 0.0, floorTo = 0.0,
 			doc = "Fraction of throughput attenuated per gold cable block (0.03 = 3% of the remaining flow per block; worse than copper by design - gold buys throughput, not distance).")
 	public static double goldCableLossPerBlock = 0.03;
 	/**
 	 * Electrum cable segment buffer, its throughput: 4x gold, the ladder's next rung; its cap is {@link
 	 * #tierHvVoltage}. The craft cost keeps a grid from being storage.
 	 */
-	@Knob(section = Section.CABLES, min = 1,
+	@Knob(section = Section.CABLES, clientVisible = true, min = 1,
 			doc = "Per-segment working EU buffer of an electrum (HV) cable = its real throughput (192 EU/t, 4x gold).")
 	public static int electrumCableBuffer = 192;
 	/**
 	 * Fraction lost per electrum cable block, the lowest in the mod: electrum wins every axis and pays in
 	 * craft cost. Halved again when insulated.
 	 */
-	@Knob(section = Section.CABLES, min = 0.0, floorTo = 0.0,
+	@Knob(section = Section.CABLES, clientVisible = true, min = 0.0, floorTo = 0.0,
 			doc = "Fraction of throughput attenuated per electrum cable block (0.005 = 0.5% of the remaining flow per block; the lowest in the mod - electrum pays in craft cost, not in distance).")
 	public static double electrumCableLossPerBlock = 0.005;
 

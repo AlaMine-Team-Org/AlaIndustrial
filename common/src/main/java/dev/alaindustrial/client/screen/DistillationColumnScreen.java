@@ -204,14 +204,13 @@ public class DistillationColumnScreen extends MachineScreen<DistillationColumnMe
 	}
 
 	@Override
-	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-		super.extractTooltip(graphics, mouseX, mouseY);
-		gaugeTooltip(graphics, mouseX, mouseY, this.menu.getOilFluidId(), this.menu.getOilPermille(),
+	protected void gaugeTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+		tankTooltip(graphics, mouseX, mouseY, this.menu.getOilFluidId(), this.menu.getOilPermille(),
 				OIL_X, OIL_BOTTOM, OIL_W, OIL_H, "gui.alaindustrial.distillation_column.tank.oil");
-		gaugeTooltip(graphics, mouseX, mouseY, this.menu.getDieselFluidId(), this.menu.getDieselPermille(),
+		tankTooltip(graphics, mouseX, mouseY, this.menu.getDieselFluidId(), this.menu.getDieselPermille(),
 				FRACTION_X, DIESEL_BOTTOM, FRACTION_W, FRACTION_H,
 				"gui.alaindustrial.distillation_column.tank.diesel");
-		gaugeTooltip(graphics, mouseX, mouseY, this.menu.getFuelOilFluidId(), this.menu.getFuelOilPermille(),
+		tankTooltip(graphics, mouseX, mouseY, this.menu.getFuelOilFluidId(), this.menu.getFuelOilPermille(),
 				FRACTION_X, FUEL_OIL_BOTTOM, FRACTION_W, FRACTION_H,
 				"gui.alaindustrial.distillation_column.tank.fuel_oil");
 		// Tower schematic — heat over the base storey, fouling over its gauge.
@@ -241,7 +240,7 @@ public class DistillationColumnScreen extends MachineScreen<DistillationColumnMe
 	}
 
 	/** Hover tooltip for one gauge: the tank's role, its fluid's name, level / capacity in mB. */
-	private void gaugeTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY,
+	private void tankTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY,
 			int fluidId, int permille, int gx, int gBottom, int w, int h, String roleKey) {
 		if (!this.isHovering(gx, gBottom - h, w, h, mouseX, mouseY)) {
 			return;

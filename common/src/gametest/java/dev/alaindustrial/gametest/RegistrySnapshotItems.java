@@ -56,6 +56,7 @@ final class RegistrySnapshotItems {
 			"item birch_iron_chest_boat class=BoatItem stack=1 damage=0 rarity=COMMON fireproof=no",
 			"item birch_shielding_chest_boat class=BoatItem stack=1 damage=0 rarity=COMMON fireproof=no",
 			"item birch_silver_chest_boat class=BoatItem stack=1 damage=0 rarity=COMMON fireproof=no",
+			"item block_breaker class=BlockItem stack=64 damage=0 rarity=COMMON fireproof=no",
 			"item broken_engraved_plate_b class=BlockItem stack=64 damage=0 rarity=COMMON fireproof=no",
 			"item broken_engraved_plate_d class=BlockItem stack=64 damage=0 rarity=COMMON fireproof=no",
 			"item broken_engraved_plate_k class=BlockItem stack=64 damage=0 rarity=COMMON fireproof=no",

@@ -100,7 +100,7 @@ public final class ChestBoatVariants {
 		public ModChestBoat create(EntityType<? extends ModChestBoat> type, Level level) {
 			String id = id();
 			return new ModChestBoat(type, level, () -> BuiltInRegistries.ITEM.getValue(Industrialization.id(id)),
-					chest.size, chest.menu, wood.raft);
+					chest.size, chest.menu, wood.raft, chest == Chest.SHIELDING);
 		}
 	}
 

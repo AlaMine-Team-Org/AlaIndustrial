@@ -1,8 +1,6 @@
 package dev.alaindustrial.item.tool;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.item.ToolConfig;
-import java.util.function.IntSupplier;
 
 /**
  * The two grades of Electromagnet (MOD-580) — everything that differs between them, in one place.
@@ -12,19 +10,15 @@ import java.util.function.IntSupplier;
  * share the first one's numbers or grow an {@code if} at every read. The same shape as
  * {@link dev.alaindustrial.block.entity.BladeTier} (MOD-145), for the same reason.
  *
- * <p>The values are {@link IntSupplier}s rather than ints because {@code Config} is mutable at
- * runtime — a reloaded config must reach a tier that was resolved at class-init, or the knobs would
- * silently stop working for magnets.
+ * <p>The values are read live rather than stored because {@code Config} is mutable at runtime — a
+ * reloaded config must reach a tier that was resolved at class-init, or the knobs would silently stop
+ * working for magnets. The tooltip, drawn on the client, passes the server's numbers to the same
+ * {@link #pick} (MOD-761): one picking, two sources.
  */
 public enum MagnetTier {
 
 	/** The original (MOD-132): five blocks, items only. */
-	BASIC(() -> ToolConfig.magnetRange,
-			() -> ToolConfig.magnetBuffer,
-			() -> ToolConfig.magnetInputRate,
-			() -> ToolConfig.magnetEuPerItem,
-			() -> 0,
-			1),
+	BASIC(1),
 
 	/**
 	 * The second grade (MOD-580): reaches further and picks up experience.
@@ -33,53 +27,51 @@ public enum MagnetTier {
 	 * priced separately from items: an orb is worth more to the player than a cobblestone, and a mob
 	 * farm should not be a free ride.
 	 */
-	ADVANCED(() -> ToolConfig.magnetAdvancedRange,
-			() -> ToolConfig.magnetAdvancedBuffer,
-			() -> ToolConfig.magnetAdvancedInputRate,
-			() -> ToolConfig.magnetAdvancedEuPerItem,
-			() -> ToolConfig.magnetAdvancedEuPerOrb,
-			3);
+	ADVANCED(3);
 
-	private final IntSupplier range;
-	private final IntSupplier buffer;
-	private final IntSupplier inputRate;
-	private final IntSupplier euPerItem;
-	private final IntSupplier euPerOrb;
 	private final int moduleSlots;
 
-	MagnetTier(IntSupplier range, IntSupplier buffer, IntSupplier inputRate,
-			IntSupplier euPerItem, IntSupplier euPerOrb, int moduleSlots) {
-		this.range = range;
-		this.buffer = buffer;
-		this.inputRate = inputRate;
-		this.euPerItem = euPerItem;
-		this.euPerOrb = euPerOrb;
+	MagnetTier(int moduleSlots) {
 		this.moduleSlots = moduleSlots;
+	}
+
+	/**
+	 * This grade's value among the two its caller read — the one picking both sources go through: the live
+	 * knobs below, and the server's numbers the magnet's tooltip passes in from {@code ServerBalance}
+	 * (MOD-761).
+	 */
+	public int pick(int basic, int advanced) {
+		return this == BASIC ? basic : advanced;
 	}
 
 	/** Pull radius in blocks around the carrier. */
 	public int range() {
-		return range.getAsInt();
+		return pick(ToolConfig.magnetRange, ToolConfig.magnetAdvancedRange);
 	}
 
 	/** EU the magnet holds. */
 	public int buffer() {
-		return buffer.getAsInt();
+		return pick(ToolConfig.magnetBuffer, ToolConfig.magnetAdvancedBuffer);
 	}
 
 	/** Max EU/tick it accepts while charging in a slot. */
 	public int inputRate() {
-		return inputRate.getAsInt();
+		return pick(ToolConfig.magnetInputRate, ToolConfig.magnetAdvancedInputRate);
 	}
 
 	/** EU spent per item actually nudged. */
 	public int euPerItem() {
-		return euPerItem.getAsInt();
+		return pick(ToolConfig.magnetEuPerItem, ToolConfig.magnetAdvancedEuPerItem);
 	}
 
 	/** EU spent per experience orb nudged; {@code 0} means this tier does not pull experience. */
 	public int euPerOrb() {
-		return euPerOrb.getAsInt();
+		return euPerOrb(ToolConfig.magnetAdvancedEuPerOrb);
+	}
+
+	/** {@link #euPerOrb()} given the advanced grade's price its caller read: the basic grade pulls no orb. */
+	public int euPerOrb(int advanced) {
+		return pick(0, advanced);
 	}
 
 	/**

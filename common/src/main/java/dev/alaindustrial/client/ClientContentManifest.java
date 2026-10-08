@@ -19,6 +19,8 @@ import dev.alaindustrial.block.entity.SilverChestBlockEntity;
 import dev.alaindustrial.block.entity.StormWindMillBlockEntity;
 import dev.alaindustrial.block.entity.SprinklerBlockEntity;
 import dev.alaindustrial.block.entity.TeleporterBlockEntity;
+import dev.alaindustrial.block.entity.BlockBreakerBlockEntity;
+import dev.alaindustrial.client.render.BlockBreakerBlockEntityRenderer;
 import dev.alaindustrial.block.entity.ThermalCentrifugeBlockEntity;
 import dev.alaindustrial.block.entity.WaterMillBlockEntity;
 import dev.alaindustrial.block.entity.WindMillBlockEntity;
@@ -215,6 +217,10 @@ public final class ClientContentManifest {
 			// Drawn by the upper half only; the rest of the bench is chunk geometry.
 			renderer(ContentManifest.blockEntity("upgrade_table", UpgradeTableBlockEntity.class),
 					UpgradeTableBlockEntityRenderer::new),
+			// MOD-787: the moving part of the block breaker (ram, bit, jaws, pick arm or rings).
+			renderer(ContentManifest.blockEntity("block_breaker",
+					BlockBreakerBlockEntity.class),
+					BlockBreakerBlockEntityRenderer::new),
 			// MOD-763: the assembled mob wheel — frame, running wheel and gate. Drawn by the drive; every
 			// other member's formed model is empty.
 			renderer(ContentManifest.blockEntity("mob_wheel_controller", MobWheelBlockEntity.class),

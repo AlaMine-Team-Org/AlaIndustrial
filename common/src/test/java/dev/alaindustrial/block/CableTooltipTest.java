@@ -2,11 +2,14 @@ package dev.alaindustrial.block;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import dev.alaindustrial.KnobSnapshot;
+import dev.alaindustrial.client.ServerBalance;
 import dev.alaindustrial.core.energy.CableType;
 import dev.alaindustrial.core.tooltip.MachineTooltipSpec;
 import dev.alaindustrial.core.tooltip.MachineTooltipSpec.Tone;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -60,5 +63,22 @@ class CableTooltipTest {
 		assertEquals(false, copper.endsWith("0") && copper.contains("."), copper);
 		assertEquals(false, copper.endsWith("."), copper);
 		assertEquals(CableType.COPPER.lossPerBlock() * 100.0, Double.parseDouble(copper), 1e-3);
+	}
+
+	/**
+	 * MOD-761: on a dedicated server the tooltip shows the server's buffer and loss, not the player's own file —
+	 * the grade picks among the received values exactly as the network picks among {@code Config}'s.
+	 */
+	@Test
+	void theTooltipShowsTheServersNumbers() {
+		try {
+			ServerBalance.receive(KnobSnapshot.of(Map.of("goldCableBuffer", 777, "goldCableLossPerBlock", 0.25,
+					"insulationLossMultiplier", 0.2)).encode());
+			MachineTooltipSpec spec = CableTooltip.of(CableType.INSULATED_GOLD);
+			assertEquals(777L, spec.basic().get(1).argValues()[0]);
+			assertEquals("5", CableTooltip.lossPercent(CableType.INSULATED_GOLD));
+		} finally {
+			ServerBalance.reset();
+		}
 	}
 }

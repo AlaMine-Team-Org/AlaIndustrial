@@ -1,8 +1,6 @@
 package dev.alaindustrial.core.energy;
 
 import dev.alaindustrial.Config;
-import java.util.function.DoubleSupplier;
-import java.util.function.IntSupplier;
 
 /**
  * The four conductor grades, each with its rubber-insulated variant, and the balance numbers that
@@ -57,7 +55,8 @@ import java.util.function.IntSupplier;
  * <p>All numbers are read <b>live</b> from {@link Config} (same contract as
  * {@link EnergyTier#maxVoltage()}), so a server operator can retune them from
  * {@code config/alaindustrial.json} without a code change. The enum carries no compile-time copy of
- * the values on purpose — {@link Config}'s field defaults are the single source.
+ * the values on purpose — {@link Config}'s field defaults are the single source. The client's tooltip
+ * passes the server's numbers to the same picking methods instead (MOD-761).
  *
  * <p><b>Tin is not its own tier.</b> There is no sub-LV entry in {@link EnergyTier}; tin is an LV
  * cable whose packet cap is simply lower than the LV tier voltage. That is why {@link #packetCap()}
@@ -69,45 +68,41 @@ import java.util.function.IntSupplier;
  */
 public enum CableType {
 	/** Cheapest grade: narrow but nearly lossless — the solar-farm wire. */
-	TIN("tin", EnergyTier.LV, () -> Config.tinCablePacketCap, () -> Config.tinCableBuffer,
-			() -> Config.tinCableLossPerBlock, false),
+	TIN("tin", EnergyTier.LV, Conductor.TIN, false),
 	/** Rubber-insulated tin: the same narrow LV conductor with half the attenuation. */
-	INSULATED_TIN("insulated_tin", EnergyTier.LV, () -> Config.tinCablePacketCap, () -> Config.tinCableBuffer,
-			() -> Config.tinCableLossPerBlock * Config.insulationLossMultiplier, true),
+	INSULATED_TIN("insulated_tin", EnergyTier.LV, Conductor.TIN, true),
 	/** The shipped v0.1 workhorse. Its knobs keep their original Config names for save/config compat. */
-	COPPER("copper", EnergyTier.LV, () -> Config.tierLvVoltage, () -> Config.cableBuffer,
-			() -> Config.copperCableLossPerBlock, false),
+	COPPER("copper", EnergyTier.LV, Conductor.COPPER, false),
 	/** Rubber-insulated copper: unchanged LV throughput with half the attenuation. */
-	INSULATED_COPPER("insulated_copper", EnergyTier.LV, () -> Config.tierLvVoltage, () -> Config.cableBuffer,
-			() -> Config.copperCableLossPerBlock * Config.insulationLossMultiplier, true),
+	INSULATED_COPPER("insulated_copper", EnergyTier.LV, Conductor.COPPER, true),
 	/** MV grade: 4× copper throughput at the highest loss per block. */
-	GOLD("gold", EnergyTier.MV, () -> Config.tierMvVoltage, () -> Config.goldCableBuffer,
-			() -> Config.goldCableLossPerBlock, false),
+	GOLD("gold", EnergyTier.MV, Conductor.GOLD, false),
 	/** Rubber-insulated gold: unchanged MV throughput with half the attenuation. */
-	INSULATED_GOLD("insulated_gold", EnergyTier.MV, () -> Config.tierMvVoltage, () -> Config.goldCableBuffer,
-			() -> Config.goldCableLossPerBlock * Config.insulationLossMultiplier, true),
+	INSULATED_GOLD("insulated_gold", EnergyTier.MV, Conductor.GOLD, true),
 	/** HV grade: 4× gold throughput AND the lowest loss in the mod — pays in craft cost instead. */
-	ELECTRUM("electrum", EnergyTier.HV, () -> Config.tierHvVoltage, () -> Config.electrumCableBuffer,
-			() -> Config.electrumCableLossPerBlock, false),
+	ELECTRUM("electrum", EnergyTier.HV, Conductor.ELECTRUM, false),
 	/** Rubber-insulated electrum: unchanged HV throughput with half of the mod's lowest attenuation. */
-	INSULATED_ELECTRUM("insulated_electrum", EnergyTier.HV, () -> Config.tierHvVoltage,
-			() -> Config.electrumCableBuffer,
-			() -> Config.electrumCableLossPerBlock * Config.insulationLossMultiplier, true);
+	INSULATED_ELECTRUM("insulated_electrum", EnergyTier.HV, Conductor.ELECTRUM, true);
+
+	/**
+	 * The metal of a grade, which picks its knobs (MOD-761): an insulated grade shares its bare twin's. The
+	 * picking is written once, in {@link #segmentBuffer(int, int, int, int)} and
+	 * {@link #lossPerBlock(double, double, double, double, double)}, and fed either the live {@code Config}
+	 * (the network) or the server's numbers (the tooltip on the client).
+	 */
+	private enum Conductor {
+		TIN, COPPER, GOLD, ELECTRUM
+	}
 
 	private final String name;
 	private final EnergyTier tier;
-	private final IntSupplier packetCap;
-	private final IntSupplier segmentBuffer;
-	private final DoubleSupplier lossPerBlock;
+	private final Conductor conductor;
 	private final boolean insulated;
 
-	CableType(String name, EnergyTier tier, IntSupplier packetCap, IntSupplier segmentBuffer,
-			DoubleSupplier lossPerBlock, boolean insulated) {
+	CableType(String name, EnergyTier tier, Conductor conductor, boolean insulated) {
 		this.name = name;
 		this.tier = tier;
-		this.packetCap = packetCap;
-		this.segmentBuffer = segmentBuffer;
-		this.lossPerBlock = lossPerBlock;
+		this.conductor = conductor;
 		this.insulated = insulated;
 	}
 
@@ -121,7 +116,12 @@ public enum CableType {
 	 * {@link EnergyNetwork#tick()}. NOT the throughput — see {@link #segmentBuffer()}.
 	 */
 	public long packetCap() {
-		return packetCap.getAsInt();
+		return switch (conductor) {
+			case TIN -> Config.tinCablePacketCap;
+			case COPPER -> Config.tierLvVoltage;
+			case GOLD -> Config.tierMvVoltage;
+			case ELECTRUM -> Config.tierHvVoltage;
+		};
 	}
 
 	/**
@@ -130,12 +130,42 @@ public enum CableType {
 	 * ({@code EnergyBuffer.capacity} is final), so changing the config affects newly placed cables.
 	 */
 	public long segmentBuffer() {
-		return segmentBuffer.getAsInt();
+		return segmentBuffer(Config.tinCableBuffer, Config.cableBuffer, Config.goldCableBuffer,
+				Config.electrumCableBuffer);
+	}
+
+	/**
+	 * {@link #segmentBuffer()} picked among the four conductors' buffers its caller read — {@code Config} on
+	 * the server, {@code ServerBalance} in the tooltip (MOD-761): one mapping, two sources.
+	 */
+	public long segmentBuffer(int tin, int copper, int gold, int electrum) {
+		return switch (conductor) {
+			case TIN -> tin;
+			case COPPER -> copper;
+			case GOLD -> gold;
+			case ELECTRUM -> electrum;
+		};
 	}
 
 	/** Fraction of the remaining throughput attenuated per cable block traversed. */
 	public double lossPerBlock() {
-		return lossPerBlock.getAsDouble();
+		return lossPerBlock(Config.tinCableLossPerBlock, Config.copperCableLossPerBlock, Config.goldCableLossPerBlock,
+				Config.electrumCableLossPerBlock, Config.insulationLossMultiplier);
+	}
+
+	/**
+	 * {@link #lossPerBlock()} picked among the four conductors' losses its caller read, the rubber sleeve's
+	 * multiplier applied to an insulated grade — {@code Config} on the server, {@code ServerBalance} in the
+	 * tooltip (MOD-761).
+	 */
+	public double lossPerBlock(double tin, double copper, double gold, double electrum, double insulationMultiplier) {
+		double bare = switch (conductor) {
+			case TIN -> tin;
+			case COPPER -> copper;
+			case GOLD -> gold;
+			case ELECTRUM -> electrum;
+		};
+		return insulated ? bare * insulationMultiplier : bare;
 	}
 
 	/**
