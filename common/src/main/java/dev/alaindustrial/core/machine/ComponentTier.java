@@ -2,6 +2,7 @@ package dev.alaindustrial.core.machine;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.core.environment.GeneratorConfig;
+import java.util.function.DoubleSupplier;
 import java.util.function.IntSupplier;
 
 /**
@@ -133,25 +134,20 @@ public enum ComponentTier {
 			() -> GeneratorConfig.lightningRodTipAdvancedMaxDamage,
 			() -> Config.repairBenchTier3EuCost);
 
-	/**
-	 * A {@code float}-valued supplier. {@link java.util.function.DoubleSupplier} would force every
-	 * caller through {@code double} arithmetic, and {@code Math.round(double)} returns a {@code long}
-	 * while {@code Math.round(float)} returns an {@code int} — the generators' rate maths is int/float
-	 * throughout, so widening here would spread casts across four block entities for no benefit.
-	 */
-	@FunctionalInterface
-	public interface FloatSupplier {
-		float getAsFloat();
-	}
-
 	/** Registry path of the item this grade describes — the key {@link #forItemPath} matches on. */
 	private final String itemPath;
-	private final FloatSupplier outputMultiplier;
+	/**
+	 * A {@link DoubleSupplier} holding a {@code float} knob: float to double and back is exact, so the
+	 * accessor still hands the generators' int/float maths a {@code float}. A JDK type on purpose (MOD-761):
+	 * {@code ClientBalanceReachRules} follows a JDK supplier to the lambdas that read the knobs, and not the
+	 * mod's own functional interfaces.
+	 */
+	private final DoubleSupplier outputMultiplier;
 	private final IntSupplier euPerDamage;
 	private final IntSupplier maxDamage;
 	private final IntSupplier repairEuCost;
 
-	ComponentTier(String itemPath, FloatSupplier outputMultiplier, IntSupplier euPerDamage,
+	ComponentTier(String itemPath, DoubleSupplier outputMultiplier, IntSupplier euPerDamage,
 			IntSupplier maxDamage, IntSupplier repairEuCost) {
 		this.itemPath = itemPath;
 		this.outputMultiplier = outputMultiplier;
@@ -170,7 +166,7 @@ public enum ComponentTier {
 	 * {@code WaterMillOutput.euFor} <b>before</b> their final clamp, so it can never lift a cap.
 	 */
 	public float outputMultiplier() {
-		return outputMultiplier.getAsFloat();
+		return (float) outputMultiplier.getAsDouble();
 	}
 
 	/** EU of production per one durability point. Read live every tick by the wear path. */

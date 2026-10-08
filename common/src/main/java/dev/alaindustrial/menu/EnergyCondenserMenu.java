@@ -62,7 +62,8 @@ public class EnergyCondenserMenu extends MachineMenu {
 	 * already in a slot, never asks. So a player holding a clot of the same tier could shift-click it
 	 * straight into this window past the take-only rule — and the tick, which normalises the window back
 	 * to a single clot, would then destroy it. At a cap of one the merge is arithmetically impossible:
-	 * the slot is already at its ceiling, so vanilla folds nothing in.
+	 * the slot is already at its ceiling, so vanilla folds nothing in. Since MOD-784
+	 * {@code MachineMenu.moveItemStackTo} asks {@code mayPlace} on both passes; the cap stays as the second lock.
 	 */
 	private static final class WindowSlot extends OutputSlot {
 		private WindowSlot(Container container, int index, int x, int y) {

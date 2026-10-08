@@ -6,6 +6,7 @@ import dev.alaindustrial.block.entity.machine.MachineChannels;
 import dev.alaindustrial.block.entity.machine.SlotLayout;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.item.misc.OverclockerChipItem;
+import dev.alaindustrial.menu.stats.StatsWindow;
 import dev.alaindustrial.network.MachineStatsPayload;
 import dev.alaindustrial.network.NetworkDispatcher;
 import dev.alaindustrial.registry.ContentManifest;
@@ -351,9 +352,6 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 
 	// --- Statistics panel (MOD-125) ---------------------------------------------------------------
 
-	/** Ticks between two statistics packets for one open screen. Two seconds: fast enough to read as live. */
-	private static final int STATS_SYNC_INTERVAL_TICKS = 40;
-
 	/** Client-only statistics-panel state (see {@link #statsPanelOpen}). */
 	public boolean isStatsPanelOpen() {
 		return statsPanelOpen;
@@ -365,11 +363,8 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 		return statsPanelOpen;
 	}
 
-	/** Server-side: ticks since the last statistics packet went out to this viewer. */
-	private int ticksSinceStatsSync;
-
-	/** Server-side: {@code energyGenerated + energyConsumed} at the last packet, to derive the window rate. */
-	private long lastThroughputSample = -1L;
+	/** Server-side: this viewer's packet timer and throughput sample (MOD-722). */
+	private final StatsWindow statsWindow = new StatsWindow();
 
 	/** Server-side: the snapshot last sent to this viewer, so an unchanged one can be skipped. */
 	private @Nullable MachineStatsPayload lastSentStats;
@@ -385,8 +380,8 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 	 *
 	 * <p>Riding {@code broadcastChanges} is what keeps the promise "no open GUI, no traffic": vanilla calls
 	 * it once per tick for an OPEN menu and stops the moment the screen closes, so nothing here has to scan
-	 * the player list or ask a block who is watching it. The counter is per-menu, i.e. per viewer, and dies
-	 * with the screen.
+	 * the player list or ask a block who is watching it. The window is per-menu, i.e. per viewer, dies with
+	 * the screen, and runs on game time: clicks in the menu call this too.
 	 *
 	 * <p>The {@code instanceof} is both the block-entity lookup and the side guard: server-side
 	 * {@code machine} IS the block entity ({@code MachineBlockEntity implements WorldlyContainer}), while a
@@ -395,20 +390,18 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 	@Override
 	public void broadcastChanges() {
 		super.broadcastChanges();
-		if (++ticksSinceStatsSync < STATS_SYNC_INTERVAL_TICKS) {
+		if (!(machine instanceof MachineBlockEntity be) || !(player instanceof ServerPlayer serverPlayer)
+				|| be.getLevel() == null || !statsWindow.due(be.getLevel().getGameTime())) {
 			return;
 		}
-		ticksSinceStatsSync = 0;
-		if (!(machine instanceof MachineBlockEntity be) || !(player instanceof ServerPlayer serverPlayer)) {
-			return;
-		}
-		// No chip, no telemetry — not even the packet. This is what makes the feature free for a base
-		// that has not opted into it: an un-instrumented machine never builds a snapshot at all.
+		// No chip, no telemetry — not even the packet: an un-instrumented machine never builds a snapshot.
+		// The sample is forgotten too, so a chip fitted again starts from the block's rate, not from a gap.
 		if (!be.hasStatsChip()) {
+			statsWindow.reset();
 			lastSentStats = null;
 			return;
 		}
-		MachineStatsPayload next = snapshot(be);
+		MachineStatsPayload next = statsSnapshot(be, be.getLevel().getGameTime());
 		// Silence when nothing changed. An idle machine skips its tick, so none of its numbers move, and
 		// re-sending an identical snapshot every two seconds would be pure noise — this is the idle-sleep
 		// rule falling out of the data instead of needing a timer of its own. It also means the packet
@@ -424,28 +417,16 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 	}
 
 	/**
-	 * Build the snapshot, deriving the window rate from the career totals rather than sampling the tick.
-	 *
-	 * <p>Throughput (produced + consumed) is monotonic, so the difference between two packets divided by the
-	 * interval is the true average over that window — including the ticks the block spent asleep, which a
-	 * per-tick sample would simply miss. The first packet has no previous sample and falls back to the
-	 * block's instantaneous rate rather than reporting a bogus average over an unknown span.
+	 * Build the snapshot; the window comes from the career totals ({@link StatsWindow#sample}) at
+	 * {@code gameTime}. Public for the L2 statistics scenarios — production calls it from {@link #broadcastChanges}.
 	 */
-	private MachineStatsPayload snapshot(MachineBlockEntity be) {
-		long throughput = be.getEnergyStorage().getTotalEnergyGenerated()
-				+ be.getEnergyStorage().getTotalEnergyConsumed();
-		int windowRate;
-		if (lastThroughputSample < 0) {
-			windowRate = be.currentEuRate();
-		} else {
-			windowRate = (int) Math.min(Integer.MAX_VALUE,
-					Math.max(0L, throughput - lastThroughputSample) / STATS_SYNC_INTERVAL_TICKS);
-		}
-		lastThroughputSample = throughput;
+	public MachineStatsPayload statsSnapshot(MachineBlockEntity be, long gameTime) {
+		StatsWindow.Sample window = statsWindow.sample(gameTime, be.getEnergyStorage().getTotalEnergyGenerated()
+				+ be.getEnergyStorage().getTotalEnergyConsumed(), be.currentEuRate());
 		return new MachineStatsPayload(containerId, be.activeTicks(),
 				be.getEnergyStorage().getTotalEnergyIn(), be.getEnergyStorage().getTotalEnergyOut(),
 				be.getEnergyStorage().getTotalEnergyGenerated(), be.getEnergyStorage().getTotalEnergyConsumed(),
-				windowRate, be.peakEuRate(), be.countDirectConnections(), be.totalItemsProcessed());
+				window.eu(), window.ticks(), be.peakEuRate(), be.countDirectConnections(), be.totalItemsProcessed());
 	}
 
 	/** Client-side: accept a snapshot addressed to THIS menu. A stale packet for another screen is dropped. */
@@ -493,7 +474,7 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 	 * threshold, wide enough that a single late packet does not blink the label on.
 	 */
 	public boolean statsAreStale() {
-		return stats != null && System.currentTimeMillis() - statsReceivedAt > STATS_SYNC_INTERVAL_TICKS * 50L * 5 / 2;
+		return stats != null && System.currentTimeMillis() - statsReceivedAt > StatsWindow.INTERVAL_TICKS * 50L * 5 / 2;
 	}
 
 	private void addPlayerInventory(Inventory inventory) {
@@ -570,6 +551,25 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 		return AbstractContainerMenu.stillValid(access, player, block);
 	}
 
+	/** Shift-click fills only slots that take the stack (MOD-784): vanilla's merge pass skips mayPlace. */
+	@Override
+	protected boolean moveItemStackTo(ItemStack stack, int start, int end, boolean reverse) {
+		boolean moved = false;
+		for (int pass = 0; pass < 2; pass++) {
+			for (int k = 0; k < end - start && !stack.isEmpty(); k++) {
+				int i = reverse ? end - 1 - k : start + k;
+				Slot slot = slots.get(i);
+				boolean fits = pass == 0 ? ItemStack.isSameItemSameComponents(slot.getItem(), stack) : !slot.hasItem();
+				boolean placed = fits && slot.mayPlace(stack) && super.moveItemStackTo(stack, i, i + 1, false);
+				if (placed && pass == 1) {
+					return true; // like vanilla: stop after the first empty slot
+				}
+				moved |= placed;
+			}
+		}
+		return moved;
+	}
+
 	@Override
 	public ItemStack quickMoveStack(Player player, int index) {
 		ItemStack result = ItemStack.EMPTY;
@@ -606,8 +606,7 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 					return ItemStack.EMPTY;
 				}
 			} else if (!moveItemStackTo(stack, 0, base, false)) {
-				// Any other inventory item → only the machine's base slots. Upgrade slots are never
-				// auto-filled with non-chip items.
+				// Any other item → the base slots that take it (moveItemStackTo); never the upgrades.
 				return ItemStack.EMPTY;
 			}
 			if (stack.isEmpty()) {

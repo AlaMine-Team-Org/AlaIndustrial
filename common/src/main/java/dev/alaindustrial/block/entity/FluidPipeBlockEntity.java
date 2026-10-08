@@ -5,6 +5,7 @@ import dev.alaindustrial.block.FluidPipeBlock;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.core.fluid.FluidHolder;
+import dev.alaindustrial.core.fluid.FluidNetwork;
 import dev.alaindustrial.core.fluid.FluidNetworkManager;
 import dev.alaindustrial.core.fluid.FluidPipeNode;
 import dev.alaindustrial.core.fluid.FluidPort;
@@ -104,7 +105,23 @@ public final class FluidPipeBlockEntity extends EnergyBlockEntity implements Flu
 		if (legacy && !migrationChecked) {
 			migrationChecked = SteamLineMigration.check(this, level, pos);
 		}
+		if (reloadedLive && level instanceof ServerLevel server) {
+			// Saved data loaded over this live segment may carry other face modes (MOD-734 review): re-join it
+			// exactly as a wrench does — re-partition, mark the network dirty, redraw the arms on both sides.
+			reloadedLive = false;
+			FluidNetworkManager.topologyChanged(server, pos);
+			for (Direction dir : Direction.values()) {
+				FluidPipeBlock.refreshConnections(server, pos.relative(dir));
+			}
+		}
 		validateShapeOnce(level, pos);
+		// A commit that no network tick settled (MOD-734): written from outside the network while one
+		// was ticking. Settling here keeps the chunk's unsaved mark at most a tick late, and the wake lets
+		// a sleeping network see the write (ADR-047).
+		if (unsettled) {
+			settle();
+			wakeNetwork();
+		}
 		return 0;
 	}
 
@@ -147,6 +164,9 @@ public final class FluidPipeBlockEntity extends EnergyBlockEntity implements Flu
 		}
 		shapeValidated = true;
 		FluidPipeBlock.refreshConnections(level, pos);
+		// The drawn core follows the buffer as loaded (MOD-734): the fill is settled once per network
+		// tick, so a save is the one place the two could part, and this read brings them back together.
+		FluidPipeBlock.refreshFilled(level, pos, fluidBuffer.amount > 0);
 	}
 
 	public void ensureRegistered() {
@@ -204,11 +224,38 @@ public final class FluidPipeBlockEntity extends EnergyBlockEntity implements Flu
 	}
 
 	/**
-	 * Push the buffer to the client so the tint can follow it, but only when the visible state actually
-	 * changed — the fluid TYPE or empty/non-empty, never the raw amount. A pipe run is hundreds of
-	 * segments and this would otherwise be a full block-entity packet per segment per tick.
+	 * The buffer committed (MOD-734). Inside a fluid-network tick the commit only marks the segment: the
+	 * network {@link #settle() settles} it once the tick is over, against the state the tick left. A write
+	 * from anywhere else — a pump, a capsule, another mod — settles at once, as every commit used to, and
+	 * wakes the network, which may be asleep (ADR-047).
 	 */
 	private void bufferChanged() {
+		unsettled = true;
+		if (!FluidNetwork.isTicking()) {
+			settle();
+			wakeNetwork();
+		}
+	}
+
+	/** A sleeping network does not watch its segments: a write from outside its tick has to wake it (ADR-047). */
+	private void wakeNetwork() {
+		if (level instanceof ServerLevel server) {
+			FluidNetworkManager.segmentChanged(server, worldPosition);
+		}
+	}
+
+	/**
+	 * Mark the chunk unsaved and push the buffer to the client so the tint can follow it, but only when
+	 * the visible state actually changed — the fluid TYPE or empty/non-empty, never the raw amount. A pipe
+	 * run is hundreds of segments and this would otherwise be a full block-entity packet per segment per
+	 * tick.
+	 */
+	@Override
+	public void settle() {
+		if (!unsettled) {
+			return;
+		}
+		unsettled = false;
 		setChanged();
 		if (!(level instanceof ServerLevel)) {
 			return;
@@ -223,6 +270,10 @@ public final class FluidPipeBlockEntity extends EnergyBlockEntity implements Flu
 		}
 	}
 
+	/** A commit has not been settled yet — see {@link #bufferChanged}. */
+	private boolean unsettled;
+	/** Saved data was loaded over this segment while it stood in a server level — see {@link #loadMachineData}. */
+	private boolean reloadedLive;
 	private Fluid lastSyncedFluid = Fluids.EMPTY;
 	private boolean lastSyncedFilled;
 
@@ -256,6 +307,16 @@ public final class FluidPipeBlockEntity extends EnergyBlockEntity implements Flu
 		}
 		lastSyncedFluid = fluidBuffer.fluid.fluid();
 		lastSyncedFilled = fluidBuffer.amount > 0;
+		if (level instanceof ServerLevel) {
+			// Loaded over a LIVE segment (MOD-734 review): /data merge, a structure or a schematic tool wrote
+			// the buffer and the face modes with no commit and no wrench. Its network may be asleep, its joins
+			// and endpoints stale, the drawn core and arms out of date, so the next tick re-joins the segment
+			// (dirty), redraws it and settles, which wakes the network (ADR-047). A chunk load has no level
+			// yet and registers the segment anew, which marks the network dirty by itself.
+			unsettled = true;
+			shapeValidated = false;
+			reloadedLive = true;
+		}
 	}
 
 	private static Fluid resolveFluid(String key) {

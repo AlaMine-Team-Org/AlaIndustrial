@@ -125,12 +125,28 @@ public final class ServerBalance {
 		return current.intValue("batteryBoxBuffer", Config.batteryBoxBuffer);
 	}
 
+	public static int blockBreakerBuffer() {
+		return current.intValue("blockBreakerBuffer", Config.blockBreakerBuffer);
+	}
+
+	public static int blockBreakerEuPerTick() {
+		return current.intValue("blockBreakerEuPerTick", Config.blockBreakerEuPerTick);
+	}
+
+	public static int cableBuffer() {
+		return current.intValue("cableBuffer", Config.cableBuffer);
+	}
+
 	public static int canningFoodValuePerCan() {
 		return current.intValue("canningFoodValuePerCan", Config.canningFoodValuePerCan);
 	}
 
 	public static int canningMachineDuration() {
 		return current.intValue("canningMachineDuration", Config.canningMachineDuration);
+	}
+
+	public static int ceramicPlatesFromPress() {
+		return current.intValue("ceramicPlatesFromPress", Config.ceramicPlatesFromPress);
 	}
 
 	public static int ceramicPressRedstoneCost() {
@@ -167,6 +183,10 @@ public final class ServerBalance {
 
 	public static int condenserInputRate() {
 		return current.intValue("condenserInputRate", Config.condenserInputRate);
+	}
+
+	public static double copperCableLossPerBlock() {
+		return current.doubleValue("copperCableLossPerBlock", Config.copperCableLossPerBlock);
 	}
 
 	public static int daylightEuPerTick() {
@@ -213,6 +233,14 @@ public final class ServerBalance {
 		return current.intValue("electricShovelEuPerBlock", ToolConfig.electricShovelEuPerBlock);
 	}
 
+	public static int electrumCableBuffer() {
+		return current.intValue("electrumCableBuffer", Config.electrumCableBuffer);
+	}
+
+	public static double electrumCableLossPerBlock() {
+		return current.doubleValue("electrumCableLossPerBlock", Config.electrumCableLossPerBlock);
+	}
+
 	public static int euPerXp() {
 		return current.intValue("euPerXp", Config.euPerXp);
 	}
@@ -229,8 +257,20 @@ public final class ServerBalance {
 		return current.intValue("fermenterDuration", Config.fermenterDuration);
 	}
 
+	public static int fluidPipeAdvancedSegmentBuffer() {
+		return current.intValue("fluidPipeAdvancedSegmentBuffer", Config.fluidPipeAdvancedSegmentBuffer);
+	}
+
 	public static int fluidPipeSegmentBuffer() {
 		return current.intValue("fluidPipeSegmentBuffer", Config.fluidPipeSegmentBuffer);
+	}
+
+	public static int fluidTankAdvancedCapacity() {
+		return current.intValue("fluidTankAdvancedCapacity", Config.fluidTankAdvancedCapacity);
+	}
+
+	public static int fluidTankCapacity() {
+		return current.intValue("fluidTankCapacity", Config.fluidTankCapacity);
 	}
 
 	public static int fuelEuPerTick() {
@@ -273,12 +313,32 @@ public final class ServerBalance {
 		return current.floatValue("globalMachineSpeedMultiplier", Config.globalMachineSpeedMultiplier);
 	}
 
+	public static int goldCableBuffer() {
+		return current.intValue("goldCableBuffer", Config.goldCableBuffer);
+	}
+
+	public static double goldCableLossPerBlock() {
+		return current.doubleValue("goldCableLossPerBlock", Config.goldCableLossPerBlock);
+	}
+
 	public static int incubatorBuffer() {
 		return current.intValue("incubatorBuffer", Config.incubatorBuffer);
 	}
 
 	public static int incubatorEuPerTick() {
 		return current.intValue("incubatorEuPerTick", Config.incubatorEuPerTick);
+	}
+
+	public static double insulationLossMultiplier() {
+		return current.doubleValue("insulationLossMultiplier", Config.insulationLossMultiplier);
+	}
+
+	public static int itemPipeAdvancedItemsPerTransfer() {
+		return current.intValue("itemPipeAdvancedItemsPerTransfer", Config.itemPipeAdvancedItemsPerTransfer);
+	}
+
+	public static int itemPipeItemsPerTransfer() {
+		return current.intValue("itemPipeItemsPerTransfer", Config.itemPipeItemsPerTransfer);
 	}
 
 	public static int itemPipeTransferIntervalTicks() {
@@ -297,6 +357,10 @@ public final class ServerBalance {
 		return current.intValue("lightningRodBuffer", GeneratorConfig.lightningRodBuffer);
 	}
 
+	public static int lvPouchCapacity() {
+		return current.intValue("lvPouchCapacity", ToolConfig.lvPouchCapacity);
+	}
+
 	public static int maceratorBuffer() {
 		return current.intValue("maceratorBuffer", Config.maceratorBuffer);
 	}
@@ -311,6 +375,26 @@ public final class ServerBalance {
 
 	public static int machineEuPerTick() {
 		return current.intValue("machineEuPerTick", Config.machineEuPerTick);
+	}
+
+	public static int magnetAdvancedEuPerItem() {
+		return current.intValue("magnetAdvancedEuPerItem", ToolConfig.magnetAdvancedEuPerItem);
+	}
+
+	public static int magnetAdvancedEuPerOrb() {
+		return current.intValue("magnetAdvancedEuPerOrb", ToolConfig.magnetAdvancedEuPerOrb);
+	}
+
+	public static int magnetAdvancedRange() {
+		return current.intValue("magnetAdvancedRange", ToolConfig.magnetAdvancedRange);
+	}
+
+	public static int magnetEuPerItem() {
+		return current.intValue("magnetEuPerItem", ToolConfig.magnetEuPerItem);
+	}
+
+	public static int magnetRange() {
+		return current.intValue("magnetRange", ToolConfig.magnetRange);
 	}
 
 	public static int mobRepellerBuffer() {
@@ -453,6 +537,10 @@ public final class ServerBalance {
 		return current.doubleValue("scytheBonusSeedMultiplier", ToolConfig.scytheBonusSeedMultiplier);
 	}
 
+	public static int shieldingPouchCapacity() {
+		return current.intValue("shieldingPouchCapacity", ToolConfig.shieldingPouchCapacity);
+	}
+
 	public static int solarBuffer() {
 		return current.intValue("solarBuffer", GeneratorConfig.solarBuffer);
 	}
@@ -483,6 +571,26 @@ public final class ServerBalance {
 
 	public static int thermalCentrifugeEuPerTick() {
 		return current.intValue("thermalCentrifugeEuPerTick", Config.thermalCentrifugeEuPerTick);
+	}
+
+	public static int tierHvVoltage() {
+		return current.intValue("tierHvVoltage", Config.tierHvVoltage);
+	}
+
+	public static int tierLvVoltage() {
+		return current.intValue("tierLvVoltage", Config.tierLvVoltage);
+	}
+
+	public static int tierMvVoltage() {
+		return current.intValue("tierMvVoltage", Config.tierMvVoltage);
+	}
+
+	public static int tinCableBuffer() {
+		return current.intValue("tinCableBuffer", Config.tinCableBuffer);
+	}
+
+	public static double tinCableLossPerBlock() {
+		return current.doubleValue("tinCableLossPerBlock", Config.tinCableLossPerBlock);
 	}
 
 	public static int upgradeTableDuration() {

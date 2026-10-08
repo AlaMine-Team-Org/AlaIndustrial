@@ -133,8 +133,7 @@ public class ComponentRepairBenchScreen extends ProgressMachineScreen<ComponentR
 	}
 
 	@Override
-	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-		super.extractTooltip(graphics, mouseX, mouseY);
+	protected void gaugeTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		// The arrow stands in for the recipe entry this machine cannot have: pressing it in a recipe
 		// viewer finds nothing, so hovering it has to carry the whole deal instead.
 		if (this.isHovering(ARROW_X, ARROW_Y, ARROW_W, ARROW_H, mouseX, mouseY)) {

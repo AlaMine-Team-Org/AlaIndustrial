@@ -1,5 +1,6 @@
 package dev.alaindustrial.entity;
 
+import dev.alaindustrial.core.radiation.ShieldsRadiation;
 import java.util.function.Supplier;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.Container;
@@ -31,7 +32,7 @@ import org.jspecify.annotations.Nullable;
  * {@code getDropItem()} and {@code getPickResult()} are final in {@code AbstractBoat} and return a bare
  * {@code new ItemStack(item)}, so each wood × chest pair is its own item and its own entity type.
  */
-public class ModChestBoat extends AbstractChestBoat {
+public class ModChestBoat extends AbstractChestBoat implements ShieldsRadiation {
 	/** Builds the chest tier's menu over this boat's container (server side). */
 	@FunctionalInterface
 	public interface ChestMenuFactory {
@@ -41,14 +42,25 @@ public class ModChestBoat extends AbstractChestBoat {
 	private final int containerSize;
 	private final ChestMenuFactory menuFactory;
 	private final boolean raft;
+	private final boolean shielding;
 	private @Nullable NonNullList<ItemStack> items;
 
 	public ModChestBoat(EntityType<? extends ModChestBoat> type, Level level, Supplier<Item> dropItem,
-			int containerSize, ChestMenuFactory menuFactory, boolean raft) {
+			int containerSize, ChestMenuFactory menuFactory, boolean raft, boolean shielding) {
 		super(type, level, dropItem);
 		this.containerSize = containerSize;
 		this.menuFactory = menuFactory;
 		this.raft = raft;
+		this.shielding = shielding;
+	}
+
+	/**
+	 * A boat with the shielding chest keeps its contents out of the radiation field, as the chest block
+	 * does (MOD-786). Fixed by the entity type, so nothing is saved: a world loads unchanged.
+	 */
+	@Override
+	public boolean shieldsRadiation() {
+		return shielding;
 	}
 
 	/** Same seat height as the vanilla {@code ChestBoat}, or {@code ChestRaft} for the bamboo raft. */

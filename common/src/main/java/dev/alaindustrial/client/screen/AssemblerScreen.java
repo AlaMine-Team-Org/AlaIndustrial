@@ -339,11 +339,7 @@ public class AssemblerScreen extends MachineScreen<AssemblerMenu> {
 	}
 
 	@Override
-	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-		super.extractTooltip(graphics, mouseX, mouseY);
-		if (!frameAcceptsInput(mouseX, mouseY)) {
-			return;
-		}
+	protected void controlTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		int tab = tabAt(mouseX, mouseY);
 		if (tab >= 0) {
 			graphics.setTooltipForNextFrame(this.font, Component.translatable(
@@ -470,21 +466,21 @@ public class AssemblerScreen extends MachineScreen<AssemblerMenu> {
 	}
 
 	/**
-	 * Tab switches, pattern-grid clicks and "Write" all become container-button presses. Intercepted
-	 * before {@code super}, so the vanilla slot path never sees them — the ghost slots would refuse the
-	 * click anyway, but the round trip would be wasted and a shift-click would be ambiguous.
+	 * Tab switches, pattern-grid clicks and "Write" all become container-button presses. Claimed before the
+	 * vanilla slot path, so it never sees them — the ghost slots would refuse the click anyway, but the round
+	 * trip would be wasted and a shift-click would be ambiguous.
 	 *
 	 * <p>The tab is applied locally <em>and</em> sent: {@code handleInventoryButtonClick} only puts a
 	 * packet on the wire, and both sides need the new tab — the client to draw it, the server to know
 	 * which slots the player can now reach.
 	 *
-	 * <p>Deferred while the modal upgrade panel is open: it is drawn over this area and owns clicks
-	 * inside its footprint.
+	 * <p>The base calls this only where frameAcceptsInput lets a click through: never while the modal upgrade
+	 * panel is open (it is drawn over this area and owns clicks inside its footprint), never under the open
+	 * statistics panel (MOD-693, MOD-762).
 	 */
 	@Override
-	public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
-		// The open statistics panel is modal too: a tab or button it covers must not answer (MOD-693).
-		if (event.button() == InputConstants.MOUSE_BUTTON_LEFT && frameAcceptsInput(event.x(), event.y())
+	protected boolean controlClicked(MouseButtonEvent event, boolean doubleClick) {
+		if (event.button() == InputConstants.MOUSE_BUTTON_LEFT
 				&& this.minecraft != null && this.minecraft.gameMode != null) {
 			int tab = tabAt(event.x(), event.y());
 			if (tab >= 0) {
@@ -521,6 +517,6 @@ public class AssemblerScreen extends MachineScreen<AssemblerMenu> {
 				}
 			}
 		}
-		return super.mouseClicked(event, doubleClick);
+		return false;
 	}
 }

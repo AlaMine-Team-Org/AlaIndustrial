@@ -1,7 +1,6 @@
 package dev.alaindustrial.core.fluid;
 
 import dev.alaindustrial.Config;
-import java.util.function.IntSupplier;
 
 /**
  * The two grades of portable fluid tank (MOD-612) — everything that differs between them, in one
@@ -20,9 +19,10 @@ import java.util.function.IntSupplier;
  * cause was the same: a number written out at the call site instead of asked of the grade. So the
  * capacity has exactly one reader-facing source, and it is this enum.
  *
- * <p>The value is an {@link IntSupplier} rather than an int because {@code Config} is mutable at
- * runtime: a reloaded config must reach a grade that was resolved at class-init, or the knob would
- * silently stop working for tanks.
+ * <p>The value is read live rather than stored because {@code Config} is mutable at runtime: a
+ * reloaded config must reach a grade that was resolved at class-init, or the knob would silently stop
+ * working for tanks. The client passes the server's numbers to {@link #capacity(int, int)} instead
+ * (MOD-761): one picking, two sources.
  *
  * <p><b>Deliberately Minecraft-free</b>, exactly like {@code MagnetTier}: no {@code net.minecraft}
  * type appears here, so the L1 lane can unit-test the relation between the grades (advanced holds
@@ -32,7 +32,7 @@ import java.util.function.IntSupplier;
 public enum FluidTankTier {
 
 	/** The original (MOD-111): eight buckets, deliberately below a machine tank's ten. */
-	BASIC(() -> Config.fluidTankCapacity),
+	BASIC,
 
 	/**
 	 * The second grade (MOD-612): sixteen buckets.
@@ -42,17 +42,19 @@ public enum FluidTankTier {
 	 * the grade below it on the day the new one becomes craftable, and a tier the player skips is a
 	 * tier that did not need to exist.
 	 */
-	ADVANCED(() -> Config.fluidTankAdvancedCapacity);
+	ADVANCED;
 
-	private final IntSupplier capacity;
-
-	FluidTankTier(IntSupplier capacity) {
-		this.capacity = capacity;
+	/** How much this grade holds, in mB — read live from {@code Config}. */
+	public int capacity() {
+		return capacity(Config.fluidTankCapacity, Config.fluidTankAdvancedCapacity);
 	}
 
-	/** How much this grade holds, in mB. */
-	public int capacity() {
-		return capacity.getAsInt();
+	/**
+	 * {@link #capacity()} picked among the two grades' capacities its caller read — {@code Config} in the
+	 * block entity, {@code ServerBalance} in the item's tooltip and bar on the client (MOD-761).
+	 */
+	public int capacity(int basic, int advanced) {
+		return this == BASIC ? basic : advanced;
 	}
 
 }

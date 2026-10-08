@@ -179,9 +179,7 @@ public class RecyclerScreen extends MachineScreen<RecyclerMenu> {
 	}
 
 	@Override
-	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-		super.extractTooltip(graphics, mouseX, mouseY);
-
+	protected void gaugeTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		int threshold = Math.max(1, ServerBalance.recyclerBatchMass());
 		if (isHovering(PROGRESS_X, PROGRESS_Y, PROGRESS_W, PROGRESS_H, mouseX, mouseY)) {
 			int maxProgress = Math.max(1, this.menu.getMaxProgress());

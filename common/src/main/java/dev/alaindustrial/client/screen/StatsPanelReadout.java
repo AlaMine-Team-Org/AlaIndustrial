@@ -83,7 +83,8 @@ final class StatsPanelReadout {
 
 		boolean stale = menu.statsAreStale();
 		y = statRow(px, y, "gui.alaindustrial.stats.now",
-				stats.euRate() + " EU/t", stats.euRate(), false, stale);
+				ReadoutFormat.rate(stats.euOverWindow(), stats.windowTicks()) + " EU/t",
+				stats.euOverWindow(), false, stale);
 		if (stats.peakEuRate() > 0) {
 			y = statRow(px, y, "gui.alaindustrial.stats.peak",
 					stats.peakEuRate() + " EU/t", stats.peakEuRate(), false);

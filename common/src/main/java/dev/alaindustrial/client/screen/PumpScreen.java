@@ -93,8 +93,7 @@ public class PumpScreen extends MachineScreen<PumpMenu> {
 	}
 
 	@Override
-	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-		super.extractTooltip(graphics, mouseX, mouseY);
+	protected void gaugeTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		// Left bar — fluid name + level as millibuckets. The name is resolved client-side from the synced
 		// fluid registry id (channel 6), so it shows the right label for any fluid, not just lava/water.
 		int fluidId = this.menu.getFluidRegistryId();

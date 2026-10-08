@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item_1": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "minecraft:oak_planks" } ] } },
+    "has_item_2": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "alaindustrial:copper_cable" } ] } },
+    "has_item_3": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "minecraft:stone_pickaxe" } ] } },
+    "has_item_4": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "minecraft:redstone" } ] } },
+    "has_item_5": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "alaindustrial:wooden_gear" } ] } }
+  },
+  "requirements": [ [ "has_item_1" ], [ "has_item_2" ], [ "has_item_3" ], [ "has_item_4" ], [ "has_item_5" ] ],
+  "rewards": {
+    "recipes": [ "alaindustrial:block_breaker" ]
+  }
+}

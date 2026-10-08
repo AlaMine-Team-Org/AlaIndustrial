@@ -183,6 +183,37 @@ final class EnergyGoldenRig {
 	}
 
 	/**
+	 * Drive the rig from its first tick to {@code toTick}, recording only every {@code every}-th tick: the state
+	 * line, then {@code w=} the EU the network drew out of storage and {@code d=} the EU it delivered to machines
+	 * over that window (MOD-756) — a characterization that runs thousands of ticks and keeps the golden short.
+	 * A window in which the network slept on some tick also says {@code z=} how many, so a sampled line cannot
+	 * hide a network that dozed between samples.
+	 */
+	List<String> driveSampled(int toTick, int every) {
+		List<String> lines = new ArrayList<>();
+		long fromStorage = 0;
+		long toMachines = 0;
+		int asleep = 0;
+		for (int t = 1; t <= toTick; t++) {
+			boolean awake = step();
+			asleep += awake ? 0 : 1;
+			EnergyNetwork net = network();
+			if (net != null) {
+				fromStorage += net.lastTickFromStorage();
+				toMachines += net.lastTickMoved() - net.lastTickToStorage();
+			}
+			if (t % every == 0) {
+				lines.add(stateLine(t, net, awake) + " w=" + fromStorage + " d=" + toMachines
+						+ (asleep > 0 ? " z=" + asleep : ""));
+				fromStorage = 0;
+				toMachines = 0;
+				asleep = 0;
+			}
+		}
+		return lines;
+	}
+
+	/**
 	 * One game tick of the rig: sources, cables, the network if awake, then every other endpoint. The first
 	 * call also gives every cable the server tick that registers it. Returns whether the network ticked.
 	 */

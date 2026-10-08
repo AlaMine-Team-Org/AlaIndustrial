@@ -87,6 +87,17 @@ public final class FluidNetworkManager {
 		GRAPH.markDirtyAt(level, pos);
 	}
 
+	/**
+	 * A segment's buffer was written from outside a fluid-network tick (MOD-734, ADR-047): wake its network,
+	 * which may be asleep. Endpoints and topology are untouched — that is {@link #onNeighbourChanged}.
+	 */
+	public static void segmentChanged(ServerLevel level, BlockPos pos) {
+		FluidNetwork network = GRAPH.networkAt(level, pos);
+		if (network != null) {
+			network.wake();
+		}
+	}
+
 	/** Tick up to {@link Config#fluidNetworksPerTick} awake networks; round-robin the remainder. */
 	public static void tickAll(ServerLevel level) {
 		GRAPH.tickAll(level);

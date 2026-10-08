@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,lit=false": {
+      "model": "alaindustrial:block/block_breaker"
+    },
+    "facing=north,lit=true": {
+      "model": "alaindustrial:block/block_breaker"
+    },
+    "facing=east,lit=false": {
+      "model": "alaindustrial:block/block_breaker",
+      "y": 90
+    },
+    "facing=east,lit=true": {
+      "model": "alaindustrial:block/block_breaker",
+      "y": 90
+    },
+    "facing=south,lit=false": {
+      "model": "alaindustrial:block/block_breaker",
+      "y": 180
+    },
+    "facing=south,lit=true": {
+      "model": "alaindustrial:block/block_breaker",
+      "y": 180
+    },
+    "facing=west,lit=false": {
+      "model": "alaindustrial:block/block_breaker",
+      "y": 270
+    },
+    "facing=west,lit=true": {
+      "model": "alaindustrial:block/block_breaker",
+      "y": 270
+    },
+    "facing=up,lit=false": {
+      "model": "alaindustrial:block/block_breaker",
+      "x": 270
+    },
+    "facing=up,lit=true": {
+      "model": "alaindustrial:block/block_breaker",
+      "x": 270
+    },
+    "facing=down,lit=false": {
+      "model": "alaindustrial:block/block_breaker",
+      "x": 90
+    },
+    "facing=down,lit=true": {
+      "model": "alaindustrial:block/block_breaker",
+      "x": 90
+    }
+  }
+}

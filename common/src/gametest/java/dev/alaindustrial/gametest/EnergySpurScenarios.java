@@ -4,6 +4,7 @@ import static dev.alaindustrial.gametest.EnergyScenarioSupport.be;
 
 import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.EnergyBlockEntity;
+import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.core.energy.CableType;
 import dev.alaindustrial.core.energy.EnergyNetwork;
 import dev.alaindustrial.registry.ModContent;
@@ -25,9 +26,10 @@ import net.minecraft.world.item.Items;
  * Turning the build 90° hid it, which is why both spur directions along Z are run.
  *
  * <p>Asserted as rules against the same line without a spur, never as numbers — the numbers are the
- * golden's ({@code EnergyFlowFieldGoldenScenarios}). Every bound comes from the rig: a full cable is the
- * copper segment buffer. The rig is ticked directly ({@link EnergyGoldenRig}), sits inside the 8×8×8
- * structure and is translation-invariant; no knob is changed.
+ * golden's ({@code EnergyFlowFieldGoldenScenarios}). The last scenario records MOD-754: a spur off the
+ * source's cable or off the machine's cable fills only once the machine stops. Every bound comes from the
+ * rig: a full cable is the copper segment buffer. The rig is ticked directly ({@link EnergyGoldenRig}),
+ * sits inside the 8×8×8 structure and is translation-invariant; no knob is changed.
  */
 public final class EnergySpurScenarios {
 
@@ -37,7 +39,9 @@ public final class EnergySpurScenarios {
 				RosterEntry.of(EnergySpurScenarios::spurDoesNotHalveTheMachine,
 						"mod730_spur_does_not_halve_the_machine"),
 				RosterEntry.of(EnergySpurScenarios::spurFillsFromSurplusOnceTheMachineIsFull,
-						"mod730_spur_fills_from_surplus_once_the_machine_is_full"));
+						"mod730_spur_fills_from_surplus_once_the_machine_is_full"),
+				RosterEntry.of(EnergySpurScenarios::endSpursStayEmptyWhileTheMachineWorks,
+						"mod754_end_spurs_stay_empty_while_the_machine_works"));
 
 		private Roster() {}
 	}
@@ -68,6 +72,10 @@ public final class EnergySpurScenarios {
 	private static final int LONG_RUN = 200;
 	/** How many final ticks the full spur must hold still — no packet pumped back and forth. */
 	private static final int STILL_TICKS = 20;
+	/** MOD-754: the working run — the Macerator fills (net +10 EU/t into 800 EU) and keeps working. */
+	private static final int WORK_RUN = 400;
+	/** MOD-754: ticks after the work runs out, enough to finish the operation, top the buffer up and fill. */
+	private static final int IDLE_RUN = 400;
 
 	private EnergySpurScenarios() {
 	}
@@ -82,20 +90,30 @@ public final class EnergySpurScenarios {
 	}
 
 	private static List<BlockPos> spurCables(Spur spur) {
+		return spurCables(spur, 2);
+	}
+
+	/** The spur's cables off the bus cable at {@code x}. */
+	private static List<BlockPos> spurCables(Spur spur, int x) {
 		List<BlockPos> out = new ArrayList<>();
 		for (int i = 1; i <= SPUR_LENGTH && spur != Spur.NONE; i++) {
-			out.add(p(2, BUS_Z + spur.dz * i));
+			out.add(p(x, BUS_Z + spur.dz * i));
 		}
 		return out;
 	}
 
 	/** The golden {@code spur} circuit, built at {@link #BUS_Z} with the spur on {@code spur}'s side. */
 	private static EnergyGoldenRig build(GameTestHelper helper, Spur spur) {
+		return build(helper, spur, 2);
+	}
+
+	/** The same circuit with the spur off the bus cable at {@code x} (1 — the source's, 4 — the machine's). */
+	private static EnergyGoldenRig build(GameTestHelper helper, Spur spur, int x) {
 		EnergyGoldenRig.clear(helper);
 		EnergyGoldenRig rig = new EnergyGoldenRig(helper, "mod730");
 		rig.source(SOURCE, SOURCE_OUTPUT);
 		rig.run(BUS.get(0), BUS.get(BUS.size() - 1));
-		List<BlockPos> spurCables = spurCables(spur);
+		List<BlockPos> spurCables = spurCables(spur, x);
 		if (!spurCables.isEmpty()) {
 			rig.run(spurCables.get(0), spurCables.get(spurCables.size() - 1));
 		}
@@ -222,6 +240,53 @@ public final class EnergySpurScenarios {
 				return;
 			}
 		}
+		helper.succeed();
+	}
+
+	/**
+	 * MOD-754, the promise as it stands (owner, 2026-10-08): a spur off the cable at the source and a spur off
+	 * the last cable before the machine have no surplus to fill from while the machine waits for energy — the
+	 * source's cable has already passed its packet down when the dead-end fill runs, and the machine's cable sits
+	 * at the field's minimum, which the MOD-419 guard keeps untouched. Both stay empty for the whole working run
+	 * (the full machine still takes its work every tick, so it keeps waiting). Once the machine has nothing to
+	 * process and its buffer is full, nobody waits, the line floods from the source, and both spurs fill.
+	 *
+	 * <p>Pins today's behaviour, not a wish: the terminal half is the flow field's wall (MOD-789), and a model
+	 * change there rewrites this scenario.
+	 *
+	 * @implements TC-CABLE-001-CON21 — spurs off the source's cable and off the machine's cable stay empty while
+	 *     the machine works and fill once it stops
+	 */
+	public static void endSpursStayEmptyWhileTheMachineWorks(GameTestHelper helper) {
+		for (int x : List.of(1, BUS.size())) {
+			for (Spur spur : List.of(Spur.SOUTH, Spur.NORTH)) {
+				EnergyGoldenRig rig = build(helper, spur, x);
+				List<BlockPos> spurCables = spurCables(spur, x);
+				for (int t = 1; t <= WORK_RUN; t++) {
+					rig.step();
+					long[] side = charges(helper, spurCables);
+					if (Arrays.stream(side).anyMatch(c -> c != 0)) {
+						helper.fail("spur off bus cable " + x + " " + spur + ", tick " + t + ": "
+								+ Arrays.toString(side) + " while the machine works — MOD-754 records it empty");
+						return;
+					}
+				}
+				if (be(helper, MACHINE) instanceof MachineBlockEntity machine) {
+					machine.setItem(0, ItemStack.EMPTY);
+				}
+				long[] side = null;
+				for (int t = 1; t <= IDLE_RUN; t++) {
+					rig.step();
+					side = charges(helper, spurCables);
+				}
+				if (Arrays.stream(side).anyMatch(c -> c != fullCable())) {
+					helper.fail("spur off bus cable " + x + " " + spur + ": " + IDLE_RUN + " ticks after the machine"
+							+ " stopped, the spur holds " + Arrays.toString(side) + "; nobody waits, so it must fill");
+					return;
+				}
+			}
+		}
+		EnergyGoldenRig.clear(helper);
 		helper.succeed();
 	}
 }

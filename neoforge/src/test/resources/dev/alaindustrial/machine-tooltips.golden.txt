@@ -180,6 +180,24 @@ tooltip.alaindustrial.battery_pouch.charge(2000, 2000) {gold}
 == alaindustrial:birch_iron_chest_boat plain : none
 == alaindustrial:birch_shielding_chest_boat plain : none
 == alaindustrial:birch_silver_chest_boat plain : none
+== alaindustrial:block_breaker plain
+-- plain eu
+tooltip.alaindustrial.block_breaker.what {gray}
+tooltip.alaindustrial.energy_input(8) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.block_breaker.what {gray}
+tooltip.alaindustrial.energy_input(8) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.block_breaker.tools {gray}
+tooltip.alaindustrial.buffer(800) {gray}
+-- plain no-eu
+tooltip.alaindustrial.block_breaker.what {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.block_breaker.what {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.block_breaker.tools {gray}
 == alaindustrial:broken_engraved_plate_b plain : none
 == alaindustrial:broken_engraved_plate_d plain : none
 == alaindustrial:broken_engraved_plate_k plain : none

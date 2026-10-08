@@ -1,5 +1,6 @@
 package dev.alaindustrial.item.fluid;
 
+import dev.alaindustrial.client.ServerBalance;
 import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -26,7 +27,7 @@ public final class FluidTankBlockItem extends BlockItem {
 		FluidTankContents contents = stack.get(dev.alaindustrial.registry.ModDataComponents.FLUID_TANK_CONTENTS.get());
 		if (contents == null) {
 			adder.accept(Component.translatable("tooltip.alaindustrial.fluid_tank.empty_capacity",
-							dev.alaindustrial.block.FluidTankBlock.tierOf(getBlock()).capacity())
+							shownCapacity())
 					.withStyle(ChatFormatting.GRAY));
 			return;
 		}
@@ -35,8 +36,17 @@ public final class FluidTankBlockItem extends BlockItem {
 		// magnet 0.1.148), both times because a number was written at the call site.
 		adder.accept(Component.translatable("tooltip.alaindustrial.fluid_tank.contents",
 						fluidName(contents), contents.amount(),
-						dev.alaindustrial.block.FluidTankBlock.tierOf(getBlock()).capacity())
+						shownCapacity())
 				.withStyle(ChatFormatting.AQUA));
+	}
+
+	/**
+	 * THIS grade's capacity as the server sets it (MOD-761): the tooltip and the bar are drawn on the client,
+	 * whose {@code Config} is the player's own file on a dedicated server.
+	 */
+	private int shownCapacity() {
+		return dev.alaindustrial.block.FluidTankBlock.tierOf(getBlock())
+				.capacity(ServerBalance.fluidTankCapacity(), ServerBalance.fluidTankAdvancedCapacity());
 	}
 
 	private static Component fluidName(FluidTankContents contents) {
@@ -56,7 +66,7 @@ public final class FluidTankBlockItem extends BlockItem {
 		FluidTankContents contents = stack.get(dev.alaindustrial.registry.ModDataComponents.FLUID_TANK_CONTENTS.get());
 		// MOD-612 — the bar measures against THIS grade's capacity: on the advanced tank the basic
 		// knob would draw a full bar at half full.
-		int capacity = dev.alaindustrial.block.FluidTankBlock.tierOf(getBlock()).capacity();
+		int capacity = shownCapacity();
 		if (contents == null || capacity <= 0) {
 			return 0;
 		}

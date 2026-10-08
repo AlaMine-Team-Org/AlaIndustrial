@@ -51,11 +51,11 @@ final class GardenDroneOutputBlock {
 	 * Settles the block once per full tick: lifts it when the output holds fewer items than when it was
 	 * blocked, raises the snapshot when it holds more, and blocks a full output outright.
 	 *
-	 * <p>The output can grow while blocked although the station inserts nothing then: a shift click
-	 * from the player's inventory runs vanilla's {@code moveItemStackTo}, whose merge pass tops up a
-	 * matching stack without asking {@code Slot#mayPlace} (checked with javap on 26.3 and 26.2), and the
-	 * menu's shift-click range includes the output slots. Without raising the snapshot, taking that one
-	 * item back out would not register as a removal.
+	 * <p>The output could grow while blocked although the station inserts nothing then: a shift click
+	 * from the player's inventory ran vanilla's {@code moveItemStackTo}, whose merge pass tops up a
+	 * matching stack without asking {@code Slot#mayPlace} (checked with javap on 26.3 and 26.2). Since
+	 * MOD-784 {@code MachineMenu} refuses that; raising the snapshot stays as the second lock, so an item
+	 * that does arrive and is taken back out still registers as a removal.
 	 *
 	 * @return whether the saved value changed, so the station knows to mark itself dirty
 	 */

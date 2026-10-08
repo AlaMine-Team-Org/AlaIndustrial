@@ -88,8 +88,17 @@ public class FluidPipeBlock extends BaseEntityBlock {
 	 * grade and its reinforced and steam siblings read the one knob; the advanced grade overrides it.
 	 * Read live, so a reloaded config reaches pipes placed after the reload.
 	 */
-	public int segmentCapacity() {
-		return Math.max(1, Config.fluidPipeSegmentBuffer);
+	public final int segmentCapacity() {
+		return segmentCapacity(Config.fluidPipeSegmentBuffer, Config.fluidPipeAdvancedSegmentBuffer);
+	}
+
+	/**
+	 * {@link #segmentCapacity()} picked among the two grades' segment buffers its caller read — {@code Config}
+	 * in the block entity, {@code ServerBalance} in the item's tooltip on the client (MOD-761). The advanced
+	 * grade overrides this one, so both sources go through one picking.
+	 */
+	public int segmentCapacity(int basic, int advanced) {
+		return Math.max(1, basic);
 	}
 
 	/** The family of the pipe standing at {@code pos}, or {@code null} when no pipe stands there. */

@@ -10,9 +10,14 @@ import dev.alaindustrial.block.entity.GardenDroneStationBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.block.entity.PumpBlockEntity;
+import dev.alaindustrial.client.ReadoutFormat;
 import dev.alaindustrial.core.energy.EnergyBuffer;
 import dev.alaindustrial.core.energy.EnergyTransactions;
 import dev.alaindustrial.core.machine.MachineRates;
+import dev.alaindustrial.menu.GardenDroneStationMenu;
+import dev.alaindustrial.menu.MaceratorMenu;
+import dev.alaindustrial.menu.stats.StatsWindow;
+import dev.alaindustrial.network.MachineStatsPayload;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.skill.PlayerSkills;
 import dev.alaindustrial.skill.SkillBranch;
@@ -24,6 +29,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -71,6 +77,9 @@ public final class StatsChipScenarios {
 				RosterEntry.of(StatsChipScenarios::statsChip_gardenDroneCountsItsActions,
 								"stats_chip_garden_drone_counts_its_actions")
 						.fabricId("StatsChipGameTest", "statsChip_gardenDroneCountsItsActions").ticks(120),
+				RosterEntry.of(StatsChipScenarios::statsChip_gardenDroneWindowRateIsNotZero,
+								"stats_chip_garden_drone_window_rate_is_not_zero")
+						.fabricId("StatsChipGameTest", "statsChip_gardenDroneWindowRateIsNotZero").ticks(120),
 				RosterEntry.of(StatsChipScenarios::statsChip_freeTelemetryLeavesPanellessBlocksUncounted,
 								"stats_chip_free_telemetry_leaves_panelless_blocks_uncounted")
 						.fabricId("StatsChipGameTest", "statsChip_freeTelemetryLeavesPanellessBlocksUncounted")
@@ -418,6 +427,62 @@ public final class StatsChipScenarios {
 			}
 			if (station.peakEuRate() <= 0) {
 				helper.fail("the station never published an EU/t for the action it paid for");
+			}
+			helper.succeed();
+		});
+	}
+
+	/**
+	 * MOD-722: the panel's "now" row is the average over the last statistics window, read from the menu's
+	 * own snapshot — the number the panel draws, not {@code currentEuRate}. The station pays
+	 * {@code Config.gardenDroneEuPerAction} once per flight of at least {@code MIN_FLIGHT_TICKS}, well under
+	 * 1 EU/t on average, and the integer rate the snapshot used to carry turned that into "0 EU/t" on a
+	 * station that was working. The control: a window in which nothing was spent still reads zero.
+	 *
+	 * @implements MOD-722-WINDOW — the menu's snapshot carries the window's EU, and the panel shows it
+	 * @covers MOD-722
+	 */
+	public static void statsChip_gardenDroneWindowRateIsNotZero(GameTestHelper helper) {
+		GardenDroneScenarios.withIsolatedZone(() -> {
+			GardenDroneStationBlockEntity station = GardenDroneScenarios.place(helper);
+			GardenDroneScenarios.charge(station);
+			fitChip(station);
+			helper.setBlock(GardenDroneScenarios.PLOT, Blocks.DIRT);
+			helper.setBlock(GardenDroneScenarios.PLOT.above(), Blocks.AIR);
+			ServerPlayer player = AlaGameTestHelper.survivalPlayer(helper);
+			GardenDroneStationMenu menu = new GardenDroneStationMenu(1, player.getInventory(), station,
+					ContainerLevelAccess.create(helper.getLevel(), station.getBlockPos()));
+
+			// The first snapshot has no previous sample: it only opens the window. drive() ticks the block
+			// without moving the level's clock, so the scenario names the window's game time itself.
+			long opened = helper.getLevel().getGameTime();
+			menu.statsSnapshot(station, opened);
+			AlaGameTestHelper.drive(station, helper, StatsWindow.INTERVAL_TICKS);
+			long spent = station.getEnergyStorage().getTotalEnergyConsumed();
+			if (spent <= 0) {
+				helper.fail("the drone rig spent nothing in the window — the rate below would be meaningless");
+			}
+			MachineStatsPayload working = menu.statsSnapshot(station, opened + StatsWindow.INTERVAL_TICKS);
+			String shown = ReadoutFormat.rate(working.euOverWindow(), working.windowTicks());
+			if (working.euOverWindow() != spent || working.windowTicks() != StatsWindow.INTERVAL_TICKS
+					|| "0".equals(shown)) {
+				helper.fail("a station that spent " + spent + " EU in the window carried "
+						+ working.euOverWindow() + " EU over " + working.windowTicks() + " ticks and shows \""
+						+ shown + " EU/t\"");
+			}
+
+			// Control: a chipped macerator with nothing to grind moves no EU, and must still read zero.
+			MaceratorBlockEntity idle = AlaGameTestHelper.place(helper, POS.east(3), ModContent.MACERATOR.get(),
+					MaceratorBlockEntity.class);
+			fitChip(idle);
+			MaceratorMenu idleMenu = new MaceratorMenu(2, player.getInventory(), idle,
+					ContainerLevelAccess.create(helper.getLevel(), idle.getBlockPos()));
+			idleMenu.statsSnapshot(idle, opened);
+			AlaGameTestHelper.drive(idle, helper, StatsWindow.INTERVAL_TICKS);
+			MachineStatsPayload quiet = idleMenu.statsSnapshot(idle, opened + StatsWindow.INTERVAL_TICKS);
+			String quietShown = ReadoutFormat.rate(quiet.euOverWindow(), quiet.windowTicks());
+			if (quiet.euOverWindow() != 0 || !"0".equals(quietShown)) {
+				helper.fail("an idle machine shows \"" + quietShown + " EU/t\" (" + quiet.euOverWindow() + " EU)");
 			}
 			helper.succeed();
 		});

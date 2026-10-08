@@ -1,14 +1,14 @@
 package dev.alaindustrial.core.item;
 
 import dev.alaindustrial.Config;
-import java.util.function.IntSupplier;
 
 /**
  * The two grades of item pipe (MOD-581) — everything that differs between them, in one place.
  *
  * <p>Same shape as {@link dev.alaindustrial.core.energy.CableType}, {@code BladeTier} and
- * {@code MagnetTier}: the values are {@link IntSupplier}s rather than ints because {@code Config} is
- * mutable at runtime, and a tier resolved at class-init must still see a reloaded knob.
+ * {@code MagnetTier}: the values are read live rather than stored because {@code Config} is mutable at
+ * runtime, and a tier resolved at class-init must still see a reloaded knob. The client's tooltip passes
+ * the server's numbers to {@link #itemsPerTransfer(int, int)} instead (MOD-761): one picking, two sources.
  *
  * <p><b>A network runs at its WEAKEST grade</b> — see {@link #min}. That is the rule the mod already
  * teaches on cables (ADR-001: a thin segment throttles the line), so a player who has wired energy
@@ -18,20 +18,22 @@ import java.util.function.IntSupplier;
 public enum PipeTier {
 
 	/** The original (MOD-104/108): 2 items per transfer, slim body. */
-	BASIC(() -> Config.itemPipeItemsPerTransfer),
+	BASIC,
 
 	/** The second grade (MOD-581): twice the throughput, visibly thicker body. */
-	ADVANCED(() -> Config.itemPipeAdvancedItemsPerTransfer);
-
-	private final IntSupplier itemsPerTransfer;
-
-	PipeTier(IntSupplier itemsPerTransfer) {
-		this.itemsPerTransfer = itemsPerTransfer;
-	}
+	ADVANCED;
 
 	/** Items this grade moves to each target per transfer. */
 	public int itemsPerTransfer() {
-		return itemsPerTransfer.getAsInt();
+		return itemsPerTransfer(Config.itemPipeItemsPerTransfer, Config.itemPipeAdvancedItemsPerTransfer);
+	}
+
+	/**
+	 * {@link #itemsPerTransfer()} picked among the two grades' batches its caller read — {@code Config} in the
+	 * network, {@code ServerBalance} in the pipe's tooltip on the client (MOD-761).
+	 */
+	public int itemsPerTransfer(int basic, int advanced) {
+		return this == BASIC ? basic : advanced;
 	}
 
 	/**

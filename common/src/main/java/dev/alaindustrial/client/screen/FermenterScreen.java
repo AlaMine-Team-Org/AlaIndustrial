@@ -113,16 +113,14 @@ public class FermenterScreen extends MachineScreen<FermenterMenu> {
 	}
 
 	@Override
-	protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-		super.extractTooltip(graphics, mouseX, mouseY);
-
+	protected void gaugeTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		// An EMPTY gauge still explains itself: "why is nothing happening" is most often "no water".
 		if (this.isHovering(WATER_X, GAUGE_BOTTOM - GAUGE_H, GAUGE_W, GAUGE_H, mouseX, mouseY)) {
-			gaugeTooltip(graphics, mouseX, mouseY, this.menu.getWaterFluidId(),
+			tankTooltip(graphics, mouseX, mouseY, this.menu.getWaterFluidId(),
 					this.menu.getWaterPermille(), waterFluid(), FermenterStatus.NO_WATER);
 		}
 		if (this.isHovering(BIOFUEL_X, GAUGE_BOTTOM - GAUGE_H, GAUGE_W, GAUGE_H, mouseX, mouseY)) {
-			gaugeTooltip(graphics, mouseX, mouseY, this.menu.getBiofuelFluidId(),
+			tankTooltip(graphics, mouseX, mouseY, this.menu.getBiofuelFluidId(),
 					this.menu.getBiofuelPermille(), biofuelFluid(), null);
 		}
 
@@ -140,7 +138,7 @@ public class FermenterScreen extends MachineScreen<FermenterMenu> {
 	 * Fluid name plus level for a gauge, or {@code emptyStatus}' label when it holds nothing. An empty
 	 * output gauge has nothing useful to say, so it passes {@code null} and stays quiet.
 	 */
-	private void gaugeTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY, int fluidId,
+	private void tankTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY, int fluidId,
 			int permille, Fluid fluid, FermenterStatus emptyStatus) {
 		if (fluidId != FermenterBlockEntity.FLUID_ID_NONE) {
 			int mb = permille * TANK_MB / 1000;

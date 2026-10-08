@@ -1,5 +1,6 @@
 package dev.alaindustrial.item.tool;
 
+import dev.alaindustrial.client.ServerBalance;
 import dev.alaindustrial.item.ToolConfig;
 import dev.alaindustrial.item.energy.EnergyBar;
 import dev.alaindustrial.item.energy.PoweredItem;
@@ -437,11 +438,15 @@ public class MagnetItem extends Item implements ModuleHost, PoweredItem {
 				.withStyle(enabled ? ChatFormatting.GREEN : ChatFormatting.GRAY));
 		adder.accept(Component.translatable(base + ".charge",
 				ItemEnergy.get(stack), ItemEnergy.capacity(stack)).withStyle(ChatFormatting.GOLD));
-		// Numbers come from the tier for the same reason: ToolConfig.magnetRange is the BASIC grade's knob.
-		adder.accept(Component.translatable(base + ".desc", tier.range(), tier.euPerItem())
+		// Numbers come from the tier for the same reason: ToolConfig.magnetRange is the BASIC grade's knob. The
+		// tooltip is drawn on the client, so the tier picks among the server's numbers (MOD-761).
+		int range = tier.pick(ServerBalance.magnetRange(), ServerBalance.magnetAdvancedRange());
+		int euPerItem = tier.pick(ServerBalance.magnetEuPerItem(), ServerBalance.magnetAdvancedEuPerItem());
+		int euPerOrb = tier.euPerOrb(ServerBalance.magnetAdvancedEuPerOrb());
+		adder.accept(Component.translatable(base + ".desc", range, euPerItem)
 				.withStyle(ChatFormatting.DARK_GRAY));
-		if (tier.pullsExperience()) {
-			adder.accept(Component.translatable(base + ".experience", tier.euPerOrb())
+		if (euPerOrb > 0) {
+			adder.accept(Component.translatable(base + ".experience", euPerOrb)
 					.withStyle(ChatFormatting.DARK_GRAY));
 		}
 		// MOD-592: what is fitted, by name, so the tooltip answers "does this one have a filter".

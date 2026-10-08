@@ -36,7 +36,7 @@ public class CarbonBriquetteItem extends Item {
 			lines.accept(Component.translatable(key).withStyle(ChatFormatting.GRAY));
 		}
 		lines.accept(Component.translatable("item.alaindustrial.carbon_briquette.press",
-				QuenchPress.pressYield(), ServerBalance.ceramicPressRedstoneCost())
+				ServerBalance.ceramicPlatesFromPress(), ServerBalance.ceramicPressRedstoneCost())
 				.withStyle(ChatFormatting.DARK_GRAY));
 	}
 }

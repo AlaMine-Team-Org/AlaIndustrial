@@ -1,6 +1,5 @@
 package dev.alaindustrial.item.misc;
 
-import dev.alaindustrial.Config;
 import dev.alaindustrial.block.AdvancedFluidPipeBlock;
 import dev.alaindustrial.block.FluidPipeBlock;
 import dev.alaindustrial.block.ReinforcedFluidPipeBlock;
@@ -20,8 +19,8 @@ import net.minecraft.world.level.block.Block;
  * The Fluid Pipe's block item and its tooltip (MOD-151), following the item pipe's layout: two short
  * plain-language lines always visible, the throughput number behind Shift.
  *
- * <p>The rate is read from {@link Config} rather than baked into the lang files, so a server that
- * retunes the pipe shows its own numbers instead of lying to the player.
+ * <p>The rate is read from the server's numbers ({@code ServerBalance}, MOD-761) rather than baked into the
+ * lang files, so a server that retunes the pipe shows its own numbers instead of lying to the player.
  *
  * <p>Both grades share this item class (MOD-660). What tells them apart on the tooltip is the one rule
  * that tells them apart in the world: the reinforced pipe says it survives a reactor, and the plain one
@@ -43,7 +42,7 @@ public class FluidPipeBlockItem extends BlockItem {
 	// MOD-498 — Item#appendHoverText carries a vanilla soft-deprecation marker but is still the only hook
 	// an item has for its own tooltip lines: ItemStack#addDetailsToTooltip calls it, and vanilla itself
 	// overrides it (DiscFragmentItem, HangingEntityItem, SmithingTemplateItem). A data-component
-	// TooltipProvider could not produce these lines — the rate is read from Config at render time.
+	// TooltipProvider could not produce these lines — the rate is read from ServerBalance at render time.
 	@SuppressWarnings("deprecation")
 	@Override
 	public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
@@ -76,7 +75,9 @@ public class FluidPipeBlockItem extends BlockItem {
 		}
 		// The grade's own segment (MOD-675) — read from the block, so each grade quotes its own knob.
 		int perTick = getBlock() instanceof FluidPipeBlock pipe
-				? pipe.segmentCapacity() : Math.max(1, ServerBalance.fluidPipeSegmentBuffer());
+				? pipe.segmentCapacity(ServerBalance.fluidPipeSegmentBuffer(),
+						ServerBalance.fluidPipeAdvancedSegmentBuffer())
+				: Math.max(1, ServerBalance.fluidPipeSegmentBuffer());
 		// Buckets per second, to one decimal: 50 mB/t → 1.0 B/s. Players think in buckets.
 		String bucketsPerSecond = String.format(java.util.Locale.ROOT, "%.1f", perTick * 20 / 1000.0D);
 		adder.accept(Component.translatable("item.alaindustrial.fluid_pipe.tech.rate",

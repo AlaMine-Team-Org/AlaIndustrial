@@ -31,4 +31,19 @@ public interface FluidPipeNode {
 
 	/** Where the segment stands. */
 	BlockPos getBlockPos();
+
+	/**
+	 * Whether the segment has left the world (broken, replaced or unloaded) — a network holding a reference
+	 * to it must look the position up again (MOD-734, {@code FluidLineTopology}).
+	 */
+	boolean isRemoved();
+
+	/**
+	 * Apply what the buffer's commits during a network tick put off (MOD-734): mark the chunk unsaved and
+	 * bring the visible fill in line with the buffer's FINAL state. A segment on a running line empties
+	 * into its neighbour and refills from the one behind it within one tick; flipping the drawn core on
+	 * each of those commits re-set the block twice per segment per tick for a state that ends where it
+	 * began. A segment with nothing pending does nothing.
+	 */
+	void settle();
 }

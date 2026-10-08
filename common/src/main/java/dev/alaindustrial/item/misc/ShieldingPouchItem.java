@@ -31,8 +31,8 @@ public class ShieldingPouchItem extends PouchItem {
 	}
 
 	@Override
-	protected int capacity() {
-		return ToolConfig.shieldingPouchCapacity;
+	protected int capacity(int lvPouch, int shieldingPouch) {
+		return shieldingPouch;
 	}
 
 	/** The tier's capacity, for callers outside the item (gametests, tooltips). */

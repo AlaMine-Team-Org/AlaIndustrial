@@ -31,6 +31,7 @@ import com.tngtech.archunit.lang.EvaluationResult;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.arch.TranslucentSheetRules.AllowedSite;
 import dev.alaindustrial.arch.VersionedApiRules.FacadeOnlyMember;
+import dev.alaindustrial.client.ServerBalance;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -579,5 +580,123 @@ class ArchitectureRulesNegativeControl {
 		}
 		assertEquals(new TreeSet<>(ArchitectureRules.FOR_TEST_USERS.keySet()), callers,
 				"ArchitectureRules.FOR_TEST_USERS must list exactly the methods that call ConfigOverrides.forTest");
+	}
+
+	/**
+	 * The fixture package with {@code Config} and {@code ServerBalance} (MOD-761): the reach condition must see
+	 * that {@code ServerBalance} reads {@code Config} itself, or the clean twin would prove nothing about the
+	 * boundary.
+	 */
+	private static JavaClasses fixturesWithBalance() {
+		Set<Location> locations = new LinkedHashSet<>(Locations.ofPackage(FIXTURE_PACKAGE));
+		locations.addAll(Locations.ofClass(Config.class));
+		locations.addAll(Locations.ofClass(ServerBalance.class));
+		return new ClassFileImporter().importLocations(locations);
+	}
+
+	private static String clientReachReport(Map<String, String> accepted, Map<String, String> pending) {
+		ArchRule rule = noClasses().should(ClientBalanceReachRules.reachABalanceKnob(
+				JavaClass.Predicates.resideInAnyPackage(FIXTURE_PACKAGE + ".clientstandin.."), accepted, pending));
+		EvaluationResult result = rule.evaluate(fixturesWithBalance());
+		assertTrue(result.hasViolation(), "rule '" + rule.getDescription() + "' must fail on the fixture package");
+		return result.getFailureReport().toString();
+	}
+
+	/**
+	 * MOD-761 — {@code clientCodeReachesNoBalanceKnob}: a knob two calls away through a helper, one behind a
+	 * JDK supplier lambda (the supplier bridge) and one behind an interface (the overrides in subclasses) are
+	 * reported, from client code and from an item's bar and tooltip image alike. The walk stops at
+	 * {@code ServerBalance}, does not cross the mod's own functional interfaces, and lets an accepted entry
+	 * through — and only because it is accepted.
+	 */
+	@Test
+	void clientReachConditionSeesEveryBridgeAndStopsAtServerBalance() {
+		String screen = FIXTURE_PACKAGE + ".clientstandin.IndirectKnobScreen.";
+		String report = clientReachReport(Map.of(screen + "acceptedRead() -> "
+				+ FIXTURE_PACKAGE + ".KnobHelper.accepted()", "fixture"), Map.of());
+
+		assertTrue(report.contains(screen + "helperRead() -> " + FIXTURE_PACKAGE
+				+ ".KnobHelper.twice() reads Config.euPerXp"), report);
+		assertTrue(report.contains(screen + "suppliedRead() -> " + FIXTURE_PACKAGE
+				+ ".SuppliedGrade.amount() reads Config.euPerXp"), report);
+		assertTrue(report.contains(screen + "virtualRead(" + FIXTURE_PACKAGE + ".KnobShape) -> " + FIXTURE_PACKAGE
+				+ ".KnobShapeImpl.amount() reads Config.euPerXp"), report);
+		assertTrue(report.contains(screen + "abstractRead(" + FIXTURE_PACKAGE + ".AbstractKnobBase) -> "
+				+ FIXTURE_PACKAGE + ".KnobBaseImpl.amount() reads Config.euPerXp"), report);
+		assertTrue(report.contains(FIXTURE_PACKAGE + ".DisplayHookItem.getBarWidth() -> "), report);
+		// another root reports its own reach: the stand-in that calls it is not reported for it
+		assertFalse(report.contains("viaAnotherRoot"), report);
+		assertTrue(report.contains(FIXTURE_PACKAGE + ".DisplayHookItem.getTooltipImage() -> "), report);
+		assertFalse(report.contains("acceptedRead"), report);
+		assertFalse(report.contains("BalanceScreen"), report);
+		assertFalse(report.contains("DisplayHookItem.getBarColor"), report);
+
+		assertTrue(clientReachReport(Map.of(), Map.of()).contains(screen + "acceptedRead() -> "),
+				"the accepted path must be seen when nothing accepts it, or its absence above proves nothing");
+		// accepted for one root only: another root reaching the same entry is still reported
+		String otherRoot = clientReachReport(Map.of(screen + "helperRead() -> "
+				+ FIXTURE_PACKAGE + ".KnobHelper.accepted()", "fixture"), Map.of());
+		assertTrue(otherRoot.contains(screen + "acceptedRead() -> "),
+				"an acceptance must name its root, not only its entry");
+	}
+
+	/**
+	 * MOD-761 — the walk stops at a pending method (the last link of a path with a task of its own) and names the
+	 * task instead of the knobs; a knob read on the way to it is still named. The fixture plays a tooltip builder
+	 * reverted from ServerBalance to the holder, next to its pending capacity call.
+	 */
+	@Test
+	void clientReachConditionStopsAtAPendingMethodButNamesReadsBeforeIt() {
+		String screen = FIXTURE_PACKAGE + ".clientstandin.IndirectKnobScreen.pendingTooltip() -> " + FIXTURE_PACKAGE
+				+ ".PendingTooltipBuilder.of() ";
+		String report = clientReachReport(Map.of(), Map.of(FIXTURE_PACKAGE + ".PendingCapacity.capacity()", "MOD-000"));
+		String pendingLine = "reaches " + FIXTURE_PACKAGE + ".PendingCapacity.capacity(), pending MOD-000";
+		assertTrue(report.contains(screen + pendingLine), report);
+		assertTrue(report.contains(screen + "reads Config.teleporterMaxPoints"), report);
+		assertFalse(report.contains(screen + "reads Config.euPerXp"), report);
+		assertTrue(clientReachReport(Map.of(), Map.of()).contains(screen + "reads Config.euPerXp"),
+				"without the pending row the knob behind it must be named, or its absence above proves nothing");
+	}
+
+	/**
+	 * MOD-761 — the frozen reach rule is only as good as its unfrozen condition: on the production classes it
+	 * must SEE today's baseline (an empty store would stay green forever). When the baseline is empty, replace
+	 * the freeze by the plain rule and drop this check.
+	 */
+	@Test
+	void theClientReachRuleSeesTheBaseline() {
+		assertTrue(ClientBalanceReachRules.CLIENT_REACH.evaluate(productionClasses).hasViolation(),
+				"the client reach rule found nothing on the production classes — today's baseline is not empty,"
+						+ " so the rule is blind and its frozen green means nothing");
+	}
+
+	/**
+	 * MOD-761 — an accepted path and a pending entry are decisions about paths that exist: once a path is gone,
+	 * its row goes too. Accepted rows whose entry class this lane does not import (the REI plugin of
+	 * fabric/src/main) are records, not checked.
+	 */
+	@Test
+	void acceptedAndPendingPathsAreStillReached() {
+		List<String> lines = noClasses()
+				.should(ClientBalanceReachRules.reachABalanceKnob(ClientBalanceReachRules.PRODUCTION_CLIENT_CODE,
+						Map.of(), ClientBalanceReachRules.PENDING))
+				.evaluate(productionClasses).getFailureReport().getDetails();
+		Set<String> stale = new TreeSet<>();
+		for (String pair : ClientBalanceReachRules.ACCEPTED.keySet()) {
+			String root = pair.substring(0, pair.indexOf(" -> "));
+			String entry = pair.substring(pair.indexOf(" -> ") + 4);
+			String entryOwner = entry.substring(0, entry.lastIndexOf('.', entry.indexOf('(')));
+			if (productionClasses.contain(entryOwner)
+					&& lines.stream().noneMatch(line -> line.contains(root + " -> " + entry + " "))) {
+				stale.add(pair);
+			}
+		}
+		for (String method : ClientBalanceReachRules.PENDING.keySet()) {
+			if (lines.stream().noneMatch(line -> line.contains(" reaches " + method + ", pending "))) {
+				stale.add(method);
+			}
+		}
+		assertTrue(stale.isEmpty(), "ClientBalanceReachRules.ACCEPTED/PENDING name paths no client code reaches any"
+				+ " more — remove them: " + stale);
 	}
 }

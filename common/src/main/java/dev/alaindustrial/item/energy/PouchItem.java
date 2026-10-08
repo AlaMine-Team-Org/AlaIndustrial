@@ -1,5 +1,6 @@
 package dev.alaindustrial.item.energy;
 
+import dev.alaindustrial.client.ServerBalance;
 import dev.alaindustrial.compat.ServerDrops;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.item.ToolConfig;
@@ -42,8 +43,17 @@ public class PouchItem extends Item implements PoweredItem {
 	 * Storage capacity in weight units. Overridable so a tier of the pouch can hold a different
 	 * amount without restating the handling: the Shielding Pouch (MOD-545) is this item plus lead.
 	 */
-	protected int capacity() {
-		return ToolConfig.lvPouchCapacity;
+	protected final int capacity() {
+		return capacity(ToolConfig.lvPouchCapacity, ToolConfig.shieldingPouchCapacity);
+	}
+
+	/**
+	 * {@link #capacity()} picked among the two pouches' capacities its caller read — {@code ToolConfig} for the
+	 * handling, {@code ServerBalance} for the tooltip image drawn on the client (MOD-761). The Shielding Pouch
+	 * overrides this one, so both sources go through one picking.
+	 */
+	protected int capacity(int lvPouch, int shieldingPouch) {
+		return lvPouch;
 	}
 
 	// --- extraction: right-click in air -> whole top stack (LIFO, Q-EXT-1) back into inventory ---
@@ -218,7 +228,8 @@ public class PouchItem extends Item implements PoweredItem {
 	public java.util.Optional<net.minecraft.world.inventory.tooltip.TooltipComponent> getTooltipImage(ItemStack stack) {
 		PouchContents contents = contentsOf(stack);
 		return contents.isEmpty() ? java.util.Optional.empty()
-				: java.util.Optional.of(new PouchTooltip(contents, capacity()));
+				: java.util.Optional.of(new PouchTooltip(contents,
+						capacity(ServerBalance.lvPouchCapacity(), ServerBalance.shieldingPouchCapacity())));
 	}
 
 	// --- helpers ---

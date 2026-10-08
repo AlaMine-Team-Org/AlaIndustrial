@@ -112,6 +112,8 @@ public class IndustrializationFabric implements ModInitializer {
 		// MOD-084: install the item-energy bridge seam, so the worn Energy Pack can charge other mods'
 		// powered items through EnergyStorage.ITEM without common code importing Team Reborn types.
 		ItemEnergyBridge.install(new FabricItemEnergyBridge());
+		// MOD-787: the fake player the block breaker breaks through, so claim mods can refuse it.
+		dev.alaindustrial.core.world.FakePlayers.install(new dev.alaindustrial.core.fabric.FabricFakePlayers());
 		// MOD-107: install the item-fluid bridge seam, so a machine's own slots can exchange a bucket with
 		// whatever fluid container sits in them — vanilla bucket, our capsule, or another mod's cell — via
 		// FluidStorage.ITEM, without common code importing Fabric Transfer types.

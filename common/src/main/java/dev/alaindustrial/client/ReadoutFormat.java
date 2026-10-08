@@ -38,6 +38,25 @@ public final class ReadoutFormat {
 		return String.format(Locale.ROOT, "%.1fB", value / 1_000_000_000.0);
 	}
 
+	/**
+	 * An average rate, {@code amount} spread over {@code ticks} (MOD-722): one decimal below 10 per tick,
+	 * a whole number from 10 up, {@code "<0.1"} for a non-zero amount too small to show a digit, and
+	 * {@code "0"} only when nothing moved at all — so a working block never reads as idle.
+	 *
+	 * <p>Rounds down, in integer arithmetic: 9.96 must not print as "10.0" in the one-decimal band, and
+	 * integers carry no locale.
+	 */
+	public static String rate(long amount, int ticks) {
+		if (amount <= 0L || ticks <= 0) {
+			return "0";
+		}
+		if (amount >= 10L * ticks) {
+			return Long.toString(amount / ticks);
+		}
+		long tenths = amount * 10L / ticks;
+		return tenths == 0L ? "<0.1" : (tenths / 10L) + "." + (tenths % 10L);
+	}
+
 	/** The exact figure with thousands separators, for the tooltip behind a {@link #compact} reading. */
 	public static String exact(long value) {
 		return String.format(Locale.ROOT, "%,d", value).replace(',', ' ');

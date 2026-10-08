@@ -127,6 +127,44 @@ public final class FluidNetworkPerfScenarios {
 			helper.fail("the mid-line segment is empty — the benchmark timed a line that was not running");
 			return;
 		}
+		long idle = idleTickCost(helper, network, dst);
+		if (idle < 0) {
+			return;
+		}
+		System.out.printf(Locale.ROOT,
+				"[ala-bench] %-8s per fluid tick  %8d ns (net of noise %8d ns) | %6.3f %% of the 50 ms budget%n",
+				"idle", idle, Math.max(0, idle - floor), Math.max(0, idle - floor) / 500_000.0);
 		helper.succeed();
+	}
+
+	/**
+	 * The same line with both tanks full (MOD-734): the source is no longer topped up and the target fills
+	 * up, the line settles and the network falls asleep; then the median of what the manager's per-tick
+	 * question — {@code isAwake}, and a tick only if it says so — costs. Returns -1 after failing the test
+	 * when the line never falls asleep.
+	 */
+	private static long idleTickCost(GameTestHelper helper, FluidNetwork network, FluidTankBlockEntity dst) {
+		dst.fluidTank.fluid = FluidHolder.of(Fluids.WATER);
+		dst.fluidTank.amount = dst.fluidTank.capacity;
+		int settled = 0;
+		while (network.isAwake()) {
+			network.tick();
+			if (++settled > 4 * WARMUP_TICKS * SEGMENTS) {
+				helper.fail("the full line never fell asleep — the idle cost cannot be measured (MOD-734)");
+				return -1;
+			}
+		}
+		long[] samples = new long[MEASURED_TICKS];
+		for (int i = 0; i < WARMUP_TICKS + MEASURED_TICKS; i++) {
+			long t1 = System.nanoTime();
+			if (network.isAwake()) {
+				network.tick();
+			}
+			long t2 = System.nanoTime();
+			if (i >= WARMUP_TICKS) {
+				samples[i - WARMUP_TICKS] = t2 - t1;
+			}
+		}
+		return median(samples);
 	}
 }

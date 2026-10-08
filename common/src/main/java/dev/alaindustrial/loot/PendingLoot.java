@@ -2,6 +2,7 @@ package dev.alaindustrial.loot;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.RandomizableContainer;
+import net.minecraft.world.entity.vehicle.ContainerEntity;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -44,6 +45,18 @@ public final class PendingLoot {
 	public static boolean isPending(@Nullable BlockEntity blockEntity) {
 		return blockEntity instanceof RandomizableContainer randomizable
 				&& randomizable.getLootTable() != null;
+	}
+
+	/**
+	 * The same question asked of a container ENTITY — a chest minecart or chest boat (MOD-786).
+	 *
+	 * <p>The trap is the same one: {@code getItem} on an entity container goes through
+	 * {@code getChestVehicleItem}, which unpacks the table with no player in context first. A chest
+	 * minecart in an abandoned mineshaft is exactly such a container. The field read is safe;
+	 * {@code getItemStacks()} is the plain list, read without unpacking.
+	 */
+	public static boolean isPending(ContainerEntity container) {
+		return container.getContainerLootTable() != null;
 	}
 
 	/**
