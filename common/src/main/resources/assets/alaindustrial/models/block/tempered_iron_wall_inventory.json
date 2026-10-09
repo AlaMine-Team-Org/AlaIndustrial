@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/wall_inventory",
+  "textures": {
+    "wall": "alaindustrial:block/tempered_iron_block"
+  }
+}

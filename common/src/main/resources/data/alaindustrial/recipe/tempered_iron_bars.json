@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "III",
+    "III"
+  ],
+  "key": {
+    "I": "alaindustrial:tempered_iron"
+  },
+  "result": {
+    "id": "alaindustrial:tempered_iron_bars",
+    "count": 16
+  }
+}

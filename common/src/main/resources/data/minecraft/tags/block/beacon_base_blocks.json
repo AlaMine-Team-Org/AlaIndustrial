@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    "alaindustrial:tin_block",
+    "alaindustrial:silver_block",
+    "alaindustrial:nickel_block",
+    "alaindustrial:uranium_block",
+    "alaindustrial:palladium_block",
+    "alaindustrial:bronze_block",
+    "alaindustrial:invar_block",
+    "alaindustrial:cupronickel_block",
+    "alaindustrial:electrum_block",
+    "alaindustrial:netherite_alloy_block",
+    "alaindustrial:shielding_alloy_block",
+    "alaindustrial:tempered_iron_block"
+  ]
+}

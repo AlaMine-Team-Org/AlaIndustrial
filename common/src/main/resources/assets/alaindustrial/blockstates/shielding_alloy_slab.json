@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "alaindustrial:block/shielding_alloy_slab"
+    },
+    "type=double": {
+      "model": "alaindustrial:block/shielding_alloy_block"
+    },
+    "type=top": {
+      "model": "alaindustrial:block/shielding_alloy_slab_top"
+    }
+  }
+}

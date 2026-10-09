@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "#  ",
+    "## ",
+    "###"
+  ],
+  "key": {
+    "#": "alaindustrial:bronze_block"
+  },
+  "result": {
+    "id": "alaindustrial:bronze_stairs",
+    "count": 4
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "alaindustrial:block/tempered_iron_chain",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "alaindustrial:block/tempered_iron_chain"
+    },
+    "axis=z": {
+      "model": "alaindustrial:block/tempered_iron_chain",
+      "x": 90
+    }
+  }
+}

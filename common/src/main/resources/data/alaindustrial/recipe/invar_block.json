@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "###",
+    "#I#",
+    "###"
+  ],
+  "key": {
+    "#": "#c:ingots/invar",
+    "I": "alaindustrial:invar_ingot"
+  },
+  "result": {
+    "id": "alaindustrial:invar_block",
+    "count": 1
+  }
+}

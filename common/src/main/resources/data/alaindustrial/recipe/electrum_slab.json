@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "###"
+  ],
+  "key": {
+    "#": "alaindustrial:electrum_block"
+  },
+  "result": {
+    "id": "alaindustrial:electrum_slab",
+    "count": 6
+  }
+}

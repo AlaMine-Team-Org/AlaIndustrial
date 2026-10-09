@@ -111,7 +111,8 @@ public final class CreativeTabContent {
 	 * CARRIED, what SPENDS it — then the two logistics networks, then what the player holds, and only
 	 * then the raw materials and crafting parts everything above is built from. Blocks and the armour
 	 * lines close the list; after them, outside both bands, come the decorative lab plaque plates
-	 * (MOD-513), which a player never builds with and only looks up.
+	 * (MOD-513), which a player never builds with and only looks up, then the metal family and the chest
+	 * boats (MOD-796).
 	 *
 	 * <p><b>On top of that order the tab is split into two bands</b> (MOD-574): everything placeable
 	 * first, loose items after — see {@link ShapeSorted} for why two and not three. Within a section the
@@ -125,6 +126,10 @@ public final class CreativeTabContent {
 		// MOD-513 — the lab plaque plates close the tab, after both bands: pure decoration with no
 		// recipe and no function, so they must not sit among the blocks a player builds with.
 		DecorContent.labPlaque(out);
+		// MOD-796 — the metal family and the chest boats close the tab (owner decision 2026-10-09): building
+		// material and boat variants a player looks up rather than progresses through.
+		DecorContent.metalFamily(out);
+		StorageContent.chestBoats(out);
 	}
 
 	/** The tab's content in reading order, before {@link ShapeSorted} groups it by silhouette. */
@@ -145,8 +150,6 @@ public final class CreativeTabContent {
 		FluidContent.fluidCarriers(out);
 		// 6 - item logistics: the containers the pipe serves.
 		StorageContent.itemLogistics(out);
-		// 6b - the chest boats (MOD-785): the mod chests again, on the water.
-		StorageContent.chestBoats(out);
 		// 7 - what the player holds: hand tools first (no charge needed), then the powered gear.
 		ToolsAndGearContent.handTools(out);
 		ToolsAndGearContent.poweredGear(out);
@@ -190,6 +193,7 @@ public final class CreativeTabContent {
 
 	public static void buildingBlocks(Sink out) {
 		DecorContent.metalBlocks(out);
+		DecorContent.metalFamily(out);
 		DecorContent.labPlaque(out);
 	}
 

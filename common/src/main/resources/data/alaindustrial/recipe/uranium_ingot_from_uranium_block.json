@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "alaindustrial:uranium_block"
+  ],
+  "result": {
+    "id": "alaindustrial:uranium_ingot",
+    "count": 9
+  }
+}

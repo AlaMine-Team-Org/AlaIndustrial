@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "alaindustrial:block/silver_slab"
+    },
+    "type=double": {
+      "model": "alaindustrial:block/silver_block"
+    },
+    "type=top": {
+      "model": "alaindustrial:block/silver_slab_top"
+    }
+  }
+}

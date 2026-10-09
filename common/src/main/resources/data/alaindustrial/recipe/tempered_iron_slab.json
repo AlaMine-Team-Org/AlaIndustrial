@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "###"
+  ],
+  "key": {
+    "#": "alaindustrial:tempered_iron_block"
+  },
+  "result": {
+    "id": "alaindustrial:tempered_iron_slab",
+    "count": 6
+  }
+}

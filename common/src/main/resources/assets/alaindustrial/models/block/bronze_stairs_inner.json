@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/inner_stairs",
+  "textures": {
+    "bottom": "alaindustrial:block/bronze_block",
+    "side": "alaindustrial:block/bronze_block",
+    "top": "alaindustrial:block/bronze_block"
+  }
+}

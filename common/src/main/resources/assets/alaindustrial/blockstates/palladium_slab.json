@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "alaindustrial:block/palladium_slab"
+    },
+    "type=double": {
+      "model": "alaindustrial:block/palladium_block"
+    },
+    "type=top": {
+      "model": "alaindustrial:block/palladium_slab_top"
+    }
+  }
+}

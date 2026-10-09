@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "#  ",
+    "## ",
+    "###"
+  ],
+  "key": {
+    "#": "alaindustrial:palladium_block"
+  },
+  "result": {
+    "id": "alaindustrial:palladium_stairs",
+    "count": 4
+  }
+}

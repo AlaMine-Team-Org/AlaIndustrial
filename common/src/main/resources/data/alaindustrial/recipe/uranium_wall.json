@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": "alaindustrial:uranium_block"
+  },
+  "result": {
+    "id": "alaindustrial:uranium_wall",
+    "count": 6
+  }
+}

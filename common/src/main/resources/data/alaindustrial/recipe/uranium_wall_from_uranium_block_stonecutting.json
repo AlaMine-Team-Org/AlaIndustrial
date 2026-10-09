@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "alaindustrial:uranium_block",
+  "result": {
+    "id": "alaindustrial:uranium_wall",
+    "count": 1
+  }
+}

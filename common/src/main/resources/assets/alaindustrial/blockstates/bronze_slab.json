@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "alaindustrial:block/bronze_slab"
+    },
+    "type=double": {
+      "model": "alaindustrial:block/bronze_block"
+    },
+    "type=top": {
+      "model": "alaindustrial:block/bronze_slab_top"
+    }
+  }
+}

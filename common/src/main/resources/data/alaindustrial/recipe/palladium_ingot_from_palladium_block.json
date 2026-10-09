@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "alaindustrial:palladium_block"
+  ],
+  "result": {
+    "id": "alaindustrial:palladium_ingot",
+    "count": 9
+  }
+}

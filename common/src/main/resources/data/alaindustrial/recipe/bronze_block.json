@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "###",
+    "#I#",
+    "###"
+  ],
+  "key": {
+    "#": "#c:ingots/bronze",
+    "I": "alaindustrial:bronze_ingot"
+  },
+  "result": {
+    "id": "alaindustrial:bronze_block",
+    "count": 1
+  }
+}

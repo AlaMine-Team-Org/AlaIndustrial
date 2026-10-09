@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "alaindustrial:invar_block",
+  "result": {
+    "id": "alaindustrial:invar_wall",
+    "count": 1
+  }
+}

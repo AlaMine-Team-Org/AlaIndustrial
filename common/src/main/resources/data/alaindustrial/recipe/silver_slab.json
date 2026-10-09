@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "###"
+  ],
+  "key": {
+    "#": "alaindustrial:silver_block"
+  },
+  "result": {
+    "id": "alaindustrial:silver_slab",
+    "count": 6
+  }
+}

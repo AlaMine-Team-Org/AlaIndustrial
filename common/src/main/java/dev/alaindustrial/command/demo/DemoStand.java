@@ -127,6 +127,7 @@ public final class DemoStand {
 			ReactorZone.REACTORROW_CAMERA,
 			FarmsZone.FARMS_CAMERA,
 			MonitorWallZone.MONITOR_CAMERA,
+			MetalFamilyZone.METALS_CAMERA,
 			ItemlessRowZone.ITEMLESS_CAMERA,
 			ShowcaseZone.SHOWCASE_CAMERA,
 			ShowcaseZone.SHOWCASE_WEST_CAMERA,
@@ -171,6 +172,7 @@ public final class DemoStand {
 			new CrystalGreenhouseZone(),
 			new ReactorRoomZone(),
 			new LabPlaqueZone(),
+			new MetalFamilyZone(),
 			new ShowcaseZone(),
 			new ItemlessRowZone(),
 			new MonitorWallZone());

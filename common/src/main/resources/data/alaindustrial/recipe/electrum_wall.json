@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": "alaindustrial:electrum_block"
+  },
+  "result": {
+    "id": "alaindustrial:electrum_wall",
+    "count": 6
+  }
+}

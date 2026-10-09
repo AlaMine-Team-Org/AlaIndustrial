@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "alaindustrial:nickel_block",
+  "result": {
+    "id": "alaindustrial:nickel_stairs",
+    "count": 1
+  }
+}

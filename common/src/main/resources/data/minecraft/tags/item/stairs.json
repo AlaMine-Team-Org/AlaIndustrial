@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    "alaindustrial:tin_stairs",
+    "alaindustrial:silver_stairs",
+    "alaindustrial:nickel_stairs",
+    "alaindustrial:uranium_stairs",
+    "alaindustrial:palladium_stairs",
+    "alaindustrial:bronze_stairs",
+    "alaindustrial:invar_stairs",
+    "alaindustrial:cupronickel_stairs",
+    "alaindustrial:electrum_stairs",
+    "alaindustrial:netherite_alloy_stairs",
+    "alaindustrial:shielding_alloy_stairs",
+    "alaindustrial:tempered_iron_stairs"
+  ]
+}

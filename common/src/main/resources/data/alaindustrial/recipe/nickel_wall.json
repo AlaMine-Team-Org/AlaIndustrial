@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": "alaindustrial:nickel_block"
+  },
+  "result": {
+    "id": "alaindustrial:nickel_wall",
+    "count": 6
+  }
+}

@@ -274,7 +274,13 @@ public final class OilSlimeScenarios {
 					helper.assertTrue(!OilSlimeSpawning.canSpawn(type, level, EntitySpawnReason.NATURAL, at,
 							level.getRandom()), "oilSlimeNaturalSpawn=false must stop natural spawning");
 				}
-				helper.spawnWithNoFreeWill(type, spawn.north());
+				// The capping slime goes into the spawn cell itself: the cap counts the chunk of that cell, and a
+				// neighbouring cell lies in the next chunk whenever the random test origin puts the spawn cell on a
+				// chunk edge (z & 15 == 0 for the north neighbour, one layout in sixteen).
+				helper.spawnWithNoFreeWill(type, spawn);
+				int counted = OilSlimeSpawning.oilSlimesInChunk(level, at);
+				helper.assertTrue(counted == present + 1, "the oil slime spawned in the counted cell was not counted: "
+						+ present + " before, " + counted + " after");
 				helper.assertTrue(!OilSlimeSpawning.canSpawn(type, level, EntitySpawnReason.NATURAL, at,
 						level.getRandom()), "a chunk at its cap must refuse another oil slime");
 			}

@@ -579,6 +579,10 @@ pitest {
             // stacks only; the ceiling it applies is RadiationCore.containerLeak, mutated where it lives.
             // Covered by the L2 R-RAD-26..29 scenarios on both loaders.
             'dev.alaindustrial.core.radiation.RadiationVehicles',
+            // MOD-796: compacted uranium — item weights by tag and the palette sweep for placed blocks; reads
+            // ItemStack and LevelChunkSection only, the cap is a plain min. Covered by the L2 metal-family
+            // radiation scenarios on both loaders.
+            'dev.alaindustrial.core.radiation.RadioactiveMass',
             'dev.alaindustrial.core.energy.EnergyLookup',
             // MOD-608: the multiblock-cell redirect. Its one body, hostOf, reads a BlockState from a
             // Level and asks the Level whether the host is loaded, so every mutant it has is a

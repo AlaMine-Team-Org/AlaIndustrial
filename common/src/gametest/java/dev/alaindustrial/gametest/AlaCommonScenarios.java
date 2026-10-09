@@ -367,8 +367,9 @@ public final class AlaCommonScenarios {
 			// its block (the bars reach the boundary, so the shape has to), and it must not occlude —
 			// a section that did would cull away the sections next to it while the player is still
 			// building the machine, and the glass core would show nothing.
+			// MOD-795: reinforced glass is a building window — vanilla glass in a steel frame, the same pairing.
 			if (id.getPath().equals("reactor_glass") || id.getPath().equals("crystal_farm_glass")
-					|| id.getPath().equals("concentrator_section")) {
+					|| id.getPath().equals("concentrator_section") || id.getPath().equals("reinforced_glass")) {
 				continue;
 			}
 			Block block = BuiltInRegistries.BLOCK.getValue(id);
@@ -395,6 +396,16 @@ public final class AlaCommonScenarios {
 					&& Block.isShapeFullBlock(state.getCollisionShape(level, probe, CollisionContext.empty()));
 			boolean occludes = state.canOcclude();
 			boolean occlusionOk = (fullCube == occludes);
+			// MOD-796: the metal stairs, slabs, walls and fence are vanilla's own shaped classes. Vanilla keeps
+			// canOcclude() on for them and occludes by the SHAPE instead, so a neighbour's face is culled only
+			// where the shape really covers it. What the rule guards against — a partial block culling its
+			// neighbour as if it were a full cube — is asked directly: its occlusion shape is not the cube.
+			if (block instanceof net.minecraft.world.level.block.StairBlock
+					|| block instanceof net.minecraft.world.level.block.SlabBlock
+					|| block instanceof net.minecraft.world.level.block.WallBlock
+					|| block instanceof net.minecraft.world.level.block.FenceBlock) {
+				occlusionOk = !fullCube && !Block.isShapeFullBlock(state.getOcclusionShape());
+			}
 
 			// 2. A BlockItem is registered under the same id (waived for liquids, see above).
 			boolean hasItem = liquid || seedItemCrop || BuiltInRegistries.ITEM.containsKey(id);

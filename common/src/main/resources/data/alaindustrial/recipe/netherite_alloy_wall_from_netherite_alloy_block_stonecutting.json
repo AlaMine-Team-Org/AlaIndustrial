@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "alaindustrial:netherite_alloy_block",
+  "result": {
+    "id": "alaindustrial:netherite_alloy_wall",
+    "count": 1
+  }
+}

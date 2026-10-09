@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "alaindustrial:block/uranium_slab"
+    },
+    "type=double": {
+      "model": "alaindustrial:block/uranium_block"
+    },
+    "type=top": {
+      "model": "alaindustrial:block/uranium_slab_top"
+    }
+  }
+}

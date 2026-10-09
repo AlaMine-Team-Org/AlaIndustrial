@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "alaindustrial:block/electrum_slab"
+    },
+    "type=double": {
+      "model": "alaindustrial:block/electrum_block"
+    },
+    "type=top": {
+      "model": "alaindustrial:block/electrum_slab_top"
+    }
+  }
+}

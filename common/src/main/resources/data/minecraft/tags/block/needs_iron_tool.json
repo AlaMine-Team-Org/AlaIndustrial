@@ -3,6 +3,26 @@
   "values": [
     "alaindustrial:deepslate_uranium_ore",
     "alaindustrial:teleporter",
-    "alaindustrial:uranium_ore"
+    "alaindustrial:uranium_ore",
+    "alaindustrial:silver_block",
+    "alaindustrial:silver_stairs",
+    "alaindustrial:silver_slab",
+    "alaindustrial:silver_wall",
+    "alaindustrial:uranium_block",
+    "alaindustrial:uranium_stairs",
+    "alaindustrial:uranium_slab",
+    "alaindustrial:uranium_wall",
+    "alaindustrial:palladium_block",
+    "alaindustrial:palladium_stairs",
+    "alaindustrial:palladium_slab",
+    "alaindustrial:palladium_wall",
+    "alaindustrial:electrum_block",
+    "alaindustrial:electrum_stairs",
+    "alaindustrial:electrum_slab",
+    "alaindustrial:electrum_wall",
+    "alaindustrial:shielding_alloy_block",
+    "alaindustrial:shielding_alloy_stairs",
+    "alaindustrial:shielding_alloy_slab",
+    "alaindustrial:shielding_alloy_wall"
   ]
 }

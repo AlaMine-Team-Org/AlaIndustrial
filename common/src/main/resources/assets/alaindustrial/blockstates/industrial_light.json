@@ -1,0 +1,30 @@
+{
+  "variants": {
+    "facing=up": {
+      "model": "alaindustrial:block/industrial_light"
+    },
+    "facing=down": {
+      "model": "alaindustrial:block/industrial_light",
+      "x": 180
+    },
+    "facing=north": {
+      "model": "alaindustrial:block/industrial_light",
+      "x": 90
+    },
+    "facing=south": {
+      "model": "alaindustrial:block/industrial_light",
+      "x": 90,
+      "y": 180
+    },
+    "facing=east": {
+      "model": "alaindustrial:block/industrial_light",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west": {
+      "model": "alaindustrial:block/industrial_light",
+      "x": 90,
+      "y": 270
+    }
+  }
+}
