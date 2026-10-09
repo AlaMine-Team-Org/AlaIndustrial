@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "PGP",
+    "G G",
+    "PGP"
+  ],
+  "key": {
+    "P": "#c:plates/tempered_iron",
+    "G": "#c:glass_blocks/colorless"
+  },
+  "result": {
+    "id": "alaindustrial:reinforced_glass",
+    "count": 4
+  }
+}

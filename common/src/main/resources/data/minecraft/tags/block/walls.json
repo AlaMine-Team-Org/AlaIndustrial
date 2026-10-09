@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    "alaindustrial:tin_wall",
+    "alaindustrial:silver_wall",
+    "alaindustrial:nickel_wall",
+    "alaindustrial:uranium_wall",
+    "alaindustrial:palladium_wall",
+    "alaindustrial:bronze_wall",
+    "alaindustrial:invar_wall",
+    "alaindustrial:cupronickel_wall",
+    "alaindustrial:electrum_wall",
+    "alaindustrial:netherite_alloy_wall",
+    "alaindustrial:shielding_alloy_wall",
+    "alaindustrial:tempered_iron_wall"
+  ]
+}

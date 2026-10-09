@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "alaindustrial:bronze_block",
+  "result": {
+    "id": "alaindustrial:bronze_slab",
+    "count": 2
+  }
+}

@@ -37,4 +37,15 @@ public final class LineBlockProps {
 	public static BlockBehaviour.Properties washedAwayByFluids(BlockBehaviour.Properties properties) {
 		return properties;
 	}
+
+	/**
+	 * A see-through full block, the way vanilla glass is (MOD-795): mobs do not spawn on it, it carries no
+	 * redstone, and it neither suffocates nor blocks the view of an entity whose head is inside it. 26.3: the
+	 * view predicate takes the entity's box as a fourth argument.
+	 */
+	public static BlockBehaviour.Properties seeThrough(BlockBehaviour.Properties properties) {
+		return properties.isValidSpawn((state, level, pos, type) -> false)
+				.isRedstoneConductor((state, level, pos) -> false).isSuffocating((state, level, pos) -> false)
+				.isViewBlocking((state, level, pos, box) -> false);
+	}
 }

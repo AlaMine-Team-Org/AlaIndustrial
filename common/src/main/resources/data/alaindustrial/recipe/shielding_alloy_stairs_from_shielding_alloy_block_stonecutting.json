@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "alaindustrial:shielding_alloy_block",
+  "result": {
+    "id": "alaindustrial:shielding_alloy_stairs",
+    "count": 1
+  }
+}

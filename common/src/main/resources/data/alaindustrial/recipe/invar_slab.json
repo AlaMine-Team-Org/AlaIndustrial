@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "###"
+  ],
+  "key": {
+    "#": "alaindustrial:invar_block"
+  },
+  "result": {
+    "id": "alaindustrial:invar_slab",
+    "count": 6
+  }
+}

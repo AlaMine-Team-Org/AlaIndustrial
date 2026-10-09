@@ -1,6 +1,10 @@
 {
   "replace": false,
   "values": [
-    "alaindustrial:palladium_ore"
+    "alaindustrial:palladium_ore",
+    "alaindustrial:netherite_alloy_block",
+    "alaindustrial:netherite_alloy_stairs",
+    "alaindustrial:netherite_alloy_slab",
+    "alaindustrial:netherite_alloy_wall"
   ]
 }

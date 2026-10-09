@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "###",
+    "#I#",
+    "###"
+  ],
+  "key": {
+    "#": "#c:ingots/palladium",
+    "I": "alaindustrial:palladium_ingot"
+  },
+  "result": {
+    "id": "alaindustrial:palladium_block",
+    "count": 1
+  }
+}

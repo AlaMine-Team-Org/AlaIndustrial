@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/template_chain",
+  "textures": {
+    "texture": "alaindustrial:block/tempered_iron_chain"
+  }
+}

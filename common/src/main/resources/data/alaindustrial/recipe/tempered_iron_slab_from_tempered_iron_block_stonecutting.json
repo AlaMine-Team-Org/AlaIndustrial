@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "alaindustrial:tempered_iron_block",
+  "result": {
+    "id": "alaindustrial:tempered_iron_slab",
+    "count": 2
+  }
+}

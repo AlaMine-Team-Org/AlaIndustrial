@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    "alaindustrial:tin_slab",
+    "alaindustrial:silver_slab",
+    "alaindustrial:nickel_slab",
+    "alaindustrial:uranium_slab",
+    "alaindustrial:palladium_slab",
+    "alaindustrial:bronze_slab",
+    "alaindustrial:invar_slab",
+    "alaindustrial:cupronickel_slab",
+    "alaindustrial:electrum_slab",
+    "alaindustrial:netherite_alloy_slab",
+    "alaindustrial:shielding_alloy_slab",
+    "alaindustrial:tempered_iron_slab"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "G",
+    "D",
+    "P"
+  ],
+  "key": {
+    "G": "#c:glass_blocks/colorless",
+    "D": "minecraft:glowstone_dust",
+    "P": "#c:plates/tempered_iron"
+  },
+  "result": {
+    "id": "alaindustrial:industrial_light",
+    "count": 4
+  }
+}

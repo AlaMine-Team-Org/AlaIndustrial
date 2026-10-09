@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/inner_stairs",
+  "textures": {
+    "bottom": "alaindustrial:block/cupronickel_block",
+    "side": "alaindustrial:block/cupronickel_block",
+    "top": "alaindustrial:block/cupronickel_block"
+  }
+}

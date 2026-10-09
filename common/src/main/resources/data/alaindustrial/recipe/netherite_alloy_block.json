@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "###",
+    "#I#",
+    "###"
+  ],
+  "key": {
+    "#": "#c:ingots/netherite_alloy",
+    "I": "alaindustrial:netherite_alloy_ingot"
+  },
+  "result": {
+    "id": "alaindustrial:netherite_alloy_block",
+    "count": 1
+  }
+}

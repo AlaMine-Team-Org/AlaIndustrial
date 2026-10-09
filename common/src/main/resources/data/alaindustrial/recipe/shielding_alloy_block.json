@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "###",
+    "#I#",
+    "###"
+  ],
+  "key": {
+    "#": "#c:ingots/shielding_alloy",
+    "I": "alaindustrial:shielding_alloy_ingot"
+  },
+  "result": {
+    "id": "alaindustrial:shielding_alloy_block",
+    "count": 1
+  }
+}

@@ -1556,6 +1556,44 @@
           ]
         },
         {
+          "id": "block_breaker",
+          "title": "블록 파괴기",
+          "icon": "alaindustrial:block_breaker",
+          "pages": [
+            {
+              "type": "text",
+              "title": "블록 파괴기",
+              "text": "슬롯에 넣은 도구로 앞에 있는 블록을 부수는 1단계 LV 기계입니다. 그 도구를 든 플레이어와 똑같이 부숩니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 8 EU/t",
+                "버퍼: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "alaindustrial:wooden_gear",
+                "minecraft:stone_pickaxe",
+                "alaindustrial:wooden_gear",
+                "minecraft:oak_planks",
+                "minecraft:redstone",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:block_breaker",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "component_repair_bench",
           "title": "부품 수리대",
           "icon": "alaindustrial:component_repair_bench",
@@ -2370,6 +2408,24 @@
               "type": "text",
               "title": "청동 주괴",
               "text": "대량으로 뽑는 구리·주석 합금 — 합금 제련기에서 구리 주괴 3개와 주석 주괴 1개로 청동 주괴 2개가 나옵니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "무정형 제작",
+              "grid": [
+                "alaindustrial:bronze_block",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:bronze_ingot",
+              "result_count": 9
             }
           ]
         },
@@ -2394,6 +2450,24 @@
               "type": "text",
               "title": "인바 주괴",
               "text": "한 번에 하나씩 나오는 철·니켈 합금 — 합금 제련기에서 철 주괴 2개와 니켈 주괴 1개로 인바 주괴 1개만 나옵니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "무정형 제작",
+              "grid": [
+                "alaindustrial:invar_block",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:invar_ingot",
+              "result_count": 9
             }
           ]
         },
@@ -2406,6 +2480,24 @@
               "type": "text",
               "title": "백동 주괴",
               "text": "1대1 비율의 구리·니켈 합금으로, 한 번에 주괴 하나씩만 나옵니다 — 재료로 따지면 니켈을 활용하는 가장 값싼 길입니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "무정형 제작",
+              "grid": [
+                "alaindustrial:cupronickel_block",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:cupronickel_ingot",
+              "result_count": 9
             }
           ]
         },
@@ -2422,6 +2514,230 @@
           ]
         },
         {
+          "id": "metal_blocks",
+          "title": "금속 블록",
+          "icon": "alaindustrial:tin_block",
+          "pages": [
+            {
+              "type": "text",
+              "title": "금속 블록",
+              "text": "모드의 모든 주괴에 하나씩 있는 저장 블록입니다. 주괴 아홉 개를 블록 하나로 만들고 손실 없이 되돌릴 수 있으며, 블록으로 계단, 반 블록, 담장을 만들고 담금질된 철로는 울타리도 만듭니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot"
+              ],
+              "result_id": "alaindustrial:tin_block",
+              "result_count": 1,
+              "variants": [
+                {
+                  "grid": [
+                    "alaindustrial:tin_ingot",
+                    "alaindustrial:tin_ingot",
+                    "alaindustrial:tin_ingot",
+                    "alaindustrial:tin_ingot",
+                    "alaindustrial:tin_ingot",
+                    "alaindustrial:tin_ingot",
+                    "alaindustrial:tin_ingot",
+                    "alaindustrial:tin_ingot",
+                    "alaindustrial:tin_ingot"
+                  ],
+                  "recipe_type": "정형 제작",
+                  "result_id": "alaindustrial:tin_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:silver_ingot",
+                    "alaindustrial:silver_ingot",
+                    "alaindustrial:silver_ingot",
+                    "alaindustrial:silver_ingot",
+                    "alaindustrial:silver_ingot",
+                    "alaindustrial:silver_ingot",
+                    "alaindustrial:silver_ingot",
+                    "alaindustrial:silver_ingot",
+                    "alaindustrial:silver_ingot"
+                  ],
+                  "recipe_type": "정형 제작",
+                  "result_id": "alaindustrial:silver_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:nickel_ingot",
+                    "alaindustrial:nickel_ingot",
+                    "alaindustrial:nickel_ingot",
+                    "alaindustrial:nickel_ingot",
+                    "alaindustrial:nickel_ingot",
+                    "alaindustrial:nickel_ingot",
+                    "alaindustrial:nickel_ingot",
+                    "alaindustrial:nickel_ingot",
+                    "alaindustrial:nickel_ingot"
+                  ],
+                  "recipe_type": "정형 제작",
+                  "result_id": "alaindustrial:nickel_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:uranium_ingot",
+                    "alaindustrial:uranium_ingot",
+                    "alaindustrial:uranium_ingot",
+                    "alaindustrial:uranium_ingot",
+                    "alaindustrial:uranium_ingot",
+                    "alaindustrial:uranium_ingot",
+                    "alaindustrial:uranium_ingot",
+                    "alaindustrial:uranium_ingot",
+                    "alaindustrial:uranium_ingot"
+                  ],
+                  "recipe_type": "정형 제작",
+                  "result_id": "alaindustrial:uranium_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:palladium_ingot",
+                    "alaindustrial:palladium_ingot",
+                    "alaindustrial:palladium_ingot",
+                    "alaindustrial:palladium_ingot",
+                    "alaindustrial:palladium_ingot",
+                    "alaindustrial:palladium_ingot",
+                    "alaindustrial:palladium_ingot",
+                    "alaindustrial:palladium_ingot",
+                    "alaindustrial:palladium_ingot"
+                  ],
+                  "recipe_type": "정형 제작",
+                  "result_id": "alaindustrial:palladium_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:bronze_ingot",
+                    "alaindustrial:bronze_ingot",
+                    "alaindustrial:bronze_ingot",
+                    "alaindustrial:bronze_ingot",
+                    "alaindustrial:bronze_ingot",
+                    "alaindustrial:bronze_ingot",
+                    "alaindustrial:bronze_ingot",
+                    "alaindustrial:bronze_ingot",
+                    "alaindustrial:bronze_ingot"
+                  ],
+                  "recipe_type": "정형 제작",
+                  "result_id": "alaindustrial:bronze_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:invar_ingot",
+                    "alaindustrial:invar_ingot",
+                    "alaindustrial:invar_ingot",
+                    "alaindustrial:invar_ingot",
+                    "alaindustrial:invar_ingot",
+                    "alaindustrial:invar_ingot",
+                    "alaindustrial:invar_ingot",
+                    "alaindustrial:invar_ingot",
+                    "alaindustrial:invar_ingot"
+                  ],
+                  "recipe_type": "정형 제작",
+                  "result_id": "alaindustrial:invar_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:cupronickel_ingot",
+                    "alaindustrial:cupronickel_ingot",
+                    "alaindustrial:cupronickel_ingot",
+                    "alaindustrial:cupronickel_ingot",
+                    "alaindustrial:cupronickel_ingot",
+                    "alaindustrial:cupronickel_ingot",
+                    "alaindustrial:cupronickel_ingot",
+                    "alaindustrial:cupronickel_ingot",
+                    "alaindustrial:cupronickel_ingot"
+                  ],
+                  "recipe_type": "정형 제작",
+                  "result_id": "alaindustrial:cupronickel_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:electrum_ingot",
+                    "alaindustrial:electrum_ingot",
+                    "alaindustrial:electrum_ingot",
+                    "alaindustrial:electrum_ingot",
+                    "alaindustrial:electrum_ingot",
+                    "alaindustrial:electrum_ingot",
+                    "alaindustrial:electrum_ingot",
+                    "alaindustrial:electrum_ingot",
+                    "alaindustrial:electrum_ingot"
+                  ],
+                  "recipe_type": "정형 제작",
+                  "result_id": "alaindustrial:electrum_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:netherite_alloy_ingot",
+                    "alaindustrial:netherite_alloy_ingot",
+                    "alaindustrial:netherite_alloy_ingot",
+                    "alaindustrial:netherite_alloy_ingot",
+                    "alaindustrial:netherite_alloy_ingot",
+                    "alaindustrial:netherite_alloy_ingot",
+                    "alaindustrial:netherite_alloy_ingot",
+                    "alaindustrial:netherite_alloy_ingot",
+                    "alaindustrial:netherite_alloy_ingot"
+                  ],
+                  "recipe_type": "정형 제작",
+                  "result_id": "alaindustrial:netherite_alloy_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:shielding_alloy_ingot",
+                    "alaindustrial:shielding_alloy_ingot",
+                    "alaindustrial:shielding_alloy_ingot",
+                    "alaindustrial:shielding_alloy_ingot",
+                    "alaindustrial:shielding_alloy_ingot",
+                    "alaindustrial:shielding_alloy_ingot",
+                    "alaindustrial:shielding_alloy_ingot",
+                    "alaindustrial:shielding_alloy_ingot",
+                    "alaindustrial:shielding_alloy_ingot"
+                  ],
+                  "recipe_type": "정형 제작",
+                  "result_id": "alaindustrial:shielding_alloy_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:tempered_iron",
+                    "alaindustrial:tempered_iron_plate",
+                    "alaindustrial:tempered_iron",
+                    "alaindustrial:tempered_iron",
+                    "alaindustrial:tempered_iron_plate",
+                    "alaindustrial:tempered_iron",
+                    "",
+                    "",
+                    ""
+                  ],
+                  "recipe_type": "정형 제작",
+                  "result_id": "alaindustrial:tempered_iron_fence",
+                  "result_count": 6
+                }
+              ]
+            }
+          ]
+        },
+        {
           "id": "netherite_alloy_ingot",
           "title": "네더라이트 합금 주괴",
           "icon": "alaindustrial:netherite_alloy_ingot",
@@ -2430,6 +2746,24 @@
               "type": "text",
               "title": "네더라이트 합금 주괴",
               "text": "모드의 엔드게임 합금 — 바닐라 네더라이트 주괴 1개와 호박금 주괴 2개를 합금 제련기에 넣으면 네더라이트 합금 주괴 2개가 나옵니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "무정형 제작",
+              "grid": [
+                "alaindustrial:netherite_alloy_block",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:netherite_alloy_ingot",
+              "result_count": 9
             }
           ]
         },
@@ -2659,6 +2993,24 @@
               "type": "text",
               "title": "차폐 합금 주괴",
               "text": "팔라듐과 담금질된 철의 합금으로, 원자로실을 짓는 유일한 재료입니다 — 주괴, 차폐판, 그리고 열화 우라늄까지 요구하는 강화 차폐판."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "무정형 제작",
+              "grid": [
+                "alaindustrial:shielding_alloy_block",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:shielding_alloy_ingot",
+              "result_count": 9
             }
           ]
         },
@@ -2671,6 +3023,24 @@
               "type": "text",
               "title": "호박금 주괴",
               "text": "재료로 따져 이 모드에서 가장 비싼 합금 — 합금 제련기에서 금 주괴 1개와 은 주괴 1개로 호박금 주괴 1개만 나옵니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "무정형 제작",
+              "grid": [
+                "alaindustrial:electrum_block",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:electrum_ingot",
+              "result_count": 9
             }
           ]
         },
@@ -5212,6 +5582,43 @@
                 ""
               ],
               "result_id": "alaindustrial:forge_hammer",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "oak_iron_chest_boat",
+          "title": "철 상자가 실린 참나무 보트",
+          "icon": "alaindustrial:oak_iron_chest_boat",
+          "pages": [
+            {
+              "type": "text",
+              "title": "철 상자가 실린 참나무 보트",
+              "text": "어떤 나무로든 만드는 바닐라 보트에 모드 상자를 고물에 실은 것입니다. 상자 자체만큼 담기며(36–108칸) 바닐라 상자 보트처럼 움직입니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "용량: 36–108칸"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "무정형 제작",
+              "grid": [
+                "alaindustrial:iron_chest",
+                "minecraft:oak_boat",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:oak_iron_chest_boat",
               "result_count": 1
             }
           ]

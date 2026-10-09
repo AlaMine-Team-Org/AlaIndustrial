@@ -108,6 +108,7 @@ public final class RadiationSources {
 		collectGround(level, at, radius, groundReach, sources);
 		collectFallout(level, at, radius, sources);
 		collectContainers(level, at, radius, groundReach, sources);
+		RadioactiveMass.collectPlaced(level, at, radius, groundReach, sources);
 		RadiationVehicles.collectVehicles(level, at, radius, groundReach, sources);
 		return sources;
 	}
@@ -516,7 +517,7 @@ public final class RadiationSources {
 		if (stack.isEmpty()) {
 			return 0;
 		}
-		int count = stack.is(tag) ? stack.getCount() : 0;
+		int count = stack.is(tag) ? stack.getCount() * RadioactiveMass.of(stack) : 0;
 		if (depth > 0 && !isShieldingPouch(stack.getItem())) {
 			count += taggedInside(stack, tag, depth);
 		}
@@ -529,7 +530,7 @@ public final class RadiationSources {
 	 * sweep of every player, and all this needs is the item and the count.
 	 */
 	public static int countTagged(ItemStackTemplate template, TagKey<Item> tag, int depth) {
-		int count = template.typeHolder().is(tag) ? template.count() : 0;
+		int count = template.typeHolder().is(tag) ? template.count() * RadioactiveMass.of(template) : 0;
 		if (depth > 0 && !isShieldingPouch(template.typeHolder().value())) {
 			count += taggedInside(template, tag, depth);
 		}

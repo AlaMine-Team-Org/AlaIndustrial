@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "#  ",
+    "## ",
+    "###"
+  ],
+  "key": {
+    "#": "alaindustrial:netherite_alloy_block"
+  },
+  "result": {
+    "id": "alaindustrial:netherite_alloy_stairs",
+    "count": 4
+  }
+}

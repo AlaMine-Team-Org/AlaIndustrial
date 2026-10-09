@@ -1556,6 +1556,44 @@
           ]
         },
         {
+          "id": "block_breaker",
+          "title": "ब्लॉक तोड़क",
+          "icon": "alaindustrial:block_breaker",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ब्लॉक तोड़क",
+              "text": "पहले स्तर की एक LV मशीन, जो अपने स्लॉट में रखे औज़ार से सामने का ब्लॉक तोड़ती है — ठीक वैसे ही जैसे वह औज़ार हाथ में लिए कोई खिलाड़ी तोड़ता।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 8 EU/t",
+                "बफ़र: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "alaindustrial:wooden_gear",
+                "minecraft:stone_pickaxe",
+                "alaindustrial:wooden_gear",
+                "minecraft:oak_planks",
+                "minecraft:redstone",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:block_breaker",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "component_repair_bench",
           "title": "पुर्ज़ा मरम्मत बेंच",
           "icon": "alaindustrial:component_repair_bench",
@@ -2370,6 +2408,24 @@
               "type": "text",
               "title": "कांस्य का पिंड",
               "text": "तांबे-टिन की बड़े पैमाने वाली मिश्रधातु — मिश्रधातु भट्ठी में तीन तांबे के पिंड और एक टिन का पिंड मिलकर दो कांस्य के पिंड देते हैं।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "बिना आकार की क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:bronze_block",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:bronze_ingot",
+              "result_count": 9
             }
           ]
         },
@@ -2394,6 +2450,24 @@
               "type": "text",
               "title": "इन्वार का पिंड",
               "text": "लोहे-निकल की मिश्रधातु, एक बार में एक — मिश्रधातु भट्ठी में दो लोहे के पिंड और एक निकल का पिंड मिलकर केवल एक इन्वार का पिंड देते हैं।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "बिना आकार की क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:invar_block",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:invar_ingot",
+              "result_count": 9
             }
           ]
         },
@@ -2406,6 +2480,24 @@
               "type": "text",
               "title": "क्यूप्रोनिकल का पिंड",
               "text": "एक-से-एक अनुपात वाली तांबे-निकल की मिश्रधातु, एक बार में एक पिंड — सामग्री के हिसाब से निकल को काम में लाने का सबसे सस्ता तरीका।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "बिना आकार की क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:cupronickel_block",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:cupronickel_ingot",
+              "result_count": 9
             }
           ]
         },
@@ -2422,6 +2514,230 @@
           ]
         },
         {
+          "id": "metal_blocks",
+          "title": "धातु ब्लॉक",
+          "icon": "alaindustrial:tin_block",
+          "pages": [
+            {
+              "type": "text",
+              "title": "धातु ब्लॉक",
+              "text": "मॉड की हर सिल्ली के लिए एक भंडारण ब्लॉक — एक ब्लॉक में नौ सिल्लियाँ, और बिना किसी नुकसान के वापस — और ब्लॉकों से सीढ़ियाँ, पटिया और दीवारें; टेम्पर्ड लोहे से बाड़ भी बनती है।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot"
+              ],
+              "result_id": "alaindustrial:tin_block",
+              "result_count": 1,
+              "variants": [
+                {
+                  "grid": [
+                    "alaindustrial:tin_ingot",
+                    "alaindustrial:tin_ingot",
+                    "alaindustrial:tin_ingot",
+                    "alaindustrial:tin_ingot",
+                    "alaindustrial:tin_ingot",
+                    "alaindustrial:tin_ingot",
+                    "alaindustrial:tin_ingot",
+                    "alaindustrial:tin_ingot",
+                    "alaindustrial:tin_ingot"
+                  ],
+                  "recipe_type": "आकारित क्राफ्टिंग",
+                  "result_id": "alaindustrial:tin_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:silver_ingot",
+                    "alaindustrial:silver_ingot",
+                    "alaindustrial:silver_ingot",
+                    "alaindustrial:silver_ingot",
+                    "alaindustrial:silver_ingot",
+                    "alaindustrial:silver_ingot",
+                    "alaindustrial:silver_ingot",
+                    "alaindustrial:silver_ingot",
+                    "alaindustrial:silver_ingot"
+                  ],
+                  "recipe_type": "आकारित क्राफ्टिंग",
+                  "result_id": "alaindustrial:silver_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:nickel_ingot",
+                    "alaindustrial:nickel_ingot",
+                    "alaindustrial:nickel_ingot",
+                    "alaindustrial:nickel_ingot",
+                    "alaindustrial:nickel_ingot",
+                    "alaindustrial:nickel_ingot",
+                    "alaindustrial:nickel_ingot",
+                    "alaindustrial:nickel_ingot",
+                    "alaindustrial:nickel_ingot"
+                  ],
+                  "recipe_type": "आकारित क्राफ्टिंग",
+                  "result_id": "alaindustrial:nickel_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:uranium_ingot",
+                    "alaindustrial:uranium_ingot",
+                    "alaindustrial:uranium_ingot",
+                    "alaindustrial:uranium_ingot",
+                    "alaindustrial:uranium_ingot",
+                    "alaindustrial:uranium_ingot",
+                    "alaindustrial:uranium_ingot",
+                    "alaindustrial:uranium_ingot",
+                    "alaindustrial:uranium_ingot"
+                  ],
+                  "recipe_type": "आकारित क्राफ्टिंग",
+                  "result_id": "alaindustrial:uranium_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:palladium_ingot",
+                    "alaindustrial:palladium_ingot",
+                    "alaindustrial:palladium_ingot",
+                    "alaindustrial:palladium_ingot",
+                    "alaindustrial:palladium_ingot",
+                    "alaindustrial:palladium_ingot",
+                    "alaindustrial:palladium_ingot",
+                    "alaindustrial:palladium_ingot",
+                    "alaindustrial:palladium_ingot"
+                  ],
+                  "recipe_type": "आकारित क्राफ्टिंग",
+                  "result_id": "alaindustrial:palladium_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:bronze_ingot",
+                    "alaindustrial:bronze_ingot",
+                    "alaindustrial:bronze_ingot",
+                    "alaindustrial:bronze_ingot",
+                    "alaindustrial:bronze_ingot",
+                    "alaindustrial:bronze_ingot",
+                    "alaindustrial:bronze_ingot",
+                    "alaindustrial:bronze_ingot",
+                    "alaindustrial:bronze_ingot"
+                  ],
+                  "recipe_type": "आकारित क्राफ्टिंग",
+                  "result_id": "alaindustrial:bronze_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:invar_ingot",
+                    "alaindustrial:invar_ingot",
+                    "alaindustrial:invar_ingot",
+                    "alaindustrial:invar_ingot",
+                    "alaindustrial:invar_ingot",
+                    "alaindustrial:invar_ingot",
+                    "alaindustrial:invar_ingot",
+                    "alaindustrial:invar_ingot",
+                    "alaindustrial:invar_ingot"
+                  ],
+                  "recipe_type": "आकारित क्राफ्टिंग",
+                  "result_id": "alaindustrial:invar_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:cupronickel_ingot",
+                    "alaindustrial:cupronickel_ingot",
+                    "alaindustrial:cupronickel_ingot",
+                    "alaindustrial:cupronickel_ingot",
+                    "alaindustrial:cupronickel_ingot",
+                    "alaindustrial:cupronickel_ingot",
+                    "alaindustrial:cupronickel_ingot",
+                    "alaindustrial:cupronickel_ingot",
+                    "alaindustrial:cupronickel_ingot"
+                  ],
+                  "recipe_type": "आकारित क्राफ्टिंग",
+                  "result_id": "alaindustrial:cupronickel_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:electrum_ingot",
+                    "alaindustrial:electrum_ingot",
+                    "alaindustrial:electrum_ingot",
+                    "alaindustrial:electrum_ingot",
+                    "alaindustrial:electrum_ingot",
+                    "alaindustrial:electrum_ingot",
+                    "alaindustrial:electrum_ingot",
+                    "alaindustrial:electrum_ingot",
+                    "alaindustrial:electrum_ingot"
+                  ],
+                  "recipe_type": "आकारित क्राफ्टिंग",
+                  "result_id": "alaindustrial:electrum_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:netherite_alloy_ingot",
+                    "alaindustrial:netherite_alloy_ingot",
+                    "alaindustrial:netherite_alloy_ingot",
+                    "alaindustrial:netherite_alloy_ingot",
+                    "alaindustrial:netherite_alloy_ingot",
+                    "alaindustrial:netherite_alloy_ingot",
+                    "alaindustrial:netherite_alloy_ingot",
+                    "alaindustrial:netherite_alloy_ingot",
+                    "alaindustrial:netherite_alloy_ingot"
+                  ],
+                  "recipe_type": "आकारित क्राफ्टिंग",
+                  "result_id": "alaindustrial:netherite_alloy_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:shielding_alloy_ingot",
+                    "alaindustrial:shielding_alloy_ingot",
+                    "alaindustrial:shielding_alloy_ingot",
+                    "alaindustrial:shielding_alloy_ingot",
+                    "alaindustrial:shielding_alloy_ingot",
+                    "alaindustrial:shielding_alloy_ingot",
+                    "alaindustrial:shielding_alloy_ingot",
+                    "alaindustrial:shielding_alloy_ingot",
+                    "alaindustrial:shielding_alloy_ingot"
+                  ],
+                  "recipe_type": "आकारित क्राफ्टिंग",
+                  "result_id": "alaindustrial:shielding_alloy_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:tempered_iron",
+                    "alaindustrial:tempered_iron_plate",
+                    "alaindustrial:tempered_iron",
+                    "alaindustrial:tempered_iron",
+                    "alaindustrial:tempered_iron_plate",
+                    "alaindustrial:tempered_iron",
+                    "",
+                    "",
+                    ""
+                  ],
+                  "recipe_type": "आकारित क्राफ्टिंग",
+                  "result_id": "alaindustrial:tempered_iron_fence",
+                  "result_count": 6
+                }
+              ]
+            }
+          ]
+        },
+        {
           "id": "netherite_alloy_ingot",
           "title": "नेदराइट मिश्रधातु का पिंड",
           "icon": "alaindustrial:netherite_alloy_ingot",
@@ -2430,6 +2746,24 @@
               "type": "text",
               "title": "नेदराइट मिश्रधातु का पिंड",
               "text": "मॉड की अंतिम-चरण मिश्रधातु — एक वैनिला नेदराइट पिंड और दो इलेक्ट्रम के पिंड मिश्रधातु भट्ठी में मिलकर दो नेदराइट मिश्रधातु के पिंड देते हैं।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "बिना आकार की क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:netherite_alloy_block",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:netherite_alloy_ingot",
+              "result_count": 9
             }
           ]
         },
@@ -2659,6 +2993,24 @@
               "type": "text",
               "title": "परिरक्षक मिश्रधातु का पिंड",
               "text": "पैलेडियम और टेम्पर्ड लोहे की मिश्रधातु — रिएक्टर कक्ष केवल इसी सामग्री से बनता है: पिंड, परिरक्षक प्लेट, और प्रबलित परिरक्षक प्लेट, जिसके लिए क्षीण यूरेनियम भी चाहिए।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "बिना आकार की क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:shielding_alloy_block",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:shielding_alloy_ingot",
+              "result_count": 9
             }
           ]
         },
@@ -2671,6 +3023,24 @@
               "type": "text",
               "title": "इलेक्ट्रम का पिंड",
               "text": "सामग्री के हिसाब से मॉड की सबसे महंगी मिश्रधातु — मिश्रधातु भट्ठी में एक सोने का पिंड और एक चांदी का पिंड मिलकर केवल एक इलेक्ट्रम का पिंड देते हैं।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "बिना आकार की क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:electrum_block",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:electrum_ingot",
+              "result_count": 9
             }
           ]
         },
@@ -5212,6 +5582,43 @@
                 ""
               ],
               "result_id": "alaindustrial:forge_hammer",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "oak_iron_chest_boat",
+          "title": "बाँज की नाव (आयरन चेस्ट सहित)",
+          "icon": "alaindustrial:oak_iron_chest_boat",
+          "pages": [
+            {
+              "type": "text",
+              "title": "बाँज की नाव (आयरन चेस्ट सहित)",
+              "text": "किसी भी लकड़ी की एक साधारण नाव, जिसके पिछले हिस्से पर मॉड का एक संदूक रखा है — उसमें उतना ही समाता है जितना उस संदूक में (36–108 स्लॉट), और वह साधारण संदूक वाली नाव की तरह चलती है।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "क्षमता: 36–108 स्लॉट"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "बिना आकार की क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:iron_chest",
+                "minecraft:oak_boat",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:oak_iron_chest_boat",
               "result_count": 1
             }
           ]

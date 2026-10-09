@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/ladder",
+  "textures": {
+    "particle": "alaindustrial:block/tempered_iron_ladder",
+    "texture": "alaindustrial:block/tempered_iron_ladder"
+  }
+}

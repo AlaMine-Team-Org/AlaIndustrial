@@ -1556,6 +1556,44 @@
           ]
         },
         {
+          "id": "block_breaker",
+          "title": "Block Breaker",
+          "icon": "alaindustrial:block_breaker",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Block Breaker",
+              "text": "A first-tier LV machine that breaks the block in front of it with the tool in its slot — the same way a player holding that tool would."
+            },
+            {
+              "type": "stats",
+              "title": "Stats",
+              "lines": [
+                "Energy: 8 EU/t",
+                "Buffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "alaindustrial:wooden_gear",
+                "minecraft:stone_pickaxe",
+                "alaindustrial:wooden_gear",
+                "minecraft:oak_planks",
+                "minecraft:redstone",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:block_breaker",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "component_repair_bench",
           "title": "Component Repair Bench",
           "icon": "alaindustrial:component_repair_bench",
@@ -2370,6 +2408,24 @@
               "type": "text",
               "title": "Bronze Ingot",
               "text": "The bulk copper-tin alloy — three copper ingots plus one tin ingot give two bronze ingots in the alloy smelter."
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shapeless Crafting",
+              "grid": [
+                "alaindustrial:bronze_block",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:bronze_ingot",
+              "result_count": 9
             }
           ]
         },
@@ -2394,6 +2450,24 @@
               "type": "text",
               "title": "Invar Ingot",
               "text": "A one-at-a-time iron-nickel alloy — two iron ingots plus one nickel ingot give a single invar ingot in the alloy smelter."
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shapeless Crafting",
+              "grid": [
+                "alaindustrial:invar_block",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:invar_ingot",
+              "result_count": 9
             }
           ]
         },
@@ -2406,6 +2480,24 @@
               "type": "text",
               "title": "Cupronickel Ingot",
               "text": "A one-to-one copper-nickel alloy made a single ingot at a time — the cheapest way, by materials, to put nickel to work."
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shapeless Crafting",
+              "grid": [
+                "alaindustrial:cupronickel_block",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:cupronickel_ingot",
+              "result_count": 9
             }
           ]
         },
@@ -2422,6 +2514,230 @@
           ]
         },
         {
+          "id": "metal_blocks",
+          "title": "Metal Blocks",
+          "icon": "alaindustrial:tin_block",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Metal Blocks",
+              "text": "A storage block for every ingot of the mod — nine ingots in one block, back again with no loss — and stairs, slabs and walls cut from the blocks; tempered iron also makes a fence."
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot"
+              ],
+              "result_id": "alaindustrial:tin_block",
+              "result_count": 1,
+              "variants": [
+                {
+                  "grid": [
+                    "alaindustrial:tin_ingot",
+                    "alaindustrial:tin_ingot",
+                    "alaindustrial:tin_ingot",
+                    "alaindustrial:tin_ingot",
+                    "alaindustrial:tin_ingot",
+                    "alaindustrial:tin_ingot",
+                    "alaindustrial:tin_ingot",
+                    "alaindustrial:tin_ingot",
+                    "alaindustrial:tin_ingot"
+                  ],
+                  "recipe_type": "Shaped Crafting",
+                  "result_id": "alaindustrial:tin_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:silver_ingot",
+                    "alaindustrial:silver_ingot",
+                    "alaindustrial:silver_ingot",
+                    "alaindustrial:silver_ingot",
+                    "alaindustrial:silver_ingot",
+                    "alaindustrial:silver_ingot",
+                    "alaindustrial:silver_ingot",
+                    "alaindustrial:silver_ingot",
+                    "alaindustrial:silver_ingot"
+                  ],
+                  "recipe_type": "Shaped Crafting",
+                  "result_id": "alaindustrial:silver_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:nickel_ingot",
+                    "alaindustrial:nickel_ingot",
+                    "alaindustrial:nickel_ingot",
+                    "alaindustrial:nickel_ingot",
+                    "alaindustrial:nickel_ingot",
+                    "alaindustrial:nickel_ingot",
+                    "alaindustrial:nickel_ingot",
+                    "alaindustrial:nickel_ingot",
+                    "alaindustrial:nickel_ingot"
+                  ],
+                  "recipe_type": "Shaped Crafting",
+                  "result_id": "alaindustrial:nickel_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:uranium_ingot",
+                    "alaindustrial:uranium_ingot",
+                    "alaindustrial:uranium_ingot",
+                    "alaindustrial:uranium_ingot",
+                    "alaindustrial:uranium_ingot",
+                    "alaindustrial:uranium_ingot",
+                    "alaindustrial:uranium_ingot",
+                    "alaindustrial:uranium_ingot",
+                    "alaindustrial:uranium_ingot"
+                  ],
+                  "recipe_type": "Shaped Crafting",
+                  "result_id": "alaindustrial:uranium_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:palladium_ingot",
+                    "alaindustrial:palladium_ingot",
+                    "alaindustrial:palladium_ingot",
+                    "alaindustrial:palladium_ingot",
+                    "alaindustrial:palladium_ingot",
+                    "alaindustrial:palladium_ingot",
+                    "alaindustrial:palladium_ingot",
+                    "alaindustrial:palladium_ingot",
+                    "alaindustrial:palladium_ingot"
+                  ],
+                  "recipe_type": "Shaped Crafting",
+                  "result_id": "alaindustrial:palladium_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:bronze_ingot",
+                    "alaindustrial:bronze_ingot",
+                    "alaindustrial:bronze_ingot",
+                    "alaindustrial:bronze_ingot",
+                    "alaindustrial:bronze_ingot",
+                    "alaindustrial:bronze_ingot",
+                    "alaindustrial:bronze_ingot",
+                    "alaindustrial:bronze_ingot",
+                    "alaindustrial:bronze_ingot"
+                  ],
+                  "recipe_type": "Shaped Crafting",
+                  "result_id": "alaindustrial:bronze_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:invar_ingot",
+                    "alaindustrial:invar_ingot",
+                    "alaindustrial:invar_ingot",
+                    "alaindustrial:invar_ingot",
+                    "alaindustrial:invar_ingot",
+                    "alaindustrial:invar_ingot",
+                    "alaindustrial:invar_ingot",
+                    "alaindustrial:invar_ingot",
+                    "alaindustrial:invar_ingot"
+                  ],
+                  "recipe_type": "Shaped Crafting",
+                  "result_id": "alaindustrial:invar_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:cupronickel_ingot",
+                    "alaindustrial:cupronickel_ingot",
+                    "alaindustrial:cupronickel_ingot",
+                    "alaindustrial:cupronickel_ingot",
+                    "alaindustrial:cupronickel_ingot",
+                    "alaindustrial:cupronickel_ingot",
+                    "alaindustrial:cupronickel_ingot",
+                    "alaindustrial:cupronickel_ingot",
+                    "alaindustrial:cupronickel_ingot"
+                  ],
+                  "recipe_type": "Shaped Crafting",
+                  "result_id": "alaindustrial:cupronickel_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:electrum_ingot",
+                    "alaindustrial:electrum_ingot",
+                    "alaindustrial:electrum_ingot",
+                    "alaindustrial:electrum_ingot",
+                    "alaindustrial:electrum_ingot",
+                    "alaindustrial:electrum_ingot",
+                    "alaindustrial:electrum_ingot",
+                    "alaindustrial:electrum_ingot",
+                    "alaindustrial:electrum_ingot"
+                  ],
+                  "recipe_type": "Shaped Crafting",
+                  "result_id": "alaindustrial:electrum_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:netherite_alloy_ingot",
+                    "alaindustrial:netherite_alloy_ingot",
+                    "alaindustrial:netherite_alloy_ingot",
+                    "alaindustrial:netherite_alloy_ingot",
+                    "alaindustrial:netherite_alloy_ingot",
+                    "alaindustrial:netherite_alloy_ingot",
+                    "alaindustrial:netherite_alloy_ingot",
+                    "alaindustrial:netherite_alloy_ingot",
+                    "alaindustrial:netherite_alloy_ingot"
+                  ],
+                  "recipe_type": "Shaped Crafting",
+                  "result_id": "alaindustrial:netherite_alloy_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:shielding_alloy_ingot",
+                    "alaindustrial:shielding_alloy_ingot",
+                    "alaindustrial:shielding_alloy_ingot",
+                    "alaindustrial:shielding_alloy_ingot",
+                    "alaindustrial:shielding_alloy_ingot",
+                    "alaindustrial:shielding_alloy_ingot",
+                    "alaindustrial:shielding_alloy_ingot",
+                    "alaindustrial:shielding_alloy_ingot",
+                    "alaindustrial:shielding_alloy_ingot"
+                  ],
+                  "recipe_type": "Shaped Crafting",
+                  "result_id": "alaindustrial:shielding_alloy_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:tempered_iron",
+                    "alaindustrial:tempered_iron_plate",
+                    "alaindustrial:tempered_iron",
+                    "alaindustrial:tempered_iron",
+                    "alaindustrial:tempered_iron_plate",
+                    "alaindustrial:tempered_iron",
+                    "",
+                    "",
+                    ""
+                  ],
+                  "recipe_type": "Shaped Crafting",
+                  "result_id": "alaindustrial:tempered_iron_fence",
+                  "result_count": 6
+                }
+              ]
+            }
+          ]
+        },
+        {
           "id": "netherite_alloy_ingot",
           "title": "Netherite Alloy Ingot",
           "icon": "alaindustrial:netherite_alloy_ingot",
@@ -2430,6 +2746,24 @@
               "type": "text",
               "title": "Netherite Alloy Ingot",
               "text": "The mod's endgame alloy — one vanilla netherite ingot and two electrum ingots give two netherite alloy ingots in the alloy smelter."
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shapeless Crafting",
+              "grid": [
+                "alaindustrial:netherite_alloy_block",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:netherite_alloy_ingot",
+              "result_count": 9
             }
           ]
         },
@@ -2659,6 +2993,24 @@
               "type": "text",
               "title": "Shielding Alloy Ingot",
               "text": "An alloy of palladium and tempered iron — the one material a reactor room is built from: the ingot, the shielding plate, and the reinforced plate that also asks for depleted uranium."
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shapeless Crafting",
+              "grid": [
+                "alaindustrial:shielding_alloy_block",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:shielding_alloy_ingot",
+              "result_count": 9
             }
           ]
         },
@@ -2671,6 +3023,24 @@
               "type": "text",
               "title": "Electrum Ingot",
               "text": "The mod's most expensive alloy by materials — one gold ingot and one silver ingot give a single electrum ingot in the alloy smelter."
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shapeless Crafting",
+              "grid": [
+                "alaindustrial:electrum_block",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:electrum_ingot",
+              "result_count": 9
             }
           ]
         },
@@ -5212,6 +5582,43 @@
                 ""
               ],
               "result_id": "alaindustrial:forge_hammer",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "oak_iron_chest_boat",
+          "title": "Oak Boat with Iron Chest",
+          "icon": "alaindustrial:oak_iron_chest_boat",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Oak Boat with Iron Chest",
+              "text": "A vanilla boat of any wood carrying a mod chest on the stern — it holds as much as the chest itself (36–108 slots) and sails like a vanilla chest boat."
+            },
+            {
+              "type": "stats",
+              "title": "Stats",
+              "lines": [
+                "Capacity: 36–108 slots"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shapeless Crafting",
+              "grid": [
+                "alaindustrial:iron_chest",
+                "minecraft:oak_boat",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:oak_iron_chest_boat",
               "result_count": 1
             }
           ]

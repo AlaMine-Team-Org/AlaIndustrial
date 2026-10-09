@@ -1556,6 +1556,44 @@
           ]
         },
         {
+          "id": "block_breaker",
+          "title": "كاسر الكتل",
+          "icon": "alaindustrial:block_breaker",
+          "pages": [
+            {
+              "type": "text",
+              "title": "كاسر الكتل",
+              "text": "آلة LV من المستوى الأول تكسر الكتلة التي أمامها بالأداة الموضوعة في خانتها — كما يكسرها لاعب يحمل تلك الأداة."
+            },
+            {
+              "type": "stats",
+              "title": "المواصفات",
+              "lines": [
+                "الطاقة: 8 EU/t",
+                "الاحتياطي: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
+              "grid": [
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "alaindustrial:wooden_gear",
+                "minecraft:stone_pickaxe",
+                "alaindustrial:wooden_gear",
+                "minecraft:oak_planks",
+                "minecraft:redstone",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:block_breaker",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "component_repair_bench",
           "title": "طاولة إصلاح المكونات",
           "icon": "alaindustrial:component_repair_bench",
@@ -2370,6 +2408,24 @@
               "type": "text",
               "title": "سبيكة برونز",
               "text": "سبيكة النحاس والقصدير للاستخدام الوفير — ثلاث سبائك نحاس مع سبيكة قصدير تعطي سبيكتي برونز في فرن السبائك."
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع غير مرتب",
+              "grid": [
+                "alaindustrial:bronze_block",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:bronze_ingot",
+              "result_count": 9
             }
           ]
         },
@@ -2394,6 +2450,24 @@
               "type": "text",
               "title": "سبيكة إنفار",
               "text": "سبيكة حديد ونيكل تنتج واحدة في كل مرة — سبيكتا حديد مع سبيكة نيكل تعطيان سبيكة إنفار واحدة في فرن السبائك."
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع غير مرتب",
+              "grid": [
+                "alaindustrial:invar_block",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:invar_ingot",
+              "result_count": 9
             }
           ]
         },
@@ -2406,6 +2480,24 @@
               "type": "text",
               "title": "سبيكة نحاس نيكل",
               "text": "سبيكة نحاس ونيكل بنسبة واحد إلى واحد تنتج سبيكة واحدة في كل مرة — وهي أرخص طريقة، من حيث المواد، لتشغيل النيكل."
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع غير مرتب",
+              "grid": [
+                "alaindustrial:cupronickel_block",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:cupronickel_ingot",
+              "result_count": 9
             }
           ]
         },
@@ -2422,6 +2514,230 @@
           ]
         },
         {
+          "id": "metal_blocks",
+          "title": "كتل معدنية",
+          "icon": "alaindustrial:tin_block",
+          "pages": [
+            {
+              "type": "text",
+              "title": "كتل معدنية",
+              "text": "مكعب تخزين لكل سبيكة في التعديل — تسع سبائك في مكعب واحد، وتعود سبائك من دون خسارة — ومن المكعبات تُصنع الدرجات والبلاطات والجدران؛ ومن الحديد المقسى يُصنع أيضًا سياج."
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot"
+              ],
+              "result_id": "alaindustrial:tin_block",
+              "result_count": 1,
+              "variants": [
+                {
+                  "grid": [
+                    "alaindustrial:tin_ingot",
+                    "alaindustrial:tin_ingot",
+                    "alaindustrial:tin_ingot",
+                    "alaindustrial:tin_ingot",
+                    "alaindustrial:tin_ingot",
+                    "alaindustrial:tin_ingot",
+                    "alaindustrial:tin_ingot",
+                    "alaindustrial:tin_ingot",
+                    "alaindustrial:tin_ingot"
+                  ],
+                  "recipe_type": "تصنيع مرتب",
+                  "result_id": "alaindustrial:tin_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:silver_ingot",
+                    "alaindustrial:silver_ingot",
+                    "alaindustrial:silver_ingot",
+                    "alaindustrial:silver_ingot",
+                    "alaindustrial:silver_ingot",
+                    "alaindustrial:silver_ingot",
+                    "alaindustrial:silver_ingot",
+                    "alaindustrial:silver_ingot",
+                    "alaindustrial:silver_ingot"
+                  ],
+                  "recipe_type": "تصنيع مرتب",
+                  "result_id": "alaindustrial:silver_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:nickel_ingot",
+                    "alaindustrial:nickel_ingot",
+                    "alaindustrial:nickel_ingot",
+                    "alaindustrial:nickel_ingot",
+                    "alaindustrial:nickel_ingot",
+                    "alaindustrial:nickel_ingot",
+                    "alaindustrial:nickel_ingot",
+                    "alaindustrial:nickel_ingot",
+                    "alaindustrial:nickel_ingot"
+                  ],
+                  "recipe_type": "تصنيع مرتب",
+                  "result_id": "alaindustrial:nickel_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:uranium_ingot",
+                    "alaindustrial:uranium_ingot",
+                    "alaindustrial:uranium_ingot",
+                    "alaindustrial:uranium_ingot",
+                    "alaindustrial:uranium_ingot",
+                    "alaindustrial:uranium_ingot",
+                    "alaindustrial:uranium_ingot",
+                    "alaindustrial:uranium_ingot",
+                    "alaindustrial:uranium_ingot"
+                  ],
+                  "recipe_type": "تصنيع مرتب",
+                  "result_id": "alaindustrial:uranium_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:palladium_ingot",
+                    "alaindustrial:palladium_ingot",
+                    "alaindustrial:palladium_ingot",
+                    "alaindustrial:palladium_ingot",
+                    "alaindustrial:palladium_ingot",
+                    "alaindustrial:palladium_ingot",
+                    "alaindustrial:palladium_ingot",
+                    "alaindustrial:palladium_ingot",
+                    "alaindustrial:palladium_ingot"
+                  ],
+                  "recipe_type": "تصنيع مرتب",
+                  "result_id": "alaindustrial:palladium_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:bronze_ingot",
+                    "alaindustrial:bronze_ingot",
+                    "alaindustrial:bronze_ingot",
+                    "alaindustrial:bronze_ingot",
+                    "alaindustrial:bronze_ingot",
+                    "alaindustrial:bronze_ingot",
+                    "alaindustrial:bronze_ingot",
+                    "alaindustrial:bronze_ingot",
+                    "alaindustrial:bronze_ingot"
+                  ],
+                  "recipe_type": "تصنيع مرتب",
+                  "result_id": "alaindustrial:bronze_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:invar_ingot",
+                    "alaindustrial:invar_ingot",
+                    "alaindustrial:invar_ingot",
+                    "alaindustrial:invar_ingot",
+                    "alaindustrial:invar_ingot",
+                    "alaindustrial:invar_ingot",
+                    "alaindustrial:invar_ingot",
+                    "alaindustrial:invar_ingot",
+                    "alaindustrial:invar_ingot"
+                  ],
+                  "recipe_type": "تصنيع مرتب",
+                  "result_id": "alaindustrial:invar_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:cupronickel_ingot",
+                    "alaindustrial:cupronickel_ingot",
+                    "alaindustrial:cupronickel_ingot",
+                    "alaindustrial:cupronickel_ingot",
+                    "alaindustrial:cupronickel_ingot",
+                    "alaindustrial:cupronickel_ingot",
+                    "alaindustrial:cupronickel_ingot",
+                    "alaindustrial:cupronickel_ingot",
+                    "alaindustrial:cupronickel_ingot"
+                  ],
+                  "recipe_type": "تصنيع مرتب",
+                  "result_id": "alaindustrial:cupronickel_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:electrum_ingot",
+                    "alaindustrial:electrum_ingot",
+                    "alaindustrial:electrum_ingot",
+                    "alaindustrial:electrum_ingot",
+                    "alaindustrial:electrum_ingot",
+                    "alaindustrial:electrum_ingot",
+                    "alaindustrial:electrum_ingot",
+                    "alaindustrial:electrum_ingot",
+                    "alaindustrial:electrum_ingot"
+                  ],
+                  "recipe_type": "تصنيع مرتب",
+                  "result_id": "alaindustrial:electrum_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:netherite_alloy_ingot",
+                    "alaindustrial:netherite_alloy_ingot",
+                    "alaindustrial:netherite_alloy_ingot",
+                    "alaindustrial:netherite_alloy_ingot",
+                    "alaindustrial:netherite_alloy_ingot",
+                    "alaindustrial:netherite_alloy_ingot",
+                    "alaindustrial:netherite_alloy_ingot",
+                    "alaindustrial:netherite_alloy_ingot",
+                    "alaindustrial:netherite_alloy_ingot"
+                  ],
+                  "recipe_type": "تصنيع مرتب",
+                  "result_id": "alaindustrial:netherite_alloy_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:shielding_alloy_ingot",
+                    "alaindustrial:shielding_alloy_ingot",
+                    "alaindustrial:shielding_alloy_ingot",
+                    "alaindustrial:shielding_alloy_ingot",
+                    "alaindustrial:shielding_alloy_ingot",
+                    "alaindustrial:shielding_alloy_ingot",
+                    "alaindustrial:shielding_alloy_ingot",
+                    "alaindustrial:shielding_alloy_ingot",
+                    "alaindustrial:shielding_alloy_ingot"
+                  ],
+                  "recipe_type": "تصنيع مرتب",
+                  "result_id": "alaindustrial:shielding_alloy_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:tempered_iron",
+                    "alaindustrial:tempered_iron_plate",
+                    "alaindustrial:tempered_iron",
+                    "alaindustrial:tempered_iron",
+                    "alaindustrial:tempered_iron_plate",
+                    "alaindustrial:tempered_iron",
+                    "",
+                    "",
+                    ""
+                  ],
+                  "recipe_type": "تصنيع مرتب",
+                  "result_id": "alaindustrial:tempered_iron_fence",
+                  "result_count": 6
+                }
+              ]
+            }
+          ]
+        },
+        {
           "id": "netherite_alloy_ingot",
           "title": "سبيكة نذرايت مركبة",
           "icon": "alaindustrial:netherite_alloy_ingot",
@@ -2430,6 +2746,24 @@
               "type": "text",
               "title": "سبيكة نذرايت مركبة",
               "text": "سبيكة نهاية اللعبة في المود — سبيكة نذرايت فانيلا واحدة وسبيكتا إلكتروم تعطيان سبيكتين من سبيكة نذرايت مركبة في فرن السبائك."
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع غير مرتب",
+              "grid": [
+                "alaindustrial:netherite_alloy_block",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:netherite_alloy_ingot",
+              "result_count": 9
             }
           ]
         },
@@ -2659,6 +2993,24 @@
               "type": "text",
               "title": "سبيكة تدريع",
               "text": "سبيكة من البالاديوم والحديد المقسى — المادة الوحيدة التي تبنى منها غرفة المفاعل: السبيكة، وصفيحة التدريع، والصفيحة المقواة التي تتطلب أيضا يورانيوما منضبا."
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع غير مرتب",
+              "grid": [
+                "alaindustrial:shielding_alloy_block",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:shielding_alloy_ingot",
+              "result_count": 9
             }
           ]
         },
@@ -2671,6 +3023,24 @@
               "type": "text",
               "title": "سبيكة إلكتروم",
               "text": "أغلى سبائك المود من حيث المواد — سبيكة ذهب واحدة وسبيكة فضة واحدة تعطيان سبيكة إلكتروم واحدة في فرن السبائك."
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع غير مرتب",
+              "grid": [
+                "alaindustrial:electrum_block",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:electrum_ingot",
+              "result_count": 9
             }
           ]
         },
@@ -5212,6 +5582,43 @@
                 ""
               ],
               "result_id": "alaindustrial:forge_hammer",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "oak_iron_chest_boat",
+          "title": "قارب البلوط مع صندوق حديدي",
+          "icon": "alaindustrial:oak_iron_chest_boat",
+          "pages": [
+            {
+              "type": "text",
+              "title": "قارب البلوط مع صندوق حديدي",
+              "text": "قارب أصلي من أي خشب يحمل صندوقًا من التعديل في مؤخرته — يتسع لما يتسع له الصندوق نفسه (36–108 خانة) ويبحر مثل قارب الصندوق الأصلي."
+            },
+            {
+              "type": "stats",
+              "title": "المواصفات",
+              "lines": [
+                "السعة: 36–108 خانة"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع غير مرتب",
+              "grid": [
+                "alaindustrial:iron_chest",
+                "minecraft:oak_boat",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:oak_iron_chest_boat",
               "result_count": 1
             }
           ]

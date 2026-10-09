@@ -1556,6 +1556,44 @@
           ]
         },
         {
+          "id": "block_breaker",
+          "title": "Quebrador de Blocos",
+          "icon": "alaindustrial:block_breaker",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Quebrador de Blocos",
+              "text": "Uma máquina LV de primeiro nível que quebra o bloco à sua frente com a ferramenta do seu espaço — do mesmo jeito que um jogador segurando essa ferramenta faria."
+            },
+            {
+              "type": "stats",
+              "title": "Estatísticas",
+              "lines": [
+                "Energia: 8 EU/t",
+                "Buffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação com forma",
+              "grid": [
+                "minecraft:oak_planks",
+                "alaindustrial:copper_cable",
+                "minecraft:oak_planks",
+                "alaindustrial:wooden_gear",
+                "minecraft:stone_pickaxe",
+                "alaindustrial:wooden_gear",
+                "minecraft:oak_planks",
+                "minecraft:redstone",
+                "minecraft:oak_planks"
+              ],
+              "result_id": "alaindustrial:block_breaker",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "component_repair_bench",
           "title": "Bancada de reparo de componentes",
           "icon": "alaindustrial:component_repair_bench",
@@ -2370,6 +2408,24 @@
               "type": "text",
               "title": "Lingote de Bronze",
               "text": "A liga de cobre e estanho para produção em massa — três lingotes de cobre mais um lingote de estanho dão dois lingotes de bronze na fornalha de ligas."
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação sem forma",
+              "grid": [
+                "alaindustrial:bronze_block",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:bronze_ingot",
+              "result_count": 9
             }
           ]
         },
@@ -2394,6 +2450,24 @@
               "type": "text",
               "title": "Lingote de Invar",
               "text": "Uma liga de ferro e níquel feita um de cada vez — dois lingotes de ferro mais um lingote de níquel dão um único lingote de invar na fornalha de ligas."
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação sem forma",
+              "grid": [
+                "alaindustrial:invar_block",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:invar_ingot",
+              "result_count": 9
             }
           ]
         },
@@ -2406,6 +2480,24 @@
               "type": "text",
               "title": "Lingote de Cuproníquel",
               "text": "Uma liga de cobre e níquel na proporção de um para um, feita um lingote por vez — o jeito mais barato, em materiais, de pôr o níquel para trabalhar."
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação sem forma",
+              "grid": [
+                "alaindustrial:cupronickel_block",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:cupronickel_ingot",
+              "result_count": 9
             }
           ]
         },
@@ -2422,6 +2514,230 @@
           ]
         },
         {
+          "id": "metal_blocks",
+          "title": "Blocos de metal",
+          "icon": "alaindustrial:tin_block",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Blocos de metal",
+              "text": "Um bloco de armazenamento para cada lingote do mod — nove lingotes em um bloco, e de volta sem perdas — e, com os blocos, escadas, lajes e muros; o ferro temperado ainda dá uma cerca."
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação com forma",
+              "grid": [
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot",
+                "alaindustrial:tin_ingot"
+              ],
+              "result_id": "alaindustrial:tin_block",
+              "result_count": 1,
+              "variants": [
+                {
+                  "grid": [
+                    "alaindustrial:tin_ingot",
+                    "alaindustrial:tin_ingot",
+                    "alaindustrial:tin_ingot",
+                    "alaindustrial:tin_ingot",
+                    "alaindustrial:tin_ingot",
+                    "alaindustrial:tin_ingot",
+                    "alaindustrial:tin_ingot",
+                    "alaindustrial:tin_ingot",
+                    "alaindustrial:tin_ingot"
+                  ],
+                  "recipe_type": "Fabricação com forma",
+                  "result_id": "alaindustrial:tin_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:silver_ingot",
+                    "alaindustrial:silver_ingot",
+                    "alaindustrial:silver_ingot",
+                    "alaindustrial:silver_ingot",
+                    "alaindustrial:silver_ingot",
+                    "alaindustrial:silver_ingot",
+                    "alaindustrial:silver_ingot",
+                    "alaindustrial:silver_ingot",
+                    "alaindustrial:silver_ingot"
+                  ],
+                  "recipe_type": "Fabricação com forma",
+                  "result_id": "alaindustrial:silver_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:nickel_ingot",
+                    "alaindustrial:nickel_ingot",
+                    "alaindustrial:nickel_ingot",
+                    "alaindustrial:nickel_ingot",
+                    "alaindustrial:nickel_ingot",
+                    "alaindustrial:nickel_ingot",
+                    "alaindustrial:nickel_ingot",
+                    "alaindustrial:nickel_ingot",
+                    "alaindustrial:nickel_ingot"
+                  ],
+                  "recipe_type": "Fabricação com forma",
+                  "result_id": "alaindustrial:nickel_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:uranium_ingot",
+                    "alaindustrial:uranium_ingot",
+                    "alaindustrial:uranium_ingot",
+                    "alaindustrial:uranium_ingot",
+                    "alaindustrial:uranium_ingot",
+                    "alaindustrial:uranium_ingot",
+                    "alaindustrial:uranium_ingot",
+                    "alaindustrial:uranium_ingot",
+                    "alaindustrial:uranium_ingot"
+                  ],
+                  "recipe_type": "Fabricação com forma",
+                  "result_id": "alaindustrial:uranium_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:palladium_ingot",
+                    "alaindustrial:palladium_ingot",
+                    "alaindustrial:palladium_ingot",
+                    "alaindustrial:palladium_ingot",
+                    "alaindustrial:palladium_ingot",
+                    "alaindustrial:palladium_ingot",
+                    "alaindustrial:palladium_ingot",
+                    "alaindustrial:palladium_ingot",
+                    "alaindustrial:palladium_ingot"
+                  ],
+                  "recipe_type": "Fabricação com forma",
+                  "result_id": "alaindustrial:palladium_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:bronze_ingot",
+                    "alaindustrial:bronze_ingot",
+                    "alaindustrial:bronze_ingot",
+                    "alaindustrial:bronze_ingot",
+                    "alaindustrial:bronze_ingot",
+                    "alaindustrial:bronze_ingot",
+                    "alaindustrial:bronze_ingot",
+                    "alaindustrial:bronze_ingot",
+                    "alaindustrial:bronze_ingot"
+                  ],
+                  "recipe_type": "Fabricação com forma",
+                  "result_id": "alaindustrial:bronze_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:invar_ingot",
+                    "alaindustrial:invar_ingot",
+                    "alaindustrial:invar_ingot",
+                    "alaindustrial:invar_ingot",
+                    "alaindustrial:invar_ingot",
+                    "alaindustrial:invar_ingot",
+                    "alaindustrial:invar_ingot",
+                    "alaindustrial:invar_ingot",
+                    "alaindustrial:invar_ingot"
+                  ],
+                  "recipe_type": "Fabricação com forma",
+                  "result_id": "alaindustrial:invar_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:cupronickel_ingot",
+                    "alaindustrial:cupronickel_ingot",
+                    "alaindustrial:cupronickel_ingot",
+                    "alaindustrial:cupronickel_ingot",
+                    "alaindustrial:cupronickel_ingot",
+                    "alaindustrial:cupronickel_ingot",
+                    "alaindustrial:cupronickel_ingot",
+                    "alaindustrial:cupronickel_ingot",
+                    "alaindustrial:cupronickel_ingot"
+                  ],
+                  "recipe_type": "Fabricação com forma",
+                  "result_id": "alaindustrial:cupronickel_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:electrum_ingot",
+                    "alaindustrial:electrum_ingot",
+                    "alaindustrial:electrum_ingot",
+                    "alaindustrial:electrum_ingot",
+                    "alaindustrial:electrum_ingot",
+                    "alaindustrial:electrum_ingot",
+                    "alaindustrial:electrum_ingot",
+                    "alaindustrial:electrum_ingot",
+                    "alaindustrial:electrum_ingot"
+                  ],
+                  "recipe_type": "Fabricação com forma",
+                  "result_id": "alaindustrial:electrum_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:netherite_alloy_ingot",
+                    "alaindustrial:netherite_alloy_ingot",
+                    "alaindustrial:netherite_alloy_ingot",
+                    "alaindustrial:netherite_alloy_ingot",
+                    "alaindustrial:netherite_alloy_ingot",
+                    "alaindustrial:netherite_alloy_ingot",
+                    "alaindustrial:netherite_alloy_ingot",
+                    "alaindustrial:netherite_alloy_ingot",
+                    "alaindustrial:netherite_alloy_ingot"
+                  ],
+                  "recipe_type": "Fabricação com forma",
+                  "result_id": "alaindustrial:netherite_alloy_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:shielding_alloy_ingot",
+                    "alaindustrial:shielding_alloy_ingot",
+                    "alaindustrial:shielding_alloy_ingot",
+                    "alaindustrial:shielding_alloy_ingot",
+                    "alaindustrial:shielding_alloy_ingot",
+                    "alaindustrial:shielding_alloy_ingot",
+                    "alaindustrial:shielding_alloy_ingot",
+                    "alaindustrial:shielding_alloy_ingot",
+                    "alaindustrial:shielding_alloy_ingot"
+                  ],
+                  "recipe_type": "Fabricação com forma",
+                  "result_id": "alaindustrial:shielding_alloy_block",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "alaindustrial:tempered_iron",
+                    "alaindustrial:tempered_iron_plate",
+                    "alaindustrial:tempered_iron",
+                    "alaindustrial:tempered_iron",
+                    "alaindustrial:tempered_iron_plate",
+                    "alaindustrial:tempered_iron",
+                    "",
+                    "",
+                    ""
+                  ],
+                  "recipe_type": "Fabricação com forma",
+                  "result_id": "alaindustrial:tempered_iron_fence",
+                  "result_count": 6
+                }
+              ]
+            }
+          ]
+        },
+        {
           "id": "netherite_alloy_ingot",
           "title": "Lingote de Liga de Netherita",
           "icon": "alaindustrial:netherite_alloy_ingot",
@@ -2430,6 +2746,24 @@
               "type": "text",
               "title": "Lingote de Liga de Netherita",
               "text": "A liga do endgame do mod — um lingote de netherita vanilla e dois lingotes de Electro dão dois lingotes de Liga de Netherita na Fornalha de Ligas."
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação sem forma",
+              "grid": [
+                "alaindustrial:netherite_alloy_block",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:netherite_alloy_ingot",
+              "result_count": 9
             }
           ]
         },
@@ -2659,6 +2993,24 @@
               "type": "text",
               "title": "Lingote de Liga de Blindagem",
               "text": "Uma liga de paládio e ferro temperado — o único material com que se constrói uma sala de reator: o lingote, a placa de blindagem e a placa de blindagem reforçada, que ainda pede urânio empobrecido."
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação sem forma",
+              "grid": [
+                "alaindustrial:shielding_alloy_block",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:shielding_alloy_ingot",
+              "result_count": 9
             }
           ]
         },
@@ -2671,6 +3023,24 @@
               "type": "text",
               "title": "Lingote de Electro",
               "text": "A liga mais cara do mod em materiais — um lingote de ouro e um lingote de prata dão um único lingote de electro na fornalha de ligas."
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação sem forma",
+              "grid": [
+                "alaindustrial:electrum_block",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:electrum_ingot",
+              "result_count": 9
             }
           ]
         },
@@ -5212,6 +5582,43 @@
                 ""
               ],
               "result_id": "alaindustrial:forge_hammer",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "oak_iron_chest_boat",
+          "title": "Bote de Carvalho com Baú de Ferro",
+          "icon": "alaindustrial:oak_iron_chest_boat",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Bote de Carvalho com Baú de Ferro",
+              "text": "Um bote vanilla de qualquer madeira levando um baú do mod na popa — ele guarda tanto quanto o próprio baú (36–108 espaços) e navega como um bote com baú vanilla."
+            },
+            {
+              "type": "stats",
+              "title": "Estatísticas",
+              "lines": [
+                "Capacidade: 36–108 espaços"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação sem forma",
+              "grid": [
+                "alaindustrial:iron_chest",
+                "minecraft:oak_boat",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:oak_iron_chest_boat",
               "result_count": 1
             }
           ]

@@ -316,6 +316,64 @@ public final class ModContent {
 	public static Supplier<Block> ADVANCED_MACHINE_CASING = unbound("ADVANCED_MACHINE_CASING");
 	public static Supplier<Block> SILVER_PLATE_BLOCK = unbound("SILVER_PLATE_BLOCK");
 	public static Supplier<Block> TEMPERED_IRON_PLATE_BLOCK = unbound("TEMPERED_IRON_PLATE_BLOCK");
+	// MOD-796 - metal storage blocks and their shapes.
+	// BEGIN GENERATED metal blocks (tools/gen_metal_blocks.py)
+	public static Supplier<Block> TIN_BLOCK = unbound("TIN_BLOCK");
+	public static Supplier<Block> TIN_STAIRS = unbound("TIN_STAIRS");
+	public static Supplier<Block> TIN_SLAB = unbound("TIN_SLAB");
+	public static Supplier<Block> TIN_WALL = unbound("TIN_WALL");
+	public static Supplier<Block> SILVER_BLOCK = unbound("SILVER_BLOCK");
+	public static Supplier<Block> SILVER_STAIRS = unbound("SILVER_STAIRS");
+	public static Supplier<Block> SILVER_SLAB = unbound("SILVER_SLAB");
+	public static Supplier<Block> SILVER_WALL = unbound("SILVER_WALL");
+	public static Supplier<Block> NICKEL_BLOCK = unbound("NICKEL_BLOCK");
+	public static Supplier<Block> NICKEL_STAIRS = unbound("NICKEL_STAIRS");
+	public static Supplier<Block> NICKEL_SLAB = unbound("NICKEL_SLAB");
+	public static Supplier<Block> NICKEL_WALL = unbound("NICKEL_WALL");
+	public static Supplier<Block> URANIUM_BLOCK = unbound("URANIUM_BLOCK");
+	public static Supplier<Block> URANIUM_STAIRS = unbound("URANIUM_STAIRS");
+	public static Supplier<Block> URANIUM_SLAB = unbound("URANIUM_SLAB");
+	public static Supplier<Block> URANIUM_WALL = unbound("URANIUM_WALL");
+	public static Supplier<Block> PALLADIUM_BLOCK = unbound("PALLADIUM_BLOCK");
+	public static Supplier<Block> PALLADIUM_STAIRS = unbound("PALLADIUM_STAIRS");
+	public static Supplier<Block> PALLADIUM_SLAB = unbound("PALLADIUM_SLAB");
+	public static Supplier<Block> PALLADIUM_WALL = unbound("PALLADIUM_WALL");
+	public static Supplier<Block> BRONZE_BLOCK = unbound("BRONZE_BLOCK");
+	public static Supplier<Block> BRONZE_STAIRS = unbound("BRONZE_STAIRS");
+	public static Supplier<Block> BRONZE_SLAB = unbound("BRONZE_SLAB");
+	public static Supplier<Block> BRONZE_WALL = unbound("BRONZE_WALL");
+	public static Supplier<Block> INVAR_BLOCK = unbound("INVAR_BLOCK");
+	public static Supplier<Block> INVAR_STAIRS = unbound("INVAR_STAIRS");
+	public static Supplier<Block> INVAR_SLAB = unbound("INVAR_SLAB");
+	public static Supplier<Block> INVAR_WALL = unbound("INVAR_WALL");
+	public static Supplier<Block> CUPRONICKEL_BLOCK = unbound("CUPRONICKEL_BLOCK");
+	public static Supplier<Block> CUPRONICKEL_STAIRS = unbound("CUPRONICKEL_STAIRS");
+	public static Supplier<Block> CUPRONICKEL_SLAB = unbound("CUPRONICKEL_SLAB");
+	public static Supplier<Block> CUPRONICKEL_WALL = unbound("CUPRONICKEL_WALL");
+	public static Supplier<Block> ELECTRUM_BLOCK = unbound("ELECTRUM_BLOCK");
+	public static Supplier<Block> ELECTRUM_STAIRS = unbound("ELECTRUM_STAIRS");
+	public static Supplier<Block> ELECTRUM_SLAB = unbound("ELECTRUM_SLAB");
+	public static Supplier<Block> ELECTRUM_WALL = unbound("ELECTRUM_WALL");
+	public static Supplier<Block> NETHERITE_ALLOY_BLOCK = unbound("NETHERITE_ALLOY_BLOCK");
+	public static Supplier<Block> NETHERITE_ALLOY_STAIRS = unbound("NETHERITE_ALLOY_STAIRS");
+	public static Supplier<Block> NETHERITE_ALLOY_SLAB = unbound("NETHERITE_ALLOY_SLAB");
+	public static Supplier<Block> NETHERITE_ALLOY_WALL = unbound("NETHERITE_ALLOY_WALL");
+	public static Supplier<Block> SHIELDING_ALLOY_BLOCK = unbound("SHIELDING_ALLOY_BLOCK");
+	public static Supplier<Block> SHIELDING_ALLOY_STAIRS = unbound("SHIELDING_ALLOY_STAIRS");
+	public static Supplier<Block> SHIELDING_ALLOY_SLAB = unbound("SHIELDING_ALLOY_SLAB");
+	public static Supplier<Block> SHIELDING_ALLOY_WALL = unbound("SHIELDING_ALLOY_WALL");
+	public static Supplier<Block> TEMPERED_IRON_STAIRS = unbound("TEMPERED_IRON_STAIRS");
+	public static Supplier<Block> TEMPERED_IRON_SLAB = unbound("TEMPERED_IRON_SLAB");
+	public static Supplier<Block> TEMPERED_IRON_WALL = unbound("TEMPERED_IRON_WALL");
+	public static Supplier<Block> TEMPERED_IRON_FENCE = unbound("TEMPERED_IRON_FENCE");
+	// END GENERATED metal blocks
+	// MOD-795 — reinforced glass, the panel lamp and the tempered iron fittings.
+	public static Supplier<Block> REINFORCED_GLASS = unbound("REINFORCED_GLASS");
+	public static Supplier<Block> INDUSTRIAL_LIGHT = unbound("INDUSTRIAL_LIGHT");
+	public static Supplier<Block> TEMPERED_IRON_BARS = unbound("TEMPERED_IRON_BARS");
+	public static Supplier<Block> TEMPERED_IRON_LADDER = unbound("TEMPERED_IRON_LADDER");
+	public static Supplier<Block> TEMPERED_IRON_TRAPDOOR = unbound("TEMPERED_IRON_TRAPDOOR");
+	public static Supplier<Block> TEMPERED_IRON_CHAIN = unbound("TEMPERED_IRON_CHAIN");
 	public static Supplier<Block> INDUSTRIAL_WORKBENCH = unbound("INDUSTRIAL_WORKBENCH");
 	// Enriched Uranium Torch (MOD-085) — a vanilla-behaviour torch (light 15, green flame) in two
 	// blocks: standing + wall. The wall variant has NO block item; it drops/names from the standing
@@ -924,6 +982,64 @@ public final class ModContent {
 	public static Supplier<BlockItem> ADVANCED_MACHINE_CASING_ITEM = unbound("ADVANCED_MACHINE_CASING_ITEM");
 	public static Supplier<BlockItem> SILVER_PLATE_BLOCK_ITEM = unbound("SILVER_PLATE_BLOCK_ITEM");
 	public static Supplier<BlockItem> TEMPERED_IRON_PLATE_BLOCK_ITEM = unbound("TEMPERED_IRON_PLATE_BLOCK_ITEM");
+	// MOD-796 - metal storage blocks and their shapes.
+	// BEGIN GENERATED metal blocks (tools/gen_metal_blocks.py)
+	public static Supplier<BlockItem> TIN_BLOCK_ITEM = unbound("TIN_BLOCK_ITEM");
+	public static Supplier<BlockItem> TIN_STAIRS_ITEM = unbound("TIN_STAIRS_ITEM");
+	public static Supplier<BlockItem> TIN_SLAB_ITEM = unbound("TIN_SLAB_ITEM");
+	public static Supplier<BlockItem> TIN_WALL_ITEM = unbound("TIN_WALL_ITEM");
+	public static Supplier<BlockItem> SILVER_BLOCK_ITEM = unbound("SILVER_BLOCK_ITEM");
+	public static Supplier<BlockItem> SILVER_STAIRS_ITEM = unbound("SILVER_STAIRS_ITEM");
+	public static Supplier<BlockItem> SILVER_SLAB_ITEM = unbound("SILVER_SLAB_ITEM");
+	public static Supplier<BlockItem> SILVER_WALL_ITEM = unbound("SILVER_WALL_ITEM");
+	public static Supplier<BlockItem> NICKEL_BLOCK_ITEM = unbound("NICKEL_BLOCK_ITEM");
+	public static Supplier<BlockItem> NICKEL_STAIRS_ITEM = unbound("NICKEL_STAIRS_ITEM");
+	public static Supplier<BlockItem> NICKEL_SLAB_ITEM = unbound("NICKEL_SLAB_ITEM");
+	public static Supplier<BlockItem> NICKEL_WALL_ITEM = unbound("NICKEL_WALL_ITEM");
+	public static Supplier<BlockItem> URANIUM_BLOCK_ITEM = unbound("URANIUM_BLOCK_ITEM");
+	public static Supplier<BlockItem> URANIUM_STAIRS_ITEM = unbound("URANIUM_STAIRS_ITEM");
+	public static Supplier<BlockItem> URANIUM_SLAB_ITEM = unbound("URANIUM_SLAB_ITEM");
+	public static Supplier<BlockItem> URANIUM_WALL_ITEM = unbound("URANIUM_WALL_ITEM");
+	public static Supplier<BlockItem> PALLADIUM_BLOCK_ITEM = unbound("PALLADIUM_BLOCK_ITEM");
+	public static Supplier<BlockItem> PALLADIUM_STAIRS_ITEM = unbound("PALLADIUM_STAIRS_ITEM");
+	public static Supplier<BlockItem> PALLADIUM_SLAB_ITEM = unbound("PALLADIUM_SLAB_ITEM");
+	public static Supplier<BlockItem> PALLADIUM_WALL_ITEM = unbound("PALLADIUM_WALL_ITEM");
+	public static Supplier<BlockItem> BRONZE_BLOCK_ITEM = unbound("BRONZE_BLOCK_ITEM");
+	public static Supplier<BlockItem> BRONZE_STAIRS_ITEM = unbound("BRONZE_STAIRS_ITEM");
+	public static Supplier<BlockItem> BRONZE_SLAB_ITEM = unbound("BRONZE_SLAB_ITEM");
+	public static Supplier<BlockItem> BRONZE_WALL_ITEM = unbound("BRONZE_WALL_ITEM");
+	public static Supplier<BlockItem> INVAR_BLOCK_ITEM = unbound("INVAR_BLOCK_ITEM");
+	public static Supplier<BlockItem> INVAR_STAIRS_ITEM = unbound("INVAR_STAIRS_ITEM");
+	public static Supplier<BlockItem> INVAR_SLAB_ITEM = unbound("INVAR_SLAB_ITEM");
+	public static Supplier<BlockItem> INVAR_WALL_ITEM = unbound("INVAR_WALL_ITEM");
+	public static Supplier<BlockItem> CUPRONICKEL_BLOCK_ITEM = unbound("CUPRONICKEL_BLOCK_ITEM");
+	public static Supplier<BlockItem> CUPRONICKEL_STAIRS_ITEM = unbound("CUPRONICKEL_STAIRS_ITEM");
+	public static Supplier<BlockItem> CUPRONICKEL_SLAB_ITEM = unbound("CUPRONICKEL_SLAB_ITEM");
+	public static Supplier<BlockItem> CUPRONICKEL_WALL_ITEM = unbound("CUPRONICKEL_WALL_ITEM");
+	public static Supplier<BlockItem> ELECTRUM_BLOCK_ITEM = unbound("ELECTRUM_BLOCK_ITEM");
+	public static Supplier<BlockItem> ELECTRUM_STAIRS_ITEM = unbound("ELECTRUM_STAIRS_ITEM");
+	public static Supplier<BlockItem> ELECTRUM_SLAB_ITEM = unbound("ELECTRUM_SLAB_ITEM");
+	public static Supplier<BlockItem> ELECTRUM_WALL_ITEM = unbound("ELECTRUM_WALL_ITEM");
+	public static Supplier<BlockItem> NETHERITE_ALLOY_BLOCK_ITEM = unbound("NETHERITE_ALLOY_BLOCK_ITEM");
+	public static Supplier<BlockItem> NETHERITE_ALLOY_STAIRS_ITEM = unbound("NETHERITE_ALLOY_STAIRS_ITEM");
+	public static Supplier<BlockItem> NETHERITE_ALLOY_SLAB_ITEM = unbound("NETHERITE_ALLOY_SLAB_ITEM");
+	public static Supplier<BlockItem> NETHERITE_ALLOY_WALL_ITEM = unbound("NETHERITE_ALLOY_WALL_ITEM");
+	public static Supplier<BlockItem> SHIELDING_ALLOY_BLOCK_ITEM = unbound("SHIELDING_ALLOY_BLOCK_ITEM");
+	public static Supplier<BlockItem> SHIELDING_ALLOY_STAIRS_ITEM = unbound("SHIELDING_ALLOY_STAIRS_ITEM");
+	public static Supplier<BlockItem> SHIELDING_ALLOY_SLAB_ITEM = unbound("SHIELDING_ALLOY_SLAB_ITEM");
+	public static Supplier<BlockItem> SHIELDING_ALLOY_WALL_ITEM = unbound("SHIELDING_ALLOY_WALL_ITEM");
+	public static Supplier<BlockItem> TEMPERED_IRON_STAIRS_ITEM = unbound("TEMPERED_IRON_STAIRS_ITEM");
+	public static Supplier<BlockItem> TEMPERED_IRON_SLAB_ITEM = unbound("TEMPERED_IRON_SLAB_ITEM");
+	public static Supplier<BlockItem> TEMPERED_IRON_WALL_ITEM = unbound("TEMPERED_IRON_WALL_ITEM");
+	public static Supplier<BlockItem> TEMPERED_IRON_FENCE_ITEM = unbound("TEMPERED_IRON_FENCE_ITEM");
+	// END GENERATED metal blocks
+	// MOD-795
+	public static Supplier<BlockItem> REINFORCED_GLASS_ITEM = unbound("REINFORCED_GLASS_ITEM");
+	public static Supplier<BlockItem> INDUSTRIAL_LIGHT_ITEM = unbound("INDUSTRIAL_LIGHT_ITEM");
+	public static Supplier<BlockItem> TEMPERED_IRON_BARS_ITEM = unbound("TEMPERED_IRON_BARS_ITEM");
+	public static Supplier<BlockItem> TEMPERED_IRON_LADDER_ITEM = unbound("TEMPERED_IRON_LADDER_ITEM");
+	public static Supplier<BlockItem> TEMPERED_IRON_TRAPDOOR_ITEM = unbound("TEMPERED_IRON_TRAPDOOR_ITEM");
+	public static Supplier<BlockItem> TEMPERED_IRON_CHAIN_ITEM = unbound("TEMPERED_IRON_CHAIN_ITEM");
 	public static Supplier<BlockItem> INDUSTRIAL_WORKBENCH_ITEM = unbound("INDUSTRIAL_WORKBENCH_ITEM");
 	// Enriched Uranium Torch (MOD-085) — only the STANDING torch has a block item; the wall variant
 	// drops this item via its overrideLootTable, so it needs no item of its own.

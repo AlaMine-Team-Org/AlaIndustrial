@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "W#W",
+    "W#W"
+  ],
+  "key": {
+    "W": "alaindustrial:tempered_iron",
+    "#": "alaindustrial:tempered_iron_plate"
+  },
+  "result": {
+    "id": "alaindustrial:tempered_iron_fence",
+    "count": 6
+  }
+}

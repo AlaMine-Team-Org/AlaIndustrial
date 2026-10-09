@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "alaindustrial:silver_block",
+  "result": {
+    "id": "alaindustrial:silver_wall",
+    "count": 1
+  }
+}

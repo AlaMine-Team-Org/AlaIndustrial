@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "alaindustrial:electrum_block",
+  "result": {
+    "id": "alaindustrial:electrum_slab",
+    "count": 2
+  }
+}

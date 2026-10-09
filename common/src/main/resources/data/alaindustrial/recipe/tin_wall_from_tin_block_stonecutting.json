@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "alaindustrial:tin_block",
+  "result": {
+    "id": "alaindustrial:tin_wall",
+    "count": 1
+  }
+}

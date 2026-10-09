@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "#  ",
+    "## ",
+    "###"
+  ],
+  "key": {
+    "#": "alaindustrial:tin_block"
+  },
+  "result": {
+    "id": "alaindustrial:tin_stairs",
+    "count": 4
+  }
+}

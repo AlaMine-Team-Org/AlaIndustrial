@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/inner_stairs",
+  "textures": {
+    "bottom": "alaindustrial:block/invar_block",
+    "side": "alaindustrial:block/invar_block",
+    "top": "alaindustrial:block/invar_block"
+  }
+}

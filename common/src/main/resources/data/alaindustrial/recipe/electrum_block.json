@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "###",
+    "#I#",
+    "###"
+  ],
+  "key": {
+    "#": "#c:ingots/electrum",
+    "I": "alaindustrial:electrum_ingot"
+  },
+  "result": {
+    "id": "alaindustrial:electrum_block",
+    "count": 1
+  }
+}

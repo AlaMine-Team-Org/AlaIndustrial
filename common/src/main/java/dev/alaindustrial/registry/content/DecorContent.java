@@ -13,12 +13,19 @@ import static dev.alaindustrial.registry.content.TabEntries.show;
 import dev.alaindustrial.block.EngravedPlateBlock;
 import dev.alaindustrial.block.EnrichedUraniumTorchBlock;
 import dev.alaindustrial.block.EnrichedUraniumWallTorchBlock;
+import dev.alaindustrial.block.MetalStairBlock;
 import dev.alaindustrial.block.MobRepellerBlock;
 import dev.alaindustrial.block.MobRepellerHvBlock;
 import dev.alaindustrial.block.MobRepellerMvBlock;
+import dev.alaindustrial.block.IndustrialLightBlock;
+import dev.alaindustrial.block.ReinforcedGlassBlock;
+import dev.alaindustrial.block.TemperedIronBarsBlock;
+import dev.alaindustrial.block.TemperedIronLadderBlock;
+import dev.alaindustrial.block.TemperedIronTrapdoorBlock;
 import dev.alaindustrial.block.entity.MobRepellerBlockEntity;
 import dev.alaindustrial.block.entity.MobRepellerHvBlockEntity;
 import dev.alaindustrial.block.entity.MobRepellerMvBlockEntity;
+import dev.alaindustrial.compat.LineBlockProps;
 import dev.alaindustrial.menu.MobRepellerHvMenu;
 import dev.alaindustrial.menu.MobRepellerMenu;
 import dev.alaindustrial.menu.MobRepellerMvMenu;
@@ -33,11 +40,18 @@ import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModParticles;
 import java.util.List;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.StandingAndWallBlockItem;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ChainBlock;
+import net.minecraft.world.level.block.FenceBlock;
+import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.material.MapColor;
 
+// size-justified: a declarative table (coding.md §10, under 600 lines per domain); the metal family of
+// MOD-796 alone is 47 generated blocks, written by tools/gen_metal_blocks.py between its markers.
 /**
  * The Decor domain of the content manifest (MOD-711; coding.md §1, owner decision D5). Blocks with no machine
  * function: metal and plate blocks, the engraved lab plaque, the enriched uranium torch and the mob repellers.
@@ -77,6 +91,195 @@ public final class DecorContent {
 	public static final BlockDef<Block> TEMPERED_IRON_PLATE_BLOCK = block("tempered_iron_plate_block", Block::new,
 			machine(MapColor.TERRACOTTA_LIGHT_BLUE, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
 			s -> ModContent.TEMPERED_IRON_PLATE_BLOCK = s);
+	// MOD-796 - storage blocks of the mod's ingots, their stairs, slabs and walls, the tempered iron fence.
+	// BEGIN GENERATED metal blocks (tools/gen_metal_blocks.py)
+	public static final BlockDef<Block> TIN_BLOCK = block("tin_block", Block::new,
+			machine(MapColor.COLOR_LIGHT_GRAY, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.TIN_BLOCK = s);
+	public static final BlockDef<MetalStairBlock> TIN_STAIRS = block("tin_stairs",
+			p -> new MetalStairBlock(registeredBlock("tin_block").defaultBlockState(), p),
+			machine(MapColor.COLOR_LIGHT_GRAY, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.TIN_STAIRS = s);
+	public static final BlockDef<SlabBlock> TIN_SLAB = block("tin_slab", SlabBlock::new,
+			machine(MapColor.COLOR_LIGHT_GRAY, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.TIN_SLAB = s);
+	public static final BlockDef<WallBlock> TIN_WALL = block("tin_wall", WallBlock::new,
+			machine(MapColor.COLOR_LIGHT_GRAY, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL).forceSolidOn()),
+			s -> ModContent.TIN_WALL = s);
+	public static final BlockDef<Block> SILVER_BLOCK = block("silver_block", Block::new,
+			machine(MapColor.METAL, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.SILVER_BLOCK = s);
+	public static final BlockDef<MetalStairBlock> SILVER_STAIRS = block("silver_stairs",
+			p -> new MetalStairBlock(registeredBlock("silver_block").defaultBlockState(), p),
+			machine(MapColor.METAL, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.SILVER_STAIRS = s);
+	public static final BlockDef<SlabBlock> SILVER_SLAB = block("silver_slab", SlabBlock::new,
+			machine(MapColor.METAL, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.SILVER_SLAB = s);
+	public static final BlockDef<WallBlock> SILVER_WALL = block("silver_wall", WallBlock::new,
+			machine(MapColor.METAL, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL).forceSolidOn()),
+			s -> ModContent.SILVER_WALL = s);
+	public static final BlockDef<Block> NICKEL_BLOCK = block("nickel_block", Block::new,
+			machine(MapColor.SAND, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.NICKEL_BLOCK = s);
+	public static final BlockDef<MetalStairBlock> NICKEL_STAIRS = block("nickel_stairs",
+			p -> new MetalStairBlock(registeredBlock("nickel_block").defaultBlockState(), p),
+			machine(MapColor.SAND, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.NICKEL_STAIRS = s);
+	public static final BlockDef<SlabBlock> NICKEL_SLAB = block("nickel_slab", SlabBlock::new,
+			machine(MapColor.SAND, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.NICKEL_SLAB = s);
+	public static final BlockDef<WallBlock> NICKEL_WALL = block("nickel_wall", WallBlock::new,
+			machine(MapColor.SAND, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL).forceSolidOn()),
+			s -> ModContent.NICKEL_WALL = s);
+	public static final BlockDef<Block> URANIUM_BLOCK = block("uranium_block", Block::new,
+			machine(MapColor.COLOR_LIGHT_GREEN, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.URANIUM_BLOCK = s);
+	public static final BlockDef<MetalStairBlock> URANIUM_STAIRS = block("uranium_stairs",
+			p -> new MetalStairBlock(registeredBlock("uranium_block").defaultBlockState(), p),
+			machine(MapColor.COLOR_LIGHT_GREEN, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.URANIUM_STAIRS = s);
+	public static final BlockDef<SlabBlock> URANIUM_SLAB = block("uranium_slab", SlabBlock::new,
+			machine(MapColor.COLOR_LIGHT_GREEN, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.URANIUM_SLAB = s);
+	public static final BlockDef<WallBlock> URANIUM_WALL = block("uranium_wall", WallBlock::new,
+			machine(MapColor.COLOR_LIGHT_GREEN, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL).forceSolidOn()),
+			s -> ModContent.URANIUM_WALL = s);
+	public static final BlockDef<Block> PALLADIUM_BLOCK = block("palladium_block", Block::new,
+			machine(MapColor.DIAMOND, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.PALLADIUM_BLOCK = s);
+	public static final BlockDef<MetalStairBlock> PALLADIUM_STAIRS = block("palladium_stairs",
+			p -> new MetalStairBlock(registeredBlock("palladium_block").defaultBlockState(), p),
+			machine(MapColor.DIAMOND, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.PALLADIUM_STAIRS = s);
+	public static final BlockDef<SlabBlock> PALLADIUM_SLAB = block("palladium_slab", SlabBlock::new,
+			machine(MapColor.DIAMOND, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.PALLADIUM_SLAB = s);
+	public static final BlockDef<WallBlock> PALLADIUM_WALL = block("palladium_wall", WallBlock::new,
+			machine(MapColor.DIAMOND, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL).forceSolidOn()),
+			s -> ModContent.PALLADIUM_WALL = s);
+	public static final BlockDef<Block> BRONZE_BLOCK = block("bronze_block", Block::new,
+			machine(MapColor.COLOR_ORANGE, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.BRONZE_BLOCK = s);
+	public static final BlockDef<MetalStairBlock> BRONZE_STAIRS = block("bronze_stairs",
+			p -> new MetalStairBlock(registeredBlock("bronze_block").defaultBlockState(), p),
+			machine(MapColor.COLOR_ORANGE, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.BRONZE_STAIRS = s);
+	public static final BlockDef<SlabBlock> BRONZE_SLAB = block("bronze_slab", SlabBlock::new,
+			machine(MapColor.COLOR_ORANGE, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.BRONZE_SLAB = s);
+	public static final BlockDef<WallBlock> BRONZE_WALL = block("bronze_wall", WallBlock::new,
+			machine(MapColor.COLOR_ORANGE, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL).forceSolidOn()),
+			s -> ModContent.BRONZE_WALL = s);
+	public static final BlockDef<Block> INVAR_BLOCK = block("invar_block", Block::new,
+			machine(MapColor.STONE, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.INVAR_BLOCK = s);
+	public static final BlockDef<MetalStairBlock> INVAR_STAIRS = block("invar_stairs",
+			p -> new MetalStairBlock(registeredBlock("invar_block").defaultBlockState(), p),
+			machine(MapColor.STONE, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.INVAR_STAIRS = s);
+	public static final BlockDef<SlabBlock> INVAR_SLAB = block("invar_slab", SlabBlock::new,
+			machine(MapColor.STONE, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.INVAR_SLAB = s);
+	public static final BlockDef<WallBlock> INVAR_WALL = block("invar_wall", WallBlock::new,
+			machine(MapColor.STONE, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL).forceSolidOn()),
+			s -> ModContent.INVAR_WALL = s);
+	public static final BlockDef<Block> CUPRONICKEL_BLOCK = block("cupronickel_block", Block::new,
+			machine(MapColor.TERRACOTTA_PINK, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.CUPRONICKEL_BLOCK = s);
+	public static final BlockDef<MetalStairBlock> CUPRONICKEL_STAIRS = block("cupronickel_stairs",
+			p -> new MetalStairBlock(registeredBlock("cupronickel_block").defaultBlockState(), p),
+			machine(MapColor.TERRACOTTA_PINK, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.CUPRONICKEL_STAIRS = s);
+	public static final BlockDef<SlabBlock> CUPRONICKEL_SLAB = block("cupronickel_slab", SlabBlock::new,
+			machine(MapColor.TERRACOTTA_PINK, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.CUPRONICKEL_SLAB = s);
+	public static final BlockDef<WallBlock> CUPRONICKEL_WALL = block("cupronickel_wall", WallBlock::new,
+			machine(MapColor.TERRACOTTA_PINK, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL).forceSolidOn()),
+			s -> ModContent.CUPRONICKEL_WALL = s);
+	public static final BlockDef<Block> ELECTRUM_BLOCK = block("electrum_block", Block::new,
+			machine(MapColor.GOLD, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.ELECTRUM_BLOCK = s);
+	public static final BlockDef<MetalStairBlock> ELECTRUM_STAIRS = block("electrum_stairs",
+			p -> new MetalStairBlock(registeredBlock("electrum_block").defaultBlockState(), p),
+			machine(MapColor.GOLD, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.ELECTRUM_STAIRS = s);
+	public static final BlockDef<SlabBlock> ELECTRUM_SLAB = block("electrum_slab", SlabBlock::new,
+			machine(MapColor.GOLD, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.ELECTRUM_SLAB = s);
+	public static final BlockDef<WallBlock> ELECTRUM_WALL = block("electrum_wall", WallBlock::new,
+			machine(MapColor.GOLD, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL).forceSolidOn()),
+			s -> ModContent.ELECTRUM_WALL = s);
+	public static final BlockDef<Block> NETHERITE_ALLOY_BLOCK = block("netherite_alloy_block", Block::new,
+			machine(MapColor.COLOR_BROWN, p -> p.strength(50.0f, 1200.0f).sound(SoundType.NETHERITE_BLOCK)),
+			s -> ModContent.NETHERITE_ALLOY_BLOCK = s);
+	public static final BlockDef<MetalStairBlock> NETHERITE_ALLOY_STAIRS = block("netherite_alloy_stairs",
+			p -> new MetalStairBlock(registeredBlock("netherite_alloy_block").defaultBlockState(), p),
+			machine(MapColor.COLOR_BROWN, p -> p.strength(50.0f, 1200.0f).sound(SoundType.NETHERITE_BLOCK)),
+			s -> ModContent.NETHERITE_ALLOY_STAIRS = s);
+	public static final BlockDef<SlabBlock> NETHERITE_ALLOY_SLAB = block("netherite_alloy_slab", SlabBlock::new,
+			machine(MapColor.COLOR_BROWN, p -> p.strength(50.0f, 1200.0f).sound(SoundType.NETHERITE_BLOCK)),
+			s -> ModContent.NETHERITE_ALLOY_SLAB = s);
+	public static final BlockDef<WallBlock> NETHERITE_ALLOY_WALL = block("netherite_alloy_wall", WallBlock::new,
+			machine(MapColor.COLOR_BROWN,
+					p -> p.strength(50.0f, 1200.0f).sound(SoundType.NETHERITE_BLOCK).forceSolidOn()),
+			s -> ModContent.NETHERITE_ALLOY_WALL = s);
+	public static final BlockDef<Block> SHIELDING_ALLOY_BLOCK = block("shielding_alloy_block", Block::new,
+			machine(MapColor.DEEPSLATE, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.SHIELDING_ALLOY_BLOCK = s);
+	public static final BlockDef<MetalStairBlock> SHIELDING_ALLOY_STAIRS = block("shielding_alloy_stairs",
+			p -> new MetalStairBlock(registeredBlock("shielding_alloy_block").defaultBlockState(), p),
+			machine(MapColor.DEEPSLATE, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.SHIELDING_ALLOY_STAIRS = s);
+	public static final BlockDef<SlabBlock> SHIELDING_ALLOY_SLAB = block("shielding_alloy_slab", SlabBlock::new,
+			machine(MapColor.DEEPSLATE, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.SHIELDING_ALLOY_SLAB = s);
+	public static final BlockDef<WallBlock> SHIELDING_ALLOY_WALL = block("shielding_alloy_wall", WallBlock::new,
+			machine(MapColor.DEEPSLATE, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL).forceSolidOn()),
+			s -> ModContent.SHIELDING_ALLOY_WALL = s);
+	public static final BlockDef<MetalStairBlock> TEMPERED_IRON_STAIRS = block("tempered_iron_stairs",
+			p -> new MetalStairBlock(registeredBlock("tempered_iron_block").defaultBlockState(), p),
+			machine(MapColor.TERRACOTTA_LIGHT_BLUE, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.TEMPERED_IRON_STAIRS = s);
+	public static final BlockDef<SlabBlock> TEMPERED_IRON_SLAB = block("tempered_iron_slab", SlabBlock::new,
+			machine(MapColor.TERRACOTTA_LIGHT_BLUE, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.TEMPERED_IRON_SLAB = s);
+	public static final BlockDef<WallBlock> TEMPERED_IRON_WALL = block("tempered_iron_wall", WallBlock::new,
+			machine(MapColor.TERRACOTTA_LIGHT_BLUE, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL).forceSolidOn()),
+			s -> ModContent.TEMPERED_IRON_WALL = s);
+	public static final BlockDef<FenceBlock> TEMPERED_IRON_FENCE = block("tempered_iron_fence", FenceBlock::new,
+			machine(MapColor.TERRACOTTA_LIGHT_BLUE, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.TEMPERED_IRON_FENCE = s);
+	// END GENERATED metal blocks
+	// MOD-795 — reinforced glass, the panel lamp and the tempered iron twins of vanilla bars, ladder, trapdoor
+	// and chain. Vanilla behaviour throughout; tempered iron hardness, a pickaxe for the drop.
+	public static final BlockDef<ReinforcedGlassBlock> REINFORCED_GLASS = block("reinforced_glass",
+			ReinforcedGlassBlock::new,
+			// Ten times vanilla glass to break; blast resistance of the reactor shell, so a creeper or TNT holds.
+			machine(MapColor.NONE, p -> LineBlockProps.seeThrough(p.strength(3.0f, 30.0f).sound(SoundType.GLASS)
+					.noOcclusion())),
+			s -> ModContent.REINFORCED_GLASS = s);
+	public static final BlockDef<IndustrialLightBlock> INDUSTRIAL_LIGHT = block("industrial_light",
+			IndustrialLightBlock::new,
+			// Always the full light level: no power, no switch.
+			machine(MapColor.NONE, p -> p.strength(1.5f, 6.0f).sound(SoundType.GLASS).lightLevel(state -> 15)
+					.noOcclusion()), s -> ModContent.INDUSTRIAL_LIGHT = s);
+	public static final BlockDef<TemperedIronBarsBlock> TEMPERED_IRON_BARS = block("tempered_iron_bars",
+			TemperedIronBarsBlock::new,
+			machine(MapColor.TERRACOTTA_LIGHT_BLUE, p -> p.strength(5.0f, 6.0f).sound(SoundType.IRON).noOcclusion()),
+			s -> ModContent.TEMPERED_IRON_BARS = s);
+	public static final BlockDef<TemperedIronLadderBlock> TEMPERED_IRON_LADDER = block("tempered_iron_ladder",
+			TemperedIronLadderBlock::new,
+			// A piston pops it like the vanilla ladder.
+			machine(MapColor.TERRACOTTA_LIGHT_BLUE, p -> LineBlockProps.popsOnPush(p).strength(3.0f, 6.0f)
+					.sound(SoundType.METAL).noOcclusion()), s -> ModContent.TEMPERED_IRON_LADDER = s);
+	public static final BlockDef<TemperedIronTrapdoorBlock> TEMPERED_IRON_TRAPDOOR = block("tempered_iron_trapdoor",
+			TemperedIronTrapdoorBlock::new,
+			machine(MapColor.TERRACOTTA_LIGHT_BLUE, p -> p.strength(5.0f, 6.0f).noOcclusion()
+					.isValidSpawn((state, level, pos, type) -> false)), s -> ModContent.TEMPERED_IRON_TRAPDOOR = s);
+	public static final BlockDef<ChainBlock> TEMPERED_IRON_CHAIN = block("tempered_iron_chain", ChainBlock::new,
+			machine(MapColor.NONE, p -> p.strength(5.0f, 6.0f).sound(SoundType.CHAIN).noOcclusion().forceSolidOn()),
+			s -> ModContent.TEMPERED_IRON_CHAIN = s);
 	// Enriched Uranium Torch (MOD-085) — vanilla-behaviour torch, light 14, green flame.
 	// The WALL variant must stay directly after the standing one: its properties read the
 	// already-registered standing torch for its loot table and description.
@@ -171,6 +374,67 @@ public final class DecorContent {
 			blockItem("tempered_iron_block", s -> ModContent.TEMPERED_IRON_BLOCK_ITEM = s),
 			blockItem("silver_plate_block", s -> ModContent.SILVER_PLATE_BLOCK_ITEM = s),
 			blockItem("tempered_iron_plate_block", s -> ModContent.TEMPERED_IRON_PLATE_BLOCK_ITEM = s),
+			// MOD-796 - storage blocks of the mod's ingots, their stairs, slabs and walls, the tempered iron fence.
+			// BEGIN GENERATED metal blocks (tools/gen_metal_blocks.py)
+			blockItem("tin_block", s -> ModContent.TIN_BLOCK_ITEM = s),
+			blockItem("tin_stairs", s -> ModContent.TIN_STAIRS_ITEM = s),
+			blockItem("tin_slab", s -> ModContent.TIN_SLAB_ITEM = s),
+			blockItem("tin_wall", s -> ModContent.TIN_WALL_ITEM = s),
+			blockItem("silver_block", s -> ModContent.SILVER_BLOCK_ITEM = s),
+			blockItem("silver_stairs", s -> ModContent.SILVER_STAIRS_ITEM = s),
+			blockItem("silver_slab", s -> ModContent.SILVER_SLAB_ITEM = s),
+			blockItem("silver_wall", s -> ModContent.SILVER_WALL_ITEM = s),
+			blockItem("nickel_block", s -> ModContent.NICKEL_BLOCK_ITEM = s),
+			blockItem("nickel_stairs", s -> ModContent.NICKEL_STAIRS_ITEM = s),
+			blockItem("nickel_slab", s -> ModContent.NICKEL_SLAB_ITEM = s),
+			blockItem("nickel_wall", s -> ModContent.NICKEL_WALL_ITEM = s),
+			blockItem("uranium_block", s -> ModContent.URANIUM_BLOCK_ITEM = s),
+			blockItem("uranium_stairs", s -> ModContent.URANIUM_STAIRS_ITEM = s),
+			blockItem("uranium_slab", s -> ModContent.URANIUM_SLAB_ITEM = s),
+			blockItem("uranium_wall", s -> ModContent.URANIUM_WALL_ITEM = s),
+			blockItem("palladium_block", s -> ModContent.PALLADIUM_BLOCK_ITEM = s),
+			blockItem("palladium_stairs", s -> ModContent.PALLADIUM_STAIRS_ITEM = s),
+			blockItem("palladium_slab", s -> ModContent.PALLADIUM_SLAB_ITEM = s),
+			blockItem("palladium_wall", s -> ModContent.PALLADIUM_WALL_ITEM = s),
+			blockItem("bronze_block", s -> ModContent.BRONZE_BLOCK_ITEM = s),
+			blockItem("bronze_stairs", s -> ModContent.BRONZE_STAIRS_ITEM = s),
+			blockItem("bronze_slab", s -> ModContent.BRONZE_SLAB_ITEM = s),
+			blockItem("bronze_wall", s -> ModContent.BRONZE_WALL_ITEM = s),
+			blockItem("invar_block", s -> ModContent.INVAR_BLOCK_ITEM = s),
+			blockItem("invar_stairs", s -> ModContent.INVAR_STAIRS_ITEM = s),
+			blockItem("invar_slab", s -> ModContent.INVAR_SLAB_ITEM = s),
+			blockItem("invar_wall", s -> ModContent.INVAR_WALL_ITEM = s),
+			blockItem("cupronickel_block", s -> ModContent.CUPRONICKEL_BLOCK_ITEM = s),
+			blockItem("cupronickel_stairs", s -> ModContent.CUPRONICKEL_STAIRS_ITEM = s),
+			blockItem("cupronickel_slab", s -> ModContent.CUPRONICKEL_SLAB_ITEM = s),
+			blockItem("cupronickel_wall", s -> ModContent.CUPRONICKEL_WALL_ITEM = s),
+			blockItem("electrum_block", s -> ModContent.ELECTRUM_BLOCK_ITEM = s),
+			blockItem("electrum_stairs", s -> ModContent.ELECTRUM_STAIRS_ITEM = s),
+			blockItem("electrum_slab", s -> ModContent.ELECTRUM_SLAB_ITEM = s),
+			blockItem("electrum_wall", s -> ModContent.ELECTRUM_WALL_ITEM = s),
+			blockItem("netherite_alloy_block", "netherite_alloy_block", Item.Properties::fireResistant,
+					s -> ModContent.NETHERITE_ALLOY_BLOCK_ITEM = s),
+			blockItem("netherite_alloy_stairs", "netherite_alloy_stairs", Item.Properties::fireResistant,
+					s -> ModContent.NETHERITE_ALLOY_STAIRS_ITEM = s),
+			blockItem("netherite_alloy_slab", "netherite_alloy_slab", Item.Properties::fireResistant,
+					s -> ModContent.NETHERITE_ALLOY_SLAB_ITEM = s),
+			blockItem("netherite_alloy_wall", "netherite_alloy_wall", Item.Properties::fireResistant,
+					s -> ModContent.NETHERITE_ALLOY_WALL_ITEM = s),
+			blockItem("shielding_alloy_block", s -> ModContent.SHIELDING_ALLOY_BLOCK_ITEM = s),
+			blockItem("shielding_alloy_stairs", s -> ModContent.SHIELDING_ALLOY_STAIRS_ITEM = s),
+			blockItem("shielding_alloy_slab", s -> ModContent.SHIELDING_ALLOY_SLAB_ITEM = s),
+			blockItem("shielding_alloy_wall", s -> ModContent.SHIELDING_ALLOY_WALL_ITEM = s),
+			blockItem("tempered_iron_stairs", s -> ModContent.TEMPERED_IRON_STAIRS_ITEM = s),
+			blockItem("tempered_iron_slab", s -> ModContent.TEMPERED_IRON_SLAB_ITEM = s),
+			blockItem("tempered_iron_wall", s -> ModContent.TEMPERED_IRON_WALL_ITEM = s),
+			blockItem("tempered_iron_fence", s -> ModContent.TEMPERED_IRON_FENCE_ITEM = s),
+			// END GENERATED metal blocks
+			blockItem("reinforced_glass", s -> ModContent.REINFORCED_GLASS_ITEM = s),
+			blockItem("industrial_light", s -> ModContent.INDUSTRIAL_LIGHT_ITEM = s),
+			blockItem("tempered_iron_bars", s -> ModContent.TEMPERED_IRON_BARS_ITEM = s),
+			blockItem("tempered_iron_ladder", s -> ModContent.TEMPERED_IRON_LADDER_ITEM = s),
+			blockItem("tempered_iron_trapdoor", s -> ModContent.TEMPERED_IRON_TRAPDOOR_ITEM = s),
+			blockItem("tempered_iron_chain", s -> ModContent.TEMPERED_IRON_CHAIN_ITEM = s),
 			// Enriched Uranium Torch (MOD-085): a StandingAndWallBlockItem (like vanilla Items.TORCH) so using it
 			// on a wall places the wall variant and on the floor the standing variant. The wall block has no item
 			// of its own — this item maps to both blocks (StandingAndWallBlockItem#registerBlocks).
@@ -226,6 +490,77 @@ public final class DecorContent {
 		show(out, ModContent.TEMPERED_IRON_BLOCK_ITEM);
 		plateBlocks(out);
 		show(out, ModContent.INDUSTRIAL_WORKBENCH_ITEM);
+	}
+
+	/**
+	 * The metal family (MOD-796): the storage blocks of the mod's ingots, then their stairs, slabs and walls
+	 * and the tempered iron fence. Building material rather than machinery, so the mod's tab keeps it at the
+	 * very bottom, after both bands and the lab plaque (owner decision 2026-10-09); cubes before shapes.
+	 */
+	public static void metalFamily(Sink out) {
+		// BEGIN GENERATED metal blocks (tools/gen_metal_blocks.py)
+		show(out, ModContent.TIN_BLOCK_ITEM);
+		show(out, ModContent.SILVER_BLOCK_ITEM);
+		show(out, ModContent.NICKEL_BLOCK_ITEM);
+		show(out, ModContent.URANIUM_BLOCK_ITEM);
+		show(out, ModContent.PALLADIUM_BLOCK_ITEM);
+		show(out, ModContent.BRONZE_BLOCK_ITEM);
+		show(out, ModContent.INVAR_BLOCK_ITEM);
+		show(out, ModContent.CUPRONICKEL_BLOCK_ITEM);
+		show(out, ModContent.ELECTRUM_BLOCK_ITEM);
+		show(out, ModContent.NETHERITE_ALLOY_BLOCK_ITEM);
+		show(out, ModContent.SHIELDING_ALLOY_BLOCK_ITEM);
+		// END GENERATED metal blocks
+		// BEGIN GENERATED metal blocks (tools/gen_metal_blocks.py)
+		show(out, ModContent.TIN_STAIRS_ITEM);
+		show(out, ModContent.TIN_SLAB_ITEM);
+		show(out, ModContent.TIN_WALL_ITEM);
+		show(out, ModContent.SILVER_STAIRS_ITEM);
+		show(out, ModContent.SILVER_SLAB_ITEM);
+		show(out, ModContent.SILVER_WALL_ITEM);
+		show(out, ModContent.NICKEL_STAIRS_ITEM);
+		show(out, ModContent.NICKEL_SLAB_ITEM);
+		show(out, ModContent.NICKEL_WALL_ITEM);
+		show(out, ModContent.URANIUM_STAIRS_ITEM);
+		show(out, ModContent.URANIUM_SLAB_ITEM);
+		show(out, ModContent.URANIUM_WALL_ITEM);
+		show(out, ModContent.PALLADIUM_STAIRS_ITEM);
+		show(out, ModContent.PALLADIUM_SLAB_ITEM);
+		show(out, ModContent.PALLADIUM_WALL_ITEM);
+		show(out, ModContent.BRONZE_STAIRS_ITEM);
+		show(out, ModContent.BRONZE_SLAB_ITEM);
+		show(out, ModContent.BRONZE_WALL_ITEM);
+		show(out, ModContent.INVAR_STAIRS_ITEM);
+		show(out, ModContent.INVAR_SLAB_ITEM);
+		show(out, ModContent.INVAR_WALL_ITEM);
+		show(out, ModContent.CUPRONICKEL_STAIRS_ITEM);
+		show(out, ModContent.CUPRONICKEL_SLAB_ITEM);
+		show(out, ModContent.CUPRONICKEL_WALL_ITEM);
+		show(out, ModContent.ELECTRUM_STAIRS_ITEM);
+		show(out, ModContent.ELECTRUM_SLAB_ITEM);
+		show(out, ModContent.ELECTRUM_WALL_ITEM);
+		show(out, ModContent.NETHERITE_ALLOY_STAIRS_ITEM);
+		show(out, ModContent.NETHERITE_ALLOY_SLAB_ITEM);
+		show(out, ModContent.NETHERITE_ALLOY_WALL_ITEM);
+		show(out, ModContent.SHIELDING_ALLOY_STAIRS_ITEM);
+		show(out, ModContent.SHIELDING_ALLOY_SLAB_ITEM);
+		show(out, ModContent.SHIELDING_ALLOY_WALL_ITEM);
+		show(out, ModContent.TEMPERED_IRON_STAIRS_ITEM);
+		show(out, ModContent.TEMPERED_IRON_SLAB_ITEM);
+		show(out, ModContent.TEMPERED_IRON_WALL_ITEM);
+		show(out, ModContent.TEMPERED_IRON_FENCE_ITEM);
+		// END GENERATED metal blocks
+		fittings(out);
+	}
+
+	/** MOD-795 — reinforced glass, the panel lamp, and tempered iron bars, ladder, trapdoor and chain. */
+	public static void fittings(Sink out) {
+		show(out, ModContent.REINFORCED_GLASS_ITEM);
+		show(out, ModContent.INDUSTRIAL_LIGHT_ITEM);
+		show(out, ModContent.TEMPERED_IRON_BARS_ITEM);
+		show(out, ModContent.TEMPERED_IRON_LADDER_ITEM);
+		show(out, ModContent.TEMPERED_IRON_TRAPDOOR_ITEM);
+		show(out, ModContent.TEMPERED_IRON_CHAIN_ITEM);
 	}
 
 	/** Blocks made from plates (MOD-225): the machine casing and two decorative panels. */

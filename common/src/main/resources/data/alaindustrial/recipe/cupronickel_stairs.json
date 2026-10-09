@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "#  ",
+    "## ",
+    "###"
+  ],
+  "key": {
+    "#": "alaindustrial:cupronickel_block"
+  },
+  "result": {
+    "id": "alaindustrial:cupronickel_stairs",
+    "count": 4
+  }
+}

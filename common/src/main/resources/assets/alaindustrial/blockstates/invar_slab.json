@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "alaindustrial:block/invar_slab"
+    },
+    "type=double": {
+      "model": "alaindustrial:block/invar_block"
+    },
+    "type=top": {
+      "model": "alaindustrial:block/invar_slab_top"
+    }
+  }
+}

@@ -12,6 +12,7 @@
     "#c:ingots/palladium",
     "#c:ingots/shielding_alloy",
     "#c:ingots/netherite",
-    "#c:ingots/netherite_alloy"
+    "#c:ingots/netherite_alloy",
+    "#c:ingots/tempered_iron"
   ]
 }

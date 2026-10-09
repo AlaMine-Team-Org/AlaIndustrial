@@ -205,9 +205,13 @@ tooltip.alaindustrial.block_breaker.tools {gray}
 == alaindustrial:broken_engraved_plate_p plain : none
 == alaindustrial:broken_engraved_plate_r plain : none
 == alaindustrial:broken_engraved_plate_w plain : none
+== alaindustrial:bronze_block plain : none
 == alaindustrial:bronze_ingot plain : none
 == alaindustrial:bronze_plate plain : none
 == alaindustrial:bronze_reinforced_plate plain : none
+== alaindustrial:bronze_slab plain : none
+== alaindustrial:bronze_stairs plain : none
+== alaindustrial:bronze_wall plain : none
 == alaindustrial:cable_breaker plain : none
 == alaindustrial:canned_ration plain : none
 == alaindustrial:canning_machine plain
@@ -353,9 +357,13 @@ tooltip.alaindustrial.core_barrel.role {gray}
 == alaindustrial:crystal_farm_floor plain : none
 == alaindustrial:crystal_farm_glass plain : none
 == alaindustrial:crystal_seedbed plain : none
+== alaindustrial:cupronickel_block plain : none
 == alaindustrial:cupronickel_ingot plain : none
 == alaindustrial:cupronickel_plate plain : none
 == alaindustrial:cupronickel_reinforced_plate plain : none
+== alaindustrial:cupronickel_slab plain : none
+== alaindustrial:cupronickel_stairs plain : none
+== alaindustrial:cupronickel_wall plain : none
 == alaindustrial:dark_oak_diamond_chest_boat plain : none
 == alaindustrial:dark_oak_electrum_chest_boat plain : none
 == alaindustrial:dark_oak_gold_chest_boat plain : none
@@ -1071,6 +1079,7 @@ tooltip.alaindustrial.electric_shovel_diamond_tip.silk_on {aqua}
 == alaindustrial:electromagnet_advanced eu=1 : none
 == alaindustrial:electromagnet_advanced full : none
 == alaindustrial:electronic_circuit plain : none
+== alaindustrial:electrum_block plain : none
 == alaindustrial:electrum_cable plain
 -- plain eu
 tooltip.alaindustrial.tier_hv {light_purple}
@@ -1122,6 +1131,9 @@ tooltip.alaindustrial.storage_slots_double(162) {dark_gray}
 == alaindustrial:electrum_ingot plain : none
 == alaindustrial:electrum_plate plain : none
 == alaindustrial:electrum_reinforced_plate plain : none
+== alaindustrial:electrum_slab plain : none
+== alaindustrial:electrum_stairs plain : none
+== alaindustrial:electrum_wall plain : none
 == alaindustrial:emerald_dust plain : none
 == alaindustrial:empty_can plain : none
 == alaindustrial:empty_chip plain : none
@@ -1385,6 +1397,7 @@ gui.alaindustrial.incubator.mode.create {gray} + " — " + tooltip.alaindustrial
 tooltip.alaindustrial.hold_shift {dark_gray}
 -- shift no-eu
 tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:industrial_light plain : none
 == alaindustrial:industrial_workbench plain : none
 == alaindustrial:insulated_boots plain : none
 == alaindustrial:insulated_chestplate plain : none
@@ -1535,9 +1548,13 @@ item.color(<color.minecraft.red>) {gray}
 tooltip.alaindustrial.tier_lv {green}
 tooltip.alaindustrial.cable_safe {green}
 == alaindustrial:inulin plain : none
+== alaindustrial:invar_block plain : none
 == alaindustrial:invar_ingot plain : none
 == alaindustrial:invar_plate plain : none
 == alaindustrial:invar_reinforced_plate plain : none
+== alaindustrial:invar_slab plain : none
+== alaindustrial:invar_stairs plain : none
+== alaindustrial:invar_wall plain : none
 == alaindustrial:iron_chest plain
 -- plain eu
 tooltip.alaindustrial.hold_shift {dark_gray}
@@ -1706,7 +1723,11 @@ tooltip.alaindustrial.tier_lv {green}
 == alaindustrial:mutation_chip_duplicate plain : none
 == alaindustrial:mutation_chip_transform plain : none
 == alaindustrial:mute_chip plain : none
+== alaindustrial:netherite_alloy_block plain : none
 == alaindustrial:netherite_alloy_ingot plain : none
+== alaindustrial:netherite_alloy_slab plain : none
+== alaindustrial:netherite_alloy_stairs plain : none
+== alaindustrial:netherite_alloy_wall plain : none
 == alaindustrial:netherite_drill_head plain : none
 == alaindustrial:netherite_drill_upgrade_smithing_template plain : none
 == alaindustrial:network_analyzer plain
@@ -1747,10 +1768,14 @@ tooltip.alaindustrial.network_analyzer.cables(12) {gray}
 tooltip.alaindustrial.network_analyzer.endpoints(2, 3, 1) {gray}
 tooltip.alaindustrial.network_analyzer.flow(40, 32) {gray}
 tooltip.alaindustrial.network_analyzer.moved(30) {gray}
+== alaindustrial:nickel_block plain : none
 == alaindustrial:nickel_dust plain : none
 == alaindustrial:nickel_ingot plain : none
 == alaindustrial:nickel_ore plain : none
 == alaindustrial:nickel_plate plain : none
+== alaindustrial:nickel_slab plain : none
+== alaindustrial:nickel_stairs plain : none
+== alaindustrial:nickel_wall plain : none
 == alaindustrial:nutrient_solution_bucket plain : none
 == alaindustrial:oak_diamond_chest_boat plain : none
 == alaindustrial:oak_electrum_chest_boat plain : none
@@ -1769,10 +1794,14 @@ tooltip.alaindustrial.network_analyzer.moved(30) {gray}
 == alaindustrial:pale_oak_iron_chest_boat plain : none
 == alaindustrial:pale_oak_shielding_chest_boat plain : none
 == alaindustrial:pale_oak_silver_chest_boat plain : none
+== alaindustrial:palladium_block plain : none
 == alaindustrial:palladium_dust plain : none
 == alaindustrial:palladium_ingot plain : none
 == alaindustrial:palladium_ore plain : none
 == alaindustrial:palladium_plate plain : none
+== alaindustrial:palladium_slab plain : none
+== alaindustrial:palladium_stairs plain : none
+== alaindustrial:palladium_wall plain : none
 == alaindustrial:piezo_plate plain
 -- plain eu
 tooltip.alaindustrial.piezo_plate_press {gray}
@@ -1874,6 +1903,7 @@ tooltip.alaindustrial.tier_lv {green}
 == alaindustrial:reinforced_amethyst plain : none
 == alaindustrial:reinforced_bearing plain : none
 == alaindustrial:reinforced_fluid_pipe plain : none
+== alaindustrial:reinforced_glass plain : none
 == alaindustrial:reinforced_steam_pipe plain : none
 == alaindustrial:resonance_chip plain : none
 == alaindustrial:resonance_coil plain : none
@@ -1907,9 +1937,13 @@ tooltip.alaindustrial.tier_lv {green}
 == alaindustrial:scythe_stone plain : none
 == alaindustrial:scythe_tempered_iron plain : none
 == alaindustrial:scythe_wood plain : none
+== alaindustrial:shielding_alloy_block plain : none
 == alaindustrial:shielding_alloy_ingot plain : none
 == alaindustrial:shielding_alloy_plate plain : none
 == alaindustrial:shielding_alloy_reinforced_plate plain : none
+== alaindustrial:shielding_alloy_slab plain : none
+== alaindustrial:shielding_alloy_stairs plain : none
+== alaindustrial:shielding_alloy_wall plain : none
 == alaindustrial:shielding_boots plain : none
 == alaindustrial:shielding_chest plain
 -- plain eu
@@ -2026,6 +2060,7 @@ tooltip.alaindustrial.silent_piezo_plate_quiet {dark_gray}
 tooltip.alaindustrial.tier_lv {green}
 tooltip.alaindustrial.piezo_plate_connect {dark_gray}
 tooltip.alaindustrial.piezo_plate_wrench {dark_gray}
+== alaindustrial:silver_block plain : none
 == alaindustrial:silver_chest plain
 -- plain eu
 tooltip.alaindustrial.hold_shift {dark_gray}
@@ -2043,6 +2078,9 @@ tooltip.alaindustrial.storage_slots_double(90) {dark_gray}
 == alaindustrial:silver_ore plain : none
 == alaindustrial:silver_plate plain : none
 == alaindustrial:silver_plate_block plain : none
+== alaindustrial:silver_slab plain : none
+== alaindustrial:silver_stairs plain : none
+== alaindustrial:silver_wall plain : none
 == alaindustrial:slag plain : none
 == alaindustrial:slag_block plain : none
 == alaindustrial:slag_poor plain : none
@@ -2122,17 +2160,25 @@ tooltip.alaindustrial.teleporter_io {gray}
 == alaindustrial:teleporter_remote plain : none
 == alaindustrial:tempered_iron plain : none
 == alaindustrial:tempered_iron_axe plain : none
+== alaindustrial:tempered_iron_bars plain : none
 == alaindustrial:tempered_iron_block plain : none
 == alaindustrial:tempered_iron_boots plain : none
+== alaindustrial:tempered_iron_chain plain : none
 == alaindustrial:tempered_iron_chestplate plain : none
+== alaindustrial:tempered_iron_fence plain : none
 == alaindustrial:tempered_iron_helmet plain : none
 == alaindustrial:tempered_iron_hoe plain : none
+== alaindustrial:tempered_iron_ladder plain : none
 == alaindustrial:tempered_iron_leggings plain : none
 == alaindustrial:tempered_iron_pickaxe plain : none
 == alaindustrial:tempered_iron_plate plain : none
 == alaindustrial:tempered_iron_plate_block plain : none
 == alaindustrial:tempered_iron_shovel plain : none
+== alaindustrial:tempered_iron_slab plain : none
+== alaindustrial:tempered_iron_stairs plain : none
 == alaindustrial:tempered_iron_sword plain : none
+== alaindustrial:tempered_iron_trapdoor plain : none
+== alaindustrial:tempered_iron_wall plain : none
 == alaindustrial:thermal_centrifuge plain
 -- plain eu
 tooltip.alaindustrial.energy_input(4) {gray}
@@ -2148,6 +2194,7 @@ tooltip.alaindustrial.energy_per_op(800) {gray}
 tooltip.alaindustrial.hold_shift {dark_gray}
 -- shift no-eu
 tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:tin_block plain : none
 == alaindustrial:tin_cable plain
 -- plain eu
 tooltip.alaindustrial.tier_lv {green}
@@ -2188,6 +2235,9 @@ tooltip.alaindustrial.cable_shock_warning {red}
 == alaindustrial:tin_ingot plain : none
 == alaindustrial:tin_ore plain : none
 == alaindustrial:tin_plate plain : none
+== alaindustrial:tin_slab plain : none
+== alaindustrial:tin_stairs plain : none
+== alaindustrial:tin_wall plain : none
 == alaindustrial:trellis plain : none
 == alaindustrial:unstable_isotope plain : none
 == alaindustrial:upgrade_table plain
@@ -2206,12 +2256,16 @@ tooltip.alaindustrial.hold_shift {dark_gray}
 tooltip.alaindustrial.upgrade_table.assemble {gray}
 tooltip.alaindustrial.tier_lv {green}
 tooltip.alaindustrial.upgrade_table.purpose {gray}
+== alaindustrial:uranium_block plain : none
 == alaindustrial:uranium_dust plain : none
 == alaindustrial:uranium_fuel_rod plain : none
 == alaindustrial:uranium_ingot plain : none
 == alaindustrial:uranium_ore plain : none
 == alaindustrial:uranium_plate plain : none
 == alaindustrial:uranium_shavings plain : none
+== alaindustrial:uranium_slab plain : none
+== alaindustrial:uranium_stairs plain : none
+== alaindustrial:uranium_wall plain : none
 == alaindustrial:vacuum_capsule plain : none
 == alaindustrial:vulcanizer plain
 -- plain eu

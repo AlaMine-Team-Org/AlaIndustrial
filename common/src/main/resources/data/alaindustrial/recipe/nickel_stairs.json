@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "#  ",
+    "## ",
+    "###"
+  ],
+  "key": {
+    "#": "alaindustrial:nickel_block"
+  },
+  "result": {
+    "id": "alaindustrial:nickel_stairs",
+    "count": 4
+  }
+}

@@ -3,6 +3,10 @@
   "values": [
     "alaindustrial:uranium_ingot",
     "alaindustrial:uranium_plate",
-    "alaindustrial:irradiated_soil"
+    "alaindustrial:irradiated_soil",
+    "alaindustrial:uranium_block",
+    "alaindustrial:uranium_stairs",
+    "alaindustrial:uranium_slab",
+    "alaindustrial:uranium_wall"
   ]
 }

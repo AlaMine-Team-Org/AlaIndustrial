@@ -126,6 +126,7 @@ public final class ScenarioRoster {
 			MagnetScenarios.Roster.ENTRIES,
 			MenuChannelValuesScenarios.Roster.ENTRIES,
 			MenuDataWidthScenarios.Roster.ENTRIES,
+			MetalFamilyScenarios.Roster.ENTRIES,
 			MobRepellerScenarios.Roster.ENTRIES,
 			MobSpawnEquipmentScenarios.Roster.ENTRIES,
 			MobWheelRunnerScenarios.Roster.ENTRIES,
