@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import dev.alaindustrial.junit.StopEphemeralServerBeforeFmlTeardown;
+import dev.alaindustrial.compat.MobSpawns;
+import dev.alaindustrial.registry.ModMobs;
 import dev.alaindustrial.registry.WorldgenInjections;
 import dev.alaindustrial.registry.WorldgenInjections.Injection;
 import java.io.IOException;
@@ -28,8 +30,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
  *
  * <p>For every modifier name of the table, the file
  * {@code neoforge/src/main/resources/data/alaindustrial/neoforge/biome_modifier/<name>.json} must hold, byte
- * for byte, what {@link #render} writes for its rows; no other biome modifier file of this mod may exist. The
- * files are read as the server loaded them, so a file the game does not see counts as missing.
+ * for byte, what {@link #render} writes for its rows, and every mob of {@link ModMobs#MOBS} has its
+ * {@code <mob>_spawns.json} as {@link #renderSpawns} writes it; no other biome modifier file of this mod may
+ * exist. The files are read as the server loaded them, so a file the game does not see counts as missing.
  *
  * <p><b>Written only by an explicit command (ADR-032)</b>, never by the build, a hook or {@code regen.py}:
  * <pre>
@@ -54,6 +57,7 @@ class BiomeModifierTableTest {
 	@Test
 	void everyBiomeModifierFileIsWrittenFromTheTable(MinecraftServer server) throws IOException {
 		Map<String, String> expected = render(WorldgenInjections.INJECTIONS);
+		expected.putAll(renderSpawns(ModMobs.MOBS));
 		Map<String, Resource> loaded = NeoForgeBiomeModifierSnapshotTest.biomeModifierFiles(server);
 		TreeSet<String> orphans = new TreeSet<>(loaded.keySet());
 		orphans.removeAll(expected.keySet());
@@ -82,6 +86,25 @@ class BiomeModifierTableTest {
 		}
 		assertEquals(List.of(), differing, "MOD-708: these neoforge/biome_modifier files are not what"
 				+ " WorldgenInjections writes. Write them with the command in this class's javadoc.");
+	}
+
+	/**
+	 * One NeoForge {@code add_spawns} file per mob of {@link ModMobs#MOBS} (MOD-767), named
+	 * {@code <mob>_spawns}: the Fabric side replays the same {@link ModMobs.NaturalSpawn} in code. The spawner
+	 * entry's shape is the line's own ({@link MobSpawns#spawnerJson}).
+	 */
+	static Map<String, String> renderSpawns(List<ModMobs.MobDef<?>> mobs) {
+		Map<String, String> files = new LinkedHashMap<>();
+		for (ModMobs.MobDef<?> mob : mobs) {
+			ModMobs.NaturalSpawn spawn = mob.naturalSpawn();
+			files.put(mob.id() + "_spawns", "{\n"
+					+ "\t\"type\": \"neoforge:add_spawns\",\n"
+					+ "\t\"biomes\": \"#" + spawn.biomes().location() + "\",\n"
+					+ "\t\"spawners\": " + MobSpawns.spawnerJson(mob.key(), spawn.weight(), spawn.minGroup(),
+							spawn.maxGroup()) + "\n"
+					+ "}\n");
+		}
+		return files;
 	}
 
 	/** One NeoForge {@code add_features} file per modifier name, keyed by name, in the order of the table. */

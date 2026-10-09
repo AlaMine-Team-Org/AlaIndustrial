@@ -1,5 +1,6 @@
 package dev.alaindustrial.fluid;
 
+import dev.alaindustrial.entity.OilSlimeConversion;
 import dev.alaindustrial.registry.ModContent;
 import java.util.Optional;
 import net.minecraft.core.BlockPos;
@@ -122,12 +123,18 @@ public abstract class OilFluid extends FlowingFluid {
 	 * NeoForge-only and Fabric has no equivalent at all. Using it would make the two loaders damp
 	 * motion differently, so {@code motionScale} stays 0 and the effect stays here — see
 	 * {@code ModFluidsNeoForge} (MOD-495).
+	 *
+	 * <p>The same seat counts a slime's soak on the server: a slime that stands in crude oil long enough
+	 * turns into an oil slime (MOD-767, {@link OilSlimeConversion}).
 	 */
 	@Override
 	protected void entityInside(Level level, BlockPos pos, Entity entity,
 			InsideBlockEffectApplier effectApplier) {
 		super.entityInside(level, pos, entity, effectApplier);
 		FluidImmersion.applyEntityInside(level, pos, entity);
+		if (level instanceof ServerLevel server) {
+			OilSlimeConversion.soak(server, pos, entity);
+		}
 	}
 
 	@Override

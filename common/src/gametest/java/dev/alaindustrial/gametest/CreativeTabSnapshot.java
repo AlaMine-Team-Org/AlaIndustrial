@@ -296,6 +296,7 @@ final class CreativeTabSnapshot {
 			"main alaindustrial:core_barrel",
 			"main alaindustrial:drill_column_module",
 			"main alaindustrial:raw_rubber",
+			"main alaindustrial:oil_slime_spawn_egg",
 			"main alaindustrial:biomass",
 			"main alaindustrial:rubber",
 			"main alaindustrial:cotton_fiber",

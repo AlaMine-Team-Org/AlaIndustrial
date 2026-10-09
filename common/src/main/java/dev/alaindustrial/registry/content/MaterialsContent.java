@@ -27,7 +27,9 @@ import dev.alaindustrial.registry.ContentManifest.ItemDef;
 import dev.alaindustrial.registry.ContentManifest.MenuDef;
 import dev.alaindustrial.registry.CreativeTabContent.Sink;
 import dev.alaindustrial.registry.ModContent;
+import dev.alaindustrial.registry.ModMobs;
 import java.util.List;
+import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
@@ -152,6 +154,10 @@ public final class MaterialsContent {
 			plain("mutagen_dust", s -> ModContent.MUTAGEN_DUST = s),
 			// Oil → rubber chain: the polymerizer's product and the vulcanizer's cured output.
 			plain("raw_rubber", s -> ModContent.RAW_RUBBER = s),
+			// MOD-767: the oil slime's egg — the mob is the other source of raw rubber. The type is read when
+			// the item is built (entity types register before items on both loaders).
+			item("oil_slime_spawn_egg", p -> new SpawnEggItem(p.spawnEgg(ModMobs.OIL_SLIME.type())),
+					s -> ModContent.OIL_SLIME_SPAWN_EGG = s),
 			// Organic chain (MOD-146): the fermenter's solid leftover, stock for a later task.
 			plain("biomass", s -> ModContent.BIOMASS = s),
 			plain("rubber", s -> ModContent.RUBBER = s),
@@ -381,6 +387,7 @@ public final class MaterialsContent {
 		show(out, ModContent.DRILL_COLUMN_MODULE);
 		// The rubber and cloth chains, each from raw to finished.
 		show(out, ModContent.RAW_RUBBER);
+		show(out, ModContent.OIL_SLIME_SPAWN_EGG);
 		show(out, ModContent.BIOMASS);
 		show(out, ModContent.RUBBER);
 		show(out, ModContent.COTTON_FIBER);

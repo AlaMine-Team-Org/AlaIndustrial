@@ -2,8 +2,10 @@ package dev.alaindustrial.compat.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.Model;
+import net.minecraft.client.renderer.OrderedSubmitNodeCollector;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.resources.model.sprite.SpriteGetter;
 import net.minecraft.client.resources.model.sprite.SpriteId;
 import net.minecraft.resources.Identifier;
@@ -40,5 +42,16 @@ public final class ModelSubmit {
 	public static <S> void textured(SubmitNodeCollector collector, Model<? super S> model, S state,
 			PoseStack poseStack, Identifier texture, int lightCoords, int overlayCoords, int outlineColor) {
 		collector.submitModel(model, state, poseStack, texture, lightCoords, overlayCoords, outlineColor, null);
+	}
+
+	/**
+	 * Submits a model with an explicit render type and no breaking overlay — an entity layer drawn with its
+	 * own render type, such as the oil slime's translucent shell (MOD-767). On 26.3 that is the seven-argument
+	 * {@code submitModel(..., RenderType, ...)}; 26.2 has the same call with a trailing
+	 * {@code CrumblingOverlay}, here {@code null}.
+	 */
+	public static <S> void typed(OrderedSubmitNodeCollector collector, Model<? super S> model, S state,
+			PoseStack poseStack, RenderType renderType, int lightCoords, int overlayCoords, int outlineColor) {
+		collector.submitModel(model, state, poseStack, renderType, lightCoords, overlayCoords, outlineColor, null);
 	}
 }

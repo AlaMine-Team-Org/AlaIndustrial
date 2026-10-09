@@ -1311,6 +1311,28 @@ public final class Config {
 			doc = "Chance (0..1) that a burnt-out oil fire leaves a soot layer on a solid floor under it (0 = never, 1 = always).")
 	public static double oilSootChance = 0.2;
 
+	/** MOD-767: a vanilla slime standing in crude oil turns into an oil slime (docs/mobs/oil_slime.md). */
+	@Knob(section = Section.WORLD,
+			doc = "When true, a slime that stands in crude oil long enough turns into an oil slime of the same size."
+					+ " false = slimes ignore oil.")
+	public static boolean oilSlimeConversion = true;
+
+	/** MOD-767: how long a slime has to stand in crude oil, uninterrupted, before it turns. */
+	@Knob(section = Section.WORLD, min = 1,
+			doc = "Seconds a slime must stand in crude oil without leaving it before it turns into an oil slime.")
+	public static int oilSlimeSoakSeconds = 20;
+
+	/** MOD-767: oil slimes appear on their own next to crude oil in the dark. */
+	@Knob(section = Section.WORLD,
+			doc = "When true, oil slimes spawn naturally next to crude oil in the dark (light 7 or less)."
+					+ " false = only conversion makes them.")
+	public static boolean oilSlimeNaturalSpawn = true;
+
+	/** MOD-767: natural spawning stops while a chunk already holds this many oil slimes. */
+	@Knob(section = Section.WORLD, min = 1,
+			doc = "Natural spawning of oil slimes stops while the chunk already holds this many of them.")
+	public static int oilSlimeSpawnCapPerChunk = 4;
+
 	// ---------------------------------------------------------------------------------------------
 	// The file mechanism lives in dev.alaindustrial.config (MOD-710): schema and migrations
 	// (ConfigSchema), the knob registry (KnobRegistry), reading and writing (ConfigFile).

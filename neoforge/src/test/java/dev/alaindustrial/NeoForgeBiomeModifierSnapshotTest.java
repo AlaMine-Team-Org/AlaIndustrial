@@ -47,7 +47,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(StopEphemeralServerBeforeFmlTeardown.class)
 class NeoForgeBiomeModifierSnapshotTest {
 
-	/** Every biome modifier file of this mod, by name, its keys sorted, each value as compact JSON. */
+	/**
+	 * The mob spawn files (MOD-767) are not pinned here: their entry's shape is per Minecraft line, and
+	 * {@code BiomeModifierTableTest} already holds them to {@code ModMobs} byte for byte.
+	 */
+	private static final String ADD_SPAWNS = "neoforge:add_spawns";
+
+	/** Every feature biome modifier file of this mod, by name, its keys sorted, each value as compact JSON. */
 	static final List<String> FILES = List.of(
 			"abandoned_labs biomes=\"#alaindustrial:has_abandoned_labs\" features=[\"alaindustrial:abandoned_lab\"]"
 					+ " step=\"surface_structures\" type=\"neoforge:add_features\"",
@@ -93,6 +99,9 @@ class NeoForgeBiomeModifierSnapshotTest {
 		List<String> actual = new ArrayList<>();
 		for (Map.Entry<String, Resource> file : biomeModifierFiles(server).entrySet()) {
 			JsonObject json = JsonParser.parseString(read(file.getValue())).getAsJsonObject();
+			if (ADD_SPAWNS.equals(json.get("type").getAsString())) {
+				continue;
+			}
 			StringBuilder line = new StringBuilder(file.getKey());
 			for (String key : new TreeSet<>(json.keySet())) {
 				JsonElement value = json.get(key);

@@ -726,6 +726,7 @@ public final class ModContent {
 	public static Supplier<Item> NUTRIENT_SOLUTION_BUCKET = unbound("NUTRIENT_SOLUTION_BUCKET");
 	// Oil → rubber chain: the polymerizer makes raw rubber; the vulcanizer cures it with sulfur and heat.
 	public static Supplier<Item> RAW_RUBBER = unbound("RAW_RUBBER");
+	public static Supplier<Item> OIL_SLIME_SPAWN_EGG = unbound("OIL_SLIME_SPAWN_EGG");
 	/**
 	 * Biomass (MOD-146) — the fermenter's solid leftover. It has no use yet, on purpose: it is
 	 * stock for a later task, the same way the recycler's matter scrap is.

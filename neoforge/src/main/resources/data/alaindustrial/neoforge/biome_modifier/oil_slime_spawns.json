@@ -1,0 +1,10 @@
+{
+	"type": "neoforge:add_spawns",
+	"biomes": "#alaindustrial:has_oil_slimes",
+	"spawners": {
+		"type": "alaindustrial:oil_slime",
+		"minCount": 1,
+		"maxCount": 2,
+		"weight": 10
+	}
+}
