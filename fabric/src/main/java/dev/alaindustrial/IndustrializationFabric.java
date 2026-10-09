@@ -215,6 +215,9 @@ public class IndustrializationFabric implements ModInitializer {
 		for (RecipeFamily<?> family : ModRecipes.families()) {
 			RecipeSynchronization.synchronizeRecipeSerializer(family.serializer());
 		}
+		// The charge-transfer crafting recipes (jetpack, energy pack, electric tools...) need the same
+		// opt-in, otherwise JEI on a dedicated server never receives them and they vanish from JEI.
+		RecipeSynchronization.synchronizeRecipeSerializer(ModRecipes.chargedCraftSerializer());
 		ModCriteria.init();
 		ModWorldGen.init();
 		// MOD-062: villager profession + its POI (needs the workbench block registered by ModBlocks
