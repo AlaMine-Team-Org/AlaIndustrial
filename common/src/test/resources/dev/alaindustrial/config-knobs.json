@@ -472,6 +472,10 @@
     {"key": "kokSagyzStage3Divisor", "section": "world", "type": "int", "default": 3, "min": 1.0, "exclusive": false, "doc": "Kok sagyz: 1-in-this chance per random tick of going flower -> seed head, on tended ground."},
     {"key": "kokSagyzTrampling", "section": "world", "type": "boolean", "default": true, "exclusive": false, "doc": "Kok sagyz: landing on a flower from above knocks it back one growth stage. Walking through and sneaking never trample."},
     {"key": "oilBurns", "section": "world", "type": "boolean", "default": true, "exclusive": false, "doc": "When true, oil ignites from adjacent fire or flint-and-steel and the burn spreads across the pool; lava alone does not ignite it. false = oil is inert."},
+    {"key": "oilSlimeConversion", "section": "world", "type": "boolean", "default": true, "exclusive": false, "doc": "When true, a slime that stands in crude oil long enough turns into an oil slime of the same size. false = slimes ignore oil."},
+    {"key": "oilSlimeNaturalSpawn", "section": "world", "type": "boolean", "default": true, "exclusive": false, "doc": "When true, oil slimes spawn naturally next to crude oil in the dark (light 7 or less). false = only conversion makes them."},
+    {"key": "oilSlimeSoakSeconds", "section": "world", "type": "int", "default": 20, "min": 1.0, "exclusive": false, "doc": "Seconds a slime must stand in crude oil without leaving it before it turns into an oil slime."},
+    {"key": "oilSlimeSpawnCapPerChunk", "section": "world", "type": "int", "default": 4, "min": 1.0, "exclusive": false, "doc": "Natural spawning of oil slimes stops while the chunk already holds this many of them."},
     {"key": "oilSootChance", "section": "world", "type": "double", "default": 0.2, "min": 0.0, "exclusive": false, "floorTo": 0.0, "doc": "Chance (0..1) that a burnt-out oil fire leaves a soot layer on a solid floor under it (0 = never, 1 = always)."},
     {"key": "welcomeMessageEnabled", "section": "world", "type": "boolean", "default": true, "exclusive": false, "doc": "When true, the mod writes a two-line welcome with its Discord link the first time anyone joins a world."}
   ]

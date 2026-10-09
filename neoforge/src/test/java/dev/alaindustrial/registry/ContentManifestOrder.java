@@ -370,6 +370,7 @@ final class ContentManifestOrder {
 			"item reinforced_amethyst",
 			"item mutagen_dust",
 			"item raw_rubber",
+			"item oil_slime_spawn_egg",
 			"item biomass",
 			"item rubber",
 			"item flux_thread",

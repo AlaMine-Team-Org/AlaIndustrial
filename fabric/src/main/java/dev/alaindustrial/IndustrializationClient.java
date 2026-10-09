@@ -349,5 +349,17 @@ public class IndustrializationClient implements ClientModInitializer {
 					dev.alaindustrial.registry.ModEntities.CHEST_BOATS.get(variant.id()),
 					context -> dev.alaindustrial.client.render.ModChestBoatRenderer.create(context, variant));
 		}
+		// The mobs (MOD-767), replayed from the shared ClientContentManifest.MOB_RENDERERS.
+		ClientContentManifest.EntityRendererRegistrar mobs = new ClientContentManifest.EntityRendererRegistrar() {
+			@Override
+			public <T extends net.minecraft.world.entity.Entity> void register(
+					net.minecraft.world.entity.EntityType<T> type,
+					net.minecraft.client.renderer.entity.EntityRendererProvider<T> provider) {
+				net.minecraft.client.renderer.entity.EntityRenderers.register(type, provider);
+			}
+		};
+		for (ClientContentManifest.MobRendererDef<?> def : ClientContentManifest.MOB_RENDERERS) {
+			def.bindTo(mobs);
+		}
 	}
 }

@@ -280,6 +280,7 @@ final class RegistrySnapshotItems {
 			"item oak_shielding_chest_boat class=BoatItem stack=1 damage=0 rarity=COMMON fireproof=no",
 			"item oak_silver_chest_boat class=BoatItem stack=1 damage=0 rarity=COMMON fireproof=no",
 			"item oil_bucket class=BucketItem stack=1 damage=0 rarity=COMMON fireproof=no",
+			"item oil_slime_spawn_egg class=SpawnEggItem stack=64 damage=0 rarity=COMMON fireproof=no",
 			"item overclocker_chip_i class=OverclockerChipItem stack=64 damage=0 rarity=COMMON fireproof=no",
 			"item overclocker_chip_ii class=OverclockerChipItem stack=64 damage=0 rarity=COMMON fireproof=no",
 			"item overclocker_chip_iii class=OverclockerChipItem stack=64 damage=0 rarity=COMMON fireproof=no",

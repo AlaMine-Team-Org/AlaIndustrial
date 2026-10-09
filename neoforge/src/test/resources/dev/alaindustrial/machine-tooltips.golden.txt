@@ -1759,6 +1759,7 @@ tooltip.alaindustrial.network_analyzer.moved(30) {gray}
 == alaindustrial:oak_shielding_chest_boat plain : none
 == alaindustrial:oak_silver_chest_boat plain : none
 == alaindustrial:oil_bucket plain : none
+== alaindustrial:oil_slime_spawn_egg plain : none
 == alaindustrial:overclocker_chip_i plain : none
 == alaindustrial:overclocker_chip_ii plain : none
 == alaindustrial:overclocker_chip_iii plain : none

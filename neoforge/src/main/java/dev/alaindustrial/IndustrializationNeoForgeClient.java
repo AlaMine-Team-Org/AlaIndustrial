@@ -313,6 +313,18 @@ public final class IndustrializationNeoForgeClient {
 					dev.alaindustrial.registry.neoforge.ModEntitiesNeoForge.CHEST_BOATS.get(variant.id()).get(),
 					context -> dev.alaindustrial.client.render.ModChestBoatRenderer.create(context, variant));
 		}
+		// The mobs (MOD-767), replayed from the shared ClientContentManifest.MOB_RENDERERS.
+		ClientContentManifest.EntityRendererRegistrar mobs = new ClientContentManifest.EntityRendererRegistrar() {
+			@Override
+			public <T extends net.minecraft.world.entity.Entity> void register(
+					net.minecraft.world.entity.EntityType<T> type,
+					net.minecraft.client.renderer.entity.EntityRendererProvider<T> provider) {
+				event.registerEntityRenderer(type, provider);
+			}
+		};
+		for (ClientContentManifest.MobRendererDef<?> def : ClientContentManifest.MOB_RENDERERS) {
+			def.bindTo(mobs);
+		}
 	}
 
 	/**

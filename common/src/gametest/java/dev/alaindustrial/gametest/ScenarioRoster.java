@@ -137,6 +137,7 @@ public final class ScenarioRoster {
 			NetworkAnalyzerScenarios.Roster.ENTRIES,
 			OcclusionShapeScenarios.Roster.ENTRIES,
 			OilScenarios.Roster.ENTRIES,
+			OilSlimeScenarios.Roster.ENTRIES,
 			OperationEnergyScenarios.Roster.ENTRIES,
 			OreScenarios.Roster.ENTRIES,
 			OverclockerEffectScenarios.Roster.ENTRIES,

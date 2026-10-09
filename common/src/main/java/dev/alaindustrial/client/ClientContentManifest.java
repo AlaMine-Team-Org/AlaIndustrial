@@ -49,6 +49,12 @@ import dev.alaindustrial.registry.ContentManifest;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModFluidsManifest;
 import java.util.List;
+import dev.alaindustrial.client.render.entity.OilSlimeRenderer;
+import dev.alaindustrial.registry.ModMobs;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
 import java.util.function.Supplier;
 import dev.alaindustrial.client.hud.ElectricDrillHud;
 import dev.alaindustrial.client.hud.EnergyPackHud;
@@ -126,6 +132,31 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 public final class ClientContentManifest {
 	private ClientContentManifest() {
 	}
+
+	// ─────────────────────────────────────────────────────────────────────────────────────────
+	// Mob renderers (MOD-767)
+	// ─────────────────────────────────────────────────────────────────────────────────────────
+
+	/**
+	 * A loader's entity-renderer registration API, one generic method for the same reason as
+	 * {@link RendererRegistrar}: the entity type and the renderer keep their types to the call, no cast.
+	 */
+	public interface EntityRendererRegistrar {
+		<T extends Entity> void register(EntityType<T> type, EntityRendererProvider<T> provider);
+	}
+
+	/** One mob of {@code ModMobs} and the renderer that draws it; the type is resolved when bound. */
+	public record MobRendererDef<T extends Mob>(ModMobs.MobDef<T> mob, EntityRendererProvider<T> provider) {
+
+		/** Hands this pair to a loader's registration API (see {@link BlockEntityRendererDef#bindTo}). */
+		public void bindTo(EntityRendererRegistrar registrar) {
+			registrar.<T>register(mob.type(), provider);
+		}
+	}
+
+	/** The renderer of every mob of {@code ModMobs.MOBS}, in the same order; both loaders replay it. */
+	public static final List<MobRendererDef<?>> MOB_RENDERERS = List.of(
+			new MobRendererDef<>(ModMobs.OIL_SLIME, OilSlimeRenderer::new));
 
 	// ─────────────────────────────────────────────────────────────────────────────────────────
 	// Block-entity renderers

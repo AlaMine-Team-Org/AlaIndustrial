@@ -142,7 +142,7 @@ public final class IndustrializationNeoForge {
 		ModBlocksNeoForge.BLOCKS.register(modBus);
 		// Entity types before items only for readability — the frame item resolves its EntityType
 		// lazily inside the item RegisterEvent lambda, so no call-order dependency exists (MOD-066).
-		dev.alaindustrial.registry.neoforge.ModEntitiesNeoForge.ENTITY_TYPES.register(modBus);
+		dev.alaindustrial.registry.neoforge.ModEntitiesNeoForge.register(modBus);
 		ModItemsNeoForge.ITEMS.register(modBus);
 		ModBlockEntitiesNeoForge.BLOCK_ENTITIES.register(modBus);
 		ModMenusNeoForge.MENUS.register(modBus);
