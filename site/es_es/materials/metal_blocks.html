@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es_es" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>Bloques metálicos — Ala Industrial — Guía</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../../assets/guide-site.js" defer></script>
+
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="Abrir menú" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  </div>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../../assets/item/guide_book_3d.png" alt="">Todo el contenido</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/ky7cFDF8JD" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../../assets/platform/discord.svg" alt="Discord"></a>
+    </div>
+    <search class="site-search"><input type="search" data-wiki-search placeholder="Buscar en la wiki…" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-label="Buscar en la guía" autocomplete="off" spellcheck="false" data-index="../search-index.json" data-root="../" data-l10n="{&quot;list&quot;:&quot;Resultados de la búsqueda&quot;,&quot;one&quot;:&quot;página encontrada&quot;,&quot;few&quot;:&quot;páginas encontradas&quot;,&quot;many&quot;:&quot;páginas encontradas&quot;,&quot;loading&quot;:&quot;Cargando el índice de búsqueda…&quot;,&quot;nothing&quot;:&quot;Nada encontrado&quot;}"></search>
+    <details class="language-menu"><summary aria-label="Language">ES</summary><div class="language-popover"><span>ES</span><a href="../../en/materials/metal_blocks.html">EN</a><a href="../../ru/materials/metal_blocks.html">RU</a><a href="../../uk/materials/metal_blocks.html">UA</a><a href="../../zh_cn/materials/metal_blocks.html">中文</a><a href="../../ja_jp/materials/metal_blocks.html">日本語</a></div></details>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">Explorar</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../../assets/item/tempered_iron_pickaxe.png" alt=""><span>Primeros pasos</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>Recetas</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>Perfil del jugador</span></a>
+<div class="group-title">Energía</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>Generadores</span><span class="cat-count" aria-label="14 páginas">14</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>Almacenamiento de energía</span><span class="cat-count" aria-label="4 páginas">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>Transferencia de energía</span><span class="cat-count" aria-label="8 páginas">8</span></a>
+<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>Energía nuclear</span><span class="cat-count" aria-label="15 páginas">15</span></a>
+<div class="group-title">Procesamiento</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>Máquinas</span><span class="cat-count" aria-label="17 páginas">17</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>Máquinas de fluidos</span><span class="cat-count" aria-label="3 páginas">3</span></a>
+<div class="group-title">Logística</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>Transporte de objetos</span><span class="cat-count" aria-label="2 páginas">2</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Transporte de fluidos</span><span class="cat-count" aria-label="5 páginas">5</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>Almacenamiento de fluidos</span><span class="cat-count" aria-label="2 páginas">2</span></a>
+<div class="group-title">Mundo y automatización</div>
+<a class="cat-link active" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Materiales</span><span class="cat-count" aria-label="25 páginas">25</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>Agricultura</span><span class="cat-count" aria-label="6 páginas">6</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>Máquinas avanzadas</span><span class="cat-count" aria-label="1 página">1</span></a>
+<div class="group-title">Otros</div>
+<a class="cat-link" href="../construction/index.html"><img class="nav-icon" src="../../assets/item/engraved_plate_0_3d.png" alt=""><span>Construcción</span><span class="cat-count" aria-label="3 páginas">3</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>Utilidades</span><span class="cat-count" aria-label="19 páginas">19</span></a>
+<div class="group-title">Objetos</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>Mejoras</span><span class="cat-count" aria-label="3 páginas">3</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>Componentes</span><span class="cat-count" aria-label="30 páginas">30</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>Objetos</span><span class="cat-count" aria-label="31 páginas">31</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">Inicio</a><span class="sep">/</span><a href="../materials/index.html">Materiales</a><span class="sep">/</span><span>Bloques metálicos</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../../assets/item/tin_block_3d.png" alt="Bloques metálicos" width="64" height="64">
+    <div class="info">
+      <h1>Bloques metálicos</h1>
+      <div class="block-id">alaindustrial:metal_blocks</div>
+      <div class="tags"><span class="tag cat" style="background:#6b7280">Materiales</span><span class="tag lifecycle" style="background:#22c55e">Implementado</span><span class="tag">material</span><span class="tag">metals</span><span class="tag">decorative</span></div>
+    </div>
+  </div>
+</div>
+<h2>Todas las variantes</h2>
+<div class="variant-grid"><figure class="variant-card"><img src="../../assets/item/tin_block_3d.png" alt="Bloque de estaño" width="112" height="112" loading="lazy"><figcaption>Bloque de estaño</figcaption></figure><figure class="variant-card"><img src="../../assets/item/tin_stairs_3d.png" alt="Escaleras de estaño" width="112" height="112" loading="lazy"><figcaption>Escaleras de estaño</figcaption></figure><figure class="variant-card"><img src="../../assets/item/tin_slab_3d.png" alt="Losa de estaño" width="112" height="112" loading="lazy"><figcaption>Losa de estaño</figcaption></figure><figure class="variant-card"><img src="../../assets/item/tin_wall_3d.png" alt="Muro de estaño" width="112" height="112" loading="lazy"><figcaption>Muro de estaño</figcaption></figure><figure class="variant-card"><img src="../../assets/item/silver_block_3d.png" alt="Bloque de plata" width="112" height="112" loading="lazy"><figcaption>Bloque de plata</figcaption></figure><figure class="variant-card"><img src="../../assets/item/silver_stairs_3d.png" alt="Escaleras de plata" width="112" height="112" loading="lazy"><figcaption>Escaleras de plata</figcaption></figure><figure class="variant-card"><img src="../../assets/item/silver_slab_3d.png" alt="Losa de plata" width="112" height="112" loading="lazy"><figcaption>Losa de plata</figcaption></figure><figure class="variant-card"><img src="../../assets/item/silver_wall_3d.png" alt="Muro de plata" width="112" height="112" loading="lazy"><figcaption>Muro de plata</figcaption></figure><figure class="variant-card"><img src="../../assets/item/nickel_block_3d.png" alt="Bloque de níquel" width="112" height="112" loading="lazy"><figcaption>Bloque de níquel</figcaption></figure><figure class="variant-card"><img src="../../assets/item/nickel_stairs_3d.png" alt="Escaleras de níquel" width="112" height="112" loading="lazy"><figcaption>Escaleras de níquel</figcaption></figure><figure class="variant-card"><img src="../../assets/item/nickel_slab_3d.png" alt="Losa de níquel" width="112" height="112" loading="lazy"><figcaption>Losa de níquel</figcaption></figure><figure class="variant-card"><img src="../../assets/item/nickel_wall_3d.png" alt="Muro de níquel" width="112" height="112" loading="lazy"><figcaption>Muro de níquel</figcaption></figure><figure class="variant-card"><img src="../../assets/item/uranium_block_3d.png" alt="Bloque de uranio" width="112" height="112" loading="lazy"><figcaption>Bloque de uranio</figcaption></figure><figure class="variant-card"><img src="../../assets/item/uranium_stairs_3d.png" alt="Escaleras de uranio" width="112" height="112" loading="lazy"><figcaption>Escaleras de uranio</figcaption></figure><figure class="variant-card"><img src="../../assets/item/uranium_slab_3d.png" alt="Losa de uranio" width="112" height="112" loading="lazy"><figcaption>Losa de uranio</figcaption></figure><figure class="variant-card"><img src="../../assets/item/uranium_wall_3d.png" alt="Muro de uranio" width="112" height="112" loading="lazy"><figcaption>Muro de uranio</figcaption></figure><figure class="variant-card"><img src="../../assets/item/palladium_block_3d.png" alt="Bloque de paladio" width="112" height="112" loading="lazy"><figcaption>Bloque de paladio</figcaption></figure><figure class="variant-card"><img src="../../assets/item/palladium_stairs_3d.png" alt="Escaleras de paladio" width="112" height="112" loading="lazy"><figcaption>Escaleras de paladio</figcaption></figure><figure class="variant-card"><img src="../../assets/item/palladium_slab_3d.png" alt="Losa de paladio" width="112" height="112" loading="lazy"><figcaption>Losa de paladio</figcaption></figure><figure class="variant-card"><img src="../../assets/item/palladium_wall_3d.png" alt="Muro de paladio" width="112" height="112" loading="lazy"><figcaption>Muro de paladio</figcaption></figure><figure class="variant-card"><img src="../../assets/item/bronze_block_3d.png" alt="Bloque de bronce" width="112" height="112" loading="lazy"><figcaption>Bloque de bronce</figcaption></figure><figure class="variant-card"><img src="../../assets/item/bronze_stairs_3d.png" alt="Escaleras de bronce" width="112" height="112" loading="lazy"><figcaption>Escaleras de bronce</figcaption></figure><figure class="variant-card"><img src="../../assets/item/bronze_slab_3d.png" alt="Losa de bronce" width="112" height="112" loading="lazy"><figcaption>Losa de bronce</figcaption></figure><figure class="variant-card"><img src="../../assets/item/bronze_wall_3d.png" alt="Muro de bronce" width="112" height="112" loading="lazy"><figcaption>Muro de bronce</figcaption></figure><figure class="variant-card"><img src="../../assets/item/invar_block_3d.png" alt="Bloque de invar" width="112" height="112" loading="lazy"><figcaption>Bloque de invar</figcaption></figure><figure class="variant-card"><img src="../../assets/item/invar_stairs_3d.png" alt="Escaleras de invar" width="112" height="112" loading="lazy"><figcaption>Escaleras de invar</figcaption></figure><figure class="variant-card"><img src="../../assets/item/invar_slab_3d.png" alt="Losa de invar" width="112" height="112" loading="lazy"><figcaption>Losa de invar</figcaption></figure><figure class="variant-card"><img src="../../assets/item/invar_wall_3d.png" alt="Muro de invar" width="112" height="112" loading="lazy"><figcaption>Muro de invar</figcaption></figure><figure class="variant-card"><img src="../../assets/item/cupronickel_block_3d.png" alt="Bloque de cuproníquel" width="112" height="112" loading="lazy"><figcaption>Bloque de cuproníquel</figcaption></figure><figure class="variant-card"><img src="../../assets/item/cupronickel_stairs_3d.png" alt="Escaleras de cuproníquel" width="112" height="112" loading="lazy"><figcaption>Escaleras de cuproníquel</figcaption></figure><figure class="variant-card"><img src="../../assets/item/cupronickel_slab_3d.png" alt="Losa de cuproníquel" width="112" height="112" loading="lazy"><figcaption>Losa de cuproníquel</figcaption></figure><figure class="variant-card"><img src="../../assets/item/cupronickel_wall_3d.png" alt="Muro de cuproníquel" width="112" height="112" loading="lazy"><figcaption>Muro de cuproníquel</figcaption></figure><figure class="variant-card"><img src="../../assets/item/electrum_block_3d.png" alt="Bloque de electro" width="112" height="112" loading="lazy"><figcaption>Bloque de electro</figcaption></figure><figure class="variant-card"><img src="../../assets/item/electrum_stairs_3d.png" alt="Escaleras de electro" width="112" height="112" loading="lazy"><figcaption>Escaleras de electro</figcaption></figure><figure class="variant-card"><img src="../../assets/item/electrum_slab_3d.png" alt="Losa de electro" width="112" height="112" loading="lazy"><figcaption>Losa de electro</figcaption></figure><figure class="variant-card"><img src="../../assets/item/electrum_wall_3d.png" alt="Muro de electro" width="112" height="112" loading="lazy"><figcaption>Muro de electro</figcaption></figure><figure class="variant-card"><img src="../../assets/item/netherite_alloy_block_3d.png" alt="Bloque de aleación de netherita" width="112" height="112" loading="lazy"><figcaption>Bloque de aleación de netherita</figcaption></figure><figure class="variant-card"><img src="../../assets/item/netherite_alloy_stairs_3d.png" alt="Escaleras de aleación de netherita" width="112" height="112" loading="lazy"><figcaption>Escaleras de aleación de netherita</figcaption></figure><figure class="variant-card"><img src="../../assets/item/netherite_alloy_slab_3d.png" alt="Losa de aleación de netherita" width="112" height="112" loading="lazy"><figcaption>Losa de aleación de netherita</figcaption></figure><figure class="variant-card"><img src="../../assets/item/netherite_alloy_wall_3d.png" alt="Muro de aleación de netherita" width="112" height="112" loading="lazy"><figcaption>Muro de aleación de netherita</figcaption></figure><figure class="variant-card"><img src="../../assets/item/shielding_alloy_block_3d.png" alt="Bloque de aleación de blindaje" width="112" height="112" loading="lazy"><figcaption>Bloque de aleación de blindaje</figcaption></figure><figure class="variant-card"><img src="../../assets/item/shielding_alloy_stairs_3d.png" alt="Escaleras de aleación de blindaje" width="112" height="112" loading="lazy"><figcaption>Escaleras de aleación de blindaje</figcaption></figure><figure class="variant-card"><img src="../../assets/item/shielding_alloy_slab_3d.png" alt="Losa de aleación de blindaje" width="112" height="112" loading="lazy"><figcaption>Losa de aleación de blindaje</figcaption></figure><figure class="variant-card"><img src="../../assets/item/shielding_alloy_wall_3d.png" alt="Muro de aleación de blindaje" width="112" height="112" loading="lazy"><figcaption>Muro de aleación de blindaje</figcaption></figure><figure class="variant-card"><img src="../../assets/item/tempered_iron_stairs_3d.png" alt="Escaleras de hierro templado" width="112" height="112" loading="lazy"><figcaption>Escaleras de hierro templado</figcaption></figure><figure class="variant-card"><img src="../../assets/item/tempered_iron_slab_3d.png" alt="Losa de hierro templado" width="112" height="112" loading="lazy"><figcaption>Losa de hierro templado</figcaption></figure><figure class="variant-card"><img src="../../assets/item/tempered_iron_wall_3d.png" alt="Muro de hierro templado" width="112" height="112" loading="lazy"><figcaption>Muro de hierro templado</figcaption></figure><figure class="variant-card"><img src="../../assets/item/tempered_iron_fence_3d.png" alt="Valla de hierro templado" width="112" height="112" loading="lazy"><figcaption>Valla de hierro templado</figcaption></figure></div>
+<h2 id="resumen">Resumen</h2>
+
+<p>Los <strong>bloques metálicos</strong> son una familia de bloques de construcción hechos con los lingotes del mod. Cada uno de los once lingotes tiene su propio <strong>bloque de almacenamiento</strong>: nueve lingotes en un cubo completo, y cuando vuelves a necesitar el metal, el bloque se deshace en nueve lingotes sin pérdidas. Así se guardan cientos de lingotes sin ocupar medio cofre. El bloque de hierro templado ya existía en el mod (<a href="tempered_iron_block.html">su propia página</a>) y pertenece a la misma familia.</p>
+
+<p>Con cada uno de los doce bloques se hacen <strong>escaleras</strong>, una <strong>losa</strong> y un <strong>muro</strong>, igual que con la piedra o el cobre vanilla. El hierro templado da además una <strong>valla</strong>.</p>
+
+<table><thead><tr><th>Metal</th><th>Bloque</th><th>Formas</th></tr></thead><tbody><tr><td>Estaño, plata, níquel, uranio, paladio</td><td>bloque de almacenamiento</td><td>escaleras, losa, muro</td></tr><tr><td>Bronce, invar, cuproníquel, electro, aleación de netherita, aleación de blindaje</td><td>bloque de almacenamiento</td><td>escaleras, losa, muro</td></tr><tr><td>Hierro templado</td><td><a href="tempered_iron_block.html">bloque de almacenamiento</a> (ya existía)</td><td>escaleras, losa, muro, <strong>valla</strong></td></tr></tbody></table>
+
+<blockquote><strong>Ejemplo rápido:</strong> tras un par de horas en la mina, tu cofre guarda tres pilas de lingotes de estaño. Los compactas en bloques y las tres pilas se convierten en una veintena de bloques en una sola casilla. Los bloques sobrantes se convierten en escaleras y losas para el tejado del taller.</blockquote>
+
+<p>Los bloques y sus formas no producen energía ni interactúan con nada: sirven para guardar metal y como material de construcción. <strong>La excepción es el uranio:</strong> el uranio en un bloque sigue siendo uranio y emite radiación (ver abajo).</p>
+
+<h2 id="propiedades-del-bloque">Propiedades del bloque</h2>
+
+<table><thead><tr><th>Campo</th><th>Valor</th></tr></thead><tbody><tr><td>Forma</td><td>el bloque es un cubo completo 16³; las escaleras, la losa, el muro y la valla son las formas vanilla con su propia colisión (la losa es medio bloque; el muro y la valla se unen a sus vecinos)</td></tr><tr><td>Dureza / resistencia a explosiones</td><td>5 / 6, igual que el bloque de hierro; la aleación de netherita tiene 50 / 1200, igual que el bloque de netherita</td></tr><tr><td>Herramienta</td><td>pico; sin el pico adecuado no suelta nada</td></tr><tr><td>Botín</td><td>el propio bloque; una losa doble suelta dos losas</td></tr><tr><td>Sonido</td><td>metálico; la aleación de netherita suena como el bloque de netherita</td></tr><tr><td>Base de faro</td><td>los doce bloques de almacenamiento; las formas no</td></tr></tbody></table>
+
+<p>El pico necesario sigue a los metales vanilla: los metales comunes son como el bloque de hierro, los preciosos y raros como los bloques de oro y de diamante, y la aleación de netherita como el bloque de netherita.</p>
+
+<table><thead><tr><th>Pico</th><th>Metales</th></tr></thead><tbody><tr><td>de piedra o mejor</td><td>estaño, níquel, bronce, invar, cuproníquel, hierro templado (y la valla)</td></tr><tr><td>de hierro o mejor</td><td>plata, uranio, paladio, electro, aleación de blindaje</td></tr><tr><td>de diamante o mejor</td><td>aleación de netherita</td></tr></tbody></table>
+
+<p>Como objetos, el bloque, las escaleras, la losa y el muro de aleación de netherita <strong>no arden en la lava</strong>, igual que los objetos de netherita.</p>
+
+<p>Las escaleras forman esquinas como las vanilla; los muros se unen entre sí y con los muros vanilla. La valla de hierro templado se une a otras vallas y a la valla de ladrillos del Nether, pero <strong>no a las de madera</strong>, exactamente igual que la valla de ladrillos del Nether en vanilla.</p>
+
+<p>La textura de cada bloque está pintada con los colores de su lingote: los metales puros usan el dibujo del bloque de hierro templado y las aleaciones una placa biselada con cuatro remaches. Las formas usan la textura de su bloque.</p>
+
+<h3 id="radiación-del-uranio">Radiación del uranio</h3>
+
+<p>El uranio compactado en un bloque no se vuelve seguro:</p>
+
+<ul><li><strong>En el inventario</strong>, el bloque de uranio, las escaleras de uranio y el muro de uranio irradian como <strong>nueve</strong> lingotes de uranio, y la losa de uranio como <strong>cinco</strong> (medio bloque, redondeado hacia arriba).</li><li><strong>Colocado en el mundo</strong>, un bloque de uranio irradia al jugador que esté cerca, y el <a href="../items/geiger_counter.html">Contador Geiger</a> lo oye. Una losa simple cuenta como cinco lingotes; una doble, como un bloque.</li><li>Todos los bloques de uranio colocados alrededor de un jugador cuentan como <strong>una sola fuente</strong> en su centro, y esa fuente no es más fuerte que un cofre con uranio. Un muro de uranio es peligroso si estás a su lado, pero no te mata desde el otro extremo de la sala.</li></ul>
+
+<p>La protección es la misma que contra los lingotes: el <a href="../items/shielding_suit.html">traje de blindaje</a> y la distancia.</p>
+
+<h2 id="recetas">Recetas</h2>
+
+<p><strong>Bloque de almacenamiento</strong> (mesa de trabajo): ocho lingotes del metal en círculo y <strong>el lingote del mod</strong> en el centro → 1 bloque. Los ocho lingotes del círculo pueden venir de otro mod: sirve cualquier lingote del mismo metal (por ejemplo, el estaño de otro mod también se convierte en nuestro bloque). El lingote central siempre es el nuestro: así dos mods con el mismo bloque de estaño no se disputan una misma receta.</p>
+
+<p><strong>De vuelta a lingotes</strong> (mesa de trabajo, sin forma): 1 bloque → 9 lingotes del mod. Solo se deshace el bloque de este mod.</p>
+
+<p>El bloque de hierro templado se fabrica como siempre: con nueve lingotes propios (ningún otro mod tiene una etiqueta común para el hierro templado, así que no hay con quién chocar).</p>
+
+<p><strong>Formas</strong>: como los bloques de piedra vanilla, en la mesa de trabajo o en el cortapiedras:</p>
+
+<table><thead><tr><th>Forma</th><th>Mesa de trabajo</th><th>Cortapiedras (con 1 bloque)</th></tr></thead><tbody><tr><td>Escaleras</td><td>6 bloques → 4</td><td>1</td></tr><tr><td>Losa</td><td>3 bloques → 6</td><td>2</td></tr><tr><td>Muro</td><td>6 bloques → 6</td><td>1</td></tr></tbody></table>
+
+<p>Para las escaleras conviene el cortapiedras: con seis bloques da seis escaleras, y la mesa de trabajo solo cuatro.</p>
+
+<p><strong>Valla de hierro templado</strong> (mesa de trabajo): cada una de las dos filas es hierro templado, placa de hierro templado, hierro templado → 6 vallas.</p>
+
+<p>Las formas y la valla <strong>no se deshacen</strong> en bloques ni en lingotes: el metal que va a una construcción se queda en ella.</p>
+
+<h2 id="progresión">Progresión</h2>
+
+<p>Fuera del sistema de energía y de la progresión del mod. El bloque llega junto con su lingote: en cuanto tienes nueve lingotes de estaño, de plata o de una aleación, puedes fabricar el bloque. Los lingotes están en las páginas de materiales: <a href="tin.html">estaño</a>, <a href="silver.html">plata</a>, <a href="nickel.html">níquel</a>, <a href="uranium.html">uranio</a>, <a href="palladium.html">paladio</a>, <a href="bronze.html">bronce</a>, <a href="invar.html">invar</a>, <a href="cupronickel.html">cuproníquel</a>, <a href="electrum.html">electro</a>, <a href="netherite_alloy.html">aleación de netherita</a>, <a href="shielding_alloy.html">aleación de blindaje</a>, <a href="../components/tempered_iron.html">hierro templado</a>.</p>
+
+<h2 id="relacionado">Relacionado</h2>
+
+<ul><li><a href="tempered_iron_block.html">Bloque de hierro templado</a>: el primer bloque de la familia, con su propia página.</li><li><a href="silver_plate_block.html">Revestimiento de plata</a>, <a href="tempered_iron_plate_block.html">Revestimiento de hierro templado</a>: bloques decorativos hechos con placas.</li><li><a href="../items/geiger_counter.html">Contador Geiger</a>: oye un bloque de uranio colocado.</li></ul>
+
+
+  </main>
+</div>
+
+</body>
+</html>
