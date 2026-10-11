@@ -394,7 +394,9 @@ public final class ClientContentManifest {
 			// MOD-127: the Fluxweave leggings' step assist.
 			ModKeyMappings.TOGGLE_STEP_ASSIST,
 			// MOD-482: the column bore on the held drill.
-			ModKeyMappings.TOGGLE_DRILL_COLUMN);
+			ModKeyMappings.TOGGLE_DRILL_COLUMN,
+			// MOD-797: the blueprint of the hovered or held item.
+			ModKeyMappings.OPEN_BLUEPRINT);
 
 	// ─────────────────────────────────────────────────────────────────────────────────────────
 	// HUD layers (MOD-706)
@@ -583,4 +585,34 @@ public final class ClientContentManifest {
 	public static final List<BlockOutline> BLOCK_OUTLINES = List.of(
 			// MOD-778: any storey of an assembled distillation column outlines the whole tower.
 			blockOutline(DistillationColumnOutline::shape));
+
+	// ─────────────────────────────────────────────────────────────────────────────────────────
+	// Picture-in-picture renderers (MOD-797)
+	// ─────────────────────────────────────────────────────────────────────────────────────────
+
+	/**
+	 * One picture-in-picture renderer: a 3D picture a screen draws inside its own rectangle. Fabric replays
+	 * it through {@code PictureInPictureRendererRegistry.register}, NeoForge through
+	 * {@code RegisterPictureInPictureRenderersEvent.register}; both take a fresh renderer per call.
+	 */
+	public record PipRendererDef<T extends net.minecraft.client.renderer.state.gui.pip.PictureInPictureRenderState>(
+			Class<T> stateClass,
+			java.util.function.Supplier<net.minecraft.client.gui.render.pip.PictureInPictureRenderer<T>> factory) {
+		public PipRendererDef {
+			Objects.requireNonNull(stateClass, "stateClass");
+			Objects.requireNonNull(factory, "factory");
+		}
+	}
+
+	private static <T extends net.minecraft.client.renderer.state.gui.pip.PictureInPictureRenderState>
+			PipRendererDef<T> pipRenderer(Class<T> stateClass,
+			java.util.function.Supplier<net.minecraft.client.gui.render.pip.PictureInPictureRenderer<T>> factory) {
+		return new PipRendererDef<>(stateClass, factory);
+	}
+
+	/** Every picture-in-picture renderer of the mod. */
+	public static final List<PipRendererDef<?>> PICTURE_IN_PICTURE_RENDERERS = List.of(
+			// MOD-797: the 3D scene of a blueprint sheet.
+			pipRenderer(dev.alaindustrial.client.blueprint.BlueprintSceneState.class,
+					dev.alaindustrial.client.blueprint.BlueprintSceneRenderer::new));
 }

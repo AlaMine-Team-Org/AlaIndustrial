@@ -76,6 +76,14 @@ public final class ModKeyMappings {
 			InputConstants.KEY_L,
 			CATEGORY);
 
+	/** Hold to open the blueprint of the item whose tooltip is showing, or of the held item in the world
+	 * (MOD-797). Default: I — free in vanilla; the player can rebind it in Controls like any other key. */
+	public static final KeyMapping OPEN_BLUEPRINT = new KeyMapping(
+			"key.alaindustrial.open_blueprint",
+			Keyboard.keyMappingType(),
+			InputConstants.KEY_I,
+			CATEGORY);
+
 	private ModKeyMappings() {
 	}
 
@@ -130,6 +138,11 @@ public final class ModKeyMappings {
 				mc.gui.setScreen(new dev.alaindustrial.client.dashboard.DashboardScreen());
 			}
 		}
+		// The blueprint opens on a held key, not a click (MOD-797): drain the clicks, let the hold decide.
+		while (OPEN_BLUEPRINT.consumeClick()) {
+			// nothing — BlueprintHold polls the key itself, inside screens too
+		}
+		dev.alaindustrial.client.blueprint.BlueprintHold.tick();
 		// MOD-133: re-anchor the inventory profile button to leftPos/topPos (shifts when the recipe
 		// book opens without re-firing screen init). Both loaders drive handleInput() each client tick.
 		dev.alaindustrial.client.dashboard.InventoryProfileButton.tick();

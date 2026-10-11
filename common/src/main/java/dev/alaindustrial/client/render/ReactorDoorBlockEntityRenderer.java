@@ -96,7 +96,7 @@ public final class ReactorDoorBlockEntityRenderer
 		BlockEntityRenderer.super.extractRenderState(entity, state, partialTicks, cameraPosition, breakProgress);
 		BlockState blockState = entity.getBlockState();
 		Level level = entity.getLevel();
-		if (level == null || !(blockState.getBlock() instanceof ReactorDoorBlock)) {
+		if (!(blockState.getBlock() instanceof ReactorDoorBlock)) {
 			state.visible = false;
 			return;
 		}
@@ -106,7 +106,9 @@ public final class ReactorDoorBlockEntityRenderer
 
 		// One clock for the pair — see the class doc. `slideProgress` takes the tick count and the
 		// fraction apart because a long-lived world's game time no longer fits a float precisely.
-		float retracted = entity.animationClock().slideProgress(level.getGameTime(), partialTicks);
+		// No level: a block entity built for a blueprint sheet (MOD-797). Draw the door closed and fully lit.
+		float retracted = level == null ? 0.0f
+				: entity.animationClock().slideProgress(level.getGameTime(), partialTicks);
 		state.panelTop = PANEL_HEIGHT * (1.0f - retracted);
 
 		// The panel fills exactly the volume the closed door collides in, read off the block itself so
@@ -117,7 +119,8 @@ public final class ReactorDoorBlockEntityRenderer
 		state.minZ = (float) slab.min(Direction.Axis.Z);
 		state.maxZ = (float) slab.max(Direction.Axis.Z);
 
-		state.lightCoords = LightCoordsUtil.getLightCoords(level, entity.getBlockPos());
+		state.lightCoords = level == null ? LightCoordsUtil.FULL_BRIGHT
+				: LightCoordsUtil.getLightCoords(level, entity.getBlockPos());
 	}
 
 	@Override
