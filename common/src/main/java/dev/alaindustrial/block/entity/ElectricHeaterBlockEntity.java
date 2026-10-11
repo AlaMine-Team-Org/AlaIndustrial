@@ -277,4 +277,13 @@ public final class ElectricHeaterBlockEntity extends MachineBlockEntity implemen
 		return new ElectricHeaterMenu(syncId, inventory, this,
 				ContainerLevelAccess.create(getLevel(), getBlockPos()));
 	}
+
+	/**
+	 * Its per-tick need for the network (MOD-789, ADR-049): one heat tick at the chips of the machine above, not the
+	 * shared machine rate.
+	 */
+	@Override
+	public long perTickDemand() {
+		return Math.max(1, costEuPerTick);
+	}
 }

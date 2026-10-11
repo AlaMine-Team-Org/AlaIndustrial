@@ -38,14 +38,16 @@ import net.minecraft.world.item.ItemStack;
  * <p>A screen with controls of its own draws them in {@link #drawUnderPanels} (below every overlay) and answers
  * a hover, a click or a scroll through {@link #controlTooltip}, {@link #controlClicked} and
  * {@link #controlScrolled}. The base asks the overlays and {@link #frameAcceptsInput} first and calls the hook
- * only for a point they leave free, and the three input methods it does that in are {@code final}, so a screen
+ * only for a point they leave free, and the input methods it does that in are {@code final}, so a screen
  * cannot forget the rule (MOD-762). A read-only gauge (a tank, a heat bar) answers its hover in
  * {@link #gaugeTooltip}, which no overlay modality silences beyond the overlays' own footprints.
  *
- * <p>Not yet under the same guarantee: {@code mouseDragged} and {@code mouseReleased} are not final and have no
- * hooks, and the base does not route {@code keyPressed} at all. The creative energy source's drag and release run
- * before the overlays, and the reactor controller hands every release to its page unconditionally — harmless
- * today (the drag starts only from a gated click; the reactor has no overlay), tracked as MOD-793.
+ * <p>A drag and a release reach the screen through {@link #controlDragged} and {@link #controlReleased}, after
+ * the overlays and before vanilla, from final {@code mouseDragged}/{@code mouseReleased} (MOD-793). They are not
+ * gated by {@link #frameAcceptsInput}: they continue a gesture whose click already was. The base does not route
+ * {@code keyPressed}: no subclass overrides it and no overlay takes keyboard input — a keyboard overlay would
+ * bring a final {@code keyPressed} with a {@code controlKeyPressed} hook. {@code MachineScreenInputRules} pins
+ * the {@code final} on every routed input method.
  */
 public abstract class MachineScreen<T extends MachineMenu> extends AbstractContainerScreen<T> {
 
@@ -679,24 +681,57 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 		return false;
 	}
 
+	/**
+	 * Final for the reason {@link #extractTooltip} is (MOD-793): the overlays take a drag first (the upgrade
+	 * panel being moved), then this screen's own control ({@link #controlDragged}), vanilla the rest.
+	 */
 	@Override
-	public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
+	public final boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
 		for (ScreenOverlay overlay : overlays) {
 			if (overlay.drag(event)) {
 				return true;
 			}
 		}
+		if (controlDragged(event, dragX, dragY)) {
+			return true;
+		}
 		return super.mouseDragged(event, dragX, dragY);
 	}
 
+	/**
+	 * A drag on this screen's own control; true claims it. Called after every overlay passed on it, and — unlike
+	 * {@link #controlClicked} — NOT gated by {@link #frameAcceptsInput} (MOD-793): a drag continues a gesture
+	 * whose click already passed that gate, and a screen arms its drag only from {@link #controlClicked}.
+	 */
+	protected boolean controlDragged(MouseButtonEvent event, double dragX, double dragY) {
+		return false;
+	}
+
+	/**
+	 * Final for the reason {@link #extractTooltip} is (MOD-793): the overlays take a release first, then this
+	 * screen's own control ({@link #controlReleased}), vanilla the rest.
+	 */
 	@Override
-	public boolean mouseReleased(MouseButtonEvent event) {
+	public final boolean mouseReleased(MouseButtonEvent event) {
 		for (ScreenOverlay overlay : overlays) {
 			if (overlay.release(event)) {
 				return true;
 			}
 		}
+		if (controlReleased(event)) {
+			return true;
+		}
 		return super.mouseReleased(event);
+	}
+
+	/**
+	 * A release for this screen's own control; true claims it, so vanilla never sees it. Called after every
+	 * overlay passed on it and NOT gated by {@link #frameAcceptsInput} (MOD-793): a release ends a gesture that
+	 * already passed the gate on its click, and gating it could leave that gesture unfinished (a slider stuck
+	 * dragging, a request never sent). A control that needs no claim does its work and returns false.
+	 */
+	protected boolean controlReleased(MouseButtonEvent event) {
+		return false;
 	}
 
 	@Override

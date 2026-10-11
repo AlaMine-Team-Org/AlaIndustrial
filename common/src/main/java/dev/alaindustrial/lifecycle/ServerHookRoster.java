@@ -4,6 +4,7 @@ import dev.alaindustrial.block.CableDyeing;
 import dev.alaindustrial.block.OilLiquidBlock;
 import dev.alaindustrial.chat.WelcomeMessage;
 import dev.alaindustrial.command.demo.DemoStandDropSweeper;
+import dev.alaindustrial.command.demo.energy.EnergyStandCheck;
 import dev.alaindustrial.core.energy.NetworkManager;
 import dev.alaindustrial.core.fluid.FluidNetworkManager;
 import dev.alaindustrial.core.guide.ArchiveRecordSync;
@@ -61,7 +62,10 @@ public final class ServerHookRoster {
 
 	/** End of every server tick, once per loaded level, before {@link #SERVER_TICK}: the network managers. */
 	public static final List<Consumer<ServerLevel>> SERVER_TICK_PER_LEVEL = List.of(
+			// MOD-799: the energy stand check times the energy-network pass of the level it measures.
+			EnergyStandCheck::beforeNetworks,
 			NetworkManager::tickAll,
+			EnergyStandCheck::afterNetworks,
 			ItemNetworkManager::tickAll,
 			FluidNetworkManager::tickAll,
 			MonitorNetworkManager::tickAll);
@@ -79,7 +83,9 @@ public final class ServerHookRoster {
 			// MOD-475: the Geiger counter clicks every tick; the sweep above sets the step, this spends it.
 			GeigerTicker::tick,
 			// MOD-674: drops that rain onto the demo stand after it was built (decaying leaves).
-			DemoStandDropSweeper::tick);
+			DemoStandDropSweeper::tick,
+			// MOD-799: advance a running energy stand check, sampled after the networks.
+			EnergyStandCheck::tick);
 
 	/**
 	 * A player took damage (the loader passes only a server player that lost health). Three hooks — hurt,

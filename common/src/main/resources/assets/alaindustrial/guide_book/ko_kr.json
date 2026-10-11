@@ -1487,7 +1487,7 @@
             {
               "type": "text",
               "title": "제재기",
-              "text": "어떤 목재든 판자, 막대기, 반 블록, 계단으로 켜며 손으로 제작할 때보다 수확량이 많습니다. 전환 가능한 네 가지 모드가 있고 EU로 작동합니다."
+              "text": "어떤 목재든 판자, 막대기, 반 블록, 계단으로 켜며 손으로 제작할 때보다 수확량이 많고, 다섯 번째 모드에서는 톱밥을 만듭니다. 전환 가능한 다섯 가지 모드가 있고 EU로 작동합니다."
             },
             {
               "type": "stats",
@@ -2834,6 +2834,25 @@
           ]
         },
         {
+          "id": "sawdust",
+          "title": "톱밥",
+          "icon": "alaindustrial:sawdust",
+          "pages": [
+            {
+              "type": "text",
+              "title": "톱밥",
+              "text": "제재소 다섯 번째 모드의 산물 — 원목 하나당 톱밥 6개. 발효조의 값싼 유기 원료, 재활용기의 가연성 성분, 그리고 대나무처럼 타는 짧은 연료입니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 160 EU/작업"
+              ]
+            }
+          ]
+        },
+        {
           "id": "palladium_ore",
           "title": "팔라듐 광석",
           "icon": "alaindustrial:palladium_ore",
@@ -3291,6 +3310,43 @@
           ]
         },
         {
+          "id": "tempered_iron_bars",
+          "title": "담금질 철 창살",
+          "icon": "alaindustrial:tempered_iron_bars",
+          "pages": [
+            {
+              "type": "text",
+              "title": "담금질 철 창살",
+              "text": "바닐라를 본뜬 강화 철 건축 블록 네 가지 — 창살, 사다리, 다락문, 사슬. 바닐라처럼 동작하고 모드의 강철처럼 보입니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "버퍼: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tempered_iron_bars",
+              "result_count": 16
+            }
+          ]
+        },
+        {
           "id": "reactor_button",
           "title": "원자로 버튼",
           "icon": "alaindustrial:reactor_button",
@@ -3435,6 +3491,43 @@
               ],
               "result_id": "alaindustrial:reactor_glass",
               "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reinforced_glass",
+          "title": "강화 유리",
+          "icon": "alaindustrial:reinforced_glass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "강화 유리",
+              "text": "강화 철 틀에 끼운 투명한 유리 — 돌처럼 부서지고 크리퍼나 TNT 폭발을 견딥니다. 건축 블록이자 이후 제작법의 재료입니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "버퍼: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:reinforced_glass",
+              "result_count": 4
             }
           ]
         },
@@ -3737,6 +3830,43 @@
               ],
               "result_id": "alaindustrial:industrial_workbench",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "industrial_light",
+          "title": "산업용 조명",
+          "icon": "alaindustrial:industrial_light",
+          "pages": [
+            {
+              "type": "text",
+              "title": "산업용 조명",
+              "text": "4×4 픽셀 크기의 작은 조명으로 따뜻한 밝기 15 — 바닥, 천장, 어느 벽에나 설치할 수 있습니다. 메뉴도 에너지도 필요 없습니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "버퍼: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "minecraft:glass",
+                "",
+                "",
+                "minecraft:glowstone_dust",
+                "",
+                "",
+                "alaindustrial:tempered_iron_plate",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:industrial_light",
+              "result_count": 4
             }
           ]
         },

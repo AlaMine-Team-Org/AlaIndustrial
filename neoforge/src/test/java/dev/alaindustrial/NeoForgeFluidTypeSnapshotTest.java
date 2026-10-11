@@ -3,6 +3,7 @@ package dev.alaindustrial;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import dev.alaindustrial.junit.StopEphemeralServerBeforeFmlTeardown;
+import dev.alaindustrial.registry.ModFluidsManifest;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -27,8 +28,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * scale) is pinned as well. The sound map is read as its sorted keys and sound ids. Moving the fluid types
  * into a shared list must leave every line unchanged.
  *
- * <p>The values differ from Fabric's on purpose — the Fabric side has attributes for crude oil only, a
- * known defect with its own task; this test pins the NeoForge side as it is.
+ * <p>Since MOD-728 Fabric reports the same viscosity, temperature, lighter-than-air sign and name: both
+ * loaders build them from {@link ModFluidsManifest#FLUIDS}, and {@link #fluidTypesFollowTheManifest} holds
+ * this lane against that list as the Fabric gametest {@code fluidAttributesFollowTheManifest} holds its own.
  *
  * <p><b>Updated only by hand</b> from the actual lines this test prints on a mismatch, in a commit that
  * names the behaviour change (ADR-032).
@@ -144,5 +146,28 @@ class NeoForgeFluidTypeSnapshotTest {
 	void fluidTypesMatchTheReference() throws IllegalAccessException {
 		assertEquals(String.join("\n", EXPECTED), String.join("\n", capture()),
 				"MOD-708: NeoForge fluid types differ from the reference; if intended, copy the actual lines");
+	}
+
+	/**
+	 * @implements MOD-728-AC2 — every form of every {@code ModFluidsManifest} entry reports, through its
+	 *     NeoForge fluid type, the entry's viscosity, temperature, lighter-than-air sign and name key
+	 */
+	@Test
+	void fluidTypesFollowTheManifest() {
+		List<String> wrong = new ArrayList<>();
+		for (ModFluidsManifest.FluidDef<?> def : ModFluidsManifest.FLUIDS) {
+			List<String> forms = def.hasFlowing() ? List.of(def.id(), def.flowingId()) : List.of(def.id());
+			for (String path : forms) {
+				FluidType type = BuiltInRegistries.FLUID.getValue(Industrialization.id(path)).getFluidType();
+				String expected = def.physics().viscosity() + "/" + def.physics().temperature() + "/"
+						+ def.physics().lighterThanAir() + "/" + def.descriptionId();
+				String actual = type.getViscosity() + "/" + type.getTemperature() + "/" + type.isLighterThanAir()
+						+ "/" + type.getDescriptionId();
+				if (!expected.equals(actual)) {
+					wrong.add(path + ": expected " + expected + ", got " + actual);
+				}
+			}
+		}
+		assertEquals(List.of(), wrong, "MOD-728: NeoForge fluid types differ from ModFluidsManifest");
 	}
 }

@@ -282,4 +282,12 @@ public class EnergyCondenserBlockEntity extends MachineBlockEntity implements Me
 				ContainerLevelAccess.create(level, worldPosition));
 	}
 
+	/**
+	 * Unknown per-tick need (MOD-789, ADR-049): it fills a buffer it spends in bursts, so the network plans it as a
+	 * store and charges it with the stores, nearest first.
+	 */
+	@Override
+	public long perTickDemand() {
+		return 0L;
+	}
 }

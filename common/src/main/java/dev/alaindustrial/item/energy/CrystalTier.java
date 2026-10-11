@@ -18,23 +18,22 @@ import java.util.function.LongSupplier;
  * have accepted an empty blank in place of a finished crystal and no gate would have caught it.
  *
  * <p>The suppliers read {@link Config} <b>live</b> rather than copying its value into a field, so a
- * config reload moves the ladder with it instead of leaving the old balance until the next restart.
+ * config reload moves the ladder with it instead of leaving the old balance until the next restart. The buffer is
+ * picked out of an {@link ItemBuffers}, read anew each time, for the same reason (MOD-790).
  */
 public enum CrystalTier {
 	/** MV entry rung. */
-	ENERGY("energy_crystal", () -> ToolConfig.energyCrystalBuffer, () -> ToolConfig.energyCrystalInputRate),
+	ENERGY("energy_crystal", () -> ToolConfig.energyCrystalInputRate),
 	/** HV rung, built around a finished Energy Crystal. */
-	LAPOTRON("lapotron_crystal", () -> ToolConfig.lapotronCrystalBuffer, () -> ToolConfig.lapotronCrystalInputRate),
+	LAPOTRON("lapotron_crystal", () -> ToolConfig.lapotronCrystalInputRate),
 	/** End of the ladder. */
-	RESONANT("resonant_crystal", () -> ToolConfig.resonantCrystalBuffer, () -> ToolConfig.resonantCrystalInputRate);
+	RESONANT("resonant_crystal", () -> ToolConfig.resonantCrystalInputRate);
 
 	private final String id;
-	private final LongSupplier buffer;
 	private final LongSupplier inputRate;
 
-	CrystalTier(String id, LongSupplier buffer, LongSupplier inputRate) {
+	CrystalTier(String id, LongSupplier inputRate) {
 		this.id = id;
-		this.buffer = buffer;
 		this.inputRate = inputRate;
 	}
 
@@ -48,9 +47,21 @@ public enum CrystalTier {
 		return id + "_blank";
 	}
 
-	/** EU the blank must take before it becomes the finished crystal. */
+	/** EU the blank must take before it becomes the finished crystal, by this side's own balance. */
 	public long capacity() {
-		return buffer.getAsLong();
+		return capacity(ItemBuffers.live());
+	}
+
+	/**
+	 * {@link #capacity()} when the buffers are {@code buffers} (MOD-790): picked by the tier, so a client drawing
+	 * the blank's bar passes the server's numbers.
+	 */
+	public long capacity(ItemBuffers buffers) {
+		return switch (this) {
+			case ENERGY -> buffers.energyCrystalBuffer();
+			case LAPOTRON -> buffers.lapotronCrystalBuffer();
+			case RESONANT -> buffers.resonantCrystalBuffer();
+		};
 	}
 
 	/**

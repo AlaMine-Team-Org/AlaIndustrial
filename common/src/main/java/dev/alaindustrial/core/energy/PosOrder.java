@@ -23,16 +23,16 @@ package dev.alaindustrial.core.energy;
  * before {@code (0,64,1)} — a plain translation flipping the order. The same flip happens across
  * {@code y = 0}, which sits in the middle of the normal build range.
  *
- * <p><b>Where this rule is deliberately NOT applied (MOD-313).</b> The item and fluid transport networks
- * still sort by {@code asLong()}, and that is a reviewed decision rather than an oversight — otherwise
- * two neighbouring files would state opposite things about the same comparator. The distinction is what
- * the order DECIDES. Here it decides how a fixed amount of EU is split between equally entitled
- * consumers, so translation invariance is a balance property: the same base must not pay differently for
- * standing somewhere else. In {@code ItemNetwork} it only picks where a round robin starts its lap
- * (every endpoint is served within the cycle either way), and in {@code FluidNetwork.propagateOneHop} the
- * pass halves each difference and converges to the same levels whatever order it walks. Those two owe
- * their cursors only a TOTAL and STABLE order, which {@code asLong} is. See the comments at both sort
- * sites.
+ * <p><b>Where this rule is deliberately NOT applied (MOD-313).</b> The item transport network still sorts
+ * by {@code asLong()}, and that is a reviewed decision rather than an oversight. The distinction is what the
+ * order DECIDES. Here it decides how a fixed amount of EU is split between equally entitled consumers, so
+ * translation invariance is a balance property: the same base must not pay differently for standing
+ * somewhere else. In {@code ItemNetwork} it only picks where a round robin starts its lap (every endpoint is
+ * served within the cycle either way), so it owes the cursor only a TOTAL and STABLE order, which
+ * {@code asLong} is. The fluid network used to be the second exception; MOD-733 showed its order does split
+ * fluid between equal donors (and moves the levelling pass's remainder and the tick it falls asleep), so it
+ * follows this rule now. The text rule {@code no-aslong-order-in-core} keeps {@code asLong} orders out of
+ * the core, {@code ItemNetwork} exempted by name.
  */
 public final class PosOrder {
 	private PosOrder() {

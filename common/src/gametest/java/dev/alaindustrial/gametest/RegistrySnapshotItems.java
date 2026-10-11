@@ -368,6 +368,7 @@ final class RegistrySnapshotItems {
 			"item resonant_shard class=Item stack=64 damage=0 rarity=COMMON fireproof=no",
 			"item rtp_chip class=RtpChipItem stack=64 damage=0 rarity=COMMON fireproof=no",
 			"item rubber class=Item stack=64 damage=0 rarity=COMMON fireproof=no",
+			"item sawdust class=HintItem stack=64 damage=0 rarity=COMMON fireproof=no",
 			"item sawmill class=BlockItem stack=64 damage=0 rarity=COMMON fireproof=no",
 			"item scythe_copper class=ScytheItem stack=1 damage=190 rarity=COMMON fireproof=no",
 			"item scythe_diamond class=ScytheItem stack=1 damage=1561 rarity=COMMON fireproof=no",

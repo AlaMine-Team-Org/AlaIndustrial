@@ -1487,7 +1487,7 @@
             {
               "type": "text",
               "title": "Scierie",
-              "text": "Scie n’importe quel bois en planches, bâtons, dalles ou escaliers avec un meilleur rendement qu’à la main. Quatre modes commutables, fonctionne aux EU."
+              "text": "Scie n’importe quel bois en planches, bâtons, dalles ou escaliers avec un meilleur rendement qu’à la main, ou en sciure dans son cinquième mode. Cinq modes commutables, fonctionne à l’EU."
             },
             {
               "type": "stats",
@@ -2834,6 +2834,25 @@
           ]
         },
         {
+          "id": "sawdust",
+          "title": "Sciure",
+          "icon": "alaindustrial:sawdust",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Sciure",
+              "text": "Le produit du cinquième mode de la scierie : 6 sciures par bûche. Matière organique bon marché pour le fermenteur, fraction combustible du recycleur et combustible bref qui brûle comme le bambou."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiques",
+              "lines": [
+                "Énergie : 160 EU/op"
+              ]
+            }
+          ]
+        },
+        {
           "id": "palladium_ore",
           "title": "Minerai de palladium",
           "icon": "alaindustrial:palladium_ore",
@@ -3291,6 +3310,43 @@
           ]
         },
         {
+          "id": "tempered_iron_bars",
+          "title": "Barreaux en fer trempé",
+          "icon": "alaindustrial:tempered_iron_bars",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Barreaux en fer trempé",
+              "text": "Quatre pièces de construction en fer trempé inspirées de la vanilla : barreaux, échelle, trappe et chaîne. Elles se comportent comme la vanilla et ont l’aspect de l’acier du mod."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiques",
+              "lines": [
+                "Tampon : 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tempered_iron_bars",
+              "result_count": 16
+            }
+          ]
+        },
+        {
           "id": "reactor_button",
           "title": "Bouton de réacteur",
           "icon": "alaindustrial:reactor_button",
@@ -3435,6 +3491,43 @@
               ],
               "result_id": "alaindustrial:reactor_glass",
               "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reinforced_glass",
+          "title": "Verre renforcé",
+          "icon": "alaindustrial:reinforced_glass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Verre renforcé",
+              "text": "Du verre clair dans un cadre en fer trempé : il se brise comme la pierre et résiste à l’explosion d’un creeper ou de la TNT. Un bloc de construction et un ingrédient de recettes futures."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiques",
+              "lines": [
+                "Tampon : 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:reinforced_glass",
+              "result_count": 4
             }
           ]
         },
@@ -3737,6 +3830,43 @@
               ],
               "result_id": "alaindustrial:industrial_workbench",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "industrial_light",
+          "title": "Ampoule industrielle",
+          "icon": "alaindustrial:industrial_light",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Ampoule industrielle",
+              "text": "Une minuscule lampe de 4×4 pixels à la lumière chaude de niveau 15 : au sol, au plafond ou sur n’importe quel mur. Sans menu, sans énergie."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiques",
+              "lines": [
+                "Tampon : 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "minecraft:glass",
+                "",
+                "",
+                "minecraft:glowstone_dust",
+                "",
+                "",
+                "alaindustrial:tempered_iron_plate",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:industrial_light",
+              "result_count": 4
             }
           ]
         },

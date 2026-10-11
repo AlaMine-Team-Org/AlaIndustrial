@@ -10,6 +10,7 @@ category alaindustrial:sawing_planks 150x48 icon=alaindustrial:sawmill title=emp
 category alaindustrial:sawing_sticks 150x48 icon=alaindustrial:sawmill title=empty + {block.alaindustrial.sawmill} + literal{: } + {gui.alaindustrial.sawmill.mode.sticks}
 category alaindustrial:sawing_slabs 150x48 icon=alaindustrial:sawmill title=empty + {block.alaindustrial.sawmill} + literal{: } + {gui.alaindustrial.sawmill.mode.slabs}
 category alaindustrial:sawing_stairs 150x48 icon=alaindustrial:sawmill title=empty + {block.alaindustrial.sawmill} + literal{: } + {gui.alaindustrial.sawmill.mode.stairs}
+category alaindustrial:sawing_sawdust 150x48 icon=alaindustrial:sawmill title=empty + {block.alaindustrial.sawmill} + literal{: } + {gui.alaindustrial.sawmill.mode.sawdust}
 category alaindustrial:mutation_transform 150x48 icon=alaindustrial:incubator title=empty + {block.alaindustrial.incubator} + literal{: } + {gui.alaindustrial.incubator.mode.transform}
 category alaindustrial:mutation_duplicate 150x48 icon=alaindustrial:incubator title=empty + {block.alaindustrial.incubator} + literal{: } + {gui.alaindustrial.incubator.mode.duplicate}
 category alaindustrial:mutation_create 150x48 icon=alaindustrial:incubator title=empty + {block.alaindustrial.incubator} + literal{: } + {gui.alaindustrial.incubator.mode.create}
@@ -37,6 +38,7 @@ station alaindustrial:mutation_duplicate alaindustrial:incubator
 station alaindustrial:mutation_transform alaindustrial:incubator
 station alaindustrial:polymerizing alaindustrial:polymerizer
 station alaindustrial:sawing_planks alaindustrial:sawmill
+station alaindustrial:sawing_sawdust alaindustrial:sawmill
 station alaindustrial:sawing_slabs alaindustrial:sawmill
 station alaindustrial:sawing_stairs alaindustrial:sawmill
 station alaindustrial:sawing_sticks alaindustrial:sawmill
@@ -44,7 +46,7 @@ station alaindustrial:smelting alaindustrial:electric_furnace
 station alaindustrial:vulcanizing alaindustrial:vulcanizer
 station minecraft:smelting alaindustrial:electric_furnace alaindustrial:iron_furnace
 # click areas by screen
-click AlloySmelterScreen 65 22 42 43 -> alaindustrial:alloying
+click AlloySmelterScreen 65 22 45 43 -> alaindustrial:alloying
 click CanningMachineScreen 74 33 31 10 -> alaindustrial:canning
 click CompressorScreen 81 34 25 18 -> alaindustrial:compressing
 click DistillationColumnScreen 59 40 24 56 -> alaindustrial:distilling
@@ -56,7 +58,7 @@ click GeothermalGeneratorScreen 82 38 10 7 -> alaindustrial:machine_info
 click IncubatorScreen 112 20 24 16 -> alaindustrial:mutation_transform,alaindustrial:mutation_duplicate,alaindustrial:mutation_create
 click MaceratorScreen 82 38 25 9 -> alaindustrial:maceration
 click PolymerizerScreen 79 35 24 17 -> alaindustrial:polymerizing
-click SawmillScreen 82 20 22 12 -> alaindustrial:sawing_planks,alaindustrial:sawing_sticks,alaindustrial:sawing_slabs,alaindustrial:sawing_stairs
+click SawmillScreen 82 20 22 12 -> alaindustrial:sawing_planks,alaindustrial:sawing_sticks,alaindustrial:sawing_slabs,alaindustrial:sawing_stairs,alaindustrial:sawing_sawdust
 click ThermalCentrifugeScreen 82 38 25 9 -> alaindustrial:centrifuging
 click VulcanizerScreen 79 31 25 9 -> alaindustrial:vulcanizing
 # handlers by screen

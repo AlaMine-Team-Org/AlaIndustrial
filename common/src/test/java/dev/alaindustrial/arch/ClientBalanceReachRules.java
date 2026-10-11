@@ -17,7 +17,6 @@ import com.tngtech.archunit.lang.ArchCondition;
 import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.lang.ConditionEvents;
 import com.tngtech.archunit.lang.SimpleConditionEvent;
-import com.tngtech.archunit.library.freeze.FreezingArchRule;
 import dev.alaindustrial.config.Knob;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -75,7 +74,7 @@ import java.util.TreeSet;
  *
  * <p><b>Report line.</b> {@code <root> -> <first method outside the roots> reads <Holder.knob>}, or
  * {@code <root> reads <Holder.knob>} for a read in the root itself: stable while the path between the entry
- * and the knob is refactored, so the frozen baseline does not churn.
+ * and the knob is refactored.
  *
  * <p><b>Pending.</b> A method listed in {@link #PENDING} is the LAST link of a known path that has a task of its
  * own — the method that asks the knob holder, not the first method outside the roots. The walk stops there and
@@ -85,23 +84,10 @@ import java.util.TreeSet;
  * method between the root and the pending one (a tooltip builder reverted from {@code ServerBalance} to
  * {@code ToolConfig}) is reported by name. A new ROOT reaching a pending method is still a new line, on purpose.
  *
- * <p><b>Frozen.</b> Today's violations are a baseline in {@code common/src/test/archunit-store} (the mechanism of
- * {@code coreDoesNotDependOnBlocksOrRegistry}, ADR-039): a new one fails, a fixed one fails too until the
- * baseline is shrunk on purpose —
- * <pre>
- * JAVA_TOOL_OPTIONS="-Darchunit.freeze.store.default.allowStoreUpdate=true"
- *   ./gradlew :common:test --tests dev.alaindustrial.arch.ClientBalanceReachRules
- * </pre>
- * The store is keyed by the rule's description, {@code because} text included: rewording it means writing the
- * store anew, with {@code allowStoreCreation=true} next to {@code allowStoreUpdate=true}.
- *
- * <p><b>Rebuilding after a change of the line format</b> (a {@link #PENDING} row added or removed, this report
- * line reworded): every line of the affected paths changes, which the ratchet reads as fixed plus new. Rebuild
- * with {@code -Darchunit.freeze.refreeze=true} next to {@code allowStoreUpdate=true}, then read the store's
- * {@code git diff} before committing it: it may only re-spell paths the old store already held (same root, same
- * entry). {@code refreeze} accepts ANY current violation, a new path included — never run it to make a red rule
- * green, and never commit its result unread. When a pending task lands, drop its row from {@link #PENDING} and
- * rebuild: what still reaches a knob comes back as per-knob lines, what is fixed is gone.
+ * <p><b>Plain, no baseline.</b> The rule was frozen from MOD-761 until its baseline emptied: MOD-791 (the jetpack
+ * ceiling) and MOD-790 (the powered items' capacity) fixed the last 44 paths, and the store went with them. Any
+ * violation now fails the build, by name. A path that cannot be fixed with the change that finds it gets a
+ * {@link #PENDING} row and a task of its own — a decision written here, never a baseline.
  *
  * <p>{@code ArchitectureRulesNegativeControl} proves the condition, both bridges, the stop at another root, the
  * pending form and the accepted paths on fixtures.
@@ -157,22 +143,16 @@ public class ClientBalanceReachRules {
 	/**
 	 * The last links of known paths that have a task of their own, by full name with parameter types: the walk
 	 * stops at them and reports the task instead of the knobs (see the class javadoc). A row goes when its task
-	 * lands, by the rebuild procedure above.
+	 * lands. Empty since MOD-790; kept, with its negative control, for the next path that needs a task.
 	 */
-	static final Map<String, String> PENDING = Map.of(
-			"dev.alaindustrial.item.energy.ItemEnergy.capacity(net.minecraft.world.item.ItemStack)", "MOD-790",
-			"dev.alaindustrial.item.wearable.JetpackItem.isPowered(net.minecraft.world.item.ItemStack, "
-					+ "net.minecraft.world.entity.player.Player)", "MOD-791");
+	static final Map<String, String> PENDING = Map.of();
 
 	/** The client packages, {@code ServerBalance} and its nested classes excepted. */
 	static final DescribedPredicate<JavaClass> PRODUCTION_CLIENT_CODE = DescribedPredicate.describe(
 			"client code", (JavaClass c) -> JavaClass.Predicates.resideInAnyPackage(
 					ArchitectureRules.CLIENT_TYPE_HOSTS).test(c) && !isServerBalance(c));
 
-	/**
-	 * The rule unfrozen, so the negative control can prove it sees the baseline at all (a condition matching
-	 * nothing would freeze an empty store and stay green forever).
-	 */
+	/** The rule; its condition is proved on fixtures by {@code ArchitectureRulesNegativeControl}. */
 	static final ArchRule CLIENT_REACH = noClasses()
 			.should(reachABalanceKnob(PRODUCTION_CLIENT_CODE, ACCEPTED, PENDING))
 			.because("on a dedicated server Config holds the player's own file: a number the client shows comes "
@@ -180,7 +160,7 @@ public class ClientBalanceReachRules {
 					+ "from a class that reads Config on the client's behalf (MOD-761)");
 
 	@ArchTest
-	static final ArchRule clientCodeReachesNoBalanceKnob = FreezingArchRule.freeze(CLIENT_REACH);
+	static final ArchRule clientCodeReachesNoBalanceKnob = CLIENT_REACH;
 
 	private static boolean isServerBalance(JavaClass c) {
 		return c.getName().equals(SERVER_BALANCE) || c.getName().startsWith(SERVER_BALANCE + "$");

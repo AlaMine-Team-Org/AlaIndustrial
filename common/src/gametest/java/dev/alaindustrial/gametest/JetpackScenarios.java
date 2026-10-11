@@ -1,19 +1,24 @@
 package dev.alaindustrial.gametest;
 
+import dev.alaindustrial.KnobSnapshot;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
+import dev.alaindustrial.client.ServerBalance;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.item.ToolConfig;
 import dev.alaindustrial.item.wearable.EnergyPackItem;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.item.wearable.JetpackItem;
 import dev.alaindustrial.item.wearable.JetpackLight;
+import dev.alaindustrial.registry.ModDataComponents;
 import java.util.List;
+import java.util.Map;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.equipment.Equippable;
 import net.minecraft.world.item.equipment.EquipmentAsset;
 import net.minecraft.world.level.GameType;
@@ -59,7 +64,9 @@ public final class JetpackScenarios {
 				RosterEntry.of(JetpackScenarios::neg04EmptyJetpackFallsNormally, "jetpack_empty_falls_normally")
 						.fabricId("JetpackGameTest", "tcJet001Neg04_emptyJetpackFallsNormally").ticks(20, 40),
 				RosterEntry.of(JetpackScenarios::fun08FlightGlowPlacedAndSwept, "jetpack_flight_glow_placed_and_swept")
-						.fabricId("JetpackGameTest", "tcJet001Fun08_flightGlowPlacedAndSwept").ticks(20, 40));
+						.fabricId("JetpackGameTest", "tcJet001Fun08_flightGlowPlacedAndSwept").ticks(20, 40),
+				RosterEntry.of(JetpackScenarios::mod791ClientCeilingFollowsTheServer,
+						"jetpack_client_ceiling_follows_the_server"));
 
 		private Roster() {}
 	}
@@ -311,6 +318,65 @@ public final class JetpackScenarios {
 		}
 		if (player.fallDistance != 0.0) {
 			helper.fail("above the ceiling a powered flight still glides (fall distance reset)");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * MOD-791: the client's thrust prediction compares the height with the SERVER's ceiling. A snapshot from a
+	 * server whose ceiling is 100 blocks under the local one puts a player 50 blocks under the local ceiling above
+	 * the server's: the client form refuses, the server form (local ceiling) still thrusts. And
+	 * {@code ItemEnergy.hasCharge} — what the client form asks instead of {@code get > 0}, to stay off the local
+	 * capacity — agrees with {@code get > 0} on an empty, a nearly empty, a full and a negative charge.
+	 *
+	 * <p>The snapshot is received and forgotten inside this one synchronous body, so no other scenario sees it.
+	 *
+	 * @implements MOD-791-JET01 — the client's thrust prediction uses the server's jetpackMaxY, the server tick its
+	 *     own; hasCharge agrees with get > 0
+	 */
+	public static void mod791ClientCeilingFollowsTheServer(GameTestHelper helper) {
+		Player player = airborne(helper);
+		ItemStack jetpack = jetpack(ToolConfig.jetpackBuffer);
+		int local = ToolConfig.jetpackMaxY;
+		player.setPos(player.getX(), local - 50.0, player.getZ());
+		ServerBalance.reset();
+		try {
+			if (!ServerBalance.receive(KnobSnapshot.of(Map.of("jetpackMaxY", local - 100)).encode())) {
+				helper.fail("the client refused a snapshot carrying jetpackMaxY");
+				return;
+			}
+			if (ServerBalance.jetpackMaxY() != local - 100) {
+				helper.fail("ServerBalance.jetpackMaxY() shows " + ServerBalance.jetpackMaxY() + ", the server sent "
+						+ (local - 100));
+				return;
+			}
+			if (JetpackItem.isPowered(jetpack, player, ServerBalance.jetpackMaxY())) {
+				helper.fail("50 blocks over the server's ceiling the client form must refuse to thrust");
+				return;
+			}
+			if (!JetpackItem.isPowered(jetpack, player)) {
+				helper.fail("the server form must keep its own ceiling (" + local + ") and thrust at Y "
+						+ player.getY());
+				return;
+			}
+		} finally {
+			ServerBalance.reset();
+		}
+		if (ToolConfig.jetpackMaxY != local) {
+			helper.fail("receiving the snapshot rewrote ToolConfig.jetpackMaxY");
+			return;
+		}
+		ItemStack negative = jetpack(0);
+		negative.set(ModDataComponents.POUCH_ENERGY.get(), -5L);
+		// A component on an item without a buffer holds nothing either: get clamps it to a capacity of 0.
+		ItemStack notPowered = new ItemStack(Items.STONE);
+		notPowered.set(ModDataComponents.POUCH_ENERGY.get(), 100L);
+		for (ItemStack stack : List.of(jetpack(0), jetpack(1), jetpack(ToolConfig.jetpackBuffer), negative,
+				notPowered)) {
+			if (ItemEnergy.hasCharge(stack) != (ItemEnergy.get(stack) > 0)) {
+				helper.fail("hasCharge disagrees with get > 0 on " + stack + ": " + ItemEnergy.hasCharge(stack));
+				return;
+			}
 		}
 		helper.succeed();
 	}

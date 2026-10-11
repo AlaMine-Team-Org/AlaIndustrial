@@ -1487,7 +1487,7 @@
             {
               "type": "text",
               "title": "Hızar",
-              "text": "Her türlü odunu tahtaya, çubuğa, basamağa veya merdivene biçer; verim el ile üretimden yüksektir. Dört değiştirilebilir mod, EU ile çalışır."
+              "text": "Her türlü odunu tahtaya, çubuğa, basamağa veya merdivene biçer; verim el ile üretimden yüksektir, beşinci modda ise talaş çıkarır. Beş değiştirilebilir mod, EU ile çalışır."
             },
             {
               "type": "stats",
@@ -2834,6 +2834,25 @@
           ]
         },
         {
+          "id": "sawdust",
+          "title": "Talaş",
+          "icon": "alaindustrial:sawdust",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Talaş",
+              "text": "Bıçkıhanenin beşinci modunun ürünü — kütük başına 6 talaş. Fermentör için ucuz organik hammadde, geri dönüştürücüde yanıcı kısım ve bambu gibi yanan kısa bir yakıt."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: 160 EU/işlem"
+              ]
+            }
+          ]
+        },
+        {
           "id": "palladium_ore",
           "title": "Paladyum Cevheri",
           "icon": "alaindustrial:palladium_ore",
@@ -3291,6 +3310,43 @@
           ]
         },
         {
+          "id": "tempered_iron_bars",
+          "title": "Su Verilmiş Demir Parmaklık",
+          "icon": "alaindustrial:tempered_iron_bars",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Su Verilmiş Demir Parmaklık",
+              "text": "Vanilya örneklerine göre yapılmış dört su verilmiş demir yapı bloğu — parmaklık, merdiven, kapak ve zincir. Vanilya gibi davranır, modun çeliği gibi görünür."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Tampon: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tempered_iron_bars",
+              "result_count": 16
+            }
+          ]
+        },
+        {
           "id": "reactor_button",
           "title": "Reaktör Düğmesi",
           "icon": "alaindustrial:reactor_button",
@@ -3435,6 +3491,43 @@
               ],
               "result_id": "alaindustrial:reactor_glass",
               "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reinforced_glass",
+          "title": "Güçlendirilmiş Cam",
+          "icon": "alaindustrial:reinforced_glass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Güçlendirilmiş Cam",
+              "text": "Sertleştirilmiş demir çerçevede şeffaf cam — taş gibi kırılır ve creeper ya da TNT patlamasına dayanır. Bir yapı bloğu ve sonraki tarifler için bir malzeme."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Tampon: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:reinforced_glass",
+              "result_count": 4
             }
           ]
         },
@@ -3737,6 +3830,43 @@
               ],
               "result_id": "alaindustrial:industrial_workbench",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "industrial_light",
+          "title": "Endüstriyel Lamba",
+          "icon": "alaindustrial:industrial_light",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Endüstriyel Lamba",
+              "text": "Sıcak ışık seviyesi 15 olan 4×4 piksellik minik bir lamba — zemine, tavana ya da herhangi bir duvara. Menü yok, enerji yok."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Tampon: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "minecraft:glass",
+                "",
+                "",
+                "minecraft:glowstone_dust",
+                "",
+                "",
+                "alaindustrial:tempered_iron_plate",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:industrial_light",
+              "result_count": 4
             }
           ]
         },

@@ -22,7 +22,7 @@ import org.jspecify.annotations.Nullable;
  *
  * <p>A new fluid is one {@link #pair} or {@link #single} entry here plus its {@code Fluid} class and its
  * assets; neither loader's source changes. The entry carries the ids, the factories, the
- * {@link FluidPhysics} NeoForge states on the fluid type, the type's description key, and the
+ * {@link FluidPhysics} and description key both loaders report to other mods, and the
  * {@link ModContent} slots each loader binds.
  *
  * <p><b>Order is registration order</b> on both loaders. The factories construct the common fluid classes
@@ -34,10 +34,18 @@ public final class ModFluidsManifest {
 
 	/**
 	 * The numbers a loader may state about a fluid: density, viscosity and temperature (kelvin) — what a
-	 * NeoForge {@code FluidType} reports to other mods. Physics the player meets (damping, spread) lives in
-	 * the fluid classes themselves.
+	 * NeoForge {@code FluidType} and the Fabric Transfer API attribute handler report to other mods
+	 * (Fabric has no density attribute; it states only its sign, as {@code isLighterThanAir}). Physics the
+	 * player meets (damping, spread) lives in the fluid classes themselves.
 	 */
 	public record FluidPhysics(int density, int viscosity, int temperature) {
+		/**
+		 * Whether the fluid rises rather than sinks — NeoForge's rule ({@code FluidType.isLighterThanAir()} is
+		 * {@code getDensity() <= 0}), stated here so the Fabric attribute handler reports the same answer.
+		 */
+		public boolean lighterThanAir() {
+			return density <= 0;
+		}
 	}
 
 	/**
@@ -47,18 +55,16 @@ public final class ModFluidsManifest {
 	 * @param source             builds the still (or only) fluid
 	 * @param flowingId          the flowing form's registry path, or {@code null} for a fluid without one
 	 * @param flowing            builds the flowing form, or {@code null} with {@code flowingId}
-	 * @param physics            what the NeoForge fluid type states
-	 * @param descriptionId      the translation key the NeoForge fluid type names the fluid by
-	 * @param transferAttributes whether Fabric registers a Transfer API attribute handler reporting
-	 *                           {@code physics.viscosity()}; only crude oil has one (a known defect: the
-	 *                           others report the Transfer API defaults on Fabric)
+	 * @param physics            what the NeoForge fluid type and the Fabric Transfer API attribute
+	 *                           handler state (MOD-728)
+	 * @param descriptionId      the translation key both loaders name the fluid by
 	 * @param bindSource         publishes the registered still fluid into its {@link ModContent} slot
 	 * @param bindFlowing        publishes the flowing form, or {@code null} with {@code flowingId}
 	 * @param <T>                the handle type of the {@link ModContent} slots
 	 */
 	public record FluidDef<T extends Fluid>(String id, Supplier<? extends T> source, @Nullable String flowingId,
 			@Nullable Supplier<? extends T> flowing, FluidPhysics physics, String descriptionId,
-			boolean transferAttributes, Consumer<Supplier<T>> bindSource, @Nullable Consumer<Supplier<T>> bindFlowing) {
+			Consumer<Supplier<T>> bindSource, @Nullable Consumer<Supplier<T>> bindFlowing) {
 		public FluidDef {
 			Objects.requireNonNull(id, "id");
 			Objects.requireNonNull(source, "source");
@@ -74,33 +80,27 @@ public final class ModFluidsManifest {
 		public boolean hasFlowing() {
 			return flowingId != null;
 		}
-
-		/** The same entry with a Fabric Transfer API attribute handler. */
-		FluidDef<T> withTransferAttributes() {
-			return new FluidDef<>(id, source, flowingId, flowing, physics, descriptionId, true, bindSource,
-					bindFlowing);
-		}
 	}
 
 	/** A world fluid: still and flowing forms, named {@code id} and {@code flowing_<id>}. */
 	private static FluidDef<FlowingFluid> pair(String id, Supplier<? extends FlowingFluid> source,
 			Supplier<? extends FlowingFluid> flowing, FluidPhysics physics, Consumer<Supplier<FlowingFluid>> bindSource,
 			Consumer<Supplier<FlowingFluid>> bindFlowing) {
-		return new FluidDef<>(id, source, "flowing_" + id, flowing, physics, "block.alaindustrial." + id, false,
-				bindSource, bindFlowing);
+		return new FluidDef<>(id, source, "flowing_" + id, flowing, physics, "block.alaindustrial." + id, bindSource,
+				bindFlowing);
 	}
 
 	/** A fluid without a world form: one entry, no flowing fluid, no block, no bucket. */
 	private static FluidDef<Fluid> single(String id, Supplier<? extends Fluid> source, FluidPhysics physics,
 			String descriptionId, Consumer<Supplier<Fluid>> bind) {
-		return new FluidDef<>(id, source, null, null, physics, descriptionId, false, bind, null);
+		return new FluidDef<>(id, source, null, null, physics, descriptionId, bind, null);
 	}
 
 	/** Every fluid, in registration order. */
 	public static final List<FluidDef<?>> FLUIDS = List.of(
-			// MOD-238: crude oil — heavy-ish and thick. The one fluid with a Fabric attribute handler.
+			// MOD-238: crude oil — heavy-ish and thick.
 			pair("oil", OilFluid.Source::new, OilFluid.Flowing::new, new FluidPhysics(900, 3000, 300),
-					s -> ModContent.OIL = s, s -> ModContent.FLOWING_OIL = s).withTransferAttributes(),
+					s -> ModContent.OIL = s, s -> ModContent.FLOWING_OIL = s),
 			// MOD-251: the distillation fractions — diesel light and thin, fuel oil the heavy residue.
 			pair("diesel", DieselFluid.Source::new, DieselFluid.Flowing::new, new FluidPhysics(850, 1200, 300),
 					s -> ModContent.DIESEL = s, s -> ModContent.FLOWING_DIESEL = s),

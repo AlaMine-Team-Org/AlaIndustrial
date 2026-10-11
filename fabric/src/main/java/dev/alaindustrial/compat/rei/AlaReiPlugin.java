@@ -126,7 +126,7 @@ public class AlaReiPlugin implements REIClientPlugin {
 						categoryId(target.kind()),
 						CategoryIdentifier.of("minecraft", "plugins/smelting"));
 			} else if (MachineRecipeViewerTargets.isSawmill(target.kind())) {
-				// MOD-150: the sawmill's arrow opens all four mode categories at once.
+				// MOD-150: the sawmill's arrow opens every mode category at once.
 				CategoryIdentifier<?>[] ids = MachineRecipeViewerTargets.SAWMILL_KINDS.stream()
 						.map(AlaReiPlugin::categoryId)
 						.toArray(CategoryIdentifier[]::new);

@@ -212,7 +212,9 @@ public final class BackupChannelScenarios {
 	 * them — and a Battery Box whose OUT face touches the east cable. The machine's room stays at its intake,
 	 * above the source, so every tick is a backup tick; its one copper cable carries a segment a tick, so the
 	 * source has the rest to spare. The Teleporter takes that surplus on backup ticks too: at least the source's
-	 * output beyond the segment for every tick past the fill. The first cut of MOD-756 gave it 0 EU here.
+	 * output beyond the segment for every tick past the fill. The first cut of MOD-756 gave it 0 EU here. Under the
+	 * line plan (ADR-049) the generator fills the machine's one cable itself, so the box releases nothing: what it
+	 * would put in, the machine could not take.
 	 *
 	 * @implements MOD-756-BC03 — on a backup tick the sinks still take the generators' surplus, apart
 	 */
@@ -242,8 +244,9 @@ public final class BackupChannelScenarios {
 		long fund = rig.amountAt(SURPLUS_FUND);
 		long floor = (TICKS - 2L * 2) * (SURPLUS_OUTPUT - CableType.COPPER.segmentBuffer());
 		EnergyGoldenRig.clear(helper);
-		if (backupTicks == 0) {
-			helper.fail("precondition: the box never backed the machine up — the rig checks nothing");
+		if (released != 0) {
+			helper.fail("the box released " + released + " EU on " + backupTicks + " ticks into a line the generator"
+					+ " already fills to the machine's one cable — the machine can take no more of it (ADR-049)");
 			return;
 		}
 		if (fund < floor) {

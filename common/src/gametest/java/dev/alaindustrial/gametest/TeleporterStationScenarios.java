@@ -314,11 +314,9 @@ public final class TeleporterStationScenarios {
 		// Drive generator + cable + the network (same pattern as NetworkGameTest#drive): the cable
 		// registers its network from its own tick, the generator produces from its own.
 		//
-		// 300 ticks is chosen from the real numbers, not guessed: the generator makes 8 EU/t
-		// (fuelEuPerTick) and the macerator spends 2 EU/t while filling its own 800 EU buffer, so it
-		// saturates after ~133 ticks and only then does surplus reach the station. Until that point
-		// the machine legitimately takes everything and the station — a sink — waits. That ordering
-		// IS the feature under test, so the window has to cover both halves of it.
+		// 300 ticks covers two operations of the macerator (150 ticks each at 2 EU/t): the generator makes
+		// 8 EU/t (fuelEuPerTick), the macerator gets its 2 EU/t need first on every tick and the station — a
+		// sink — the other 6 at once (ADR-049). That ordering IS the feature under test.
 		for (int i = 0; i < 300; i++) {
 			gen.serverTick(helper.getLevel(), genPos, helper.getLevel().getBlockState(gen.getBlockPos()));
 			cable.serverTick(helper.getLevel(), cable.getBlockPos(),
@@ -329,8 +327,10 @@ public final class TeleporterStationScenarios {
 
 		long macEu = mac.getEnergyStorage().getAmount();
 		long stationEu = station.getEnergyStorage().getAmount();
-		if (macEu <= 0) {
-			helper.fail("the macerator got nothing: the station starved it (station took " + stationEu + " EU)");
+		int worked = 8 - mac.getItem(MaceratorBlockEntity.INPUT_SLOT).getCount();
+		if (worked < 1) {
+			helper.fail("the macerator finished nothing in 300 ticks: the station starved it (station took "
+					+ stationEu + " EU)");
 		}
 		if (stationEu <= 0) {
 			helper.fail("the station never charged from the surplus (macerator holds " + macEu + " EU) — "

@@ -18,8 +18,8 @@ import net.minecraft.server.level.ServerLevel;
  *
  * <p>Owns: the cable set, the cached producer/consumer endpoint lists with their cable-distances, the
  * independent BFS fields that produce those distances (producer-seeded for MOD-021 loss + the MOD-070
- * fallback; sink-seeded for the MOD-252 flow direction; machine-seeded for the MOD-254 fork tie-break,
- * which biases a split but never a path), and the propagation sweep order. All
+ * fallback; sink-seeded for the MOD-252 flow direction; machine- and store-seeded for the corridor of a line
+ * on which a machine waits, MOD-789), and the propagation sweep order. All
  * mutation routes through {@link #addCable}/{@link #removeCable}/{@link #absorb}/{@link #markDirty},
  * which set the {@link NodeSet}'s dirty flag so the next read refreshes the cache. {@code EnergyNetwork}
  * wires a {@code Runnable onTopologyChanged} to those mutations so its own wake-state flag
@@ -62,21 +62,14 @@ final class EnergyTopologyCache {
 	/** Cable-distance from each consumer position to its nearest producer, for per-consumer loss (MOD-021). */
 	private final Map<BlockPos, Integer> consumerDistance = new LinkedHashMap<>();
 	/**
-	 * The three distance fields over this line's cables and what follows from them — the flow potential,
-	 * the sweep order, the stranded cables ({@link FlowField}, MOD-715):
-	 * <ul>
-	 *   <li>the PRODUCER field is the source of {@link #consumerDistance}, i.e. the MOD-021 resistive loss —
-	 *       "how far the EU travelled from a source" — and the fallback flow field while nothing wants energy
-	 *       (MOD-070);</li>
-	 *   <li>the SINK field, seeded from every endpoint that wants energy, directs the flow whenever anything
-	 *       waits (MOD-252): a seam seeded from sinks drains toward both sides, one seeded from sources stalls
-	 *       a whole stretch of bus behind it;</li>
-	 *   <li>the MACHINE field is the sink field restricted to waiting machines — a fork tie-break, never a
-	 *       path (MOD-254).</li>
-	 * </ul>
-	 * Seeded here, where the endpoints and their face ports are known; rebuilt only when a seed set changes.
+	 * Distance from each cable to the nearest supplying producer (MOD-214): the source of
+	 * {@link #consumerDistance} — the MOD-021 resistive loss — the rank of the line plan ("the nearest machine
+	 * first", ADR-049) and the direction a line with nothing planned fills in (MOD-070). Recomputed only when the
+	 * supplying set or the cables change.
 	 */
-	private final FlowField<BlockPos> flow = new FlowField<>(this::cableNeighbours, BLOCK_POS_ORDER);
+	private final DistanceField<BlockPos> producerField = new DistanceField<>(this::cableNeighbours, BLOCK_POS_ORDER);
+	/** The cables in geometric order (MOD-304): one list object between topology changes, for the planner's index. */
+	private List<BlockPos> cableList = List.of();
 	/**
 	 * The strongest cable grade in the network, recomputed with the endpoint lists in {@link
 	 * #refreshIfDirty()} (a cable's grade is fixed at construction, so it only changes when the cable set
@@ -144,83 +137,30 @@ final class EnergyTopologyCache {
 	private Set<BlockPos> supplyingProducers = Set.of();
 
 	/**
-	 * Endpoints that actually want energy this tick — the seeds of the sink field (MOD-252).
-	 * Published by the façade: every endpoint with room, machines and storage sinks alike, because seeding
-	 * decides which cables are REACHABLE at all, not who is served first (a cable above every
-	 * source-adjacent potential has no filling path). MOD-009's class priority lives in the serve order
-	 * instead. Empty means "nobody is waiting", which is what puts the network back on the producer-seeded
-	 * fallback field.
-	 */
-	private Set<BlockPos> flowSinkSeeds = Set.of();
-
-	/**
-	 * The machine subset of {@link #flowSinkSeeds} — the seeds of the machine field (MOD-254).
-	 * Always a subset, so it can only ever bias a split, never open or close a path.
-	 */
-	private Set<BlockPos> flowMachineSeeds = Set.of();
-
-	/**
-	 * Publish this tick's live supply and demand endpoints. Recomputes each distance field only when its
-	 * own seed set actually changed — supply changes on day/night, fuel running out, a battery emptying;
-	 * demand changes when a machine tops off or starts working. Both are rare next to every tick, and the
-	 * BFS + sort behind them is O(cables · log cables).
-	 *
-	 * @param machineSeeds the machine subset of {@code sinkSeeds} (MOD-254); it seeds the fork tie-break
-	 *     field only and never takes part in choosing the propagation order or the reachable set.
-	 */
-	/**
-	 * The cables no downhill path can ever reach, farthest from the source first (MOD-318).
-	 *
-	 * <p>{@code propagateLineOneHop} only ever moves EU to a STRICTLY lower flow potential, and a cable is
-	 * only ever charged directly if it touches a producer. In sink mode the potential is the distance to
-	 * the nearest waiting sink, so the set of cables that can be filled at all is exactly "reachable from
-	 * a supplying producer's own cable by strictly descending sink distance" — the union of the shortest
-	 * paths from the generators to the demand. Everything else — a spur with no consumer on it, the run
-	 * past the last consumer, a stretch behind the generators — sits above every cable that could feed it
-	 * and stays at 0 EU for as long as anything on the network is asking for energy. That is MOD-318: the
-	 * player sees a dead segment in the middle of a line whose far end is demonstrably powered.
-	 *
-	 * <p>The condition is topological, not geometric: a long line that simply runs from a generator to a
-	 * consumer is entirely reachable however much it climbs and dives, and is not affected by any of this.
-	 *
-	 * <p>Empty in fallback mode by construction — with nothing waiting, the field is already seeded from
-	 * the producers and spreads outward to every cable, which is the behaviour this list exists to restore
-	 * for the sink-mode case.
-	 */
-	List<BlockPos> strandedFillOrder() {
-		return flow.strandedOrder();
-	}
-
-	/**
 	 * BFS distance from this cable to the nearest supplying producer, or {@code null} when it is off that
-	 * field. Drives the stranded-fill hop direction (MOD-318) — outward from the source, the one direction
-	 * that is well defined for a cable the demand-seeded field has abandoned.
+	 * field: the rank of the line plan and the outward fill direction (ADR-049, ADR-007).
 	 *
 	 * <p>Does not refresh the cache — see {@link #consumerDistance(BlockPos)} for why.
 	 */
 	Integer producerDistanceOrNull(BlockPos pos) {
-		return flow.producerDistance(pos);
+		return producerField.distanceOrNull(pos);
 	}
 
-	void updateLiveEndpoints(Set<BlockPos> supplying, Set<BlockPos> sinkSeeds, Set<BlockPos> machineSeeds) {
+	/** The cables in geometric order, one list object until the topology changes (ADR-049). */
+	List<BlockPos> cableList() {
 		refreshIfDirty();
-		boolean changed = false;
+		return cableList;
+	}
+
+	/**
+	 * Publish this tick's supplying producers (MOD-214). The producer field is recomputed only when that set
+	 * changes — day and night, fuel running out — which is rare next to every tick.
+	 */
+	void updateLiveEndpoints(Set<BlockPos> supplying) {
+		refreshIfDirty();
 		if (!supplyingProducers.equals(supplying)) {
 			supplyingProducers = orderedCopy(supplying);
 			computeProducerField();
-			changed = true;
-		}
-		if (!flowSinkSeeds.equals(sinkSeeds)) {
-			flowSinkSeeds = orderedCopy(sinkSeeds);
-			computeSinkField();
-			changed = true;
-		}
-		if (!flowMachineSeeds.equals(machineSeeds)) {
-			flowMachineSeeds = orderedCopy(machineSeeds);
-			computeMachineField();
-		}
-		if (changed) {
-			rebuildFlowOrder();
 		}
 	}
 
@@ -253,50 +193,14 @@ final class EnergyTopologyCache {
 
 	/**
 	 * MOD-021 loss distance for a consumer. Deliberately does NOT refresh the cache: it is called from
-	 * inside the distributor's sweep over the live {@link #propagationOrder()} list, and a refresh there
-	 * would {@code clear()+addAll()} that very list mid-iteration. The contract is that
+	 * inside the line tick, while the planner holds the live {@link #cableList()}, and a refresh there
+	 * would rebuild that very list mid-tick. The contract is that
 	 * {@code EnergyNetwork.tick()} has already refreshed (it reads {@link #producers()},
 	 * {@link #consumers()}, {@link #strongestCable()} and calls {@link #updateLiveEndpoints}) before any
 	 * distributor exists.
 	 */
 	int consumerDistance(BlockPos pos) {
 		return consumerDistance.getOrDefault(pos, 0);
-	}
-
-	/**
-	 * The flow potential of a cable, or {@code null} if it is not on the active field. Energy is pulled
-	 * from strictly HIGHER potential to lower, and the sweep visits cables in ascending potential — one
-	 * rule for both modes (MOD-252):
-	 * <ul>
-	 *   <li>sink mode: potential = distance to the nearest waiting sink, so "downhill" is toward demand;</li>
-	 *   <li>fallback: potential = <em>minus</em> the distance to the nearest supplying producer, so
-	 *       "downhill" is away from the source — bit for bit the pre-MOD-252 behaviour (pulling from a
-	 *       strictly smaller producer-distance is exactly pulling from a strictly larger negated one),
-	 *       which is what keeps MOD-070's producer-only line fill unchanged.</li>
-	 * </ul>
-	 *
-	 * <p>Does not refresh the cache — see {@link #consumerDistance(BlockPos)} for why.
-	 */
-	Integer flowPotentialOrNull(BlockPos pos) {
-		return flow.flowPotential(pos);
-	}
-
-	/**
-	 * Distance from a cable to the nearest waiting machine, or {@code null} when no machine is waiting (or
-	 * the cable is off that field). Read only as a fork tie-break in the distribution kernel (MOD-254):
-	 * a claimant whose machine distance is strictly below the donor's is carrying the unit toward a
-	 * machine and outweighs one that is not. Null everywhere on a network with no hungry machine, which
-	 * makes every claimant weigh the same and reproduces the plain proportional split.
-	 *
-	 * <p>Does not refresh the cache — see {@link #consumerDistance(BlockPos)} for why.
-	 */
-	Integer machinePotentialOrNull(BlockPos pos) {
-		return flow.machinePotential(pos);
-	}
-
-	List<BlockPos> propagationOrder() {
-		refreshIfDirty();
-		return flow.propagationOrder();
 	}
 
 	/** True if the network has at least one non-storage-sink producer (a generator that fills the line). */
@@ -387,11 +291,9 @@ final class EnergyTopologyCache {
 			}
 		}
 		cachedStrongestCable = strongest != null ? strongest : CableType.COPPER;
+		cableList = java.util.Collections.unmodifiableList(orderedCables);
 		nodes.clearDirty();
 		computeProducerField();
-		computeSinkField();
-		computeMachineField();
-		rebuildFlowOrder();
 	}
 
 	/**
@@ -404,7 +306,7 @@ final class EnergyTopologyCache {
 	 */
 	private void computeProducerField() {
 		consumerDistance.clear();
-		DistanceField<BlockPos> field = flow.producer();
+		DistanceField<BlockPos> field = producerField;
 		field.clear();
 		// Producer distances are computed whenever there is a source — even with no consumer, so a
 		// producer-only line still fills fully (the fallback field spreads the charge outward from the
@@ -440,49 +342,6 @@ final class EnergyTopologyCache {
 		}
 	}
 
-	/**
-	 * The sink field, seeded from {@link #flowSinkSeeds} — the endpoints that want energy this tick
-	 * (MOD-252). A seed only injects through the faces that can actually ACCEPT energy: a dual-role Battery
-	 * Box must not turn the cable on its output face into a "downhill" target it can never drink from. An
-	 * empty seed set leaves the field empty, which is exactly the MOD-070 fallback case.
-	 */
-	private void computeSinkField() {
-		floodFromSinks(flowSinkSeeds, flow.sink());
-	}
-
-	/**
-	 * The same flood restricted to the machine seeds (MOD-254) — the fork tie-break field behind
-	 * {@link #machinePotentialOrNull}. Never consulted for reachability or sweep order.
-	 */
-	private void computeMachineField() {
-		floodFromSinks(flowMachineSeeds, flow.machine());
-	}
-
-	/** Seed {@code field} at distance 1 on every cable an accepting seed face touches, then flood. */
-	private void floodFromSinks(Set<BlockPos> seeds, DistanceField<BlockPos> field) {
-		field.clear();
-		if (seeds.isEmpty()) {
-			return;
-		}
-		EnergyLookup lookup = EnergyLookup.get();
-		for (BlockPos seed : seeds) {
-			for (Direction dir : DIRECTIONS) {
-				// `dir` runs from the endpoint toward the cable, which is exactly the face key the lookup
-				// wants (mirrors refreshIfDirty's find(level, np, dir.getOpposite())).
-				BlockPos cable = seed.relative(dir);
-				if (!cables.contains(cable)) {
-					continue;
-				}
-				EnergyPort port = lookup.find(level, seed, dir);
-				if (port == null || !port.supportsInsertion()) {
-					continue;
-				}
-				field.seed(cable, 1);
-			}
-		}
-		field.flood();
-	}
-
 	/** The cables one hop from {@code pos}, in {@link Direction} order — the graph the fields flood. */
 	private List<BlockPos> cableNeighbours(BlockPos pos) {
 		List<BlockPos> out = new ArrayList<>(DIRECTIONS.length);
@@ -493,10 +352,5 @@ final class EnergyTopologyCache {
 			}
 		}
 		return out;
-	}
-
-	/** Re-derive the sweep order and the stranded cables after a field changed ({@link FlowField#rebuild}). */
-	private void rebuildFlowOrder() {
-		flow.rebuild(cables);
 	}
 }

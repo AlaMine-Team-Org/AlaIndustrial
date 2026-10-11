@@ -30,7 +30,7 @@ public final class GuiStyle {
 	public static final int LABEL = 0xFF404040;
 	/** A blocking status caption — dark red, the colour of {@code ChatFormatting.DARK_RED}. */
 	public static final int STATUS_BLOCKING = 0xFFAA0000;
-	/** Face of an unselected mode button (the sawmill's four modes). */
+	/** Face of an unselected mode button (the sawmill's mode row). */
 	public static final int BUTTON = 0xFF2B2B2B;
 	/** Face of the selected mode button. */
 	public static final int BUTTON_ACTIVE = 0xFF5A4A21;

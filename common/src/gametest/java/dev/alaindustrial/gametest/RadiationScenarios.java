@@ -15,7 +15,6 @@ import dev.alaindustrial.core.radiation.RadiationCore;
 import dev.alaindustrial.core.radiation.RadiationDose;
 import dev.alaindustrial.core.radiation.RadiationMobs;
 import dev.alaindustrial.core.radiation.RadiationSources;
-import dev.alaindustrial.core.radiation.RadiationTicker;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModDataComponents;
 import dev.alaindustrial.registry.ModEffects;
@@ -63,7 +62,9 @@ import net.minecraft.world.phys.Vec3;
  * <p><b>Every scenario pins the radii to 3 and restores them in a {@code finally}.</b> The gametest
  * server shares one world and lays the structures a few blocks apart, so the shipped six-block radius
  * would reach into a neighbour's rig — the exact class of bug that made MOD-277 red on one loader and
- * green on the other for identical code. Restoring the configured values is part of the contract.
+ * green on the other for identical code. Restoring the configured values is part of the contract. The
+ * one exception is R-RAD-16, which drives nothing itself: the server's own tick hook reads the shipped
+ * radii, and that hook is what it tests.
  *
  * <p><b>What is worth testing here and what is not.</b> The arithmetic of a dose is MC-free and lives
  * in {@code RadiationCoreTest} (L1). What only a world can answer is the part these bodies assert: that
@@ -533,14 +534,20 @@ public final class RadiationScenarios {
 
 	/**
 	 * The LIVE tick chain, not the direct call (MOD-535): a suited villager and a bare control beside
-	 * a fuelled rack, a mock player standing in the level as the anchor, and
-	 * {@code RadiationTicker.tickAll} driven across real ticks. The bare villager MUST convert (the
-	 * chain runs and the rig is hot) while the suited one stays at zero dose and on its feet.
+	 * a fuelled rack, a mock player standing in the level as the anchor, and nothing driving the sweep
+	 * but the server's own tick hook ({@code ServerHookRoster.SERVER_TICK} → {@code RadiationTicker.tickAll}).
+	 * The bare villager MUST convert (the chain runs and the rig is hot) while the suited one stays at
+	 * zero dose and on its feet.
 	 *
 	 * <p>Every other radiation scenario calls {@code RadiationMobs.sweep} directly; this is the only
-	 * one that exercises the loader server-tick wiring end to end. Radii are re-pinned inside each
-	 * driven tick — the sequence body runs after any {@code withIsolatedField} around the setup has
-	 * already restored them.
+	 * one that exercises the loader server-tick wiring end to end. It therefore runs at the SHIPPED
+	 * radii — the hook reads them at tick time, so there is nothing to pin. The body used to call
+	 * {@code tickAll} itself as well, which made the test pass with the hook unwired (MOD-794).
+	 *
+	 * <p><b>Both villagers are frozen ({@code NoAI}).</b> A live villager walks off the 0.75-block top of
+	 * the hanging rack within a second; in the far corner of the 8×8 box its eyes are out of the source
+	 * radius and the control never converts — the one red run of MOD-794. Radiation needs no mob goals: the
+	 * dose, the hit and {@code convertTo} all work on a frozen mob.
 	 *
 	 * @implements R-RAD-16 — see docs/testing/RULES.md
 	 */
@@ -548,24 +555,26 @@ public final class RadiationScenarios {
 		placeFuelledRack(helper);
 		ServerPlayer anchor = AlaGameTestHelper.survivalPlayer(helper);
 		// The sweep is anchored on PLAYERS; put the mock right beside the villagers so both are
-		// inside the (pinned, 3-block) sweep box whichever corner the mock spawned in.
+		// inside the sweep box whichever corner the mock spawned in.
 		BlockPos at = helper.absolutePos(BYSTANDER);
 		anchor.snapTo(at.getX() + 0.5, at.getY(), at.getZ() + 0.5, 0.0f, 0.0f);
 		Villager suited = helper.spawn(EntityTypes.VILLAGER, BYSTANDER);
+		freeze(suited);
 		suited.setItemSlot(EquipmentSlot.HEAD, new ItemStack(ModContent.SHIELDING_HELMET.get()));
 		suited.setItemSlot(EquipmentSlot.CHEST, new ItemStack(ModContent.SHIELDING_CHESTPLATE.get()));
 		suited.setItemSlot(EquipmentSlot.LEGS, new ItemStack(ModContent.SHIELDING_LEGGINGS.get()));
 		suited.setItemSlot(EquipmentSlot.FEET, new ItemStack(ModContent.SHIELDING_BOOTS.get()));
 		Villager bare = helper.spawn(EntityTypes.VILLAGER, RACK.above());
+		freeze(bare);
+		int startTick = helper.getLevel().getServer().getTickCount();
 
 		helper.startSequence()
-				.thenExecuteFor(100, () -> withIsolatedField(() ->
-						RadiationTicker.tickAll(helper.getLevel().getServer())))
+				.thenIdle(140)
 				.thenExecute(() -> {
 					if (bare.isAlive() && !bare.isRemoved()) {
 						helper.fail("the bare control villager must convert — if it does not, neither "
 								+ "did the chain run nor the rig radiate, and the zeros below prove "
-								+ "nothing");
+								+ "nothing. " + controlReport(helper, bare, sweepMoments(helper, startTick)));
 						return;
 					}
 					int dose = RadiationDose.of(suited);
@@ -579,6 +588,30 @@ public final class RadiationScenarios {
 					}
 				})
 				.thenSucceed();
+	}
+
+	private static void freeze(Villager villager) {
+		villager.setNoAi(true);
+		villager.setPersistenceRequired();
+	}
+
+	/** How many radiation sweep moments the server has passed since {@code startTick}. */
+	private static int sweepMoments(GameTestHelper helper, int startTick) {
+		int interval = Math.max(1, RadiationConfig.radiationTickInterval);
+		return helper.getLevel().getServer().getTickCount() / interval - startTick / interval;
+	}
+
+	/** Where the control stood and what it had absorbed — so a red run names its own cause (MOD-794). */
+	private static String controlReport(GameTestHelper helper, LivingEntity control, int sweeps) {
+		Vec3 eyes = control.getEyePosition();
+		Vec3 rack = Vec3.atCenterOf(helper.absolutePos(RACK));
+		Vec3 rel = helper.relativeVec(control.position());
+		return String.format(java.util.Locale.ROOT,
+				"Control at rel (%.2f, %.2f, %.2f), eyes %.2f blocks from the rack centre, dose %d of %d, "
+						+ "%d sweep moment(s) in the window (interval %d, shipped radius %d).",
+				rel.x, rel.y, rel.z, eyes.distanceTo(rack), RadiationDose.of(control),
+				RadiationConfig.radiationDoseCapacity, sweeps, RadiationConfig.radiationTickInterval,
+				RadiationConfig.radiationSourceRadius);
 	}
 
 	/**

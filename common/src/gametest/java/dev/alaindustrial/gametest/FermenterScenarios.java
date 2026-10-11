@@ -7,6 +7,7 @@ import dev.alaindustrial.block.entity.FermenterBlockEntity;
 import dev.alaindustrial.core.fluid.FluidHolder;
 import dev.alaindustrial.core.machine.MachineRates;
 import dev.alaindustrial.registry.ModContent;
+import dev.alaindustrial.registry.ModTags;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -54,7 +55,9 @@ public final class FermenterScenarios {
 				RosterEntry.of(FermenterScenarios::con01DryTankBlocksWork, "fermenter_dry_tank_blocks_work")
 						.fabricId("FermenterGameTest", "tcFerm001Con01_dryTankBlocksWork").ticks(500),
 				RosterEntry.of(FermenterScenarios::con02FullBiofuelTankStalls, "fermenter_full_biofuel_tank_stalls")
-						.fabricId("FermenterGameTest", "tcFerm001Con02_fullBiofuelTankStalls").ticks(500));
+						.fabricId("FermenterGameTest", "tcFerm001Con02_fullBiofuelTankStalls").ticks(500),
+				RosterEntry.of(FermenterScenarios::fun03SawdustBrewsAsPoorTier, "fermenter_sawdust_brews_as_poor_tier")
+						.ticks(500));
 
 		private Roster() {}
 	}
@@ -134,6 +137,42 @@ public final class FermenterScenarios {
 		}
 		if (eaten % 4 != 0) {
 			helper.fail("the poor tier must consume four per batch, but " + eaten + " went missing");
+		}
+		helper.succeed();
+	}
+
+	// ── FUN03: sawdust is poor-tier stock (MOD-655) ─────────────────────────────────────────────────
+
+	/**
+	 * The sawmill's sawdust ferments at the poor tier (MOD-655). The yield alone cannot tell: the block entity pays
+	 * the poor yield to anything that is neither common nor rich, so a sawdust filed in no tier would still brew 20 mB
+	 * if some recipe matched it. What tells are the two things that differ between tiers: the tier tags themselves
+	 * (sawdust is in {@code fermenter_input_poor} through {@code #c:dusts/wood} and in no richer tier), and the
+	 * batch size. Six sawdust are one poor batch of four with two left over; a common batch (two) would leave none
+	 * or eat in twos past four, a rich one (one) would eat all six.
+	 *
+	 * @implements TC-FERM-001-FUN03 — sawdust brews at the poor tier: tagged poor only, four per batch, poor yield.
+	 */
+	public static void fun03SawdustBrewsAsPoorTier(GameTestHelper helper) {
+		ItemStack sawdust = new ItemStack(ModContent.SAWDUST.get());
+		if (!sawdust.is(ModTags.Items.FERMENTER_INPUT_POOR) || sawdust.is(ModTags.Items.FERMENTER_INPUT_COMMON)
+				|| sawdust.is(ModTags.Items.FERMENTER_INPUT_RICH)) {
+			helper.fail("sawdust must be in the poor fermenter tier only: poor=" + sawdust.is(
+					ModTags.Items.FERMENTER_INPUT_POOR) + " common=" + sawdust.is(ModTags.Items.FERMENTER_INPUT_COMMON)
+					+ " rich=" + sawdust.is(ModTags.Items.FERMENTER_INPUT_RICH) + " (check #c:dusts/wood)");
+			return;
+		}
+		FermenterBlockEntity be = stocked(helper, sawdust.copyWithCount(6));
+		drivePowered(be, helper, driveTicks(), AMPLE_EU);
+		int eaten = 6 - be.getItem(FermenterBlockEntity.ORGANIC_SLOT).getCount();
+		if (eaten != 4) {
+			helper.fail("six sawdust must make exactly one poor batch of four, but " + eaten + " were eaten");
+			return;
+		}
+		if (be.biofuelTank.amount != Config.fermenterBiofuelPoor) {
+			helper.fail("a sawdust batch brewed " + be.biofuelTank.amount + " mB, expected the poor tier's "
+					+ Config.fermenterBiofuelPoor + " mB");
+			return;
 		}
 		helper.succeed();
 	}

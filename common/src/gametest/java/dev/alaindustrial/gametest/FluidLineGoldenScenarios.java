@@ -23,9 +23,8 @@ import net.minecraft.world.level.material.Fluids;
  *
  * <p>The witness for moving {@code FluidNetwork.distanceFromHungrySinks} onto a shared distance field: the
  * field decides which segment hands its contents to which, so a changed field moves these numbers. The fork
- * is symmetric so that segments at equal distance never compete for one neighbour — the sweep breaks such
- * ties on {@code BlockPos.asLong}, which is not translation-invariant, and a golden that depended on it
- * would differ between the two lanes' structure positions (recorded as a finding of MOD-715).
+ * is symmetric so that segments at equal distance never compete for one neighbour; how such ties are broken
+ * (x, y, z since MOD-733, translation-invariant) is pinned by {@code FluidTieBreakTranslationScenarios}.
  *
  * <p>The golden {@link FluidLineGolden} is rewritten only by the command in its javadoc (ADR-032).
  */

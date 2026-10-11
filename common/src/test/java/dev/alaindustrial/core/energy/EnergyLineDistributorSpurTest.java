@@ -15,10 +15,9 @@ import java.util.function.UnaryOperator;
 import org.junit.jupiter.api.Test;
 
 /**
- * L1 tests for a dead-end spur off a cable in the middle of a running corridor (MOD-730, ADR-045): the
- * stranded fill takes only what a donor holds over what it forwarded this tick, and at equal potential the
- * sweep visits the corridor before the spur. Beside {@code EnergyLineDistributorCoreTest} (the kernel's own
- * rules) because the full-tick case composes the kernel with the real {@link FlowField}.
+ * L1 test for a dead-end spur off a cable in the middle of a running line (MOD-730, ADR-049): the spur fills only
+ * from output nobody can take, out of what a cable holds beyond what the plan runs through it, so it never takes a
+ * packet on its way to a hungry machine, and a full spur stays still.
  *
  * <p>Positions are {@link Cell}s of an integer grid whose six faces are numbered the way the network numbers
  * a block's ({@code Direction} order — down, up, north, south, west, east).
@@ -75,63 +74,27 @@ class EnergyLineDistributorSpurTest {
 	}
 
 	@Test
-	void fillStrandedOneHop_leavesTheJunctionThePacketItForwardedThisTick() {
-		// Machine at x=0; corridor C1 (x=1) - J (x=2) - T (x=3); generator at x=4; spur S south of J. The
-		// potentials are given by hand with T listed before S, so the sweep is already corridor-first: this
-		// isolates the fill's rule. In one tick J forwards its packet to C1 and T refills it — J is brim-full
-		// and C1 below it is full too, which is exactly what a stalled corridor looked like to the fill.
-		Cell c1 = at(1, 0, 0);
-		Cell junction = at(2, 0, 0);
-		Cell trunk = at(3, 0, 0);
-		Cell spur = at(2, 0, 1);
-		cable(c1, 0);
-		cable(junction, CABLE);
-		cable(trunk, CABLE);
-		cable(spur, 0);
-		Map<Cell, Integer> potential = Map.of(c1, 1, junction, 2, trunk, 3, spur, 3);
-		Map<Cell, Integer> producerDistance = Map.of(trunk, 1, junction, 2, c1, 3, spur, 3);
-		EnergyLineDistributor<Cell> d = new EnergyLineDistributor<>(new LineView<>(GRID, cables::contains,
-				buffers::get, pos -> 0, potential::get, pos -> null, List.of(c1, junction, trunk, spur),
-				(p, f) -> true, (p, f) -> true, List.of(spur), producerDistance::get));
-
-		d.chargeAndPropagateLine(sources(at(4, 0, 0), generator()), List.of(),
-				DischargePlan.backupOnly(CABLE, 100_000L), PACKET, txn, 0);
-
-		assertEquals(CABLE, amount(c1), "precondition: the junction forwarded its packet downhill");
-		assertEquals(CABLE, amount(junction), "the junction keeps the next packet the trunk just handed it");
-		assertEquals(0, amount(spur), "a packet on its way to the machine is not surplus");
-	}
-
-	@Test
 	void fullTick_aSpurOffAMidCorridorJunctionDoesNotHalveTheMachine() {
-		// Generator at x=0, bus M1..M4 along X, machine at x=5, spur S1..S3 south (+z) off M2. The real
-		// FlowField, so the sweep order is the flood's own: from the machine the flood reaches M2 and lists
-		// SOUTH (the spur) before WEST (the corridor) — the orientation that halved delivery before MOD-730.
+		// Generator at x=0, bus M1..M4 along X, machine at x=5, spur S1..S3 south (+z) off M2.
 		List<Cell> bus = List.of(at(1, 0, 0), at(2, 0, 0), at(3, 0, 0), at(4, 0, 0));
 		List<Cell> spur = List.of(at(2, 0, 1), at(2, 0, 2), at(2, 0, 3));
 		bus.forEach(c -> cable(c, 0));
 		spur.forEach(c -> cable(c, 0));
-		FlowField<Cell> flow = new FlowField<>(cell -> {
-			List<Cell> out = new ArrayList<>();
-			for (UnaryOperator<Cell> face : GRID) {
-				if (cables.contains(face.apply(cell))) {
-					out.add(face.apply(cell));
-				}
-			}
-			return out;
-		}, Comparator.comparingInt(Cell::x).thenComparingInt(Cell::y).thenComparingInt(Cell::z));
-		flow.producer().seed(bus.get(0), 1);
-		flow.producer().flood();
-		flow.sink().seed(bus.get(3), 1);
-		flow.sink().flood();
-		flow.machine().seed(bus.get(3), 1);
-		flow.machine().flood();
-		flow.rebuild(cables);
-		assertEquals(new LinkedHashSet<>(spur), new LinkedHashSet<>(flow.strandedOrder()),
-				"precondition: the whole spur is stranded");
+		dev.alaindustrial.core.net.DistanceField<Cell> producer = new dev.alaindustrial.core.net.DistanceField<>(
+				cell -> {
+					List<Cell> out = new ArrayList<>();
+					for (UnaryOperator<Cell> face : GRID) {
+						if (cables.contains(face.apply(cell))) {
+							out.add(face.apply(cell));
+						}
+					}
+					return out;
+				}, Comparator.comparingInt(Cell::x).thenComparingInt(Cell::y).thenComparingInt(Cell::z));
+		producer.seed(bus.get(0), 1);
+		producer.flood();
 		EnergyLineDistributor<Cell> d = new EnergyLineDistributor<>(new LineView<>(GRID, cables::contains,
-				buffers::get, pos -> 4, flow::flowPotential, flow::machinePotential, flow.propagationOrder(),
-				(p, f) -> true, (p, f) -> true, flow.strandedOrder(), flow::producerDistance));
+				buffers::get, pos -> 4, producer::distanceOrNull, List.copyOf(cables), (p, f) -> true, (p, f) -> true,
+				new LinePlanner<>()));
 		Cell machinePos = at(5, 0, 0);
 		EnergyBuffer machine = new EnergyBuffer(100, 100, 0, () -> {
 		});
@@ -142,9 +105,8 @@ class EnergyLineDistributorSpurTest {
 			long room = machine.getCapacity() - machine.getAmount();
 			List<EnergyLineDistributor.LiveConsumer<Cell>> consumer =
 					List.of(new EnergyLineDistributor.LiveConsumer<>(machinePos, machine, room));
-			long delivered = d.serveConsumersFromLine(consumer, PACKET, 0.0, txn, tick);
-			d.chargeAndPropagateLine(sources(at(0, 0, 0), gen), List.of(), DischargePlan.backupOnly(room, 100_000L),
-					PACKET, txn, tick);
+			long delivered = d.distribute(consumer, List.of(), List.of(), 0L, sources(at(0, 0, 0), gen), PACKET, 0.0,
+					txn, tick).delivered();
 			machine.drainInternal(2);
 			long[] side = spur.stream().mapToLong(this::amount).toArray();
 			if (room >= CABLE) {

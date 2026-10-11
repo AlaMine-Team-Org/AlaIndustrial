@@ -21,6 +21,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -496,14 +497,24 @@ public final class RadiationSources {
 						* RadiationConfig.radiationDoseHighPerItem;
 	}
 
-	/** Items of a tag in the player's own inventory, containers opened to the configured depth. */
+	/**
+	 * Items of a tag on the player, containers opened to the configured depth: main + hotbar
+	 * ({@code getNonEquipmentItems()}), then the off-hand and armour, which live in the equipment (MOD-788).
+	 */
 	public static int carried(Player player, TagKey<Item> tag) {
 		int count = 0;
 		for (ItemStack stack : player.getInventory().getNonEquipmentItems()) {
 			count += countTagged(stack, tag, RadiationConfig.radiationContainerDepth);
 		}
+		for (EquipmentSlot slot : CARRIED_EQUIPMENT) {
+			count += countTagged(player.getItemBySlot(slot), tag, RadiationConfig.radiationContainerDepth);
+		}
 		return count;
 	}
+
+	/** Equipment outside {@code getNonEquipmentItems()}; the main hand is a hotbar slot, already counted. */
+	private static final EquipmentSlot[] CARRIED_EQUIPMENT = {
+			EquipmentSlot.OFFHAND, EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
 
 	private static boolean hasLineOfSight(ServerLevel level, Entity viewer, Vec3 from, Vec3 to) {
 		BlockHitResult hit = level.clip(new ClipContext(from, to, ClipContext.Block.COLLIDER,

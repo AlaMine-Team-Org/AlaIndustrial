@@ -1487,7 +1487,7 @@
             {
               "type": "text",
               "title": "Sägewerk",
-              "text": "Sägt jedes Holz zu Brettern, Stöcken, Stufen oder Treppen — mit höherer Ausbeute als von Hand. Vier umschaltbare Modi, läuft mit EU."
+              "text": "Sägt jedes Holz zu Brettern, Stöcken, Stufen oder Treppen mit höherer Ausbeute als von Hand, im fünften Modus zu Sägemehl. Fünf umschaltbare Modi, läuft mit EU."
             },
             {
               "type": "stats",
@@ -2834,6 +2834,25 @@
           ]
         },
         {
+          "id": "sawdust",
+          "title": "Sägemehl",
+          "icon": "alaindustrial:sawdust",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Sägemehl",
+              "text": "Das Produkt des fünften Sägewerkmodus — 6 Sägemehl pro Stamm. Billiger organischer Rohstoff für den Fermenter, brennbarer Anteil im Recycler und ein kurzer Brennstoff, der wie Bambus brennt."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 160 EU/Vorgang"
+              ]
+            }
+          ]
+        },
+        {
           "id": "palladium_ore",
           "title": "Palladiumerz",
           "icon": "alaindustrial:palladium_ore",
@@ -3291,6 +3310,43 @@
           ]
         },
         {
+          "id": "tempered_iron_bars",
+          "title": "Gehärtetes Eisengitter",
+          "icon": "alaindustrial:tempered_iron_bars",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Gehärtetes Eisengitter",
+              "text": "Vier Bauteile aus gehärtetem Eisen nach Vanilla-Vorbild — Gitter, Leiter, Falltür und Kette. Sie verhalten sich wie Vanilla und sehen aus wie der Stahl der Mod."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Puffer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tempered_iron_bars",
+              "result_count": 16
+            }
+          ]
+        },
+        {
           "id": "reactor_button",
           "title": "Reaktorknopf",
           "icon": "alaindustrial:reactor_button",
@@ -3435,6 +3491,43 @@
               ],
               "result_id": "alaindustrial:reactor_glass",
               "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reinforced_glass",
+          "title": "Verstärktes Glas",
+          "icon": "alaindustrial:reinforced_glass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Verstärktes Glas",
+              "text": "Klares Glas in einem Rahmen aus gehärtetem Eisen — bricht wie Stein und hält einer Creeper- oder TNT-Explosion stand. Ein Baublock und eine Zutat für spätere Rezepte."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Puffer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:reinforced_glass",
+              "result_count": 4
             }
           ]
         },
@@ -3737,6 +3830,43 @@
               ],
               "result_id": "alaindustrial:industrial_workbench",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "industrial_light",
+          "title": "Industrieleuchte",
+          "icon": "alaindustrial:industrial_light",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Industrieleuchte",
+              "text": "Eine winzige Leuchte von 4×4 Pixeln mit warmem Licht der Stufe 15 — auf Boden, Decke oder jede Wand. Kein Menü, keine Energie."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Puffer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "minecraft:glass",
+                "",
+                "",
+                "minecraft:glowstone_dust",
+                "",
+                "",
+                "alaindustrial:tempered_iron_plate",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:industrial_light",
+              "result_count": 4
             }
           ]
         },

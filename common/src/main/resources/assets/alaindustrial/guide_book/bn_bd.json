@@ -1487,7 +1487,7 @@
             {
               "type": "text",
               "title": "করাত কল",
-              "text": "যেকোনো কাঠ কেটে তক্তা, লাঠি, স্ল্যাব বা সিঁড়ি বানায়, হাতে তৈরির চেয়ে বেশি ফলনে। চারটি বদলানো যায় এমন মোড, EU-তে চলে।"
+              "text": "যেকোনো কাঠ কেটে তক্তা, লাঠি, স্ল্যাব বা সিঁড়ি বানায়, হাতে তৈরির চেয়ে বেশি ফলনে, আর পঞ্চম মোডে করাতের গুঁড়ো বানায়। পাঁচটি বদলানো যায় এমন মোড, EU-তে চলে।"
             },
             {
               "type": "stats",
@@ -2834,6 +2834,25 @@
           ]
         },
         {
+          "id": "sawdust",
+          "title": "করাতের গুঁড়ো",
+          "icon": "alaindustrial:sawdust",
+          "pages": [
+            {
+              "type": "text",
+              "title": "করাতের গুঁড়ো",
+              "text": "করাতকলের পঞ্চম মোডের পণ্য — প্রতি গুঁড়ি থেকে 6টি করাতের গুঁড়ো। গাঁজন ট্যাংকের জন্য সস্তা জৈব কাঁচামাল, পুনর্ব্যবহারকারীর দাহ্য অংশ এবং বাঁশের মতো জ্বলা স্বল্পস্থায়ী জ্বালানি।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "শক্তি: 160 EU/ক্রিয়া"
+              ]
+            }
+          ]
+        },
+        {
           "id": "palladium_ore",
           "title": "প্যালাডিয়াম আকরিক",
           "icon": "alaindustrial:palladium_ore",
@@ -3291,6 +3310,43 @@
           ]
         },
         {
+          "id": "tempered_iron_bars",
+          "title": "টেম্পার্ড আয়রন শিক",
+          "icon": "alaindustrial:tempered_iron_bars",
+          "pages": [
+            {
+              "type": "text",
+              "title": "টেম্পার্ড আয়রন শিক",
+              "text": "ভ্যানিলার আদলে টেম্পার্ড লোহার চারটি নির্মাণ ব্লক — গরাদ, মই, ট্র্যাপডোর ও শিকল। আচরণ ভ্যানিলার মতো, দেখতে মডের ইস্পাতের মতো।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "বাফার: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tempered_iron_bars",
+              "result_count": 16
+            }
+          ]
+        },
+        {
           "id": "reactor_button",
           "title": "রিঅ্যাক্টর বোতাম",
           "icon": "alaindustrial:reactor_button",
@@ -3435,6 +3491,43 @@
               ],
               "result_id": "alaindustrial:reactor_glass",
               "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reinforced_glass",
+          "title": "মজবুত কাচ",
+          "icon": "alaindustrial:reinforced_glass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "মজবুত কাচ",
+              "text": "টেম্পার্ড লোহার ফ্রেমে স্বচ্ছ কাচ — পাথরের মতো ভাঙে এবং ক্রিপার বা TNT বিস্ফোরণ সহ্য করে। একটি নির্মাণ ব্লক এবং পরের রেসিপির উপকরণ।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "বাফার: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:reinforced_glass",
+              "result_count": 4
             }
           ]
         },
@@ -3737,6 +3830,43 @@
               ],
               "result_id": "alaindustrial:industrial_workbench",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "industrial_light",
+          "title": "ইন্ডাস্ট্রিয়াল বাতি",
+          "icon": "alaindustrial:industrial_light",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ইন্ডাস্ট্রিয়াল বাতি",
+              "text": "4×4 পিক্সেলের ছোট্ট একটি বাতি, উষ্ণ আলো মাত্রা 15 — মেঝে, ছাদ বা যেকোনো দেয়ালে বসানো যায়। মেনু নেই, শক্তি লাগে না।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "বাফার: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "minecraft:glass",
+                "",
+                "",
+                "minecraft:glowstone_dust",
+                "",
+                "",
+                "alaindustrial:tempered_iron_plate",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:industrial_light",
+              "result_count": 4
             }
           ]
         },

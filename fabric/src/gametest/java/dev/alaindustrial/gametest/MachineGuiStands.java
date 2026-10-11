@@ -194,7 +194,7 @@ public final class MachineGuiStands {
                 CAP, CAP, SAW, SAW);
 
         // The sawmill's status row is the family's one exception: MachineScreen.STATUS_ROW_Y (61) is the
-        // middle of this screen's four mode buttons, so the caption sits higher, in the gap above them.
+        // middle of this screen's row of mode buttons, so the caption sits higher, in the gap above them.
         // That gap is 13 px against an 8 px glyph — narrow enough that it is worth a frame, not an argument.
         shootProcessing(context, "gui_sawmill_output_blocked",
                 ModContent.SAWMILL_MENU.get(), "Sawmill",

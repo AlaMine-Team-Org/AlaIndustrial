@@ -30,7 +30,7 @@ import java.util.function.Predicate;
  *
  * <p><b>The mutual exclusion lives in two places, on purpose (ADR-004).</b> {@link #decide} computes a later
  * channel only when the earlier ones are closed; the record itself refuses to exist with more than one
- * channel open, and {@code EnergyLineDistributor.chargeAndPropagateLine} still serves the channels in order
+ * channel open, and {@code EnergyLineDistributor.dischargeStorage} still serves the channels in order
  * and stops after the first that is open. A fourth channel is one more component, one more branch in
  * {@link #decide}, one more stage in the distributor — and this constructor tells whoever adds it if the
  * exclusion was forgotten in either place.

@@ -187,6 +187,14 @@ pitest {
                      // relation it guards — advanced reaches further, only advanced pulls experience —
                      // is what a wrong config edit would break silently.
                      'dev.alaindustrial.item.tool.MagnetTier',
+                     // MOD-799: the energy stand's rules and the readings they judge — Minecraft-free on
+                     // purpose, so EnergyStandExpectationTest shows each rule failing on its violation.
+                     'dev.alaindustrial.command.demo.energy.Expectation',
+                     'dev.alaindustrial.command.demo.energy.Expectation$*',
+                     'dev.alaindustrial.command.demo.energy.BayReading',
+                     'dev.alaindustrial.command.demo.energy.ProbeReading',
+                     'dev.alaindustrial.command.demo.energy.ProbeKind',
+                     'dev.alaindustrial.command.demo.energy.Bay',
                      // MOD-707: the electric tools' energy catalog, same shape as MagnetTier
                      // (ElectricToolTierTest).
                      'dev.alaindustrial.item.tool.ElectricToolTier',
@@ -218,6 +226,9 @@ pitest {
                      // place the ladder's ids and its live Config reads are stated, and both loaders
                      // register from it. Covered by CrystalTierTest.
                      'dev.alaindustrial.item.energy.CrystalTier',
+                     // MOD-790: the powered items' buffers from one source — ToolConfig for the server's logic,
+                     // ServerBalance for what the client draws. Covered by ItemBuffersTest.
+                     'dev.alaindustrial.item.energy.ItemBuffers',
                      'dev.alaindustrial.item.material.TemperedIronToolStats',
                      'dev.alaindustrial.item.misc.TooltipKeys',
                      // MOD-710 (ADR-034): the powered-tool knob holder. Minecraft-free like every holder and,
@@ -589,6 +600,9 @@ pitest {
             // stacks only; the ceiling it applies is RadiationCore.containerLeak, mutated where it lives.
             // Covered by the L2 R-RAD-26..29 scenarios on both loaders.
             'dev.alaindustrial.core.radiation.RadiationVehicles',
+            // MOD-788: items held by entities (frames, armour stands, mobs' hands, armour and inventories) —
+            // MC entity types and item stacks only; covered by the L2 R-RAD-32..38 scenarios on both loaders.
+            'dev.alaindustrial.core.radiation.RadiationHolders',
             // MOD-796: compacted uranium — item weights by tag and the palette sweep for placed blocks; reads
             // ItemStack and LevelChunkSection only, the cap is a plain min. Covered by the L2 metal-family
             // radiation scenarios on both loaders.

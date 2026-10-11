@@ -4,6 +4,7 @@ import dev.alaindustrial.Config;
 import dev.alaindustrial.block.MonitorCoreBlock;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.core.energy.PerTickDemand;
 import dev.alaindustrial.core.monitor.MonitorNetworkManager;
 import dev.alaindustrial.item.misc.CapacityCardItem;
 import dev.alaindustrial.registry.ModContent;
@@ -38,7 +39,7 @@ import net.minecraft.world.level.storage.ValueOutput;
  * not a place to keep one. That is the whole distance between this system and a digital storage
  * network.
  */
-public class MonitorCoreBlockEntity extends EnergyBlockEntity implements Container, MenuProvider {
+public class MonitorCoreBlockEntity extends EnergyBlockEntity implements Container, MenuProvider, PerTickDemand {
 
 	/** Five to a side on the model — the rack the player reads at a glance. */
 	public static final int CARD_SLOTS = 10;
@@ -105,6 +106,18 @@ public class MonitorCoreBlockEntity extends EnergyBlockEntity implements Contain
 	public int upkeepPerTick() {
 		return Math.max(0, Config.monitorCoreIdleEuPerTick)
 				+ servedPanels * Math.max(0, Config.monitorPanelEuPerTick);
+	}
+
+	/**
+	 * Its upkeep per tick, for the network's per-tick priority (MOD-789, ADR-049) — doubled until the buffer holds
+	 * one debit interval's upkeep: with no reserve, one tick the line pays short would black the wall out and the
+	 * debit would drink what is left (review of Variant 1).
+	 */
+	@Override
+	public long perTickDemand() {
+		long upkeep = Math.max(1, upkeepPerTick());
+		long reserve = Math.min(getEnergyStorage().getCapacity(), upkeep * UPKEEP_INTERVAL_TICKS);
+		return getEnergyStorage().getAmount() < reserve ? 2 * upkeep : upkeep;
 	}
 
 	/** Facts the network owns, handed over once per scan so the screen can show them. */

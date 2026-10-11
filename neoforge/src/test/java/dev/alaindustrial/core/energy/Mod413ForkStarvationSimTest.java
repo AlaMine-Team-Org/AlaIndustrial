@@ -2,14 +2,11 @@ package dev.alaindustrial.core.energy;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -24,19 +21,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * MOD-413 regression scenarios — the exact player rig from the bug report, driven for thousands of
- * ticks through the REAL {@link EnergyLineDistributor} with a faithful replica of
- * {@link EnergyNetwork#tick()}'s orchestration and {@link EnergyTopologyCache}'s BFS fields (the
- * cache itself needs a live {@code ServerLevel}; the replica mirrors its seeding, flood and ordering
- * rules — if those change, update {@link Sim} in step).
+ * ticks through the REAL {@link EnergyLineDistributor} and {@link LinePlanner} (ADR-049), with a replica of
+ * {@link EnergyNetwork#tick()}'s orchestration and of {@link EnergyTopologyCache}'s producer field (the cache
+ * itself needs a live {@code ServerLevel}; if its seeding changes, update {@link Sim} in step).
  *
  * <p>Rig (extracted from the world save's region files, 2026-08-13): solar panel → 4-cable line →
  * T-junction → one cable north to macerator A, one cable south to macerator B. A symmetric fork with
  * identical machines. Observed in game before the fix: A charged to 800/800 while B sat at 24/800
  * forever with the whole line saturated behind it.
  *
- * <p>Pins both MOD-413 defects end to end: the greedy {@code EnergyShare.split} remainder (machine A
- * took 100% of a trickle supply) and the stranded-fill reversal (the spur toward the topped-off
- * machine swapped one packet with the junction every tick, freezing the network solid).
+ * <p>Pins both MOD-413 defects end to end: a trickle supply must not go to machine A only, and a full machine on
+ * one branch must not freeze the other branch.
  */
 @ExtendWith(EphemeralTestServerProvider.class)
 @ExtendWith(StopEphemeralServerBeforeFmlTeardown.class)
@@ -100,17 +95,13 @@ class Mod413ForkStarvationSimTest {
 		final EnergyBuffer machineB = new EnergyBuffer(MACHINE_BUFFER, MACHINE_MAX_INSERT, 0, () -> {
 		});
 
-		// topology-cache replica state
-		final Map<BlockPos, Integer> producerDistance = new LinkedHashMap<>();
-		final Map<BlockPos, Integer> sinkDistance = new LinkedHashMap<>();
-		final Map<BlockPos, Integer> machineDistance = new LinkedHashMap<>();
+		// topology-cache replica state: the producer field, and production's planner kept across ticks (ADR-049)
+		final dev.alaindustrial.core.net.DistanceField<BlockPos> producer =
+				new dev.alaindustrial.core.net.DistanceField<>(this::cableNeighbours,
+						EnergyTopologyCache.BLOCK_POS_ORDER);
+		final LinePlanner<BlockPos> planner = new LinePlanner<>();
+		List<BlockPos> cableList = List.of();
 		final Map<BlockPos, Integer> consumerDistance = new LinkedHashMap<>();
-		final List<BlockPos> propagationOrder = new ArrayList<>();
-		final List<BlockPos> strandedFillOrder = new ArrayList<>();
-		boolean sinkMode;
-		Set<BlockPos> supplyingProducers = Set.of();
-		Set<BlockPos> flowSinkSeeds = Set.of();
-		Set<BlockPos> flowMachineSeeds = Set.of();
 		int producerCursor;
 
 		Sim() {
@@ -130,139 +121,49 @@ class Mod413ForkStarvationSimTest {
 
 		// --- EnergyTopologyCache replicas -------------------------------------------------------
 
-		private void floodFrom(Queue<BlockPos> queue, Map<BlockPos, Integer> dist) {
-			while (!queue.isEmpty()) {
-				BlockPos cur = queue.poll();
-				int next = dist.get(cur) + 1;
-				for (Direction dir : DIRECTIONS) {
-					BlockPos np = cur.relative(dir);
-					if (cables.contains(np) && dist.putIfAbsent(np, next) == null) {
-						queue.add(np);
-					}
-				}
-			}
-		}
-
-		private void computeProducerField() {
-			consumerDistance.clear();
-			producerDistance.clear();
-			// single producer (the panel); seeded from it when supplying, from all producers otherwise —
-			// with one producer both filters resolve to the same seed
-			Queue<BlockPos> queue = new ArrayDeque<>();
+		private List<BlockPos> cableNeighbours(BlockPos pos) {
+			List<BlockPos> out = new ArrayList<>(DIRECTIONS.length);
 			for (Direction dir : DIRECTIONS) {
-				BlockPos cable = solarPos.relative(dir);
-				if (cables.contains(cable) && producerDistance.putIfAbsent(cable, 1) == null) {
-					queue.add(cable);
+				BlockPos np = pos.relative(dir);
+				if (cables.contains(np)) {
+					out.add(np);
 				}
 			}
-			floodFrom(queue, producerDistance);
-			for (BlockPos consumer : List.of(machineAPos, machineBPos)) {
-				int best = 0;
-				for (Direction dir : DIRECTIONS) {
-					Integer d = producerDistance.get(consumer.relative(dir));
-					if (d != null && (best == 0 || d < best)) {
-						best = d;
-					}
-				}
-				if (best > 0) {
-					consumerDistance.put(consumer, best);
-				}
-			}
+			return out;
 		}
 
-		private void floodFromSinks(Set<BlockPos> seeds, Map<BlockPos, Integer> dist) {
-			dist.clear();
-			if (seeds.isEmpty()) {
-				return;
-			}
-			Queue<BlockPos> queue = new ArrayDeque<>();
+		private void seedAround(Iterable<BlockPos> seeds, dev.alaindustrial.core.net.DistanceField<BlockPos> field) {
+			field.clear();
 			for (BlockPos seed : seeds) {
 				for (Direction dir : DIRECTIONS) {
 					BlockPos cable = seed.relative(dir);
-					if (cables.contains(cable) && dist.putIfAbsent(cable, 1) == null) {
-						queue.add(cable);
+					if (cables.contains(cable)) {
+						field.seed(cable, 1);
 					}
 				}
 			}
-			floodFrom(queue, dist);
+			field.flood();
 		}
 
-		private void rebuildFlowOrder() {
-			sinkMode = !sinkDistance.isEmpty();
-			propagationOrder.clear();
-			if (sinkMode) {
-				propagationOrder.addAll(sinkDistance.keySet());
-				propagationOrder.sort((a, b) -> Integer.compare(sinkDistance.get(a), sinkDistance.get(b)));
-			} else {
-				propagationOrder.addAll(producerDistance.keySet());
-				propagationOrder.sort((a, b) -> Integer.compare(producerDistance.get(b), producerDistance.get(a)));
-			}
-			rebuildStrandedOrder();
-		}
-
-		private void rebuildStrandedOrder() {
-			strandedFillOrder.clear();
-			if (!sinkMode || producerDistance.isEmpty()) {
-				return;
-			}
-			Set<BlockPos> reachable = new LinkedHashSet<>();
-			Queue<BlockPos> queue = new ArrayDeque<>();
-			for (Map.Entry<BlockPos, Integer> entry : producerDistance.entrySet()) {
-				if (entry.getValue() == 1 && sinkDistance.containsKey(entry.getKey())
-						&& reachable.add(entry.getKey())) {
-					queue.add(entry.getKey());
-				}
-			}
-			while (!queue.isEmpty()) {
-				BlockPos cur = queue.poll();
-				int potential = sinkDistance.get(cur);
-				for (Direction dir : DIRECTIONS) {
-					BlockPos np = cur.relative(dir);
-					Integer next = sinkDistance.get(np);
-					if (next != null && next < potential && reachable.add(np)) {
-						queue.add(np);
+		/** The single producer (the panel) seeds the producer field whether it supplies or not. */
+		private void updateLiveEndpoints() {
+			if (producer.isEmpty()) {
+				seedAround(List.of(solarPos), producer);
+				for (BlockPos consumer : List.of(machineAPos, machineBPos)) {
+					int best = 0;
+					for (Direction dir : DIRECTIONS) {
+						Integer d = producer.distanceOrNull(consumer.relative(dir));
+						if (d != null && (best == 0 || d < best)) {
+							best = d;
+						}
+					}
+					if (best > 0) {
+						consumerDistance.put(consumer, best);
 					}
 				}
-			}
-			for (BlockPos cable : cables) {
-				if (!reachable.contains(cable) && producerDistance.containsKey(cable)) {
-					strandedFillOrder.add(cable);
-				}
-			}
-			strandedFillOrder.sort((a, b) -> {
-				int byDistance = Integer.compare(producerDistance.get(b), producerDistance.get(a));
-				if (byDistance != 0) {
-					return byDistance;
-				}
-				return PosOrder.compare(a.getX(), a.getY(), a.getZ(), b.getX(), b.getY(), b.getZ());
-			});
-			// FlowField.yieldStrandedToCorridor (MOD-730): at equal potential the corridor sweeps first.
-			if (!strandedFillOrder.isEmpty()) {
-				Set<BlockPos> stranded = new LinkedHashSet<>(strandedFillOrder);
-				propagationOrder.sort(Comparator.<BlockPos>comparingInt(sinkDistance::get)
-						.thenComparing(stranded::contains));
-			}
-		}
-
-		private void updateLiveEndpoints(Set<BlockPos> supplying, Set<BlockPos> sinkSeeds,
-				Set<BlockPos> machineSeeds) {
-			boolean changed = false;
-			if (!supplyingProducers.equals(supplying)) {
-				supplyingProducers = new LinkedHashSet<>(supplying);
-				computeProducerField();
-				changed = true;
-			}
-			if (!flowSinkSeeds.equals(sinkSeeds)) {
-				flowSinkSeeds = new LinkedHashSet<>(sinkSeeds);
-				floodFromSinks(flowSinkSeeds, sinkDistance);
-				changed = true;
-			}
-			if (!flowMachineSeeds.equals(machineSeeds)) {
-				flowMachineSeeds = new LinkedHashSet<>(machineSeeds);
-				floodFromSinks(flowMachineSeeds, machineDistance);
-			}
-			if (changed) {
-				rebuildFlowOrder();
+				List<BlockPos> ordered = new ArrayList<>(cables);
+				ordered.sort(EnergyTopologyCache.BLOCK_POS_ORDER);
+				cableList = List.copyOf(ordered);
 			}
 		}
 
@@ -273,7 +174,6 @@ class Mod413ForkStarvationSimTest {
 			solar.produceInternal(SOLAR_EU_PER_TICK);
 
 			long genSupply = Math.min(solar.getAmount(), SOLAR_MAX_EXTRACT);
-			Set<BlockPos> supplying = genSupply > 0 ? Set.of(solarPos) : Set.of();
 			List<EnergyLineDistributor.LiveProducer<BlockPos>> generators =
 					List.of(new EnergyLineDistributor.LiveProducer<>(solarPos, solar));
 
@@ -288,30 +188,15 @@ class Mod413ForkStarvationSimTest {
 				}
 			}
 
-			Set<BlockPos> sinkSeeds = new LinkedHashSet<>();
-			for (EnergyLineDistributor.LiveConsumer<BlockPos> c : machines) {
-				sinkSeeds.add(c.pos());
-			}
-			updateLiveEndpoints(supplying, sinkSeeds, sinkSeeds);
-
-			boolean hasSupply = !supplying.isEmpty();
+			updateLiveEndpoints();
 			EnergyLineDistributor<BlockPos> distributor = new EnergyLineDistributor<>(new LineView<>(
-					LineEndpoints.BLOCK_FACES,
-					cables::contains,
-					cableBuffers::get,
-					pos -> consumerDistance.getOrDefault(pos, 0),
-					pos -> sinkMode ? sinkDistance.get(pos)
-							: (producerDistance.get(pos) == null ? null : -producerDistance.get(pos)),
-					machineDistance::get,
-					propagationOrder,
-					(p, d) -> true,
-					(p, d) -> true,
-					hasSupply ? strandedFillOrder : List.of(),
-					producerDistance::get));
-
-			long moved = distributor.serveConsumersFromLine(machines, PACKET_CAP, COPPER_LOSS, txn, producerCursor);
-			distributor.chargeAndPropagateLine(generators, List.of(),
-					DischargePlan.backupOnly(machineDemand, genSupply), PACKET_CAP, txn, producerCursor);
+					LineEndpoints.BLOCK_FACES, cables::contains, cableBuffers::get,
+					pos -> consumerDistance.getOrDefault(pos, 0), producer::distanceOrNull, cableList,
+					(p, d) -> true, (p, d) -> true, planner));
+			long moved = distributor.distribute(machines, List.of(), List.of(), 0L, generators, PACKET_CAP,
+					COPPER_LOSS, txn, producerCursor).delivered();
+			distributor.dischargeStorage(List.of(), DischargePlan.backupOnly(machineDemand, genSupply), PACKET_CAP,
+					txn, producerCursor);
 			producerCursor = (producerCursor + 1) & Integer.MAX_VALUE;
 			return moved;
 		}

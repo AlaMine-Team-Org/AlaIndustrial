@@ -11,15 +11,28 @@ import org.jspecify.annotations.Nullable;
  * and the loader entry points are not touched.
  *
  * <p>A subclass inherits the answers of its parent and overrides only what differs (the netherite drill
- * overrides {@link #energyCapacity} alone), so correctness no longer depends on branch order.
+ * answers its own tier and nothing else), so correctness no longer depends on branch order.
  *
  * <p>Implementing this interface is a promise of a positive buffer: the gametest guard
  * {@code PoweredItemCatalog} checks every item of the roster for {@code capacity > 0}, independently.
  */
 public interface PoweredItem {
 
-	/** Max EU one item holds; read live, so a config reload is honoured. */
-	long energyCapacity(ItemStack stack);
+	/**
+	 * Max EU one item holds by this side's own balance ({@link ItemBuffers#live()}); read live, so a config reload
+	 * is honoured. The server's logic asks this form — charging, spending, the clamp. Not overridden: an item
+	 * answers {@link #energyCapacity(ItemStack, ItemBuffers)}.
+	 */
+	default long energyCapacity(ItemStack stack) {
+		return energyCapacity(stack, ItemBuffers.live());
+	}
+
+	/**
+	 * Max EU one item holds when the buffers are {@code buffers} (MOD-790): the item's own buffer, picked out of
+	 * them and read from nothing else. The one place that says which knob is this item's; the client passes the
+	 * server's numbers, the server its own.
+	 */
+	long energyCapacity(ItemStack stack, ItemBuffers buffers);
 
 	/** Max EU/tick the item accepts in a charge slot or from a foreign charger. */
 	long energyInputRate(ItemStack stack);

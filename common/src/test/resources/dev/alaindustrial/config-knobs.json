@@ -251,7 +251,7 @@
     {"key": "repairBenchTier1EuCost", "section": "machines", "type": "int", "default": 9600, "min": 1.0, "exclusive": false, "doc": "MOD-384: EU one repair of a T1 rotor/wheel costs (material: 1 iron plate). 9600 EU / 8 EU-t = 1200 ticks (60 s)."},
     {"key": "repairBenchTier2EuCost", "section": "machines", "type": "int", "default": 19200, "min": 1.0, "exclusive": false, "doc": "MOD-384: EU one repair of a reinforced rotor/wheel costs (material: 1 tempered iron plate). 19200 EU / 8 EU-t = 2400 ticks (120 s)."},
     {"key": "repairBenchTier3EuCost", "section": "machines", "type": "int", "default": 28800, "min": 1.0, "exclusive": false, "doc": "MOD-384: EU one repair of an advanced rotor/wheel costs (material: 1 electronic circuit). 28800 EU / 8 EU-t = 3600 ticks (180 s)."},
-    {"key": "sawmillDuration", "section": "machines", "type": "int", "default": 80, "min": 1.0, "exclusive": false, "doc": "Ticks a sawmill takes per cut at 1.0 speed (all four modes)."},
+    {"key": "sawmillDuration", "section": "machines", "type": "int", "default": 80, "min": 1.0, "exclusive": false, "doc": "Ticks a sawmill takes per cut at 1.0 speed (every mode)."},
     {"key": "sprinklerIntervalTicks", "section": "machines", "type": "int", "default": 20, "min": 1.0, "exclusive": false, "doc": "Ticks between sprinkler spray attempts."},
     {"key": "sprinklerRange", "section": "machines", "type": "int", "default": 4, "min": 1.0, "exclusive": false, "doc": "Sprinkler spray radius in blocks around the block."},
     {"key": "sprinklerSolutionPerActionMb", "section": "machines", "type": "int", "default": 50, "min": 1.0, "exclusive": false, "doc": "mB of nutrient solution one successful spray on a vanilla crop costs."},

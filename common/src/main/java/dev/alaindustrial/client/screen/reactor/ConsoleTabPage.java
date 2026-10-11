@@ -487,10 +487,10 @@ public final class ConsoleTabPage implements ReactorTabPage {
 	private final class DepthSlider extends AbstractSliderButton {
 
 		/**
-		 * Whether a press on the slider has not been released yet. Tracked here because the vanilla
-		 * {@code dragging} field is private in the game jar Fabric compiles against — only NeoForge's patched
-		 * copy widens it — and because it makes a release idempotent: the second of two releases finds the
-		 * flag already down and sends nothing.
+		 * Whether a press on the slider is unreleased: vanilla's {@code dragging} is private on Fabric. It makes the
+		 * whole release idempotent, click sound included (MOD-793: the page releases before vanilla's focused-widget
+		 * release, so the second release finds it down and does nothing; vanilla's flag changes only in
+		 * onClick/onRelease, in step with this one).
 		 */
 		private boolean held;
 
@@ -532,8 +532,8 @@ public final class ConsoleTabPage implements ReactorTabPage {
 
 		@Override
 		public void onRelease(MouseButtonEvent event) {
-			super.onRelease(event);
 			if (held) {
+				super.onRelease(event);
 				held = false;
 				commitDepth(depth());
 			}

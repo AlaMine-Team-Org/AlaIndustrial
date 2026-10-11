@@ -63,10 +63,10 @@ public final class EnergyPackHud {
 		drawReadout(graphics, mc, Y, pack, percent);
 	}
 
-	/** Current charge as a 0..1 fraction (0 when the item has no buffer). */
+	/** Current charge as a 0..1 fraction (0 when the item has no buffer), against the server's buffer (MOD-790). */
 	static float fractionOf(ItemStack stack) {
-		long capacity = ItemEnergy.capacity(stack);
-		return capacity <= 0 ? 0.0f : (float) ItemEnergy.get(stack) / capacity;
+		long capacity = ItemEnergy.shownCapacity(stack);
+		return capacity <= 0 ? 0.0f : (float) ItemEnergy.shownGet(stack) / capacity;
 	}
 
 	/**
@@ -123,8 +123,9 @@ public final class EnergyPackHud {
 	/** Whether a usable chest-slot EU device (Energy Pack, or the Jetpack since MOD-148) is worn. */
 	static boolean isWorn(Player player) {
 		ItemStack pack = player.getItemBySlot(EquipmentSlot.CHEST);
-		return (pack.getItem() instanceof EnergyPackItem || pack.getItem() instanceof JetpackItem)
-				&& ItemEnergy.capacity(pack) > 0;
+		// Both are powered items, and a powered item always has a buffer (every buffer knob has min = 1): no
+		// capacity to ask, so no local balance read (MOD-790).
+		return pack.getItem() instanceof EnergyPackItem || pack.getItem() instanceof JetpackItem;
 	}
 
 	/** Green while comfortable, gold when it is worth noticing, red when the pack is nearly dead. */

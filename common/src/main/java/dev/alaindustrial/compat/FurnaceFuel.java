@@ -4,6 +4,7 @@ import java.util.Optional;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CookingFuel;
 import net.minecraft.world.level.Level;
@@ -12,6 +13,7 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
 import net.minecraft.world.level.storage.loot.providers.number.ints.ResolvableInt;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
@@ -39,6 +41,19 @@ import org.jspecify.annotations.Nullable;
 public final class FurnaceFuel {
 
 	private FurnaceFuel() {
+	}
+
+	/**
+	 * Declares an item of the mod as a short fuel that burns as long as vanilla bamboo — 50 ticks in a normal
+	 * furnace, half a stick (MOD-655: sawdust). 26.3: the vanilla {@code minecraft:cooking/time_bamboo} entry of
+	 * the {@code context_int_provider} registry, referenced through {@code Properties.cookingFuel}, exactly as the
+	 * vanilla bamboo item declares itself; a datapack that edits that entry, and a fast-cooking block halving it,
+	 * are honoured by our machines and by the vanilla furnace alike. The 26.2 twin returns the properties
+	 * unchanged: that line has no fuel component, and its {@code FuelValues} table answers through the mod's
+	 * {@code FuelValuesMixin} instead.
+	 */
+	public static Item.Properties burnsLikeBamboo(Item.Properties properties) {
+		return properties.cookingFuel(ContextIntProviders.COOKING_TIME_BAMBOO);
 	}
 
 	/**

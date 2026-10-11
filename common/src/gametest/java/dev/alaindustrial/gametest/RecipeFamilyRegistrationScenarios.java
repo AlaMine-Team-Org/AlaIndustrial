@@ -48,14 +48,14 @@ public final class RecipeFamilyRegistrationScenarios {
 	static final List<String> EXPECTED_SERIALIZERS = List.of(
 			"crafting_shaped_charge_transfer",
 			"maceration", "smelting", "compressing", "extracting", "vulcanizing", "galvanic_bath", "centrifuging",
-			"sawing_planks", "sawing_sticks", "sawing_slabs", "sawing_stairs",
+			"sawing_planks", "sawing_sticks", "sawing_slabs", "sawing_stairs", "sawing_sawdust",
 			"mutation_transform", "mutation_duplicate", "mutation_create", "fermenting",
 			"polymerizing", "distilling", "alloying");
 
 	/** The mod's recipe types, in registry order. The crafting recipe has none: it is vanilla's crafting. */
 	static final List<String> EXPECTED_TYPES = List.of(
 			"maceration", "smelting", "compressing", "extracting", "vulcanizing", "galvanic_bath", "centrifuging",
-			"sawing_planks", "sawing_sticks", "sawing_slabs", "sawing_stairs",
+			"sawing_planks", "sawing_sticks", "sawing_slabs", "sawing_stairs", "sawing_sawdust",
 			"mutation_transform", "mutation_duplicate", "mutation_create", "fermenting",
 			"polymerizing", "distilling", "alloying");
 

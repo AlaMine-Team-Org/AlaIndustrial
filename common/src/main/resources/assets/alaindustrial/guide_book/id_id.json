@@ -1487,7 +1487,7 @@
             {
               "type": "text",
               "title": "Penggergaji Kayu",
-              "text": "Menggergaji kayu apa pun menjadi papan, batang kayu, lempeng, atau tangga dengan hasil lebih banyak daripada pembuatan manual. Empat mode yang bisa diganti, berjalan dengan EU."
+              "text": "Menggergaji kayu apa pun menjadi papan, batang kayu, lempeng, atau tangga dengan hasil lebih banyak daripada pembuatan manual, atau menjadi serbuk gergaji pada mode kelimanya. Lima mode yang bisa diganti, berjalan dengan EU."
             },
             {
               "type": "stats",
@@ -2834,6 +2834,25 @@
           ]
         },
         {
+          "id": "sawdust",
+          "title": "Serbuk Gergaji",
+          "icon": "alaindustrial:sawdust",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Serbuk Gergaji",
+              "text": "Hasil mode kelima penggergajian — 6 serbuk gergaji per batang kayu. Bahan organik murah untuk fermentor, fraksi mudah terbakar di pendaur ulang, dan bahan bakar singkat yang menyala seperti bambu."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Energi: 160 EU/op"
+              ]
+            }
+          ]
+        },
+        {
           "id": "palladium_ore",
           "title": "Bijih Paladium",
           "icon": "alaindustrial:palladium_ore",
@@ -3291,6 +3310,43 @@
           ]
         },
         {
+          "id": "tempered_iron_bars",
+          "title": "Jeruji Besi Temper",
+          "icon": "alaindustrial:tempered_iron_bars",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Jeruji Besi Temper",
+              "text": "Empat blok bangunan dari besi tempa yang meniru versi vanilla — jeruji, tangga, pintu kolong, dan rantai. Berperilaku seperti vanilla dan tampak seperti baja mod."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Bufer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tempered_iron_bars",
+              "result_count": 16
+            }
+          ]
+        },
+        {
           "id": "reactor_button",
           "title": "Tombol Reaktor",
           "icon": "alaindustrial:reactor_button",
@@ -3435,6 +3491,43 @@
               ],
               "result_id": "alaindustrial:reactor_glass",
               "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reinforced_glass",
+          "title": "Kaca Diperkuat",
+          "icon": "alaindustrial:reinforced_glass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kaca Diperkuat",
+              "text": "Kaca bening dalam bingkai besi tempa — pecah seperti batu dan tahan ledakan creeper atau TNT. Blok bangunan sekaligus bahan resep berikutnya."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Bufer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:reinforced_glass",
+              "result_count": 4
             }
           ]
         },
@@ -3737,6 +3830,43 @@
               ],
               "result_id": "alaindustrial:industrial_workbench",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "industrial_light",
+          "title": "Lampu Industri",
+          "icon": "alaindustrial:industrial_light",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Lampu Industri",
+              "text": "Lampu mungil 4×4 piksel dengan cahaya hangat tingkat 15 — pasang di lantai, langit-langit, atau dinding mana pun. Tanpa menu, tanpa energi."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Bufer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "minecraft:glass",
+                "",
+                "",
+                "minecraft:glowstone_dust",
+                "",
+                "",
+                "alaindustrial:tempered_iron_plate",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:industrial_light",
+              "result_count": 4
             }
           ]
         },

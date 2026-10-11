@@ -418,4 +418,13 @@ public class PumpBlockEntity extends MachineBlockEntity implements FluidPortHost
 				.map(dr -> dr / FluidAmounts.FABRIC_DROPLETS_PER_MB).orElse(0L);
 		fluidTank.load(input, "FluidTank", FluidHolder.of(Fluids.LAVA), legacyDroplets);
 	}
+
+	/**
+	 * Unknown per-tick need (MOD-789, ADR-049): it pays per bucket, so the network plans it as a store and charges it
+	 * with the stores, nearest first.
+	 */
+	@Override
+	public long perTickDemand() {
+		return 0L;
+	}
 }

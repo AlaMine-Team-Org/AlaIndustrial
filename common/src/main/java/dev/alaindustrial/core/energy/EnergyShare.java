@@ -53,6 +53,29 @@ public final class EnergyShare {
 	}
 
 	/**
+	 * What a consumer must draw out of its cables for {@code net} EU to arrive after the transit loss
+	 * ({@link #cableLoss}, MOD-021): the smallest {@code gross} with {@code gross - cableLoss(gross) >= net}
+	 * (MOD-789 — a machine's need is planned gross, so a long line does not leave it short while a store takes the
+	 * rest). {@code net} itself when nothing is lost.
+	 */
+	public static long grossFor(long net, double lossPerBlock, int distanceBlocks) {
+		if (net <= 0 || lossPerBlock <= 0 || distanceBlocks <= 0) {
+			return Math.max(0L, net);
+		}
+		double rate = Math.min(lossPerBlock, 1.0);
+		double kept = Math.exp(distanceBlocks * Math.log1p(-rate));
+		long gross = kept <= 0 ? Long.MAX_VALUE / 4 : (long) Math.min(Long.MAX_VALUE / 4, Math.ceil(net / kept));
+		gross = Math.max(gross, net);
+		while (gross > net && gross - 1 - cableLoss(gross - 1, lossPerBlock, distanceBlocks) >= net) {
+			gross--;
+		}
+		while (gross - cableLoss(gross, lossPerBlock, distanceBlocks) < net && gross < Long.MAX_VALUE / 4) {
+			gross++;
+		}
+		return gross;
+	}
+
+	/**
 	 * Split {@code moveTotal} EU across consumers proportionally to each one's free {@code room},
 	 * capping every consumer at {@code packetCap} (the tier's per-tick transfer limit). Any rounding
 	 * remainder is dealt out ONE EU at a time, round-robin from a caller-rotated start.

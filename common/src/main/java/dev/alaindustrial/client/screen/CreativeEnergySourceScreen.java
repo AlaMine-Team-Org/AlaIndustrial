@@ -380,25 +380,27 @@ public class CreativeEnergySourceScreen extends MachineScreen<CreativeEnergySour
 		return false;
 	}
 
+	/** The slider's drag, armed only by a gated click (MOD-793: the base asks it after the overlays). */
 	@Override
-	public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
+	protected boolean controlDragged(MouseButtonEvent event, double dragX, double dragY) {
 		if (dragging && event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
 			pendingOutput = stepAtMouse(event.x()) * CreativeEnergySourceMenu.OUTPUT_STEP;
 			dragTicks = DRAG_WATCHDOG_TICKS;
 			return true;
 		}
-		return super.mouseDragged(event, dragX, dragY);
+		return false;
 	}
 
+	/** Claimed, so vanilla never reads the end of a slider drag as a slot release. */
 	@Override
-	public boolean mouseReleased(MouseButtonEvent event) {
+	protected boolean controlReleased(MouseButtonEvent event) {
 		if (dragging && event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
 			dragging = false;
 			// The value stays on screen; requestStep arms the timeout that retires it once the server agrees.
 			requestStep(currentStep());
 			return true;
 		}
-		return super.mouseReleased(event);
+		return false;
 	}
 
 	@Override

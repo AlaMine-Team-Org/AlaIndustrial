@@ -9,7 +9,7 @@ ALL SawmillScreen sawing_planks 82 20 22 12
 ALL IncubatorScreen mutation_transform 112 20 24 16
 FLUID_ALL PolymerizerScreen polymerizing 79 35 24 17
 FLUID_ALL DistillationColumnScreen distilling 59 40 24 56
-ALLOY_ALL AlloySmelterScreen alloying 65 22 42 43
+ALLOY_ALL AlloySmelterScreen alloying 65 22 45 43
 CANNING_ALL CanningMachineScreen 74 33 31 10
 INFO_ALL GeothermalGeneratorScreen 82 38 10 7
 INFO_ALL EnergyCondenserScreen 57 15 63 23
@@ -17,6 +17,7 @@ SAWMILL_KINDS sawing_planks
 SAWMILL_KINDS sawing_sticks
 SAWMILL_KINDS sawing_slabs
 SAWMILL_KINDS sawing_stairs
+SAWMILL_KINDS sawing_sawdust
 MUTATION_KINDS mutation_transform
 MUTATION_KINDS mutation_duplicate
 MUTATION_KINDS mutation_create

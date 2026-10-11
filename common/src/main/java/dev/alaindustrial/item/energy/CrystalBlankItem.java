@@ -61,7 +61,7 @@ public class CrystalBlankItem extends Item implements PoweredItem {
 	public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
 			Consumer<Component> adder, TooltipFlag flag) {
 		adder.accept(Component.translatable("item.alaindustrial.crystal_blank.charge",
-				ItemEnergy.get(stack), ItemEnergy.capacity(stack)).withStyle(ChatFormatting.GRAY));
+				ItemEnergy.shownGet(stack), ItemEnergy.shownCapacity(stack)).withStyle(ChatFormatting.GRAY));
 		adder.accept(Component.translatable("item.alaindustrial.crystal_blank.hint")
 				.withStyle(ChatFormatting.YELLOW));
 	}
@@ -85,8 +85,8 @@ public class CrystalBlankItem extends Item implements PoweredItem {
 
 	/** MOD-707: this item's EU buffer, read by {@code ItemEnergy.capacity} through {@link PoweredItem}. */
 	@Override
-	public long energyCapacity(ItemStack stack) {
-		return tier().capacity();
+	public long energyCapacity(ItemStack stack, ItemBuffers buffers) {
+		return tier().capacity(buffers);
 	}
 
 	@Override

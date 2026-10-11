@@ -13,7 +13,8 @@ import net.minecraft.world.phys.Vec3;
  * key handling uses). The server never applies motion — it reads the identical held-jump state from
  * the vanilla input sync and burns the EU / resets the fall distance on its side
  * ({@link JetpackItem#serverFlightTick}); the charge component is network-synchronized, so both
- * sides evaluate {@link JetpackItem#isPowered} against the same number.
+ * sides evaluate {@link JetpackItem#isPowered} against the same charge — and against the server's ceiling, which
+ * the client reads from {@link ServerBalance} (MOD-791).
  *
  * <p>Thrust is an acceleration, not a set speed: gravity keeps pulling, releasing jump starts a
  * normal fall, and the rise speed saturates at {@link #MAX_RISE_SPEED} so the ascent reads as an
@@ -64,7 +65,8 @@ public final class JetpackFlight {
 			return;
 		}
 		Vec3 velocity = player.getDeltaMovement();
-		if (JetpackItem.isPowered(chest, player)) {
+		// The server's ceiling, not this client's file (MOD-791): the server burns EU only below its own.
+		if (JetpackItem.isPowered(chest, player, ServerBalance.jetpackMaxY())) {
 			thrustedThisFlight = true;
 			player.setDeltaMovement(velocity.x,
 					Math.min(velocity.y + THRUST_ACCELERATION, MAX_RISE_SPEED), velocity.z);

@@ -63,8 +63,10 @@ public final class OverlayInputStands {
     }
 
     private static final List<Subject> SUBJECTS = List.of(
-            // Second mode button (sticks): BUTTON_X0 52 + one BUTTON_SIZE 18, centre +9; BUTTON_Y 48 + 9.
-            new Subject("sawmill", ModContent.SAWMILL_MENU, "Sawmill", 4000, 52 + 18 + 9, 48 + 9, false),
+            // Second mode button (sticks), its centre: the row moves when a mode is added (MOD-655), so the
+            // point is read from the screen, not copied from it.
+            new Subject("sawmill", ModContent.SAWMILL_MENU, "Sawmill", 4000,
+                    SawmillScreen.buttonX(SawmillMode.STICKS.ordinal()) + 9, SawmillScreen.BUTTON_Y + 9, false),
             // The Record tab (x 88..168, y 14..30) — its stats-panel case is StatsPanelModalStand's.
             new Subject("assembler", ModContent.ASSEMBLER_MENU, "Assembler", 12000, 88 + 40, 14 + 8, true),
             // The dome button (x 134..156, y 32..54) — its stats-panel case is StatsPanelModalStand's.

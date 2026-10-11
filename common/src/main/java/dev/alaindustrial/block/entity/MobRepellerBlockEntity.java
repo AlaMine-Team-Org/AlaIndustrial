@@ -195,4 +195,12 @@ public class MobRepellerBlockEntity extends MachineBlockEntity implements MenuPr
 							serverLevel.dimension(), worldPosition, fieldRange(), false));
 		}
 	}
+
+	/**
+	 * Its per-tick need for the network (MOD-789, ADR-049): the field upkeep of its tier, not the shared machine rate.
+	 */
+	@Override
+	public long perTickDemand() {
+		return Math.max(1, fieldEuPerTick());
+	}
 }

@@ -33,7 +33,10 @@ public final class IronFurnaceFuelScenarios {
 						.fabricId("IronFurnaceFuelGameTest", "lavaBucketBurnsAndLeavesItsBucket").ticks(100),
 				RosterEntry.of(IronFurnaceFuelScenarios::fuelSlotTakesFuelAndOneEmptyBucket,
 								"iron_furnace_fuel_slot_takes_fuel_and_one_empty_bucket")
-						.fabricId("IronFurnaceFuelGameTest", "fuelSlotTakesFuelAndOneEmptyBucket").ticks(100));
+						.fabricId("IronFurnaceFuelGameTest", "fuelSlotTakesFuelAndOneEmptyBucket").ticks(100),
+				RosterEntry.of(IronFurnaceFuelScenarios::sawdustBurnsLikeBamboo,
+								"iron_furnace_sawdust_burns_like_bamboo")
+						.ticks(100));
 
 		private Roster() {}
 	}
@@ -43,6 +46,8 @@ public final class IronFurnaceFuelScenarios {
 	private static final int LIGHT_TICKS = 5;
 	private static final int COAL_BURN = 1600;
 	private static final int LAVA_BUCKET_BURN = 20000;
+	/** Vanilla bamboo's burn time, which the mod's sawdust shares (MOD-655): half a stick. */
+	private static final int BAMBOO_BURN = 50;
 	/** The reference smelt time the burn is scaled against (IronFurnaceBlockEntity.VANILLA_SMELT_TIME). */
 	private static final int VANILLA_SMELT_TIME = 200;
 
@@ -65,6 +70,17 @@ public final class IronFurnaceFuelScenarios {
 	 */
 	public static void lavaBucketBurnsAndLeavesItsBucket(GameTestHelper helper) {
 		assertLightsFor(helper, Items.LAVA_BUCKET, LAVA_BUCKET_BURN, true);
+	}
+
+	/**
+	 * The mod's sawdust (MOD-655) is fuel and lights the furnace for bamboo's 50 ticks, scaled. On 26.3 the burn
+	 * time is the item's own {@code cooking_fuel} component; on 26.2 it is the {@code FuelValues} table — the same
+	 * expectation pins both lines.
+	 *
+	 * @implements MOD-655 — sawdust lights the iron furnace for vanilla bamboo's burn time, scaled to its speed.
+	 */
+	public static void sawdustBurnsLikeBamboo(GameTestHelper helper) {
+		assertLightsFor(helper, ModContent.SAWDUST.get(), BAMBOO_BURN, false);
 	}
 
 	/**

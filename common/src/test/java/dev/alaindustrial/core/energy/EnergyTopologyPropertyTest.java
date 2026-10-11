@@ -121,10 +121,10 @@ class EnergyTopologyPropertyTest {
 
 	/**
 	 * Delivers {@code supply} over a line of {@code hops} cable blocks to {@code room.length} consumers
-	 * through the real kernel ({@link EnergyLineDistributor#serveConsumersFromLine}): one cable holds the
+	 * through the real kernel ({@link EnergyLineDistributor#distribute}): one cable holds the
 	 * whole supply and touches every consumer, each consumer sits {@code hops} blocks from the source. The
-	 * kernel caps the movable total at the demand, splits it proportionally to free room and destroys the
-	 * distance loss per consumer.
+	 * kernel caps the movable total at the demand, shares it out (ADR-049) and destroys the distance loss per
+	 * consumer.
 	 *
 	 * @return {@code [totalDelivered, totalLost, totalMoved]}: what the consumers hold, what left the cable
 	 *     without arriving, and what left the cable
@@ -143,10 +143,11 @@ class EnergyTopologyPropertyTest {
 			consumers.add(new EnergyLineDistributor.LiveConsumer<>(i + 1, sink, room[i]));
 		}
 		EnergyLineDistributor<Integer> kernel = new EnergyLineDistributor<>(new LineView<Integer>(STAR,
-				pos -> pos == 0, pos -> pos == 0 ? cable : null, pos -> hops, pos -> null, pos -> null, List.of(),
-				(pos, face) -> true, (pos, face) -> true, List.of(), pos -> null));
-		long returned = kernel.serveConsumersFromLine(consumers, cap, lossPerBlock, participant -> {
-		}, 0);
+				pos -> pos == 0, pos -> pos == 0 ? cable : null, pos -> hops, pos -> 1, List.of(0),
+				(pos, face) -> true, (pos, face) -> true, new LinePlanner<>()));
+		long returned = kernel.distribute(consumers, List.of(), List.of(), 0L, List.of(), cap, lossPerBlock,
+				participant -> {
+				}, 0).delivered();
 		long delivered = 0;
 		for (Sink sink : sinks) {
 			delivered += sink.amount;

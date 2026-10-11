@@ -25,21 +25,22 @@ public class AlloySmelterScreen extends ProgressMachineScreen<AlloySmelterMenu> 
 	private static final Identifier TEXTURE = Industrialization.id("textures/gui/container/alloy_smelter.png");
 
 	// Golden merge-arrow fill sprite in the atlas service area, drawn over the grey recess in the frame.
-	// The recess is at (65, 22) and the sprite is its gold twin, so the fill grows left-to-right along the
-	// three strands and then down the joined bar exactly where the empty groove already is.
-	// The recipe-viewer hitbox tracks this rect — keep MachineRecipeViewerTargets.ALLOY_ALL in step.
+	// The recess is at (65, 22) and 42 wide; the sprite is 45 wide and sits 1-2 px off the groove from its
+	// tenth column on, its tip overhanging the groove by 3 px (MOD-737, measured — a redraw is a task of its
+	// own). The fill grows left-to-right along the three strands and then down the joined bar.
+	// The recipe-viewer hitbox is this rect (PROGRESS_AREA), read by MachineRecipeViewerTargets.ALLOY_ALL.
 	private static final ProgressSpec PROGRESS = new ProgressSpec(
 			176, 50, 45, 43,  // sprite u/v/w/h
 			65, 22,           // dest x/y in the 176×166 frame
 			false);           // no min-1px
 
 	/**
-	 * Click area of the recipe viewers (MOD-716). MOD-457 sized it to the 42x43 merge arrow; the sprite in
-	 * {@link #PROGRESS} is 45 wide, so its last three columns are not clickable. Kept exactly as shipped — a
-	 * wider area would be a change of behaviour, not of structure.
+	 * Click area of the recipe viewers: exactly the progress sprite (MOD-737). It was a literal 42 wide — the
+	 * grey groove — while the sprite the player aims at is 45, so the arrow's last three columns opened
+	 * nothing; the area covers the groove and the whole fill now. The arch rule
+	 * {@code progress-area-from-sprite} keeps a number from coming back here.
 	 */
-	public static final GuiRect PROGRESS_AREA = new GuiRect(PROGRESS.destX(), PROGRESS.destY(), 42,
-			PROGRESS.spriteH());
+	public static final GuiRect PROGRESS_AREA = PROGRESS.area();
 
 	/** Atlas, energy bar and progress sprite: the whole declared frame (MOD-716, CLI-3). */
 	private static final MachineLayout LAYOUT = MachineLayout.of(TEXTURE, EnergyBarSpec.LEFT)

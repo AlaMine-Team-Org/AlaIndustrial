@@ -681,18 +681,6 @@ class ArchitectureRulesNegativeControl {
 	}
 
 	/**
-	 * MOD-761 — the frozen reach rule is only as good as its unfrozen condition: on the production classes it
-	 * must SEE today's baseline (an empty store would stay green forever). When the baseline is empty, replace
-	 * the freeze by the plain rule and drop this check.
-	 */
-	@Test
-	void theClientReachRuleSeesTheBaseline() {
-		assertTrue(ClientBalanceReachRules.CLIENT_REACH.evaluate(productionClasses).hasViolation(),
-				"the client reach rule found nothing on the production classes — today's baseline is not empty,"
-						+ " so the rule is blind and its frozen green means nothing");
-	}
-
-	/**
 	 * MOD-761 — an accepted path and a pending entry are decisions about paths that exist: once a path is gone,
 	 * its row goes too. Accepted rows whose entry class this lane does not import (the REI plugin of
 	 * fabric/src/main) are records, not checked.

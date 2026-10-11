@@ -24,7 +24,7 @@ package dev.alaindustrial.core.energy;
  *       stored amount. The donor keeps donating for as many ticks as the line is long — overshoot scales
  *       with distance, not with packet size.</li>
  *   <li><b>Every hand-off is charged resistive loss</b> (MOD-021, applied per delivery in
- *       {@code serveConsumersFromLine}). So each half-cycle of an oscillation burns EU permanently. Two
+ *       {@code EnergyLineDistributor.distribute}). So each half-cycle of an oscillation burns EU permanently. Two
  *       boxes on a ring would not merely jitter — they would convert their whole charge to heat and then
  *       keep spinning, which is strictly worse than the bug this fixes.</li>
  * </ul>

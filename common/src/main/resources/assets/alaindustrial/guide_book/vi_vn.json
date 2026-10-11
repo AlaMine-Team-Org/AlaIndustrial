@@ -1487,7 +1487,7 @@
             {
               "type": "text",
               "title": "Máy cưa gỗ",
-              "text": "Cưa mọi loại gỗ thành ván, gậy, phiến hoặc cầu thang với sản lượng cao hơn chế tạo thủ công. Bốn chế độ chuyển đổi được, chạy bằng EU."
+              "text": "Cưa mọi loại gỗ thành ván, gậy, phiến hoặc cầu thang với sản lượng cao hơn chế tạo thủ công, hoặc thành mùn cưa ở chế độ thứ năm. Năm chế độ chuyển đổi được, chạy bằng EU."
             },
             {
               "type": "stats",
@@ -2834,6 +2834,25 @@
           ]
         },
         {
+          "id": "sawdust",
+          "title": "Mùn cưa",
+          "icon": "alaindustrial:sawdust",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Mùn cưa",
+              "text": "Sản phẩm của chế độ thứ năm của máy cưa — 6 mùn cưa mỗi khúc gỗ. Nguyên liệu hữu cơ rẻ cho máy lên men, phần dễ cháy của máy tái chế và nhiên liệu ngắn cháy như tre."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 160 EU/thao tác"
+              ]
+            }
+          ]
+        },
+        {
           "id": "palladium_ore",
           "title": "Quặng paladi",
           "icon": "alaindustrial:palladium_ore",
@@ -3291,6 +3310,43 @@
           ]
         },
         {
+          "id": "tempered_iron_bars",
+          "title": "Hàng Rào Sắt Tôi",
+          "icon": "alaindustrial:tempered_iron_bars",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Hàng Rào Sắt Tôi",
+              "text": "Bốn khối xây dựng bằng sắt tôi theo mẫu vanilla — song sắt, thang, cửa sập và xích. Hoạt động như vanilla và trông như thép của mod."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Bộ đệm: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tempered_iron_bars",
+              "result_count": 16
+            }
+          ]
+        },
+        {
           "id": "reactor_button",
           "title": "Nút Lò Phản Ứng",
           "icon": "alaindustrial:reactor_button",
@@ -3435,6 +3491,43 @@
               ],
               "result_id": "alaindustrial:reactor_glass",
               "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reinforced_glass",
+          "title": "Kính Gia Cố",
+          "icon": "alaindustrial:reinforced_glass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kính Gia Cố",
+              "text": "Kính trong suốt trong khung sắt tôi — vỡ như đá và chịu được vụ nổ của creeper hoặc TNT. Một khối xây dựng và nguyên liệu cho các công thức sau."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Bộ đệm: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:reinforced_glass",
+              "result_count": 4
             }
           ]
         },
@@ -3737,6 +3830,43 @@
               ],
               "result_id": "alaindustrial:industrial_workbench",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "industrial_light",
+          "title": "Đèn Công Nghiệp",
+          "icon": "alaindustrial:industrial_light",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Đèn Công Nghiệp",
+              "text": "Một chiếc đèn nhỏ xíu 4×4 điểm ảnh với ánh sáng ấm mức 15 — đặt trên sàn, trần hoặc bất kỳ bức tường nào. Không có menu, không cần năng lượng."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Bộ đệm: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "minecraft:glass",
+                "",
+                "",
+                "minecraft:glowstone_dust",
+                "",
+                "",
+                "alaindustrial:tempered_iron_plate",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:industrial_light",
+              "result_count": 4
             }
           ]
         },

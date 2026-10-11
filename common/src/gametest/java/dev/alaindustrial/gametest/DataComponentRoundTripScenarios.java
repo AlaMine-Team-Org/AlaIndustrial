@@ -220,27 +220,11 @@ public final class DataComponentRoundTripScenarios {
 
 	/**
 	 * Value equality where the type's own {@code equals} cannot give it: a holder is compared by what
-	 * it holds, a blueprint by its stacks ({@code ItemStack} has identity equality, and so does a
-	 * record generated over a list of them). Every other sample type has a value {@code equals}.
-	 *
-	 * <p>The blueprint branch works around a production defect this sweep found, filed as MOD-723:
-	 * {@code BlueprintPattern} lacks the value {@code equals} its siblings {@code PouchContents} and
-	 * {@code ItemModules} have. Remove the branch together with that fix.
+	 * it holds. Every other sample type has a value {@code equals}.
 	 */
 	private static boolean sameValue(Object a, Object b) {
 		if (a instanceof Holder<?> ha && b instanceof Holder<?> hb) {
 			return ha.value() == hb.value();
-		}
-		if (a instanceof BlueprintPattern pa && b instanceof BlueprintPattern pb) {
-			if (pa.items().size() != pb.items().size()) {
-				return false;
-			}
-			for (int i = 0; i < pa.items().size(); i++) {
-				if (!ItemStack.matches(pa.items().get(i), pb.items().get(i))) {
-					return false;
-				}
-			}
-			return true;
 		}
 		return Objects.equals(a, b);
 	}

@@ -46,6 +46,7 @@
 		"minecraft:rotten_flesh",
 		"minecraft:poisonous_potato",
 		"minecraft:spider_eye",
+		"#c:dusts/wood",
 		{
 			"id": "#minecraft:leaves",
 			"required": false

@@ -3,6 +3,7 @@ package dev.alaindustrial.item.tool;
 import dev.alaindustrial.item.ToolConfig;
 import dev.alaindustrial.item.energy.EnergyBar;
 import dev.alaindustrial.item.energy.PoweredItem;
+import dev.alaindustrial.item.energy.ItemBuffers;
 import dev.alaindustrial.item.energy.ItemEnergy;
 
 import dev.alaindustrial.Industrialization;
@@ -353,8 +354,8 @@ public class ElectricSaberItem extends Item implements PoweredItem {
 
 	/** MOD-707: this item's EU buffer, read by {@code ItemEnergy.capacity} through {@link PoweredItem}. */
 	@Override
-	public long energyCapacity(ItemStack stack) {
-		return ToolConfig.electricSaberBuffer;
+	public long energyCapacity(ItemStack stack, ItemBuffers buffers) {
+		return buffers.electricSaberBuffer();
 	}
 
 	@Override
@@ -378,6 +379,6 @@ public class ElectricSaberItem extends Item implements PoweredItem {
 				.withBeforeCharge(PoweredToolTooltip.toggle(ElectricSaberItem::isEnabled,
 						"tooltip.alaindustrial.electric_saber.state_on", MachineTooltipSpec.Tone.GREEN,
 						"tooltip.alaindustrial.electric_saber.state_off"))
-				.withDepleted(stack -> ItemEnergy.get(stack) < ServerBalance.electricSaberEuPerHit());
+				.withDepleted(stack -> ItemEnergy.shownGet(stack) < ServerBalance.electricSaberEuPerHit());
 	}
 }

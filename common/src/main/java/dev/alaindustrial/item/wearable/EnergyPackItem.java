@@ -3,6 +3,7 @@ package dev.alaindustrial.item.wearable;
 import dev.alaindustrial.item.ToolConfig;
 import dev.alaindustrial.item.energy.EnergyBar;
 import dev.alaindustrial.item.energy.PoweredItem;
+import dev.alaindustrial.item.energy.ItemBuffers;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.item.energy.PlayerEuDistributor;
 import dev.alaindustrial.skill.SkillEnergy;
@@ -239,8 +240,8 @@ public class EnergyPackItem extends Item implements PoweredItem {
 
 	/** MOD-707: this item's EU buffer, read by {@code ItemEnergy.capacity} through {@link PoweredItem}. */
 	@Override
-	public long energyCapacity(ItemStack stack) {
-		return ToolConfig.energyPackBuffer;
+	public long energyCapacity(ItemStack stack, ItemBuffers buffers) {
+		return buffers.energyPackBuffer();
 	}
 
 	@Override

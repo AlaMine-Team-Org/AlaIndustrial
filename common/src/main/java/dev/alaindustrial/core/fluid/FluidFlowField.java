@@ -3,7 +3,6 @@ package dev.alaindustrial.core.fluid;
 import dev.alaindustrial.core.net.DistanceField;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -20,8 +19,9 @@ import net.minecraft.core.Direction;
  *
  * <p><b>The walk is the one it replaces.</b> The flood is the shared {@link DistanceField} over the cached
  * joins, entering a neighbour only through ITS face pointing back; equal distances are swept in
- * {@link BlockPos#asLong} order, as they always were (MOD-715). Only the reading of the result moved into
- * two arrays.
+ * {@link FluidLineTopology#POSITION_ORDER} — x, y, z, the energy network's rule — so two donors sharing a
+ * neighbour take turns the same way wherever the build stands (MOD-733; until then the tie-break was
+ * {@code BlockPos.asLong}, which flips across {@code y = 0} and {@code z = 0}).
  *
  * <p>Package-private — part of the {@code FluidNetwork} implementation.
  */
@@ -34,12 +34,12 @@ final class FluidFlowField {
 	private boolean current;
 	/** Hops from each segment (by topology index) to the nearest seed, or -1 when unreached. */
 	private int[] hops = new int[0];
-	/** The reached segments that are not seeds, nearest first, ties in {@code asLong} order. */
+	/** The reached segments that are not seeds, nearest first, ties in {@link FluidLineTopology#POSITION_ORDER}. */
 	private int[] sweep = new int[0];
 
 	FluidFlowField(FluidLineTopology topology) {
 		this.topology = topology;
-		this.distance = new DistanceField<>(this::unreachedJoinedSegments, Comparator.comparingLong(BlockPos::asLong));
+		this.distance = new DistanceField<>(this::unreachedJoinedSegments, FluidLineTopology.POSITION_ORDER);
 	}
 
 	/** The topology was rebuilt: the next {@link #update} floods whatever its seeds. */

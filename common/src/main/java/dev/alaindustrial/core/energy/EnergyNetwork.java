@@ -8,6 +8,9 @@ import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 
+// size-justified: the façade of one network tick — topology, the serve/charge order and the ledger other classes
+// read (last tick's flows, backup episode, sink credit); the kernel it drives lives in EnergyLineDistributor and
+// LinePlanner (MOD-789 added the per-tick need lookup and the line plan, ADR-049).
 /**
  * A logical energy network: a connected set of cable {@link BlockPos} in one {@link ServerLevel},
  * with cached endpoint lists (adjacent producers and consumers, discovered via {@link EnergyLookup} on
@@ -40,6 +43,8 @@ import net.minecraft.server.level.ServerLevel;
  */
 public final class EnergyNetwork implements GraphNetwork<EnergyNetwork, BlockPos> {
 	private final EnergyTopologyCache topology;
+	/** The line's planner, kept from tick to tick so its arrays are reused (ADR-049). */
+	private final LinePlanner<BlockPos> planner = new LinePlanner<>();
 
 	/**
 	 * Cached "every cable buffer is at capacity" flag for the producer-only wake gate. The only writer
@@ -300,19 +305,9 @@ public final class EnergyNetwork implements GraphNetwork<EnergyNetwork, BlockPos
 		return new EnergyNetworkDiagnostics(this);
 	}
 
-	/** The kernel's flow potential of a cable, see {@link EnergyTopologyCache#flowPotentialOrNull} (MOD-665). */
-	Integer flowPotentialAt(BlockPos pos) {
-		return topology.flowPotentialOrNull(pos);
-	}
-
-	/** Hop distance of a cable from the nearest supplying producer, or null (MOD-665). */
-	Integer producerDistanceAt(BlockPos pos) {
-		return topology.producerDistanceOrNull(pos);
-	}
-
-	/** Cables the downhill rule cannot reach, filled outward from the source instead (MOD-318, MOD-665). */
-	List<BlockPos> strandedCables() {
-		return topology.strandedFillOrder();
+	/** Does the next tick hand energy from one cable to its neighbour, by the kernel's rule (MOD-665)? */
+	boolean handsOn(BlockPos from, BlockPos to) {
+		return planner.handsOn(from, to);
 	}
 
 	/** Producers that fed a cable on the last tick (MOD-665). */
@@ -449,17 +444,11 @@ public final class EnergyNetwork implements GraphNetwork<EnergyNetwork, BlockPos
 		return port != null && port.supportsExtraction();
 	}
 
-	/**
-	 * The kernel's view of this line for this tick ({@link LineView}). MOD-318: the stranded segments are
-	 * handed over only while a GENERATOR is actually supplying — the pass moves EU that is already in the
-	 * wires, and without the gate a lone Battery Box's backup discharge would be dragged out into dead-end
-	 * spurs it can only get back slowly (MOD-070's "a lone storage source does not fill the line").
-	 */
-	private LineView<BlockPos> lineView(boolean hasSupply) {
+	/** The kernel's view of this line for this tick ({@link LineView}, ADR-049). */
+	private LineView<BlockPos> lineView() {
 		return new LineView<>(LineEndpoints.BLOCK_FACES, topology::contains, this::cableBufferAt,
-				topology::consumerDistance, topology::flowPotentialOrNull, topology::machinePotentialOrNull,
-				topology.propagationOrder(), this::faceAccepts, this::faceEmits,
-				hasSupply ? topology.strandedFillOrder() : List.of(), topology::producerDistanceOrNull);
+				topology::consumerDistance, topology::producerDistanceOrNull, topology.cableList(), this::faceAccepts,
+				this::faceEmits, planner);
 	}
 
 	/**
@@ -473,28 +462,20 @@ public final class EnergyNetwork implements GraphNetwork<EnergyNetwork, BlockPos
 		// [3] drawn out of the cables by the machines (MOD-731), [4] by the sinks served apart (MOD-756).
 		long[] movedEu = {0L, 0L, 0L, 0L, 0L};
 		EnergyTransactions.get().runCommitting(tx -> {
-			// Serve ALL consumers from the line — machines first (MOD-009 priority), then storage sinks.
-			// Both drain the cable buffers they touch, so a cable between a source and ANY consumer
-			// (a machine OR a BatteryBox) genuinely carries and displays the energy in transit, instead
-			// of the storage charge bypassing the wires.
-			movedEu[0] += distributor.serveConsumersFromLine(demand.machines(), packetCap, lossPerBlock, tx,
+			// One plan for the whole line (ADR-049): the machines' need first (the nearest first when short), what
+			// they cannot take to the storages nearest first, then the machines' buffers; the sinks set aside this
+			// tick (MOD-731/756) draw only the generators' surplus, within the plan's budget.
+			EnergyLineDistributor.Moved moved = distributor.distribute(demand.machines(), demand.sinks(),
+					surplusTakers, plan.surplusBudget(), supply.generators(), packetCap, lossPerBlock, tx,
 					producerCursor);
-			movedEu[3] = distributor.lastServeDrawn();
-			// MOD-731, MOD-756: on a cascade or backup tick the set-aside sinks take the generators' surplus,
-			// before the stores level on what is left — the account that keeps a store's charge out of them.
-			long intoStorage = distributor.serveConsumersFromLine(surplusTakers, packetCap, lossPerBlock, tx,
-					producerCursor, plan.surplusBudget());
-			movedEu[4] = distributor.lastServeDrawn();
-			intoStorage += distributor.serveConsumersFromLine(demand.sinks(), packetCap, lossPerBlock, tx,
-					producerCursor);
-			movedEu[0] += intoStorage;
-			movedEu[1] = intoStorage;
-			// Replenish the line for next tick: generators fill it freely (inertia + a visible buffer);
-			// a storage source discharges into the line ONLY to cover the machine demand generators fall
-			// short of (backup power), never to hoard buffers or wash into another battery. With no
-			// generator present, storage discharges nothing, so two batteries can't drain each other.
-			movedEu[2] = distributor.chargeAndPropagateLine(supply.generators(), supply.storageSources(), plan,
-					packetCap, tx, producerCursor);
+			movedEu[0] = moved.delivered();
+			movedEu[1] = moved.intoStorage();
+			movedEu[3] = moved.machinesDrew();
+			movedEu[4] = moved.takersDrew();
+			// A storage source discharges into the line ONLY through one channel of the plan (ADR-004): backup
+			// power when the generators fall short of the machines, else the cascade or the feed. With no
+			// generator present the plan opens none, so two batteries can't drain each other.
+			movedEu[2] = distributor.dischargeStorage(supply.storageSources(), plan, packetCap, tx, producerCursor);
 		});
 		// Advance the rotation cursor so the next tick starts at a different producer / face. Monotonic and
 		// masked non-negative (MOD-254); every use site re-applies the modulus against its own list size.
@@ -559,7 +540,9 @@ public final class EnergyNetwork implements GraphNetwork<EnergyNetwork, BlockPos
 			generatorSurplus = 0L;
 			return 0L;
 		}
-		LineEndpoints.Demand demand = LineEndpoints.demand(consumers, this::storageAt, this::isStorageSink);
+		// MOD-789: a machine's per-tick need, read at its host (ADR-027), or 0 — unknown: never under-fed.
+		LineEndpoints.Demand demand = LineEndpoints.demand(consumers, this::storageAt, this::isStorageSink,
+				ep -> topology.level().getBlockEntity(ep.host()) instanceof PerTickDemand d ? d.perTickDemand() : 0L);
 		List<EnergyLineDistributor.LiveConsumer<BlockPos>> sinks = demand.sinks();
 
 		// The three storage discharge channels — backup, cascade, feed — and which sinks sit this tick out of the
@@ -572,9 +555,9 @@ public final class EnergyNetwork implements GraphNetwork<EnergyNetwork, BlockPos
 		List<EnergyLineDistributor.LiveConsumer<BlockPos>> surplusTakers = supply.storagePositions().isEmpty()
 				? List.of() : plan.setAside(sinks, supply.storagePositions(), stores::acceptsCascade);
 
-		// Published before the distributor reads propagationOrder / the flow potential, and outside the
+		// Published before the distributor reads the producer distances, and outside the
 		// committing transaction opened below (ADR-003).
-		topology.updateLiveEndpoints(supply.supplying(), demand.flowSeeds(), demand.machineSeeds());
+		topology.updateLiveEndpoints(supply.supplying());
 		// Stamp "a generator had EU this tick" for the shock rule — here rather than at the end of the
 		// method, so it lands on the same tick the cables are actually fed. Generators only: a Battery Box
 		// on an isolated stretch must not keep it reading as a live hazard (ADR-007).
@@ -582,7 +565,7 @@ public final class EnergyNetwork implements GraphNetwork<EnergyNetwork, BlockPos
 		if (hasSupply) {
 			lastSupplyTick = topology.level().getGameTime();
 		}
-		EnergyLineDistributor<BlockPos> distributor = new EnergyLineDistributor<>(lineView(hasSupply));
+		EnergyLineDistributor<BlockPos> distributor = new EnergyLineDistributor<>(lineView());
 		return moveAndRecord(distributor, supply, demand, surplusTakers, plan, packetCap, lossPerBlock,
 				topology.cables().size() * strongestCable.segmentBuffer());
 	}

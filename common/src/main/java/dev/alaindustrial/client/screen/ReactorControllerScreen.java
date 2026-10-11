@@ -239,11 +239,15 @@ public class ReactorControllerScreen extends MachineScreen<ReactorControllerMenu
 		return false;
 	}
 
+	/**
+	 * Every release goes to the open page (MOD-793: through the base's hook, so after the overlays and before
+	 * vanilla). Not claimed: vanilla still finishes its own release. The depth slider's release is idempotent,
+	 * so the page ending a drag first and vanilla's focused-widget release after it still send one request.
+	 */
 	@Override
-	public boolean mouseReleased(MouseButtonEvent event) {
-		boolean handled = super.mouseReleased(event);
+	protected boolean controlReleased(MouseButtonEvent event) {
 		pages.get(selected).mouseReleased(event);
-		return handled;
+		return false;
 	}
 
 	/**

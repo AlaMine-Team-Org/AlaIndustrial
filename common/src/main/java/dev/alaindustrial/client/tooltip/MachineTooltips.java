@@ -263,8 +263,8 @@ public final class MachineTooltips {
 					.withStyle(ChatFormatting.GRAY));
 		lines.add(Component.translatable("tooltip.alaindustrial.battery_pouch.usage_extract")
 				.withStyle(ChatFormatting.GRAY));
-		long eu = ItemEnergy.get(stack);
-		long cap = ItemEnergy.capacity(stack);
+		long eu = ItemEnergy.shownGet(stack);
+		long cap = ItemEnergy.shownCapacity(stack);
 		if (eu <= 0) {
 			lines.add(Component.translatable("tooltip.alaindustrial.battery_pouch.depleted")
 					.withStyle(ChatFormatting.RED));
@@ -291,8 +291,8 @@ public final class MachineTooltips {
 	private static void addBatteryTooltip(ItemStack stack, List<Component> lines) {
 		lines.add(Component.translatable("tooltip.alaindustrial.battery.usage")
 				.withStyle(ChatFormatting.GRAY));
-		long eu = ItemEnergy.get(stack);
-		long cap = ItemEnergy.capacity(stack);
+		long eu = ItemEnergy.shownGet(stack);
+		long cap = ItemEnergy.shownCapacity(stack);
 		if (eu <= 0) {
 			lines.add(Component.translatable("tooltip.alaindustrial.battery.depleted")
 					.withStyle(ChatFormatting.RED));
@@ -301,7 +301,7 @@ public final class MachineTooltips {
 					.withStyle(ChatFormatting.GOLD));
 			if (stack.getCount() > 1) {
 				lines.add(Component.translatable("tooltip.alaindustrial.battery.stack_total",
-						stack.getCount(), ItemEnergy.stackGet(stack)).withStyle(ChatFormatting.DARK_GRAY));
+						stack.getCount(), ItemEnergy.shownStackGet(stack)).withStyle(ChatFormatting.DARK_GRAY));
 			}
 		}
 	}
@@ -314,8 +314,8 @@ public final class MachineTooltips {
 	private static void addPoweredToolTooltip(ItemStack stack, PoweredToolTooltip tooltip, List<Component> lines) {
 		lines.add(Component.translatable(tooltip.usageKey(), tooltip.usageValues()).withStyle(ChatFormatting.GRAY));
 		addStateLines(stack, tooltip.beforeCharge(), lines);
-		long eu = ItemEnergy.get(stack);
-		long cap = ItemEnergy.capacity(stack);
+		long eu = ItemEnergy.shownGet(stack);
+		long cap = ItemEnergy.shownCapacity(stack);
 		if (tooltip.depleted().test(stack)) {
 			lines.add(Component.translatable(tooltip.depletedKey()).withStyle(ChatFormatting.RED));
 		} else {

@@ -946,4 +946,13 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 		return new GardenDroneStationMenu(syncId, inventory, this,
 				ContainerLevelAccess.create(getLevel(), getBlockPos()));
 	}
+
+	/**
+	 * Unknown per-tick need (MOD-789, ADR-049): it pays per drone action, so the network plans it as a store and
+	 * charges it with the stores, nearest first.
+	 */
+	@Override
+	public long perTickDemand() {
+		return 0L;
+	}
 }

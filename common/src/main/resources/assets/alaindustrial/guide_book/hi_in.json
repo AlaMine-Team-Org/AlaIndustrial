@@ -1487,7 +1487,7 @@
             {
               "type": "text",
               "title": "आरा मशीन",
-              "text": "किसी भी लकड़ी को तख्तों, डंडों, पटियों या सीढ़ियों में चीरती है, वह भी हाथ से बनाने की तुलना में अधिक उपज के साथ। चार बदले जा सकने वाले मोड, EU पर चलती है।"
+              "text": "किसी भी लकड़ी को तख्तों, डंडों, पटियों या सीढ़ियों में चीरती है, हाथ से बनाने से अधिक उपज के साथ, और पाँचवें मोड में बुरादा बनाती है। पाँच बदले जा सकने वाले मोड, EU पर चलती है।"
             },
             {
               "type": "stats",
@@ -2834,6 +2834,25 @@
           ]
         },
         {
+          "id": "sawdust",
+          "title": "बुरादा",
+          "icon": "alaindustrial:sawdust",
+          "pages": [
+            {
+              "type": "text",
+              "title": "बुरादा",
+              "text": "आरा मशीन के पाँचवें मोड का उत्पाद — हर लट्ठे से 6 बुरादा। किण्वन टंकी के लिए सस्ता जैविक कच्चा माल, पुनर्चक्रक का दहनशील अंश और बाँस जैसा जलने वाला छोटा ईंधन।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 160 EU/संचालन"
+              ]
+            }
+          ]
+        },
+        {
           "id": "palladium_ore",
           "title": "पैलेडियम का अयस्क",
           "icon": "alaindustrial:palladium_ore",
@@ -3291,6 +3310,43 @@
           ]
         },
         {
+          "id": "tempered_iron_bars",
+          "title": "टेम्पर्ड आयरन छड़",
+          "icon": "alaindustrial:tempered_iron_bars",
+          "pages": [
+            {
+              "type": "text",
+              "title": "टेम्पर्ड आयरन छड़",
+              "text": "वनीला की तर्ज़ पर टेम्पर्ड लोहे के चार निर्माण ब्लॉक — सलाखें, सीढ़ी, ट्रैपडोर और ज़ंजीर। व्यवहार वनीला जैसा, रूप मॉड के इस्पात जैसा।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "बफ़र: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tempered_iron_bars",
+              "result_count": 16
+            }
+          ]
+        },
+        {
           "id": "reactor_button",
           "title": "रिएक्टर बटन",
           "icon": "alaindustrial:reactor_button",
@@ -3435,6 +3491,43 @@
               ],
               "result_id": "alaindustrial:reactor_glass",
               "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reinforced_glass",
+          "title": "मजबूत काँच",
+          "icon": "alaindustrial:reinforced_glass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "मजबूत काँच",
+              "text": "टेम्पर्ड लोहे के ढाँचे में साफ़ काँच — पत्थर की तरह टूटता है और क्रीपर या TNT विस्फोट झेल लेता है। एक निर्माण ब्लॉक और आगे की रेसिपियों की सामग्री।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "बफ़र: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:reinforced_glass",
+              "result_count": 4
             }
           ]
         },
@@ -3737,6 +3830,43 @@
               ],
               "result_id": "alaindustrial:industrial_workbench",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "industrial_light",
+          "title": "औद्योगिक बल्ब",
+          "icon": "alaindustrial:industrial_light",
+          "pages": [
+            {
+              "type": "text",
+              "title": "औद्योगिक बल्ब",
+              "text": "4×4 पिक्सेल की नन्ही बत्ती, गर्म रोशनी स्तर 15 — फ़र्श, छत या किसी भी दीवार पर लगाएँ। न मेनू, न ऊर्जा।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "बफ़र: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "minecraft:glass",
+                "",
+                "",
+                "minecraft:glowstone_dust",
+                "",
+                "",
+                "alaindustrial:tempered_iron_plate",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:industrial_light",
+              "result_count": 4
             }
           ]
         },

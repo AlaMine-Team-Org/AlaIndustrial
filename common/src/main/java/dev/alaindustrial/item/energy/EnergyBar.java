@@ -15,13 +15,16 @@ public final class EnergyBar {
 	private EnergyBar() {
 	}
 
-	/** Bar width for the item's charge against its own capacity; 0 for an item without a buffer. */
+	/**
+	 * Bar width for the item's charge against its own capacity; 0 for an item without a buffer. Drawn on the
+	 * client, so both are the shown ones (MOD-790): the server's buffer, not the player's own file.
+	 */
 	public static int width(ItemStack stack, int maxWidth) {
-		long capacity = ItemEnergy.capacity(stack);
+		long capacity = ItemEnergy.shownCapacity(stack);
 		if (capacity <= 0) {
 			return 0;
 		}
-		return (int) Math.min(maxWidth, maxWidth * ItemEnergy.get(stack) / capacity);
+		return (int) Math.min(maxWidth, maxWidth * ItemEnergy.shownGet(stack) / capacity);
 	}
 
 	/** Bar colour of an item of voltage tier {@code tier} (LV for everything but the crystal blanks). */

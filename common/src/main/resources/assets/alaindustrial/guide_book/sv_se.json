@@ -1487,7 +1487,7 @@
             {
               "type": "text",
               "title": "Sågverk",
-              "text": "Sågar vilket trä som helst till plankor, pinnar, plattor eller trappor med högre utbyte än handtillverkning. Fyra omkopplingsbara lägen, drivs med EU."
+              "text": "Sågar vilket trä som helst till plankor, pinnar, plattor eller trappor med högre utbyte än handtillverkning, eller till sågspån i det femte läget. Fem omkopplingsbara lägen, drivs med EU."
             },
             {
               "type": "stats",
@@ -2834,6 +2834,25 @@
           ]
         },
         {
+          "id": "sawdust",
+          "title": "Sågspån",
+          "icon": "alaindustrial:sawdust",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Sågspån",
+              "text": "Produkten av sågverkets femte läge — 6 sågspån per stock. Billig organisk råvara för fermentorn, brännbar fraktion i återvinnaren och ett kort bränsle som brinner som bambu."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Energi: 160 EU/op"
+              ]
+            }
+          ]
+        },
+        {
           "id": "palladium_ore",
           "title": "Palladiummalm",
           "icon": "alaindustrial:palladium_ore",
@@ -3291,6 +3310,43 @@
           ]
         },
         {
+          "id": "tempered_iron_bars",
+          "title": "Galler av härdat järn",
+          "icon": "alaindustrial:tempered_iron_bars",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Galler av härdat järn",
+              "text": "Fyra byggblock av härdat järn efter vanilla-förebild — galler, stege, fallucka och kedja. De beter sig som vanilla och ser ut som moddens stål."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Buffert: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formad tillverkning",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tempered_iron_bars",
+              "result_count": 16
+            }
+          ]
+        },
+        {
           "id": "reactor_button",
           "title": "Reaktorknapp",
           "icon": "alaindustrial:reactor_button",
@@ -3435,6 +3491,43 @@
               ],
               "result_id": "alaindustrial:reactor_glass",
               "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reinforced_glass",
+          "title": "Förstärkt glas",
+          "icon": "alaindustrial:reinforced_glass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Förstärkt glas",
+              "text": "Klart glas i en ram av härdat järn — det går sönder som sten och står emot en creeper- eller TNT-explosion. Ett byggblock och en ingrediens i senare recept."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Buffert: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formad tillverkning",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:reinforced_glass",
+              "result_count": 4
             }
           ]
         },
@@ -3737,6 +3830,43 @@
               ],
               "result_id": "alaindustrial:industrial_workbench",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "industrial_light",
+          "title": "Industrilampa",
+          "icon": "alaindustrial:industrial_light",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Industrilampa",
+              "text": "En pytteliten lampa på 4×4 pixlar med varmt ljus av nivå 15 — på golvet, i taket eller på valfri vägg. Ingen meny, ingen energi."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Buffert: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formad tillverkning",
+              "grid": [
+                "minecraft:glass",
+                "",
+                "",
+                "minecraft:glowstone_dust",
+                "",
+                "",
+                "alaindustrial:tempered_iron_plate",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:industrial_light",
+              "result_count": 4
             }
           ]
         },

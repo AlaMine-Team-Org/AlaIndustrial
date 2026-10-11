@@ -10,6 +10,8 @@ import dev.alaindustrial.Config;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.block.entity.SawmillBlockEntity;
 import dev.alaindustrial.block.entity.SawmillMode;
+import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.ProblemReporter;
@@ -27,6 +29,27 @@ import net.minecraft.world.level.storage.TagValueInput;
  * its mechanic and declared in that class's roster.
  */
 public final class SawmillScenarios {
+
+	/**
+	 * The scenarios declared here rather than through {@link MachineScenarios} (ADR-038): the sawdust mode
+	 * (MOD-655). Nested so reading the roster does not initialise this class.
+	 */
+	public static final class Roster {
+		public static final List<RosterEntry> ENTRIES = List.of(
+				RosterEntry.of(SawmillScenarios::tcSaw001Fun06_sawdustModeLog, "sawmill_sawdust_mode_log_gives_six")
+						.ticks(40),
+				RosterEntry.of(SawmillScenarios::tcSaw001Fun07_sawdustModeBamboo,
+								"sawmill_sawdust_mode_bamboo_block_gives_three")
+						.ticks(40),
+				RosterEntry.of(SawmillScenarios::tcSaw001Con04_savedModeOrdinalsLoadUnchanged,
+								"sawmill_saved_mode_ordinals_load_unchanged")
+						.ticks(40),
+				RosterEntry.of(SawmillScenarios::tcSaw001Con05_netherStemGivesNoSawdust,
+								"sawmill_sawdust_mode_nether_stem_gives_none")
+						.ticks(40));
+
+		private Roster() {}
+	}
 
 	private SawmillScenarios() {
 	}
@@ -152,6 +175,76 @@ public final class SawmillScenarios {
 
 		if (restored.getMode() != SawmillMode.STAIRS) {
 			helper.fail("sawmill mode lost on NBT round-trip: expected STAIRS but got " + restored.getMode());
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * TC-SAW-001-FUN06 (MOD-655): SAWDUST mode, oak log → 6 sawdust — one log burns 300 ticks, six sawdust 6 × 50,
+	 * so sawing it first never beats burning it.
+	 *
+	 * @implements TC-SAW-001-FUN06 — SAWDUST mode: oak log (#minecraft:logs_that_burn) → exactly 6 sawdust.
+	 */
+	public static void tcSaw001Fun06_sawdustModeLog(GameTestHelper helper) {
+		assertSawsInMode(helper, SawmillMode.SAWDUST, new ItemStack(Items.OAK_LOG, 4), ModContent.SAWDUST.get(), 6);
+	}
+
+	/**
+	 * TC-SAW-001-FUN07 (MOD-655): SAWDUST mode, bamboo block → 3 sawdust — half a log, as in PLANKS mode.
+	 *
+	 * @implements TC-SAW-001-FUN07 — SAWDUST mode: bamboo block → exactly 3 sawdust (half of a log).
+	 */
+	public static void tcSaw001Fun07_sawdustModeBamboo(GameTestHelper helper) {
+		assertSawsInMode(helper, SawmillMode.SAWDUST, new ItemStack(Items.BAMBOO_BLOCK, 4),
+				ModContent.SAWDUST.get(), 3);
+	}
+
+	/**
+	 * TC-SAW-001-CON05 (MOD-655): a crimson stem gives no sawdust. Nether stems do not burn, and sawdust is fuel, so
+	 * sawing one would make fuel out of something that is not; the recipe takes {@code #minecraft:logs_that_burn},
+	 * which leaves the stems out, rather than {@code #minecraft:logs}, which holds them.
+	 *
+	 * @implements TC-SAW-001-CON05 — SAWDUST mode: a crimson stem is not sawn; no output, the input untouched.
+	 */
+	public static void tcSaw001Con05_netherStemGivesNoSawdust(GameTestHelper helper) {
+		MachineBlockEntity be = place(helper, sawmill());
+		((SawmillBlockEntity) be).setMode(SawmillMode.SAWDUST);
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
+		be.setItem(0, new ItemStack(Items.CRIMSON_STEM, 4));
+		drive(be, helper, Config.sawmillDuration);
+		ItemStack out = be.getItem(1);
+		if (!out.isEmpty()) {
+			helper.fail("sawmill[SAWDUST] sawed a crimson stem into " + out.getCount() + "× " + out.getItem()
+					+ " — Nether stems do not burn and must not become fuel");
+		}
+		if (be.getItem(0).getCount() != 4) {
+			helper.fail("sawmill[SAWDUST] consumed a crimson stem: " + be.getItem(0).getCount() + " left of 4");
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * TC-SAW-001-CON04 (MOD-655): the saved {@code "Mode"} is the enum ordinal, so a mode added anywhere but last
+	 * turns every saved sawmill into another mode. Each ordinal is written into a saved block entity and loaded into
+	 * a fresh one; the four ordinals worlds saved before MOD-655 must load as the mode they were, and 4 as SAWDUST.
+	 *
+	 * @implements TC-SAW-001-CON04 — saved modes 0..3 load as PLANKS, STICKS, SLABS, STAIRS and 4 as SAWDUST.
+	 */
+	public static void tcSaw001Con04_savedModeOrdinalsLoadUnchanged(GameTestHelper helper) {
+		// The order worlds were saved in; written out by name, not read from SawmillMode.values().
+		List<String> saved = List.of("PLANKS", "STICKS", "SLABS", "STAIRS", "SAWDUST");
+		MachineBlockEntity be = place(helper, sawmill());
+		var registries = helper.getLevel().registryAccess();
+		for (int ordinal = 0; ordinal < saved.size(); ordinal++) {
+			CompoundTag tag = be.saveCustomOnly(registries);
+			tag.putInt("Mode", ordinal);
+			SawmillBlockEntity restored = new SawmillBlockEntity(be.getBlockPos(),
+					helper.getLevel().getBlockState(be.getBlockPos()));
+			restored.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, tag));
+			if (!restored.getMode().name().equals(saved.get(ordinal))) {
+				helper.fail("sawmill saved with Mode " + ordinal + " loaded as " + restored.getMode() + ", expected "
+						+ saved.get(ordinal) + " — a mode was inserted before the end of SawmillMode");
+			}
 		}
 		helper.succeed();
 	}

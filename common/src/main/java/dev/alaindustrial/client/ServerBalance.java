@@ -125,6 +125,10 @@ public final class ServerBalance {
 		return current.intValue("batteryBoxBuffer", Config.batteryBoxBuffer);
 	}
 
+	public static int batteryBuffer() {
+		return current.intValue("batteryBuffer", ToolConfig.batteryBuffer);
+	}
+
 	public static int blockBreakerBuffer() {
 		return current.intValue("blockBreakerBuffer", Config.blockBreakerBuffer);
 	}
@@ -197,16 +201,32 @@ public final class ServerBalance {
 		return current.intValue("distillationColumnDuration", Config.distillationColumnDuration);
 	}
 
+	public static int electricBowBuffer() {
+		return current.intValue("electricBowBuffer", ToolConfig.electricBowBuffer);
+	}
+
 	public static int electricBowEuPerShot() {
 		return current.intValue("electricBowEuPerShot", ToolConfig.electricBowEuPerShot);
+	}
+
+	public static int electricChainsawBuffer() {
+		return current.intValue("electricChainsawBuffer", ToolConfig.electricChainsawBuffer);
 	}
 
 	public static int electricChainsawEuPerBlock() {
 		return current.intValue("electricChainsawEuPerBlock", ToolConfig.electricChainsawEuPerBlock);
 	}
 
+	public static int electricDrillBuffer() {
+		return current.intValue("electricDrillBuffer", ToolConfig.electricDrillBuffer);
+	}
+
 	public static int electricDrillEuPerBlock() {
 		return current.intValue("electricDrillEuPerBlock", ToolConfig.electricDrillEuPerBlock);
+	}
+
+	public static int electricDrillNetheriteTipBuffer() {
+		return current.intValue("electricDrillNetheriteTipBuffer", ToolConfig.electricDrillNetheriteTipBuffer);
 	}
 
 	public static int electricFurnaceDuration() {
@@ -221,12 +241,24 @@ public final class ServerBalance {
 		return current.intValue("electricHeaterEuPerTick", Config.electricHeaterEuPerTick);
 	}
 
+	public static int electricHoeBuffer() {
+		return current.intValue("electricHoeBuffer", ToolConfig.electricHoeBuffer);
+	}
+
 	public static int electricHoeEuPerBlock() {
 		return current.intValue("electricHoeEuPerBlock", ToolConfig.electricHoeEuPerBlock);
 	}
 
+	public static int electricSaberBuffer() {
+		return current.intValue("electricSaberBuffer", ToolConfig.electricSaberBuffer);
+	}
+
 	public static int electricSaberEuPerHit() {
 		return current.intValue("electricSaberEuPerHit", ToolConfig.electricSaberEuPerHit);
+	}
+
+	public static int electricShovelBuffer() {
+		return current.intValue("electricShovelBuffer", ToolConfig.electricShovelBuffer);
 	}
 
 	public static int electricShovelEuPerBlock() {
@@ -239,6 +271,14 @@ public final class ServerBalance {
 
 	public static double electrumCableLossPerBlock() {
 		return current.doubleValue("electrumCableLossPerBlock", Config.electrumCableLossPerBlock);
+	}
+
+	public static int energyCrystalBuffer() {
+		return current.intValue("energyCrystalBuffer", ToolConfig.energyCrystalBuffer);
+	}
+
+	public static int energyPackBuffer() {
+		return current.intValue("energyPackBuffer", ToolConfig.energyPackBuffer);
 	}
 
 	public static int euPerXp() {
@@ -271,6 +311,10 @@ public final class ServerBalance {
 
 	public static int fluidTankCapacity() {
 		return current.intValue("fluidTankCapacity", Config.fluidTankCapacity);
+	}
+
+	public static int fluxweaveBuffer() {
+		return current.intValue("fluxweaveBuffer", ToolConfig.fluxweaveBuffer);
 	}
 
 	public static int fuelEuPerTick() {
@@ -345,8 +389,20 @@ public final class ServerBalance {
 		return current.intValue("itemPipeTransferIntervalTicks", Config.itemPipeTransferIntervalTicks);
 	}
 
+	public static int jetpackBuffer() {
+		return current.intValue("jetpackBuffer", ToolConfig.jetpackBuffer);
+	}
+
+	public static int jetpackMaxY() {
+		return current.intValue("jetpackMaxY", ToolConfig.jetpackMaxY);
+	}
+
 	public static int kokSagyzSandGrowthPercent() {
 		return current.intValue("kokSagyzSandGrowthPercent", Config.kokSagyzSandGrowthPercent);
+	}
+
+	public static int lapotronCrystalBuffer() {
+		return current.intValue("lapotronCrystalBuffer", ToolConfig.lapotronCrystalBuffer);
 	}
 
 	public static float levelXpMultiplier() {
@@ -355,6 +411,10 @@ public final class ServerBalance {
 
 	public static int lightningRodBuffer() {
 		return current.intValue("lightningRodBuffer", GeneratorConfig.lightningRodBuffer);
+	}
+
+	public static int lvPouchBuffer() {
+		return current.intValue("lvPouchBuffer", ToolConfig.lvPouchBuffer);
 	}
 
 	public static int lvPouchCapacity() {
@@ -377,6 +437,10 @@ public final class ServerBalance {
 		return current.intValue("machineEuPerTick", Config.machineEuPerTick);
 	}
 
+	public static int magnetAdvancedBuffer() {
+		return current.intValue("magnetAdvancedBuffer", ToolConfig.magnetAdvancedBuffer);
+	}
+
 	public static int magnetAdvancedEuPerItem() {
 		return current.intValue("magnetAdvancedEuPerItem", ToolConfig.magnetAdvancedEuPerItem);
 	}
@@ -387,6 +451,10 @@ public final class ServerBalance {
 
 	public static int magnetAdvancedRange() {
 		return current.intValue("magnetAdvancedRange", ToolConfig.magnetAdvancedRange);
+	}
+
+	public static int magnetBuffer() {
+		return current.intValue("magnetBuffer", ToolConfig.magnetBuffer);
 	}
 
 	public static int magnetEuPerItem() {
@@ -527,6 +595,10 @@ public final class ServerBalance {
 
 	public static int repairBenchTier1EuCost() {
 		return current.intValue("repairBenchTier1EuCost", Config.repairBenchTier1EuCost);
+	}
+
+	public static int resonantCrystalBuffer() {
+		return current.intValue("resonantCrystalBuffer", ToolConfig.resonantCrystalBuffer);
 	}
 
 	public static int sawmillDuration() {

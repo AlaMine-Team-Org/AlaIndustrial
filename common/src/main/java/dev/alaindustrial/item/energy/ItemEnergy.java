@@ -57,6 +57,46 @@ public final class ItemEnergy {
 		return Math.max(0L, Math.min(value, capacity(stack)));
 	}
 
+	// --- Shown on the client (MOD-790) -----------------------------------------------------------------------
+	//
+	// What a client DRAWS — a bar, an "X / Y EU" line, a HUD percentage — is measured against the server's
+	// buffers, which reach it through ServerBalance; on a dedicated server the client's own file holds other
+	// numbers. Logic never asks these: charging, spending and the clamp go through capacity/get above, which read
+	// this side's balance.
+
+	/** The item's capacity by the buffers the client draws against ({@link ItemBuffers#shown()}); display only. */
+	public static long shownCapacity(ItemStack stack) {
+		return stack.getItem() instanceof PoweredItem powered ? powered.energyCapacity(stack, ItemBuffers.shown()) : 0L;
+	}
+
+	/**
+	 * The stored charge as the client shows it: the raw component clamped to {@link #shownCapacity}, not to the
+	 * local capacity — a server with bigger buffers sends charges the local file would cut down. Display only.
+	 */
+	public static long shownGet(ItemStack stack) {
+		Long value = stack.get(ModDataComponents.POUCH_ENERGY.get());
+		if (value == null) {
+			return 0L;
+		}
+		return Math.max(0L, Math.min(value, shownCapacity(stack)));
+	}
+
+	/** {@link #shownGet} of the whole stack — what a stack of batteries is worth, as shown. Display only. */
+	public static long shownStackGet(ItemStack stack) {
+		return shownGet(stack) * stack.getCount();
+	}
+
+	/**
+	 * Whether the item holds any charge — {@code get(stack) > 0} without asking for the capacity (MOD-791). The
+	 * two agree because every buffer knob has {@code min = 1}: the clamp to {@code [0, capacity]} turns a positive
+	 * raw charge into a positive one. Client code asks this rather than {@link #get}, which reads the capacity from
+	 * the local balance; a negative component (a hand-written {@code /give}) holds nothing, as in {@link #get}.
+	 */
+	public static boolean hasCharge(ItemStack stack) {
+		Long value = stack.get(ModDataComponents.POUCH_ENERGY.get());
+		return value != null && value > 0L && stack.getItem() instanceof PoweredItem;
+	}
+
 	/** Store {@code eu} clamped to {@code [0, capacity]}; 0 removes the component. */
 	public static void set(ItemStack stack, long eu) {
 		long clamped = Math.max(0L, Math.min(eu, capacity(stack)));
