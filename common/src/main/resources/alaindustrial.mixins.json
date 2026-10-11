@@ -13,6 +13,7 @@
     "client.RootInspectionStateMixin",
     "client.RootInspectionRendererMixin",
     "client.AbstractContainerScreenAccessor",
+    "client.GuiGraphicsExtractorAccessor",
     "client.ItemModelsAccessor",
     "client.ItemStackRenderStateAccessor",
     "client.ItemTintSourcesAccessor",

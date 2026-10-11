@@ -173,6 +173,9 @@ public final class GuideBookScreen extends Screen {
 			}).bounds(contentX, contentTop, 60, TAB_H).build());
 		}
 
+		// MOD-797: the entry's blueprint, when its block has one.
+		dev.alaindustrial.client.blueprint.BlueprintGuideButton.create(e.icon, this, contentRight, contentTop, TAB_H)
+				.ifPresent(this::addRenderableWidget);
 		flowTop = contentTop + TAB_H + 8;          // below the Back button + entry title row
 		int navRow = TAB_H + 2;
 		int flowBottom = contentBottom - navRow;

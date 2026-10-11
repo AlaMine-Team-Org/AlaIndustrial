@@ -44,8 +44,21 @@ public final class MachineTooltips {
 	private MachineTooltips() {
 	}
 
-	/** Append Ala Industrial tooltip lines for {@code stack} (machine stats or analyzer reading). */
+	/**
+	 * Append Ala Industrial tooltip lines for {@code stack} (machine stats or analyzer reading), then the
+	 * blueprint line when the item has a blueprint (MOD-797) — last, so it sits under the stats.
+	 */
 	public static void append(ItemStack stack, List<Component> lines, boolean shiftDown) {
+		appendStats(stack, lines, shiftDown);
+		dev.alaindustrial.client.blueprint.BlueprintTooltip.append(stack, lines);
+	}
+
+	/**
+	 * The stat lines proper. size-justified: one ordered dispatch over every item family that writes its own
+	 * tooltip (graded, dyed, analyzer, pouches, storage, batteries, powered tools, components, machines);
+	 * the first match returns, so splitting it would only spread that order across files.
+	 */
+	private static void appendStats(ItemStack stack, List<Component> lines, boolean shiftDown) {
 		// A mutated stack carries its grade regardless of what item it is, so this runs before the
 		// mod-item branches below (a graded vanilla ingot would never reach them).
 		MutationGrade grade = MutationGrades.get(stack);

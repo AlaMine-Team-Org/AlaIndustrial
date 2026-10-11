@@ -31,7 +31,8 @@ public class KeyMappingDefaultsClientGameTest implements FabricClientGameTest {
 			"key.alaindustrial.toggle_drill_hud key.keyboard.j",
 			"key.alaindustrial.open_profile key.keyboard.k",
 			"key.alaindustrial.toggle_step_assist key.keyboard.g",
-			"key.alaindustrial.toggle_drill_column key.keyboard.l");
+			"key.alaindustrial.toggle_drill_column key.keyboard.l",
+			"key.alaindustrial.open_blueprint key.keyboard.i");
 
 	/** {@code null} when {@code mappings} match {@link #EXPECTED} in the line's keyboard type, else what differs. */
 	public static String check(List<KeyMapping> mappings) {
@@ -52,7 +53,7 @@ public class KeyMappingDefaultsClientGameTest implements FabricClientGameTest {
 	}
 
 	/**
-	 * @implements MOD-703-KM01 — the five mod key mappings default to G, H, J, K and L of the line's keyboard
+	 * @implements MOD-703-KM01 — the six mod key mappings default to G, H, J, K, L and I of the line's keyboard
 	 *     type, in registration order
 	 */
 	@Override

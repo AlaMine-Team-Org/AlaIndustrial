@@ -167,6 +167,11 @@ public class IndustrializationClient implements ClientModInitializer {
 		for (net.minecraft.client.KeyMapping mapping : ClientContentManifest.KEY_MAPPINGS) {
 			KeyMappingHelper.registerKeyMapping(mapping);
 		}
+		// MOD-797: picture-in-picture renderers (the blueprint scene) from the shared list.
+		for (ClientContentManifest.PipRendererDef<?> def : ClientContentManifest.PICTURE_IN_PICTURE_RENDERERS) {
+			net.fabricmc.fabric.api.client.rendering.v1.PictureInPictureRendererRegistry.register(
+					context -> def.factory().get());
+		}
 		ClientTickEvents.END_CLIENT_TICK.register(client -> ModKeyMappings.handleInput());
 		// Jetpack thrust/glide (MOD-148) — player motion is client-authoritative, so the velocity
 		// change lives in this end-of-tick step; the server burns the EU on its own input view.

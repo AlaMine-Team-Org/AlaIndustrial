@@ -217,6 +217,13 @@ public final class IndustrializationNeoForgeClient {
 				event.register(mapping);
 			}
 		});
+		// MOD-797: picture-in-picture renderers (the blueprint scene) from the shared list.
+		modBus.addListener((net.neoforged.neoforge.client.event.RegisterPictureInPictureRenderersEvent event) -> {
+			for (ClientContentManifest.PipRendererDef<?> def : ClientContentManifest.PICTURE_IN_PICTURE_RENDERERS) {
+				registerPip(event, def);
+			}
+		});
+
 		// In list order, which is drawing order: the readouts stay legible over the teleport fade. The
 		// drawing is loader-neutral — NeoForge's GuiLayer and Fabric's HudElement take the same pair.
 		modBus.addListener((RegisterGuiLayersEvent event) -> {
@@ -242,6 +249,12 @@ public final class IndustrializationNeoForgeClient {
 		NeoForge.EVENT_BUS.addListener(
 				(net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent.LoggingOut event) ->
 						dev.alaindustrial.client.ClientDisconnectReset.run());
+	}
+
+	private static <T extends net.minecraft.client.renderer.state.gui.pip.PictureInPictureRenderState> void registerPip(
+			net.neoforged.neoforge.client.event.RegisterPictureInPictureRenderersEvent event,
+			ClientContentManifest.PipRendererDef<T> def) {
+		event.register(def.stateClass(), def.factory());
 	}
 
 	/**
