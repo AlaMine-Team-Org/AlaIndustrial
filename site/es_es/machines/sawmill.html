@@ -372,7 +372,7 @@
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Transporte de fluidos</span><span class="cat-count" aria-label="5 páginas">5</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>Almacenamiento de fluidos</span><span class="cat-count" aria-label="2 páginas">2</span></a>
 <div class="group-title">Mundo y automatización</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Materiales</span><span class="cat-count" aria-label="25 páginas">25</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Materiales</span><span class="cat-count" aria-label="26 páginas">26</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>Agricultura</span><span class="cat-count" aria-label="6 páginas">6</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>Máquinas avanzadas</span><span class="cat-count" aria-label="1 página">1</span></a>
 <div class="group-title">Otros</div>
@@ -391,13 +391,13 @@
     <div class="info">
       <h1>Aserradero</h1>
       <div class="block-id">alaindustrial:sawmill</div>
-      <div class="tags"><span class="tag cat" style="background:#ff7a45">Máquinas</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">Implementado</span><span class="tag">tier-lv</span><span class="tag">processing</span><span class="tag">wood</span><span class="tag">sawing</span><span class="tag">gui-modes</span></div>
+      <div class="tags"><span class="tag cat" style="background:#ff7a45">Máquinas</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">Implementado</span><span class="tag">tier-lv</span><span class="tag">processing</span><span class="tag">wood</span><span class="tag">sawing</span><span class="tag">gui-modes</span><span class="tag">sawdust</span></div>
     </div>
   </div>
 </div>
 <h2 id="resumen">Resumen</h2>
 
-<p>El <strong>Aserradero</strong> es una máquina LV de procesamiento de madera. Aserra un tronco (o tablones) con un <strong>rendimiento mayor</strong> que el fabricado a mano, y puede cortar cuatro productos distintos — tiene <strong>4 modos conmutables</strong> (botones de la interfaz): <strong>tablones / palos / losas / escaleras</strong>. Cada especie produce su propia especie; los palos son independientes de la especie. Es la operación más barata del mod en energía — aserrar madera es más fácil que moler piedra.</p>
+<p>El <strong>Aserradero</strong> es una máquina LV de procesamiento de madera. Aserra un tronco (o tablones) con un <strong>rendimiento mayor</strong> que el fabricado a mano, y puede cortar cinco productos distintos — tiene <strong>5 modos conmutables</strong> (botones de la interfaz): <strong>tablones / palos / losas / escaleras / serrín</strong>. Cada especie produce su propia especie; los palos y el <a href="../materials/sawdust.html">serrín</a> son independientes de la especie. Es la operación más barata del mod en energía — aserrar madera es más fácil que moler piedra.</p>
 
 <blockquote><strong>Miniejemplo:</strong> pon un tronco de roble en modo «Tablones» — en ~4 segundos obtienes <strong>6 tablones de roble</strong> en lugar de los 4 de vanilla. Cambia a «Palos» — el mismo tronco da <strong>18 palos</strong>.</blockquote>
 
@@ -411,9 +411,9 @@
 
 <h2 id="procesamiento">Procesamiento</h2>
 
-<p>El aserradero siempre trabaja solo en el <strong>modo activo</strong>; las recetas de los otros tres modos mientras tanto están inactivas. Cambiar de modo reinicia el progreso actual (el nuevo modo corta un producto distinto). Un corte tarda ~80 ticks (~4 s).</p>
+<p>El aserradero siempre trabaja solo en el <strong>modo activo</strong>; las recetas de los demás modos mientras tanto están inactivas. Cambiar de modo reinicia el progreso actual (el nuevo modo corta un producto distinto). Un corte tarda ~80 ticks (~4 s).</p>
 
-<table><thead><tr><th>Qué</th><th>Valor</th></tr></thead><tbody><tr><td>Tipo de receta</td><td>/ <code>sawing_sticks</code> / <code>sawing_slabs</code> / <code>sawing_stairs</code></td></tr><tr><td>Duración</td><td>~80 ticks (~4 s)</td></tr><tr><td>Coste por corte</td><td>160 EU/FE</td></tr><tr><td>Autosalida</td><td>no</td></tr></tbody></table>
+<table><thead><tr><th>Qué</th><th>Valor</th></tr></thead><tbody><tr><td>Tipo de receta</td><td>/ <code>sawing_sticks</code> / <code>sawing_slabs</code> / <code>sawing_stairs</code> / <code>sawing_sawdust</code></td></tr><tr><td>Duración</td><td>~80 ticks (~4 s)</td></tr><tr><td>Coste por corte</td><td>160 EU/FE</td></tr><tr><td>Autosalida</td><td>no</td></tr></tbody></table>
 
 <h2 id="inventario">Inventario</h2>
 
@@ -425,7 +425,7 @@
 
 <h2 id="interfaz">Interfaz</h2>
 
-<p>La pantalla tiene su propia interfaz: búfer de energía, ranuras de entrada y salida, y entre ellas un indicador de progreso en forma de <strong>hoja de sierra</strong> que se llena de izquierda a derecha. Una fila de <strong>4 botones de modo</strong> con iconos fantasma (tablón/palo/losa/escaleras) está bajo las ranuras; el modo activo queda resaltado y cada botón tiene su tooltip.</p>
+<p>La pantalla tiene su propia interfaz: búfer de energía, ranuras de entrada y salida, y entre ellas un indicador de progreso en forma de <strong>hoja de sierra</strong> que se llena de izquierda a derecha. Una fila centrada de <strong>5 botones de modo</strong> con iconos fantasma (tablón/palo/losa/escaleras/serrín) está bajo las ranuras; el modo activo queda resaltado y cada botón tiene su tooltip.</p>
 
 <p>Mientras el panel de mejoras está abierto — esté donde esté —, los botones de modo no responden: un clic no cambia el modo, y al pasar el cursor no hay ni resaltado ni tooltip. Lo mismo vale para un botón tapado por el panel de estadísticas abierto. Un tooltip nunca promete lo que el botón no hará.</p>
 
@@ -447,13 +447,15 @@
 
 <p>Qué aserra (la salida es <strong>la propia especie de la entrada</strong>; el bambú rinde la mitad — en vanilla también da solo 2 tablones por bloque):</p>
 
-<table><thead><tr><th>Modo</th><th>Entrada</th><th>Salida</th><th>Vanilla (para comparar)</th></tr></thead><tbody><tr><td>Tablones</td><td>1 tronco/tallo (por especie)</td><td><strong>6 tablones</strong></td><td>4</td></tr><tr><td>Tablones</td><td>1 bloque de bambú</td><td><strong>3 tablones de bambú</strong></td><td>2</td></tr><tr><td>Palos</td><td>1 tronco/tallo (<code>#minecraft:logs</code>)</td><td><strong>18 palos</strong></td><td>~8</td></tr><tr><td>Palos</td><td>1 bloque de bambú</td><td><strong>9 palos</strong></td><td>4</td></tr><tr><td>Palos</td><td>1 tablón (<code>#minecraft:planks</code>)</td><td><strong>3 palos</strong></td><td>2</td></tr><tr><td>Losas</td><td>1 tronco/tallo (por especie)</td><td><strong>18 losas</strong></td><td>8</td></tr><tr><td>Losas</td><td>1 bloque de bambú</td><td><strong>9 losas de bambú</strong></td><td>4</td></tr><tr><td>Escaleras</td><td>1 tronco/tallo (por especie)</td><td><strong>6 escaleras</strong></td><td>~2⅔</td></tr><tr><td>Escaleras</td><td>1 bloque de bambú</td><td><strong>3 escaleras de bambú</strong></td><td>~1⅓</td></tr></tbody></table>
+<table><thead><tr><th>Modo</th><th>Entrada</th><th>Salida</th><th>Vanilla (para comparar)</th></tr></thead><tbody><tr><td>Tablones</td><td>1 tronco/tallo (por especie)</td><td><strong>6 tablones</strong></td><td>4</td></tr><tr><td>Tablones</td><td>1 bloque de bambú</td><td><strong>3 tablones de bambú</strong></td><td>2</td></tr><tr><td>Palos</td><td>1 tronco/tallo (<code>#minecraft:logs</code>)</td><td><strong>18 palos</strong></td><td>~8</td></tr><tr><td>Palos</td><td>1 bloque de bambú</td><td><strong>9 palos</strong></td><td>4</td></tr><tr><td>Palos</td><td>1 tablón (<code>#minecraft:planks</code>)</td><td><strong>3 palos</strong></td><td>2</td></tr><tr><td>Losas</td><td>1 tronco/tallo (por especie)</td><td><strong>18 losas</strong></td><td>8</td></tr><tr><td>Losas</td><td>1 bloque de bambú</td><td><strong>9 losas de bambú</strong></td><td>4</td></tr><tr><td>Escaleras</td><td>1 tronco/tallo (por especie)</td><td><strong>6 escaleras</strong></td><td>~2⅔</td></tr><tr><td>Escaleras</td><td>1 bloque de bambú</td><td><strong>3 escaleras de bambú</strong></td><td>~1⅓</td></tr><tr><td>Serrín</td><td>1 tronco que arde (<code>#minecraft:logs_that_burn</code>; no los tallos del Nether)</td><td><strong>6 de <a href="../materials/sawdust.html">serrín</a></strong></td><td>—</td></tr><tr><td>Serrín</td><td>1 bloque de bambú</td><td><strong>3 de serrín</strong></td><td>—</td></tr></tbody></table>
 
-<p>En total 39 recetas de aserrado (12 especies × tablones/losas/escaleras + 3 recetas de palos). Las losas, escaleras y palos <strong>no se aceptan como entrada</strong> — no hay bucle inverso ni dupeo.</p>
+<p>En total 41 recetas de aserrado (12 especies × tablones/losas/escaleras + 3 recetas de palos + 2 recetas de serrín). Las losas, escaleras y palos <strong>no se aceptan como entrada</strong> — no hay bucle inverso ni dupeo.</p>
+
+<p>El serrín es materia menuda para las máquinas vecinas: el <a href="../fluid-machines/fermenter.html">fermentador</a> lo toma como materia orgánica pobre, la <a href="recycler.html">recicladora</a> lo cuenta como fracción combustible, y en un horno arde como el bambú — la mitad que un palo. Seis de serrín arden justo lo mismo que un tronco, así que aserrar para obtener combustible nunca compensa: solo gasta 160 EU/FE.</p>
 
 <h3 id="en-el-visor-de-recetas">En el visor de recetas</h3>
 
-<p>En JEI/REI el aserradero aporta <strong>4 categorías</strong> — una por modo (<code>sawing_planks</code>, <code>sawing_sticks</code>, <code>sawing_slabs</code>, <code>sawing_stairs</code>); la estación de trabajo de todas ellas es el propio aserradero. Al hacer clic en la flecha de progreso se abren las cuatro categorías a la vez. Cada una lleva el título de su modo — «Aserradero: Tablones», «Aserradero: Palos», «Aserradero: Losas», «Aserradero: Escaleras» — para poder distinguir las pestañas; el nombre del modo viene de la misma traducción que usan los botones de la propia interfaz de la máquina.</p>
+<p>En JEI/REI el aserradero aporta <strong>5 categorías</strong> — una por modo (<code>sawing_planks</code>, <code>sawing_sticks</code>, <code>sawing_slabs</code>, <code>sawing_stairs</code>, <code>sawing_sawdust</code>); la estación de trabajo de todas ellas es el propio aserradero. Al hacer clic en la flecha de progreso se abren las cinco categorías a la vez. Cada una lleva el título de su modo — «Aserradero: Tablones», «Aserradero: Palos», «Aserradero: Losas», «Aserradero: Escaleras», «Aserradero: Serrín» — para poder distinguir las pestañas; el nombre del modo viene de la misma traducción que usan los botones de la propia interfaz de la máquina.</p>
 
 <h2 id="progresión">Progresión</h2>
 
@@ -461,7 +463,7 @@
 
 <h2 id="relacionado">Relacionado</h2>
 
-<ul><li><a href="electric_furnace.html">Horno eléctrico</a> — la interfaz reutilizada, una máquina LV vecina.</li><li><a href="../generators/generator.html">Generador</a> — una fuente de energía.</li></ul>
+<ul><li><a href="electric_furnace.html">Horno eléctrico</a> — la interfaz reutilizada, una máquina LV vecina.</li><li><a href="../generators/generator.html">Generador</a> — una fuente de energía.</li><li><a href="../materials/sawdust.html">Serrín</a> — el producto del quinto modo.</li></ul>
 
 <h2>Fabricación</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="aserradero alaindustrial:sawmill" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Fabricación con forma</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Cualquier lingote de hierro"><img src="../../assets/item/iron_ingot_3d.png" alt="Cualquier lingote de hierro" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Cualquier lingote de hierro"><img src="../../assets/item/iron_ingot_3d.png" alt="Cualquier lingote de hierro" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Cualquier lingote de hierro"><img src="../../assets/item/iron_ingot_3d.png" alt="Cualquier lingote de hierro" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Cualquier tablón de madera"><img src="../../assets/item/oak_planks_3d.png" alt="Cualquier tablón de madera" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Circuito electrónico"><img src="../../assets/item/electronic_circuit_3d.png" alt="Circuito electrónico" width="32" height="32"></div> <div class="cell" title="Cualquier tablón de madera"><img src="../../assets/item/oak_planks_3d.png" alt="Cualquier tablón de madera" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Cualquier tablón de madera"><img src="../../assets/item/oak_planks_3d.png" alt="Cualquier tablón de madera" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Cualquier lingote de plata"><img src="../../assets/item/silver_ingot_3d.png" alt="Cualquier lingote de plata" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Cualquier tablón de madera"><img src="../../assets/item/oak_planks_3d.png" alt="Cualquier tablón de madera" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Mesa de trabajo" title="Mesa de trabajo" width="30" height="30"><div class="arrow" aria-label="Fabricación">▶</div></div><div class="recipe-result"><div class="cell result" title="Aserradero"><img src="../../assets/item/sawmill_3d.png" alt="Aserradero" width="32" height="32"></div><div class="result-name">Aserradero</div></div></div></div></div>

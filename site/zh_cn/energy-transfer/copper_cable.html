@@ -372,7 +372,7 @@
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>流体物流</span><span class="cat-count" aria-label="5 个页面">5</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>流体储存</span><span class="cat-count" aria-label="2 个页面">2</span></a>
 <div class="group-title">世界与自动化</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="25 个页面">25</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="26 个页面">26</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>农业</span><span class="cat-count" aria-label="6 个页面">6</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>高级机器</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <div class="group-title">其他</div>
@@ -409,7 +409,11 @@
 
 <p><strong>带惯性的流动（）。</strong> 电缆不是"传送门"：每个方块都有一个微小的活体缓存（12 EU/FE）。<strong>所有</strong> 能量（无论送往机器还是储能方块）都在每刻一次的网络遍历内沿段（电缆→电缆）流过，因此任何通电中的电缆都真实地承载并显示出流过的能量，到达远方耗电方时会带有线路填充的惯性，而一旦线路中断，剩余能量会滞留在靠近电源一侧的电缆缓存中。缓存刻意很小：1000 根电缆的网络共持 12 × 1000 = 12 000 EU/FE——<strong>少于</strong> 一座储能库（20 000 EU/FE），因此无法"用导线堆电池"。吞吐量 = 缓存大小：每根紧邻耗电方的电缆为 <strong>12 EU/FE/刻</strong>（等级电压 32 EU/FE 是从电源的取用上限，而非细线的吞吐量）。即便没有耗电方，电源也会把导线充满到容量（缓存立即可见），随后网络进入休眠。阶梯中的其他线种（锡/金/琥珀金）的缓存与损耗也以同样方式配置——各自使用独立的配置项（、）。</p>
 
-<p><strong>没有耗电方的支线不会拖慢机器（、）。</strong> 侧面一段什么都没接的电缆只用余量充电——即线路上的机器已经充满之后——绝不会抢走正在送往机器的能量。在耗电方仍缺电时，这样的支线保持为空，无论它从主线朝哪个方向伸出。从电源旁第一根电缆或机器前最后一根电缆分出的支线，在该机器工作期间不会充电（）。</p>
+<p><strong>线路如何分配能量（、）。</strong> 每一刻遵循三条规则：</p>
+
+<ol><li><strong>机器先吃。</strong> 每台机器在电缆能送到的范围内，得到它一刻工作所需的量（已计入电缆损耗）；不够分时，离发电机最近的机器先得，距离相同的机器平分。</li><li><strong>机器拿不走的部分立即送往储能方块</strong>（电池箱、传送器、能量凝聚器、充电站），离得近的先充。之后机器才补满自己的缓冲。网络不知道耗电量的其他模组的机器或电池，按储能方块对待；间歇耗电的抽水泵、喷灌器和园艺无人机基站也一样。</li><li><strong>发电机供不上机器时，储能方块向机器供电。</strong></li></ol>
+
+<p>因此，储能方块还有空位时，机器的缓冲可能显示 0 EU/FE，而机器本身仍在全速工作。什么都没接的支线和最后一个耗电方之后的线路，只有在线路上谁都不再需要能量时才会充电（、）；机器工作期间，这样的支线保持为空，也不会电人（）。每个耗电方只从自己接触的电缆取能量。</p>
 
 <p>电缆不会因过载而爆炸：超出上限的部分直接过不去。要承载完整的 MV/HV/EV 流量，需要对应等级的电缆。</p>
 

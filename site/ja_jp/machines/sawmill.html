@@ -372,7 +372,7 @@
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>液体輸送</span><span class="cat-count" aria-label="5 ページ">5</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>液体貯蔵</span><span class="cat-count" aria-label="2 ページ">2</span></a>
 <div class="group-title">世界と自動化</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>素材</span><span class="cat-count" aria-label="25 ページ">25</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>素材</span><span class="cat-count" aria-label="26 ページ">26</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>農業</span><span class="cat-count" aria-label="6 ページ">6</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>高度なマシン</span><span class="cat-count" aria-label="1 ページ">1</span></a>
 <div class="group-title">その他</div>
@@ -391,13 +391,13 @@
     <div class="info">
       <h1>製材機</h1>
       <div class="block-id">alaindustrial:sawmill</div>
-      <div class="tags"><span class="tag cat" style="background:#ff7a45">マシン</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">実装済み</span><span class="tag">tier-lv</span><span class="tag">processing</span><span class="tag">wood</span><span class="tag">sawing</span><span class="tag">gui-modes</span></div>
+      <div class="tags"><span class="tag cat" style="background:#ff7a45">マシン</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">実装済み</span><span class="tag">tier-lv</span><span class="tag">processing</span><span class="tag">wood</span><span class="tag">sawing</span><span class="tag">gui-modes</span><span class="tag">sawdust</span></div>
     </div>
   </div>
 </div>
 <h2 id="概要">概要</h2>
 
-<p><strong>製材機</strong> は木材加工用の LV マシンです。原木（または板材）を手作業クラフトより <strong>多い産出</strong> で製材し、4種類の異なる製品に切ることもできます。<strong>切替可能な4つのモード</strong>（インターフェースのボタン）があります：<strong>板材 / 棒 / ハーフブロック / 階段</strong>。任意の樹種はその樹種の産物を与えます。棒は樹種に依存しません。これはモッドで最もエネルギー効率の良い操作です：石を粉砕するより木材を切る方が簡単です。</p>
+<p><strong>製材機</strong> は木材加工用の LV マシンです。原木（または板材）を手作業クラフトより <strong>多い産出</strong> で製材し、5種類の異なる製品に切ることもできます。<strong>切替可能な5つのモード</strong>（インターフェースのボタン）があります：<strong>板材 / 棒 / ハーフブロック / 階段 / おがくず</strong>。任意の樹種はその樹種の産物を与えます。棒と<a href="../materials/sawdust.html">おがくず</a>は樹種に依存しません。これはモッドで最もエネルギー効率の良い操作です：石を粉砕するより木材を切る方が簡単です。</p>
 
 <blockquote><strong>ミニ例：</strong> 「板材」モードでオークの原木を置けば、約4秒でバニラの4枚ではなく <strong>オークの板材 ×6</strong> が得られます。「棒」に切り替えれば、同じ原木から <strong>棒 ×18</strong> が得られます。</blockquote>
 
@@ -411,9 +411,9 @@
 
 <h2 id="加工">加工</h2>
 
-<p>製材機は常に <strong>アクティブなモード</strong> だけで動作します。その間、他の3モードのレシピは非アクティブです。モードを切り替えると現在の進行状況がリセットされます（新しいモードは別の製品を切ります）。1回の製材は約80ティック（約4秒）かかります。</p>
+<p>製材機は常に <strong>アクティブなモード</strong> だけで動作します。その間、他のモードのレシピは非アクティブです。モードを切り替えると現在の進行状況がリセットされます（新しいモードは別の製品を切ります）。1回の製材は約80ティック（約4秒）かかります。</p>
 
-<table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>レシピタイプ</td><td>/ <code>sawing_sticks</code> / <code>sawing_slabs</code> / <code>sawing_stairs</code></td></tr><tr><td>所要時間</td><td>約80ティック（約4秒）</td></tr><tr><td>製材コスト</td><td>160 EU/FE</td></tr><tr><td>自動排出</td><td>なし</td></tr></tbody></table>
+<table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>レシピタイプ</td><td>/ <code>sawing_sticks</code> / <code>sawing_slabs</code> / <code>sawing_stairs</code> / <code>sawing_sawdust</code></td></tr><tr><td>所要時間</td><td>約80ティック（約4秒）</td></tr><tr><td>製材コスト</td><td>160 EU/FE</td></tr><tr><td>自動排出</td><td>なし</td></tr></tbody></table>
 
 <h2 id="インベントリ">インベントリ</h2>
 
@@ -425,7 +425,7 @@
 
 <h2 id="インターフェース">インターフェース</h2>
 
-<p>画面は <a href="electric_furnace.html">電気かまど</a> のインターフェースを再利用します：エネルギー量、進行状況、入力スロットと出力スロット、その間に左から右に埋まる <strong>丸鋸</strong> 型の進行インジケーター。スロットの下には、ghost アイコン（板/棒/ハーフブロック/階段）付きの <strong>4つのモードボタン</strong> が並び、アクティブなモードがハイライトされ、各ボタンにツールチップがあります。</p>
+<p>画面は <a href="electric_furnace.html">電気かまど</a> のインターフェースを再利用します：エネルギー量、進行状況、入力スロットと出力スロット、その間に左から右に埋まる <strong>丸鋸</strong> 型の進行インジケーター。スロットの下には、ghost アイコン（板/棒/ハーフブロック/階段/おがくず）付きの <strong>5つのモードボタン</strong> が中央揃えで並び、アクティブなモードがハイライトされ、各ボタンにツールチップがあります。</p>
 
 <p>アップグレードパネルが開いている間は、それがどこにあってもモードボタンは反応しません：クリックしてもモードは切り替わらず、カーソルを重ねてもハイライトもツールチップも出ません。開いた統計パネルに覆われたボタンも同様です。ツールチップは、ボタンができないことを約束しません。</p>
 
@@ -445,13 +445,15 @@
 
 <p>何を切るか（産出は <strong>その樹種</strong> のもの。竹は半分 — バニラでもブロックあたり板材2枚です）：</p>
 
-<table><thead><tr><th>モード</th><th>入力</th><th>出力</th><th>バニラ（比較用）</th></tr></thead><tbody><tr><td>板材</td><td>原木/木 ×1（樹種ごと）</td><td><strong>板材 ×6</strong></td><td>4</td></tr><tr><td>板材</td><td>竹ブロック ×1</td><td><strong>竹の板材 ×3</strong></td><td>2</td></tr><tr><td>棒</td><td>原木/木 ×1（<code>#minecraft:logs</code>）</td><td><strong>棒 ×18</strong></td><td>約8</td></tr><tr><td>棒</td><td>竹ブロック ×1</td><td><strong>棒 ×9</strong></td><td>4</td></tr><tr><td>棒</td><td>板材 ×1（<code>#minecraft:planks</code>）</td><td><strong>棒 ×3</strong></td><td>2</td></tr><tr><td>ハーフブロック</td><td>原木/木 ×1（樹種ごと）</td><td><strong>ハーフブロック ×18</strong></td><td>8</td></tr><tr><td>ハーフブロック</td><td>竹ブロック ×1</td><td><strong>竹のハーフブロック ×9</strong></td><td>4</td></tr><tr><td>階段</td><td>原木/木 ×1（樹種ごと）</td><td><strong>階段 ×6</strong></td><td>約2⅔</td></tr><tr><td>階段</td><td>竹ブロック ×1</td><td><strong>竹の階段 ×3</strong></td><td>約1⅓</td></tr></tbody></table>
+<table><thead><tr><th>モード</th><th>入力</th><th>出力</th><th>バニラ（比較用）</th></tr></thead><tbody><tr><td>板材</td><td>原木/木 ×1（樹種ごと）</td><td><strong>板材 ×6</strong></td><td>4</td></tr><tr><td>板材</td><td>竹ブロック ×1</td><td><strong>竹の板材 ×3</strong></td><td>2</td></tr><tr><td>棒</td><td>原木/木 ×1（<code>#minecraft:logs</code>）</td><td><strong>棒 ×18</strong></td><td>約8</td></tr><tr><td>棒</td><td>竹ブロック ×1</td><td><strong>棒 ×9</strong></td><td>4</td></tr><tr><td>棒</td><td>板材 ×1（<code>#minecraft:planks</code>）</td><td><strong>棒 ×3</strong></td><td>2</td></tr><tr><td>ハーフブロック</td><td>原木/木 ×1（樹種ごと）</td><td><strong>ハーフブロック ×18</strong></td><td>8</td></tr><tr><td>ハーフブロック</td><td>竹ブロック ×1</td><td><strong>竹のハーフブロック ×9</strong></td><td>4</td></tr><tr><td>階段</td><td>原木/木 ×1（樹種ごと）</td><td><strong>階段 ×6</strong></td><td>約2⅔</td></tr><tr><td>階段</td><td>竹ブロック ×1</td><td><strong>竹の階段 ×3</strong></td><td>約1⅓</td></tr><tr><td>おがくず</td><td>燃える原木 ×1（<code>#minecraft:logs_that_burn</code>。ネザーの幹は不可）</td><td><strong><a href="../materials/sawdust.html">おがくず</a> ×6</strong></td><td>—</td></tr><tr><td>おがくず</td><td>竹ブロック ×1</td><td><strong>おがくず ×3</strong></td><td>—</td></tr></tbody></table>
 
-<p>製材レシピは計39個（12樹種 × 板材/ハーフブロック/階段 + 棒3レシピ）です。ハーフブロック、階段、棒は入力に <strong>受け付けられません</strong> — 逆ループや増殖はありません。</p>
+<p>製材レシピは計41個（12樹種 × 板材/ハーフブロック/階段 + 棒3レシピ + おがくず2レシピ）です。ハーフブロック、階段、棒は入力に <strong>受け付けられません</strong> — 逆ループや増殖はありません。</p>
+
+<p>おがくずは隣の機械のためのささやかな素材です：<a href="../fluid-machines/fermenter.html">発酵槽</a>は安価な有機物として受け取り、<a href="recycler.html">リサイクラー</a>は可燃性の画分として数え、かまどでは竹と同じく棒の半分の時間燃えます。おがくず6個の燃焼時間は原木1本とちょうど同じなので、燃料目的の製材は割に合いません：160 EU/FE を消費するだけです。</p>
 
 <h3 id="レシピビューアーで">レシピビューアーで</h3>
 
-<p>JEI/REI では、製材機は <strong>4つのカテゴリ</strong> を提供します — モードごとに1つ（<code>sawing_planks</code>、<code>sawing_sticks</code>、<code>sawing_slabs</code>、<code>sawing_stairs</code>）。すべてのワークステーションは製材機自身です。進行矢印をクリックすると4つのカテゴリすべてが一度に開きます。各カテゴリは自身のモード名でラベル付けされています — 「製材機：板材」「製材機：棒」「製材機：ハーフブロック」「製材機：階段」— タブを区別するためで、モード名は機械のインターフェースのボタンと同じ翻訳から取られます。</p>
+<p>JEI/REI では、製材機は <strong>5つのカテゴリ</strong> を提供します — モードごとに1つ（<code>sawing_planks</code>、<code>sawing_sticks</code>、<code>sawing_slabs</code>、<code>sawing_stairs</code>、<code>sawing_sawdust</code>）。すべてのワークステーションは製材機自身です。進行矢印をクリックすると5つのカテゴリすべてが一度に開きます。各カテゴリは自身のモード名でラベル付けされています — 「製材機：板材」「製材機：棒」「製材機：ハーフブロック」「製材機：階段」「製材機：おがくず」— タブを区別するためで、モード名は機械のインターフェースのボタンと同じ翻訳から取られます。</p>
 
 <h2 id="進行">進行</h2>
 
@@ -459,7 +461,7 @@
 
 <h2 id="関連項目">関連項目</h2>
 
-<ul><li><a href="electric_furnace.html">電気かまど</a> — 再利用されるインターフェース、隣接する LV マシン。</li><li><a href="../generators/generator.html">発電機</a> — 電源。</li></ul>
+<ul><li><a href="electric_furnace.html">電気かまど</a> — 再利用されるインターフェース、隣接する LV マシン。</li><li><a href="../generators/generator.html">発電機</a> — 電源。</li><li><a href="../materials/sawdust.html">おがくず</a> — 5番目のモードの製品。</li></ul>
 
 <h2>クラフト</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="製材機 alaindustrial:sawmill" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">定型クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="いずれかの鉄インゴット"><img src="../../assets/item/iron_ingot_3d.png" alt="いずれかの鉄インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかの鉄インゴット"><img src="../../assets/item/iron_ingot_3d.png" alt="いずれかの鉄インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかの鉄インゴット"><img src="../../assets/item/iron_ingot_3d.png" alt="いずれかの鉄インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかの木材"><img src="../../assets/item/oak_planks_3d.png" alt="いずれかの木材" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="電子回路"><img src="../../assets/item/electronic_circuit_3d.png" alt="電子回路" width="32" height="32"></div> <div class="cell" title="いずれかの木材"><img src="../../assets/item/oak_planks_3d.png" alt="いずれかの木材" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかの木材"><img src="../../assets/item/oak_planks_3d.png" alt="いずれかの木材" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかの銀インゴット"><img src="../../assets/item/silver_ingot_3d.png" alt="いずれかの銀インゴット" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかの木材"><img src="../../assets/item/oak_planks_3d.png" alt="いずれかの木材" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="製材機"><img src="../../assets/item/sawmill_3d.png" alt="製材機" width="32" height="32"></div><div class="result-name">製材機</div></div></div></div></div>

@@ -372,7 +372,7 @@
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Логистика жидкостей</span><span class="cat-count" aria-label="5 страниц">5</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>Хранение жидкостей</span><span class="cat-count" aria-label="2 страницы">2</span></a>
 <div class="group-title">Мир и автоматизация</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="25 страниц">25</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="26 страниц">26</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>Сельское хозяйство</span><span class="cat-count" aria-label="6 страниц">6</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>Хай-тек машины</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Прочее</div>
@@ -391,14 +391,14 @@
     <div class="info">
       <h1>Лесопилка</h1>
       <div class="block-id">alaindustrial:sawmill</div>
-      <div class="tags"><span class="tag cat" style="background:#ff7a45">Машины</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">Реализовано</span><span class="tag">tier-lv</span><span class="tag">processing</span><span class="tag">wood</span><span class="tag">sawing</span><span class="tag">gui-modes</span></div>
+      <div class="tags"><span class="tag cat" style="background:#ff7a45">Машины</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">Реализовано</span><span class="tag">tier-lv</span><span class="tag">processing</span><span class="tag">wood</span><span class="tag">sawing</span><span class="tag">gui-modes</span><span class="tag">sawdust</span></div>
     </div>
   </div>
 </div>
 
 <h2 id="сводка">Сводка</h2>
 
-<p><strong>Лесопилка</strong> — LV-машина для переработки дерева. Она распускает бревно (или доски) с <strong>бóльшим выходом</strong>, чем ручной крафт, и умеет пилить в четыре разных продукта — у неё <strong>4 переключаемых режима</strong> (кнопки в интерфейсе): <strong>доски / палки / полублоки / ступени</strong>. Любая порода даёт выход своей породы; палки — внепородные. Это самая дешёвая по энергии операция в моде: пилить дерево проще, чем молоть камень.</p>
+<p><strong>Лесопилка</strong> — LV-машина для переработки дерева. Она распускает бревно (или доски) с <strong>бóльшим выходом</strong>, чем ручной крафт, и умеет пилить в пять разных продуктов — у неё <strong>5 переключаемых режимов</strong> (кнопки в интерфейсе): <strong>доски / палки / полублоки / ступени / опилки</strong>. Любая порода даёт выход своей породы; палки и <a href="../materials/sawdust.html">опилки</a> — внепородные. Это самая дешёвая по энергии операция в моде: пилить дерево проще, чем молоть камень.</p>
 
 <blockquote><strong>Мини-пример:</strong> положите дубовое бревно в режиме «Доски» — через ~4 секунды получите <strong>6 дубовых досок</strong> вместо ванильных 4. Переключите на «Палки» — то же бревно даст <strong>18 палок</strong>.</blockquote>
 
@@ -412,9 +412,9 @@
 
 <h2 id="процессинг">Процессинг</h2>
 
-<p>Пилка всегда работает только в <strong>активном режиме</strong>: рецепты трёх других режимов в этот момент неактивны. Смена режима сбрасывает текущий прогресс (новый режим пилит другой продукт). Один распил идёт ~80 тиков (~4 с).</p>
+<p>Пилка всегда работает только в <strong>активном режиме</strong>: рецепты остальных режимов в этот момент неактивны. Смена режима сбрасывает текущий прогресс (новый режим пилит другой продукт). Один распил идёт ~80 тиков (~4 с).</p>
 
-<table><thead><tr><th>Что</th><th>Значение</th></tr></thead><tbody><tr><td>Тип рецепта</td><td>/ <code>sawing_sticks</code> / <code>sawing_slabs</code> / <code>sawing_stairs</code></td></tr><tr><td>Длительность</td><td>~80 тиков (~4 с)</td></tr><tr><td>Цена распила</td><td>160 EU/FE</td></tr><tr><td>Авто-выгрузка</td><td>нет</td></tr></tbody></table>
+<table><thead><tr><th>Что</th><th>Значение</th></tr></thead><tbody><tr><td>Тип рецепта</td><td>/ <code>sawing_sticks</code> / <code>sawing_slabs</code> / <code>sawing_stairs</code> / <code>sawing_sawdust</code></td></tr><tr><td>Длительность</td><td>~80 тиков (~4 с)</td></tr><tr><td>Цена распила</td><td>160 EU/FE</td></tr><tr><td>Авто-выгрузка</td><td>нет</td></tr></tbody></table>
 
 <h2 id="инвентарь">Инвентарь</h2>
 
@@ -426,7 +426,7 @@
 
 <h2 id="интерфейс">Интерфейс</h2>
 
-<p>Экран переиспользует интерфейс <a href="electric_furnace.html">Электропечи</a>: запас энергии, прогресс, слот входа и выхода, а между ними — индикатор прогресса в виде <strong>пильного диска</strong>, который заполняется слева направо. Снизу, под слотами, идёт ряд из <strong>4 кнопок режимов</strong> с ghost-иконками (доска/палка/полублок/ступень); активный режим подсвечен, у каждой кнопки — всплывающая подсказка.</p>
+<p>Экран переиспользует интерфейс <a href="electric_furnace.html">Электропечи</a>: запас энергии, прогресс, слот входа и выхода, а между ними — индикатор прогресса в виде <strong>пильного диска</strong>, который заполняется слева направо. Снизу, под слотами, по центру идёт ряд из <strong>5 кнопок режимов</strong> с ghost-иконками (доска/палка/полублок/ступень/опилки); активный режим подсвечен, у каждой кнопки — всплывающая подсказка.</p>
 
 <p>Пока открыта панель улучшений — где бы она ни лежала, — кнопки режимов глухие: клик не переключает режим, а наведение не даёт ни подсветки, ни подсказки. Так же глуха кнопка, которую накрыла открытая панель статистики. Подсказка не обещает того, чего кнопка не сделает.</p>
 
@@ -446,13 +446,15 @@
 
 <p>Что она пилит (выход <strong>своей породы</strong>; бамбук вдвое меньше — он и в ванили даёт 2 доски с блока):</p>
 
-<table><thead><tr><th>Режим</th><th>Вход</th><th>Выход</th><th>Ваниль (для сравнения)</th></tr></thead><tbody><tr><td>Доски</td><td>1 бревно/ствол (пер-породно)</td><td><strong>6 досок</strong></td><td>4</td></tr><tr><td>Доски</td><td>1 бамбук-блок</td><td><strong>3 бамбуковые доски</strong></td><td>2</td></tr><tr><td>Палки</td><td>1 бревно/ствол (<code>#minecraft:logs</code>)</td><td><strong>18 палок</strong></td><td>~8</td></tr><tr><td>Палки</td><td>1 бамбук-блок</td><td><strong>9 палок</strong></td><td>4</td></tr><tr><td>Палки</td><td>1 доска (<code>#minecraft:planks</code>)</td><td><strong>3 палки</strong></td><td>2</td></tr><tr><td>Полублоки</td><td>1 бревно/ствол (пер-породно)</td><td><strong>18 полублоков</strong></td><td>8</td></tr><tr><td>Полублоки</td><td>1 бамбук-блок</td><td><strong>9 бамбуковых полублоков</strong></td><td>4</td></tr><tr><td>Ступени</td><td>1 бревно/ствол (пер-породно)</td><td><strong>6 ступеней</strong></td><td>~2⅔</td></tr><tr><td>Ступени</td><td>1 бамбук-блок</td><td><strong>3 бамбуковые ступени</strong></td><td>~1⅓</td></tr></tbody></table>
+<table><thead><tr><th>Режим</th><th>Вход</th><th>Выход</th><th>Ваниль (для сравнения)</th></tr></thead><tbody><tr><td>Доски</td><td>1 бревно/ствол (пер-породно)</td><td><strong>6 досок</strong></td><td>4</td></tr><tr><td>Доски</td><td>1 бамбук-блок</td><td><strong>3 бамбуковые доски</strong></td><td>2</td></tr><tr><td>Палки</td><td>1 бревно/ствол (<code>#minecraft:logs</code>)</td><td><strong>18 палок</strong></td><td>~8</td></tr><tr><td>Палки</td><td>1 бамбук-блок</td><td><strong>9 палок</strong></td><td>4</td></tr><tr><td>Палки</td><td>1 доска (<code>#minecraft:planks</code>)</td><td><strong>3 палки</strong></td><td>2</td></tr><tr><td>Полублоки</td><td>1 бревно/ствол (пер-породно)</td><td><strong>18 полублоков</strong></td><td>8</td></tr><tr><td>Полублоки</td><td>1 бамбук-блок</td><td><strong>9 бамбуковых полублоков</strong></td><td>4</td></tr><tr><td>Ступени</td><td>1 бревно/ствол (пер-породно)</td><td><strong>6 ступеней</strong></td><td>~2⅔</td></tr><tr><td>Ступени</td><td>1 бамбук-блок</td><td><strong>3 бамбуковые ступени</strong></td><td>~1⅓</td></tr><tr><td>Опилки</td><td>1 горючее бревно (<code>#minecraft:logs_that_burn</code>; незерские ножки — нет)</td><td><strong>6 <a href="../materials/sawdust.html">опилок</a></strong></td><td>—</td></tr><tr><td>Опилки</td><td>1 бамбук-блок</td><td><strong>3 опилки</strong></td><td>—</td></tr></tbody></table>
 
-<p>Всего 39 рецептов распила (12 пород × доски/полублоки/ступени + 3 рецепта палок). Полублоки, ступени и палки на вход <strong>не принимаются</strong> — обратного цикла и дюпа нет.</p>
+<p>Всего 41 рецепт распила (12 пород × доски/полублоки/ступени + 3 рецепта палок + 2 рецепта опилок). Полублоки, ступени и палки на вход <strong>не принимаются</strong> — обратного цикла и дюпа нет.</p>
+
+<p>Опилки — мелкое сырьё вокруг соседних машин: <a href="../fluid-machines/fermenter.html">бочка брожения</a> берёт их как дешёвую органику, <a href="recycler.html">утилизатор</a> считает горючей фракцией, а в печи они горят как бамбук — вдвое меньше палки. Шесть опилок горят ровно столько же, сколько одно бревно, так что распил ради топлива невыгоден: он только тратит 160 EU/FE.</p>
 
 <h3 id="в-просмотрщике-рецептов">В просмотрщике рецептов</h3>
 
-<p>В JEI/REI лесопилка даёт <strong>4 категории</strong> — по одной на режим (<code>sawing_planks</code>, <code>sawing_sticks</code>, <code>sawing_slabs</code>, <code>sawing_stairs</code>); рабочая станция у всех — сама лесопилка. Клик по стрелке прогресса открывает все четыре категории сразу. Каждая подписана своим режимом — «Лесопилка: Доски», «Лесопилка: Палки», «Лесопилка: Полублоки», «Лесопилка: Ступени», — чтобы вкладки различались; имя режима берётся из того же перевода, что и кнопки в интерфейсе машины.</p>
+<p>В JEI/REI лесопилка даёт <strong>5 категорий</strong> — по одной на режим (<code>sawing_planks</code>, <code>sawing_sticks</code>, <code>sawing_slabs</code>, <code>sawing_stairs</code>, <code>sawing_sawdust</code>); рабочая станция у всех — сама лесопилка. Клик по стрелке прогресса открывает все пять категорий сразу. Каждая подписана своим режимом — «Лесопилка: Доски», «Лесопилка: Палки», «Лесопилка: Полублоки», «Лесопилка: Ступени», «Лесопилка: Опилки», — чтобы вкладки различались; имя режима берётся из того же перевода, что и кнопки в интерфейсе машины.</p>
 
 <h2 id="прогрессия">Прогрессия</h2>
 
@@ -460,7 +462,7 @@
 
 <h2 id="связанное">Связанное</h2>
 
-<ul><li><a href="electric_furnace.html">Электропечь</a> — переиспользуемый интерфейс, соседняя LV-машина.</li><li><a href="../generators/generator.html">Генератор</a> — источник питания.</li></ul>
+<ul><li><a href="electric_furnace.html">Электропечь</a> — переиспользуемый интерфейс, соседняя LV-машина.</li><li><a href="../generators/generator.html">Генератор</a> — источник питания.</li><li><a href="../materials/sawdust.html">Опилки</a> — продукт пятого режима.</li></ul>
 
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="лесопилка alaindustrial:sawmill" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаке</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Любой железный слиток"><img src="../../assets/item/iron_ingot_3d.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Любой железный слиток"><img src="../../assets/item/iron_ingot_3d.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Любой железный слиток"><img src="../../assets/item/iron_ingot_3d.png" alt="Любой железный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Любые доски"><img src="../../assets/item/oak_planks_3d.png" alt="Любые доски" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Электронная схема"><img src="../../assets/item/electronic_circuit_3d.png" alt="Электронная схема" width="32" height="32"></div> <div class="cell" title="Любые доски"><img src="../../assets/item/oak_planks_3d.png" alt="Любые доски" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Любые доски"><img src="../../assets/item/oak_planks_3d.png" alt="Любые доски" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Любой серебряный слиток"><img src="../../assets/item/silver_ingot_3d.png" alt="Любой серебряный слиток" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Любые доски"><img src="../../assets/item/oak_planks_3d.png" alt="Любые доски" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Лесопилка"><img src="../../assets/item/sawmill_3d.png" alt="Лесопилка" width="32" height="32"></div><div class="result-name">Лесопилка</div></div></div></div></div>

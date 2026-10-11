@@ -372,7 +372,7 @@
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>液体輸送</span><span class="cat-count" aria-label="5 ページ">5</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>液体貯蔵</span><span class="cat-count" aria-label="2 ページ">2</span></a>
 <div class="group-title">世界と自動化</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>素材</span><span class="cat-count" aria-label="25 ページ">25</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>素材</span><span class="cat-count" aria-label="26 ページ">26</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>農業</span><span class="cat-count" aria-label="6 ページ">6</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>高度なマシン</span><span class="cat-count" aria-label="1 ページ">1</span></a>
 <div class="group-title">その他</div>
@@ -409,7 +409,11 @@
 
 <p><strong>慣性を持つ流れ（）。</strong> ケーブルは「テレポーター」ではありません：各ブロックには小さな生きたバッファ（12 EU/FE）があります。<strong>すべての</strong>エネルギー（機械へも貯蔵库へも）が、ティックあたり 1 回のネットワーク巡回でセグメント間（ケーブル→ケーブル）を流れるため、稼働中のどのケーブルも実際に通過するエネルギーを保持・表示し、遠くの消費者へはライン充填の慣性とともに届き、路線が切れた場合は残りは電源に近い側のケーブルバッファに保持されます。バッファは意図的に極小です：1000 本のケーブルからなるネットワークでも 12 × 1000 = 12 000 EU/FE を保持します——エネルギー貯蔵庫（20 000 EU/FE）1 個より<strong>少なく</strong>、したがって「導線で電池を組み上げる」ことはできません。スループット = バッファサイズ：消費者に隣接するケーブルあたり <strong>12 EU/FE/t</strong>（ティア電圧 32 EU/FE は電源からの引き込み上限であり、細い線のスループットではありません）。消費者がいなくても電源は導線を容量まで満たし（バッファはすぐに見えます）、その後ネットワークはスリープします。はしごの他の品種（スズ/金/エレクトラム）のバッファと損失も同じ仕組みで、それぞれ専用のコンフィグキーを持ちます（、）。</p>
 
-<p><strong>消費者のない支線は機械を遅くしません（、）。</strong> 何もつながっていない横向きのケーブルは、余剰だけで——ライン上の機械が満たされてから——充電され、すでに機械へ向かっているエネルギーを奪うことはありません。消費者が電力を求めている間、そのような支線は空のままで、幹線からどちらの向きに伸びていても同じです。電源のすぐ隣の最初のケーブル、または機械の手前の最後のケーブルから出た支線は、その機械が稼働している間は充電されません（）。</p>
+<p><strong>ラインのエネルギーの分け方（、）。</strong> 毎ティック、3 つのルールが働きます。</p>
+
+<ol><li><strong>機械が先に食べます。</strong> 各機械は 1 ティックの稼働に使う分を、ケーブルの損失込みで、ケーブルが運べる範囲で受け取ります。全員に足りないときは発電機に近い機械が先に受け取り、同じ距離の機械は均等に分けます。</li><li><strong>機械が取れない分はすぐに蓄電ブロックへ</strong>（バッテリーボックス、テレポーター、エネルギー凝縮器、充電ステーション）、近いものから順に送られます。機械が自分のバッファを満たすのはその後です。消費量をネットワークが知らない他MODの機械やバッテリーは蓄電ブロックとして扱われます。まとめて電力を使うポンプ、スプリンクラー、ガーデンドローンステーションも同様です。</li><li><strong>発電機が機械をまかなえないときは、蓄電ブロックが機械に供給します。</strong></li></ol>
+
+<p>そのため、蓄電ブロックに空きがある間は機械のバッファが 0 EU/FE と表示されることがありますが、機械自体は全速力で稼働しています。何もつながっていない支線と、最後の消費者より先のラインは、ライン上の誰もそれ以上を必要としなくなったときにだけ充電されます（、）。機械が稼働している間、その支線は空のままで感電もしません（）。各消費者は自分が接しているケーブルからだけエネルギーを取ります。</p>
 
 <p>ケーブルは過負荷で爆発しません：上限を超えた分は通過しません。本格的な MV/HV/EV の流れには対応するティアのケーブルが必要です。</p>
 

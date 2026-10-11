@@ -372,7 +372,7 @@
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>流体物流</span><span class="cat-count" aria-label="5 个页面">5</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>流体储存</span><span class="cat-count" aria-label="2 个页面">2</span></a>
 <div class="group-title">世界与自动化</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="25 个页面">25</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="26 个页面">26</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>农业</span><span class="cat-count" aria-label="6 个页面">6</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>高级机器</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <div class="group-title">其他</div>
@@ -391,13 +391,13 @@
     <div class="info">
       <h1>锯木机</h1>
       <div class="block-id">alaindustrial:sawmill</div>
-      <div class="tags"><span class="tag cat" style="background:#ff7a45">机器</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">已实现</span><span class="tag">tier-lv</span><span class="tag">processing</span><span class="tag">wood</span><span class="tag">sawing</span><span class="tag">gui-modes</span></div>
+      <div class="tags"><span class="tag cat" style="background:#ff7a45">机器</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">已实现</span><span class="tag">tier-lv</span><span class="tag">processing</span><span class="tag">wood</span><span class="tag">sawing</span><span class="tag">gui-modes</span><span class="tag">sawdust</span></div>
     </div>
   </div>
 </div>
 <h2 id="概览">概览</h2>
 
-<p><strong>锯木机</strong> 是一台用于木材加工的 LV 等级机器。它能将原木（或木板）锯成比手动合成 <strong>更高产出</strong> 的成品，并可锯出四种不同的产品，拥有 <strong>4 种可切换模式</strong>（界面中的按钮）：<strong>木板 / 木棍 / 半砖 / 楼梯</strong>。任何木种都会产出对应木种的成品，木棍则是无木种区分的。这是本模组能耗最低的操作：锯木头比磨石头更轻松。</p>
+<p><strong>锯木机</strong> 是一台用于木材加工的 LV 等级机器。它能将原木（或木板）锯成比手动合成 <strong>更高产出</strong> 的成品，并可锯出五种不同的产品，拥有 <strong>5 种可切换模式</strong>（界面中的按钮）：<strong>木板 / 木棍 / 半砖 / 楼梯 / 木屑</strong>。任何木种都会产出对应木种的成品，木棍和<a href="../materials/sawdust.html">木屑</a>则是无木种区分的。这是本模组能耗最低的操作：锯木头比磨石头更轻松。</p>
 
 <blockquote><strong>小示例：</strong> 在 "木板" 模式下放入一根橡木原木，约 4 秒后就能得到 <strong>6 块橡木木板</strong>，而非原版的 4 块。切换到 "木棍" 模式，同一根原木会产出 <strong>18 根木棍</strong>。</blockquote>
 
@@ -411,9 +411,9 @@
 
 <h2 id="加工">加工</h2>
 
-<p>锯木机始终只在 <strong>当前活动模式</strong> 下工作：其他三种模式的配方在此刻处于非活动状态。切换模式会重置当前进度（新模式锯的是另一种产品）。一次锯切持续约 80 刻（约 4 秒）。</p>
+<p>锯木机始终只在 <strong>当前活动模式</strong> 下工作：其他模式的配方在此刻处于非活动状态。切换模式会重置当前进度（新模式锯的是另一种产品）。一次锯切持续约 80 刻（约 4 秒）。</p>
 
-<table><thead><tr><th>项目</th><th>数值</th></tr></thead><tbody><tr><td>配方类型</td><td>/ <code>sawing_sticks</code> / <code>sawing_slabs</code> / <code>sawing_stairs</code></td></tr><tr><td>持续时间</td><td>约 80 刻（约 4 秒）</td></tr><tr><td>单次锯切消耗</td><td>160 EU/FE</td></tr><tr><td>自动卸料</td><td>否</td></tr></tbody></table>
+<table><thead><tr><th>项目</th><th>数值</th></tr></thead><tbody><tr><td>配方类型</td><td>/ <code>sawing_sticks</code> / <code>sawing_slabs</code> / <code>sawing_stairs</code> / <code>sawing_sawdust</code></td></tr><tr><td>持续时间</td><td>约 80 刻（约 4 秒）</td></tr><tr><td>单次锯切消耗</td><td>160 EU/FE</td></tr><tr><td>自动卸料</td><td>否</td></tr></tbody></table>
 
 <h2 id="物品栏">物品栏</h2>
 
@@ -425,7 +425,7 @@
 
 <h2 id="界面">界面</h2>
 
-<p>界面复用 <a href="electric_furnace.html">电力熔炉</a> 的设计：能量储备、进度、输入槽和输出槽，中间是 <strong>锯片</strong> 形式的进度指示器，从左向右填充。槽位下方是一排 <strong>4 个模式按钮</strong>，带幽灵图标（木板/木棍/半砖/楼梯）；当前活动模式会高亮，每个按钮都有悬浮提示。</p>
+<p>界面复用 <a href="electric_furnace.html">电力熔炉</a> 的设计：能量储备、进度、输入槽和输出槽，中间是 <strong>锯片</strong> 形式的进度指示器，从左向右填充。槽位下方居中排列着 <strong>5 个模式按钮</strong>，带幽灵图标（木板/木棍/半砖/楼梯/木屑）；当前活动模式会高亮，每个按钮都有悬浮提示。</p>
 
 <p>升级面板打开期间——无论它停在哪里——模式按钮都不响应：点击不会切换模式，悬停既没有高亮也没有悬浮提示。被打开的统计面板盖住的按钮同样如此。悬浮提示不会许诺按钮做不到的事。</p>
 
@@ -445,13 +445,15 @@
 
 <p>它能锯切的内容（产出为 <strong>对应木种</strong>；竹子减半，原版中竹块也只产出 2 块木板）：</p>
 
-<table><thead><tr><th>模式</th><th>输入</th><th>输出</th><th>原版（对比）</th></tr></thead><tbody><tr><td>木板</td><td>1 块原木/树干（按木种）</td><td><strong>6 块木板</strong></td><td>4</td></tr><tr><td>木板</td><td>1 个竹块</td><td><strong>3 块竹木板</strong></td><td>2</td></tr><tr><td>木棍</td><td>1 块原木/树干（<code>#minecraft:logs</code>）</td><td><strong>18 根木棍</strong></td><td>约 8</td></tr><tr><td>木棍</td><td>1 个竹块</td><td><strong>9 根木棍</strong></td><td>4</td></tr><tr><td>木棍</td><td>1 块木板（<code>#minecraft:planks</code>）</td><td><strong>3 根木棍</strong></td><td>2</td></tr><tr><td>半砖</td><td>1 块原木/树干（按木种）</td><td><strong>18 块半砖</strong></td><td>8</td></tr><tr><td>半砖</td><td>1 个竹块</td><td><strong>9 块竹半砖</strong></td><td>4</td></tr><tr><td>楼梯</td><td>1 块原木/树干（按木种）</td><td><strong>6 个楼梯</strong></td><td>约 2⅔</td></tr><tr><td>楼梯</td><td>1 个竹块</td><td><strong>3 个竹楼梯</strong></td><td>约 1⅓</td></tr></tbody></table>
+<table><thead><tr><th>模式</th><th>输入</th><th>输出</th><th>原版（对比）</th></tr></thead><tbody><tr><td>木板</td><td>1 块原木/树干（按木种）</td><td><strong>6 块木板</strong></td><td>4</td></tr><tr><td>木板</td><td>1 个竹块</td><td><strong>3 块竹木板</strong></td><td>2</td></tr><tr><td>木棍</td><td>1 块原木/树干（<code>#minecraft:logs</code>）</td><td><strong>18 根木棍</strong></td><td>约 8</td></tr><tr><td>木棍</td><td>1 个竹块</td><td><strong>9 根木棍</strong></td><td>4</td></tr><tr><td>木棍</td><td>1 块木板（<code>#minecraft:planks</code>）</td><td><strong>3 根木棍</strong></td><td>2</td></tr><tr><td>半砖</td><td>1 块原木/树干（按木种）</td><td><strong>18 块半砖</strong></td><td>8</td></tr><tr><td>半砖</td><td>1 个竹块</td><td><strong>9 块竹半砖</strong></td><td>4</td></tr><tr><td>楼梯</td><td>1 块原木/树干（按木种）</td><td><strong>6 个楼梯</strong></td><td>约 2⅔</td></tr><tr><td>楼梯</td><td>1 个竹块</td><td><strong>3 个竹楼梯</strong></td><td>约 1⅓</td></tr><tr><td>木屑</td><td>1 块可燃原木（<code>#minecraft:logs_that_burn</code>；下界菌柄不行）</td><td><strong>6 份<a href="../materials/sawdust.html">木屑</a></strong></td><td>—</td></tr><tr><td>木屑</td><td>1 个竹块</td><td><strong>3 份木屑</strong></td><td>—</td></tr></tbody></table>
 
-<p>共计 39 个锯切配方（12 个木种 × 木板/半砖/楼梯 + 3 个木棍配方）。半砖、楼梯和木棍 <strong>不接受</strong> 作为输入，不存在逆向循环和复制。</p>
+<p>共计 41 个锯切配方（12 个木种 × 木板/半砖/楼梯 + 3 个木棍配方 + 2 个木屑配方）。半砖、楼梯和木棍 <strong>不接受</strong> 作为输入，不存在逆向循环和复制。</p>
+
+<p>木屑是供相邻机器使用的零碎原料：<a href="../fluid-machines/fermenter.html">发酵罐</a>把它当作廉价有机物，<a href="recycler.html">回收机</a>把它算作可燃组分，在熔炉中它像竹子一样燃烧——只有木棍的一半。6 份木屑的燃烧时间正好等于一根原木，所以为了燃料而锯木永远不划算：只会白白消耗 160 EU/FE。</p>
 
 <h3 id="在配方查看器中">在配方查看器中</h3>
 
-<p>在 JEI/REI 中，锯木机提供 <strong>4 个类别</strong>，每种模式一个（<code>sawing_planks</code>、<code>sawing_sticks</code>、<code>sawing_slabs</code>、<code>sawing_stairs</code>）；它们的工作站都是锯木机本身。点击进度箭头会同时打开全部四个类别。每个类别都标注了对应模式：锯木机：木板、锯木机：木棍、锯木机：半砖、锯木机：楼梯，以便区分标签页；模式名称取自与机器界面按钮相同的翻译。</p>
+<p>在 JEI/REI 中，锯木机提供 <strong>5 个类别</strong>，每种模式一个（<code>sawing_planks</code>、<code>sawing_sticks</code>、<code>sawing_slabs</code>、<code>sawing_stairs</code>、<code>sawing_sawdust</code>）；它们的工作站都是锯木机本身。点击进度箭头会同时打开全部五个类别。每个类别都标注了对应模式：锯木机：木板、锯木机：木棍、锯木机：半砖、锯木机：楼梯、锯木机：木屑，以便区分标签页；模式名称取自与机器界面按钮相同的翻译。</p>
 
 <h2 id="进阶">进阶</h2>
 
@@ -459,7 +461,7 @@
 
 <h2 id="相关内容">相关内容</h2>
 
-<ul><li><a href="electric_furnace.html">电力熔炉</a> — 复用的界面，相邻的 LV 机器。</li><li><a href="../generators/generator.html">发电机</a> — 电源。</li></ul>
+<ul><li><a href="electric_furnace.html">电力熔炉</a> — 复用的界面，相邻的 LV 机器。</li><li><a href="../generators/generator.html">发电机</a> — 电源。</li><li><a href="../materials/sawdust.html">木屑</a> — 第五种模式的产品。</li></ul>
 
 <h2>合成</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="锯木机 alaindustrial:sawmill" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意木板"><img src="../../assets/item/oak_planks_3d.png" alt="任意木板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="电子电路"><img src="../../assets/item/electronic_circuit_3d.png" alt="电子电路" width="32" height="32"></div> <div class="cell" title="任意木板"><img src="../../assets/item/oak_planks_3d.png" alt="任意木板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意木板"><img src="../../assets/item/oak_planks_3d.png" alt="任意木板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意银锭"><img src="../../assets/item/silver_ingot_3d.png" alt="任意银锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意木板"><img src="../../assets/item/oak_planks_3d.png" alt="任意木板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="锯木机"><img src="../../assets/item/sawmill_3d.png" alt="锯木机" width="32" height="32"></div><div class="result-name">锯木机</div></div></div></div></div>

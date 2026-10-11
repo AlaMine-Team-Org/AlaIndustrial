@@ -372,7 +372,7 @@
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Логістика рідин</span><span class="cat-count" aria-label="5 сторінок">5</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>Зберігання рідин</span><span class="cat-count" aria-label="2 сторінки">2</span></a>
 <div class="group-title">Світ та автоматизація</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Матеріали</span><span class="cat-count" aria-label="25 сторінок">25</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Матеріали</span><span class="cat-count" aria-label="26 сторінок">26</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>Сільське господарство</span><span class="cat-count" aria-label="6 сторінок">6</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>Високотехнологічні машини</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
 <div class="group-title">Інше</div>
@@ -391,13 +391,13 @@
     <div class="info">
       <h1>Лісопилка</h1>
       <div class="block-id">alaindustrial:sawmill</div>
-      <div class="tags"><span class="tag cat" style="background:#ff7a45">Машини</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">Реалізовано</span><span class="tag">tier-lv</span><span class="tag">processing</span><span class="tag">wood</span><span class="tag">sawing</span><span class="tag">gui-modes</span></div>
+      <div class="tags"><span class="tag cat" style="background:#ff7a45">Машини</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">Реалізовано</span><span class="tag">tier-lv</span><span class="tag">processing</span><span class="tag">wood</span><span class="tag">sawing</span><span class="tag">gui-modes</span><span class="tag">sawdust</span></div>
     </div>
   </div>
 </div>
 <h2 id="зведення">Зведення</h2>
 
-<p><strong>Лісопилка</strong> — LV-машина для переробки дерева. Вона розпускає колоду (або дошки) з <strong>більшим виходом</strong>, ніж ручний крафт, і вміє пиляти в чотири різні продукти — у неї <strong>4 перемикані режими</strong> (кнопки в інтерфейсі): <strong>дошки / палиці / напівблоки / сходи</strong>. Будь-яка порода дає вихід своєї породи; палиці — позапородні. Це найдешевша за енергією операція в моді: пиляти дерево простіше, ніж молоти камінь.</p>
+<p><strong>Лісопилка</strong> — LV-машина для переробки дерева. Вона розпускає колоду (або дошки) з <strong>більшим виходом</strong>, ніж ручний крафт, і вміє пиляти в п'ять різних продуктів — у неї <strong>5 перемиканих режимів</strong> (кнопки в інтерфейсі): <strong>дошки / палиці / напівблоки / сходи / тирса</strong>. Будь-яка порода дає вихід своєї породи; палиці й <a href="../materials/sawdust.html">тирса</a> — позапородні. Це найдешевша за енергією операція в моді: пиляти дерево простіше, ніж молоти камінь.</p>
 
 <blockquote><strong>Міні-приклад:</strong> покладіть дубову колоду в режимі «Дошки» — через ~4 секунди отримаєте <strong>6 дубових дощок</strong> замість ванільних 4. Перемкніть на «Палиці» — та сама колода дасть <strong>18 палиць</strong>.</blockquote>
 
@@ -411,7 +411,7 @@
 
 <h2 id="процесинг">Процесинг</h2>
 
-<p>Пилка завжди працює лише в <strong>активному режимі</strong>: рецепти трьох інших режимів у цей момент неактивні. Зміна режиму скидає поточний прогрес (новий режим пиляє інший продукт). Один розпил іде ~80 тиків (~4 с).</p>
+<p>Пилка завжди працює лише в <strong>активному режимі</strong>: рецепти решти режимів у цей момент неактивні. Зміна режиму скидає поточний прогрес (новий режим пиляє інший продукт). Один розпил іде ~80 тиків (~4 с).</p>
 
 <table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Тривалість</td><td>~80 тиків (~4 с)</td></tr><tr><td>Ціна розпилу</td><td>160 EU/FE</td></tr><tr><td>Авто-вивантаження</td><td>немає</td></tr></tbody></table>
 
@@ -425,7 +425,7 @@
 
 <h2 id="інтерфейс">Інтерфейс</h2>
 
-<p>Екран перевикористовує інтерфейс <a href="electric_furnace.html">Електропечі</a>: запас енергії, прогрес, слот входу й виходу, а між ними — індикатор прогресу у вигляді <strong>пиляльного диска</strong>, який заповнюється зліва направо. Знизу, під слотами, іде ряд із <strong>4 кнопок режимів</strong> з ghost-іконками (дошка/палиця/напівблок/сходинка); активний режим підсвічено, у кожної кнопки — спливна підказка.</p>
+<p>Екран перевикористовує інтерфейс <a href="electric_furnace.html">Електропечі</a>: запас енергії, прогрес, слот входу й виходу, а між ними — індикатор прогресу у вигляді <strong>пиляльного диска</strong>, який заповнюється зліва направо. Знизу, під слотами, по центру іде ряд із <strong>5 кнопок режимів</strong> з ghost-іконками (дошка/палиця/напівблок/сходинка/тирса); активний режим підсвічено, у кожної кнопки — спливна підказка.</p>
 
 <p>Поки відкрита панель покращень — хоч би де вона лежала, — кнопки режимів глухі: клік не перемикає режим, а наведення не дає ні підсвічування, ні підказки. Так само глуха кнопка, яку накрила відкрита панель статистики. Підказка не обіцяє того, чого кнопка не зробить.</p>
 
@@ -445,13 +445,15 @@
 
 <p>Що вона пиляє (вихід <strong>своєї породи</strong>; бамбук удвічі менший — він і у ванілі дає 2 дошки з блока):</p>
 
-<table><thead><tr><th>Режим</th><th>Вхід</th><th>Вихід</th><th>Ваніль (для порівняння)</th></tr></thead><tbody><tr><td>Дошки</td><td>1 колода/стовбур (за породою)</td><td><strong>6 дощок</strong></td><td>4</td></tr><tr><td>Дошки</td><td>1 бамбук-блок</td><td><strong>3 бамбукові дошки</strong></td><td>2</td></tr><tr><td>Палиці</td><td>1 колода/стовбур</td><td><strong>18 палиць</strong></td><td>~8</td></tr><tr><td>Палиці</td><td>1 бамбук-блок</td><td><strong>9 палиць</strong></td><td>4</td></tr><tr><td>Палиці</td><td>1 дошка</td><td><strong>3 палиці</strong></td><td>2</td></tr><tr><td>Напівблоки</td><td>1 колода/стовбур (за породою)</td><td><strong>18 напівблоків</strong></td><td>8</td></tr><tr><td>Напівблоки</td><td>1 бамбук-блок</td><td><strong>9 бамбукових напівблоків</strong></td><td>4</td></tr><tr><td>Сходи</td><td>1 колода/стовбур (за породою)</td><td><strong>6 сходинок</strong></td><td>~2⅔</td></tr><tr><td>Сходи</td><td>1 бамбук-блок</td><td><strong>3 бамбукові сходинки</strong></td><td>~1⅓</td></tr></tbody></table>
+<table><thead><tr><th>Режим</th><th>Вхід</th><th>Вихід</th><th>Ваніль (для порівняння)</th></tr></thead><tbody><tr><td>Дошки</td><td>1 колода/стовбур (за породою)</td><td><strong>6 дощок</strong></td><td>4</td></tr><tr><td>Дошки</td><td>1 бамбук-блок</td><td><strong>3 бамбукові дошки</strong></td><td>2</td></tr><tr><td>Палиці</td><td>1 колода/стовбур</td><td><strong>18 палиць</strong></td><td>~8</td></tr><tr><td>Палиці</td><td>1 бамбук-блок</td><td><strong>9 палиць</strong></td><td>4</td></tr><tr><td>Палиці</td><td>1 дошка</td><td><strong>3 палиці</strong></td><td>2</td></tr><tr><td>Напівблоки</td><td>1 колода/стовбур (за породою)</td><td><strong>18 напівблоків</strong></td><td>8</td></tr><tr><td>Напівблоки</td><td>1 бамбук-блок</td><td><strong>9 бамбукових напівблоків</strong></td><td>4</td></tr><tr><td>Сходи</td><td>1 колода/стовбур (за породою)</td><td><strong>6 сходинок</strong></td><td>~2⅔</td></tr><tr><td>Сходи</td><td>1 бамбук-блок</td><td><strong>3 бамбукові сходинки</strong></td><td>~1⅓</td></tr><tr><td>Тирса</td><td>1 горюча колода (<code>#minecraft:logs_that_burn</code>; незерські ніжки — ні)</td><td><strong>6 <a href="../materials/sawdust.html">тирси</a></strong></td><td>—</td></tr><tr><td>Тирса</td><td>1 бамбук-блок</td><td><strong>3 тирси</strong></td><td>—</td></tr></tbody></table>
 
-<p>Усього 39 рецептів розпилу (12 порід × дошки/напівблоки/сходи + 3 рецепти палиць). Напівблоки, сходи й палиці на вхід <strong>не приймаються</strong> — зворотного циклу й дюпу немає.</p>
+<p>Усього 41 рецепт розпилу (12 порід × дошки/напівблоки/сходи + 3 рецепти палиць + 2 рецепти тирси). Напівблоки, сходи й палиці на вхід <strong>не приймаються</strong> — зворотного циклу й дюпу немає.</p>
+
+<p>Тирса — дрібна сировина для сусідніх машин: <a href="../fluid-machines/fermenter.html">бочка бродіння</a> бере її як дешеву органіку, <a href="recycler.html">утилізатор</a> рахує горючою фракцією, а в печі вона горить як бамбук — удвічі менше за палицю. Шість тирси горять рівно стільки, скільки одна колода, тож розпил заради палива невигідний: він лише витрачає 160 EU/FE.</p>
 
 <h3 id="у-переглядачі-рецептів">У переглядачі рецептів</h3>
 
-<p>У JEI/REI лісопилка дає <strong>4 категорії</strong> — по одній на режим; робоча станція в усіх — сама лісопилка. Клік по стрілці прогресу відкриває всі чотири категорії одразу. Кожна підписана своїм режимом — «Лісопилка: Дошки», «Лісопилка: Палиці», «Лісопилка: Напівблоки», «Лісопилка: Сходи», — щоб вкладки відрізнялися; ім'я режиму береться з того самого перекладу, що й кнопки в інтерфейсі машини.</p>
+<p>У JEI/REI лісопилка дає <strong>5 категорій</strong> — по одній на режим; робоча станція в усіх — сама лісопилка. Клік по стрілці прогресу відкриває всі п'ять категорій одразу. Кожна підписана своїм режимом — «Лісопилка: Дошки», «Лісопилка: Палиці», «Лісопилка: Напівблоки», «Лісопилка: Сходи», «Лісопилка: Тирса», — щоб вкладки відрізнялися; ім'я режиму береться з того самого перекладу, що й кнопки в інтерфейсі машини.</p>
 
 <h2 id="прогресія">Прогресія</h2>
 
@@ -459,7 +461,7 @@
 
 <h2 id="повязане">Пов'язане</h2>
 
-<ul><li><a href="electric_furnace.html">Електропіч</a> — перевикористаний інтерфейс, сусідня LV-машина.</li><li><a href="../generators/generator.html">Генератор</a> — джерело живлення.</li></ul>
+<ul><li><a href="electric_furnace.html">Електропіч</a> — перевикористаний інтерфейс, сусідня LV-машина.</li><li><a href="../generators/generator.html">Генератор</a> — джерело живлення.</li><li><a href="../materials/sawdust.html">Тирса</a> — продукт п'ятого режиму.</li></ul>
 
 <h2>Крафт</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="лісопилка alaindustrial:sawmill" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаку</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Будь-який залізний злиток"><img src="../../assets/item/iron_ingot_3d.png" alt="Будь-який залізний злиток" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Будь-який залізний злиток"><img src="../../assets/item/iron_ingot_3d.png" alt="Будь-який залізний злиток" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Будь-який залізний злиток"><img src="../../assets/item/iron_ingot_3d.png" alt="Будь-який залізний злиток" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Будь-які дошки"><img src="../../assets/item/oak_planks_3d.png" alt="Будь-які дошки" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Електронна схема"><img src="../../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Будь-які дошки"><img src="../../assets/item/oak_planks_3d.png" alt="Будь-які дошки" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Будь-які дошки"><img src="../../assets/item/oak_planks_3d.png" alt="Будь-які дошки" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Будь-який срібний злиток"><img src="../../assets/item/silver_ingot_3d.png" alt="Будь-який срібний злиток" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Будь-які дошки"><img src="../../assets/item/oak_planks_3d.png" alt="Будь-які дошки" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Лісопилка"><img src="../../assets/item/sawmill_3d.png" alt="Лісопилка" width="32" height="32"></div><div class="result-name">Лісопилка</div></div></div></div></div>

@@ -372,7 +372,7 @@
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Fluid Transport</span><span class="cat-count" aria-label="5 pages">5</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="2 pages">2</span></a>
 <div class="group-title">World &amp; Automation</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="25 pages">25</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="26 pages">26</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="6 pages">6</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
@@ -391,13 +391,13 @@
     <div class="info">
       <h1>Sawmill</h1>
       <div class="block-id">alaindustrial:sawmill</div>
-      <div class="tags"><span class="tag cat" style="background:#ff7a45">Machines</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">Implemented</span><span class="tag">tier-lv</span><span class="tag">processing</span><span class="tag">wood</span><span class="tag">sawing</span><span class="tag">gui-modes</span></div>
+      <div class="tags"><span class="tag cat" style="background:#ff7a45">Machines</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">Implemented</span><span class="tag">tier-lv</span><span class="tag">processing</span><span class="tag">wood</span><span class="tag">sawing</span><span class="tag">gui-modes</span><span class="tag">sawdust</span></div>
     </div>
   </div>
 </div>
 <h2 id="summary">Summary</h2>
 
-<p>The <strong>Sawmill</strong> is an LV wood-processing machine. It saws a log (or planks) at a <strong>higher yield</strong> than hand-crafting, and can cut into four different products — it has <strong>4 switchable modes</strong> (GUI buttons): <strong>planks / sticks / slabs / stairs</strong>. Every species yields its own species; sticks are species-agnostic. It is the cheapest operation in the mod by energy — sawing wood is easier than milling stone.</p>
+<p>The <strong>Sawmill</strong> is an LV wood-processing machine. It saws a log (or planks) at a <strong>higher yield</strong> than hand-crafting, and can cut into five different products — it has <strong>5 switchable modes</strong> (GUI buttons): <strong>planks / sticks / slabs / stairs / sawdust</strong>. Every species yields its own species; sticks and <a href="../materials/sawdust.html">sawdust</a> are species-agnostic. It is the cheapest operation in the mod by energy — sawing wood is easier than milling stone.</p>
 
 <blockquote><strong>Mini-example:</strong> put an oak log in "Planks" mode — in ~4 seconds you get <strong>6 oak planks</strong> instead of the vanilla 4. Switch to "Sticks" — the same log gives <strong>18 sticks</strong>.</blockquote>
 
@@ -411,9 +411,9 @@
 
 <h2 id="processing">Processing</h2>
 
-<p>The sawmill always works only in the <strong>active mode</strong>; the recipes of the other three modes are inactive meanwhile. Switching the mode resets the current progress (the new mode cuts a different product). One cut takes ~80 ticks (~4 s).</p>
+<p>The sawmill always works only in the <strong>active mode</strong>; the recipes of the other modes are inactive meanwhile. Switching the mode resets the current progress (the new mode cuts a different product). One cut takes ~80 ticks (~4 s).</p>
 
-<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Recipe type</td><td>/ <code>sawing_sticks</code> / <code>sawing_slabs</code> / <code>sawing_stairs</code></td></tr><tr><td>Duration</td><td>~80 ticks (~4 s)</td></tr><tr><td>Cost per cut</td><td>160 EU/FE</td></tr><tr><td>Auto-output</td><td>no</td></tr></tbody></table>
+<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Recipe type</td><td>/ <code>sawing_sticks</code> / <code>sawing_slabs</code> / <code>sawing_stairs</code> / <code>sawing_sawdust</code></td></tr><tr><td>Duration</td><td>~80 ticks (~4 s)</td></tr><tr><td>Cost per cut</td><td>160 EU/FE</td></tr><tr><td>Auto-output</td><td>no</td></tr></tbody></table>
 
 <h2 id="inventory">Inventory</h2>
 
@@ -425,7 +425,7 @@
 
 <h2 id="interface">Interface</h2>
 
-<p>The screen has its own GUI: energy buffer, input and output slots, and between them a <strong>saw blade</strong> progress indicator that fills left to right. A row of <strong>4 mode buttons</strong> with ghost icons (plank/stick/slab/stairs) sits below the slots; the active mode is highlighted and each button has a tooltip.</p>
+<p>The screen has its own GUI: energy buffer, input and output slots, and between them a <strong>saw blade</strong> progress indicator that fills left to right. A centred row of <strong>5 mode buttons</strong> with ghost icons (plank/stick/slab/stairs/sawdust) sits below the slots; the active mode is highlighted and each button has a tooltip.</p>
 
 <p>While the upgrade panel is open — wherever it lies — the mode buttons are deaf: a click does not switch the mode, and hovering gives neither a highlight nor a tooltip. So is a button covered by the open statistics panel. A tooltip never promises what the button will not do.</p>
 
@@ -447,13 +447,15 @@
 
 <p>What it saws (output is <strong>the input's own species</strong>; bamboo yields half — it also gives only 2 planks</p>
 
-<table><thead><tr><th>Mode</th><th>Input</th><th>Output</th><th>Vanilla (for comparison)</th></tr></thead><tbody><tr><td>Planks</td><td>1 log/stem (per species)</td><td><strong>6 planks</strong></td><td>4</td></tr><tr><td>Planks</td><td>1 bamboo block</td><td><strong>3 bamboo planks</strong></td><td>2</td></tr><tr><td>Sticks</td><td>1 log/stem (<code>#minecraft:logs</code>)</td><td><strong>18 sticks</strong></td><td>~8</td></tr><tr><td>Sticks</td><td>1 bamboo block</td><td><strong>9 sticks</strong></td><td>4</td></tr><tr><td>Sticks</td><td>1 plank (<code>#minecraft:planks</code>)</td><td><strong>3 sticks</strong></td><td>2</td></tr><tr><td>Slabs</td><td>1 log/stem (per species)</td><td><strong>18 slabs</strong></td><td>8</td></tr><tr><td>Slabs</td><td>1 bamboo block</td><td><strong>9 bamboo slabs</strong></td><td>4</td></tr><tr><td>Stairs</td><td>1 log/stem (per species)</td><td><strong>6 stairs</strong></td><td>~2⅔</td></tr><tr><td>Stairs</td><td>1 bamboo block</td><td><strong>3 bamboo stairs</strong></td><td>~1⅓</td></tr></tbody></table>
+<table><thead><tr><th>Mode</th><th>Input</th><th>Output</th><th>Vanilla (for comparison)</th></tr></thead><tbody><tr><td>Planks</td><td>1 log/stem (per species)</td><td><strong>6 planks</strong></td><td>4</td></tr><tr><td>Planks</td><td>1 bamboo block</td><td><strong>3 bamboo planks</strong></td><td>2</td></tr><tr><td>Sticks</td><td>1 log/stem (<code>#minecraft:logs</code>)</td><td><strong>18 sticks</strong></td><td>~8</td></tr><tr><td>Sticks</td><td>1 bamboo block</td><td><strong>9 sticks</strong></td><td>4</td></tr><tr><td>Sticks</td><td>1 plank (<code>#minecraft:planks</code>)</td><td><strong>3 sticks</strong></td><td>2</td></tr><tr><td>Slabs</td><td>1 log/stem (per species)</td><td><strong>18 slabs</strong></td><td>8</td></tr><tr><td>Slabs</td><td>1 bamboo block</td><td><strong>9 bamboo slabs</strong></td><td>4</td></tr><tr><td>Stairs</td><td>1 log/stem (per species)</td><td><strong>6 stairs</strong></td><td>~2⅔</td></tr><tr><td>Stairs</td><td>1 bamboo block</td><td><strong>3 bamboo stairs</strong></td><td>~1⅓</td></tr><tr><td>Sawdust</td><td>1 log that burns (<code>#minecraft:logs_that_burn</code>; not Nether stems)</td><td><strong>6 <a href="../materials/sawdust.html">sawdust</a></strong></td><td>—</td></tr><tr><td>Sawdust</td><td>1 bamboo block</td><td><strong>3 sawdust</strong></td><td>—</td></tr></tbody></table>
 
-<p>39 sawing recipes in total (12 species × planks/slabs/stairs + 3 stick recipes). Slabs, stairs and sticks are <strong>not accepted as input</strong> — there is no reverse loop or duping.</p>
+<p>41 sawing recipes in total (12 species × planks/slabs/stairs + 3 stick recipes + 2 sawdust recipes). Slabs, stairs and sticks are <strong>not accepted as input</strong> — there is no reverse loop or duping.</p>
+
+<p>Sawdust is small change for the neighbouring machines: the <a href="../fluid-machines/fermenter.html">fermenter</a> takes it as poor organic feedstock, the <a href="recycler.html">recycler</a> counts it as the combustible fraction, and in a furnace it burns like bamboo — half a stick. Six sawdust burn exactly as long as one log, so sawing for fuel never pays: it only spends 160 EU/FE.</p>
 
 <h3 id="in-the-recipe-viewer">In the recipe viewer</h3>
 
-<p>In JEI/REI the sawmill contributes <strong>4 categories</strong> — one per mode (<code>sawing_planks</code>, <code>sawing_sticks</code>, <code>sawing_slabs</code>, <code>sawing_stairs</code>); the workstation for all of them is the sawmill itself. Clicking the progress arrow opens all four categories at once. Each is titled after its mode — "Sawmill: Planks", "Sawmill: Sticks", "Sawmill: Slabs", "Sawmill: Stairs" — so the tabs can be told apart; the mode name comes from the same translation the machine's own GUI buttons use.</p>
+<p>In JEI/REI the sawmill contributes <strong>5 categories</strong> — one per mode (<code>sawing_planks</code>, <code>sawing_sticks</code>, <code>sawing_slabs</code>, <code>sawing_stairs</code>, <code>sawing_sawdust</code>); the workstation for all of them is the sawmill itself. Clicking the progress arrow opens all five categories at once. Each is titled after its mode — "Sawmill: Planks", "Sawmill: Sticks", "Sawmill: Slabs", "Sawmill: Stairs", "Sawmill: Sawdust" — so the tabs can be told apart; the mode name comes from the same translation the machine's own GUI buttons use.</p>
 
 <h2 id="progression">Progression</h2>
 
@@ -461,7 +463,7 @@
 
 <h2 id="related">Related</h2>
 
-<ul><li><a href="electric_furnace.html">Electric Furnace</a> — the reused GUI, a neighboring LV machine.</li><li><a href="../generators/generator.html">Generator</a> — a power source.</li></ul>
+<ul><li><a href="electric_furnace.html">Electric Furnace</a> — the reused GUI, a neighboring LV machine.</li><li><a href="../generators/generator.html">Generator</a> — a power source.</li><li><a href="../materials/sawdust.html">Sawdust</a> — the product of the fifth mode.</li></ul>
 
 <h2>Crafting</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="sawmill alaindustrial:sawmill" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Shaped Crafting</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Any Iron Ingot"><img src="../../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Iron Ingot"><img src="../../assets/item/iron_ingot_3d.png" alt="Any Iron Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Planks"><img src="../../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Electronic Circuit"><img src="../../assets/item/electronic_circuit_3d.png" alt="Electronic Circuit" width="32" height="32"></div> <div class="cell" title="Any Planks"><img src="../../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Planks"><img src="../../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Silver Ingot"><img src="../../assets/item/silver_ingot_3d.png" alt="Any Silver Ingot" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="Any Planks"><img src="../../assets/item/oak_planks_3d.png" alt="Any Planks" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Crafting Table" title="Crafting Table" width="30" height="30"><div class="arrow" aria-label="Craft">▶</div></div><div class="recipe-result"><div class="cell result" title="Sawmill"><img src="../../assets/item/sawmill_3d.png" alt="Sawmill" width="32" height="32"></div><div class="result-name">Sawmill</div></div></div></div></div>
