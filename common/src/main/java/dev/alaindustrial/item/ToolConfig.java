@@ -29,7 +29,7 @@ public final class ToolConfig {
 	public static int lvPouchCapacity = 128;
 	/** Pouch EU buffer. At the 1 EU/s passive drain this is ~33 min of carrying items — well past a
 	 * single mining trip; charging at the LV ceiling (32 EU/t) refills it in ~63 ticks. */
-	@Knob(section = Section.TOOLS, min = 1,
+	@Knob(section = Section.TOOLS, clientVisible = true, min = 1,
 			doc = "Battery Pouch EU buffer.")
 	public static int lvPouchBuffer = 2000;
 	/** EU drained per second while the pouch is in a player inventory AND holds items. At 0 EU the
@@ -41,7 +41,7 @@ public final class ToolConfig {
 	/** EU one battery holds. Deliberately the same size as the pouch (a pouch's whole charge fits in one
 	 * battery), so the battery reads as "the first EU you can carry" and does not compete with the
 	 * 20 000 EU Energy Pack. Charge is stored PER ITEM: a full stack of 16 carries 32 000 EU. */
-	@Knob(section = Section.TOOLS, min = 1,
+	@Knob(section = Section.TOOLS, clientVisible = true, min = 1,
 			doc = "Battery EU buffer, PER ITEM (a stack of 16 carries 16x this).")
 	public static int batteryBuffer = 2000;
 	/** Max EU/tick one battery accepts in a charge slot. At the LV ceiling (32) a whole stack of 16
@@ -69,7 +69,7 @@ public final class ToolConfig {
 	// crystal it is built from holds no charge to carry. At 128 EU/t that gives 39 s / 3 min 15 s /
 	// 9 min 45 s. Ten million would have meant 65 minutes of staring at a slot.
 	/** EU a blank Energy Crystal must absorb before it becomes an Energy Crystal. ~39 s at 128 EU/t. */
-	@Knob(section = Section.TOOLS, min = 1,
+	@Knob(section = Section.TOOLS, clientVisible = true, min = 1,
 			doc = "EU a blank Energy Crystal must absorb to become a crystal. Priming time is this divided by the"
 					+ " charge rate below.")
 	public static int energyCrystalBuffer = 100_000;
@@ -79,7 +79,7 @@ public final class ToolConfig {
 					+ " values do nothing until an HV item charger exists.")
 	public static int energyCrystalInputRate = 128;
 	/** EU a blank Lapotron Crystal must absorb. ~3 min 15 s at 128 EU/t. */
-	@Knob(section = Section.TOOLS, min = 1,
+	@Knob(section = Section.TOOLS, clientVisible = true, min = 1,
 			doc = "EU a blank Lapotron Crystal must absorb. It fills from empty - the finished Energy Crystal it is"
 					+ " built from carries no charge.")
 	public static int lapotronCrystalBuffer = 500_000;
@@ -88,7 +88,7 @@ public final class ToolConfig {
 			doc = "Max EU/t a Lapotron Crystal accepts in a charge slot.")
 	public static int lapotronCrystalInputRate = 128;
 	/** EU a blank Resonant Crystal must absorb — the end of the ladder. ~9 min 45 s at 128 EU/t. */
-	@Knob(section = Section.TOOLS, min = 1,
+	@Knob(section = Section.TOOLS, clientVisible = true, min = 1,
 			doc = "EU a blank Resonant Crystal must absorb. Sized against the 128 EU/t charge ceiling; raise it only"
 					+ " together with an HV item charger.")
 	public static int resonantCrystalBuffer = 1_500_000;
@@ -99,7 +99,7 @@ public final class ToolConfig {
 	// --- Energy Pack (MOD-065, worn LV buffer) ---
 	/** Energy Pack EU buffer — 10 pouches' worth, the same size as the Battery Box (LV tier). Charging
 	 * it from a Battery Box at the LV ceiling (32 EU/t) takes ~625 ticks (~31 s). */
-	@Knob(section = Section.TOOLS, min = 1,
+	@Knob(section = Section.TOOLS, clientVisible = true, min = 1,
 			doc = "Energy Pack (worn) EU buffer.")
 	public static int energyPackBuffer = 20_000;
 	/** Max EU/tick the pack accepts while sitting in a charge slot. At the LV ceiling this is what a
@@ -115,7 +115,7 @@ public final class ToolConfig {
 	// --- Electric Drill (MOD-079, first powered hand tool) ---
 	/** Electric Drill EU buffer — half an Energy Pack, five pouches' worth. At {@link #electricDrillEuPerBlock}
 	 * per block this is ~200 blocks on a full charge. */
-	@Knob(section = Section.TOOLS, min = 1,
+	@Knob(section = Section.TOOLS, clientVisible = true, min = 1,
 			doc = "Electric Drill EU buffer.")
 	public static int electricDrillBuffer = 10_000;
 	/** EU drained per block the drill successfully mines while it has at least this much charge. Below it the
@@ -140,7 +140,7 @@ public final class ToolConfig {
 	 * Netherite-tipped drill buffer (MOD-534), the third tier's only own number: about 300 blocks a charge.
 	 * The per-block cost stays; the tier is paid in its recipe.
 	 */
-	@Knob(section = Section.TOOLS, min = 1,
+	@Knob(section = Section.TOOLS, clientVisible = true, min = 1,
 			doc = "Netherite-Tipped Electric Drill EU buffer (the two tiers below share electricDrillBuffer).")
 	public static int electricDrillNetheriteTipBuffer = 15_000;
 	/**
@@ -154,7 +154,7 @@ public final class ToolConfig {
 	/** Electric Chainsaw EU buffer — the same reservoir as the drill, so the two tools of the LV hand-tool
 	 * line charge and last alike. At {@link #electricChainsawEuPerBlock} per block this is ~333 logs on a
 	 * full charge. */
-	@Knob(section = Section.TOOLS, min = 1,
+	@Knob(section = Section.TOOLS, clientVisible = true, min = 1,
 			doc = "Electric Chainsaw EU buffer.")
 	public static int electricChainsawBuffer = 10_000;
 	/**
@@ -172,7 +172,7 @@ public final class ToolConfig {
 	/** Electric Shovel EU buffer — the same reservoir as the drill and the chainsaw, so the whole LV
 	 * hand-tool line charges and lasts alike. At {@link #electricShovelEuPerBlock} per block this is
 	 * ~500 blocks of dirt on a full charge. */
-	@Knob(section = Section.TOOLS, min = 1,
+	@Knob(section = Section.TOOLS, clientVisible = true, min = 1,
 			doc = "Electric Shovel EU buffer.")
 	public static int electricShovelBuffer = 10_000;
 	/**
@@ -189,7 +189,7 @@ public final class ToolConfig {
 	// --- Electric Hoe (MOD-342, the farming member of the same hand-tool line) ---
 	/** Electric Hoe EU buffer — the same reservoir as the rest of the line, so all four powered hand
 	 * tools charge and last alike. */
-	@Knob(section = Section.TOOLS, min = 1,
+	@Knob(section = Section.TOOLS, clientVisible = true, min = 1,
 			doc = "Electric Hoe EU buffer.")
 	public static int electricHoeBuffer = 10_000;
 	/**
@@ -214,7 +214,7 @@ public final class ToolConfig {
 	// --- Electric Saber (MOD-149, the line's first weapon) ---
 	/** Electric Saber EU buffer — the same reservoir as the four hand tools, so the whole LV line
 	 * charges and lasts alike. At {@link #electricSaberEuPerHit} per hit this is 100 powered swings. */
-	@Knob(section = Section.TOOLS, min = 1,
+	@Knob(section = Section.TOOLS, clientVisible = true, min = 1,
 			doc = "Electric Saber EU buffer.")
 	public static int electricSaberBuffer = 10_000;
 	/**
@@ -237,7 +237,7 @@ public final class ToolConfig {
 	// --- Electric Bow (MOD-363, the line's ranged weapon) ---
 	/** Electric Bow EU buffer — the line's shared reservoir. At {@link #electricBowEuPerShot} per shot
 	 * this is 66 powered shots. */
-	@Knob(section = Section.TOOLS, min = 1,
+	@Knob(section = Section.TOOLS, clientVisible = true, min = 1,
 			doc = "Electric Bow EU buffer.")
 	public static int electricBowBuffer = 10_000;
 	/** EU spent per powered shot. Below it the bow still shoots, but as a plain bow and for free — see
@@ -253,7 +253,7 @@ public final class ToolConfig {
 	// --- Electromagnet (MOD-132, item-pull convenience) ---
 	/** Electromagnet EU buffer (tier 1). A modest LV reservoir: at {@link #magnetEuPerItem} per pulled
 	 * item·tick it reaps hundreds of drops before a recharge, and tops up in ~8 s at an LV charger. */
-	@Knob(section = Section.TOOLS, min = 1,
+	@Knob(section = Section.TOOLS, clientVisible = true, min = 1,
 			doc = "Electromagnet EU buffer.")
 	public static int magnetBuffer = 5_000;
 	/** Max EU/tick the magnet accepts while sitting in a charge slot (LV ceiling, like the drill). */
@@ -277,7 +277,7 @@ public final class ToolConfig {
 	public static int magnetScanIntervalTicks = 1;
 	// --- Advanced Electromagnet (MOD-580, tier 2) ---
 	/** Advanced magnet EU buffer. Four times the basic grade: it reaches further, so it works more. */
-	@Knob(section = Section.TOOLS, min = 1,
+	@Knob(section = Section.TOOLS, clientVisible = true, min = 1,
 			doc = "Advanced electromagnet EU buffer.")
 	public static int magnetAdvancedBuffer = 20_000;
 	/** Max EU/tick the advanced magnet accepts while charging (MV ceiling — it is an MV-tier item). */
@@ -306,14 +306,14 @@ public final class ToolConfig {
 	// --- Jetpack (MOD-148, worn EU flight) ---
 	/** Jetpack EU buffer — 1.5 Energy Packs. At {@link #jetpackEuPerTick} per tick of thrust this is
 	 * ~30 s of continuous flight; charging at the LV ceiling (32 EU/t) refills it in ~938 ticks (~47 s). */
-	@Knob(section = Section.TOOLS, min = 1,
+	@Knob(section = Section.TOOLS, clientVisible = true, min = 1,
 			doc = "Jetpack EU buffer.")
 	public static int jetpackBuffer = 30_000;
 	// Fluxweave armour (MOD-127). Only EU numbers live here: defense/toughness/enchantability are built
 	// into ArmorMaterial at item-registration time, BEFORE the config file is read, so exposing those
 	// would be dead knobs. See ModArmorMaterials.
 	/** EU buffer of each Fluxweave piece — between the drill (10k) and the Energy Pack (20k). */
-	@Knob(section = Section.TOOLS, min = 1,
+	@Knob(section = Section.TOOLS, clientVisible = true, min = 1,
 			doc = "EU buffer of each Fluxweave armour piece.")
 	public static int fluxweaveBuffer = 15_000;
 	/** Max EU/t a Fluxweave piece accepts while charging in a slot (LV ceiling). */
@@ -369,7 +369,7 @@ public final class ToolConfig {
 	public static int jetpackInputRate = 32;
 	/** Altitude ceiling (block Y) above which the engine refuses to thrust — the jetpack glides
 	 * instead. 320 = the overworld build limit; server owners can lower it. */
-	@Knob(section = Section.TOOLS, min = 1,
+	@Knob(section = Section.TOOLS, clientVisible = true, min = 1,
 			doc = "Altitude ceiling (block Y) above which the jetpack engine refuses to thrust.")
 	public static int jetpackMaxY = 320;
 	/** Light level (0–15) of the torch-like glow a thrusting jetpack casts around the flyer — a

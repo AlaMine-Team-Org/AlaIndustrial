@@ -2,6 +2,7 @@ package dev.alaindustrial.item.tool;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.item.ToolConfig;
+import dev.alaindustrial.item.energy.ItemBuffers;
 import java.util.function.IntSupplier;
 
 /**
@@ -13,37 +14,46 @@ import java.util.function.IntSupplier;
  * {@code Properties} builder, whose full copies are deliberate (see their javadoc).
  *
  * <p>Values are {@link IntSupplier}s because {@code Config} is mutable at runtime: a reloaded config must
- * reach a tier resolved at class-init.
+ * reach a tier resolved at class-init. The buffer is picked out of an {@link ItemBuffers} instead (MOD-790): the
+ * client draws it from the server's numbers.
  *
  * <p>The diamond tips share their base line's numbers; the netherite drill has a buffer of its own and
  * the base drill's intake and cost (MOD-534). The drill's column price
  * ({@code ToolConfig.electricDrillColumnEuPerBlock}) is a feature of the drill, not of a tier, and stays there.
  */
 public enum ElectricToolTier {
-	DRILL(() -> ToolConfig.electricDrillBuffer, () -> ToolConfig.electricDrillInputRate,
-			() -> ToolConfig.electricDrillEuPerBlock),
-	DRILL_NETHERITE_TIP(() -> ToolConfig.electricDrillNetheriteTipBuffer, () -> ToolConfig.electricDrillInputRate,
-			() -> ToolConfig.electricDrillEuPerBlock),
-	CHAINSAW(() -> ToolConfig.electricChainsawBuffer, () -> ToolConfig.electricChainsawInputRate,
-			() -> ToolConfig.electricChainsawEuPerBlock),
-	SHOVEL(() -> ToolConfig.electricShovelBuffer, () -> ToolConfig.electricShovelInputRate,
-			() -> ToolConfig.electricShovelEuPerBlock),
-	HOE(() -> ToolConfig.electricHoeBuffer, () -> ToolConfig.electricHoeInputRate,
-			() -> ToolConfig.electricHoeEuPerBlock);
+	DRILL(() -> ToolConfig.electricDrillInputRate, () -> ToolConfig.electricDrillEuPerBlock),
+	DRILL_NETHERITE_TIP(() -> ToolConfig.electricDrillInputRate, () -> ToolConfig.electricDrillEuPerBlock),
+	CHAINSAW(() -> ToolConfig.electricChainsawInputRate, () -> ToolConfig.electricChainsawEuPerBlock),
+	SHOVEL(() -> ToolConfig.electricShovelInputRate, () -> ToolConfig.electricShovelEuPerBlock),
+	HOE(() -> ToolConfig.electricHoeInputRate, () -> ToolConfig.electricHoeEuPerBlock);
 
-	private final IntSupplier buffer;
 	private final IntSupplier inputRate;
 	private final IntSupplier euPerBlock;
 
-	ElectricToolTier(IntSupplier buffer, IntSupplier inputRate, IntSupplier euPerBlock) {
-		this.buffer = buffer;
+	ElectricToolTier(IntSupplier inputRate, IntSupplier euPerBlock) {
 		this.inputRate = inputRate;
 		this.euPerBlock = euPerBlock;
 	}
 
-	/** EU the tool holds. */
+	/** EU the tool holds, by this side's own balance. */
 	public int buffer() {
-		return buffer.getAsInt();
+		return buffer(ItemBuffers.live());
+	}
+
+	/**
+	 * EU the tool holds when the buffers are {@code buffers} (MOD-790): picked by the tier, no supplier — a client
+	 * drawing the bar passes the server's buffers, and a supplier field would tie it to the enum's initialiser,
+	 * where every knob of the class is read.
+	 */
+	public int buffer(ItemBuffers buffers) {
+		return switch (this) {
+			case DRILL -> buffers.electricDrillBuffer();
+			case DRILL_NETHERITE_TIP -> buffers.electricDrillNetheriteTipBuffer();
+			case CHAINSAW -> buffers.electricChainsawBuffer();
+			case SHOVEL -> buffers.electricShovelBuffer();
+			case HOE -> buffers.electricHoeBuffer();
+		};
 	}
 
 	/** Max EU/tick it accepts while charging. */

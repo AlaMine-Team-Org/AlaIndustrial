@@ -112,7 +112,7 @@ public class BatteryItem extends Item implements PoweredItem {
 
 	@Override
 	public boolean isBarVisible(ItemStack stack) {
-		return ItemEnergy.get(stack) > 0;
+		return ItemEnergy.hasCharge(stack);
 	}
 
 	/**
@@ -131,8 +131,8 @@ public class BatteryItem extends Item implements PoweredItem {
 
 	/** MOD-707: this item's EU buffer, read by {@code ItemEnergy.capacity} through {@link PoweredItem}. */
 	@Override
-	public long energyCapacity(ItemStack stack) {
-		return ToolConfig.batteryBuffer;
+	public long energyCapacity(ItemStack stack, ItemBuffers buffers) {
+		return buffers.batteryBuffer();
 	}
 
 	@Override

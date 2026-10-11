@@ -507,7 +507,7 @@
     "repairBenchTier2EuCost": 19200,
     "_comment_repairBenchTier3EuCost": "MOD-384: EU one repair of an advanced rotor/wheel costs (material: 1 electronic circuit). 28800 EU / 8 EU-t = 3600 ticks (180 s).",
     "repairBenchTier3EuCost": 28800,
-    "_comment_sawmillDuration": "Ticks a sawmill takes per cut at 1.0 speed (all four modes).",
+    "_comment_sawmillDuration": "Ticks a sawmill takes per cut at 1.0 speed (every mode).",
     "sawmillDuration": 80,
     "_comment_sprinklerIntervalTicks": "Ticks between sprinkler spray attempts.",
     "sprinklerIntervalTicks": 20,

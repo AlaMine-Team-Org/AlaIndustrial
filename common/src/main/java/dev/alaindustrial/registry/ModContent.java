@@ -790,6 +790,8 @@ public final class ModContent {
 	 * stock for a later task, the same way the recycler's matter scrap is.
 	 */
 	public static Supplier<Item> BIOMASS = unbound("BIOMASS");
+	/** Sawdust (MOD-655): the sawmill's fifth mode — fermenter and recycler stock, a short fuel. */
+	public static Supplier<Item> SAWDUST = unbound("SAWDUST");
 	public static Supplier<Item> RUBBER = unbound("RUBBER");
 	/** Cotton seed (MOD-280) — right-clicked onto a bare trellis to plant it. */
 	public static Supplier<Item> COTTON_SEEDS = unbound("COTTON_SEEDS");

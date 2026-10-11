@@ -37,9 +37,9 @@ public record PoweredToolTooltip(String usageKey, List<IntSupplier> usageArgs,
 		afterCharge = List.copyOf(afterCharge);
 	}
 
-	/** The usual "depleted" rule: no EU left at all. */
+	/** The usual "depleted" rule: no EU left at all — asked without the local capacity (MOD-790). */
 	public static boolean empty(ItemStack stack) {
-		return ItemEnergy.get(stack) <= 0;
+		return !ItemEnergy.hasCharge(stack);
 	}
 
 	/**

@@ -398,4 +398,13 @@ public final class ChargePadBlockEntity extends MachineBlockEntity implements Me
 		return new ChargePadMenu(syncId, inventory, this,
 				ContainerLevelAccess.create(getLevel(), getBlockPos()));
 	}
+
+	/**
+	 * Unknown per-tick need (MOD-789, ADR-049): it fills a buffer to charge what stands on it, so the network plans it
+	 * as a store and charges it with the stores, nearest first.
+	 */
+	@Override
+	public long perTickDemand() {
+		return 0L;
+	}
 }

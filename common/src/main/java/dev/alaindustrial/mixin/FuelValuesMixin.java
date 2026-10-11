@@ -1,6 +1,7 @@
 package dev.alaindustrial.mixin;
 
 import dev.alaindustrial.item.fluid.CapsuleFuel;
+import dev.alaindustrial.registry.ModContent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.FuelValues;
@@ -19,13 +20,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  * {@code burnDuration}, and on NeoForge via {@code ItemStack#getBurnTime} whose default delegates to
  * {@code burnDuration}. The empty-capsule remainder is handled separately by the item's {@code craftRemainder}
  * property; per-stack size is capped to one in the fuel slot by {@code FurnaceFuelSlotMixin} (no tare loss).
+ *
+ * <p>Sawdust (MOD-655) is a short fuel that burns as long as vanilla bamboo. 26.2 has no fuel component, so
+ * the facade {@code FurnaceFuel.burnsLikeBamboo} leaves its properties alone and this mixin answers for it
+ * instead: {@code isFuel} says yes and {@code burnDuration} reports the table's own bamboo value, so a
+ * datapack that edits bamboo moves sawdust with it.
  */
 @Mixin(FuelValues.class)
 public abstract class FuelValuesMixin {
 
 	@Inject(method = "isFuel", at = @At("HEAD"), cancellable = true)
 	private void alaindustrial$lavaCapsuleIsFuel(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
-		if (CapsuleFuel.isLavaCapsule(stack)) {
+		if (CapsuleFuel.isLavaCapsule(stack) || isSawdust(stack)) {
 			cir.setReturnValue(true);
 		}
 	}
@@ -42,6 +48,13 @@ public abstract class FuelValuesMixin {
 			// Re-entrant call with a lava bucket is safe: the guard above rejects it, so it falls through to
 			// the original body and returns the map value.
 			cir.setReturnValue(((FuelValues) (Object) this).burnDuration(new ItemStack(Items.LAVA_BUCKET)));
+		} else if (isSawdust(stack)) {
+			// Bamboo's own table value, re-entrant like the lava bucket above: bamboo is no sawdust.
+			cir.setReturnValue(((FuelValues) (Object) this).burnDuration(new ItemStack(Items.BAMBOO)));
 		}
+	}
+
+	private static boolean isSawdust(ItemStack stack) {
+		return stack.is(ModContent.SAWDUST.get());
 	}
 }

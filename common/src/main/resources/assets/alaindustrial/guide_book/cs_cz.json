@@ -1487,7 +1487,7 @@
             {
               "type": "text",
               "title": "Pila",
-              "text": "Rozřeže jakékoli dřevo na prkna, tyčky, půlbloky nebo schody s vyšším výtěžkem než ruční výroba. Čtyři přepínatelné režimy, běží na EU."
+              "text": "Rozřeže jakékoli dřevo na prkna, tyčky, půlbloky nebo schody s vyšším výtěžkem než ruční výroba, v pátém režimu na piliny. Pět přepínatelných režimů, běží na EU."
             },
             {
               "type": "stats",
@@ -2834,6 +2834,25 @@
           ]
         },
         {
+          "id": "sawdust",
+          "title": "Piliny",
+          "icon": "alaindustrial:sawdust",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Piliny",
+              "text": "Výrobek pátého režimu pily — 6 pilin z jednoho kmene. Levná organická surovina pro fermentor, hořlavá frakce recyklátoru a krátké palivo, které hoří jako bambus."
+            },
+            {
+              "type": "stats",
+              "title": "Parametry",
+              "lines": [
+                "Energie: 160 EU/operace"
+              ]
+            }
+          ]
+        },
+        {
           "id": "palladium_ore",
           "title": "Palladiová ruda",
           "icon": "alaindustrial:palladium_ore",
@@ -3291,6 +3310,43 @@
           ]
         },
         {
+          "id": "tempered_iron_bars",
+          "title": "Mříže z kaleného železa",
+          "icon": "alaindustrial:tempered_iron_bars",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Mříže z kaleného železa",
+              "text": "Čtyři stavební bloky z kaleného železa podle vanilkových předloh — mříže, žebřík, poklop a řetěz. Chovají se jako vanilkové a vypadají jako ocel módu."
+            },
+            {
+              "type": "stats",
+              "title": "Parametry",
+              "lines": [
+                "Zásobník: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Výroba podle vzoru",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tempered_iron_bars",
+              "result_count": 16
+            }
+          ]
+        },
+        {
           "id": "reactor_button",
           "title": "Tlačítko reaktoru",
           "icon": "alaindustrial:reactor_button",
@@ -3435,6 +3491,43 @@
               ],
               "result_id": "alaindustrial:reactor_glass",
               "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reinforced_glass",
+          "title": "Zesílené sklo",
+          "icon": "alaindustrial:reinforced_glass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Zesílené sklo",
+              "text": "Čiré sklo v rámu z kaleného železa — láme se jako kámen a vydrží výbuch creepera nebo TNT. Stavební blok a surovina pro pozdější recepty."
+            },
+            {
+              "type": "stats",
+              "title": "Parametry",
+              "lines": [
+                "Zásobník: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Výroba podle vzoru",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:reinforced_glass",
+              "result_count": 4
             }
           ]
         },
@@ -3737,6 +3830,43 @@
               ],
               "result_id": "alaindustrial:industrial_workbench",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "industrial_light",
+          "title": "Průmyslová žárovka",
+          "icon": "alaindustrial:industrial_light",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Průmyslová žárovka",
+              "text": "Drobné světlo 4×4 pixely s teplým světlem úrovně 15 — na podlahu, strop nebo jakoukoli stěnu. Bez rozhraní, bez energie."
+            },
+            {
+              "type": "stats",
+              "title": "Parametry",
+              "lines": [
+                "Zásobník: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Výroba podle vzoru",
+              "grid": [
+                "minecraft:glass",
+                "",
+                "",
+                "minecraft:glowstone_dust",
+                "",
+                "",
+                "alaindustrial:tempered_iron_plate",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:industrial_light",
+              "result_count": 4
             }
           ]
         },

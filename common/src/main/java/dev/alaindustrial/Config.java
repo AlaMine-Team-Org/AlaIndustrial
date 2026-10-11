@@ -387,7 +387,7 @@ public final class Config {
 	/** Sawmill (MOD-150): ticks per cut at 1.0 speed. 80 → 160 EU/op — the cheapest machine op (wood
 	 * saws easier than ore mills): furnace 100, extractor 120, compressor 130, macerator 150. */
 	@Knob(section = Section.MACHINES, clientVisible = true, min = 1,
-			doc = "Ticks a sawmill takes per cut at 1.0 speed (all four modes).")
+			doc = "Ticks a sawmill takes per cut at 1.0 speed (every mode).")
 	public static int sawmillDuration = 80;
 	/** Polymerizer (MOD-019): ticks per bucket of oil at 1.0 speed. 200 → 400 EU/op — the most expensive
 	 * op of the LV processing family, because rubber is the material gate into MV and a bucket of oil is

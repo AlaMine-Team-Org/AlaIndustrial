@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:sawing_sawdust",
+  "ingredient": "#minecraft:bamboo_blocks",
+  "result": {
+    "id": "alaindustrial:sawdust",
+    "count": 3
+  },
+  "energy": 160
+}

@@ -1,34 +1,43 @@
 package dev.alaindustrial.block.entity;
 
+import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModRecipes;
+import java.util.function.Supplier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * The four cutting modes of the {@link SawmillBlockEntity} (MOD-150). Each mode is backed by its own
- * {@link ModRecipes.Kind} recipe family, so the machine saws the same log into planks, sticks, slabs
- * or stairs depending on which button the player has selected. The active mode is persisted in NBT
+ * The cutting modes of the {@link SawmillBlockEntity} (MOD-150; the fifth, sawdust, MOD-655). Each mode is
+ * backed by its own {@link ModRecipes.Kind} recipe family, so the machine saws the same log into planks, sticks,
+ * slabs, stairs or sawdust depending on which button the player has selected. The active mode is persisted in NBT
  * and synced to the open screen via a dedicated {@link net.minecraft.world.inventory.ContainerData}
- * index; the recipe set for the other three modes is inert while a mode is active.
+ * index; the recipe sets of the other modes are inert while a mode is active.
  *
- * <p>The {@link #icon} is a vanilla representative item drawn as a ghost on the GUI mode button — it
- * is purely cosmetic (oak variants stand in for "planks/sticks/slabs/stairs" in general); the actual
- * per-species output comes from the matched recipe, not from this icon.
+ * <p><b>The order is a save format.</b> The ordinal is what the block entity writes as {@code "Mode"} and what
+ * the GUI channel carries, so a new mode is appended LAST: inserting one would turn every saved sawmill into a
+ * different mode on load.
+ *
+ * <p>The {@link #icon} is a representative item drawn as a ghost on the GUI mode button — it is purely
+ * cosmetic (oak variants stand in for "planks/sticks/slabs/stairs" in general); the actual per-species output
+ * comes from the matched recipe, not from this icon. A supplier, because the sawdust is the mod's own item and is
+ * bound only when the loader registers it — after this enum may already have been initialised.
  */
 public enum SawmillMode {
-	PLANKS(ModRecipes.SAWING_PLANKS, Items.OAK_PLANKS),
-	STICKS(ModRecipes.SAWING_STICKS, Items.STICK),
-	SLABS(ModRecipes.SAWING_SLABS, Items.OAK_SLAB),
-	STAIRS(ModRecipes.SAWING_STAIRS, Items.OAK_STAIRS);
+	PLANKS(ModRecipes.SAWING_PLANKS, () -> Items.OAK_PLANKS),
+	STICKS(ModRecipes.SAWING_STICKS, () -> Items.STICK),
+	SLABS(ModRecipes.SAWING_SLABS, () -> Items.OAK_SLAB),
+	STAIRS(ModRecipes.SAWING_STAIRS, () -> Items.OAK_STAIRS),
+	// MOD-655: appended last — the ordinal is the saved "Mode".
+	SAWDUST(ModRecipes.SAWING_SAWDUST, () -> ModContent.SAWDUST.get());
 
 	private static final SawmillMode[] VALUES = values();
 
 	private final ModRecipes.Kind kind;
-	private final Item icon;
+	private final Supplier<Item> icon;
 
-	SawmillMode(ModRecipes.Kind kind, Item icon) {
+	SawmillMode(ModRecipes.Kind kind, Supplier<Item> icon) {
 		this.kind = kind;
 		this.icon = icon;
 	}
@@ -40,7 +49,7 @@ public enum SawmillMode {
 
 	/** Ghost icon drawn on this mode's GUI button (cosmetic representative item). */
 	public ItemStack iconStack() {
-		return new ItemStack(icon);
+		return new ItemStack(icon.get());
 	}
 
 	/** Lang key suffix for the button tooltip: {@code gui.alaindustrial.sawmill.mode.<name>}. */

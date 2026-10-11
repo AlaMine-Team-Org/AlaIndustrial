@@ -40,29 +40,42 @@ import net.minecraft.world.phys.Vec3;
  * radiating vehicle. A packed mob farm multiplies both — every cow in it is an observer that queries the
  * same crowd. If that ever shows in a profile, collect the vehicles once per sweep over the union of the
  * observers' boxes and keep only the per-observer distance cut here, instead of querying once per observer.
+ *
+ * <p><b>Held items ride the same query (MOD-788).</b> Frames and every living entity but a player now pass the
+ * predicate too ({@link RadiationHolders}), so a mob in the box costs eight equipment-slot reads more; no second
+ * query. Measured (MOD-788 research.md): with 40 empty-handed frozen zombies in the box the query went from
+ * ~0.4–0.9 µs to ~2–3 µs, and {@code exposureAt} from ~1–4.6 µs to ~4.7–7 µs, plus one trace per holder that
+ * radiates.
  */
 public final class RadiationVehicles {
 
 	private RadiationVehicles() {
 	}
 
-	/** Moving containers within the container reach — see {@link RadiationSources#exposureAt}. */
+	/**
+	 * Moving containers and entities holding items (MOD-788, {@link RadiationHolders}) within the container
+	 * reach — see {@link RadiationSources#exposureAt}. ONE entity query for both: an entity is one source, its
+	 * cargo capped as a chest and whatever it holds on view added uncapped.
+	 */
 	public static void collectVehicles(ServerLevel level, Vec3 centre, int radius, int groundReach,
 			List<RadiationSources.Source> out) {
-		if (groundReach <= 0 || RadiationConfig.radiationContainerMaxItems <= 0) {
+		if (groundReach <= 0) {
 			return;
 		}
 		double reach = Math.min(radius, groundReach);
 		AABB box = AABB.ofSize(centre, reach * 2, reach * 2, reach * 2);
-		for (Entity entity : level.getEntities((Entity) null, box, RadiationVehicles::isExposedCarrier)) {
+		for (Entity entity : level.getEntities((Entity) null, box,
+				e -> isExposedCarrier(e) || RadiationHolders.holds(e))) {
 			// The centre of the box, as for a loose item: an entity's position is the bottom of its box,
 			// and a trace to it clips the floor the vehicle stands on.
 			Vec3 at = entity.getBoundingBox().getCenter();
 			if (at.distanceTo(centre) > reach) {
 				continue;
 			}
-			int strength = RadiationCore.containerLeak(contentsStrength(entity),
-					RadiationConfig.radiationContainerMaxItems, RadiationConfig.radiationDoseHighPerItem);
+			// containerLeak returns 0 when radiationContainerMaxItems is 0: cargo off, held items still count.
+			int cargo = isExposedCarrier(entity) ? RadiationCore.containerLeak(contentsStrength(entity),
+					RadiationConfig.radiationContainerMaxItems, RadiationConfig.radiationDoseHighPerItem) : 0;
+			int strength = cargo + RadiationHolders.heldStrength(entity);
 			if (strength > 0) {
 				out.add(new RadiationSources.Source(at, strength));
 			}

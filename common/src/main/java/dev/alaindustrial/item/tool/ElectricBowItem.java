@@ -4,6 +4,7 @@ import dev.alaindustrial.item.ToolConfig;
 import dev.alaindustrial.item.energy.EnergyBar;
 import dev.alaindustrial.item.energy.PoweredItem;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.item.energy.ItemBuffers;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.registry.ModDataComponents;
 import java.util.List;
@@ -212,8 +213,8 @@ public class ElectricBowItem extends BowItem implements PoweredItem {
 
 	/** MOD-707: this item's EU buffer, read by {@code ItemEnergy.capacity} through {@link PoweredItem}. */
 	@Override
-	public long energyCapacity(ItemStack stack) {
-		return ToolConfig.electricBowBuffer;
+	public long energyCapacity(ItemStack stack, ItemBuffers buffers) {
+		return buffers.electricBowBuffer();
 	}
 
 	@Override

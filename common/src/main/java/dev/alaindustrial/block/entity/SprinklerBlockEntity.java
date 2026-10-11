@@ -378,4 +378,13 @@ public class SprinklerBlockEntity extends MachineBlockEntity implements FluidPor
 		// expected fluid on load is the geothermal generator's save-corruption bug (flagged in MOD-261).
 		tank.load(input, "Solution");
 	}
+
+	/**
+	 * Unknown per-tick need (MOD-789, ADR-049): it draws no steady rate, so the network plans it as a store and charges
+	 * it with the stores, nearest first.
+	 */
+	@Override
+	public long perTickDemand() {
+		return 0L;
+	}
 }

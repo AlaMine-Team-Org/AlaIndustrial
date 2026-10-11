@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:sawing_sawdust",
+  "ingredient": "#minecraft:logs_that_burn",
+  "result": {
+    "id": "alaindustrial:sawdust",
+    "count": 6
+  },
+  "energy": 160
+}

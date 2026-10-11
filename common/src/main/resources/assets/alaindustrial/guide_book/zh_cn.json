@@ -1487,7 +1487,7 @@
             {
               "type": "text",
               "title": "锯木机",
-              "text": "可将任意木头锯成木板、木棍、台阶或楼梯，产量高于手工合成。四种可切换模式，使用 EU 运作。"
+              "text": "可将任何木头锯成木板、木棍、半砖或楼梯，产量高于手工合成；第五种模式则锯出木屑。五种可切换模式，以 EU 运作。"
             },
             {
               "type": "stats",
@@ -2834,6 +2834,25 @@
           ]
         },
         {
+          "id": "sawdust",
+          "title": "木屑",
+          "icon": "alaindustrial:sawdust",
+          "pages": [
+            {
+              "type": "text",
+              "title": "木屑",
+              "text": "锯木机第五种模式的产物——每根原木 6 份木屑。发酵罐的廉价有机原料、回收机的可燃组分，以及像竹子一样燃烧的短时燃料。"
+            },
+            {
+              "type": "stats",
+              "title": "属性",
+              "lines": [
+                "能量：160 EU/次"
+              ]
+            }
+          ]
+        },
+        {
           "id": "palladium_ore",
           "title": "钯矿石",
           "icon": "alaindustrial:palladium_ore",
@@ -3291,6 +3310,43 @@
           ]
         },
         {
+          "id": "tempered_iron_bars",
+          "title": "回火铁栏杆",
+          "icon": "alaindustrial:tempered_iron_bars",
+          "pages": [
+            {
+              "type": "text",
+              "title": "回火铁栏杆",
+              "text": "仿照原版制作的四种淬火铁建筑方块——铁栏杆、梯子、活板门和锁链。行为与原版相同，外观是模组的钢材。"
+            },
+            {
+              "type": "stats",
+              "title": "属性",
+              "lines": [
+                "缓冲：0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tempered_iron_bars",
+              "result_count": 16
+            }
+          ]
+        },
+        {
           "id": "reactor_button",
           "title": "反应堆按钮",
           "icon": "alaindustrial:reactor_button",
@@ -3435,6 +3491,43 @@
               ],
               "result_id": "alaindustrial:reactor_glass",
               "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reinforced_glass",
+          "title": "强化玻璃",
+          "icon": "alaindustrial:reinforced_glass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "强化玻璃",
+              "text": "装在淬火铁框中的透明玻璃——像石头一样碎裂，能挡住苦力怕或 TNT 的爆炸。既是建筑方块，也是后续配方的材料。"
+            },
+            {
+              "type": "stats",
+              "title": "属性",
+              "lines": [
+                "缓冲：0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:reinforced_glass",
+              "result_count": 4
             }
           ]
         },
@@ -3737,6 +3830,43 @@
               ],
               "result_id": "alaindustrial:industrial_workbench",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "industrial_light",
+          "title": "工业灯",
+          "icon": "alaindustrial:industrial_light",
+          "pages": [
+            {
+              "type": "text",
+              "title": "工业灯",
+              "text": "一盏 4×4 像素的小灯，暖光亮度 15——可装在地面、天花板或任意墙面上。无界面，无需能量。"
+            },
+            {
+              "type": "stats",
+              "title": "属性",
+              "lines": [
+                "缓冲：0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "minecraft:glass",
+                "",
+                "",
+                "minecraft:glowstone_dust",
+                "",
+                "",
+                "alaindustrial:tempered_iron_plate",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:industrial_light",
+              "result_count": 4
             }
           ]
         },

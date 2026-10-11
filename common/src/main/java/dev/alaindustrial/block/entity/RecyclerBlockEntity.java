@@ -324,4 +324,12 @@ public class RecyclerBlockEntity extends MachineBlockEntity implements MenuProvi
 	public AbstractContainerMenu createMenu(int syncId, Inventory inventory, Player player) {
 		return new RecyclerMenu(syncId, inventory, this, ContainerLevelAccess.create(getLevel(), getBlockPos()));
 	}
+
+	/**
+	 * Its per-tick need for the network (MOD-789, ADR-049): its own tariff with the chips, not the shared machine rate.
+	 */
+	@Override
+	public long perTickDemand() {
+		return Math.max(1, effectiveEuPerTick(Config.recyclerEuPerTick));
+	}
 }

@@ -1,7 +1,6 @@
 package dev.alaindustrial.client.hud;
 
 import dev.alaindustrial.item.tool.ElectricDrillItem;
-import dev.alaindustrial.item.energy.ItemEnergy;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -57,11 +56,13 @@ public final class ElectricDrillHud {
 	/** The drill the player is holding (main hand first, then offhand), or null if neither hand holds one. */
 	private static ItemStack heldDrill(Player player) {
 		ItemStack main = player.getItemInHand(InteractionHand.MAIN_HAND);
-		if (main.getItem() instanceof ElectricDrillItem && ItemEnergy.capacity(main) > 0) {
+		// A drill is a powered item, and a powered item always has a buffer (min = 1): no capacity to ask, so no
+		// local balance read (MOD-790).
+		if (main.getItem() instanceof ElectricDrillItem) {
 			return main;
 		}
 		ItemStack off = player.getItemInHand(InteractionHand.OFF_HAND);
-		if (off.getItem() instanceof ElectricDrillItem && ItemEnergy.capacity(off) > 0) {
+		if (off.getItem() instanceof ElectricDrillItem) {
 			return off;
 		}
 		return null;

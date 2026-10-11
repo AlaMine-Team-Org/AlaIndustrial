@@ -1908,6 +1908,7 @@ tooltip.alaindustrial.tier_lv {green}
 == alaindustrial:resonant_shard plain : none
 == alaindustrial:rtp_chip plain : none
 == alaindustrial:rubber plain : none
+== alaindustrial:sawdust plain : none
 == alaindustrial:sawmill plain
 -- plain eu
 tooltip.alaindustrial.energy_input(2) {gray}

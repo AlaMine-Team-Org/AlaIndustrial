@@ -14,7 +14,7 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * Menu for the LV sawmill (MOD-150) — one input slot + a result-only output slot, plus a mode selector.
- * The four cutting modes ({@link SawmillMode}) are switched with GUI buttons that ride the vanilla
+ * The cutting modes ({@link SawmillMode}) are switched with GUI buttons that ride the vanilla
  * {@link #clickMenuButton} channel (no custom packet, works on both loaders): the button id is the
  * target mode ordinal. The active mode is read back for the screen from the machine's 6-wide
  * {@link net.minecraft.world.inventory.ContainerData} (channel {@link SawmillBlockEntity.Channel#MODE}).
@@ -42,7 +42,7 @@ public class SawmillMenu extends MachineMenu {
 	@Override
 	protected void addMachineSlots() {
 		// Slot positions aligned to the sawmill's own GUI atlas: the input/saw/output row sits high in
-		// the frame so the band underneath is free for the four mode buttons (see SawmillScreen).
+		// the frame so the band underneath is free for the mode buttons (see SawmillScreen).
 		addSlot(new Slot(machine, 0, 55, 19));
 		// Output slot: result only, no manual insertion (spec).
 		addSlot(new OutputSlot(machine, 1, 116, 19));

@@ -13,7 +13,7 @@ import net.minecraft.world.entity.player.Inventory;
 /**
  * Texture-backed screen for the LV sawmill (MOD-150/MOD-215). Draws its own GUI atlas — same frame
  * and energy bar as the other processing machines, but the progress sprite is a saw blade cutting
- * left-to-right ({@link ProgressMachineScreen}) — and adds a row of four {@link SawmillMode} buttons
+ * left-to-right ({@link ProgressMachineScreen}) — and adds a row of {@link SawmillMode} buttons (five since MOD-655)
  * below the slots. Clicking a button rides the vanilla container-button channel
  * ({@code handleInventoryButtonClick}) to switch the machine's mode; the active button is
  * highlighted, and each shows a ghost item + tooltip.
@@ -32,19 +32,25 @@ public class SawmillScreen extends ProgressMachineScreen<SawmillMenu> {
 			82, 20,           // dest x/y in the 176×166 frame
 			false);           // no min-1px
 
-	// Four 18×18 mode buttons in a centered row below the slots (relative to leftPos/topPos).
+	// One 18×18 button per mode in a centered row below the slots (relative to leftPos/topPos).
 	private static final int BUTTON_SIZE = 18;
 
 	/** Click area of the recipe viewers (MOD-716): exactly the progress sprite. */
 	public static final GuiRect PROGRESS_AREA = PROGRESS.area();
-	private static final int BUTTON_Y = 48;
-	private static final int BUTTON_X0 = 52;
+	/** Top edge of the mode-button row, relative to {@code topPos}. Public for the L3 stands that click it. */
+	public static final int BUTTON_Y = 48;
+	/**
+	 * Left edge of the first mode button, relative to {@code leftPos}: the row is centred in the 176-px frame,
+	 * so a new mode re-centres it (MOD-655: four buttons started at 52, five start at 43). Public for the L3
+	 * stands, which aim at a button by this number rather than by a copy of it.
+	 */
+	public static final int BUTTON_X0 = (176 - SawmillMode.values().length * BUTTON_SIZE) / 2;
 
 	/**
 	 * The sawmill's status row sits ABOVE the mode buttons, not in the family's usual place.
 	 *
 	 * <p>{@link MachineScreen#STATUS_ROW_Y} is y=61, which on every other machine in the family is empty
-	 * frame — here it is the middle of the four 18×18 mode buttons (y=48..65, x=52..123). The band this
+	 * frame — here it is the middle of the 18×18 mode buttons (y=48..65). The band this
 	 * screen has instead is the gap between the slot row (which ends at y=35, the slots being higher on
 	 * this frame than on the others) and the buttons.
 	 */
@@ -58,7 +64,8 @@ public class SawmillScreen extends ProgressMachineScreen<SawmillMenu> {
 		super(menu, inventory, title, LAYOUT);
 	}
 
-	private static int buttonX(int ordinal) {
+	/** Left edge of the mode button with this ordinal, relative to {@code leftPos}. */
+	public static int buttonX(int ordinal) {
 		return BUTTON_X0 + ordinal * BUTTON_SIZE;
 	}
 

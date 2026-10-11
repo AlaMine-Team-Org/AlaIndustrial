@@ -71,36 +71,6 @@ final class LineEndpoints {
 	 */
 	record Demand(List<EnergyLineDistributor.LiveConsumer<BlockPos>> machines,
 			List<EnergyLineDistributor.LiveConsumer<BlockPos>> sinks, long machineDemand) {
-
-		/**
-		 * Every endpoint that wants energy this tick — machines AND storage sinks — the seeds of the flow
-		 * field. Seeding is about REACHABILITY, not priority: narrowing it to machines fences off the stretch
-		 * of bus lying past the source, and a store out there never fills. Class priority lives in the serve
-		 * order instead. Empty means nobody is waiting: the network falls back to the producer-seeded field
-		 * (ADR-003, ADR-001).
-		 */
-		Set<BlockPos> flowSeeds() {
-			Set<BlockPos> seeds = new LinkedHashSet<>();
-			for (EnergyLineDistributor.LiveConsumer<BlockPos> c : machines) {
-				seeds.add(c.pos());
-			}
-			for (EnergyLineDistributor.LiveConsumer<BlockPos> c : sinks) {
-				seeds.add(c.pos());
-			}
-			return seeds;
-		}
-
-		/**
-		 * The machine subset of {@link #flowSeeds()}: the fork tie-break seed set. It only weighs how a forked
-		 * buffer is split, never who may be filled (ADR-003, point 3).
-		 */
-		Set<BlockPos> machineSeeds() {
-			Set<BlockPos> seeds = new LinkedHashSet<>();
-			for (EnergyLineDistributor.LiveConsumer<BlockPos> c : machines) {
-				seeds.add(c.pos());
-			}
-			return seeds;
-		}
 	}
 
 	/** Resolve the producers' live ports and dry-run what each can give this tick. */
@@ -124,8 +94,9 @@ final class LineEndpoints {
 				storageSources.add(new EnergyLineDistributor.LiveProducer<>(ep.pos(), st));
 				storagePositions.add(ep.pos());
 			} else {
-				generators.add(new EnergyLineDistributor.LiveProducer<>(ep.pos(), st, ep.host()));
 				long supply = EnergyTransactions.get().simulate(sim -> st.extract(Long.MAX_VALUE, sim));
+				// what one extract gives (a port's per-call cap): the plan routes at most that through each face
+				generators.add(new EnergyLineDistributor.LiveProducer<>(ep.pos(), st, ep.host(), supply));
 				if (countedHosts.add(ep.host())) {
 					genSupply += supply;
 				}
@@ -144,6 +115,16 @@ final class LineEndpoints {
 	 */
 	static Demand demand(List<EnergyTopologyCache.Endpoint> consumers,
 			Function<EnergyTopologyCache.Endpoint, EnergyPort> portAt, Predicate<BlockPos> isStorageSink) {
+		return demand(consumers, portAt, isStorageSink, ep -> 0L);
+	}
+
+	/**
+	 * {@code needAt}: a machine's per-tick need ({@link PerTickDemand}, MOD-789), read at the endpoint's host
+	 * (ADR-027: a multiblock cell has no block entity of its own); {@code <= 0} — unknown.
+	 */
+	static Demand demand(List<EnergyTopologyCache.Endpoint> consumers,
+			Function<EnergyTopologyCache.Endpoint, EnergyPort> portAt, Predicate<BlockPos> isStorageSink,
+			java.util.function.ToLongFunction<EnergyTopologyCache.Endpoint> needAt) {
 		List<EnergyLineDistributor.LiveConsumer<BlockPos>> machines = new ArrayList<>(consumers.size());
 		List<EnergyLineDistributor.LiveConsumer<BlockPos>> sinks = new ArrayList<>(consumers.size());
 		long machineDemand = 0;
@@ -156,11 +137,11 @@ final class LineEndpoints {
 			if (r <= 0) {
 				continue;
 			}
-			EnergyLineDistributor.LiveConsumer<BlockPos> c = new EnergyLineDistributor.LiveConsumer<>(ep.pos(), st, r);
 			if (isStorageSink.test(ep.pos())) {
-				sinks.add(c);
+				sinks.add(new EnergyLineDistributor.LiveConsumer<>(ep.pos(), st, r, r, ep.host()));
 			} else {
-				machines.add(c);
+				long need = needAt.applyAsLong(ep);
+				machines.add(new EnergyLineDistributor.LiveConsumer<>(ep.pos(), st, r, Math.max(0L, need), ep.host()));
 				machineDemand += r;
 			}
 		}

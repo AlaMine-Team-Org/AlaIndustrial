@@ -1369,9 +1369,9 @@ public final class CableEnergyScenarios {
 	 * set the two cables east of the generator stay at 0 and the box never charges — while a single hungry
 	 * machine anywhere on the net keeps that state latched.
 	 *
-	 * <p>The macerator holds ore, so it consumes {@code 2} EU/t against the generator's {@code 8}: its room
-	 * is above zero on every tick (it is latched into the seed set, which is what makes this red without the
-	 * fix) yet it leaves a genuine surplus for the far side. Both ends must end with energy.
+	 * <p>The macerator holds ore, so it consumes {@code 2} EU/t against the generator's {@code 8}: it leaves a
+	 * genuine surplus for the far side. The macerator must work (it gets its need every tick, ADR-049, so its
+	 * buffer may well read 0) and the box must charge.
 	 *
 	 * @implements MOD-252 (review) — the flow field is seeded by every waiting endpoint, machines and
 	 *     storage sinks alike. Seeding decides reachability, not priority: with machines alone seeding it,
@@ -1411,14 +1411,14 @@ public final class CableEnergyScenarios {
 			tick(helper, be(helper, MIXED_MAC));
 			tick(helper, be(helper, MIXED_BOX));
 		}
-		long mac = be(helper, MIXED_MAC) instanceof MaceratorBlockEntity m ? m.getEnergyStorage().getAmount() : -1;
+		long mac = be(helper, MIXED_MAC) instanceof MaceratorBlockEntity m ? 8 - m.getItem(0).getCount() : -1;
 		long box = be(helper, MIXED_BOX) instanceof BatteryBoxBlockEntity b ? b.getEnergyStorage().getAmount() : -1;
 		if (mac <= 0) {
 			// MOD-254: this branch is NOT a broken fixture, whatever it used to claim. The generator's own
 			// cable is the fork of this rig, and the sweep used to hand that whole buffer to whichever
 			// neighbour it visited first — so the machine's side of the bus could read a flat zero while
 			// the Box on the far side charged normally. Both cables west of the source are the tell.
-			helper.fail("the macerator next to the source got nothing (" + mac + " EU, cables toward it: "
+			helper.fail("the macerator next to the source finished nothing (" + mac + " ores, cables toward it: "
 					+ cableAmount(helper, MIXED_CABLES[0]) + "/" + cableAmount(helper, MIXED_CABLES[1])
 					+ " EU) — the source's own segment is being drained whole by the other branch instead of"
 					+ " being split between the two");
@@ -1758,14 +1758,14 @@ public final class CableEnergyScenarios {
 	private static final BlockPos PRI_BOX = new BlockPos(2, 2, 2);   // +z of the cable
 
 	/**
-	 * With scarce supply, a working machine is served before a storage sink: the macerator fills from
-	 * the limited generator buffer while the BatteryBox gets only the remainder (here 0). Guards the
+	 * With scarce supply, a machine is served before a storage sink: out of the generator's 10 EU the
+	 * macerator gets its per-tick need first and the BatteryBox the remainder at once (ADR-049). Guards the
 	 * "machines before storage, no BatteryBox starvation" criterion.
 	 * Mirrors: NetworkGameTest.mod009Pri_machineServedBeforeStorage
 	 *
-	 * @implements MOD-009-PRI — with scarce supply, a working machine is served before a storage sink:
-	 *     the macerator fills from the limited generator buffer while the BatteryBox gets only the remainder
-	 *     (here 0). Guards the "machines before storage, no BatteryBox starvation" criterion.
+	 * @implements MOD-009-PRI — with scarce supply, a machine is served before a storage sink: the macerator
+	 *     gets its per-tick need out of the limited generator buffer, the BatteryBox only the remainder.
+	 *     Guards the "machines before storage, no BatteryBox starvation" criterion.
 	 * @covers R-NRG-08
 	 */
 	public static void mod009Pri_machineServedBeforeStorage(GameTestHelper helper) {
@@ -1784,13 +1784,11 @@ public final class CableEnergyScenarios {
 			tick(helper, be(helper, PRI_CABLE));
 			NetworkManager.tickAll(helper.getLevel());
 		}
-		long mac = be(helper, PRI_MAC) instanceof MaceratorBlockEntity m ? m.getEnergyStorage().getAmount() : -1;
+		MaceratorBlockEntity m = (MaceratorBlockEntity) be(helper, PRI_MAC);
 		long box = be(helper, PRI_BOX) instanceof BatteryBoxBlockEntity bb ? bb.getEnergyStorage().getAmount() : -1;
-		if (mac != 10L) {
-			helper.fail("machine should be served first: macerator=" + mac + " (expected 10), battery_box=" + box);
-		}
-		if (box != 0L) {
-			helper.fail("storage sink took EU before the machine was satisfied: battery_box=" + box + " (expected 0)");
+		if (m.getEnergyStorage().getAmount() != m.perTickDemand() || box != 10L - m.perTickDemand()) {
+			helper.fail("the machine gets its need first, the box the rest: macerator="
+					+ m.getEnergyStorage().getAmount() + " (need " + m.perTickDemand() + "), battery_box=" + box);
 		}
 		helper.succeed();
 	}

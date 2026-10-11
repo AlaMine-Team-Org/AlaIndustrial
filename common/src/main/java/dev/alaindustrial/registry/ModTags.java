@@ -203,6 +203,15 @@ public final class ModTags {
 				TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "dusts/sulfur"));
 
 		/**
+		 * Any mod's sawdust ({@code c:dusts/wood}, MOD-655). The Recycler files it as combustible and the
+		 * fermenter's poor tier takes it — both by this tag, so another mod's sawdust counts the same as ours.
+		 * The recycler keys on the tag, not on "the item is fuel": fuel is a component on 26.3 and a table on
+		 * 26.2, and a fuel test would also file a lava capsule as wood.
+		 */
+		public static final TagKey<Item> C_WOOD_DUSTS =
+				TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "dusts/wood"));
+
+		/**
 		 * Every grade of wind mill rotor (MOD-385) — what the three wind mills' rotor slot accepts.
 		 *
 		 * <p>A tag rather than a list of {@code ModContent} comparisons: the check lives in

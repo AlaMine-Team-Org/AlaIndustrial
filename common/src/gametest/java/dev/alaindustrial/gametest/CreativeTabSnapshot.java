@@ -238,6 +238,7 @@ final class CreativeTabSnapshot {
 			"main alaindustrial:raw_rubber",
 			"main alaindustrial:oil_slime_spawn_egg",
 			"main alaindustrial:biomass",
+			"main alaindustrial:sawdust",
 			"main alaindustrial:rubber",
 			"main alaindustrial:cotton_fiber",
 			"main alaindustrial:flux_thread",

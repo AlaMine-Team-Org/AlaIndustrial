@@ -23,13 +23,13 @@ import net.minecraft.world.level.storage.ValueOutput;
 
 /**
  * LV sawmill (spec: alaindustrial:sawmill, MOD-150) — saws vanilla wood into planks, sticks, slabs or
- * stairs with a higher yield than the hand recipe, spending EU. Unlike the other processing machines
- * it has <b>four switchable modes</b> ({@link SawmillMode}); each mode is its own
+ * stairs with a higher yield than the hand recipe, or into sawdust (MOD-655), spending EU. Unlike the other
+ * processing machines it has <b>five switchable modes</b> ({@link SawmillMode}); each mode is its own
  * {@link dev.alaindustrial.registry.ModRecipes.Kind} recipe family, and the machine only saws in the
  * currently-selected mode. Recipes are real vanilla recipes loaded from
  * {@code data/<ns>/recipe/sawing_*}/*.json (item or tag input, R-14/R-15).
  *
- * <p>Behaviour lives in {@link AbstractProcessingMachineBlockEntity}; this class adds the four recipe
+ * <p>Behaviour lives in {@link AbstractProcessingMachineBlockEntity}; this class adds the per-mode recipe
  * checks, the active-mode field (persisted in NBT, synced to the screen via its MODE channel),
  * and mode-aware input resolution. Audible while working since MOD-447: {@code SawmillBlock}
  * implements {@code MachineHumProvider} (pattern A, the vanilla {@code lit} blockstate).
@@ -40,14 +40,14 @@ public final class SawmillBlockEntity extends AbstractProcessingMachineBlockEnti
 	/** Output slot index — re-export of the shared processing-machine slot 1. */
 	public static final int OUTPUT_SLOT = 1;
 
-	// One cached lookup per mode: resolveInput uses the active mode's, canPlaceInput scans all four.
+	// One cached lookup per mode: resolveInput uses the active mode's, canPlaceInput scans them all.
 	private final RecipeManager.CachedCheck<ProcessingRecipeInput, AlaProcessingRecipe>[] checks = newChecks();
 
 	private SawmillMode mode = SawmillMode.PLANKS;
 
 	/**
 	 * GUI sync channels (MOD-712, BE-7): the processing family's five, then the active {@link SawmillMode}
-	 * ordinal (0..3). An enum constant, not an offset from the family's width: before BE-7 a literal
+	 * ordinal (0..4). An enum constant, not an offset from the family's width: before BE-7 a literal
 	 * {@code 4} here collided with the family's status channel the moment MOD-458 added it, and no gate saw it.
 	 */
 	public enum Channel { ENERGY, CAPACITY, PROGRESS, MAX_PROGRESS, STATUS, MODE }
@@ -78,7 +78,7 @@ public final class SawmillBlockEntity extends AbstractProcessingMachineBlockEnti
 		return result;
 	}
 
-	/** Resolve the input against the ACTIVE mode's recipe family only (the other three are inert). */
+	/** Resolve the input against the ACTIVE mode's recipe family only (the others are inert). */
 	@Override
 	protected RecipeSolution resolveInput(ServerLevel level, ItemStack input) {
 		AlaProcessingRecipe recipe = lookupKind(checks[mode.ordinal()], level, input);

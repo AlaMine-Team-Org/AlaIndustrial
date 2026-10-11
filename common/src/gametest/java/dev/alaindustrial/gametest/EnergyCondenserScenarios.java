@@ -430,14 +430,15 @@ public final class EnergyCondenserScenarios {
 	}
 
 	/**
-	 * A hungry machine gets everything the generator makes; the condenser banks nothing.
+	 * A working machine gets its per-tick need first; the condenser banks only what the machine leaves
+	 * (ADR-049).
 	 *
 	 * <p>The predicate test above proves the four flags are set. This proves what the flags are FOR, and
 	 * the two are not the same claim: the flags could all be right while the grid served the classes in
 	 * the wrong order, and a player would find that as "my macerator stopped when I added a condenser".
 	 *
-	 * <p>The rig is deliberately short of power — one coal generator (8 EU/t) against a macerator that
-	 * will take 32 — so any EU reaching the condenser had to be taken off a machine that wanted it.
+	 * <p>One coal generator against a macerator: the macerator must get its need on every tick once the line
+	 * runs, and the condenser no more than the generator makes beyond that need.
 	 *
 	 * <p>Second phase is the control. "Condenser banked 0" also passes on a rig where the condenser was
 	 * never connected at all, which is the exact way this test would rot into decoration. So the
@@ -463,15 +464,25 @@ public final class EnergyCondenserScenarios {
 				ModContent.ENERGY_CONDENSER.get(), EnergyCondenserBlockEntity.class);
 
 		int ticks = 60;
-		drive(helper, gen, cable, machinePos, condenser, ticks);
-
-		if (condenser.getEnergyStorage().getAmount() > 0) {
-			helper.fail("condenser banked " + condenser.getEnergyStorage().getAmount()
-					+ " EU while a machine on the same line was still hungry — machines must be served first");
+		long need = macerator.perTickDemand();
+		int fed = 0;
+		for (int i = 0; i < ticks; i++) {
+			EnergyScenarioSupport.tick(helper, EnergyScenarioSupport.be(helper, gen));
+			EnergyScenarioSupport.tick(helper, EnergyScenarioSupport.be(helper, cable));
+			long before = macerator.getEnergyStorage().getAmount();
+			dev.alaindustrial.core.energy.NetworkManager.tickAll(helper.getLevel());
+			fed += macerator.getEnergyStorage().getAmount() - before >= need ? 1 : 0;
+			EnergyScenarioSupport.tick(helper, macerator);
+			EnergyScenarioSupport.tick(helper, condenser);
 		}
-		if (macerator.getEnergyStorage().getAmount() <= 0) {
-			helper.fail("the macerator received nothing at all — the rig is not delivering power, so the "
-					+ "assertion above proves nothing");
+		long ceiling = (GeneratorConfig.fuelEuPerTick - need) * ticks;
+		if (fed < ticks - 5) {
+			helper.fail("the macerator got its need of " + need + " EU on only " + fed + " of " + ticks
+					+ " ticks while a condenser shares its line — machines must be served first");
+		}
+		if (condenser.getEnergyStorage().getAmount() > ceiling) {
+			helper.fail("condenser banked " + condenser.getEnergyStorage().getAmount() + " EU, more than the "
+					+ ceiling + " the generator made beyond the machine's need");
 		}
 
 		// Control: take the competitor away and the very same line must reach the condenser.

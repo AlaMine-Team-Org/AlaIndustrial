@@ -76,8 +76,10 @@ public final class WasteClassifier {
 		if (stack.is(ModTags.Items.C_INGOTS)) {
 			return WasteFraction.METAL;
 		}
+		// Sawdust (MOD-655) by its common tag: without the rule it would land in OTHER, mass 1.
 		if (stack.is(ItemTags.PLANKS) || stack.is(ItemTags.LOGS) || stack.is(ItemTags.WOOL)
-				|| stack.is(ItemTags.WOOL_CARPETS) || stack.is(ItemTags.COALS)) {
+				|| stack.is(ItemTags.WOOL_CARPETS) || stack.is(ItemTags.COALS)
+				|| stack.is(ModTags.Items.C_WOOD_DUSTS)) {
 			return WasteFraction.COMBUSTIBLE;
 		}
 		if (stack.is(ItemTags.STONE_BRICKS) || stack.is(ItemTags.DIRT) || stack.is(ItemTags.SAND)) {

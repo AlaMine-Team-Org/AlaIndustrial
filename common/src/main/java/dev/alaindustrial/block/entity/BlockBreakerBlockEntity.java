@@ -401,4 +401,13 @@ public class BlockBreakerBlockEntity extends MachineBlockEntity implements MenuP
 	public AbstractContainerMenu createMenu(int syncId, Inventory inventory, Player player) {
 		return new BlockBreakerMenu(syncId, inventory, this, ContainerLevelAccess.create(getLevel(), getBlockPos()));
 	}
+
+	/**
+	 * Its per-tick need for the network (MOD-789, ADR-049): its upkeep per tick while it breaks, not the shared machine
+	 * rate.
+	 */
+	@Override
+	public long perTickDemand() {
+		return Math.max(1, Config.blockBreakerEuPerTick);
+	}
 }

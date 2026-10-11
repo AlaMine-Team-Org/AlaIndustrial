@@ -268,8 +268,8 @@ public class PouchItem extends Item implements PoweredItem {
 
 	/** MOD-707: this item's EU buffer, read by {@code ItemEnergy.capacity} through {@link PoweredItem}. */
 	@Override
-	public long energyCapacity(ItemStack stack) {
-		return ToolConfig.lvPouchBuffer;
+	public long energyCapacity(ItemStack stack, ItemBuffers buffers) {
+		return buffers.lvPouchBuffer();
 	}
 
 	@Override

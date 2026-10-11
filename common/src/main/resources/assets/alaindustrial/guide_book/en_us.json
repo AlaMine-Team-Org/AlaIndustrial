@@ -1487,7 +1487,7 @@
             {
               "type": "text",
               "title": "Sawmill",
-              "text": "Saws any wood into planks, sticks, slabs or stairs at a higher yield than hand-crafting. Four switchable modes, runs on EU."
+              "text": "Saws any wood into planks, sticks, slabs or stairs at a higher yield than hand-crafting, or into sawdust in its fifth mode. Five switchable modes, runs on EU."
             },
             {
               "type": "stats",
@@ -2834,6 +2834,25 @@
           ]
         },
         {
+          "id": "sawdust",
+          "title": "Sawdust",
+          "icon": "alaindustrial:sawdust",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Sawdust",
+              "text": "The product of the sawmill's fifth mode — 6 sawdust per log. Cheap organic stock for the fermenter, the combustible fraction of the recycler and a short fuel that burns like bamboo."
+            },
+            {
+              "type": "stats",
+              "title": "Stats",
+              "lines": [
+                "Energy: 160 EU/op"
+              ]
+            }
+          ]
+        },
+        {
           "id": "palladium_ore",
           "title": "Palladium Ore",
           "icon": "alaindustrial:palladium_ore",
@@ -3291,6 +3310,43 @@
           ]
         },
         {
+          "id": "tempered_iron_bars",
+          "title": "Tempered Iron Bars",
+          "icon": "alaindustrial:tempered_iron_bars",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tempered Iron Bars",
+              "text": "Four tempered iron building blocks modelled on vanilla ones — bars, a ladder, a trapdoor and a chain. They behave like vanilla and look like the mod's steel."
+            },
+            {
+              "type": "stats",
+              "title": "Stats",
+              "lines": [
+                "Buffer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tempered_iron_bars",
+              "result_count": 16
+            }
+          ]
+        },
+        {
           "id": "reactor_button",
           "title": "Reactor Button",
           "icon": "alaindustrial:reactor_button",
@@ -3435,6 +3491,43 @@
               ],
               "result_id": "alaindustrial:reactor_glass",
               "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reinforced_glass",
+          "title": "Reinforced Glass",
+          "icon": "alaindustrial:reinforced_glass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reinforced Glass",
+              "text": "Clear glass in a tempered iron steel frame — it breaks like stone and holds against a creeper or TNT blast. A building block and an ingredient for later recipes."
+            },
+            {
+              "type": "stats",
+              "title": "Stats",
+              "lines": [
+                "Buffer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:reinforced_glass",
+              "result_count": 4
             }
           ]
         },
@@ -3737,6 +3830,43 @@
               ],
               "result_id": "alaindustrial:industrial_workbench",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "industrial_light",
+          "title": "Industrial Light",
+          "icon": "alaindustrial:industrial_light",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Industrial Light",
+              "text": "A tiny 4×4-pixel light with warm light level 15 — place it on the floor, the ceiling or any wall. No menu, no energy."
+            },
+            {
+              "type": "stats",
+              "title": "Stats",
+              "lines": [
+                "Buffer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "minecraft:glass",
+                "",
+                "",
+                "minecraft:glowstone_dust",
+                "",
+                "",
+                "alaindustrial:tempered_iron_plate",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:industrial_light",
+              "result_count": 4
             }
           ]
         },

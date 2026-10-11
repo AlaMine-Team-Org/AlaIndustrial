@@ -1,5 +1,6 @@
 package dev.alaindustrial.core.fluid;
 
+import dev.alaindustrial.core.energy.PosOrder;
 import dev.alaindustrial.core.item.PipeFaceMode;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,6 +41,15 @@ final class FluidLineTopology {
 	static final int NONE = -1;
 
 	/**
+	 * The order segments of equal standing are visited in — the hungry-sink sweep's tie-break and the
+	 * levelling pass's walk (MOD-733). The energy network's rule ({@link PosOrder}: x, y, z as signed ints),
+	 * so a build flows the same wherever it stands; {@code BlockPos.asLong} is not translation-invariant
+	 * across {@code y = 0} and {@code z = 0} and must not come back here (ADR-006).
+	 */
+	static final Comparator<BlockPos> POSITION_ORDER =
+			(a, b) -> PosOrder.compare(a.getX(), a.getY(), a.getZ(), b.getX(), b.getY(), b.getZ());
+
+	/**
 	 * Everything one refresh reads, held together so a refresh replaces it in one assignment (MOD-734
 	 * review). Reading a join asks the neighbour's fluid port, which is another mod's capability and may
 	 * throw; a refresh that died half-way must leave the previous layout whole, not new positions beside
@@ -49,11 +59,11 @@ final class FluidLineTopology {
 	 * @param segments the block entity of each member at refresh, or {@code null}
 	 * @param neighbours six slots per member, in {@link Direction} order: the member there, or {@link #NONE}
 	 * @param joins one bit per {@link Direction} ordinal: whether the member's own face there joins
-	 * @param asLongOrder every index in {@link BlockPos#asLong} order — the levelling pass's order
+	 * @param positionOrder every index in {@link #POSITION_ORDER} — the levelling pass's order
 	 * @param indexOf each member's index
 	 */
 	private record Layout(BlockPos[] positions, FluidPipeNode[] segments, int[] neighbours, int[] joins,
-			int[] asLongOrder, Map<BlockPos, Integer> indexOf) {
+			int[] positionOrder, Map<BlockPos, Integer> indexOf) {
 		static final Layout EMPTY = new Layout(new BlockPos[0], new FluidPipeNode[0], new int[0], new int[0],
 				new int[0], new LinkedHashMap<>());
 	}
@@ -120,12 +130,12 @@ final class FluidLineTopology {
 		for (int i = 0; i < n; i++) {
 			order[i] = i;
 		}
-		Arrays.sort(order, Comparator.comparingLong(i -> positions[i].asLong()));
-		int[] asLongOrder = new int[n];
+		Arrays.sort(order, (i, j) -> POSITION_ORDER.compare(positions[i], positions[j]));
+		int[] positionOrder = new int[n];
 		for (int i = 0; i < n; i++) {
-			asLongOrder[i] = order[i];
+			positionOrder[i] = order[i];
 		}
-		return new Layout(positions, segments, neighbours, joins, asLongOrder, indexOf);
+		return new Layout(positions, segments, neighbours, joins, positionOrder, indexOf);
 	}
 
 	/** The faces of the segments that touch a fluid port outside the network, with their roles. */
@@ -204,9 +214,9 @@ final class FluidLineTopology {
 		return (layout.joins()[index] & (1 << dir.ordinal())) != 0;
 	}
 
-	/** Every index, {@link BlockPos#asLong} order. Read-only by convention. */
-	int[] asLongOrder() {
-		return layout.asLongOrder();
+	/** Every index, in {@link #POSITION_ORDER}. Read-only by convention. */
+	int[] positionOrder() {
+		return layout.positionOrder();
 	}
 
 	/**

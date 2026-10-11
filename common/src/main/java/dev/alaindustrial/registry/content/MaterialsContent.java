@@ -12,6 +12,7 @@ import static dev.alaindustrial.registry.content.ContentDeclarations.plain;
 import static dev.alaindustrial.registry.content.TabEntries.show;
 
 import dev.alaindustrial.Config;
+import dev.alaindustrial.compat.FurnaceFuel;
 import dev.alaindustrial.core.environment.GeneratorConfig;
 import dev.alaindustrial.item.CarbonBriquetteItem;
 import dev.alaindustrial.item.assembler.AssemblyBlueprintItem;
@@ -19,6 +20,7 @@ import dev.alaindustrial.item.energy.BatteryItem;
 import dev.alaindustrial.item.energy.CrystalBlankItem;
 import dev.alaindustrial.item.energy.CrystalTier;
 import dev.alaindustrial.item.misc.CannedRation;
+import dev.alaindustrial.item.misc.HintItem;
 import dev.alaindustrial.item.tool.NetheriteDrillUpgradeTemplate;
 import dev.alaindustrial.registry.ContentManifest.BlockDef;
 import dev.alaindustrial.registry.ContentManifest.BlockEntityDef;
@@ -36,7 +38,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.MapColor;
 
 // size-justified: a declarative table under the §10 norm of 600 lines per domain — the manifest entries
-// (134 items) and the four tab runs coding.md §1 files here (crafting components, materials, vanilla
+// (135 items) and the four tab runs coding.md §1 files here (crafting components, materials, vanilla
 // Ingredients, ores). Item construction longer than one line lives in the item's own class (MOD-711).
 /**
  * The Materials domain of the content manifest (MOD-711; coding.md §1, owner decision D5). Ores, dusts, ingots,
@@ -160,6 +162,10 @@ public final class MaterialsContent {
 					s -> ModContent.OIL_SLIME_SPAWN_EGG = s),
 			// Organic chain (MOD-146): the fermenter's solid leftover, stock for a later task.
 			plain("biomass", s -> ModContent.BIOMASS = s),
+			// MOD-655: the sawmill's fifth mode. Burns like bamboo — the fuel is declared through the version
+			// facade, because the fuel API differs between the Minecraft lines.
+			item("sawdust", p -> new HintItem(FurnaceFuel.burnsLikeBamboo(p), "item.alaindustrial.sawdust.hint",
+					"item.alaindustrial.sawdust.hint2"), s -> ModContent.SAWDUST = s),
 			plain("rubber", s -> ModContent.RUBBER = s),
 			// Fluxweave chain (MOD-127): silver-plated fibre, then the woven sheet. Both are plain crafting
 			// components — the EU buffer lives on the armor, not on the material.
@@ -389,6 +395,7 @@ public final class MaterialsContent {
 		show(out, ModContent.RAW_RUBBER);
 		show(out, ModContent.OIL_SLIME_SPAWN_EGG);
 		show(out, ModContent.BIOMASS);
+		show(out, ModContent.SAWDUST);
 		show(out, ModContent.RUBBER);
 		show(out, ModContent.COTTON_FIBER);
 		show(out, ModContent.FLUX_THREAD);

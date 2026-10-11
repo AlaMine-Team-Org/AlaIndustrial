@@ -12,6 +12,7 @@ import dev.alaindustrial.block.entity.machine.SyncChannels;
 import dev.alaindustrial.block.entity.machine.UpgradePanel;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.core.energy.PerTickDemand;
 import dev.alaindustrial.core.machine.MachineRates;
 import java.util.UUID;
 import net.minecraft.core.BlockPos;
@@ -65,7 +66,7 @@ import org.jspecify.annotations.Nullable;
  * panel and no owner, so nothing here applies to them. Everything in this class may therefore assume
  * it is looking at a real machine.
  */
-public abstract class MachineBlockEntity extends EnergyBlockEntity implements WorldlyContainer {
+public abstract class MachineBlockEntity extends EnergyBlockEntity implements WorldlyContainer, PerTickDemand {
 
 	/** Upgrade slots appended to the tail of every GUI machine's inventory (MOD-080). */
 	public static final int UPGRADE_SLOT_COUNT = UpgradePanel.SLOT_COUNT;
@@ -468,7 +469,9 @@ public abstract class MachineBlockEntity extends EnergyBlockEntity implements Wo
 	/**
 	 * Base EU/t this machine draws while working, BEFORE the global speed multiplier and any
 	 * overclocker chip. Default is the shared processing rate; machines with their own tariff (alloy
-	 * smelter, assembler, incubator, electric heater) override it.
+	 * smelter, assembler, incubator, repair bench, upgrade table) override it. A machine whose draw lives
+	 * outside it (block breaker, electric heater, mob repeller, thermal centrifuge, recycler) overrides
+	 * {@link #perTickDemand} instead, and one that pays in bursts reports its need as unknown there.
 	 *
 	 * <p>Read live from {@link Config} rather than cached, so a config reload takes effect without a
 	 * world restart — and so {@link #overclockerCap()} re-derives against the current value.
@@ -516,6 +519,15 @@ public abstract class MachineBlockEntity extends EnergyBlockEntity implements Wo
 	 */
 	public int effectiveEuPerTick(int baseEuPerTick) {
 		return upgrades.effectiveEuPerTick(baseEuPerTick);
+	}
+
+	/**
+	 * What this machine draws per tick while it works, for the network's per-tick priority (MOD-789, ADR-049): its
+	 * base rate with the chips. A machine with its own draw outside {@link #baseEuPerTick} overrides this.
+	 */
+	@Override
+	public long perTickDemand() {
+		return effectiveEuPerTick(baseEuPerTick());
 	}
 
 	/**

@@ -3,6 +3,7 @@ package dev.alaindustrial.item.wearable;
 import dev.alaindustrial.item.ToolConfig;
 import dev.alaindustrial.item.energy.EnergyBar;
 import dev.alaindustrial.item.energy.PoweredItem;
+import dev.alaindustrial.item.energy.ItemBuffers;
 import dev.alaindustrial.item.energy.ItemEnergy;
 
 import dev.alaindustrial.Industrialization;
@@ -133,9 +134,23 @@ public class JetpackItem extends Item implements PoweredItem {
 	 * zero — a 15–20 EU tail would otherwise sit forever below the per-tick cost, showing 1% that can
 	 * never be used (playtest feedback). The client checks the same predicate before applying lift
 	 * (the component is network-synchronized), so the two sides flip together give or take one sync.
+	 *
+	 * <p>The server's own ceiling, {@link ToolConfig#jetpackMaxY}: the server tick and the gametests ask this form.
 	 */
 	public static boolean isPowered(ItemStack stack, Player player) {
-		return ItemEnergy.get(stack) > 0 && player.getY() < ToolConfig.jetpackMaxY;
+		return isPowered(stack, player, ToolConfig.jetpackMaxY);
+	}
+
+	/**
+	 * {@link #isPowered(ItemStack, Player)} against the ceiling {@code maxY} (MOD-791). The client passes the
+	 * server's ceiling ({@code ServerBalance.jetpackMaxY()}): its own file may hold another one. The server
+	 * never moves the player, so a client ceiling above the server's lifted the player past it for free (no EU
+	 * spent), and one below it glided while the server billed EU for thrust that never happened.
+	 * Asks {@link ItemEnergy#hasCharge}, not {@code get > 0}: the same answer without reading the item's
+	 * capacity from the local balance.
+	 */
+	public static boolean isPowered(ItemStack stack, Player player, int maxY) {
+		return ItemEnergy.hasCharge(stack) && player.getY() < maxY;
 	}
 
 	/**
@@ -228,8 +243,8 @@ public class JetpackItem extends Item implements PoweredItem {
 
 	/** MOD-707: this item's EU buffer, read by {@code ItemEnergy.capacity} through {@link PoweredItem}. */
 	@Override
-	public long energyCapacity(ItemStack stack) {
-		return ToolConfig.jetpackBuffer;
+	public long energyCapacity(ItemStack stack, ItemBuffers buffers) {
+		return buffers.jetpackBuffer();
 	}
 
 	@Override

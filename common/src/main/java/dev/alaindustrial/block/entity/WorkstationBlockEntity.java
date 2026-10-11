@@ -5,6 +5,7 @@ import dev.alaindustrial.block.WorkstationBlock;
 import dev.alaindustrial.block.WorkstationPart;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.core.energy.PerTickDemand;
 import dev.alaindustrial.registry.ModContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -26,7 +27,16 @@ import net.minecraft.world.level.block.state.BlockState;
  * player buys, and the tier default already covers several of those. A knob invented without a
  * reason is a number somebody has to keep in step with the balance document forever.
  */
-public class WorkstationBlockEntity extends EnergyBlockEntity {
+public class WorkstationBlockEntity extends EnergyBlockEntity implements PerTickDemand {
+
+	/**
+	 * Its upkeep per tick, for the network's per-tick priority (MOD-789): without it a just-placed, empty
+	 * workstation counted its whole 128 EU intake as its need and held every machine and store behind it.
+	 */
+	@Override
+	public long perTickDemand() {
+		return Math.max(1, Config.workstationEuPerTick);
+	}
 
 	public WorkstationBlockEntity(BlockPos pos, BlockState state) {
 		// maxExtract = 0: a workstation is a sink. Nothing ever flows back out of it, the same

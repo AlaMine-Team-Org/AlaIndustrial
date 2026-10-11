@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
@@ -79,20 +80,34 @@ public final class ModFluids {
 	}
 
 	/**
-	 * Registers the Transfer API attribute handler of every entry that declares one — today only crude oil,
-	 * whose handler reports its viscosity; the other fluids keep the Transfer API defaults on Fabric (a known
-	 * defect with its own task). One handler serves the still and the flowing form.
+	 * Registers one Transfer API attribute handler per entry, serving its still and flowing form (MOD-728).
+	 * Every number and the name come from the entry, the same {@link ModFluidsManifest.FluidPhysics} and
+	 * description key NeoForge's {@code FluidType} is built from, so the two loaders cannot report different
+	 * attributes for one fluid. Light emission, sounds and colour keep the Transfer API defaults.
 	 */
 	public static void registerTransferAttributes() {
 		for (ModFluidsManifest.FluidDef<?> def : ModFluidsManifest.FLUIDS) {
-			if (!def.transferAttributes()) {
-				continue;
-			}
-			int viscosity = def.physics().viscosity();
+			ModFluidsManifest.FluidPhysics physics = def.physics();
+			String descriptionId = def.descriptionId();
 			FluidVariantAttributeHandler handler = new FluidVariantAttributeHandler() {
 				@Override
+				public Component getName(FluidVariant variant) {
+					return Component.translatable(descriptionId);
+				}
+
+				@Override
+				public int getTemperature(FluidVariant variant) {
+					return physics.temperature();
+				}
+
+				@Override
 				public int getViscosity(FluidVariant variant, Level level) {
-					return viscosity;
+					return physics.viscosity();
+				}
+
+				@Override
+				public boolean isLighterThanAir(FluidVariant variant) {
+					return physics.lighterThanAir();
 				}
 			};
 			FluidVariantAttributes.register(REGISTERED.get(def.id()), handler);

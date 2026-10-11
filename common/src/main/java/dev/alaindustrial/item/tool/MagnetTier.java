@@ -1,6 +1,7 @@
 package dev.alaindustrial.item.tool;
 
 import dev.alaindustrial.item.ToolConfig;
+import dev.alaindustrial.item.energy.ItemBuffers;
 
 /**
  * The two grades of Electromagnet (MOD-580) — everything that differs between them, in one place.
@@ -52,6 +53,11 @@ public enum MagnetTier {
 	/** EU the magnet holds. */
 	public int buffer() {
 		return pick(ToolConfig.magnetBuffer, ToolConfig.magnetAdvancedBuffer);
+	}
+
+	/** {@link #buffer()} out of {@code buffers} (MOD-790): the server's numbers on a client drawing the bar. */
+	public int buffer(ItemBuffers buffers) {
+		return pick(buffers.magnetBuffer(), buffers.magnetAdvancedBuffer());
 	}
 
 	/** Max EU/tick it accepts while charging in a slot. */

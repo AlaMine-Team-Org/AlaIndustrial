@@ -5,6 +5,7 @@ import dev.alaindustrial.item.energy.EnergyBar;
 import dev.alaindustrial.item.energy.PoweredItem;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.item.energy.ItemBuffers;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.skill.SkillEnergy;
 import dev.alaindustrial.item.material.ModArmorMaterials;
@@ -357,8 +358,8 @@ public class FluxweaveArmorItem extends Item implements PoweredItem {
 	@Override
 	public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
 			Consumer<Component> adder, TooltipFlag flag) {
-		long charge = ItemEnergy.get(stack);
-		long capacity = ItemEnergy.capacity(stack);
+		long charge = ItemEnergy.shownGet(stack);
+		long capacity = ItemEnergy.shownCapacity(stack);
 		long percent = capacity > 0 ? charge * 100L / capacity : 0L;
 		adder.accept(Component.translatable("tooltip.alaindustrial.fluxweave.charge",
 				charge, capacity, percent + "%").withStyle(ChatFormatting.GOLD));
@@ -390,8 +391,8 @@ public class FluxweaveArmorItem extends Item implements PoweredItem {
 
 	/** MOD-707: this item's EU buffer, read by {@code ItemEnergy.capacity} through {@link PoweredItem}. */
 	@Override
-	public long energyCapacity(ItemStack stack) {
-		return ToolConfig.fluxweaveBuffer;
+	public long energyCapacity(ItemStack stack, ItemBuffers buffers) {
+		return buffers.fluxweaveBuffer();
 	}
 
 	@Override

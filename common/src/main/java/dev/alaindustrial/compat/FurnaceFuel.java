@@ -2,6 +2,7 @@ package dev.alaindustrial.compat;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -24,6 +25,17 @@ import org.jspecify.annotations.Nullable;
 public final class FurnaceFuel {
 
 	private FurnaceFuel() {
+	}
+
+	/**
+	 * Declares an item of the mod as a short fuel that burns as long as vanilla bamboo — 50 ticks in a normal
+	 * furnace, half a stick (MOD-655: sawdust). 26.2: this line has no fuel component, so the properties are
+	 * returned unchanged; the per-level {@code FuelValues} table answers for the item through the mod's
+	 * {@code FuelValuesMixin}, which reports vanilla bamboo's own value (datapack-faithful). The 26.3 twin
+	 * references {@code minecraft:cooking/time_bamboo} through {@code Properties.cookingFuel}.
+	 */
+	public static Item.Properties burnsLikeBamboo(Item.Properties properties) {
+		return properties;
 	}
 
 	/** Whether the stack is fuel at all, asked by a slot predicate that has a level. 26.2: the table. */

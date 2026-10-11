@@ -163,8 +163,8 @@ public class AlaJeiPlugin implements IModPlugin {
 						AlaJeiRecipeTypes.byKind(target.kind()),
 						RecipeTypes.SMELTING);
 			} else if (MachineRecipeViewerTargets.isSawmill(target.kind())) {
-				// MOD-150: the sawmill's arrow opens all four mode categories at once. addRecipeClickArea
-				// takes IRecipeType<?>...; IRecipeHolderType extends IRecipeType, so the four fit one call.
+				// MOD-150: the sawmill's arrow opens every mode category at once. addRecipeClickArea
+				// takes IRecipeType<?>...; IRecipeHolderType extends IRecipeType, so all of them fit one call.
 				mezz.jei.api.recipe.types.IRecipeType<?>[] types = MachineRecipeViewerTargets.SAWMILL_KINDS.stream()
 						.map(AlaJeiRecipeTypes::byKind)
 						.toArray(mezz.jei.api.recipe.types.IRecipeType[]::new);

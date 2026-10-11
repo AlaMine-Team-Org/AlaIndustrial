@@ -49,8 +49,8 @@ public final class MachineRecipeViewerTargets {
 			// Galvanic Bath (MOD-127): the arrow sits at (86,35), 24x17 — clicking it opens the
 			// bath's recipes in JEI/REI instead of only reporting why it is idle.
 			new Target(GalvanicBathScreen.class, ModRecipes.GALVANIC_BATH, GalvanicBathScreen.PROGRESS_AREA),
-			// Sawmill (MOD-150): one screen, four recipe families (mode-switched). The progress sprite opens
-			// all four categories at once — the loader plugins special-case a sawmill target and pass every
+			// Sawmill (MOD-150): one screen, one recipe family per mode (five since MOD-655). The progress
+			// sprite opens every category at once — the loader plugins special-case a sawmill target and pass every
 			// kind in SAWMILL_KINDS in a single click-area registration (mirrors the electric-furnace
 			// SMELTING special-case). The target's own kind is the "primary" (planks) for iteration.
 			// The rect is the saw blade from the machine's own atlas (MOD-215), not the shared arrow.
@@ -98,7 +98,7 @@ public final class MachineRecipeViewerTargets {
 	 * <p>MOD-457 replaced the shared 25×9 arrow with the 42×43 merge arrow, and this rect had been left
 	 * describing the old one — a 225 px² hitbox floating inside a 1806 px² picture. The player aiming at
 	 * the arrow to open the recipe list mostly missed it. It now covers the arrow, and since MOD-716 the
-	 * screen states it next to the sprite.
+	 * screen states it next to the sprite; since MOD-737 it is the sprite itself (45×43), not a 42 literal.
 	 */
 	public static final List<AlloyTarget> ALLOY_ALL = List.of(
 			new AlloyTarget(AlloySmelterScreen.class, ModRecipes.ALLOYING, AlloySmelterScreen.PROGRESS_AREA));
@@ -138,15 +138,16 @@ public final class MachineRecipeViewerTargets {
 			new InfoTarget(GeothermalGeneratorScreen.class, GeothermalGeneratorScreen.PROGRESS_AREA),
 			new InfoTarget(EnergyCondenserScreen.class, EnergyCondenserScreen.PROGRESS_AREA));
 
-	/** The four sawmill recipe families, in button order — used by REI/JEI to open every mode from the sprite. */
+	/** The sawmill recipe families, in button order — used by REI/JEI to open every mode from the sprite. */
 	public static final List<ModRecipes.Kind> SAWMILL_KINDS = List.of(
-			ModRecipes.SAWING_PLANKS, ModRecipes.SAWING_STICKS, ModRecipes.SAWING_SLABS, ModRecipes.SAWING_STAIRS);
+			ModRecipes.SAWING_PLANKS, ModRecipes.SAWING_STICKS, ModRecipes.SAWING_SLABS, ModRecipes.SAWING_STAIRS,
+			ModRecipes.SAWING_SAWDUST);
 
 	/** The three incubator mutation families, in chip order. */
 	public static final List<ModRecipes.Kind> MUTATION_KINDS = List.of(
 			ModRecipes.MUTATION_TRANSFORM, ModRecipes.MUTATION_DUPLICATE, ModRecipes.MUTATION_CREATE);
 
-	/** True when {@code kind} is one of the sawmill's four mode families. */
+	/** True when {@code kind} is one of the sawmill's mode families. */
 	public static boolean isSawmill(ModRecipes.Kind kind) {
 		return SAWMILL_KINDS.contains(kind);
 	}

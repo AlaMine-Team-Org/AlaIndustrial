@@ -4,6 +4,7 @@ import dev.alaindustrial.client.ServerBalance;
 import dev.alaindustrial.item.ToolConfig;
 import dev.alaindustrial.item.energy.EnergyBar;
 import dev.alaindustrial.item.energy.PoweredItem;
+import dev.alaindustrial.item.energy.ItemBuffers;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.item.module.ItemModules;
 import dev.alaindustrial.item.module.ModuleHost;
@@ -437,7 +438,7 @@ public class MagnetItem extends Item implements ModuleHost, PoweredItem {
 		adder.accept(Component.translatable(enabled ? base + ".state_on" : base + ".state_off")
 				.withStyle(enabled ? ChatFormatting.GREEN : ChatFormatting.GRAY));
 		adder.accept(Component.translatable(base + ".charge",
-				ItemEnergy.get(stack), ItemEnergy.capacity(stack)).withStyle(ChatFormatting.GOLD));
+				ItemEnergy.shownGet(stack), ItemEnergy.shownCapacity(stack)).withStyle(ChatFormatting.GOLD));
 		// Numbers come from the tier for the same reason: ToolConfig.magnetRange is the BASIC grade's knob. The
 		// tooltip is drawn on the client, so the tier picks among the server's numbers (MOD-761).
 		int range = tier.pick(ServerBalance.magnetRange(), ServerBalance.magnetAdvancedRange());
@@ -476,8 +477,8 @@ public class MagnetItem extends Item implements ModuleHost, PoweredItem {
 
 	/** MOD-707: this item's EU buffer, read by {@code ItemEnergy.capacity} through {@link PoweredItem}. */
 	@Override
-	public long energyCapacity(ItemStack stack) {
-		return tier().buffer();
+	public long energyCapacity(ItemStack stack, ItemBuffers buffers) {
+		return tier().buffer(buffers);
 	}
 
 	@Override

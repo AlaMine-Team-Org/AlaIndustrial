@@ -79,8 +79,8 @@ public class MagnetScreen extends AbstractContainerScreen<MagnetMenu> {
 		graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, x, y, 0, 0, WIDTH, HEIGHT, TEX_SIZE, TEX_SIZE);
 
 		ItemStack host = this.menu.host();
-		long capacity = ItemEnergy.capacity(host);
-		int fill = capacity > 0 ? (int) Math.min(BAR_H, ItemEnergy.get(host) * BAR_H / capacity) : 0;
+		long capacity = ItemEnergy.shownCapacity(host);
+		int fill = capacity > 0 ? (int) Math.min(BAR_H, ItemEnergy.shownGet(host) * BAR_H / capacity) : 0;
 		if (fill > 0) {
 			graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, x + BAR_X, y + BAR_Y + BAR_H - fill,
 					BAR_UV_X, BAR_H - fill, BAR_W, fill, TEX_SIZE, TEX_SIZE);
@@ -158,7 +158,7 @@ public class MagnetScreen extends AbstractContainerScreen<MagnetMenu> {
 		ItemStack host = this.menu.host();
 		if (isHovering(BAR_X, BAR_Y, BAR_W, BAR_H, mouseX, mouseY)) {
 			graphics.setTooltipForNextFrame(this.font, Component.translatable("gui.alaindustrial.energy",
-					ItemEnergy.get(host), ItemEnergy.capacity(host)), mouseX, mouseY);
+					ItemEnergy.shownGet(host), ItemEnergy.shownCapacity(host)), mouseX, mouseY);
 			return;
 		}
 		int button = buttonAt(mouseX, mouseY);

@@ -420,6 +420,7 @@ final class ContentManifestOrder {
 			"item raw_rubber",
 			"item oil_slime_spawn_egg",
 			"item biomass",
+			"item sawdust",
 			"item rubber",
 			"item flux_thread",
 			"item fluxweave_cloth",

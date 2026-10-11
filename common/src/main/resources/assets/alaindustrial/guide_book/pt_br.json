@@ -1487,7 +1487,7 @@
             {
               "type": "text",
               "title": "Serraria",
-              "text": "Serra qualquer madeira em tábuas, gravetos, lajes ou escadas com rendimento maior que a fabricação manual. Quatro modos alternáveis, funciona com EU."
+              "text": "Serra qualquer madeira em tábuas, gravetos, lajes ou escadas com rendimento maior que a fabricação manual, ou em serragem no seu quinto modo. Cinco modos alternáveis, funciona com EU."
             },
             {
               "type": "stats",
@@ -2834,6 +2834,25 @@
           ]
         },
         {
+          "id": "sawdust",
+          "title": "Serragem",
+          "icon": "alaindustrial:sawdust",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Serragem",
+              "text": "O produto do quinto modo da serraria: 6 de serragem por tronco. Matéria orgânica barata para o fermentador, fração combustível do reciclador e um combustível curto que queima como bambu."
+            },
+            {
+              "type": "stats",
+              "title": "Estatísticas",
+              "lines": [
+                "Energia: 160 EU/op"
+              ]
+            }
+          ]
+        },
+        {
           "id": "palladium_ore",
           "title": "Minério de Paládio",
           "icon": "alaindustrial:palladium_ore",
@@ -3291,6 +3310,43 @@
           ]
         },
         {
+          "id": "tempered_iron_bars",
+          "title": "Barras de Ferro Temperado",
+          "icon": "alaindustrial:tempered_iron_bars",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Barras de Ferro Temperado",
+              "text": "Quatro peças de construção de ferro temperado inspiradas nas do vanilla: grades, escada de mão, alçapão e corrente. Funcionam como as do vanilla e têm a cara do aço do mod."
+            },
+            {
+              "type": "stats",
+              "title": "Estatísticas",
+              "lines": [
+                "Buffer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação com forma",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tempered_iron_bars",
+              "result_count": 16
+            }
+          ]
+        },
+        {
           "id": "reactor_button",
           "title": "Botão de Reator",
           "icon": "alaindustrial:reactor_button",
@@ -3435,6 +3491,43 @@
               ],
               "result_id": "alaindustrial:reactor_glass",
               "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reinforced_glass",
+          "title": "Vidro Reforçado",
+          "icon": "alaindustrial:reinforced_glass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Vidro Reforçado",
+              "text": "Vidro transparente numa moldura de ferro temperado: quebra como pedra e aguenta a explosão de um creeper ou de TNT. Um bloco de construção e ingrediente de receitas futuras."
+            },
+            {
+              "type": "stats",
+              "title": "Estatísticas",
+              "lines": [
+                "Buffer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação com forma",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:reinforced_glass",
+              "result_count": 4
             }
           ]
         },
@@ -3737,6 +3830,43 @@
               ],
               "result_id": "alaindustrial:industrial_workbench",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "industrial_light",
+          "title": "Lâmpada Industrial",
+          "icon": "alaindustrial:industrial_light",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Lâmpada Industrial",
+              "text": "Uma luz minúscula de 4×4 pixels com luz quente de nível 15: no chão, no teto ou em qualquer parede. Sem menu, sem energia."
+            },
+            {
+              "type": "stats",
+              "title": "Estatísticas",
+              "lines": [
+                "Buffer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação com forma",
+              "grid": [
+                "minecraft:glass",
+                "",
+                "",
+                "minecraft:glowstone_dust",
+                "",
+                "",
+                "alaindustrial:tempered_iron_plate",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:industrial_light",
+              "result_count": 4
             }
           ]
         },

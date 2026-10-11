@@ -374,4 +374,13 @@ public class TeleporterBlockEntity extends MachineBlockEntity {
 		isPrivate = getter.getOrDefault(ModDataComponents.TELEPORTER_PRIVATE.get(), true);
 		hasRtpModule = getter.getOrDefault(ModDataComponents.TELEPORTER_RTP_MODULE.get(), false);
 	}
+
+	/**
+	 * Unknown per-tick need (MOD-789, ADR-049): it fills a buffer it spends per jump, so the network plans it as a
+	 * store and charges it with the stores, nearest first.
+	 */
+	@Override
+	public long perTickDemand() {
+		return 0L;
+	}
 }

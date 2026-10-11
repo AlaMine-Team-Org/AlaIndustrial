@@ -374,10 +374,11 @@ public final class FluidNetwork implements GraphNetwork<FluidNetwork, BlockPos> 
 	 * (the gap, the {@code <= 1} threshold, the halving) lives in {@link FluidFlowMath}.
 	 */
 	private void levelOneHop() {
-		// asLong, not the translation-invariant PosOrder rule — kept deliberately (MOD-313): equalising
-		// halves the difference on every hop, so the pass converges to the same levels whatever order it
-		// visits in. All this order owes is to be total and stable. See ItemNetwork.ENDPOINT_ORDER.
-		for (int index : topology.asLongOrder()) {
+		// The translation-invariant x/y/z order (MOD-733). MOD-313 kept asLong here on the ground that the
+		// pass converges to the same levels whatever order it walks; it does not quite — any state with
+		// neighbours within 1 mB is stable, so an odd remainder lands where the walk carried it, and the
+		// tick the line falls asleep depends on the order too.
+		for (int index : topology.positionOrder()) {
 			FluidPipeNode from = segment(index);
 			if (from == null || from.lineBuffer().amount <= 0) {
 				continue;

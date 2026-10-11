@@ -1487,7 +1487,7 @@
             {
               "type": "text",
               "title": "Houtzagerij",
-              "text": "Zaagt elk hout tot planken, stokken, platen of trappen met een hogere opbrengst dan handmatig vervaardigen. Vier omschakelbare standen, werkt op EU."
+              "text": "Zaagt elk hout tot planken, stokken, platen of trappen met een hogere opbrengst dan handmatig vervaardigen, of tot zaagsel in de vijfde stand. Vijf omschakelbare standen, werkt op EU."
             },
             {
               "type": "stats",
@@ -2834,6 +2834,25 @@
           ]
         },
         {
+          "id": "sawdust",
+          "title": "Zaagsel",
+          "icon": "alaindustrial:sawdust",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Zaagsel",
+              "text": "Het product van de vijfde stand van de zaagmolen — 6 zaagsel per stam. Goedkope organische grondstof voor de fermentor, brandbare fractie in de recycler en een korte brandstof die brandt als bamboe."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: 160 EU/bew."
+              ]
+            }
+          ]
+        },
+        {
           "id": "palladium_ore",
           "title": "Palladiumerts",
           "icon": "alaindustrial:palladium_ore",
@@ -3291,6 +3310,43 @@
           ]
         },
         {
+          "id": "tempered_iron_bars",
+          "title": "Geharde ijzeren tralies",
+          "icon": "alaindustrial:tempered_iron_bars",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Geharde ijzeren tralies",
+              "text": "Vier bouwblokken van gehard ijzer naar vanillevoorbeeld — tralies, ladder, valluik en ketting. Ze gedragen zich als vanilla en zien eruit als het staal van de mod."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Buffer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tempered_iron_bars",
+              "result_count": 16
+            }
+          ]
+        },
+        {
           "id": "reactor_button",
           "title": "Reactorknop",
           "icon": "alaindustrial:reactor_button",
@@ -3435,6 +3491,43 @@
               ],
               "result_id": "alaindustrial:reactor_glass",
               "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reinforced_glass",
+          "title": "Versterkt glas",
+          "icon": "alaindustrial:reinforced_glass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Versterkt glas",
+              "text": "Helder glas in een frame van gehard ijzer — het breekt als steen en houdt een creeper- of TNT-explosie tegen. Een bouwblok en een ingrediënt voor latere recepten."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Buffer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:reinforced_glass",
+              "result_count": 4
             }
           ]
         },
@@ -3737,6 +3830,43 @@
               ],
               "result_id": "alaindustrial:industrial_workbench",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "industrial_light",
+          "title": "Industrieel lampje",
+          "icon": "alaindustrial:industrial_light",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Industrieel lampje",
+              "text": "Een piepklein lampje van 4×4 pixels met warm licht van niveau 15 — op de vloer, het plafond of elke muur. Geen menu, geen energie."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Buffer: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "minecraft:glass",
+                "",
+                "",
+                "minecraft:glowstone_dust",
+                "",
+                "",
+                "alaindustrial:tempered_iron_plate",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:industrial_light",
+              "result_count": 4
             }
           ]
         },

@@ -2,6 +2,7 @@ package dev.alaindustrial.item.tool;
 
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.item.energy.EnergyBar;
+import dev.alaindustrial.item.energy.ItemBuffers;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.item.energy.PoweredItem;
 import net.minecraft.core.BlockPos;
@@ -96,8 +97,8 @@ public abstract class ElectricMiningToolItem extends Item implements PoweredItem
 
 	/** This item's EU buffer, read by {@code ItemEnergy.capacity} through {@link PoweredItem}. */
 	@Override
-	public long energyCapacity(ItemStack stack) {
-		return toolTier().buffer();
+	public long energyCapacity(ItemStack stack, ItemBuffers buffers) {
+		return toolTier().buffer(buffers);
 	}
 
 	@Override

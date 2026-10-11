@@ -6,6 +6,7 @@ import dev.alaindustrial.block.CrystalSeedbedBlock;
 import dev.alaindustrial.block.SprinklerBlock;
 import dev.alaindustrial.core.crystal.CrystalGrowth;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.core.energy.PerTickDemand;
 import dev.alaindustrial.core.structure.CrystalFarmRoom;
 import dev.alaindustrial.core.structure.RoomFill;
 import dev.alaindustrial.registry.ModContent;
@@ -54,7 +55,20 @@ import java.util.List;
  * the floor out quickly), while growth is attempted rarely — a crystal takes an hour or two unaided,
  * so rolling for it more than a few times a minute would be wasted work.
  */
-public class CrystalFarmControllerBlockEntity extends EnergyBlockEntity {
+public class CrystalFarmControllerBlockEntity extends EnergyBlockEntity implements PerTickDemand {
+
+	/**
+	 * Its draw per tick for the network's per-tick priority (MOD-789): the room's growth bill averaged at the base
+	 * chance — one {@link #euPerGrowth} per bed per growth interval per chance divisor — at least 1. Growth is paid
+	 * per event, so the average is the honest steady rate; the speedups only make the bill come sooner.
+	 */
+	@Override
+	public long perTickDemand() {
+		long perCycle = euPerGrowth() * seedbeds.size();
+		long ticks = (long) Math.max(1, Config.crystalFarmGrowthIntervalTicks)
+				* Math.max(1, Config.crystalFarmGrowthChanceDivisor);
+		return Math.max(1L, Math.ceilDiv(perCycle, ticks));
+	}
 
 	/** Where the room's seedbeds were on the last successful scan. Rebuilt every scan, never saved. */
 	private final List<BlockPos> seedbeds = new ArrayList<>();

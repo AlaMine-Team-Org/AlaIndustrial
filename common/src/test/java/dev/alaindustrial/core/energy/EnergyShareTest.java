@@ -420,4 +420,19 @@ class EnergyShareTest {
 		}
 		return s;
 	}
+	/** MOD-789: the gross a consumer draws brings at least its net after the loss, and one EU less would not. */
+	@Test
+	void grossForIsTheSmallestDrawThatBringsTheNet() {
+		assertEquals(8L, EnergyShare.grossFor(8, 0.0, 30));
+		assertEquals(8L, EnergyShare.grossFor(8, 0.02, 0));
+		assertEquals(0L, EnergyShare.grossFor(0, 0.02, 10));
+		for (int d = 1; d <= 60; d += 7) {
+			for (long net = 1; net <= 600; net += 13) {
+				long g = EnergyShare.grossFor(net, 0.02, d);
+				assertTrue(g - EnergyShare.cableLoss(g, 0.02, d) >= net, "gross " + g + " brings " + net + " at " + d);
+				assertTrue(g == net || g - 1 - EnergyShare.cableLoss(g - 1, 0.02, d) < net,
+						"gross " + g + " is the smallest for " + net + " over " + d);
+			}
+		}
+	}
 }

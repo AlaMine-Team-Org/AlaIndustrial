@@ -1487,7 +1487,7 @@
             {
               "type": "text",
               "title": "โรงเลื่อย",
-              "text": "เลื่อยไม้ชนิดใดก็ได้ให้กลายเป็นไม้กระดาน ไม้แท่ง แผ่นหินครึ่งก้อน หรือบันได ให้ผลผลิตสูงกว่าการคราฟต์ด้วยมือ มีสี่โหมดให้สลับ ทำงานด้วย EU"
+              "text": "เลื่อยไม้ชนิดใดก็ได้ให้กลายเป็นไม้กระดาน ไม้แท่ง แผ่นหินครึ่งก้อน หรือบันได ให้ผลผลิตสูงกว่าการคราฟต์ด้วยมือ และในโหมดที่ห้าจะได้ขี้เลื่อย มีห้าโหมดให้สลับ ทำงานด้วย EU"
             },
             {
               "type": "stats",
@@ -2834,6 +2834,25 @@
           ]
         },
         {
+          "id": "sawdust",
+          "title": "ขี้เลื่อย",
+          "icon": "alaindustrial:sawdust",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ขี้เลื่อย",
+              "text": "ผลผลิตของโหมดที่ห้าของโรงเลื่อย — ขี้เลื่อย 6 หน่วยต่อท่อนซุง วัตถุดิบอินทรีย์ราคาถูกสำหรับถังหมัก ส่วนที่ติดไฟได้ของเครื่องรีไซเคิล และเชื้อเพลิงช่วงสั้นที่ติดไฟเหมือนไม้ไผ่"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 160 EU ต่อรอบ"
+              ]
+            }
+          ]
+        },
+        {
           "id": "palladium_ore",
           "title": "แร่แพลเลเดียม",
           "icon": "alaindustrial:palladium_ore",
@@ -3291,6 +3310,43 @@
           ]
         },
         {
+          "id": "tempered_iron_bars",
+          "title": "ลูกกรงเหล็กชุบแข็ง",
+          "icon": "alaindustrial:tempered_iron_bars",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ลูกกรงเหล็กชุบแข็ง",
+              "text": "บล็อกก่อสร้างจากเหล็กชุบแข็งสี่แบบตามต้นแบบวานิลลา — ลูกกรง บันไดลิง ประตูกล และโซ่ ทำงานเหมือนวานิลลาและดูเหมือนเหล็กกล้าของม็อด"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "บัฟเฟอร์: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tempered_iron_bars",
+              "result_count": 16
+            }
+          ]
+        },
+        {
           "id": "reactor_button",
           "title": "ปุ่มเตาปฏิกรณ์",
           "icon": "alaindustrial:reactor_button",
@@ -3435,6 +3491,43 @@
               ],
               "result_id": "alaindustrial:reactor_glass",
               "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reinforced_glass",
+          "title": "กระจกเสริมแรง",
+          "icon": "alaindustrial:reinforced_glass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "กระจกเสริมแรง",
+              "text": "กระจกใสในกรอบเหล็กชุบแข็ง — แตกเหมือนหินและทนแรงระเบิดของครีปเปอร์หรือ TNT ได้ เป็นบล็อกก่อสร้างและวัตถุดิบสำหรับสูตรในภายหลัง"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "บัฟเฟอร์: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:reinforced_glass",
+              "result_count": 4
             }
           ]
         },
@@ -3737,6 +3830,43 @@
               ],
               "result_id": "alaindustrial:industrial_workbench",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "industrial_light",
+          "title": "ไฟอุตสาหกรรม",
+          "icon": "alaindustrial:industrial_light",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ไฟอุตสาหกรรม",
+              "text": "ไฟดวงจิ๋วขนาด 4×4 พิกเซล ให้แสงอุ่นระดับ 15 — ติดบนพื้น เพดาน หรือผนังใดก็ได้ ไม่มีเมนู ไม่ใช้พลังงาน"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "บัฟเฟอร์: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:glass",
+                "",
+                "",
+                "minecraft:glowstone_dust",
+                "",
+                "",
+                "alaindustrial:tempered_iron_plate",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:industrial_light",
+              "result_count": 4
             }
           ]
         },

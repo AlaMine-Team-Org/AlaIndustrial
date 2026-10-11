@@ -1487,7 +1487,7 @@
             {
               "type": "text",
               "title": "منشرة",
-              "text": "تنشر أي خشب إلى ألواح أو عصي أو بلاطات أو درجات بناتج أعلى من الصنع اليدوي. أربعة أوضاع قابلة للتبديل، وتعمل بـ EU."
+              "text": "تنشر أي خشب إلى ألواح أو عصي أو بلاطات أو درجات بناتج أعلى من الصنع اليدوي، أو إلى نشارة خشب في وضعها الخامس. خمسة أوضاع قابلة للتبديل، وتعمل بـ EU."
             },
             {
               "type": "stats",
@@ -2834,6 +2834,25 @@
           ]
         },
         {
+          "id": "sawdust",
+          "title": "نشارة الخشب",
+          "icon": "alaindustrial:sawdust",
+          "pages": [
+            {
+              "type": "text",
+              "title": "نشارة الخشب",
+              "text": "ناتج الوضع الخامس للمنشرة — 6 من نشارة الخشب لكل جذع. مادة عضوية رخيصة لخزان التخمير، وجزء قابل للاحتراق في معيد التدوير، ووقود قصير يحترق مثل الخيزران."
+            },
+            {
+              "type": "stats",
+              "title": "المواصفات",
+              "lines": [
+                "الطاقة: 160 EU/عملية"
+              ]
+            }
+          ]
+        },
+        {
           "id": "palladium_ore",
           "title": "خام البالاديوم",
           "icon": "alaindustrial:palladium_ore",
@@ -3291,6 +3310,43 @@
           ]
         },
         {
+          "id": "tempered_iron_bars",
+          "title": "قضبان حديد مقسى",
+          "icon": "alaindustrial:tempered_iron_bars",
+          "pages": [
+            {
+              "type": "text",
+              "title": "قضبان حديد مقسى",
+              "text": "أربع قطع بناء من الحديد المقسّى على غرار القطع الأصلية — قضبان وسلّم وباب أرضي وسلسلة. تتصرف مثل الأصلية وتبدو بلون فولاذ التعديل."
+            },
+            {
+              "type": "stats",
+              "title": "المواصفات",
+              "lines": [
+                "الاحتياطي: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
+              "grid": [
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:tempered_iron_bars",
+              "result_count": 16
+            }
+          ]
+        },
+        {
           "id": "reactor_button",
           "title": "زر مفاعل",
           "icon": "alaindustrial:reactor_button",
@@ -3435,6 +3491,43 @@
               ],
               "result_id": "alaindustrial:reactor_glass",
               "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "reinforced_glass",
+          "title": "زجاج مقوى",
+          "icon": "alaindustrial:reinforced_glass",
+          "pages": [
+            {
+              "type": "text",
+              "title": "زجاج مقوى",
+              "text": "زجاج شفاف في إطار من الحديد المقسّى — ينكسر مثل الحجر ويصمد أمام انفجار الزاحف أو الديناميت. مكعب بناء ومكوّن لوصفات لاحقة."
+            },
+            {
+              "type": "stats",
+              "title": "المواصفات",
+              "lines": [
+                "الاحتياطي: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate",
+                "minecraft:glass",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:reinforced_glass",
+              "result_count": 4
             }
           ]
         },
@@ -3737,6 +3830,43 @@
               ],
               "result_id": "alaindustrial:industrial_workbench",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "industrial_light",
+          "title": "مصباح صناعي",
+          "icon": "alaindustrial:industrial_light",
+          "pages": [
+            {
+              "type": "text",
+              "title": "مصباح صناعي",
+              "text": "مصباح صغير بحجم 4×4 بكسل بإضاءة دافئة مستواها 15 — يوضع على الأرض أو السقف أو أي جدار. بلا واجهة وبلا طاقة."
+            },
+            {
+              "type": "stats",
+              "title": "المواصفات",
+              "lines": [
+                "الاحتياطي: 0 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
+              "grid": [
+                "minecraft:glass",
+                "",
+                "",
+                "minecraft:glowstone_dust",
+                "",
+                "",
+                "alaindustrial:tempered_iron_plate",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:industrial_light",
+              "result_count": 4
             }
           ]
         },

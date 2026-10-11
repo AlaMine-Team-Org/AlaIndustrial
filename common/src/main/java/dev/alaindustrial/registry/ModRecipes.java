@@ -122,12 +122,13 @@ public final class ModRecipes {
 	// recipe viewers print as the operation's length, and a wrong divisor here shows players a wrong time.
 	public static final Kind CENTRIFUGING = family(new Kind("centrifuging", 800,
 			() -> ModContent.THERMAL_CENTRIFUGE.get(), ServerBalance::thermalCentrifugeEuPerTick));
-	// Sawmill (MOD-150): one Kind per cutting mode (planks/sticks/slabs/stairs). defaultEnergy 160 =
+	// Sawmill (MOD-150): one Kind per cutting mode (planks/sticks/slabs/stairs/sawdust). defaultEnergy 160 =
 	// sawmillDuration (80) × machineEuPerTick (2); every shipped sawing JSON sets energy: 160 explicitly.
 	public static final Kind SAWING_PLANKS = family(new Kind("sawing_planks", 160, () -> ModContent.SAWMILL.get()));
 	public static final Kind SAWING_STICKS = family(new Kind("sawing_sticks", 160, () -> ModContent.SAWMILL.get()));
 	public static final Kind SAWING_SLABS = family(new Kind("sawing_slabs", 160, () -> ModContent.SAWMILL.get()));
 	public static final Kind SAWING_STAIRS = family(new Kind("sawing_stairs", 160, () -> ModContent.SAWMILL.get()));
+	public static final Kind SAWING_SAWDUST = family(new Kind("sawing_sawdust", 160, () -> ModContent.SAWMILL.get()));
 
 	// Incubator (MOD-118): one kind per mutation mode, selected by the chip in the machine.
 	// Splitting by type (rather than a "kind" field inside one type) matches how the sawmill models

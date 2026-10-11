@@ -11,6 +11,7 @@ import dev.alaindustrial.BuildInfo;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.command.demo.DemoStand;
+import dev.alaindustrial.command.demo.energy.EnergyStandCommand;
 import dev.alaindustrial.compat.ServerDrops;
 import dev.alaindustrial.core.energy.NetworkManager;
 import dev.alaindustrial.network.ConfigSync;
@@ -294,7 +295,9 @@ public final class AlaCommandCommon {
 									}
 									return builder.buildFuture();
 								})
-								.executes(AlaCommandCommon::demoTp)));
+								.executes(AlaCommandCommon::demoTp)))
+				// MOD-799: the energy test stand, its own arena north of the showcase.
+				.then(EnergyStandCommand.tree());
 	}
 
 	/**
