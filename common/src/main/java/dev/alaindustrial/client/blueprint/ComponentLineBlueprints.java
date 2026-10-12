@@ -16,33 +16,33 @@ import java.util.Map;
  */
 public final class ComponentLineBlueprints {
 
-	private static final String AI = "alaindustrial:";
+	private static final String MOD = "alaindustrial:";
 	private static final String CRAFTING_TABLE = "minecraft:crafting_table";
-	private static final String RAW_SULFUR = AI + "raw_sulfur";
-	private static final String SULFUR_DUST = AI + "sulfur_dust";
-	private static final String RAW_RUBBER = AI + "raw_rubber";
-	private static final String RUBBER = AI + "rubber";
-	private static final String INULIN = AI + "inulin";
-	private static final String KOK_SAGYZ_ROOT = AI + "kok_sagyz_root";
-	private static final String OIL_BUCKET = AI + "oil_bucket";
+	private static final String RAW_SULFUR = MOD + "raw_sulfur";
+	private static final String SULFUR_DUST = MOD + "sulfur_dust";
+	private static final String RAW_RUBBER = MOD + "raw_rubber";
+	private static final String RUBBER = MOD + "rubber";
+	private static final String INULIN = MOD + "inulin";
+	private static final String KOK_SAGYZ_ROOT = MOD + "kok_sagyz_root";
+	private static final String OIL_BUCKET = MOD + "oil_bucket";
 	private static final String AMETHYST_SHARD = "minecraft:amethyst_shard";
-	private static final String SILVER_DUST = AI + "silver_dust";
-	private static final String SILVER_PLATE = AI + "silver_plate";
+	private static final String SILVER_DUST = MOD + "silver_dust";
+	private static final String SILVER_PLATE = MOD + "silver_plate";
 	private static final String REDSTONE = "minecraft:redstone";
-	private static final String REINFORCED_AMETHYST = AI + "reinforced_amethyst";
-	private static final String ADVANCED_CIRCUIT = AI + "advanced_circuit";
-	private static final String ELECTRUM_PLATE = AI + "electrum_plate";
-	private static final String ENERGY_CRYSTAL = AI + "energy_crystal";
-	private static final String CAPACITY_CARD = AI + "capacity_card";
-	private static final String MONITOR_CORE = AI + "monitor_core";
-	private static final String MONITOR_PANEL = AI + "monitor_panel";
+	private static final String REINFORCED_AMETHYST = MOD + "reinforced_amethyst";
+	private static final String ADVANCED_CIRCUIT = MOD + "advanced_circuit";
+	private static final String ELECTRUM_PLATE = MOD + "electrum_plate";
+	private static final String ENERGY_CRYSTAL = MOD + "energy_crystal";
+	private static final String CAPACITY_CARD = MOD + "capacity_card";
+	private static final String MONITOR_CORE = MOD + "monitor_core";
+	private static final String MONITOR_PANEL = MOD + "monitor_panel";
 	private static final String GOLD_INGOT = "minecraft:gold_ingot";
-	private static final String EMPTY_CHIP = AI + "empty_chip";
-	private static final String CLOT_I = AI + "energy_clot_i";
-	private static final String CLOT_II = AI + "energy_clot_ii";
-	private static final String CLOT_III = AI + "energy_clot_iii";
-	private static final String CHIP_I = AI + "overclocker_chip_i";
-	private static final String CHIP_II = AI + "overclocker_chip_ii";
+	private static final String EMPTY_CHIP = MOD + "empty_chip";
+	private static final String CLOT_I = MOD + "energy_clot_i";
+	private static final String CLOT_II = MOD + "energy_clot_ii";
+	private static final String CLOT_III = MOD + "energy_clot_iii";
+	private static final String CHIP_I = MOD + "overclocker_chip_i";
+	private static final String CHIP_II = MOD + "overclocker_chip_ii";
 
 	/**
 	 * The macerator line (0, position 1) grinding raw sulfur into two dust, then two kok-sagyz roots

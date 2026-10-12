@@ -1,7 +1,7 @@
 package dev.alaindustrial.client;
 
 import dev.alaindustrial.client.render.ConcentratorSchematicRenderer;
-import dev.alaindustrial.client.render.RepellerDomeRenderer;
+import dev.alaindustrial.client.render.ZonePreviewRenderer;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
 import dev.alaindustrial.client.render.NetworkOverlayRenderer;
@@ -27,7 +27,7 @@ public final class NetworkVisualizationClient {
 	private static void render(LevelRenderContext context) {
 		NetworkOverlayRenderer.submitFrame(context.submitNodeCollector(),
 				context.levelState().cameraRenderState);
-		RepellerDomeRenderer.submitFrame(context.submitNodeCollector(),
+		ZonePreviewRenderer.submitFrame(context.submitNodeCollector(),
 				context.levelState().cameraRenderState);
 
 		// MOD-603: the concentrator's assembly schematic rides the same frame point — it is a

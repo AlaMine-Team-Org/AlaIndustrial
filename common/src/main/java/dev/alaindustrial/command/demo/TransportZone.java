@@ -8,8 +8,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluids;
 
 /**
- * Zone <b>transport</b> (rows z=16 and z=18, MOD-659): the two item-pipe grades and the two fluid-pipe
- * grades (MOD-675).
+ * Zone <b>transport</b> (rows z=16 and z=18, MOD-659): the two item-pipe grades, the vacuum collector feeding
+ * a third line east of the basic one (MOD-802) and the two fluid-pipe grades (MOD-675).
  * They used to stand at the very back of the stand, one row behind the showcase wall — invisible from
  * the front, with the two item grades stacked on top of each other and so, very likely, one network
  * (an advanced pipe IS an item pipe to its neighbour). Now each grade has its own row, one free row
@@ -19,7 +19,7 @@ import net.minecraft.world.level.material.Fluids;
  * capacity card, a panel with no filter) is gone: the working monitoring wall at
  * {@link MonitorWallZone} shows every one of those blocks running.
  *
- * <p>Domain (coding standard, section 1): Storage (item pipes) and Fluid (fluid pipes).
+ * <p>Domain (coding standard, section 1): Storage (item pipes, the vacuum collector) and Fluid (fluid pipes).
  */
 final class TransportZone implements DemoZone {
 	private static final LongUnaryOperator FULL = StandWriter.FULL;
@@ -50,6 +50,16 @@ final class TransportZone implements DemoZone {
 			w.set(x, 1, 18, ModContent.ITEM_PIPE_ADVANCED.get());
 		}
 		w.set(10, 1, 18, ModContent.IRON_CHEST.get());
+		// MOD-802: the vacuum collector feeding a third item line, east of the basic one with a gap so the two
+		// stay separate networks. Pipes and cables join the collector only through its lid and floor — its
+		// sides are the funnels — so the line leaves upwards, runs one block up and drops into the chest; a
+		// plain pipe needs no face configured. Left without energy, like the block breaker: a powered
+		// collector would draw the stand's own drops out of the neighbouring zones.
+		w.set(14, 1, 16, ModContent.VACUUM_COLLECTOR.get());
+		for (int x = 14; x <= 19; x++) {
+			w.set(x, 2, 16, ModContent.ITEM_PIPE.get());
+		}
+		w.set(19, 1, 16, ModContent.IRON_CHEST.get());
 
 		// The fluid line: tank → pipes → tank, the same read-left-to-right shape, so the two transport
 		// systems can be compared side by side. The source tank is seeded so the pipes carry something and

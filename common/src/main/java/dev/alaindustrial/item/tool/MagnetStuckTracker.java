@@ -1,7 +1,6 @@
 package dev.alaindustrial.item.tool;
 
-import java.util.Map;
-import java.util.WeakHashMap;
+import dev.alaindustrial.core.world.StuckDropTracker;
 import net.minecraft.world.entity.Entity;
 
 /**
@@ -18,8 +17,8 @@ import net.minecraft.world.entity.Entity;
  * when the player has no room, so the drops trail after the player. A drop that reaches the player
  * sits inside the pickup snap distance, where the magnet already stops pulling and stops paying.
  *
- * <p>Server thread only (the pull runs in {@code inventoryTick} and in gametests on the server). Keys
- * are weak, so a drop that is picked up or despawns drops out of the map on its own.
+ * <p>Server thread only (the pull runs in {@code inventoryTick} and in gametests on the server). The rule
+ * itself is {@link StuckDropTracker}; this class holds the magnet's instance of it.
  */
 public final class MagnetStuckTracker {
 
@@ -27,24 +26,15 @@ public final class MagnetStuckTracker {
 	public static final int STALL_PULLS = 20;
 	/** How long a released drop is left alone, in game ticks: 2 s. */
 	public static final int RELEASE_TICKS = 40;
-	/** A pull that brings the drop at least this much closer (blocks) counts as progress. */
-	private static final double PROGRESS = 0.05;
-
-	private static final Map<Entity, Track> TRACKS = new WeakHashMap<>();
-
-	private static final class Track {
-		double lastDistance = Double.MAX_VALUE;
-		int stalls;
-		long releasedUntil = Long.MIN_VALUE;
-	}
+	/** The magnet's own history: the vacuum collector keeps another (MOD-802). */
+	private static final StuckDropTracker TRACKER = new StuckDropTracker(STALL_PULLS, RELEASE_TICKS);
 
 	private MagnetStuckTracker() {
 	}
 
 	/** Whether the magnet has let go of {@code drop} for now. */
 	public static boolean isReleased(Entity drop, long gameTime) {
-		Track track = TRACKS.get(drop);
-		return track != null && gameTime < track.releasedUntil;
+		return TRACKER.isReleased(drop, gameTime);
 	}
 
 	/**
@@ -52,21 +42,11 @@ public final class MagnetStuckTracker {
 	 * whether this pull released it.
 	 */
 	public static boolean recordPull(Entity drop, double distance, long gameTime) {
-		Track track = TRACKS.computeIfAbsent(drop, d -> new Track());
-		if (distance < track.lastDistance - PROGRESS) {
-			track.stalls = 0;
-		} else if (++track.stalls >= STALL_PULLS) {
-			track.releasedUntil = gameTime + RELEASE_TICKS;
-			track.stalls = 0;
-			track.lastDistance = Double.MAX_VALUE;
-			return true;
-		}
-		track.lastDistance = Math.min(track.lastDistance, distance);
-		return false;
+		return TRACKER.recordPull(drop, distance, gameTime);
 	}
 
 	/** Forget {@code drop} — for tests that reuse one detached entity across scenarios. */
 	public static void forget(Entity drop) {
-		TRACKS.remove(drop);
+		TRACKER.forget(drop);
 	}
 }

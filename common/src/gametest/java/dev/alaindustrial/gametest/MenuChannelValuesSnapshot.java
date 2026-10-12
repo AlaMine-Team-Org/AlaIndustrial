@@ -242,6 +242,10 @@ final class MenuChannelValuesSnapshot {
 			"charge_pad charged getters: energy=10000 capacity=20000 progress=0/0",
 			"charge_pad charged menu[0]: getChargePercent=50 getEtaSeconds=0 getItemsCharging=0"
 					+ " getRateEuPerTick=0 isServing=false",
+			"vacuum_collector placed [0]: 0 800 0 0 1",
+			"vacuum_collector placed getters: energy=0 capacity=800 progress=0/0",
+			"vacuum_collector charged [0]: 400 800 0 0 1",
+			"vacuum_collector charged getters: energy=400 capacity=800 progress=0/0",
 			"reactor_controller placed [0]: 0 200000 0 0 1 0 0 0 0 0 0 0",
 			"reactor_controller placed [12]: 0 100 0 0 0 0 0 0 0 0 0 0",
 			"reactor_controller placed [24]: 100 70 85 0 0 3 12 30 0 0 0 0",

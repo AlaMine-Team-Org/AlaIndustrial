@@ -399,6 +399,8 @@ final class EnergyRoleForFaceSnapshot {
 			"charge_pad[state=empty] DUNSWE=IIIIII",
 			"energy_condenser[lit=true] DUNSWE=IINNNN",
 			"energy_condenser[lit=false] DUNSWE=IINNNN",
+			"vacuum_collector[lit=true] DUNSWE=IINNNN",
+			"vacuum_collector[lit=false] DUNSWE=IINNNN",
 			"reactor_controller[facing=north,formed=true] DUNSWE=OONOOO",
 			"reactor_controller[facing=north,formed=false] DUNSWE=OONOOO",
 			"reactor_controller[facing=south,formed=true] DUNSWE=OOONOO",

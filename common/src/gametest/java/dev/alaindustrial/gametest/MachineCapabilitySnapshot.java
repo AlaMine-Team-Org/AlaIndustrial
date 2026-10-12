@@ -137,6 +137,9 @@ final class MachineCapabilitySnapshot {
 			"energy_condenser: owner=Characterizer active=3 items=5 eu=11/13/17/19 panel=0 mute=0"
 					+ " stats=0 oc=0/0 rate=2 dur=200 evolve=-1/-1",
 			"energy_condenser keys: -EvolveProgress -EvolveChip",
+			"vacuum_collector: owner=Characterizer active=3 items=5 eu=11/13/17/19 panel=0 mute=0"
+					+ " stats=0 oc=0/0 rate=2 dur=200 evolve=-1/-1",
+			"vacuum_collector keys: -EvolveProgress -EvolveChip",
 			"reactor_controller: owner=Characterizer active=3 items=5 eu=11/13/17/19 panel=0 mute=0"
 					+ " stats=0 oc=0/0 rate=2 dur=200 evolve=-1/-1",
 			"reactor_controller keys: -EvolveProgress -EvolveChip",

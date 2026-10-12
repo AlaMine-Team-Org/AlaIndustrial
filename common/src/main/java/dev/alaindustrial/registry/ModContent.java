@@ -48,6 +48,7 @@ import dev.alaindustrial.menu.TeleporterRemoteMenu;
 import dev.alaindustrial.menu.TeleporterStationMenu;
 import dev.alaindustrial.menu.ReactorControllerMenu;
 import dev.alaindustrial.menu.BlockBreakerMenu;
+import dev.alaindustrial.menu.VacuumCollectorMenu;
 import dev.alaindustrial.menu.ThermalCentrifugeMenu;
 import dev.alaindustrial.menu.WaterMillMenu;
 import dev.alaindustrial.menu.WindMillMenu;
@@ -247,6 +248,7 @@ public final class ModContent {
 	public static Supplier<Block> ELECTRIC_HEATER = unbound("ELECTRIC_HEATER");
 	/** Charging Station (MOD-274) — the plate that tops up the gear of whoever stands on it. */
 	public static Supplier<Block> CHARGE_PAD = unbound("CHARGE_PAD");
+	public static Supplier<Block> VACUUM_COLLECTOR = unbound("VACUUM_COLLECTOR");
 	// Energy condenser (MOD-393): banks the grid's surplus and packs it into an energy clot.
 	public static Supplier<Block> ENERGY_CONDENSER = unbound("ENERGY_CONDENSER");
 	// Mob Repeller tier family (MOD-278): LV is crafted, MV/HV are only ever reached by evolving the
@@ -935,6 +937,7 @@ public final class ModContent {
 	public static Supplier<BlockItem> FUEL_ROD_ASSEMBLY_ITEM = unbound("FUEL_ROD_ASSEMBLY_ITEM");
 	public static Supplier<BlockItem> ELECTRIC_HEATER_ITEM = unbound("ELECTRIC_HEATER_ITEM");
 	public static Supplier<BlockItem> CHARGE_PAD_ITEM = unbound("CHARGE_PAD_ITEM");
+	public static Supplier<BlockItem> VACUUM_COLLECTOR_ITEM = unbound("VACUUM_COLLECTOR_ITEM");
 	public static Supplier<BlockItem> ENERGY_CONDENSER_ITEM = unbound("ENERGY_CONDENSER_ITEM");
 	public static Supplier<BlockItem> MOB_REPELLER_ITEM = unbound("MOB_REPELLER_ITEM");
 	public static Supplier<BlockItem> MOB_REPELLER_MV_ITEM = unbound("MOB_REPELLER_MV_ITEM");
@@ -1102,6 +1105,7 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> INDUSTRIAL_WORKBENCH_BE = unbound("INDUSTRIAL_WORKBENCH_BE");
 	public static Supplier<BlockEntityType<?>> ELECTRIC_HEATER_BE = unbound("ELECTRIC_HEATER_BE");
 	public static Supplier<BlockEntityType<?>> CHARGE_PAD_BE = unbound("CHARGE_PAD_BE");
+	public static Supplier<BlockEntityType<?>> VACUUM_COLLECTOR_BE = unbound("VACUUM_COLLECTOR_BE");
 	public static Supplier<BlockEntityType<?>> ENERGY_CONDENSER_BE = unbound("ENERGY_CONDENSER_BE");
 	public static Supplier<BlockEntityType<?>> MOB_REPELLER_BE = unbound("MOB_REPELLER_BE");
 	public static Supplier<BlockEntityType<?>> MOB_REPELLER_MV_BE = unbound("MOB_REPELLER_MV_BE");
@@ -1170,6 +1174,8 @@ public final class ModContent {
 	public static Supplier<MenuType<CesuMenu>> CESU_MENU = unbound("CESU_MENU");
 	/** Charging Station readout (MOD-416): buffer bar plus delivery rate, item count and estimate. */
 	public static Supplier<MenuType<ChargePadMenu>> CHARGE_PAD_MENU = unbound("CHARGE_PAD_MENU");
+	public static Supplier<MenuType<VacuumCollectorMenu>> VACUUM_COLLECTOR_MENU =
+			unbound("VACUUM_COLLECTOR_MENU");
 	/** Teleporter station screen (MOD-093): EU bar, owner, private/public toggle. */
 	public static Supplier<MenuType<TeleporterStationMenu>> TELEPORTER_STATION_MENU =
 			unbound("TELEPORTER_STATION_MENU");

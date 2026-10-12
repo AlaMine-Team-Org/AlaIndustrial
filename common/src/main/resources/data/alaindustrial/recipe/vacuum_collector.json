@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"key": {
+		"P": "#c:plates/iron",
+		"H": "minecraft:hopper",
+		"E": "alaindustrial:electronic_circuit",
+		"X": "alaindustrial:electromagnet",
+		"M": "alaindustrial:machine_casing"
+	},
+	"pattern": [
+		"PHP",
+		"EXE",
+		"PMP"
+	],
+	"result": { "id": "alaindustrial:vacuum_collector" }
+}

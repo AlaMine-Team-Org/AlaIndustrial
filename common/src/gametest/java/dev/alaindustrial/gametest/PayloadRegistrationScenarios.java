@@ -9,7 +9,7 @@ import dev.alaindustrial.network.MagnetFilterSamplePayload;
 import dev.alaindustrial.network.NetworkAnalyzerPayload;
 import dev.alaindustrial.network.ReactorLogPayload;
 import dev.alaindustrial.network.ReactorZonePayload;
-import dev.alaindustrial.network.RepellerDomePayload;
+import dev.alaindustrial.network.ZonePreviewPayload;
 import dev.alaindustrial.network.SkillActionPayload;
 import dev.alaindustrial.network.TeleportFadePayload;
 import dev.alaindustrial.network.TeleportNoticePayload;
@@ -77,7 +77,7 @@ public final class PayloadRegistrationScenarios {
 	static Map<CustomPacketPayload.Type<?>, Direction> expected() {
 		Map<CustomPacketPayload.Type<?>, Direction> table = new LinkedHashMap<>();
 		table.put(NetworkAnalyzerPayload.TYPE, Direction.CLIENTBOUND);
-		table.put(RepellerDomePayload.TYPE, Direction.CLIENTBOUND);
+		table.put(ZonePreviewPayload.TYPE, Direction.CLIENTBOUND);
 		table.put(MachineStatsPayload.TYPE, Direction.CLIENTBOUND);
 		table.put(ReactorZonePayload.TYPE, Direction.CLIENTBOUND);
 		table.put(ReactorLogPayload.TYPE, Direction.CLIENTBOUND);

@@ -34,6 +34,7 @@ public final class ScenarioRoster {
 			BatteryDrawerScenarios.Roster.ENTRIES,
 			BatteryScenarios.Roster.ENTRIES,
 			BlockBreakerScenarios.Roster.ENTRIES,
+			VacuumCollectorScenarios.Roster.ENTRIES,
 			BlockCodecScenarios.Roster.ENTRIES,
 			BlockEntityDisplayNameSnapshotScenarios.Roster.ENTRIES,
 			BlockEntityPersistenceSweepScenarios.Roster.ENTRIES,

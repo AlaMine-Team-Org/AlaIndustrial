@@ -1,5 +1,6 @@
 package dev.alaindustrial.block;
 
+import dev.alaindustrial.core.world.ZonePreviewBlock;
 import dev.alaindustrial.registry.ModSounds;
 import java.util.function.Supplier;
 import net.minecraft.sounds.SoundEvent;
@@ -24,7 +25,8 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
  *
  * <p>Pattern A sound (MOD-447): {@link #LIT} is {@link LitMachineBlock#LIT}, so the default {@code isWorking} applies.
  */
-public abstract class AbstractMobRepellerBlock extends AbstractMachineBlock implements MachineHumProvider {
+public abstract class AbstractMobRepellerBlock extends AbstractMachineBlock
+		implements MachineHumProvider, ZonePreviewBlock {
 	public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
 	protected AbstractMobRepellerBlock(Properties properties) {

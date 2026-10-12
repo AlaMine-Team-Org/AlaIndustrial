@@ -37,6 +37,7 @@ import net.minecraft.world.level.CardinalLighting;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.PipeBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
@@ -66,6 +67,8 @@ import org.jspecify.annotations.Nullable;
  */
 public final class CableAccessoryBlockEntityRenderer
 		implements BlockEntityRenderer<CableBlockEntity, CableAccessoryBlockEntityRenderer.State> {
+	/** How far, in blocks, an arm continuation stands past the cell edge at most (see CableArmReach.Band). */
+	private static final double ARM_REACH_LIMIT = 0.5;
 	/**
 	 * Sprite per stand block, resolved once and reused. A base can hold hundreds of stood segments and
 	 * this runs per frame per segment, so the registry lookup and id juggling below must not repeat.
@@ -687,6 +690,17 @@ public final class CableAccessoryBlockEntityRenderer
 		quads.quad(1.0F, 0.0F, 0.0F,
 				x1, y0, z0, x1, y1, z0, x1, y1, z1, x1, y0, z1,
 				z0, THICKNESS, z0, 0.0F, z1, 0.0F, z1, THICKNESS);
+	}
+
+	/**
+	 * The box NeoForge tests against the frustum before drawing (MOD-805, the MOD-633 trap): the block widened
+	 * by the farthest an arm continuation reaches into a neighbour, or the continuation vanished with the cable
+	 * block while the neighbour was still in view. {@code shouldRenderOffScreen} stays false: it would draw
+	 * every cable of a base each frame. No {@code @Override} — NeoForge-only method, guarded by
+	 * {@code OffScreenRendererBoxTest}.
+	 */
+	public AABB getRenderBoundingBox(CableBlockEntity blockEntity) {
+		return new AABB(blockEntity.getBlockPos()).inflate(ARM_REACH_LIMIT, 0.0, ARM_REACH_LIMIT);
 	}
 
 	public static final class State extends BlockEntityRenderState {

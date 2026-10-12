@@ -2262,6 +2262,29 @@ tooltip.alaindustrial.upgrade_table.purpose {gray}
 == alaindustrial:uranium_stairs plain : none
 == alaindustrial:uranium_wall plain : none
 == alaindustrial:vacuum_capsule plain : none
+== alaindustrial:vacuum_collector plain
+-- plain eu
+tooltip.alaindustrial.vacuum_collector.what {gray}
+tooltip.alaindustrial.energy_input(8) {gray}
+tooltip.alaindustrial.range(5) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.vacuum_collector.what {gray}
+tooltip.alaindustrial.energy_input(8) {gray}
+tooltip.alaindustrial.range(5) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.vacuum_collector.pipes {gray}
+tooltip.alaindustrial.vacuum_collector.pulse(4, 5) {gray}
+tooltip.alaindustrial.buffer(800) {gray}
+-- plain no-eu
+tooltip.alaindustrial.vacuum_collector.what {gray}
+tooltip.alaindustrial.range(5) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.vacuum_collector.what {gray}
+tooltip.alaindustrial.range(5) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.vacuum_collector.pipes {gray}
 == alaindustrial:vulcanizer plain
 -- plain eu
 tooltip.alaindustrial.energy_input(2) {gray}

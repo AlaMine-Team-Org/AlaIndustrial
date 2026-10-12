@@ -579,6 +579,11 @@ pitest {
             // MOD-787: the fake-player seam — its one method takes a ServerLevel and returns a ServerPlayer,
             // so L1 cannot call it; the both-lane block breaker scenarios break through it on each loader.
             'dev.alaindustrial.core.world.FakePlayers',
+            // MOD-802: the drop pull shared by the electromagnet and the vacuum collector — DropSeek moves an
+            // Entity, StuckDropTracker keys its history on one; both are covered by the magnet and the vacuum
+            // collector scenarios on both lanes.
+            'dev.alaindustrial.core.world.DropSeek',
+            'dev.alaindustrial.core.world.StuckDropTracker',
             // MOD-468: the reactor room's world adapter — it resolves BlockState/Level to ask
             // "what shell block stands here". The geometry it delegates to (RoomScan) is deliberately
             // Minecraft-free and stays IN the run, covered by RoomScanTest; this half is covered by the

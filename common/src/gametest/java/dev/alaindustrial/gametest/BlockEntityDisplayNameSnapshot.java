@@ -71,6 +71,7 @@ final class BlockEntityDisplayNameSnapshot {
 			"electrum_chest @electrum_chest: block.alaindustrial.electrum_chest",
 			"diamond_chest @diamond_chest: block.alaindustrial.diamond_chest",
 			"shielding_chest @shielding_chest: block.alaindustrial.shielding_chest",
+			"vacuum_collector @vacuum_collector: block.alaindustrial.vacuum_collector",
 			"reactor_controller @reactor_controller: block.alaindustrial.reactor_controller",
 			"incubator @incubator: block.alaindustrial.incubator",
 			"garden_drone_station @garden_drone_station: block.alaindustrial.garden_drone_station",

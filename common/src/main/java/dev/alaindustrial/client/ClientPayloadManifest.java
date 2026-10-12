@@ -4,14 +4,14 @@ import dev.alaindustrial.client.guide.ArchiveRecordClient;
 import dev.alaindustrial.client.hud.TeleportFadeHud;
 import dev.alaindustrial.client.hud.TeleportNotice;
 import dev.alaindustrial.client.render.NetworkOverlayRenderer;
-import dev.alaindustrial.client.render.RepellerDomeRenderer;
+import dev.alaindustrial.client.render.ZonePreviewRenderer;
 import dev.alaindustrial.network.ArchiveRecordPayload;
 import dev.alaindustrial.network.ConfigSyncPayload;
 import dev.alaindustrial.network.MachineStatsPayload;
 import dev.alaindustrial.network.NetworkAnalyzerPayload;
 import dev.alaindustrial.network.ReactorLogPayload;
 import dev.alaindustrial.network.ReactorZonePayload;
-import dev.alaindustrial.network.RepellerDomePayload;
+import dev.alaindustrial.network.ZonePreviewPayload;
 import dev.alaindustrial.network.TeleportFadePayload;
 import dev.alaindustrial.network.TeleportNoticePayload;
 import dev.alaindustrial.network.TeleportStationsPayload;
@@ -102,7 +102,7 @@ public final class ClientPayloadManifest {
 			// MOD-016/MOD-665: the analyzer trace, pushed into the overlay (formerly NetworkVisualizationClient).
 			inline(NetworkAnalyzerPayload.TYPE, NetworkOverlayRenderer::updatePayload),
 			// MOD-278: toggles this client's personal dome for that block.
-			inline(RepellerDomePayload.TYPE, RepellerDomeRenderer::receive),
+			inline(ZonePreviewPayload.TYPE, ZonePreviewRenderer::receive),
 			// MOD-125: machine statistics for the open screen's panel.
 			inline(MachineStatsPayload.TYPE, MachineStatsClient::receive),
 			// MOD-620: the reactor controller's «Core» tab.
