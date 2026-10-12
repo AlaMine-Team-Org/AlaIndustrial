@@ -29,6 +29,7 @@ import dev.alaindustrial.block.ShieldingChestBlock;
 import dev.alaindustrial.block.SilverChestBlock;
 import dev.alaindustrial.block.SmartWireBlock;
 import dev.alaindustrial.block.StorageModuleBlock;
+import dev.alaindustrial.block.VacuumCollectorBlock;
 import dev.alaindustrial.block.entity.BatteryBoxBlockEntity;
 import dev.alaindustrial.block.entity.CesuBlockEntity;
 import dev.alaindustrial.block.entity.ChargePadBlockEntity;
@@ -44,6 +45,7 @@ import dev.alaindustrial.block.entity.ShieldingChestBlockEntity;
 import dev.alaindustrial.block.entity.SilverChestBlockEntity;
 import dev.alaindustrial.block.entity.SmartWireBlockEntity;
 import dev.alaindustrial.block.entity.StorageModuleBlockEntity;
+import dev.alaindustrial.block.entity.VacuumCollectorBlockEntity;
 import dev.alaindustrial.item.misc.ItemPipeBlockItem;
 import dev.alaindustrial.item.misc.StockDisplayFrameItem;
 import dev.alaindustrial.menu.BatteryBoxMenu;
@@ -60,6 +62,7 @@ import dev.alaindustrial.menu.ShieldingChestMenu;
 import dev.alaindustrial.menu.SilverChestMenu;
 import dev.alaindustrial.menu.StorageMenu3;
 import dev.alaindustrial.menu.StorageMenu6;
+import dev.alaindustrial.menu.VacuumCollectorMenu;
 import dev.alaindustrial.registry.ContentManifest.BlockDef;
 import dev.alaindustrial.registry.ContentManifest.BlockEntityDef;
 import dev.alaindustrial.registry.ContentManifest.Domain;
@@ -160,6 +163,11 @@ public final class StorageContent {
 	public static final BlockDef<MonitorPanelBlock> MONITOR_PANEL = block("monitor_panel", MonitorPanelBlock::new,
 			machine(p -> p.strength(2.0f, 4.0f).sound(SoundType.METAL).noOcclusion()),
 			s -> ModContent.MONITOR_PANEL = s);
+	// MOD-802 — draws loose drops within reach into a nine-slot buffer that item pipes empty.
+	public static final BlockDef<VacuumCollectorBlock> VACUUM_COLLECTOR =
+			block("vacuum_collector", VacuumCollectorBlock::new,
+					machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)),
+					s -> ModContent.VACUUM_COLLECTOR = s);
 
 	/** This domain's blocks, in declaration order — collected since {@code beginBlocks()} above. */
 	private static final List<BlockDef<?>> BLOCKS = endBlocks();
@@ -261,7 +269,9 @@ public final class StorageContent {
 			blockItem("monitor_core", s -> ModContent.MONITOR_CORE_ITEM = s),
 			blockItem("monitor_panel", s -> ModContent.MONITOR_PANEL_ITEM = s),
 			item("capacity_card", dev.alaindustrial.item.misc.CapacityCardItem::new,
-					s -> ModContent.CAPACITY_CARD = s));
+					s -> ModContent.CAPACITY_CARD = s),
+			// MOD-802 — the vacuum collector.
+			blockItem("vacuum_collector", s -> ModContent.VACUUM_COLLECTOR_ITEM = s));
 
 	/*
 	 * Block entities named by a constant because code outside the list refers to the entry itself
@@ -303,7 +313,9 @@ public final class StorageContent {
 			blockEntity("diamond_chest", DiamondChestBlockEntity.class, DiamondChestBlockEntity::new,
 					s -> ModContent.DIAMOND_CHEST_BE = s, DIAMOND_CHEST),
 			blockEntity("shielding_chest", ShieldingChestBlockEntity.class, ShieldingChestBlockEntity::new,
-					s -> ModContent.SHIELDING_CHEST_BE = s, SHIELDING_CHEST));
+					s -> ModContent.SHIELDING_CHEST_BE = s, SHIELDING_CHEST),
+			blockEntity("vacuum_collector", VacuumCollectorBlockEntity.class, VacuumCollectorBlockEntity::new,
+					s -> ModContent.VACUUM_COLLECTOR_BE = s, VACUUM_COLLECTOR));
 
 	private static final List<MenuDef<?>> MENUS = List.of(
 			menu("battery_box", BatteryBoxMenu::new, s -> ModContent.BATTERY_BOX_MENU = s),
@@ -328,7 +340,9 @@ public final class StorageContent {
 			// MOD-480: the monitoring wall's core — a rack of cards, not a machine, so its menu sits
 			// on the vanilla base rather than on MachineMenu.
 			menu("monitor_core", MonitorCoreMenu::new,
-					s -> ModContent.MONITOR_CORE_MENU = s));
+					s -> ModContent.MONITOR_CORE_MENU = s),
+			// MOD-802 — the vacuum collector's 3x3 buffer.
+			menu("vacuum_collector", VacuumCollectorMenu::new, s -> ModContent.VACUUM_COLLECTOR_MENU = s));
 
 	/** Everything this domain declares; {@link dev.alaindustrial.registry.ContentManifest#DOMAINS} joins it in. */
 	public static final Domain DOMAIN = new Domain("Storage", BLOCKS, ITEMS, BLOCK_ENTITIES, MENUS);
@@ -444,6 +458,8 @@ public final class StorageContent {
 		// chest, bought for the shielding.
 		show(out, ModContent.SHIELDING_CHEST_ITEM);
 		show(out, ModContent.STORAGE_MODULE_ITEM);
+		// MOD-802 — gathers the drops a pipe then carries to the chests above.
+		show(out, ModContent.VACUUM_COLLECTOR_ITEM);
 		show(out, ModContent.STOCK_DISPLAY_FRAME_ITEM);
 		// MOD-480: the monitoring wall — wire reads the chests, core powers and permits, panels show.
 		show(out, ModContent.MONITOR_CORE_ITEM);

@@ -170,6 +170,8 @@ public class ScreensClientGameTest implements FabricClientGameTest {
             new Screen("mob_repeller_hv", "mob_repeller_hv", "Mob Repeller HV"),
             // MOD-787: the block breaker — tool slot, break progress, redstone-mode button.
             new Screen("block_breaker", "block_breaker", "Block Breaker"),
+            // MOD-802: the vacuum collector — the 3x3 take-only buffer and the energy bar.
+            new Screen("vacuum_collector", "vacuum_collector", "Vacuum Collector"),
             // MOD-479: the creative energy source. Shot in its placed state — switched on at the
             // default output, slot empty — because that is the state the stand can produce with a
             // right click and nothing else, and it already carries every control the panel owns:

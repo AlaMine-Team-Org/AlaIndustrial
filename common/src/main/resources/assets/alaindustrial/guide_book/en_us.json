@@ -2115,6 +2115,43 @@
           ]
         },
         {
+          "id": "vacuum_collector",
+          "title": "Vacuum Collector",
+          "icon": "alaindustrial:vacuum_collector",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Vacuum Collector",
+              "text": "An electric block that draws loose dropped items into its buffer, which item pipes then empty."
+            },
+            {
+              "type": "stats",
+              "title": "Stats",
+              "lines": [
+                "Energy: 8 EU/t"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:hopper",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:electromagnet",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:vacuum_collector",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "fluid_pipe",
           "title": "Fluid Pipe",
           "icon": "alaindustrial:fluid_pipe",

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "alaindustrial:block/vacuum_collector"
+    },
+    "lit=true": {
+      "model": "alaindustrial:block/vacuum_collector_on"
+    }
+  }
+}

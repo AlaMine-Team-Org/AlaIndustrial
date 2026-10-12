@@ -2,10 +2,8 @@ package dev.alaindustrial.menu;
 
 import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.block.entity.MobRepellerBlockEntity;
-import dev.alaindustrial.network.NetworkDispatcher;
-import dev.alaindustrial.network.RepellerDomePayload;
+import dev.alaindustrial.network.ZonePreviewPayload;
 import dev.alaindustrial.registry.ModContent;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
@@ -27,8 +25,8 @@ import net.minecraft.world.level.block.Block;
  * <p>The dome toggle rides the vanilla container-button channel, not a payload of our own: the
  * screen ({@code AbstractMobRepellerScreen}) sends {@link #BUTTON_TOGGLE_DOME} through
  * {@code handleInventoryButtonClick}, and {@link #clickMenuButton} answers the asking player — and
- * only them — with a personal {@link RepellerDomePayload}. Server-authoritative is the radius; WHICH
- * domes a player currently sees is client-only state, held by {@code RepellerDomeRenderer}.
+ * only them — with a personal {@link ZonePreviewPayload}. Server-authoritative is the radius; WHICH
+ * domes a player currently sees is client-only state, held by {@code ZonePreviewRenderer}.
  */
 public class MobRepellerMenu extends MachineMenu {
 
@@ -77,7 +75,7 @@ public class MobRepellerMenu extends MachineMenu {
 	/**
 	 * The dome button: answer the asking player — and only them — with this block's position and its
 	 * server-authoritative radius; their client toggles the dome from that
-	 * ({@code RepellerDomeRenderer}). The server keeps no per-player view state, so nothing here can
+	 * ({@code ZonePreviewRenderer}). The server keeps no per-player view state, so nothing here can
 	 * leak between players or survive a disconnect.
 	 */
 	@Override
@@ -85,13 +83,10 @@ public class MobRepellerMenu extends MachineMenu {
 		if (buttonId == BUTTON_BATTERY_DRAWER) {
 			return super.clickMenuButton(player, buttonId); // the battery drawer (MOD-679)
 		}
-		if (buttonId != BUTTON_TOGGLE_DOME || repeller == null
-				|| !(player instanceof ServerPlayer serverPlayer)
-				|| !(repeller.getLevel() instanceof ServerLevel serverLevel)) {
+		if (buttonId != BUTTON_TOGGLE_DOME || repeller == null || !(player instanceof ServerPlayer)) {
 			return false;
 		}
-		NetworkDispatcher.get().sendToPlayer(serverPlayer, new RepellerDomePayload(
-				serverLevel.dimension(), repeller.getBlockPos(), repeller.fieldRange(), true));
+		ZonePreviewPayload.send(player, repeller.getLevel(), repeller.getBlockPos(), repeller.previewReach(), true);
 		return true;
 	}
 

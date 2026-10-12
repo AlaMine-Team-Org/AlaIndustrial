@@ -124,6 +124,8 @@ public final class MenuScreenManifest {
 			screen(() -> ModContent.ENERGY_CONDENSER_MENU.get(), EnergyCondenserScreen::new),
 			screen(() -> ModContent.CESU_MENU.get(), CesuScreen::new),
 			screen(() -> ModContent.CHARGE_PAD_MENU.get(), ChargePadScreen::new),
+			// MOD-802 — the vacuum collector's 3x3 buffer.
+			screen(() -> ModContent.VACUUM_COLLECTOR_MENU.get(), VacuumCollectorScreen::new),
 			screen(() -> ModContent.TELEPORTER_STATION_MENU.get(), TeleporterStationScreen::new),
 			screen(() -> ModContent.TELEPORTER_REMOTE_MENU.get(), TeleporterRemoteScreen::new),
 			screen(() -> ModContent.DAYLIGHT_SOLAR_PANEL_MENU.get(), DaylightSolarPanelScreen::new),

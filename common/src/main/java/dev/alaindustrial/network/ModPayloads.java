@@ -125,7 +125,7 @@ public final class ModPayloads {
 			// MOD-016: the Network Analyzer's trace of a cable network.
 			clientbound(NetworkAnalyzerPayload.TYPE, NetworkAnalyzerPayload.CODEC),
 			// MOD-278: the repeller dome answer — personal, one per button press.
-			clientbound(RepellerDomePayload.TYPE, RepellerDomePayload.CODEC),
+			clientbound(ZonePreviewPayload.TYPE, ZonePreviewPayload.CODEC),
 			// MOD-125: one machine's career statistics, pushed from its open menu every 40 ticks.
 			clientbound(MachineStatsPayload.TYPE, MachineStatsPayload.CODEC),
 			// MOD-620: the reactor's core, stack by stack, at most once a second from an open controller.

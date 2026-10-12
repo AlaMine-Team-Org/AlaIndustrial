@@ -7,6 +7,7 @@ import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.entity.MobRepellerField;
 import dev.alaindustrial.item.misc.SoulVesselItem;
 import dev.alaindustrial.menu.MobRepellerMenu;
+import dev.alaindustrial.network.ZonePreviewPayload;
 import dev.alaindustrial.registry.ModContent;
 import java.util.HashMap;
 import java.util.Map;
@@ -188,12 +189,12 @@ public class MobRepellerBlockEntity extends MachineBlockEntity implements MenuPr
 	 * dome button can show its real on/off state. Shared by every tier.
 	 */
 	protected final void announceTo(Player player) {
-		if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer
-				&& level instanceof ServerLevel serverLevel) {
-			dev.alaindustrial.network.NetworkDispatcher.get().sendToPlayer(serverPlayer,
-					new dev.alaindustrial.network.RepellerDomePayload(
-							serverLevel.dimension(), worldPosition, fieldRange(), false));
-		}
+		ZonePreviewPayload.send(player, level, worldPosition, previewReach(), false);
+	}
+
+	/** The field as the preview draws it: {@code new AABB(pos).inflate(range)} reaches range + ½ from the centre. */
+	public final double previewReach() {
+		return fieldRange() + 0.5;
 	}
 
 	/**

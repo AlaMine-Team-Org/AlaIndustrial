@@ -2115,6 +2115,43 @@
           ]
         },
         {
+          "id": "vacuum_collector",
+          "title": "Vakuumsammler",
+          "icon": "alaindustrial:vacuum_collector",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Vakuumsammler",
+              "text": "Ein elektrischer Block, der lose fallengelassene Gegenstände in seinen Puffer zieht, den Gegenstandsrohre dann leeren."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 8 EU/t"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:hopper",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:electromagnet",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:vacuum_collector",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "fluid_pipe",
           "title": "Flüssigkeitsrohr",
           "icon": "alaindustrial:fluid_pipe",

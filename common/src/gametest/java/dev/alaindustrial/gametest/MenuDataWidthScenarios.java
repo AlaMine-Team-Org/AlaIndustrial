@@ -67,7 +67,8 @@ public final class MenuDataWidthScenarios {
 	// being status, the breach offset and the measured interior box.
 	// 36 -> 37 (MOD-479): the creative energy source.
 	// 43 -> 44 (MOD-787): the block breaker.
-	private static final int EXPECTED_MACHINE_MENUS = 44;
+	// 44 -> 45 (MOD-802): the vacuum collector.
+	private static final int EXPECTED_MACHINE_MENUS = 45;
 
 	/** Reused single cell inside the test region; each machine is placed here, read, then cleared. */
 	private static final BlockPos PROBE = new BlockPos(1, 2, 1);

@@ -2115,6 +2115,43 @@
           ]
         },
         {
+          "id": "vacuum_collector",
+          "title": "Pengumpul Vakum",
+          "icon": "alaindustrial:vacuum_collector",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Pengumpul Vakum",
+              "text": "Blok listrik yang menarik item terjatuh ke dalam bufernya, lalu pipa item mengosongkannya."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Energi: 8 EU/t"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:hopper",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:electromagnet",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:vacuum_collector",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "fluid_pipe",
           "title": "Pipa Fluida",
           "icon": "alaindustrial:fluid_pipe",

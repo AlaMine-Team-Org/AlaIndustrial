@@ -246,6 +246,32 @@ public final class Config {
 			doc = "Items an ADVANCED item-pipe network moves per transfer. A network runs at its weakest pipe.")
 	public static int itemPipeAdvancedItemsPerTransfer = 4;
 
+	// --- Vacuum collector, tier I (MOD-802) ---
+	/**
+	 * EU per tick the vacuum collector draws while it works, paid per pulse as this times
+	 * {@link #vacuumCollectorPulseTicks}, and only for a pulse that pulled or took a drop: an empty field costs
+	 * nothing. The block breaker's rate: both are first-tier helpers on a farm.
+	 */
+	@Knob(section = Section.LOGISTICS, clientVisible = true, min = 1,
+			doc = "Vacuum collector EU per tick while it pulls or takes drops (nothing while idle).")
+	public static int vacuumCollectorEuPerTick = 8;
+	/** Internal EU buffer of the vacuum collector: the shared LV machine figure. */
+	@Knob(section = Section.LOGISTICS, clientVisible = true, min = 1,
+			doc = "Vacuum collector internal EU buffer. Applies to newly placed blocks.")
+	public static int vacuumCollectorBuffer = 800;
+	/** Ticks between two pulls of the vacuum collector; a drop is pulled and taken only on a pulse. */
+	@Knob(section = Section.LOGISTICS, clientVisible = true, min = 1,
+			doc = "Server ticks between two pulses of the vacuum collector.")
+	public static int vacuumCollectorPulseTicks = 5;
+	/** Reach of the vacuum collector: a cube this many blocks out from the centre of the block on every axis. */
+	@Knob(section = Section.LOGISTICS, clientVisible = true, min = 1,
+			doc = "Vacuum collector reach in blocks: a cube this far from the block centre along each axis.")
+	public static int vacuumCollectorRadius = 5;
+	/** Most drops one pulse pulls or takes, the nearest first. */
+	@Knob(section = Section.LOGISTICS, clientVisible = true, min = 1,
+			doc = "Most dropped item entities one vacuum collector pulse pulls or takes, nearest first.")
+	public static int vacuumCollectorItemsPerPulse = 4;
+
 	// --- Fluid pipes (MOD-151) ---
 	/**
 	 * Working buffer of one fluid-pipe segment in mB, which is also its throughput (one hop per tick). 50

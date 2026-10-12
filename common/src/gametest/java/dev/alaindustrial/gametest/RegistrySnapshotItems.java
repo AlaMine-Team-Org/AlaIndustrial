@@ -475,6 +475,7 @@ final class RegistrySnapshotItems {
 			"item uranium_stairs class=BlockItem stack=64 damage=0 rarity=COMMON fireproof=no",
 			"item uranium_wall class=BlockItem stack=64 damage=0 rarity=COMMON fireproof=no",
 			"item vacuum_capsule class=VacuumCapsuleItem stack=64 damage=0 rarity=COMMON fireproof=no",
+			"item vacuum_collector class=BlockItem stack=64 damage=0 rarity=COMMON fireproof=no",
 			"item vulcanizer class=BlockItem stack=64 damage=0 rarity=COMMON fireproof=no",
 			"item water_mill class=BlockItem stack=64 damage=0 rarity=COMMON fireproof=no",
 			"item water_mill_wheel class=DurableComponentItem stack=1 damage=1000 rarity=COMMON fireproof=no",

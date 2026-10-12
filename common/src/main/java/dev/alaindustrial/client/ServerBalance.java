@@ -673,6 +673,26 @@ public final class ServerBalance {
 		return current.intValue("upgradeTableEuPerTick", Config.upgradeTableEuPerTick);
 	}
 
+	public static int vacuumCollectorBuffer() {
+		return current.intValue("vacuumCollectorBuffer", Config.vacuumCollectorBuffer);
+	}
+
+	public static int vacuumCollectorEuPerTick() {
+		return current.intValue("vacuumCollectorEuPerTick", Config.vacuumCollectorEuPerTick);
+	}
+
+	public static int vacuumCollectorItemsPerPulse() {
+		return current.intValue("vacuumCollectorItemsPerPulse", Config.vacuumCollectorItemsPerPulse);
+	}
+
+	public static int vacuumCollectorPulseTicks() {
+		return current.intValue("vacuumCollectorPulseTicks", Config.vacuumCollectorPulseTicks);
+	}
+
+	public static int vacuumCollectorRadius() {
+		return current.intValue("vacuumCollectorRadius", Config.vacuumCollectorRadius);
+	}
+
 	public static int vulcanizerDuration() {
 		return current.intValue("vulcanizerDuration", Config.vulcanizerDuration);
 	}

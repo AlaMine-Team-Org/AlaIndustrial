@@ -11,6 +11,7 @@ import dev.alaindustrial.item.module.ModuleHost;
 import dev.alaindustrial.menu.MagnetMenu;
 
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.core.world.DropSeek;
 import dev.alaindustrial.registry.ModDataComponents;
 import java.util.List;
 import java.util.function.Consumer;
@@ -357,17 +358,11 @@ public class MagnetItem extends Item implements ModuleHost, PoweredItem {
 	 * makes the pull immediate and reliable in every direction — an item below the player rises to it,
 	 * one above sinks — because it overrides gravity and ground friction rather than fighting them (the
 	 * accumulate-and-drag XP-orb model was far too weak on grounded drops, which read as "not pulling").
-	 * Returns whether it moved the item (one already on the player is left to the vanilla pickup).
+	 * Returns whether it moved the item (one already on the player is left to the vanilla pickup). The rule
+	 * is {@link DropSeek}, shared with the vacuum collector (MOD-802); the speeds are the magnet's.
 	 */
 	private static boolean applyPull(Entity pulled, Vec3 target) {
-		Vec3 delta = new Vec3(target.x - pulled.getX(), target.y - pulled.getY(), target.z - pulled.getZ());
-		double dist = delta.length();
-		if (dist < PICKUP_SNAP) {
-			return false;
-		}
-		double speed = Math.min(SEEK_SPEED, dist * SEEK_GAIN);
-		pulled.setDeltaMovement(delta.scale(speed / dist)); // unit direction × speed
-		return true;
+		return DropSeek.seek(pulled, target, SEEK_SPEED, SEEK_GAIN, PICKUP_SNAP);
 	}
 
 	// --- right-click: plain opens the magnet's screen, shift flips the on/off flag ---

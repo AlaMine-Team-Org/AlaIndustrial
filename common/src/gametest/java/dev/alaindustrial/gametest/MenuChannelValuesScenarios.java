@@ -5,11 +5,13 @@ import dev.alaindustrial.block.entity.MachineBlockEntity;
 import dev.alaindustrial.block.entity.MobRepellerBlockEntity;
 import dev.alaindustrial.block.entity.MobRepellerHvBlockEntity;
 import dev.alaindustrial.block.entity.MobRepellerMvBlockEntity;
+import dev.alaindustrial.block.entity.VacuumCollectorBlockEntity;
 import dev.alaindustrial.core.energy.EnergyBuffer;
 import dev.alaindustrial.menu.MachineMenu;
 import dev.alaindustrial.menu.MobRepellerHvMenu;
 import dev.alaindustrial.menu.MobRepellerMenu;
 import dev.alaindustrial.menu.MobRepellerMvMenu;
+import dev.alaindustrial.menu.VacuumCollectorMenu;
 import dev.alaindustrial.registry.ContentManifest;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -58,9 +60,10 @@ import net.minecraft.world.level.block.entity.BlockEntity;
  * ({@link AbstractContainerMenu#setSynchronizer} then {@code sendInitialData}); they must be exactly the
  * block entity's channels, in number and in value, in both states, and the server menu's shared getters
  * must agree with the client stub's. The menu is built by {@link MenuProvider#createMenu} — except the
- * three mob repellers, whose {@code createMenu} first pushes the dome payload to the viewer (a side effect
- * the NeoForge mock player refuses); their server menu is built by its server constructor, the same call
- * {@code createMenu} makes after that push, and must be of the stub's class. No machine is skipped: the
+ * three mob repellers and the vacuum collector, whose {@code createMenu} first pushes the zone preview
+ * payload to the viewer (a side effect the NeoForge mock player refuses); their server menu is built by
+ * its server constructor, the same call {@code createMenu} makes after that push, and must be of the
+ * stub's class. No machine is skipped: the
  * scenario fails unless every swept machine had its server menu checked, and unless at least
  * {@link #MIN_SERVER_MENUS} were.
  */
@@ -158,8 +161,8 @@ public final class MenuChannelValuesScenarios {
 	}
 
 	/**
-	 * The machine's server menu: {@code createMenu}, or for a mob repeller its server constructor (see the
-	 * class javadoc). Null, with a failure, when neither yields a menu.
+	 * The machine's server menu: {@code createMenu}, or for a zone-preview machine its server constructor
+	 * (see the class javadoc). Null, with a failure, when neither yields a menu.
 	 */
 	private static AbstractContainerMenu serverMenu(MachineBlockEntity machine, ServerPlayer player,
 			List<String> failures, String id) {
@@ -171,6 +174,8 @@ public final class MenuChannelValuesScenarios {
 			menu = new MobRepellerMvMenu(1, player.getInventory(), mv, access);
 		} else if (machine instanceof MobRepellerBlockEntity lv) {
 			menu = new MobRepellerMenu(1, player.getInventory(), lv, access);
+		} else if (machine instanceof VacuumCollectorBlockEntity collector) {
+			menu = new VacuumCollectorMenu(1, player.getInventory(), collector, access);
 		} else if (machine instanceof MenuProvider provider) {
 			menu = provider.createMenu(1, player.getInventory(), player);
 		} else {

@@ -2,7 +2,7 @@ package dev.alaindustrial.client.neoforge;
 
 import dev.alaindustrial.client.render.NetworkOverlayRenderer;
 import dev.alaindustrial.client.render.ConcentratorSchematicRenderer;
-import dev.alaindustrial.client.render.RepellerDomeRenderer;
+import dev.alaindustrial.client.render.ZonePreviewRenderer;
 import net.neoforged.neoforge.client.event.SubmitCustomGeometryEvent;
 
 /**
@@ -34,8 +34,8 @@ public final class NeoForgeNetworkVisualization {
 	public static void onSubmitCustomGeometry(SubmitCustomGeometryEvent event) {
 		NetworkOverlayRenderer.submitFrame(event.getSubmitNodeCollector(),
 				event.getLevelRenderState().cameraRenderState);
-		// MOD-278: the personal repeller dome rides the same frame point (see RepellerDomeRenderer).
-		RepellerDomeRenderer.submitFrame(event.getSubmitNodeCollector(),
+		// MOD-278: the personal repeller dome rides the same frame point (see ZonePreviewRenderer).
+		ZonePreviewRenderer.submitFrame(event.getSubmitNodeCollector(),
 				event.getLevelRenderState().cameraRenderState);
 
 		// MOD-603: the concentrator's assembly schematic rides the same frame point — it is a

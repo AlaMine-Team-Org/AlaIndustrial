@@ -18,43 +18,43 @@ import java.util.Map;
  */
 public final class ComponentBlueprints {
 
-	private static final String AI = "alaindustrial:";
+	private static final String MOD = "alaindustrial:";
 	private static final String CRAFTING_TABLE = "minecraft:crafting_table";
-	private static final String MACHINE_CASING = AI + "machine_casing";
-	private static final String ADVANCED_MACHINE_CASING = AI + "advanced_machine_casing";
-	private static final String ELECTRONIC_CIRCUIT = AI + "electronic_circuit";
-	private static final String ADVANCED_CIRCUIT = AI + "advanced_circuit";
-	private static final String REACTOR_CIRCUIT = AI + "reactor_circuit";
-	private static final String REACTOR_CONTROLLER = AI + "reactor_controller";
+	private static final String MACHINE_CASING = MOD + "machine_casing";
+	private static final String ADVANCED_MACHINE_CASING = MOD + "advanced_machine_casing";
+	private static final String ELECTRONIC_CIRCUIT = MOD + "electronic_circuit";
+	private static final String ADVANCED_CIRCUIT = MOD + "advanced_circuit";
+	private static final String REACTOR_CIRCUIT = MOD + "reactor_circuit";
+	private static final String REACTOR_CONTROLLER = MOD + "reactor_controller";
 
-	private static final String COPPER_COIL = AI + "copper_coil";
-	private static final String CHOKE = AI + "choke";
-	private static final String CHOKE_REINFORCED = AI + "choke_reinforced";
-	private static final String CHOKE_ADVANCED = AI + "choke_advanced";
-	private static final String RESONANCE_COIL = AI + "resonance_coil";
-	private static final String RESONANCE_CHIP = AI + "resonance_chip";
+	private static final String COPPER_COIL = MOD + "copper_coil";
+	private static final String CHOKE = MOD + "choke";
+	private static final String CHOKE_REINFORCED = MOD + "choke_reinforced";
+	private static final String CHOKE_ADVANCED = MOD + "choke_advanced";
+	private static final String RESONANCE_COIL = MOD + "resonance_coil";
+	private static final String RESONANCE_CHIP = MOD + "resonance_chip";
 
-	private static final String COTTON_SEEDS = AI + "cotton_seeds";
-	private static final String COTTON_FIBER = AI + "cotton_fiber";
-	private static final String FLUX_THREAD = AI + "flux_thread";
-	private static final String FLUXWEAVE_CLOTH = AI + "fluxweave_cloth";
+	private static final String COTTON_SEEDS = MOD + "cotton_seeds";
+	private static final String COTTON_FIBER = MOD + "cotton_fiber";
+	private static final String FLUX_THREAD = MOD + "flux_thread";
+	private static final String FLUXWEAVE_CLOTH = MOD + "fluxweave_cloth";
 
-	private static final String CARBON_ROD = AI + "carbon_rod";
-	private static final String CARBON_ROD_DOUBLE = AI + "carbon_rod_double";
-	private static final String CARBON_BRIQUETTE = AI + "carbon_briquette";
-	private static final String CERAMIC_PLATE = AI + "ceramic_plate";
-	private static final String CARBON_CERAMIC = AI + "carbon_ceramic";
-	private static final String SOOT = AI + "soot";
+	private static final String CARBON_ROD = MOD + "carbon_rod";
+	private static final String CARBON_ROD_DOUBLE = MOD + "carbon_rod_double";
+	private static final String CARBON_BRIQUETTE = MOD + "carbon_briquette";
+	private static final String CERAMIC_PLATE = MOD + "ceramic_plate";
+	private static final String CARBON_CERAMIC = MOD + "carbon_ceramic";
+	private static final String SOOT = MOD + "soot";
 
-	private static final String SAWDUST = AI + "sawdust";
-	private static final String ASH = AI + "ash";
-	private static final String SLAG = AI + "slag";
-	private static final String SLAG_POOR = AI + "slag_poor";
-	private static final String SLAG_RICH = AI + "slag_rich";
-	private static final String SLAG_BLOCK = AI + "slag_block";
-	private static final String BLADES_IRON = AI + "recycler_blades_iron";
-	private static final String BLADES_TEMPERED = AI + "recycler_blades_tempered";
-	private static final String BLADES_DIAMOND = AI + "recycler_blades_diamond";
+	private static final String SAWDUST = MOD + "sawdust";
+	private static final String ASH = MOD + "ash";
+	private static final String SLAG = MOD + "slag";
+	private static final String SLAG_POOR = MOD + "slag_poor";
+	private static final String SLAG_RICH = MOD + "slag_rich";
+	private static final String SLAG_BLOCK = MOD + "slag_block";
+	private static final String BLADES_IRON = MOD + "recycler_blades_iron";
+	private static final String BLADES_TEMPERED = MOD + "recycler_blades_tempered";
+	private static final String BLADES_DIAMOND = MOD + "recycler_blades_diamond";
 
 	/**
 	 * The crafting table (0, position 1) making an electronic circuit; the machine casing (1, position 2)
@@ -67,10 +67,10 @@ public final class ComponentBlueprints {
 			List.of(ELECTRONIC_CIRCUIT, ADVANCED_CIRCUIT, REACTOR_CIRCUIT, MACHINE_CASING, ADVANCED_MACHINE_CASING),
 			List.of(
 					new Step(List.of(table(0, 0)), 0, 1, List.of(), Verdict.NONE,
-							motions(0, "+" + AI + "silver_ingot", "+" + AI + "nickel_ingot", "+minecraft:quartz",
+							motions(0, "+" + MOD + "silver_ingot", "+" + MOD + "nickel_ingot", "+minecraft:quartz",
 									"+minecraft:emerald", "-" + ELECTRONIC_CIRCUIT)),
 					new Step(List.of(table(0, 0), block(MACHINE_CASING, 2, 0, 0)), 1, 2, List.of(), Verdict.NONE,
-							motions(0, "+" + AI + "iron_plate", "+" + AI + "iron_plate", "-" + MACHINE_CASING)),
+							motions(0, "+" + MOD + "iron_plate", "+" + MOD + "iron_plate", "-" + MACHINE_CASING)),
 					new Step(List.of(table(0, 0), block(MACHINE_CASING, 2, 0, 0), cableOf(COPPER_CABLE, 3, 0, 0,
 							"east"), generatorAt(4)), 1, 2, List.of(), Verdict.BAD,
 							motions(1, "+minecraft:raw_iron", "-minecraft:raw_iron")),
@@ -78,15 +78,15 @@ public final class ComponentBlueprints {
 							cableOf(COPPER_CABLE, 3, 0, 0, "west", "east"), generatorAt(4)), 1, 3,
 							List.of(Flow.energy(3, 1)), Verdict.GOOD,
 							then(motions(0, "+" + MACHINE_CASING, "+minecraft:flint", "+" + ELECTRONIC_CIRCUIT,
-									"-" + MACERATOR), motions(1, "+minecraft:raw_iron", "-" + AI + "iron_dust"))),
+									"-" + MACERATOR), motions(1, "+minecraft:raw_iron", "-" + MOD + "iron_dust"))),
 					new Step(List.of(table(0, 0), block(ADVANCED_MACHINE_CASING, 2, 0, 0)), 1, 4, List.of(),
 							Verdict.NONE,
-							motions(0, "+" + ELECTRONIC_CIRCUIT, "+" + AI + "rubber", "+" + AI + "gold_plate",
-									"-" + ADVANCED_CIRCUIT, "+" + MACHINE_CASING, "+" + AI + "tempered_iron_plate",
+							motions(0, "+" + ELECTRONIC_CIRCUIT, "+" + MOD + "rubber", "+" + MOD + "gold_plate",
+									"-" + ADVANCED_CIRCUIT, "+" + MACHINE_CASING, "+" + MOD + "tempered_iron_plate",
 									"-" + ADVANCED_MACHINE_CASING)),
 					new Step(List.of(table(0, 0), new Placement(REACTOR_CONTROLLER, 2, 0, 0,
 							Map.of("facing", "south", "formed", "false"))), 1, 5, List.of(), Verdict.GOOD,
-							motions(0, "+" + ADVANCED_CIRCUIT, "+" + RESONANCE_COIL, "+" + AI + "palladium_plate",
+							motions(0, "+" + ADVANCED_CIRCUIT, "+" + RESONANCE_COIL, "+" + MOD + "palladium_plate",
 									"-" + REACTOR_CIRCUIT, "+" + REACTOR_CIRCUIT, "+" + ADVANCED_MACHINE_CASING,
 									"-" + REACTOR_CONTROLLER))));
 
@@ -100,15 +100,15 @@ public final class ComponentBlueprints {
 			List.of(COPPER_COIL, CHOKE, CHOKE_REINFORCED, CHOKE_ADVANCED, RESONANCE_COIL, RESONANCE_CHIP),
 			List.of(
 					new Step(List.of(table(0, 0)), 0, 1, List.of(), Verdict.NONE,
-							motions(0, "+" + COPPER_CABLE, "+" + AI + "tin_ingot", "-" + COPPER_COIL,
-									"+" + COPPER_COIL, "+" + AI + "spatial_crystal", "+" + AI + "resonant_shard",
+							motions(0, "+" + COPPER_CABLE, "+" + MOD + "tin_ingot", "-" + COPPER_COIL,
+									"+" + COPPER_COIL, "+" + MOD + "spatial_crystal", "+" + MOD + "resonant_shard",
 									"-" + RESONANCE_COIL)),
 					new Step(List.of(table(0, 0)), 0, 1, List.of(), Verdict.NONE,
-							motions(0, "+" + AI + "invar_plate", "+" + COPPER_COIL, "+" + ELECTRONIC_CIRCUIT,
+							motions(0, "+" + MOD + "invar_plate", "+" + COPPER_COIL, "+" + ELECTRONIC_CIRCUIT,
 									"-" + CHOKE)),
 					new Step(List.of(table(0, 0)), 0, 1, List.of(), Verdict.NONE,
-							motions(0, "+" + CHOKE, "+" + AI + "diamond_dust", "-" + CHOKE_REINFORCED,
-									"+" + CHOKE_REINFORCED, "+" + RESONANCE_COIL, "+" + AI + "palladium_plate",
+							motions(0, "+" + CHOKE, "+" + MOD + "diamond_dust", "-" + CHOKE_REINFORCED,
+									"+" + CHOKE_REINFORCED, "+" + RESONANCE_COIL, "+" + MOD + "palladium_plate",
 									"-" + CHOKE_ADVANCED)),
 					new Step(List.of(table(0, 0), panelAt(SOLAR_PANEL, 2)), 1, 2, List.of(), Verdict.BAD,
 							motions(1, "+" + RESONANCE_CHIP, "-" + RESONANCE_CHIP)),
@@ -137,13 +137,13 @@ public final class ComponentBlueprints {
 							motions(2, "-" + COTTON_FIBER, "-" + COTTON_FIBER, "-" + COTTON_SEEDS)),
 					new Step(List.of(tankAt(FLUID_TANK), fluidPipeAt(1, "extract", "insert"), bath(false),
 							generatorAt(4)), 2, 3, List.of(Flow.water(0, 2)), Verdict.BAD,
-							motions(2, "+" + COTTON_FIBER, "+" + AI + "silver_dust")),
+							motions(2, "+" + COTTON_FIBER, "+" + MOD + "silver_dust")),
 					new Step(bathLine(FLUID_TANK, true), 2, 3, List.of(Flow.water(0, 2), Flow.energy(4, 2)),
 							Verdict.GOOD,
-							motions(2, "+" + COTTON_FIBER, "+" + AI + "silver_dust", "-" + FLUX_THREAD)),
+							motions(2, "+" + COTTON_FIBER, "+" + MOD + "silver_dust", "-" + FLUX_THREAD)),
 					new Step(List.of(table(0, 0)), 0, 4, List.of(), Verdict.NONE,
 							motions(0, "+" + FLUX_THREAD, "+" + FLUX_THREAD, "-" + FLUXWEAVE_CLOTH,
-									"+" + FLUXWEAVE_CLOTH, "-" + AI + "fluxweave_chestplate"))));
+									"+" + FLUXWEAVE_CLOTH, "-" + MOD + "fluxweave_chestplate"))));
 
 	/**
 	 * The compressor (0, position 1) pressing coal dust into a carbon rod; two rods and the forge hammer on
@@ -159,9 +159,9 @@ public final class ComponentBlueprints {
 					new Step(List.of(machine(COMPRESSOR, 0, 0, false, true),
 							cableOf(COPPER_CABLE, 1, 0, 0, "west", "east"), generatorAt(2)), 0, 1,
 							List.of(Flow.energy(2, 0)), Verdict.NONE,
-							motions(0, "+" + AI + "coal_dust", "-" + CARBON_ROD)),
+							motions(0, "+" + MOD + "coal_dust", "-" + CARBON_ROD)),
 					new Step(List.of(table(0, 0)), 0, 2, List.of(), Verdict.NONE,
-							motions(0, "+" + AI + "forge_hammer", "+" + CARBON_ROD, "+" + CARBON_ROD,
+							motions(0, "+" + MOD + "forge_hammer", "+" + CARBON_ROD, "+" + CARBON_ROD,
 									"-" + CARBON_ROD_DOUBLE)),
 					new Step(List.of(machine(ALLOY_SMELTER, 0, 0, false, true),
 							cableOf(COPPER_CABLE, 1, 0, 0, "west", "east"), generatorAt(2),
@@ -205,7 +205,7 @@ public final class ComponentBlueprints {
 							Map.of("facing", "south", "lit", "false"), Map.of("lit", "true")), table(2, 0)), 0, 3,
 							List.of(), Verdict.NONE,
 							then(motions(0, "+" + BLADES_IRON, "-" + BLADES_TEMPERED), motions(1, "+" + BLADES_TEMPERED,
-									"+minecraft:diamond", "+" + AI + "reinforced_bearing", "-" + BLADES_DIAMOND))),
+									"+minecraft:diamond", "+" + MOD + "reinforced_bearing", "-" + BLADES_DIAMOND))),
 					new Step(List.of(table(0, 0), block(SLAG_BLOCK, 2, 0, 0), block(SLAG_BLOCK, 3, 0, 0),
 							block(SLAG_BLOCK, 2, 1, 0)), 1, 4, List.of(), Verdict.NONE,
 							motions(0, "+" + SLAG_POOR, "-" + SLAG_BLOCK, "+" + ASH, "+" + ASH,

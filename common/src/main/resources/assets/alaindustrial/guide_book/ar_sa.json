@@ -2115,6 +2115,43 @@
           ]
         },
         {
+          "id": "vacuum_collector",
+          "title": "جامع التفريغ",
+          "icon": "alaindustrial:vacuum_collector",
+          "pages": [
+            {
+              "type": "text",
+              "title": "جامع التفريغ",
+              "text": "كتلة كهربائية تسحب العناصر الساقطة إلى مخزنها، ثم تفرغه أنابيب العناصر."
+            },
+            {
+              "type": "stats",
+              "title": "المواصفات",
+              "lines": [
+                "الطاقة: 8 EU/t"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:hopper",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:electromagnet",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:vacuum_collector",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "fluid_pipe",
           "title": "أنبوب سوائل",
           "icon": "alaindustrial:fluid_pipe",

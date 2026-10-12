@@ -1,6 +1,8 @@
 package dev.alaindustrial.block;
 
 import com.mojang.serialization.MapCodec;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -59,6 +61,28 @@ public class ReactorShellBlock extends Block {
 	@Override
 	protected boolean skipRendering(BlockState state, BlockState neighbourState, net.minecraft.core.Direction side) {
 		return neighbourState.is(this) || super.skipRendering(state, neighbourState, side);
+	}
+
+	/**
+	 * The glazing lets skylight straight down, as vanilla glass does (MOD-805). The class is shared with
+	 * the opaque casing, so the answer follows the state: only a cell that does not occlude (the glass,
+	 * declared {@code noOcclusion()}) is see-through. Without it a full collision cube that occludes
+	 * nothing still dims light by one per pane and casts a shaft of shade under the roof.
+	 */
+	@Override
+	protected boolean propagatesSkylightDown(BlockState state) {
+		return !state.canOcclude() || super.propagatesSkylightDown(state);
+	}
+
+	/**
+	 * No ambient-occlusion shade on the neighbours of the glazing (MOD-805). A full collision box makes
+	 * the vanilla default 0.2, the darkening a solid cube casts into the corners next to it; on glass it
+	 * read in game as dark bands where the panes meet the floor and the walls. The block breaker answers
+	 * the same way (MOD-787).
+	 */
+	@Override
+	protected float getShadeBrightness(BlockState state, BlockGetter level, BlockPos pos) {
+		return state.canOcclude() ? super.getShadeBrightness(state, level, pos) : 1.0F;
 	}
 
 	/**

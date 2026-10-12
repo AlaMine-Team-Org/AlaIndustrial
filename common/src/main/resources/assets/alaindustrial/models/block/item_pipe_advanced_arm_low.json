@@ -11,7 +11,7 @@
       "north": { "texture": "#body" }, "south": { "texture": "#body" },
       "west":  { "texture": "#body" }, "east": { "texture": "#body" }
     }},
-    { "from": [5, 4, 0], "to": [11, 8, 3], "faces": {
+    { "from": [5.05, 4, 0], "to": [10.95, 8, 3], "faces": {
       "up":    { "texture": "#body" }, "north": { "texture": "#body" },
       "south": { "texture": "#body" }, "west":  { "texture": "#body" },
       "east":  { "texture": "#body" }

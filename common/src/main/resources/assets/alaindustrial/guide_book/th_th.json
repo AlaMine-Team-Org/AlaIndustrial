@@ -2115,6 +2115,43 @@
           ]
         },
         {
+          "id": "vacuum_collector",
+          "title": "เครื่องดูดเก็บสุญญากาศ",
+          "icon": "alaindustrial:vacuum_collector",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เครื่องดูดเก็บสุญญากาศ",
+              "text": "บล็อกไฟฟ้าที่ดูดของที่ตกอยู่เข้าบัฟเฟอร์ แล้วท่อลำเลียงของจะดึงออกไป"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 8 EU ต่อทิก"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:hopper",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:electromagnet",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate",
+                "alaindustrial:machine_casing",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:vacuum_collector",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "fluid_pipe",
           "title": "ท่อของเหลว",
           "icon": "alaindustrial:fluid_pipe",

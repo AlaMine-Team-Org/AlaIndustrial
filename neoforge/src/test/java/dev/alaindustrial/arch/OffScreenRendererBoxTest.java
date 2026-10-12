@@ -36,9 +36,11 @@ import org.junit.jupiter.api.Test;
  * javac writes when compiling {@code common/} against NeoForge's patched interface here: a method taking a
  * plain {@code BlockEntity}. That bridge is the call NeoForge makes, so the rule looks for it.
  *
- * <p><b>What it does not see.</b> A renderer that draws outside its block and never overrides
- * {@code shouldRenderOffScreen} — it is culled by its section on vanilla as well, so it is a different
- * defect, and nothing in the bytecode says how far a renderer draws.
+ * <p><b>What it does not see on its own.</b> A renderer that draws outside its block and never overrides
+ * {@code shouldRenderOffScreen}: nothing in the bytecode says how far a renderer draws. Such renderers are
+ * named in {@link #DRAWS_PAST_ITS_CELL} and must declare the box too (MOD-805: the cable's arm continuation
+ * into a neighbour's cell vanished with the cable block, a renderer that deliberately stays off the global
+ * list because every cable of a base would join it).
  *
  * <p>Read from bytecode, never by loading a renderer: they are client classes and this lane is headless.
  * Plain {@code @Test} with floors, for the reason {@link NeoForgeBackendAgnosticRenderingTest} gives.
@@ -65,6 +67,14 @@ class OffScreenRendererBoxTest {
 			"dev.alaindustrial.client.render.TeleporterCapsuleDoorRenderer",
 			"dev.alaindustrial.client.render.WaterMillWheelBlockEntityRenderer",
 			"dev.alaindustrial.client.render.WindMillRotorBlockEntityRenderer");
+
+	/**
+	 * Renderers that draw past their block WITHOUT overriding {@code shouldRenderOffScreen}, so the rule above
+	 * cannot find them. Each must still declare its box. Add a renderer here when it starts drawing outside its
+	 * cell (MOD-805).
+	 */
+	private static final List<String> DRAWS_PAST_ITS_CELL = List.of(
+			"dev.alaindustrial.client.render.CableAccessoryBlockEntityRenderer");
 
 	private static JavaClasses productionClasses;
 
@@ -102,6 +112,22 @@ class OffScreenRendererBoxTest {
 				+ "renderer draws - without @Override, see TeleporterCapsuleDoorRenderer");
 	}
 
+	@Test
+	void everyRendererDrawingPastItsCellDeclaresItsBox() {
+		List<String> missing = DRAWS_PAST_ITS_CELL.stream()
+				.filter(name -> !productionClasses.contain(name) || !hasBoxBridge(productionClasses.get(name)))
+				.toList();
+		assertTrue(missing.isEmpty(), "renderers listed as drawing past their cell without a NeoForge " + BOX
+				+ " (or no longer found): " + missing + ". NeoForge culls a block entity by that box, so what they "
+				+ "draw in the neighbouring cell vanishes when their own block leaves the view");
+		String prefix = OffScreenRendererBoxTest.class.getName() + "$";
+		JavaClasses fixtures = new ClassFileImporter().importPackages("dev.alaindustrial.arch");
+		assertTrue(!hasBoxBridge(fixtures.get(prefix + "OffScreenWithoutBox"))
+						&& !hasBoxBridge(fixtures.get(prefix + "OffScreenWithMisTypedBox"))
+						&& hasBoxBridge(fixtures.get(prefix + "OffScreenWithBox")),
+				"the box check must reject the fixtures without a proper box and accept the compliant one");
+	}
+
 	/** Proof the rule can fail: it has to flag both fixtures that get the box wrong, and only those. */
 	@Test
 	void ruleFlagsARendererWithoutABoxOrWithAMisTypedOne() {
@@ -121,11 +147,15 @@ class OffScreenRendererBoxTest {
 	private static List<String> violations(JavaClasses classes) {
 		return classes.stream()
 				.filter(OffScreenRendererBoxTest::isOffScreenRenderer)
-				.filter(type -> type.getAllMethods().stream()
-						.noneMatch(method -> !method.getOwner().isInterface() && isBoxBridge(method)))
+				.filter(type -> !hasBoxBridge(type))
 				.map(JavaClass::getName)
 				.sorted()
 				.toList();
+	}
+
+	private static boolean hasBoxBridge(JavaClass type) {
+		return type.getAllMethods().stream()
+				.anyMatch(method -> !method.getOwner().isInterface() && isBoxBridge(method));
 	}
 
 	private static boolean isOffScreenRenderer(JavaClass type) {
