@@ -181,6 +181,7 @@ public final class ScenarioRoster {
 			SkillEffectScenarios.Roster.ENTRIES,
 			SkillPurchaseScenarios.Roster.ENTRIES,
 			SolarPanelScenarios.Roster.ENTRIES,
+			SoundAbsorberScenarios.Roster.ENTRIES,
 			SprinklerScenarios.Roster.ENTRIES,
 			StatsChipScenarios.Roster.ENTRIES,
 			SteamPipeScenarios.Roster.ENTRIES,

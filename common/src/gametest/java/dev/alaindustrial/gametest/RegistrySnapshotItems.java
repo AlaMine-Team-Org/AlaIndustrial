@@ -405,6 +405,7 @@ final class RegistrySnapshotItems {
 			"item solar_panel class=BlockItem stack=64 damage=0 rarity=COMMON fireproof=no",
 			"item soot class=Item stack=64 damage=0 rarity=COMMON fireproof=no",
 			"item soul_vessel class=SoulVesselItem stack=1 damage=0 rarity=COMMON fireproof=no",
+			"item sound_absorber class=BlockItem stack=64 damage=0 rarity=COMMON fireproof=no",
 			"item spatial_crystal class=Item stack=64 damage=0 rarity=COMMON fireproof=no",
 			"item sprinkler class=BlockItem stack=64 damage=0 rarity=COMMON fireproof=no",
 			"item spruce_diamond_chest_boat class=BoatItem stack=1 damage=0 rarity=COMMON fireproof=no",

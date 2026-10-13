@@ -3034,5 +3034,12 @@
   "blueprint.alaindustrial.plate_cladding.step3.title": "Beklädnad",
   "blueprint.alaindustrial.plate_cladding.step3.text": "Beklädnadsblock kaklar en vägg i två metaller: silver och härdat järn.",
   "blueprint.alaindustrial.plate_cladding.step4.title": "Beklädnad av härdat järn",
-  "blueprint.alaindustrial.plate_cladding.step4.text": "Plåtar av härdat järn fungerar likadant: fyra ger ett block."
+  "blueprint.alaindustrial.plate_cladding.step4.text": "Plåtar av härdat järn fungerar likadant: fyra ger ett block.",
+  "block.alaindustrial.sound_absorber": "Ljudabsorbent",
+  "tooltip.alaindustrial.sound_absorber.desc": "Dämpar ljud i närheten.",
+  "tooltip.alaindustrial.sound_absorber.desc2": "Absorbenter som rör vid varandra förstärks.",
+  "tooltip.alaindustrial.sound_absorber.tier": "Nivå %s (%s block): radie %s, −%s%%",
+  "tooltip.alaindustrial.sound_absorber.exempt": "Musik, gränssnitt och röster hörs som vanligt.",
+  "tooltip.alaindustrial.sound_absorber.exempt2": "Det gör även reaktorsirenen och geigermätaren.",
+  "hud.alaindustrial.sound_absorber.group": "Absorbenter: %s block, radie %s, −%s%%"
 }

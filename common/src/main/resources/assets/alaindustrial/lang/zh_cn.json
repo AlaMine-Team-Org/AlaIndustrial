@@ -3034,5 +3034,12 @@
   "blueprint.alaindustrial.plate_cladding.step3.title": "墙面覆层",
   "blueprint.alaindustrial.plate_cladding.step3.text": "板方块能铺满墙面，有两种金属：银和回火铁。",
   "blueprint.alaindustrial.plate_cladding.step4.title": "回火铁板方块",
-  "blueprint.alaindustrial.plate_cladding.step4.text": "回火铁板也是一样：四块合成一个方块。"
+  "blueprint.alaindustrial.plate_cladding.step4.text": "回火铁板也是一样：四块合成一个方块。",
+  "block.alaindustrial.sound_absorber": "吸音器",
+  "tooltip.alaindustrial.sound_absorber.desc": "减弱附近的声音。",
+  "tooltip.alaindustrial.sound_absorber.desc2": "相接的吸音器会互相增强。",
+  "tooltip.alaindustrial.sound_absorber.tier": "等级 %s（%s 个方块）：半径 %s，−%s%%",
+  "tooltip.alaindustrial.sound_absorber.exempt": "音乐、界面和语音不受影响。",
+  "tooltip.alaindustrial.sound_absorber.exempt2": "反应堆警报和盖革计数器同样如此。",
+  "hud.alaindustrial.sound_absorber.group": "吸音器：%s 个方块，半径 %s，−%s%%"
 }

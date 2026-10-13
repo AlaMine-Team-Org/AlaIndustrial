@@ -205,6 +205,7 @@ final class RegistrySnapshot {
 			"block smart_wire destroy=0.2 tool=yes light=0 push=NORMAL occludes=no sound=COPPER blast=0.5 map=COLOR_GRAY loot=alaindustrial:blocks/smart_wire",
 			"block solar_panel destroy=5.0 tool=yes light=0 push=NORMAL occludes=no sound=GLASS blast=6.0 map=TERRACOTTA_CYAN loot=alaindustrial:blocks/solar_panel",
 			"block soot_layer destroy=0.1 tool=yes light=0 push=DESTROY occludes=no sound=SAND blast=0.1 map=COLOR_BLACK loot=alaindustrial:blocks/soot_layer",
+			"block sound_absorber destroy=2.0 tool=yes light=0 push=NORMAL occludes=yes sound=WOOL blast=6.0 map=COLOR_ORANGE loot=alaindustrial:blocks/sound_absorber",
 			"block sprinkler destroy=3.0 tool=yes light=0 push=NORMAL occludes=no sound=METAL blast=6.0 map=METAL loot=alaindustrial:blocks/sprinkler",
 			"block steam_nozzle destroy=4.0 tool=yes light=0 push=NORMAL occludes=no sound=METAL blast=20.0 map=METAL loot=alaindustrial:blocks/steam_nozzle",
 			"block steam_pipe destroy=0.2 tool=yes light=0 push=NORMAL occludes=no sound=COPPER blast=0.5 map=TERRACOTTA_LIGHT_GRAY loot=alaindustrial:blocks/steam_pipe",

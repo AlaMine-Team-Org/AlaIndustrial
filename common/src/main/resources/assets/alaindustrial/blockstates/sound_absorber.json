@@ -1,0 +1,625 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_core"
+      }
+    },
+    {
+      "when": {
+        "up": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_edge_up_open"
+      }
+    },
+    {
+      "when": {
+        "up": "false",
+        "tier": "1"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_edge_up_framed_1"
+      }
+    },
+    {
+      "when": {
+        "up": "false",
+        "tier": "2"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_edge_up_framed_2"
+      }
+    },
+    {
+      "when": {
+        "up": "false",
+        "tier": "3"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_edge_up_framed_3"
+      }
+    },
+    {
+      "when": {
+        "up": "false",
+        "tier": "4"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_edge_up_framed_4"
+      }
+    },
+    {
+      "when": {
+        "up": "false",
+        "tier": "5"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_edge_up_framed_5"
+      }
+    },
+    {
+      "when": {
+        "down": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_edge_down_open"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_edge_down_framed"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "tier": "1"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_edge_down_framed_1"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "tier": "2"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_edge_down_framed_2"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "tier": "3"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_edge_down_framed_3"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "tier": "4"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_edge_down_framed_4"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "tier": "5"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_edge_down_framed_5"
+      }
+    },
+    {
+      "when": {
+        "north": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_edge_north_open"
+      }
+    },
+    {
+      "when": {
+        "north": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_edge_north_framed"
+      }
+    },
+    {
+      "when": {
+        "south": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_edge_south_open"
+      }
+    },
+    {
+      "when": {
+        "south": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_edge_south_framed"
+      }
+    },
+    {
+      "when": {
+        "east": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_edge_east_open"
+      }
+    },
+    {
+      "when": {
+        "east": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_edge_east_framed"
+      }
+    },
+    {
+      "when": {
+        "west": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_edge_west_open"
+      }
+    },
+    {
+      "when": {
+        "west": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_edge_west_framed"
+      }
+    },
+    {
+      "when": {
+        "north": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_north_east_framed_framed"
+      }
+    },
+    {
+      "when": {
+        "north": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_north_east_framed_open"
+      }
+    },
+    {
+      "when": {
+        "north": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_north_east_open_framed"
+      }
+    },
+    {
+      "when": {
+        "north": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_north_east_open_open"
+      }
+    },
+    {
+      "when": {
+        "north": "false",
+        "west": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_north_west_framed_framed"
+      }
+    },
+    {
+      "when": {
+        "north": "false",
+        "west": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_north_west_framed_open"
+      }
+    },
+    {
+      "when": {
+        "north": "true",
+        "west": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_north_west_open_framed"
+      }
+    },
+    {
+      "when": {
+        "north": "true",
+        "west": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_north_west_open_open"
+      }
+    },
+    {
+      "when": {
+        "north": "false",
+        "up": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_north_up_framed_framed"
+      }
+    },
+    {
+      "when": {
+        "north": "false",
+        "up": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_north_up_framed_open"
+      }
+    },
+    {
+      "when": {
+        "north": "true",
+        "up": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_north_up_open_framed"
+      }
+    },
+    {
+      "when": {
+        "north": "true",
+        "up": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_north_up_open_open"
+      }
+    },
+    {
+      "when": {
+        "north": "false",
+        "down": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_north_down_framed_framed"
+      }
+    },
+    {
+      "when": {
+        "north": "false",
+        "down": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_north_down_framed_open"
+      }
+    },
+    {
+      "when": {
+        "north": "true",
+        "down": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_north_down_open_framed"
+      }
+    },
+    {
+      "when": {
+        "north": "true",
+        "down": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_north_down_open_open"
+      }
+    },
+    {
+      "when": {
+        "south": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_south_east_framed_framed"
+      }
+    },
+    {
+      "when": {
+        "south": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_south_east_framed_open"
+      }
+    },
+    {
+      "when": {
+        "south": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_south_east_open_framed"
+      }
+    },
+    {
+      "when": {
+        "south": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_south_east_open_open"
+      }
+    },
+    {
+      "when": {
+        "south": "false",
+        "west": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_south_west_framed_framed"
+      }
+    },
+    {
+      "when": {
+        "south": "false",
+        "west": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_south_west_framed_open"
+      }
+    },
+    {
+      "when": {
+        "south": "true",
+        "west": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_south_west_open_framed"
+      }
+    },
+    {
+      "when": {
+        "south": "true",
+        "west": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_south_west_open_open"
+      }
+    },
+    {
+      "when": {
+        "south": "false",
+        "up": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_south_up_framed_framed"
+      }
+    },
+    {
+      "when": {
+        "south": "false",
+        "up": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_south_up_framed_open"
+      }
+    },
+    {
+      "when": {
+        "south": "true",
+        "up": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_south_up_open_framed"
+      }
+    },
+    {
+      "when": {
+        "south": "true",
+        "up": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_south_up_open_open"
+      }
+    },
+    {
+      "when": {
+        "south": "false",
+        "down": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_south_down_framed_framed"
+      }
+    },
+    {
+      "when": {
+        "south": "false",
+        "down": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_south_down_framed_open"
+      }
+    },
+    {
+      "when": {
+        "south": "true",
+        "down": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_south_down_open_framed"
+      }
+    },
+    {
+      "when": {
+        "south": "true",
+        "down": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_south_down_open_open"
+      }
+    },
+    {
+      "when": {
+        "east": "false",
+        "up": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_east_up_framed_framed"
+      }
+    },
+    {
+      "when": {
+        "east": "false",
+        "up": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_east_up_framed_open"
+      }
+    },
+    {
+      "when": {
+        "east": "true",
+        "up": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_east_up_open_framed"
+      }
+    },
+    {
+      "when": {
+        "east": "true",
+        "up": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_east_up_open_open"
+      }
+    },
+    {
+      "when": {
+        "east": "false",
+        "down": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_east_down_framed_framed"
+      }
+    },
+    {
+      "when": {
+        "east": "false",
+        "down": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_east_down_framed_open"
+      }
+    },
+    {
+      "when": {
+        "east": "true",
+        "down": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_east_down_open_framed"
+      }
+    },
+    {
+      "when": {
+        "east": "true",
+        "down": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_east_down_open_open"
+      }
+    },
+    {
+      "when": {
+        "west": "false",
+        "up": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_west_up_framed_framed"
+      }
+    },
+    {
+      "when": {
+        "west": "false",
+        "up": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_west_up_framed_open"
+      }
+    },
+    {
+      "when": {
+        "west": "true",
+        "up": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_west_up_open_framed"
+      }
+    },
+    {
+      "when": {
+        "west": "true",
+        "up": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_west_up_open_open"
+      }
+    },
+    {
+      "when": {
+        "west": "false",
+        "down": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_west_down_framed_framed"
+      }
+    },
+    {
+      "when": {
+        "west": "false",
+        "down": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_west_down_framed_open"
+      }
+    },
+    {
+      "when": {
+        "west": "true",
+        "down": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_west_down_open_framed"
+      }
+    },
+    {
+      "when": {
+        "west": "true",
+        "down": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/sound_absorber_corner_west_down_open_open"
+      }
+    }
+  ]
+}

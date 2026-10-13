@@ -3034,5 +3034,12 @@
   "blueprint.alaindustrial.plate_cladding.step3.title": "외장",
   "blueprint.alaindustrial.plate_cladding.step3.text": "판 블록으로 벽을 타일처럼 마감할 수 있습니다. 은과 담금질된 철, 두 가지입니다.",
   "blueprint.alaindustrial.plate_cladding.step4.title": "담금질된 철 판 블록",
-  "blueprint.alaindustrial.plate_cladding.step4.text": "담금질된 철 판도 같은 방식입니다. 4장이 블록 1개가 됩니다."
+  "blueprint.alaindustrial.plate_cladding.step4.text": "담금질된 철 판도 같은 방식입니다. 4장이 블록 1개가 됩니다.",
+  "block.alaindustrial.sound_absorber": "흡음재",
+  "tooltip.alaindustrial.sound_absorber.desc": "근처의 소리를 줄입니다.",
+  "tooltip.alaindustrial.sound_absorber.desc2": "맞닿은 흡음재끼리 서로 강화됩니다.",
+  "tooltip.alaindustrial.sound_absorber.tier": "단계 %s (%s블록): 반경 %s, −%s%%",
+  "tooltip.alaindustrial.sound_absorber.exempt": "음악, UI, 음성은 줄이지 않습니다.",
+  "tooltip.alaindustrial.sound_absorber.exempt2": "원자로 사이렌과 가이거 계수기도 마찬가지입니다.",
+  "hud.alaindustrial.sound_absorber.group": "흡음재: %s블록, 반경 %s, −%s%%"
 }

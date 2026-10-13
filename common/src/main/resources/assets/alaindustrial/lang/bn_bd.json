@@ -3034,5 +3034,12 @@
   "blueprint.alaindustrial.plate_cladding.step3.title": "আবরণ",
   "blueprint.alaindustrial.plate_cladding.step3.text": "আবরণ ব্লক দিয়ে দেয়াল সাজানো যায় দুই ধাতুতে: রূপা আর টেম্পার্ড লোহা।",
   "blueprint.alaindustrial.plate_cladding.step4.title": "টেম্পার্ড লোহার আবরণ",
-  "blueprint.alaindustrial.plate_cladding.step4.text": "টেম্পার্ড লোহার পাতও একইভাবে কাজ করে: চারটি মিলে একটি ব্লক।"
+  "blueprint.alaindustrial.plate_cladding.step4.text": "টেম্পার্ড লোহার পাতও একইভাবে কাজ করে: চারটি মিলে একটি ব্লক।",
+  "block.alaindustrial.sound_absorber": "শব্দ শোষক",
+  "tooltip.alaindustrial.sound_absorber.desc": "কাছের শব্দ কমায়।",
+  "tooltip.alaindustrial.sound_absorber.desc2": "ছুঁয়ে থাকা শোষকেরা একে অপরকে বাড়ায়।",
+  "tooltip.alaindustrial.sound_absorber.tier": "স্তর %s (%s ব্লক): ব্যাসার্ধ %s, −%s%%",
+  "tooltip.alaindustrial.sound_absorber.exempt": "সংগীত, ইন্টারফেস ও কণ্ঠ শোনা যায়।",
+  "tooltip.alaindustrial.sound_absorber.exempt2": "রিঅ্যাক্টরের সাইরেন ও গাইগার কাউন্টারও।",
+  "hud.alaindustrial.sound_absorber.group": "শোষক: %s ব্লক, ব্যাসার্ধ %s, −%s%%"
 }

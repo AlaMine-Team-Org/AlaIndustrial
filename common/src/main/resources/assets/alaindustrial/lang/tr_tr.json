@@ -3034,5 +3034,12 @@
   "blueprint.alaindustrial.plate_cladding.step3.title": "Kaplama",
   "blueprint.alaindustrial.plate_cladding.step3.text": "Kaplama blokları bir duvarı iki metalde döşer: gümüş ve su verilmiş demir.",
   "blueprint.alaindustrial.plate_cladding.step4.title": "Su Verilmiş Demir Kaplama",
-  "blueprint.alaindustrial.plate_cladding.step4.text": "Su verilmiş demir levhaları da aynı şekilde çalışır: dördü bir blok verir."
+  "blueprint.alaindustrial.plate_cladding.step4.text": "Su verilmiş demir levhaları da aynı şekilde çalışır: dördü bir blok verir.",
+  "block.alaindustrial.sound_absorber": "Ses Emici",
+  "tooltip.alaindustrial.sound_absorber.desc": "Yakındaki sesleri kısar.",
+  "tooltip.alaindustrial.sound_absorber.desc2": "Birbirine değen emiciler birbirini güçlendirir.",
+  "tooltip.alaindustrial.sound_absorber.tier": "Kademe %s (%s blok): yarıçap %s, −%%%s",
+  "tooltip.alaindustrial.sound_absorber.exempt": "Müzik, arayüz ve sesler duyulmaya devam eder.",
+  "tooltip.alaindustrial.sound_absorber.exempt2": "Reaktör sireni ve Geiger sayacı da öyle.",
+  "hud.alaindustrial.sound_absorber.group": "Emiciler: %s blok, yarıçap %s, −%%%s"
 }

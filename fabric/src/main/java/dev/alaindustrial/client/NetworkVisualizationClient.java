@@ -37,5 +37,8 @@ public final class NetworkVisualizationClient {
 		// MOD-764: the wrench's x-ray of piezo plates rides the same frame point.
 		dev.alaindustrial.client.render.PiezoPlateXray.submitFrame(context.submitNodeCollector(),
 				context.levelState().cameraRenderState);
+		// MOD-804: the sound absorbers' zones under the wrench, and the focused group's HUD line.
+		dev.alaindustrial.client.render.SoundAbsorberOverlay.submitFrame(context.submitNodeCollector(),
+				context.levelState().cameraRenderState);
 	}
 }

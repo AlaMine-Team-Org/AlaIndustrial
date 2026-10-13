@@ -3,6 +3,7 @@ package dev.alaindustrial.client;
 import dev.alaindustrial.client.guide.ArchiveRecordClient;
 import dev.alaindustrial.client.hud.TeleportFadeHud;
 import dev.alaindustrial.client.render.NetworkOverlayRenderer;
+import dev.alaindustrial.client.sound.SoundAbsorberZones;
 
 /**
  * Client state that belongs to the world being left and must not bleed into the next one — the one list
@@ -22,5 +23,6 @@ public final class ClientDisconnectReset {
 		ArchiveRecordClient.reset(); // MOD-513
 		NetworkOverlayRenderer.clear(); // MOD-665
 		ServerBalance.reset(); // MOD-695
+		SoundAbsorberZones.reset(); // MOD-804
 	}
 }

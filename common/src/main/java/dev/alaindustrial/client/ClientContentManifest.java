@@ -62,6 +62,7 @@ import dev.alaindustrial.client.hud.TeleportFadeHud;
 import dev.alaindustrial.client.render.ConcentratorSchematicRenderer;
 import dev.alaindustrial.client.render.PiezoPlateTint;
 import dev.alaindustrial.client.render.PiezoPlateXray;
+import dev.alaindustrial.client.render.SoundAbsorberOverlay;
 import dev.alaindustrial.client.render.RootInspection;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.client.particle.NutrientSprayParticle;
@@ -451,6 +452,8 @@ public final class ClientContentManifest {
 			hudLayer("root_inspection", RootInspection::renderHud, HudPlacement.LAST),
 			// MOD-764: the focused piezo plate's group while the wrench is in hand.
 			hudLayer("piezo_plate_xray", PiezoPlateXray::renderHud, HudPlacement.LAST),
+			// MOD-804: the focused sound absorber's group.
+			hudLayer("sound_absorber_group", SoundAbsorberOverlay::renderHud, HudPlacement.LAST),
 			// MOD-603: the concentrator's assembly hint.
 			hudLayer("concentrator_assembly", ConcentratorSchematicRenderer::renderHud, HudPlacement.LAST),
 			// MOD-106: the screen going dark as a jump lands.

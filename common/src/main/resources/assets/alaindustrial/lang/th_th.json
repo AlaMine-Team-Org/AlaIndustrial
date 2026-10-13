@@ -3034,5 +3034,12 @@
   "blueprint.alaindustrial.plate_cladding.step3.title": "การหุ้มผนัง",
   "blueprint.alaindustrial.plate_cladding.step3.text": "บล็อกหุ้มแผ่นมุงผนังได้สองโลหะ: เงินและเหล็กชุบแข็ง",
   "blueprint.alaindustrial.plate_cladding.step4.title": "บล็อกหุ้มแผ่นเหล็กชุบแข็ง",
-  "blueprint.alaindustrial.plate_cladding.step4.text": "แผ่นเหล็กชุบแข็งใช้วิธีเดียวกัน: สี่แผ่นได้หนึ่งบล็อก"
+  "blueprint.alaindustrial.plate_cladding.step4.text": "แผ่นเหล็กชุบแข็งใช้วิธีเดียวกัน: สี่แผ่นได้หนึ่งบล็อก",
+  "block.alaindustrial.sound_absorber": "ตัวดูดซับเสียง",
+  "tooltip.alaindustrial.sound_absorber.desc": "ลดเสียงที่อยู่ใกล้",
+  "tooltip.alaindustrial.sound_absorber.desc2": "ตัวดูดซับที่ชิดกันช่วยเสริมกัน",
+  "tooltip.alaindustrial.sound_absorber.tier": "ระดับ %s (%s บล็อก): รัศมี %s, −%s%%",
+  "tooltip.alaindustrial.sound_absorber.exempt": "เพลง UI และเสียงพูดยังได้ยินตามปกติ",
+  "tooltip.alaindustrial.sound_absorber.exempt2": "ไซเรนเครื่องปฏิกรณ์และเครื่องนับไกเกอร์ก็เช่นกัน",
+  "hud.alaindustrial.sound_absorber.group": "ตัวดูดซับ: %s บล็อก รัศมี %s, −%s%%"
 }

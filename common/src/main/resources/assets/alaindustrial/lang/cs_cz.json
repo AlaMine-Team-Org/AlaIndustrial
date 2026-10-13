@@ -3034,5 +3034,12 @@
   "blueprint.alaindustrial.plate_cladding.step3.title": "Obklad",
   "blueprint.alaindustrial.plate_cladding.step3.text": "Bloky oplechování obkládají stěnu ve dvou kovech: stříbro a kalené železo.",
   "blueprint.alaindustrial.plate_cladding.step4.title": "Oplechování z kaleného železa",
-  "blueprint.alaindustrial.plate_cladding.step4.text": "Pláty z kaleného železa fungují stejně: čtyři dávají jeden blok."
+  "blueprint.alaindustrial.plate_cladding.step4.text": "Pláty z kaleného železa fungují stejně: čtyři dávají jeden blok.",
+  "block.alaindustrial.sound_absorber": "Pohlcovač zvuku",
+  "tooltip.alaindustrial.sound_absorber.desc": "Tlumí zvuky poblíž.",
+  "tooltip.alaindustrial.sound_absorber.desc2": "Dotýkající se pohlcovače se posilují.",
+  "tooltip.alaindustrial.sound_absorber.tier": "Stupeň %s (%s bloků): poloměr %s, −%s%%",
+  "tooltip.alaindustrial.sound_absorber.exempt": "Hudba, rozhraní a hlasy zůstanou slyšet.",
+  "tooltip.alaindustrial.sound_absorber.exempt2": "Stejně tak siréna reaktoru a Geigerův počítač.",
+  "hud.alaindustrial.sound_absorber.group": "Pohlcovače: %s bloků, poloměr %s, −%s%%"
 }

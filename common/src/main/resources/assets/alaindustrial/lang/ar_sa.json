@@ -3034,5 +3034,12 @@
   "blueprint.alaindustrial.plate_cladding.step3.title": "الطلاء",
   "blueprint.alaindustrial.plate_cladding.step3.text": "مكعبات الطلاء تبليط الجدار بمعدنين: الفضة والحديد المقسى.",
   "blueprint.alaindustrial.plate_cladding.step4.title": "صفائح حديد مقسى",
-  "blueprint.alaindustrial.plate_cladding.step4.text": "صفائح الحديد المقسى تعمل بالطريقة نفسها: أربع تصنع مكعبا واحدا."
+  "blueprint.alaindustrial.plate_cladding.step4.text": "صفائح الحديد المقسى تعمل بالطريقة نفسها: أربع تصنع مكعبا واحدا.",
+  "block.alaindustrial.sound_absorber": "ماصّ الصوت",
+  "tooltip.alaindustrial.sound_absorber.desc": "يخفّف الأصوات القريبة.",
+  "tooltip.alaindustrial.sound_absorber.desc2": "الماصّات المتلامسة تعزّز بعضها.",
+  "tooltip.alaindustrial.sound_absorber.tier": "المستوى %s (%s كتل): نصف القطر %s، −%s%%",
+  "tooltip.alaindustrial.sound_absorber.exempt": "الموسيقى والواجهة والأصوات تبقى مسموعة.",
+  "tooltip.alaindustrial.sound_absorber.exempt2": "وكذلك صفارة المفاعل وعدّاد غايغر.",
+  "hud.alaindustrial.sound_absorber.group": "الماصّات: %s كتل، نصف القطر %s، −%s%%"
 }

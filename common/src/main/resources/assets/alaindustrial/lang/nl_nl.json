@@ -3034,5 +3034,12 @@
   "blueprint.alaindustrial.plate_cladding.step3.title": "Bekleding",
   "blueprint.alaindustrial.plate_cladding.step3.text": "Beplatingsblokken tegelen een muur in twee metalen: zilver en gehard ijzer.",
   "blueprint.alaindustrial.plate_cladding.step4.title": "Beplating van gehard ijzer",
-  "blueprint.alaindustrial.plate_cladding.step4.text": "Platen van gehard ijzer werken hetzelfde: vier geven één blok."
+  "blueprint.alaindustrial.plate_cladding.step4.text": "Platen van gehard ijzer werken hetzelfde: vier geven één blok.",
+  "block.alaindustrial.sound_absorber": "Geluidsdemper",
+  "tooltip.alaindustrial.sound_absorber.desc": "Dempt geluiden in de buurt.",
+  "tooltip.alaindustrial.sound_absorber.desc2": "Dempers die elkaar raken versterken elkaar.",
+  "tooltip.alaindustrial.sound_absorber.tier": "Niveau %s (%s blokken): straal %s, −%s%%",
+  "tooltip.alaindustrial.sound_absorber.exempt": "Muziek, interface en stemmen blijven hoorbaar.",
+  "tooltip.alaindustrial.sound_absorber.exempt2": "Ook de reactorsirene en geigerteller.",
+  "hud.alaindustrial.sound_absorber.group": "Dempers: %s blokken, straal %s, −%s%%"
 }

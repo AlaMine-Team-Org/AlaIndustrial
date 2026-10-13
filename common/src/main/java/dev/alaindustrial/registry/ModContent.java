@@ -376,6 +376,8 @@ public final class ModContent {
 	public static Supplier<Block> TEMPERED_IRON_LADDER = unbound("TEMPERED_IRON_LADDER");
 	public static Supplier<Block> TEMPERED_IRON_TRAPDOOR = unbound("TEMPERED_IRON_TRAPDOOR");
 	public static Supplier<Block> TEMPERED_IRON_CHAIN = unbound("TEMPERED_IRON_CHAIN");
+	// MOD-804
+	public static Supplier<Block> SOUND_ABSORBER = unbound("SOUND_ABSORBER");
 	public static Supplier<Block> INDUSTRIAL_WORKBENCH = unbound("INDUSTRIAL_WORKBENCH");
 	// Enriched Uranium Torch (MOD-085) — a vanilla-behaviour torch (light 15, green flame) in two
 	// blocks: standing + wall. The wall variant has NO block item; it drops/names from the standing
@@ -1039,6 +1041,8 @@ public final class ModContent {
 	public static Supplier<BlockItem> TEMPERED_IRON_LADDER_ITEM = unbound("TEMPERED_IRON_LADDER_ITEM");
 	public static Supplier<BlockItem> TEMPERED_IRON_TRAPDOOR_ITEM = unbound("TEMPERED_IRON_TRAPDOOR_ITEM");
 	public static Supplier<BlockItem> TEMPERED_IRON_CHAIN_ITEM = unbound("TEMPERED_IRON_CHAIN_ITEM");
+	// MOD-804
+	public static Supplier<BlockItem> SOUND_ABSORBER_ITEM = unbound("SOUND_ABSORBER_ITEM");
 	public static Supplier<BlockItem> INDUSTRIAL_WORKBENCH_ITEM = unbound("INDUSTRIAL_WORKBENCH_ITEM");
 	// Enriched Uranium Torch (MOD-085) — only the STANDING torch has a block item; the wall variant
 	// drops this item via its overrideLootTable, so it needs no item of its own.

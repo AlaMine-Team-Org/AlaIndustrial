@@ -3034,5 +3034,12 @@
   "blueprint.alaindustrial.plate_cladding.step3.title": "Verkleidung",
   "blueprint.alaindustrial.plate_cladding.step3.text": "Verkleidungsblöcke fliesen eine Wand in zwei Metallen: Silber und gehärtetes Eisen.",
   "blueprint.alaindustrial.plate_cladding.step4.title": "Verkleidung aus gehärtetem Eisen",
-  "blueprint.alaindustrial.plate_cladding.step4.text": "Platten aus gehärtetem Eisen gehen genauso: Vier ergeben einen Block."
+  "blueprint.alaindustrial.plate_cladding.step4.text": "Platten aus gehärtetem Eisen gehen genauso: Vier ergeben einen Block.",
+  "block.alaindustrial.sound_absorber": "Schalldämpfer",
+  "tooltip.alaindustrial.sound_absorber.desc": "Dämpft Geräusche in der Nähe.",
+  "tooltip.alaindustrial.sound_absorber.desc2": "Sich berührende Dämpfer verstärken sich.",
+  "tooltip.alaindustrial.sound_absorber.tier": "Stufe %s (%s Blöcke): Radius %s, −%s%%",
+  "tooltip.alaindustrial.sound_absorber.exempt": "Musik, Oberfläche und Stimmen bleiben hörbar.",
+  "tooltip.alaindustrial.sound_absorber.exempt2": "Ebenso Reaktorsirene und Geigerzähler.",
+  "hud.alaindustrial.sound_absorber.group": "Schalldämpfer: %s Blöcke, Radius %s, −%s%%"
 }

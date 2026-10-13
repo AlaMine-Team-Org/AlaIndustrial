@@ -3034,5 +3034,12 @@
   "blueprint.alaindustrial.plate_cladding.step3.title": "Rivestimento",
   "blueprint.alaindustrial.plate_cladding.step3.text": "I blocchi di rivestimento rivestono una parete in due metalli: argento e ferro temprato.",
   "blueprint.alaindustrial.plate_cladding.step4.title": "Rivestimento di ferro temprato",
-  "blueprint.alaindustrial.plate_cladding.step4.text": "Le piastre di ferro temprato funzionano uguale: quattro formano un blocco."
+  "blueprint.alaindustrial.plate_cladding.step4.text": "Le piastre di ferro temprato funzionano uguale: quattro formano un blocco.",
+  "block.alaindustrial.sound_absorber": "Assorbitore acustico",
+  "tooltip.alaindustrial.sound_absorber.desc": "Attutisce i suoni vicini.",
+  "tooltip.alaindustrial.sound_absorber.desc2": "Gli assorbitori a contatto si rafforzano.",
+  "tooltip.alaindustrial.sound_absorber.tier": "Livello %s (%s blocchi): raggio %s, −%s%%",
+  "tooltip.alaindustrial.sound_absorber.exempt": "Musica, interfaccia e voci restano udibili.",
+  "tooltip.alaindustrial.sound_absorber.exempt2": "Come la sirena del reattore e il Geiger.",
+  "hud.alaindustrial.sound_absorber.group": "Assorbitori: %s blocchi, raggio %s, −%s%%"
 }
