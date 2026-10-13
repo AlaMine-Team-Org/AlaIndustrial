@@ -3046,5 +3046,12 @@
   "blueprint.alaindustrial.plate_cladding.step3.title": "Revestimento",
   "blueprint.alaindustrial.plate_cladding.step3.text": "Blocos de revestimento ladrilham a parede em dois metais: prata e Ferro Temperado.",
   "blueprint.alaindustrial.plate_cladding.step4.title": "Revestimento de Ferro Temperado",
-  "blueprint.alaindustrial.plate_cladding.step4.text": "Placas de Ferro Temperado funcionam igual: quatro fazem um bloco."
+  "blueprint.alaindustrial.plate_cladding.step4.text": "Placas de Ferro Temperado funcionam igual: quatro fazem um bloco.",
+  "block.alaindustrial.sound_absorber": "Absorvedor de som",
+  "tooltip.alaindustrial.sound_absorber.desc": "Abafa os sons por perto.",
+  "tooltip.alaindustrial.sound_absorber.desc2": "Absorvedores encostados se reforçam.",
+  "tooltip.alaindustrial.sound_absorber.tier": "Nível %s (%s blocos): raio %s, −%s%%",
+  "tooltip.alaindustrial.sound_absorber.exempt": "Música, interface e vozes continuam audíveis.",
+  "tooltip.alaindustrial.sound_absorber.exempt2": "Assim como a sirene do reator e o Geiger.",
+  "hud.alaindustrial.sound_absorber.group": "Absorvedores: %s blocos, raio %s, −%s%%"
 }

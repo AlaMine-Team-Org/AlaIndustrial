@@ -56,6 +56,10 @@ public final class MachineHumSoundInstance extends AbstractTickableSoundInstance
 	private final BlockPos pos;
 	private final Block block;
 
+	/**
+	 * A loop at {@code pos} starting at {@code volume}, already scaled by any sound absorber's zone there
+	 * (MOD-804) and held at the audible floor.
+	 */
 	public MachineHumSoundInstance(SoundEvent event, BlockPos pos, Block block, float volume) {
 		super(event, SoundSource.BLOCKS, SoundInstance.createUnseededRandom());
 		this.pos = pos;
@@ -63,7 +67,7 @@ public final class MachineHumSoundInstance extends AbstractTickableSoundInstance
 		this.x = pos.getX() + 0.5;
 		this.y = pos.getY() + 0.5;
 		this.z = pos.getZ() + 0.5;
-		this.volume = volume;
+		this.volume = Math.max(MIN_AUDIBLE_VOLUME, volume * SoundAbsorberZones.factorAt(this.x, this.y, this.z));
 		this.looping = true;
 		this.delay = 0;
 		this.attenuation = SoundInstance.Attenuation.LINEAR;
@@ -102,8 +106,12 @@ public final class MachineHumSoundInstance extends AbstractTickableSoundInstance
 			// and an entity's position is its feet. The gap is over a block and a half, which is enough to
 			// put the listener on the wrong side of a wall — exactly the question the reactor's override
 			// asks of this argument.
+			//
+			// A sound absorber's zone around the machine scales the target (MOD-804); the floor still applies
+			// after it, so a muffled loop stays alive instead of being refused by the engine.
 			float target = Math.max(MIN_AUDIBLE_VOLUME,
-					provider.humVolume(mc.level, pos, state, mc.player.getEyePosition()));
+					provider.humVolume(mc.level, pos, state, mc.player.getEyePosition())
+							* SoundAbsorberZones.factorAt(x, y, z));
 			this.volume += (target - this.volume) * VOLUME_EASING;
 		}
 		// A mute chip inserted while the loop plays silences the machine at once (MOD-080).

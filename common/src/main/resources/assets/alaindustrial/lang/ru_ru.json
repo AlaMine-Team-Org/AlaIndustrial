@@ -3046,5 +3046,12 @@
   "blueprint.alaindustrial.plate_cladding.step3.title": "Отделка",
   "blueprint.alaindustrial.plate_cladding.step3.text": "Блоки обшивки кладутся плиткой по стене: серебро и закалённое железо.",
   "blueprint.alaindustrial.plate_cladding.step4.title": "Обшивка из закалённого железа",
-  "blueprint.alaindustrial.plate_cladding.step4.text": "Пластины из закалённого железа работают так же: четыре дают один блок."
+  "blueprint.alaindustrial.plate_cladding.step4.text": "Пластины из закалённого железа работают так же: четыре дают один блок.",
+  "block.alaindustrial.sound_absorber": "Поглотитель звука",
+  "tooltip.alaindustrial.sound_absorber.desc": "Глушит звуки рядом.",
+  "tooltip.alaindustrial.sound_absorber.desc2": "Соседние поглотители усиливают друг друга.",
+  "tooltip.alaindustrial.sound_absorber.tier": "Ступень %s (%s бл.): радиус %s, −%s%%",
+  "tooltip.alaindustrial.sound_absorber.exempt": "Музыка, интерфейс и голоса слышны.",
+  "tooltip.alaindustrial.sound_absorber.exempt2": "Как и сирена реактора и счётчик Гейгера.",
+  "hud.alaindustrial.sound_absorber.group": "Поглотители: %s бл., радиус %s, −%s%%"
 }

@@ -28,6 +28,9 @@ import net.minecraft.world.level.block.StairBlock;
  * tempered iron block at z=37, or it would have nothing to stand on. Row z=35 stays free between it and the
  * plaque, and the monitoring wall (x 66..70) is west of it.
  *
+ * <p>MOD-804 puts a pair of sound absorbers two rows behind it (z=38, x=78..79): touching, so the stand shows
+ * them joined into one tier-II panel with two lamps lit, not two single blocks.
+ *
  * <p>Domain (coding standard, section 1): Decor.
  */
 final class MetalFamilyZone implements DemoZone {
@@ -43,6 +46,8 @@ final class MetalFamilyZone implements DemoZone {
 	private static final int FENCE_X = 85;
 	/** MOD-795: the row of glass, light and tempered iron fittings. */
 	private static final int FITTINGS_Z = 36;
+	/** MOD-804: the sound absorber pair. */
+	private static final int ABSORBER_Z = 38;
 
 	@Override
 	public void build(StandWriter w) {
@@ -66,6 +71,8 @@ final class MetalFamilyZone implements DemoZone {
 				block("tempered_iron_ladder").defaultBlockState().setValue(LadderBlock.FACING, Direction.NORTH));
 		w.set(82, 1, FITTINGS_Z, block("tempered_iron_trapdoor"));
 		w.set(84, 1, FITTINGS_Z, block("tempered_iron_chain"));
+		w.set(78, 1, ABSORBER_Z, block("sound_absorber"));
+		w.set(79, 1, ABSORBER_Z, block("sound_absorber"));
 	}
 
 	/** A block of the family by its id; a missing one throws rather than leaving a hole in the row. */

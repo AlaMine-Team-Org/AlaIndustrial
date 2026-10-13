@@ -2106,6 +2106,35 @@ tooltip.alaindustrial.tier_lv {green}
 tooltip.alaindustrial.solar_chip_hint {dark_gray}
 == alaindustrial:soot plain : none
 == alaindustrial:soul_vessel plain : none
+== alaindustrial:sound_absorber plain
+-- plain eu
+tooltip.alaindustrial.sound_absorber.desc {gray}
+tooltip.alaindustrial.sound_absorber.desc2 {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.sound_absorber.desc {gray}
+tooltip.alaindustrial.sound_absorber.desc2 {gray}
+tooltip.alaindustrial.sound_absorber.tier(I, 1, 5, 35) {gray}
+tooltip.alaindustrial.sound_absorber.tier(II, 2–3, 8, 50) {gray}
+tooltip.alaindustrial.sound_absorber.tier(III, 4–7, 12, 65) {gray}
+tooltip.alaindustrial.sound_absorber.tier(IV, 8–15, 16, 75) {gray}
+tooltip.alaindustrial.sound_absorber.tier(V, 16+, 20, 85) {gray}
+tooltip.alaindustrial.sound_absorber.exempt {dark_gray}
+tooltip.alaindustrial.sound_absorber.exempt2 {dark_gray}
+-- plain no-eu
+tooltip.alaindustrial.sound_absorber.desc {gray}
+tooltip.alaindustrial.sound_absorber.desc2 {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.sound_absorber.desc {gray}
+tooltip.alaindustrial.sound_absorber.desc2 {gray}
+tooltip.alaindustrial.sound_absorber.tier(I, 1, 5, 35) {gray}
+tooltip.alaindustrial.sound_absorber.tier(II, 2–3, 8, 50) {gray}
+tooltip.alaindustrial.sound_absorber.tier(III, 4–7, 12, 65) {gray}
+tooltip.alaindustrial.sound_absorber.tier(IV, 8–15, 16, 75) {gray}
+tooltip.alaindustrial.sound_absorber.tier(V, 16+, 20, 85) {gray}
+tooltip.alaindustrial.sound_absorber.exempt {dark_gray}
+tooltip.alaindustrial.sound_absorber.exempt2 {dark_gray}
 == alaindustrial:spatial_crystal plain : none
 == alaindustrial:sprinkler plain
 -- plain eu

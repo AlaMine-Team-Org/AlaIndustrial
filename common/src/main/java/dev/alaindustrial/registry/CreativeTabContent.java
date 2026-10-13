@@ -172,6 +172,7 @@ public final class CreativeTabContent {
 		naturalBlocks(out);
 		DecorContent.metalBlocks(out);
 		DecorContent.mobRepellers(out);
+		DecorContent.soundAbsorber(out);
 		ProcessingContent.stations(out);
 		// Shaped last (MOD-574): the torch is a sprite among cubes.
 		DecorContent.torch(out);
@@ -213,10 +214,14 @@ public final class CreativeTabContent {
 		utility(out);
 	}
 
-	/** Decorative and utility blocks of vanilla Functional Blocks: the torch, the repellers, the two stations. */
+	/**
+	 * Decorative and utility blocks of vanilla Functional Blocks: the torch, the repellers, the sound absorber
+	 * and the two stations.
+	 */
 	private static void utility(Sink out) {
 		DecorContent.torch(out);
 		DecorContent.mobRepellers(out);
+		DecorContent.soundAbsorber(out);
 		ProcessingContent.stations(out);
 	}
 }

@@ -3046,5 +3046,12 @@
   "blueprint.alaindustrial.plate_cladding.step3.title": "Ốp lát",
   "blueprint.alaindustrial.plate_cladding.step3.text": "Khối ốp lát lên tường bằng hai kim loại: bạc và sắt tôi.",
   "blueprint.alaindustrial.plate_cladding.step4.title": "Ốp Sắt Tôi",
-  "blueprint.alaindustrial.plate_cladding.step4.text": "Tấm Sắt Tôi cũng y như vậy: bốn tấm cho một khối."
+  "blueprint.alaindustrial.plate_cladding.step4.text": "Tấm Sắt Tôi cũng y như vậy: bốn tấm cho một khối.",
+  "block.alaindustrial.sound_absorber": "Bộ tiêu âm",
+  "tooltip.alaindustrial.sound_absorber.desc": "Giảm âm thanh ở gần.",
+  "tooltip.alaindustrial.sound_absorber.desc2": "Các bộ tiêu âm chạm nhau tăng cường cho nhau.",
+  "tooltip.alaindustrial.sound_absorber.tier": "Cấp %s (%s khối): bán kính %s, −%s%%",
+  "tooltip.alaindustrial.sound_absorber.exempt": "Nhạc, giao diện và giọng nói vẫn nghe được.",
+  "tooltip.alaindustrial.sound_absorber.exempt2": "Còi báo động lò phản ứng và máy đếm Geiger cũng vậy.",
+  "hud.alaindustrial.sound_absorber.group": "Bộ tiêu âm: %s khối, bán kính %s, −%s%%"
 }

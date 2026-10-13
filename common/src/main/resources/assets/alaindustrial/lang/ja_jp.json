@@ -3046,5 +3046,12 @@
   "blueprint.alaindustrial.plate_cladding.step3.title": "外装",
   "blueprint.alaindustrial.plate_cladding.step3.text": "外装板は銀と焼き入れ鉄の2色で、壁をタイルのように張れます。",
   "blueprint.alaindustrial.plate_cladding.step4.title": "焼き入れ鉄の外装板",
-  "blueprint.alaindustrial.plate_cladding.step4.text": "焼き入れ鉄板も同じです。4枚でブロック1個になります。"
+  "blueprint.alaindustrial.plate_cladding.step4.text": "焼き入れ鉄板も同じです。4枚でブロック1個になります。",
+  "block.alaindustrial.sound_absorber": "吸音材",
+  "tooltip.alaindustrial.sound_absorber.desc": "近くの音を弱める。",
+  "tooltip.alaindustrial.sound_absorber.desc2": "接した吸音材は互いを強める。",
+  "tooltip.alaindustrial.sound_absorber.tier": "段階 %s（%s ブロック）：半径 %s、−%s%%",
+  "tooltip.alaindustrial.sound_absorber.exempt": "音楽・UI・音声は弱めない。",
+  "tooltip.alaindustrial.sound_absorber.exempt2": "原子炉のサイレンとガイガーカウンターも同様。",
+  "hud.alaindustrial.sound_absorber.group": "吸音材：%s ブロック、半径 %s、−%s%%"
 }

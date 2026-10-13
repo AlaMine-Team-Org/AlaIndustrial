@@ -19,6 +19,7 @@ import dev.alaindustrial.block.MobRepellerHvBlock;
 import dev.alaindustrial.block.MobRepellerMvBlock;
 import dev.alaindustrial.block.IndustrialLightBlock;
 import dev.alaindustrial.block.ReinforcedGlassBlock;
+import dev.alaindustrial.block.SoundAbsorberBlock;
 import dev.alaindustrial.block.TemperedIronBarsBlock;
 import dev.alaindustrial.block.TemperedIronLadderBlock;
 import dev.alaindustrial.block.TemperedIronTrapdoorBlock;
@@ -280,6 +281,11 @@ public final class DecorContent {
 	public static final BlockDef<ChainBlock> TEMPERED_IRON_CHAIN = block("tempered_iron_chain", ChainBlock::new,
 			machine(MapColor.NONE, p -> p.strength(5.0f, 6.0f).sound(SoundType.CHAIN).noOcclusion().forceSolidOn()),
 			s -> ModContent.TEMPERED_IRON_CHAIN = s);
+	// MOD-804 — the sound absorber: face-joined groups muffle block and ambient sounds on the client. Quiet to
+	// break (wool inside), a pickaxe for the drop (tempered iron frame).
+	public static final BlockDef<SoundAbsorberBlock> SOUND_ABSORBER = block("sound_absorber", SoundAbsorberBlock::new,
+			machine(MapColor.COLOR_ORANGE, p -> p.strength(2.0f, 6.0f).sound(SoundType.WOOL)),
+			s -> ModContent.SOUND_ABSORBER = s);
 	// Enriched Uranium Torch (MOD-085) — vanilla-behaviour torch, light 14, green flame.
 	// The WALL variant must stay directly after the standing one: its properties read the
 	// already-registered standing torch for its loot table and description.
@@ -435,6 +441,7 @@ public final class DecorContent {
 			blockItem("tempered_iron_ladder", s -> ModContent.TEMPERED_IRON_LADDER_ITEM = s),
 			blockItem("tempered_iron_trapdoor", s -> ModContent.TEMPERED_IRON_TRAPDOOR_ITEM = s),
 			blockItem("tempered_iron_chain", s -> ModContent.TEMPERED_IRON_CHAIN_ITEM = s),
+			blockItem("sound_absorber", s -> ModContent.SOUND_ABSORBER_ITEM = s),
 			// Enriched Uranium Torch (MOD-085): a StandingAndWallBlockItem (like vanilla Items.TORCH) so using it
 			// on a wall places the wall variant and on the floor the standing variant. The wall block has no item
 			// of its own — this item maps to both blocks (StandingAndWallBlockItem#registerBlocks).
@@ -581,6 +588,11 @@ public final class DecorContent {
 		show(out, ModContent.MOB_REPELLER_ITEM);
 		show(out, ModContent.MOB_REPELLER_MV_ITEM);
 		show(out, ModContent.MOB_REPELLER_HV_ITEM);
+	}
+
+	/** The sound absorber (MOD-804): next to the repellers, the other block that acts on its surroundings. */
+	public static void soundAbsorber(Sink out) {
+		show(out, ModContent.SOUND_ABSORBER_ITEM);
 	}
 
 	/** The Enriched Uranium Torch (MOD-085) — a sprite among cubes, so it closes the block run (MOD-574). */

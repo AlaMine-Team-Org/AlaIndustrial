@@ -45,5 +45,8 @@ public final class NeoForgeNetworkVisualization {
 		// MOD-764: the wrench's x-ray of piezo plates rides the same frame point.
 		dev.alaindustrial.client.render.PiezoPlateXray.submitFrame(event.getSubmitNodeCollector(),
 				event.getLevelRenderState().cameraRenderState);
+		// MOD-804: the sound absorbers' zones under the wrench, and the focused group's HUD line.
+		dev.alaindustrial.client.render.SoundAbsorberOverlay.submitFrame(event.getSubmitNodeCollector(),
+				event.getLevelRenderState().cameraRenderState);
 	}
 }

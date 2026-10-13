@@ -3046,5 +3046,12 @@
   "blueprint.alaindustrial.plate_cladding.step3.title": "Revestimiento",
   "blueprint.alaindustrial.plate_cladding.step3.text": "Los bloques de revestimiento cubren la pared en dos metales: plata y hierro templado.",
   "blueprint.alaindustrial.plate_cladding.step4.title": "Revestimiento de hierro templado",
-  "blueprint.alaindustrial.plate_cladding.step4.text": "Las placas de hierro templado funcionan igual: cuatro dan un bloque."
+  "blueprint.alaindustrial.plate_cladding.step4.text": "Las placas de hierro templado funcionan igual: cuatro dan un bloque.",
+  "block.alaindustrial.sound_absorber": "Absorbedor de sonido",
+  "tooltip.alaindustrial.sound_absorber.desc": "Amortigua los sonidos cercanos.",
+  "tooltip.alaindustrial.sound_absorber.desc2": "Los absorbedores en contacto se refuerzan.",
+  "tooltip.alaindustrial.sound_absorber.tier": "Nivel %s (%s bloques): radio %s, −%s%%",
+  "tooltip.alaindustrial.sound_absorber.exempt": "La música, la interfaz y las voces se oyen.",
+  "tooltip.alaindustrial.sound_absorber.exempt2": "Igual la sirena del reactor y el Geiger.",
+  "hud.alaindustrial.sound_absorber.group": "Absorbedores: %s bloques, radio %s, −%s%%"
 }

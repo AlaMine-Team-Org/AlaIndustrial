@@ -146,6 +146,7 @@ final class CreativeTabSnapshot {
 			"main alaindustrial:mob_repeller",
 			"main alaindustrial:mob_repeller_mv",
 			"main alaindustrial:mob_repeller_hv",
+			"main alaindustrial:sound_absorber",
 			"main alaindustrial:workstation",
 			"main alaindustrial:upgrade_table",
 			"main alaindustrial:enriched_uranium_torch",
@@ -794,6 +795,7 @@ final class CreativeTabSnapshot {
 			"functional_blocks alaindustrial:mob_repeller",
 			"functional_blocks alaindustrial:mob_repeller_mv",
 			"functional_blocks alaindustrial:mob_repeller_hv",
+			"functional_blocks alaindustrial:sound_absorber",
 			"functional_blocks alaindustrial:workstation",
 			"functional_blocks alaindustrial:upgrade_table");
 }

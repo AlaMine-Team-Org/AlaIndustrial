@@ -3046,5 +3046,12 @@
   "blueprint.alaindustrial.plate_cladding.step3.title": "Облицювання",
   "blueprint.alaindustrial.plate_cladding.step3.text": "Блоки обшивки кладуться плиткою по стіні: срібло й загартоване залізо.",
   "blueprint.alaindustrial.plate_cladding.step4.title": "Обшивка із загартованого заліза",
-  "blueprint.alaindustrial.plate_cladding.step4.text": "Пластини із загартованого заліза працюють так само: чотири дають один блок."
+  "blueprint.alaindustrial.plate_cladding.step4.text": "Пластини із загартованого заліза працюють так само: чотири дають один блок.",
+  "block.alaindustrial.sound_absorber": "Поглинач звуку",
+  "tooltip.alaindustrial.sound_absorber.desc": "Глушить звуки поруч.",
+  "tooltip.alaindustrial.sound_absorber.desc2": "Сусідні поглиначі підсилюють один одного.",
+  "tooltip.alaindustrial.sound_absorber.tier": "Ступінь %s (%s бл.): радіус %s, −%s%%",
+  "tooltip.alaindustrial.sound_absorber.exempt": "Музика, інтерфейс і голоси чутні.",
+  "tooltip.alaindustrial.sound_absorber.exempt2": "Як і сирена реактора та лічильник Гейгера.",
+  "hud.alaindustrial.sound_absorber.group": "Поглиначі: %s бл., радіус %s, −%s%%"
 }

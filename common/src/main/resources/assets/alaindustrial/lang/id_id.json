@@ -3046,5 +3046,12 @@
   "blueprint.alaindustrial.plate_cladding.step3.title": "Pelapis",
   "blueprint.alaindustrial.plate_cladding.step3.text": "Blok pelapis menutup dinding dalam dua logam: perak dan besi temper.",
   "blueprint.alaindustrial.plate_cladding.step4.title": "Pelapis Besi Temper",
-  "blueprint.alaindustrial.plate_cladding.step4.text": "Pelat besi temper bekerja sama: empat membuat satu blok."
+  "blueprint.alaindustrial.plate_cladding.step4.text": "Pelat besi temper bekerja sama: empat membuat satu blok.",
+  "block.alaindustrial.sound_absorber": "Peredam Suara",
+  "tooltip.alaindustrial.sound_absorber.desc": "Meredam suara di sekitar.",
+  "tooltip.alaindustrial.sound_absorber.desc2": "Peredam yang bersentuhan saling menguatkan.",
+  "tooltip.alaindustrial.sound_absorber.tier": "Tingkat %s (%s blok): radius %s, −%s%%",
+  "tooltip.alaindustrial.sound_absorber.exempt": "Musik, antarmuka, dan suara tetap terdengar.",
+  "tooltip.alaindustrial.sound_absorber.exempt2": "Begitu juga sirene reaktor dan pencacah Geiger.",
+  "hud.alaindustrial.sound_absorber.group": "Peredam: %s blok, radius %s, −%s%%"
 }

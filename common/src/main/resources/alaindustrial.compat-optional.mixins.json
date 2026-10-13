@@ -18,6 +18,7 @@
     "client.FogRendererAccessor",
     "client.LivingEntityRendererInvoker",
     "client.ScreenEffectRendererMixin",
+    "client.SoundEngineAbsorberMixin",
     "client.VillagerRenderStateMixin",
     "client.VillagerRendererMixin"
   ],

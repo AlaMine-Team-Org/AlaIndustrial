@@ -1,0 +1,38 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_tempered_iron_bars": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:tempered_iron_bars"
+          }
+        ]
+      }
+    },
+    "has_wool": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "#minecraft:wool"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_tempered_iron_bars"
+    ],
+    [
+      "has_wool"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "alaindustrial:sound_absorber"
+    ]
+  }
+}

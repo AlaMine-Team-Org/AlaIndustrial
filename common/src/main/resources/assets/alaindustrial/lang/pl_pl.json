@@ -3046,5 +3046,12 @@
   "blueprint.alaindustrial.plate_cladding.step3.title": "Okładzina",
   "blueprint.alaindustrial.plate_cladding.step3.text": "Bloki poszycia wykładają ścianę w dwóch metalach: srebrze i hartowanym żelazie.",
   "blueprint.alaindustrial.plate_cladding.step4.title": "Poszycie z hartowanego żelaza",
-  "blueprint.alaindustrial.plate_cladding.step4.text": "Płyty z hartowanego żelaza działają tak samo: cztery dają jeden blok."
+  "blueprint.alaindustrial.plate_cladding.step4.text": "Płyty z hartowanego żelaza działają tak samo: cztery dają jeden blok.",
+  "block.alaindustrial.sound_absorber": "Pochłaniacz dźwięku",
+  "tooltip.alaindustrial.sound_absorber.desc": "Tłumi pobliskie dźwięki.",
+  "tooltip.alaindustrial.sound_absorber.desc2": "Stykające się pochłaniacze wzmacniają się.",
+  "tooltip.alaindustrial.sound_absorber.tier": "Stopień %s (%s bloków): promień %s, −%s%%",
+  "tooltip.alaindustrial.sound_absorber.exempt": "Muzyka, interfejs i głosy pozostają słyszalne.",
+  "tooltip.alaindustrial.sound_absorber.exempt2": "Tak samo syrena reaktora i licznik Geigera.",
+  "hud.alaindustrial.sound_absorber.group": "Pochłaniacze: %s bloków, promień %s, −%s%%"
 }

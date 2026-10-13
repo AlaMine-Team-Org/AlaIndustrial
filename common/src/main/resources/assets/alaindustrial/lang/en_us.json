@@ -3046,5 +3046,12 @@
   "blueprint.alaindustrial.plate_cladding.step3.title": "Cladding",
   "blueprint.alaindustrial.plate_cladding.step3.text": "Plating blocks tile a wall in two metals: silver and tempered iron.",
   "blueprint.alaindustrial.plate_cladding.step4.title": "Tempered Iron Plating",
-  "blueprint.alaindustrial.plate_cladding.step4.text": "Tempered iron plates work the same way: four make one block."
+  "blueprint.alaindustrial.plate_cladding.step4.text": "Tempered iron plates work the same way: four make one block.",
+  "block.alaindustrial.sound_absorber": "Sound Absorber",
+  "tooltip.alaindustrial.sound_absorber.desc": "Muffles nearby sounds.",
+  "tooltip.alaindustrial.sound_absorber.desc2": "Touching absorbers boost each other.",
+  "tooltip.alaindustrial.sound_absorber.tier": "Tier %s (%s blocks): radius %s, −%s%%",
+  "tooltip.alaindustrial.sound_absorber.exempt": "Music, UI and voices stay audible.",
+  "tooltip.alaindustrial.sound_absorber.exempt2": "So do the reactor siren and Geiger counter.",
+  "hud.alaindustrial.sound_absorber.group": "Absorbers: %s blocks, radius %s, −%s%%"
 }

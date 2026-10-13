@@ -3046,5 +3046,12 @@
   "blueprint.alaindustrial.plate_cladding.step3.title": "Revêtement",
   "blueprint.alaindustrial.plate_cladding.step3.text": "Les blocs de bardage habillent un mur en deux métaux : argent et fer trempé.",
   "blueprint.alaindustrial.plate_cladding.step4.title": "Bardage en fer trempé",
-  "blueprint.alaindustrial.plate_cladding.step4.text": "Les plaques de fer trempé font pareil : quatre donnent un bloc."
+  "blueprint.alaindustrial.plate_cladding.step4.text": "Les plaques de fer trempé font pareil : quatre donnent un bloc.",
+  "block.alaindustrial.sound_absorber": "Absorbeur acoustique",
+  "tooltip.alaindustrial.sound_absorber.desc": "Atténue les sons proches.",
+  "tooltip.alaindustrial.sound_absorber.desc2": "Les absorbeurs en contact se renforcent.",
+  "tooltip.alaindustrial.sound_absorber.tier": "Niveau %s (%s blocs) : rayon %s, −%s%%",
+  "tooltip.alaindustrial.sound_absorber.exempt": "Musique, interface et voix restent audibles.",
+  "tooltip.alaindustrial.sound_absorber.exempt2": "Idem pour la sirène du réacteur et le Geiger.",
+  "hud.alaindustrial.sound_absorber.group": "Absorbeurs : %s blocs, rayon %s, −%s%%"
 }

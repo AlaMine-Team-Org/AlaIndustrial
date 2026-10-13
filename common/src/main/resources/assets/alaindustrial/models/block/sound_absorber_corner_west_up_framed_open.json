@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "alaindustrial:block/sound_absorber_frame",
+    "frame_v": "alaindustrial:block/sound_absorber_frame_v"
+  },
+  "elements": [
+    {
+      "name": "corner_west_up_north",
+      "from": [
+        0,
+        14,
+        0
+      ],
+      "to": [
+        2,
+        16,
+        0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#frame_v",
+          "cullface": "north"
+        }
+      }
+    },
+    {
+      "name": "corner_west_up_south",
+      "from": [
+        0,
+        14,
+        16
+      ],
+      "to": [
+        2,
+        16,
+        16
+      ],
+      "faces": {
+        "south": {
+          "texture": "#frame_v",
+          "cullface": "south"
+        }
+      }
+    }
+  ]
+}

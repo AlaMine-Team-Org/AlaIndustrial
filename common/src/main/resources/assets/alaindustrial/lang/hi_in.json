@@ -3046,5 +3046,12 @@
   "blueprint.alaindustrial.plate_cladding.step3.title": "आवरण",
   "blueprint.alaindustrial.plate_cladding.step3.text": "परत ब्लॉक दीवार पर दो धातुओं में टाइल बनाते हैं: चांदी और टेम्पर्ड लोहा।",
   "blueprint.alaindustrial.plate_cladding.step4.title": "टेम्पर्ड लोहे की परत",
-  "blueprint.alaindustrial.plate_cladding.step4.text": "टेम्पर्ड लोहे की प्लेटें भी वैसे ही: चार मिलकर एक ब्लॉक बनाती हैं।"
+  "blueprint.alaindustrial.plate_cladding.step4.text": "टेम्पर्ड लोहे की प्लेटें भी वैसे ही: चार मिलकर एक ब्लॉक बनाती हैं।",
+  "block.alaindustrial.sound_absorber": "ध्वनि अवशोषक",
+  "tooltip.alaindustrial.sound_absorber.desc": "पास की आवाज़ें धीमी करता है।",
+  "tooltip.alaindustrial.sound_absorber.desc2": "छूते अवशोषक एक-दूसरे को बढ़ाते हैं।",
+  "tooltip.alaindustrial.sound_absorber.tier": "स्तर %s (%s ब्लॉक): त्रिज्या %s, −%s%%",
+  "tooltip.alaindustrial.sound_absorber.exempt": "संगीत, इंटरफ़ेस और आवाज़ें सुनाई देती हैं।",
+  "tooltip.alaindustrial.sound_absorber.exempt2": "रिएक्टर का सायरन और गाइगर काउंटर भी।",
+  "hud.alaindustrial.sound_absorber.group": "अवशोषक: %s ब्लॉक, त्रिज्या %s, −%s%%"
 }
