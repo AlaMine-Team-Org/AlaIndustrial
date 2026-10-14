@@ -23,7 +23,8 @@ import org.jspecify.annotations.Nullable;
  *   <li>{@link Shown#LABEL} — a word, not a number (a tier, a safety warning, a hint): shown with numbers
  *       on, and with numbers off only under [SHIFT], so the plain tooltip stays the bare hint.</li>
  * </ul>
- * Without [SHIFT] the visible {@code basic} lines are followed by the hold-[SHIFT] hint; under it they are
+ * Without [SHIFT] the visible {@code basic} lines are followed by the hold-[SHIFT] hint (only when [SHIFT]
+ * would add a line); under it they are
  * followed by the tier line (when {@link #tier} is set) and the visible {@code detailed} lines.
  *
  * <p>Minecraft-free on purpose: the arguments are live suppliers (the block passes {@code ServerBalance}
@@ -155,14 +156,17 @@ public record MachineTooltipSpec(@Nullable Tier tier, List<Line> basic, List<Lin
 
 	/**
 	 * The lines a player sees: {@code detailed} is [SHIFT] held (or the client's always-detailed option),
-	 * {@code numbers} is the client's {@code showEuNumbers}. A non-detailed list always ends with the
-	 * hold-[SHIFT] hint.
+	 * {@code numbers} is the client's {@code showEuNumbers}. A non-detailed list ends with the
+	 * hold-[SHIFT] hint when [SHIFT] would show more, and without it when it would not.
 	 */
 	public List<Line> lines(boolean detailed, boolean numbers) {
 		List<Line> out = new ArrayList<>();
 		addVisible(basic, detailed, numbers, out);
 		if (!detailed) {
-			out.add(new Line(HOLD_SHIFT_KEY, List.of(), Tone.DARK_GRAY, Shown.ALWAYS, null));
+			// The hint promises more: a block that [SHIFT] would not extend shows no hint.
+			if (lines(true, numbers).size() > out.size()) {
+				out.add(new Line(HOLD_SHIFT_KEY, List.of(), Tone.DARK_GRAY, Shown.ALWAYS, null));
+			}
 			return out;
 		}
 		if (tier != null) {

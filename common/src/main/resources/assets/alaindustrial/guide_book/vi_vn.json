@@ -4184,6 +4184,36 @@
           ]
         },
         {
+          "id": "advanced_industrial_workbench",
+          "title": "Bàn chế tạo công nghiệp nâng cao",
+          "icon": "alaindustrial:advanced_industrial_workbench",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Bàn chế tạo công nghiệp nâng cao",
+              "text": "Cấp thứ hai của Bàn chế tạo công nghiệp — lưới 3×3 nhớ lần chế tạo gần nhất, giữ vật phẩm khi đóng cửa sổ, nhận nguyên liệu từ ống và phễu theo công thức đã nhớ và tự chế tạo vào ống bên dưới."
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "",
+                "alaindustrial:electronic_circuit",
+                "",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:industrial_workbench",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "minecraft:chest",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:advanced_industrial_workbench",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "electrum_chest",
           "title": "Rương Electrum",
           "icon": "alaindustrial:electrum_chest",
@@ -6065,6 +6095,44 @@
                 ""
               ],
               "result_id": "alaindustrial:fluxweave_helmet",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluxweave_solar_helmet",
+          "title": "Mũ từ thông năng lượng mặt trời",
+          "icon": "alaindustrial:fluxweave_solar_helmet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Mũ từ thông năng lượng mặt trời",
+              "text": "Chiếc mũ từ thông có tấm năng lượng mặt trời ở trên đỉnh — ban ngày dưới bầu trời quang đãng, nó tự tạo ra EU và sạc cho mọi thứ bạn mang theo; ngoài ra nó là một chiếc mũ từ thông bình thường."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 15 000 EU",
+                "Bộ đệm: 15 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "",
+                "alaindustrial:solar_panel",
+                "",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:fluxweave_helmet",
+                "alaindustrial:insulated_copper_cable",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:fluxweave_solar_helmet",
               "result_count": 1
             }
           ]

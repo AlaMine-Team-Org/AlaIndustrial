@@ -40,6 +40,7 @@ import dev.alaindustrial.item.tool.WindGaugeItem;
 import dev.alaindustrial.item.tool.WrenchItem;
 import dev.alaindustrial.item.wearable.EnergyPackItem;
 import dev.alaindustrial.item.wearable.FluxweaveArmorItem;
+import dev.alaindustrial.item.wearable.FluxweaveSolarHelmetItem;
 import dev.alaindustrial.item.wearable.JetpackItem;
 import dev.alaindustrial.menu.MagnetMenu;
 import dev.alaindustrial.menu.TeleporterRemoteMenu;
@@ -155,6 +156,9 @@ public final class ToolsAndGearContent {
 			item("fluxweave_boots", p -> new FluxweaveArmorItem(
 					FluxweaveArmorItem.equipmentProperties(p, ArmorType.BOOTS), ArmorType.BOOTS),
 					s -> ModContent.FLUXWEAVE_BOOTS = s),
+			// Solar Fluxweave Helmet (MOD-664): the plain helmet with a solar panel, still a Fluxweave piece.
+			item("fluxweave_solar_helmet", FluxweaveSolarHelmetItem::new,
+					s -> ModContent.FLUXWEAVE_SOLAR_HELMET = s),
 			// Shielding suit (MOD-470): ordinary armour items; the shielding lives in the item tag.
 			armor("shielding_helmet", ModArmorMaterials.SHIELDING, ArmorType.HELMET,
 					s -> ModContent.SHIELDING_HELMET = s),
@@ -362,6 +366,7 @@ public final class ToolsAndGearContent {
 		show(out, ModContent.TEMPERED_IRON_BOOTS);
 		// Fluxweave set (MOD-127) - the EU armour line, right after the plain tempered iron set.
 		show(out, ModContent.FLUXWEAVE_HELMET);
+		show(out, ModContent.FLUXWEAVE_SOLAR_HELMET);
 		show(out, ModContent.FLUXWEAVE_CHESTPLATE);
 		show(out, ModContent.FLUXWEAVE_LEGGINGS);
 		show(out, ModContent.FLUXWEAVE_BOOTS);

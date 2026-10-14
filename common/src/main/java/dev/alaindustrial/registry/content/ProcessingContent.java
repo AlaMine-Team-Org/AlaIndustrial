@@ -20,6 +20,7 @@ import dev.alaindustrial.block.ElectricFurnaceBlock;
 import dev.alaindustrial.block.ElectricHeaterBlock;
 import dev.alaindustrial.block.ExtractorBlock;
 import dev.alaindustrial.block.GalvanicBathBlock;
+import dev.alaindustrial.block.AdvancedIndustrialWorkbenchBlock;
 import dev.alaindustrial.block.IndustrialWorkbenchBlock;
 import dev.alaindustrial.block.IronFurnaceBlock;
 import dev.alaindustrial.block.MaceratorBlock;
@@ -41,6 +42,7 @@ import dev.alaindustrial.block.entity.ElectricFurnaceBlockEntity;
 import dev.alaindustrial.block.entity.ElectricHeaterBlockEntity;
 import dev.alaindustrial.block.entity.ExtractorBlockEntity;
 import dev.alaindustrial.block.entity.GalvanicBathBlockEntity;
+import dev.alaindustrial.block.entity.AdvancedIndustrialWorkbenchBlockEntity;
 import dev.alaindustrial.block.entity.IndustrialWorkbenchBlockEntity;
 import dev.alaindustrial.block.entity.IronFurnaceBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
@@ -53,6 +55,7 @@ import dev.alaindustrial.block.entity.UpgradeTableBlockEntity;
 import dev.alaindustrial.block.entity.VulcanizerBlockEntity;
 import dev.alaindustrial.block.entity.WorkstationBlockEntity;
 import dev.alaindustrial.compat.LineBlockProps;
+import dev.alaindustrial.menu.AdvancedIndustrialWorkbenchMenu;
 import dev.alaindustrial.menu.AlloySmelterMenu;
 import dev.alaindustrial.menu.AssemblerMenu;
 import dev.alaindustrial.menu.BlockBreakerMenu;
@@ -196,6 +199,12 @@ public final class ProcessingContent {
 					machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)),
 					s -> ModContent.BLOCK_BREAKER = s);
 
+	// MOD-810 - the second tier of the bench: same strength and sound as the first, not a villager workstation.
+	public static final BlockDef<AdvancedIndustrialWorkbenchBlock> ADVANCED_INDUSTRIAL_WORKBENCH =
+			block("advanced_industrial_workbench", AdvancedIndustrialWorkbenchBlock::new,
+					machine(p -> p.strength(2.5f, 6.0f).sound(SoundType.METAL)),
+					s -> ModContent.ADVANCED_INDUSTRIAL_WORKBENCH = s);
+
 	private static final List<BlockDef<?>> BLOCKS = endBlocks();
 
 	private static final List<ItemDef> ITEMS = List.of(
@@ -223,7 +232,9 @@ public final class ProcessingContent {
 			// MOD-482 — appended at the very tail; the order of this list is the registration order.
 			blockItem("upgrade_table", s -> ModContent.UPGRADE_TABLE_ITEM = s),
 			// MOD-787 — appended at the very tail; the order of this list is the registration order.
-			blockItem("block_breaker", s -> ModContent.BLOCK_BREAKER_ITEM = s));
+			blockItem("block_breaker", s -> ModContent.BLOCK_BREAKER_ITEM = s),
+			// MOD-810 - appended at the very tail; the order of this list is the registration order.
+			blockItem("advanced_industrial_workbench", s -> ModContent.ADVANCED_INDUSTRIAL_WORKBENCH_ITEM = s));
 
 	private static final List<BlockEntityDef<?>> BLOCK_ENTITIES = List.of(
 			blockEntity("macerator", MaceratorBlockEntity.class, MaceratorBlockEntity::new,
@@ -274,7 +285,11 @@ public final class ProcessingContent {
 					s -> ModContent.INDUSTRIAL_WORKBENCH_BE = s, INDUSTRIAL_WORKBENCH),
 			blockEntity("block_breaker", BlockBreakerBlockEntity.class,
 					BlockBreakerBlockEntity::new,
-					s -> ModContent.BLOCK_BREAKER_BE = s, BLOCK_BREAKER));
+					s -> ModContent.BLOCK_BREAKER_BE = s, BLOCK_BREAKER),
+			// MOD-810: the grid that keeps its items; a plain container, so the item capability follows.
+			blockEntity("advanced_industrial_workbench", AdvancedIndustrialWorkbenchBlockEntity.class,
+					AdvancedIndustrialWorkbenchBlockEntity::new,
+					s -> ModContent.ADVANCED_INDUSTRIAL_WORKBENCH_BE = s, ADVANCED_INDUSTRIAL_WORKBENCH));
 
 	private static final List<MenuDef<?>> MENUS = List.of(
 			menu("macerator", MaceratorMenu::new, s -> ModContent.MACERATOR_MENU = s),
@@ -300,7 +315,10 @@ public final class ProcessingContent {
 			// MOD-424 — the thermal centrifuge: rotor gauge + status line over the usual two slots.
 			menu("thermal_centrifuge", ThermalCentrifugeMenu::new, s -> ModContent.THERMAL_CENTRIFUGE_MENU = s),
 			// MOD-787 — the block breaker: tool slot, break progress, redstone-mode button.
-			menu("block_breaker", BlockBreakerMenu::new, s -> ModContent.BLOCK_BREAKER_MENU = s));
+			menu("block_breaker", BlockBreakerMenu::new, s -> ModContent.BLOCK_BREAKER_MENU = s),
+			// MOD-810 - the advanced workbench: crafting grid shared by its viewers.
+			menu("advanced_industrial_workbench", AdvancedIndustrialWorkbenchMenu::new,
+					s -> ModContent.ADVANCED_INDUSTRIAL_WORKBENCH_MENU = s));
 
 	/** Everything this domain declares; {@link dev.alaindustrial.registry.ContentManifest#DOMAINS} joins it in. */
 	public static final Domain DOMAIN = new Domain("Processing", BLOCKS, ITEMS, BLOCK_ENTITIES, MENUS);

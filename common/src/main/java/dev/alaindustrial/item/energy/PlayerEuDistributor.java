@@ -58,7 +58,7 @@ public final class PlayerEuDistributor {
 	 * that also yields MAINHAND and OFFHAND, both of which the inventory and offhand passes have already
 	 * served, and charging a stack twice in one call would let it exceed the caller's budget.
 	 */
-	private static final EquipmentSlot[] WORN_SLOTS = {
+	static final EquipmentSlot[] WORN_SLOTS = {
 		EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET,
 	};
 
@@ -217,7 +217,7 @@ public final class PlayerEuDistributor {
 	 * rate. Unknown for a foreign mod's item — its own handler is the only thing that knows — so those
 	 * start unbounded and are dropped as soon as a pass shows they take nothing.
 	 */
-	private static final class Target {
+	static final class Target {
 		private final int slot;
 		private final ItemStack stack;
 		private long headroom;
@@ -247,7 +247,11 @@ public final class PlayerEuDistributor {
 	 * a share rounding down to zero looks like — more targets than EU).
 	 */
 	private static Result distributeEvenly(Player player, long budget, Policy policy, int batch) {
-		List<Target> targets = collectTargets(player, policy, batch);
+		return spread(player, collectTargets(player, policy, batch, policy.includeEquipped()), budget, policy);
+	}
+
+	/** The even-split rounds over an already collected roster. */
+	static Result spread(Player player, List<Target> targets, long budget, Policy policy) {
 		if (targets.isEmpty()) {
 			return Result.NOTHING;
 		}
@@ -307,7 +311,7 @@ public final class PlayerEuDistributor {
 	 * still decides who gets the odd EU left over by an uneven split, and keeping it identical means the
 	 * two modes cannot disagree about <em>where</em> a powered item may hide, only about pacing.
 	 */
-	private static List<Target> collectTargets(Player player, Policy policy, int batch) {
+	static List<Target> collectTargets(Player player, Policy policy, int batch, boolean withWorn) {
 		List<Target> targets = new ArrayList<>();
 		NonNullList<ItemStack> items = player.getInventory().getNonEquipmentItems();
 		for (int i = 0; i < items.size(); i++) {
@@ -320,7 +324,7 @@ public final class PlayerEuDistributor {
 		for (int i = 0; i < grid.getContainerSize(); i++) {
 			addTarget(targets, NO_SLOT, grid.getItem(i), policy, batch, player);
 		}
-		if (policy.includeEquipped()) {
+		if (withWorn) {
 			for (EquipmentSlot slot : WORN_SLOTS) {
 				addTarget(targets, NO_SLOT, player.getItemBySlot(slot), policy, batch, player);
 			}
@@ -334,7 +338,7 @@ public final class PlayerEuDistributor {
 	 * A foreign item is always kept: asking whether it has room means opening a capability lookup and a
 	 * transaction, which is exactly what {@link #give} does anyway.
 	 */
-	private static void addTarget(List<Target> targets, int slot, ItemStack stack, Policy policy,
+	static void addTarget(List<Target> targets, int slot, ItemStack stack, Policy policy,
 			int batch, Player owner) {
 		if (stack.isEmpty() || (policy.skipNoAutoCharge() && stack.is(ModTags.Items.NO_AUTO_CHARGE))) {
 			return;

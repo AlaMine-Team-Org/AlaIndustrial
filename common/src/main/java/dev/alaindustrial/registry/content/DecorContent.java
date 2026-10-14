@@ -497,6 +497,7 @@ public final class DecorContent {
 		show(out, ModContent.TEMPERED_IRON_BLOCK_ITEM);
 		plateBlocks(out);
 		show(out, ModContent.INDUSTRIAL_WORKBENCH_ITEM);
+		show(out, ModContent.ADVANCED_INDUSTRIAL_WORKBENCH_ITEM);
 	}
 
 	/**

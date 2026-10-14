@@ -23,6 +23,7 @@ public final class ScenarioRoster {
 	public static final List<List<RosterEntry>> PARTS = List.of(
 			AbandonedLabScenarios.Roster.ENTRIES,
 			AdvancedCircuitScenarios.Roster.ENTRIES,
+			AdvancedWorkbenchScenarios.Roster.ENTRIES,
 			AdvancementCriteriaScenarios.Roster.ENTRIES,
 			AlaCommonScenarios.Roster.ENTRIES,
 			AlloySmelterScenarios.Roster.ENTRIES,
@@ -104,6 +105,7 @@ public final class ScenarioRoster {
 			FluidTieBreakTranslationScenarios.Roster.ENTRIES,
 			FluidWashScenarios.Roster.ENTRIES,
 			FluxweaveArmorScenarios.Roster.ENTRIES,
+			FluxweaveSolarHelmetScenarios.Roster.ENTRIES,
 			ForeignMaterialScenarios.Roster.ENTRIES,
 			GalvanicBathScenarios.Roster.ENTRIES,
 			GardenDroneScenarios.Roster.ENTRIES,

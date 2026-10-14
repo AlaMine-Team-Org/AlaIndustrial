@@ -5,6 +5,19 @@
 == alaindustrial:acacia_shielding_chest_boat plain : none
 == alaindustrial:acacia_silver_chest_boat plain : none
 == alaindustrial:advanced_circuit plain : none
+== alaindustrial:advanced_industrial_workbench plain
+-- plain eu
+tooltip.alaindustrial.advanced_industrial_workbench {gray}
+tooltip.alaindustrial.advanced_industrial_workbench.pipes {gray}
+-- shift eu
+tooltip.alaindustrial.advanced_industrial_workbench {gray}
+tooltip.alaindustrial.advanced_industrial_workbench.pipes {gray}
+-- plain no-eu
+tooltip.alaindustrial.advanced_industrial_workbench {gray}
+tooltip.alaindustrial.advanced_industrial_workbench.pipes {gray}
+-- shift no-eu
+tooltip.alaindustrial.advanced_industrial_workbench {gray}
+tooltip.alaindustrial.advanced_industrial_workbench.pipes {gray}
 == alaindustrial:advanced_machine_casing plain : none
 == alaindustrial:alignment_chip_day plain : none
 == alaindustrial:alignment_chip_night plain : none
@@ -1268,6 +1281,9 @@ tooltip.alaindustrial.tier_lv {green}
 == alaindustrial:fluxweave_leggings plain : none
 == alaindustrial:fluxweave_leggings eu=1 : none
 == alaindustrial:fluxweave_leggings full : none
+== alaindustrial:fluxweave_solar_helmet plain : none
+== alaindustrial:fluxweave_solar_helmet eu=1 : none
+== alaindustrial:fluxweave_solar_helmet full : none
 == alaindustrial:forge_hammer plain : none
 == alaindustrial:fuel_oil_bucket plain : none
 == alaindustrial:fuel_rod_assembly plain : none

@@ -37,6 +37,7 @@ final class RegistrySnapshot {
 	static final List<String> REMOVED = List.of();
 
 	static final List<String> LINES = List.of(
+			"block advanced_industrial_workbench destroy=2.5 tool=yes light=0 push=NORMAL occludes=yes sound=METAL blast=6.0 map=METAL loot=alaindustrial:blocks/advanced_industrial_workbench",
 			"block advanced_machine_casing destroy=6.0 tool=yes light=0 push=NORMAL occludes=yes sound=METAL blast=8.0 map=METAL loot=alaindustrial:blocks/advanced_machine_casing",
 			"block alloy_smelter destroy=3.0 tool=yes light=0 push=NORMAL occludes=yes sound=METAL blast=6.0 map=METAL lightmax=13 loot=alaindustrial:blocks/alloy_smelter",
 			"block assembler destroy=3.0 tool=yes light=0 push=NORMAL occludes=yes sound=METAL blast=6.0 map=METAL loot=alaindustrial:blocks/assembler",
@@ -243,6 +244,7 @@ final class RegistrySnapshot {
 			"block water_mill destroy=3.0 tool=yes light=0 push=NORMAL occludes=yes sound=METAL blast=6.0 map=WOOD loot=alaindustrial:blocks/water_mill",
 			"block wind_mill destroy=3.0 tool=yes light=0 push=NORMAL occludes=yes sound=METAL blast=6.0 map=WOOD loot=alaindustrial:blocks/wind_mill",
 			"block workstation destroy=3.0 tool=yes light=0 push=BLOCK occludes=yes sound=METAL blast=6.0 map=METAL loot=alaindustrial:blocks/workstation",
+			"block_entity advanced_industrial_workbench:advanced_industrial_workbench",
 			"block_entity alloy_smelter:alloy_smelter",
 			"block_entity assembler:assembler",
 			"block_entity battery_box:battery_box",
@@ -330,6 +332,7 @@ final class RegistrySnapshot {
 			"block_entity water_mill:water_mill",
 			"block_entity wind_mill:wind_mill",
 			"block_entity workstation:workstation",
+			"block_entity_type advanced_industrial_workbench",
 			"block_entity_type alloy_smelter",
 			"block_entity_type assembler",
 			"block_entity_type battery_box",
@@ -442,6 +445,7 @@ final class RegistrySnapshot {
 			"fluid nutrient_solution",
 			"fluid oil",
 			"fluid steam",
+			"menu advanced_industrial_workbench",
 			"menu alloy_smelter",
 			"menu assembler",
 			"menu battery_box",

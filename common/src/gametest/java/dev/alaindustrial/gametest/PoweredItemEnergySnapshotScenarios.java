@@ -71,6 +71,7 @@ public final class PoweredItemEnergySnapshotScenarios {
 			Map.entry("fluxweave_chestplate", new Energy(15_000L, 32L)),
 			Map.entry("fluxweave_leggings", new Energy(15_000L, 32L)),
 			Map.entry("fluxweave_boots", new Energy(15_000L, 32L)),
+			Map.entry("fluxweave_solar_helmet", new Energy(15_000L, 32L)),
 			Map.entry("energy_crystal_blank", new Energy(100_000L, 128L)),
 			Map.entry("lapotron_crystal_blank", new Energy(500_000L, 128L)),
 			Map.entry("resonant_crystal_blank", new Energy(1_500_000L, 128L))));

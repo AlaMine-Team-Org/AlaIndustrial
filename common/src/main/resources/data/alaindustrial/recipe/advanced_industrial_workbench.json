@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "E": "alaindustrial:electronic_circuit",
+    "T": "alaindustrial:tempered_iron",
+    "W": "alaindustrial:industrial_workbench",
+    "C": "minecraft:chest"
+  },
+  "pattern": [
+    " E ",
+    "TWT",
+    "TCT"
+  ],
+  "result": {
+    "id": "alaindustrial:advanced_industrial_workbench"
+  }
+}

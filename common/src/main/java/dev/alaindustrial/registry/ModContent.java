@@ -47,6 +47,7 @@ import dev.alaindustrial.menu.StormWindMillMenu;
 import dev.alaindustrial.menu.TeleporterRemoteMenu;
 import dev.alaindustrial.menu.TeleporterStationMenu;
 import dev.alaindustrial.menu.ReactorControllerMenu;
+import dev.alaindustrial.menu.AdvancedIndustrialWorkbenchMenu;
 import dev.alaindustrial.menu.BlockBreakerMenu;
 import dev.alaindustrial.menu.VacuumCollectorMenu;
 import dev.alaindustrial.menu.ThermalCentrifugeMenu;
@@ -379,6 +380,8 @@ public final class ModContent {
 	// MOD-804
 	public static Supplier<Block> SOUND_ABSORBER = unbound("SOUND_ABSORBER");
 	public static Supplier<Block> INDUSTRIAL_WORKBENCH = unbound("INDUSTRIAL_WORKBENCH");
+	/** MOD-810 - the second tier of the crafting bench: keeps its grid, shared by viewers, pipe-aware. */
+	public static Supplier<Block> ADVANCED_INDUSTRIAL_WORKBENCH = unbound("ADVANCED_INDUSTRIAL_WORKBENCH");
 	// Enriched Uranium Torch (MOD-085) — a vanilla-behaviour torch (light 15, green flame) in two
 	// blocks: standing + wall. The wall variant has NO block item; it drops/names from the standing
 	// torch via overrideLootTable/overrideDescription, exactly as vanilla WALL_TORCH mirrors TORCH.
@@ -818,6 +821,7 @@ public final class ModContent {
 	public static Supplier<Item> FLUXWEAVE_CHESTPLATE = unbound("FLUXWEAVE_CHESTPLATE");
 	public static Supplier<Item> FLUXWEAVE_LEGGINGS = unbound("FLUXWEAVE_LEGGINGS");
 	public static Supplier<Item> FLUXWEAVE_BOOTS = unbound("FLUXWEAVE_BOOTS");
+	public static Supplier<Item> FLUXWEAVE_SOLAR_HELMET = unbound("FLUXWEAVE_SOLAR_HELMET");
 	// Shielding suit (MOD-470): the sealed anti-radiation set. Four plain armour items — what makes
 	// them shielding is the #alaindustrial:radiation_shielding tag, not a class.
 	public static Supplier<Item> SHIELDING_HELMET = unbound("SHIELDING_HELMET");
@@ -1044,6 +1048,8 @@ public final class ModContent {
 	// MOD-804
 	public static Supplier<BlockItem> SOUND_ABSORBER_ITEM = unbound("SOUND_ABSORBER_ITEM");
 	public static Supplier<BlockItem> INDUSTRIAL_WORKBENCH_ITEM = unbound("INDUSTRIAL_WORKBENCH_ITEM");
+	public static Supplier<BlockItem> ADVANCED_INDUSTRIAL_WORKBENCH_ITEM =
+			unbound("ADVANCED_INDUSTRIAL_WORKBENCH_ITEM");
 	// Enriched Uranium Torch (MOD-085) — only the STANDING torch has a block item; the wall variant
 	// drops this item via its overrideLootTable, so it needs no item of its own.
 	public static Supplier<BlockItem> ENRICHED_URANIUM_TORCH_ITEM = unbound("ENRICHED_URANIUM_TORCH_ITEM");
@@ -1107,6 +1113,8 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> WORKSTATION_BE = unbound("WORKSTATION_BE");
 	public static Supplier<BlockEntityType<?>> KOK_SAGYZ_ROOT_BE = unbound("KOK_SAGYZ_ROOT_BE");
 	public static Supplier<BlockEntityType<?>> INDUSTRIAL_WORKBENCH_BE = unbound("INDUSTRIAL_WORKBENCH_BE");
+	public static Supplier<BlockEntityType<?>> ADVANCED_INDUSTRIAL_WORKBENCH_BE =
+			unbound("ADVANCED_INDUSTRIAL_WORKBENCH_BE");
 	public static Supplier<BlockEntityType<?>> ELECTRIC_HEATER_BE = unbound("ELECTRIC_HEATER_BE");
 	public static Supplier<BlockEntityType<?>> CHARGE_PAD_BE = unbound("CHARGE_PAD_BE");
 	public static Supplier<BlockEntityType<?>> VACUUM_COLLECTOR_BE = unbound("VACUUM_COLLECTOR_BE");
@@ -1148,6 +1156,8 @@ public final class ModContent {
 			unbound("COMPONENT_REPAIR_BENCH_MENU");
 	public static Supplier<MenuType<UpgradeTableMenu>> UPGRADE_TABLE_MENU =
 			unbound("UPGRADE_TABLE_MENU");
+	public static Supplier<MenuType<AdvancedIndustrialWorkbenchMenu>> ADVANCED_INDUSTRIAL_WORKBENCH_MENU =
+			unbound("ADVANCED_INDUSTRIAL_WORKBENCH_MENU");
 	public static Supplier<MenuType<BlockBreakerMenu>> BLOCK_BREAKER_MENU =
 			unbound("BLOCK_BREAKER_MENU");
 	public static Supplier<MenuType<CanningMachineMenu>> CANNING_MACHINE_MENU = unbound("CANNING_MACHINE_MENU");

@@ -4184,6 +4184,36 @@
           ]
         },
         {
+          "id": "advanced_industrial_workbench",
+          "title": "Établi industriel avancé",
+          "icon": "alaindustrial:advanced_industrial_workbench",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Établi industriel avancé",
+              "text": "Le deuxième niveau de l’Établi industriel — une grille 3×3 qui retient la dernière fabrication, garde ses objets à la fermeture de la fenêtre, reçoit les ingrédients des tuyaux et des entonnoirs selon la recette mémorisée et fabrique seule vers un tuyau situé en dessous."
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "",
+                "alaindustrial:electronic_circuit",
+                "",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:industrial_workbench",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "minecraft:chest",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:advanced_industrial_workbench",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "electrum_chest",
           "title": "Coffre en électrum",
           "icon": "alaindustrial:electrum_chest",
@@ -6065,6 +6095,44 @@
                 ""
               ],
               "result_id": "alaindustrial:fluxweave_helmet",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluxweave_solar_helmet",
+          "title": "Casque de flux solaire",
+          "icon": "alaindustrial:fluxweave_solar_helmet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Casque de flux solaire",
+              "text": "Un casque de flux surmonté d'un panneau solaire : de jour, à ciel ouvert, il produit lui-même des EU et recharge tout ce que vous portez ; pour le reste, c'est un casque de flux ordinaire."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiques",
+              "lines": [
+                "Énergie : 15 000 EU",
+                "Tampon : 15 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "",
+                "alaindustrial:solar_panel",
+                "",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:fluxweave_helmet",
+                "alaindustrial:insulated_copper_cable",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:fluxweave_solar_helmet",
               "result_count": 1
             }
           ]

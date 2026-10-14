@@ -170,6 +170,9 @@ public class ScreensClientGameTest implements FabricClientGameTest {
             new Screen("mob_repeller_hv", "mob_repeller_hv", "Mob Repeller HV"),
             // MOD-787: the block breaker — tool slot, break progress, redstone-mode button.
             new Screen("block_breaker", "block_breaker", "Block Breaker"),
+            // MOD-810: the advanced workbench - the crafting grid, recipe book button and the Clear button.
+            new Screen("advanced_industrial_workbench", "advanced_industrial_workbench",
+                    "Advanced Industrial Workbench"),
             // MOD-802: the vacuum collector — the 3x3 take-only buffer and the energy bar.
             new Screen("vacuum_collector", "vacuum_collector", "Vacuum Collector"),
             // MOD-479: the creative energy source. Shot in its placed state — switched on at the

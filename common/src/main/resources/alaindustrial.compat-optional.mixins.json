@@ -17,6 +17,7 @@
     "client.FogRendererAccessor",
     "client.ItemInHandRendererElectricBowMixin",
     "client.LivingEntityRendererInvoker",
+    "client.LivingEntityRendererSolarHelmetMixin",
     "client.ScreenEffectRendererMixin",
     "client.SoundEngineAbsorberMixin",
     "client.VillagerRenderStateMixin",
