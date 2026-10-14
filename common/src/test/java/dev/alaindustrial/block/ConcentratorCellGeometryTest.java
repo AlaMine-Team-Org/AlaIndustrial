@@ -97,6 +97,50 @@ class ConcentratorCellGeometryTest {
 	}
 
 	@Test
+	@DisplayName("every cell has a selection shape, and it lies inside the cell's collision box (MOD-803)")
+	void outlinesLieInsideTheCollisionBox() {
+		assertEquals(FACINGS, ConcentratorCellGeometry.OUTLINES.length, "one row per horizontal facing");
+		for (int facing = 0; facing < FACINGS; facing++) {
+			assertEquals(CELLS, ConcentratorCellGeometry.OUTLINES[facing].length, "one entry per cell");
+			for (int cell = 0; cell < CELLS; cell++) {
+				double[][] boxes = ConcentratorCellGeometry.OUTLINES[facing][cell];
+				double[] body = ConcentratorCellGeometry.BOXES[facing][cell];
+				String where = "facing row " + facing + ", cell " + ConcentratorCellGeometry.NAMES[cell];
+				assertTrue(boxes.length > 0, where + " has nothing to click on");
+				for (double[] box : boxes) {
+					assertEquals(6, box.length, "a box is two corners");
+					for (int axis = 0; axis < 3; axis++) {
+						assertTrue(box[axis + 3] > box[axis], where + ": a flat box outlines nothing");
+						assertTrue(box[axis] >= body[axis] - 1.0e-9 && box[axis + 3] <= body[axis + 3] + 1.0e-9,
+								where + ": the outline would stand out past the body a player bumps into, axis "
+										+ axis + " " + box[axis] + ".." + box[axis + 3] + " vs "
+										+ body[axis] + ".." + body[axis + 3]);
+					}
+				}
+			}
+		}
+	}
+
+	@Test
+	@DisplayName("the selection shapes of the four facings are quarter turns of one another (MOD-803)")
+	void outlinesTurnWithTheStructure() {
+		int north = indexOfYaw(0);
+		for (int facing = 0; facing < FACINGS; facing++) {
+			int quarters = ConcentratorCellGeometry.MODEL_YAW[facing] / 90;
+			for (int cell = 0; cell < CELLS; cell++) {
+				double[][] canonical = ConcentratorCellGeometry.OUTLINES[north][cell];
+				double[][] row = ConcentratorCellGeometry.OUTLINES[facing][cell];
+				assertEquals(canonical.length, row.length, "box count of cell " + ConcentratorCellGeometry.NAMES[cell]);
+				for (int box = 0; box < row.length; box++) {
+					assertArrayEquals(turned(canonical[box], quarters), row[box], 1.0e-6,
+							"facing row " + facing + ", cell " + ConcentratorCellGeometry.NAMES[cell] + ", box " + box
+									+ " is not the canonical box turned " + quarters + " quarter(s)");
+				}
+			}
+		}
+	}
+
+	@Test
 	@DisplayName("the four yaw values are the four right angles, once each")
 	void yawCoversEveryRightAngle() {
 		assertEquals(FACINGS, ConcentratorCellGeometry.MODEL_YAW.length);

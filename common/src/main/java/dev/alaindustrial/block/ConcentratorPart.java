@@ -5,6 +5,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jspecify.annotations.Nullable;
 
@@ -60,6 +61,13 @@ public enum ConcentratorPart implements StringRepresentable {
 	 */
 	private static final VoxelShape[][] SHAPES = buildShapes();
 
+	/**
+	 * The bodies a player bumps into, {@code [horizontal facing][part]}: one box per cell, the cell's whole
+	 * footprint (MOD-803). Kept as it was when the selection shape above began to follow the model, so
+	 * nothing about walking around or standing on the machine changed with it.
+	 */
+	private static final VoxelShape[][] COLLISION = buildCollision();
+
 	static {
 		if (CELLS.length != ConcentratorCellGeometry.NAMES.length) {
 			throw new IllegalStateException("cell count disagrees with the generated geometry: "
@@ -80,7 +88,28 @@ public enum ConcentratorPart implements StringRepresentable {
 		this.serializedName = serializedName;
 	}
 
+	/**
+	 * The selection shapes: each cell's model cubes joined into one shape (MOD-803). It used to be the
+	 * cell's bounding box, and for the core that box reached the top of the block over a housing that
+	 * stops at knee height — the outline hung in the air around the machine.
+	 */
 	private static VoxelShape[][] buildShapes() {
+		VoxelShape[][] shapes = new VoxelShape[ConcentratorCellGeometry.OUTLINES.length][];
+		for (int facing = 0; facing < shapes.length; facing++) {
+			double[][][] row = ConcentratorCellGeometry.OUTLINES[facing];
+			shapes[facing] = new VoxelShape[row.length];
+			for (int part = 0; part < row.length; part++) {
+				VoxelShape shape = Shapes.empty();
+				for (double[] box : row[part]) {
+					shape = Shapes.or(shape, Block.box(box[0], box[1], box[2], box[3], box[4], box[5]));
+				}
+				shapes[facing][part] = shape.optimize();
+			}
+		}
+		return shapes;
+	}
+
+	private static VoxelShape[][] buildCollision() {
 		VoxelShape[][] shapes = new VoxelShape[ConcentratorCellGeometry.BOXES.length][];
 		for (int facing = 0; facing < shapes.length; facing++) {
 			double[][] row = ConcentratorCellGeometry.BOXES[facing];
@@ -145,12 +174,23 @@ public enum ConcentratorPart implements StringRepresentable {
 	 */
 	private static final VoxelShape LOOSE_SHAPE = Block.box(0.0, 0.0, 0.0, 16.0, 16.0, 16.0);
 
-	/** Shape of this cell for a structure facing {@code facing}; see {@link #LOOSE_SHAPE}. */
+	/**
+	 * Selection shape of this cell for a structure facing {@code facing} — what the crosshair hits and the
+	 * outline traces; see {@link #LOOSE_SHAPE} for a loose section.
+	 */
 	public VoxelShape shape(Direction facing) {
 		if (this == LOOSE) {
 			return LOOSE_SHAPE;
 		}
 		return SHAPES[facing.get2DDataValue()][ordinal() - CORE.ordinal()];
+	}
+
+	/** Collision shape of this cell: the cell's whole footprint, wider than {@link #shape} (MOD-803). */
+	public VoxelShape collisionShape(Direction facing) {
+		if (this == LOOSE) {
+			return LOOSE_SHAPE;
+		}
+		return COLLISION[facing.get2DDataValue()][ordinal() - CORE.ordinal()];
 	}
 
 	/** Half the structure's width in blocks — the middle of the CANONICAL box, which is fixed. */

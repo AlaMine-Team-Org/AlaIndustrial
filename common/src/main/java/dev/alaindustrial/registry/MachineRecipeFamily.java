@@ -126,6 +126,11 @@ public abstract sealed class MachineRecipeFamily<I extends RecipeInput, R extend
 	}
 
 	@Override
+	public Optional<RecipeType<?>> registeredType() {
+		return Optional.of(type());
+	}
+
+	@Override
 	public RecipeSerializer<R> serializer() {
 		return serializer.get();
 	}

@@ -67,6 +67,19 @@ public final class ModRecipes {
 		return Collections.unmodifiableList(FAMILIES);
 	}
 
+	/**
+	 * Every {@link RecipeType} the mod registers, derived from {@link #families()} (MOD-750). NeoForge's
+	 * dedicated server must request each of these via {@code OnDatapackSyncEvent#sendRecipes}, or the
+	 * client never receives the recipes of that type and JEI shows the machine category empty.
+	 */
+	public static List<RecipeType<?>> syncedRecipeTypes() {
+		List<RecipeType<?>> types = new ArrayList<>();
+		for (RecipeFamily<?> family : FAMILIES) {
+			family.registeredType().ifPresent(types::add);
+		}
+		return Collections.unmodifiableList(types);
+	}
+
 	/** The families of class {@code type}, in registration order. */
 	private static <F> F[] only(Class<?> type, IntFunction<F[]> array) {
 		List<Object> matching = new ArrayList<>();

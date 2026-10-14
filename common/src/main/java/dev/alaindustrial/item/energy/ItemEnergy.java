@@ -64,14 +64,18 @@ public final class ItemEnergy {
 	// numbers. Logic never asks these: charging, spending and the clamp go through capacity/get above, which read
 	// this side's balance.
 
-	/** The item's capacity by the buffers the client draws against ({@link ItemBuffers#shown()}); display only. */
+	/**
+	 * The item's capacity by the buffers the client draws against ({@link ItemBuffers#shown()}). Display, and the
+	 * tools' prediction hooks (MOD-798); the clamp and every transfer go through {@link #capacity}.
+	 */
 	public static long shownCapacity(ItemStack stack) {
 		return stack.getItem() instanceof PoweredItem powered ? powered.energyCapacity(stack, ItemBuffers.shown()) : 0L;
 	}
 
 	/**
 	 * The stored charge as the client shows it: the raw component clamped to {@link #shownCapacity}, not to the
-	 * local capacity — a server with bigger buffers sends charges the local file would cut down. Display only.
+	 * local capacity — a server with bigger buffers sends charges the local file would cut down. Display, and the
+	 * tools' prediction hooks (MOD-798).
 	 */
 	public static long shownGet(ItemStack stack) {
 		Long value = stack.get(ModDataComponents.POUCH_ENERGY.get());

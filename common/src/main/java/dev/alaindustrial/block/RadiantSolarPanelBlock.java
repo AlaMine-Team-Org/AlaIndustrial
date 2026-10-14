@@ -93,6 +93,16 @@ public class RadiantSolarPanelBlock extends AbstractSolarPanelBlock implements C
 		return SHAPE;
 	}
 
+	/** Assembled, the core cell's whole footprint, not the model-hugging {@link #getShape} (MOD-803). */
+	@Override
+	protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos,
+			CollisionContext context) {
+		if (state.getValue(ASSEMBLED)) {
+			return ConcentratorPart.CORE.collisionShape(state.getValue(FACING));
+		}
+		return SHAPE;
+	}
+
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 		return new RadiantSolarPanelBlockEntity(pos, state);

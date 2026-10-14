@@ -133,7 +133,7 @@ public final class ToolConfig {
 	 * EU the drill spends placing a torch on right-click (MOD-089), cheaper than a block; below it the drill
 	 * refuses instead of placing for free (MOD-097).
 	 */
-	@Knob(section = Section.TOOLS, min = 0,
+	@Knob(section = Section.TOOLS, clientVisible = true, min = 0,
 			doc = "EU the drill spends to place a torch on right-click.")
 	public static int electricDrillTorchEuCost = 5;
 	/**
@@ -204,7 +204,7 @@ public final class ToolConfig {
 	 * EU per right-click conversion (tilling, coarse dirt to dirt): the hoe's job is powered. Below it the hoe
 	 * tills nothing and says so, like the drill's torch.
 	 */
-	@Knob(section = Section.TOOLS, min = 0,
+	@Knob(section = Section.TOOLS, clientVisible = true, min = 0,
 			doc = "EU the hoe spends per successful right-click conversion (tilling soil).")
 	public static int electricHoeTillEuCost = 50;
 	/** Max EU/tick the hoe accepts while sitting in a charge slot — the LV ceiling, like its siblings. */

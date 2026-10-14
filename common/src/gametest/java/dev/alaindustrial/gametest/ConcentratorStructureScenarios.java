@@ -3,6 +3,7 @@ package dev.alaindustrial.gametest;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.CableArmReach;
 import dev.alaindustrial.block.CableBlock;
+import dev.alaindustrial.block.ConcentratorOutline;
 import dev.alaindustrial.block.ConcentratorPart;
 import dev.alaindustrial.block.ConcentratorSectionBlock;
 import dev.alaindustrial.block.ConcentratorStructure;
@@ -29,8 +30,12 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.PipeBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 /**
  * The Mirror Concentrator's two-by-two-by-two assembly (MOD-603), and the assembled machine answering
@@ -97,6 +102,9 @@ public final class ConcentratorStructureScenarios {
 				RosterEntry.of(ConcentratorStructureScenarios::assembledOutputIsNeverADowngrade,
 								"concentrator_assembly_not_a_downgrade")
 						.fabricId("ConcentratorStructureGameTest", "mod603_assembledOutputIsNeverADowngrade")
+						.ticks(40),
+				RosterEntry.of(ConcentratorStructureScenarios::outlineHugsTheModelAndCoversTheMachine,
+								"concentrator_outline_hugs_model_and_covers_machine")
 						.ticks(40));
 
 		private Roster() {}
@@ -757,6 +765,73 @@ public final class ConcentratorStructureScenarios {
 	}
 
 	/** Air out every cell any rotation could touch, plus the core. */
+	/**
+	 * The assembled machine is selected as it looks (MOD-803): each cell's selection shape stays inside the
+	 * body a player bumps into and leaves out some of it — the core's box used to reach the top of the block
+	 * over a housing that stops at knee height — while the hover outline is the same one contour from every
+	 * cell. A loose section and a lone panel keep their own outlines.
+	 *
+	 * @implements MOD-803 — model-hugging selection shapes inside the collision box, one contour for the whole machine
+	 */
+	public static void outlineHugsTheModelAndCoversTheMachine(GameTestHelper helper) {
+		for (Direction facing : Direction.Plane.HORIZONTAL) {
+			clearArea(helper);
+			placeCore(helper);
+			placeSections(helper, facing, null);
+			assemble(helper);
+			assertAssembled(helper, facing);
+			AABB contour = null;
+			for (ConcentratorPart part : ConcentratorPart.CELLS) {
+				BlockPos cell = helper.absolutePos(CORE.offset(part.worldOffset(facing)));
+				BlockState state = helper.getLevel().getBlockState(cell);
+				VoxelShape shape = state.getShape(helper.getLevel(), cell);
+				VoxelShape body = state.getCollisionShape(helper.getLevel(), cell);
+				if (Shapes.joinIsNotEmpty(shape, body, BooleanOp.ONLY_FIRST)) {
+					helper.fail(facing + " " + part + ": the selection shape stands out past the collision box");
+				}
+				if (part == ConcentratorPart.CORE && !Shapes.joinIsNotEmpty(body, shape, BooleanOp.ONLY_FIRST)) {
+					helper.fail(facing + " CORE: the selection shape is still the whole collision box");
+				}
+				VoxelShape outline = ConcentratorOutline.shape(helper.getLevel(), cell, state);
+				if (outline == null) {
+					helper.fail(facing + " " + part + ": no whole-machine contour");
+					return;
+				}
+				AABB here = outline.bounds().move(cell);
+				if (contour == null) {
+					contour = here;
+				} else if (!sameBounds(contour, here)) {
+					helper.fail(facing + " " + part + ": the contour moved with the cell: " + here + " vs " + contour);
+				}
+			}
+			BlockPos core = helper.absolutePos(CORE);
+			BlockPos far = core.offset(ConcentratorPart.TOP_BACK_RIGHT.worldOffset(facing));
+			AABB footprint = new AABB(core).minmax(new AABB(far));
+			if (!footprint.contains(contour.getCenter()) || contour.getXsize() > 2 || contour.getZsize() > 2
+					|| contour.getYsize() > 2) {
+				helper.fail(facing + ": the contour " + contour + " is not the two-block machine " + footprint);
+			}
+		}
+		clearArea(helper);
+		placeCore(helper);
+		BlockPos core = helper.absolutePos(CORE);
+		if (ConcentratorOutline.shape(helper.getLevel(), core, helper.getLevel().getBlockState(core)) != null) {
+			helper.fail("a lone panel drew the whole machine's contour");
+		}
+		helper.setBlock(CORE.above(), ModContent.CONCENTRATOR_SECTION.get().defaultBlockState());
+		BlockPos loose = core.above();
+		if (ConcentratorOutline.shape(helper.getLevel(), loose, helper.getLevel().getBlockState(loose)) != null) {
+			helper.fail("a loose section drew the whole machine's contour");
+		}
+		helper.succeed();
+	}
+
+	private static boolean sameBounds(AABB a, AABB b) {
+		return Math.abs(a.minX - b.minX) < 1.0e-6 && Math.abs(a.minY - b.minY) < 1.0e-6
+				&& Math.abs(a.minZ - b.minZ) < 1.0e-6 && Math.abs(a.maxX - b.maxX) < 1.0e-6
+				&& Math.abs(a.maxY - b.maxY) < 1.0e-6 && Math.abs(a.maxZ - b.maxZ) < 1.0e-6;
+	}
+
 	private static void clearArea(GameTestHelper helper) {
 		for (int dx = -1; dx <= 1; dx++) {
 			// Up to dy = 2: the roofs this suite lays down sit one block above the top cells, and a

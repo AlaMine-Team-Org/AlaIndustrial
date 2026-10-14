@@ -100,6 +100,13 @@ public class ConcentratorSectionBlock extends Block implements EnergyHostRedirec
 		return state.getValue(PART).shape(state.getValue(FACING));
 	}
 
+	/** The cell's whole footprint, not the model-hugging {@link #getShape} (MOD-803). */
+	@Override
+	protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos,
+			CollisionContext context) {
+		return state.getValue(PART).collisionShape(state.getValue(FACING));
+	}
+
 	/**
 	 * Any cell of an assembled machine opens the core's screen (MOD-608) — the structure has no screen
 	 * of its own, so this is the only screen there is, reachable from wherever the player happens to be

@@ -659,6 +659,37 @@ class ArchitectureRulesNegativeControl {
 	}
 
 	/**
+	 * MOD-798 — the prediction hooks ({@code getDestroySpeed}, {@code useOn}) of the predicting items are roots:
+	 * a knob read in them, directly or two calls away, is reported; the clean twin reading {@code ServerBalance}
+	 * is not; and a {@code useOn} outside the predicting items is not a root (the scope is the point). The
+	 * stand-ins cannot extend {@code ElectricMiningToolItem} on this lane, so the control hands the condition its
+	 * own predicate; with the production one, none of the three fixtures is a root.
+	 */
+	@Test
+	void clientReachRootsThePredictionHooksOfThePredictingItemsOnly() {
+		DescribedPredicate<JavaClass> predicting = DescribedPredicate.describe("fixture predicting items",
+				(JavaClass c) -> c.getName().equals(FIXTURE_PACKAGE + ".PredictionItem")
+						|| c.getName().equals(FIXTURE_PACKAGE + ".PredictionItemClean"));
+		ArchRule rule = noClasses().should(ClientBalanceReachRules.reachABalanceKnob(
+				JavaClass.Predicates.resideInAnyPackage(FIXTURE_PACKAGE + ".clientstandin.."), predicting, Map.of(),
+				Map.of()));
+		EvaluationResult result = rule.evaluate(fixturesWithBalance());
+		assertTrue(result.hasViolation(), "the prediction hooks must be roots");
+		String report = result.getFailureReport().toString();
+		String item = FIXTURE_PACKAGE + ".PredictionItem.";
+		assertTrue(report.contains(item + "getDestroySpeed(java.lang.Object) -> " + FIXTURE_PACKAGE
+				+ ".KnobHelper.twice() reads Config.euPerXp"), report);
+		assertTrue(report.contains(item + "useOn(java.lang.Object) reads Config.euPerXp"), report);
+		assertFalse(report.contains("PredictionItemClean"), report);
+		assertFalse(report.contains("UnscopedUseOnItem"), report);
+
+		String production = clientReachReport(Map.of(), Map.of());
+		assertFalse(production.contains("PredictionItem"),
+				"with the production predicate a fixture is no predicting item, or the scope above proves nothing");
+		assertFalse(production.contains("UnscopedUseOnItem"), production);
+	}
+
+	/**
 	 * MOD-761 — an accepted path and a pending entry are decisions about paths that exist: once a path is gone,
 	 * its row goes too. Accepted rows whose entry class this lane does not import (the REI plugin of
 	 * fabric/src/main) are records, not checked.

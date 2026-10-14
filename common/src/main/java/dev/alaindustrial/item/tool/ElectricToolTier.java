@@ -1,6 +1,6 @@
 package dev.alaindustrial.item.tool;
 
-import dev.alaindustrial.Config;
+import dev.alaindustrial.client.ServerBalance;
 import dev.alaindustrial.item.ToolConfig;
 import dev.alaindustrial.item.energy.ItemBuffers;
 import java.util.function.IntSupplier;
@@ -61,8 +61,23 @@ public enum ElectricToolTier {
 		return inputRate.getAsInt();
 	}
 
-	/** EU spent per block of non-zero hardness broken at powered speed. */
+	/** EU spent per block of non-zero hardness broken at powered speed, by this side's own balance. */
 	public int euPerBlock() {
 		return euPerBlock.getAsInt();
+	}
+
+	/**
+	 * The same price as the client PREDICTS with it (MOD-798): the server's, through {@link ServerBalance}, or this
+	 * side's own until a server has sent them (so on a dedicated server it is the {@link #euPerBlock} price). A
+	 * switch on the tier and no supplier, for the reason {@link #buffer(ItemBuffers)} is one: the client-reach rule
+	 * would follow a supplier field into the initialiser, where every knob of the enum is read.
+	 */
+	public int predictedEuPerBlock() {
+		return switch (this) {
+			case DRILL, DRILL_NETHERITE_TIP -> ServerBalance.electricDrillEuPerBlock();
+			case CHAINSAW -> ServerBalance.electricChainsawEuPerBlock();
+			case SHOVEL -> ServerBalance.electricShovelEuPerBlock();
+			case HOE -> ServerBalance.electricHoeEuPerBlock();
+		};
 	}
 }

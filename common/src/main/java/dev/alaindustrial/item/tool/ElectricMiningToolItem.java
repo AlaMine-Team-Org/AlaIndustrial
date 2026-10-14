@@ -23,7 +23,8 @@ import net.minecraft.world.level.block.state.BlockState;
  * <h2>The contract — {@link ElectricMiningRule}, applied here only</h2>
  * <ul>
  * <li>{@link #getDestroySpeed}: the {@code TOOL} component's speed while the tool affords one block
- * ({@link ElectricToolTier#euPerBlock}); otherwise exactly {@link ElectricMiningRule#HAND_SPEED}. The
+ * ({@link ElectricToolTier#predictedEuPerBlock}: the client predicts this, so the price is the server's, MOD-798);
+ * otherwise exactly {@link ElectricMiningRule#HAND_SPEED}. The
  * mining tier and the drops come from the {@code TOOL} component either way, so a flat tool still mines
  * what it mined and keeps the drops — it is just slow.</li>
  * <li>{@link #mineBlock}: a block of non-zero hardness broken on the server is billed through
@@ -49,7 +50,9 @@ public abstract class ElectricMiningToolItem extends Item implements PoweredItem
 
 	@Override
 	public final float getDestroySpeed(ItemStack stack, BlockState state) {
-		if (ElectricMiningRule.affords(ItemEnergy.get(stack), toolTier().euPerBlock())) {
+		// MOD-798: the client predicts the speed, so "enough for a block" is asked of the server's price and the
+		// charge as the server's buffers clamp it (on a dedicated server both read that server's own numbers).
+		if (ElectricMiningRule.affords(ItemEnergy.shownGet(stack), toolTier().predictedEuPerBlock())) {
 			return super.getDestroySpeed(stack, state);
 		}
 		return ElectricMiningRule.HAND_SPEED;

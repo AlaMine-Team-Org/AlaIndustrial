@@ -88,6 +88,18 @@ public class TeleporterCapsuleBlock extends Block {
 	/** Where they end: the crown, half a block into the top cell. */
 	private static final double DOORWAY_ABOVE_MIDDLE = 1.5;
 
+	/**
+	 * {@code tan(22.5°)}: half a facet of a regular octagon, per pixel of its apothem. Declared before the
+	 * silhouettes below, which read it during class-init — a field further down would still be zero then.
+	 */
+	private static final double OCTAGON_HALF_FACET = Math.tan(Math.PI / 8);
+	/** Apothem of the station's ring and of the crown's lower ring, in pixels — read off the models. */
+	public static final double RING_APOTHEM = 7.7;
+	/** Apothem of the glass barrel between them, outer surface. */
+	private static final double BARREL_APOTHEM = 6.7;
+	/** Apothem of the crown's upper ring, the one under the cap. */
+	private static final double CROWN_TOP_APOTHEM = 6.55;
+
 	/*
 	 * Silhouettes, assembled once at class-init (ADR-023). The glass barrel is an octagon; collision is
 	 * its axis-aligned stand-in, one pixel of wall with the diagonals filled in at the corners. The
@@ -100,6 +112,16 @@ public class TeleporterCapsuleBlock extends Block {
 			Shapes.rotateHorizontal(Shapes.or(sidesAndBack(8), front(8), crown()));
 	private static final Map<Direction, VoxelShape> TOP_OPEN =
 			Shapes.rotateHorizontal(Shapes.or(sidesAndBack(8), crown()));
+	/*
+	 * The top cell as the crosshair meets it (MOD-803): the same walls under a crown that follows the model
+	 * — an octagonal ring, a narrower ring above it and the cap — instead of the square box the player
+	 * bumps into. That box stood out past the ring's diagonals and put a flat lid over a cap that narrows
+	 * to two pixels at the top.
+	 */
+	private static final Map<Direction, VoxelShape> TOP_CLOSED_OUTLINE =
+			Shapes.rotateHorizontal(Shapes.or(sidesAndBack(8), front(8), crownOutline(0)));
+	private static final Map<Direction, VoxelShape> TOP_OPEN_OUTLINE =
+			Shapes.rotateHorizontal(Shapes.or(sidesAndBack(8), crownOutline(0)));
 	/** The doorway, as a box inside the middle cell's footprint, for each facing. */
 	private static final Map<Direction, VoxelShape> DOORWAY =
 			Shapes.rotateHorizontal(Block.box(1, 0, 0, 15, 16, DOORWAY_DEPTH));
@@ -126,6 +148,49 @@ public class TeleporterCapsuleBlock extends Block {
 		return Block.box(0.5, 8, 0.5, 15.5, 16, 15.5);
 	}
 
+	/**
+	 * The crown as the model draws it, {@code dy} pixels up from the top cell's floor: the ring from 8 to
+	 * 14, the narrower ring to 15.2 and the stepped cap to the top of the block.
+	 */
+	private static VoxelShape crownOutline(double dy) {
+		return Shapes.or(
+				octagon(RING_APOTHEM, dy + 8, dy + 14),
+				octagon(CROWN_TOP_APOTHEM, dy + 14, dy + 15.2),
+				Block.box(6, dy + 14, 6, 10, dy + 15.5, 10),
+				Block.box(7, dy + 15.5, 7, 9, dy + 16, 9));
+	}
+
+	/**
+	 * A regular octagon prism centred on the block, from {@code y0} to {@code y1} pixels: three boxes — two
+	 * crossing bars and the square whose corners touch the diagonal facets. It lies inside the octagon and
+	 * misses only the four slivers along the diagonals, so an outline drawn from it never stands out past
+	 * the model, and it is the same for every facing.
+	 */
+	public static VoxelShape octagon(double apothem, double y0, double y1) {
+		double facet = apothem * OCTAGON_HALF_FACET;
+		double corner = apothem * (1 + OCTAGON_HALF_FACET) / 2;
+		return Shapes.or(
+				Block.box(8 - apothem, y0, 8 - facet, 8 + apothem, y1, 8 + facet),
+				Block.box(8 - facet, y0, 8 - apothem, 8 + facet, y1, 8 + apothem),
+				Block.box(8 - corner, y0, 8 - corner, 8 + corner, y1, 8 + corner));
+	}
+
+	/**
+	 * The whole assembled capsule as one solid silhouette, in the station's pixels, facing north (MOD-803):
+	 * the station's ring, the glass barrel with its console, spine and rod, and the crown. The hover outline
+	 * ({@link TeleporterCapsuleOutline}) draws it whichever of the three blocks the player aims at.
+	 */
+	static VoxelShape capsuleSilhouette() {
+		return Shapes.or(
+				octagon(RING_APOTHEM, 0, 10),
+				octagon(BARREL_APOTHEM, 10, 40),
+				// The side console, the back spine and the rod beside the console.
+				Block.box(13.5, 22, 5, 15.8, 29, 9),
+				Block.box(6, 10, 14.4, 10, 40, 15.8),
+				Block.box(14.8, 10, 6.5, 15.6, 40, 7.5),
+				crownOutline(32));
+	}
+
 	public TeleporterCapsuleBlock(Properties properties) {
 		super(properties);
 		registerDefaultState(stateDefinition.any()
@@ -145,8 +210,20 @@ public class TeleporterCapsuleBlock extends Block {
 		builder.add(PART, FACING, OPEN, GLASS);
 	}
 
+	/** What the crosshair hits and the outline traces: the top cell's crown follows the model (MOD-803). */
 	@Override
 	protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+		Direction facing = state.getValue(FACING);
+		boolean open = state.getValue(OPEN);
+		return state.getValue(PART) == Part.MIDDLE
+				? (open ? MIDDLE_OPEN : MIDDLE_CLOSED).get(facing)
+				: (open ? TOP_OPEN_OUTLINE : TOP_CLOSED_OUTLINE).get(facing);
+	}
+
+	/** What a player bumps into and stands on: the square crown, as it always was. */
+	@Override
+	protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos,
+			CollisionContext context) {
 		Direction facing = state.getValue(FACING);
 		boolean open = state.getValue(OPEN);
 		return state.getValue(PART) == Part.MIDDLE
