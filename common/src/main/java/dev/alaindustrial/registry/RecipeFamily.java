@@ -45,6 +45,13 @@ public sealed interface RecipeFamily<R extends Recipe<?>>
 	/** The registered serializer. */
 	RecipeSerializer<R> serializer();
 
+	/**
+	 * The registered {@link RecipeType} of this family — empty exactly when {@link #createType()} is (MOD-750).
+	 * NeoForge sends a client only the recipe types somebody requested, so its entry point asks for every
+	 * one of these ({@link ModRecipes#syncedRecipeTypes()}).
+	 */
+	Optional<RecipeType<?>> registeredType();
+
 	/** The type supplier a loader binds to a family whose {@link #createType()} is empty. */
 	static <R extends Recipe<?>> Supplier<RecipeType<R>> noType(String id) {
 		return () -> {

@@ -11,6 +11,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.Item;
@@ -35,6 +36,12 @@ public final class MachineMenuQuickMoveScenarios {
 						.ticks(40),
 				RosterEntry.of(MachineMenuQuickMoveScenarios::quickMove_maceratorOutputTakesNothingFromThePlayer,
 								"quick_move_macerator_output_takes_nothing_from_the_player")
+						.ticks(40),
+				RosterEntry.of(MachineMenuQuickMoveScenarios::quickMove_stackNoSlotTakesMovesBetweenInventoryAndHotbar,
+								"quick_move_stack_no_slot_takes_moves_between_inventory_and_hotbar")
+						.ticks(40),
+				RosterEntry.of(MachineMenuQuickMoveScenarios::quickMove_acceptedStackStillGoesIntoTheMachine,
+								"quick_move_accepted_stack_still_goes_into_the_machine")
 						.ticks(40));
 
 		private Roster() {}
@@ -105,6 +112,96 @@ public final class MachineMenuQuickMoveScenarios {
 		expect(helper, be, 0, Items.IRON_ORE, 8, "the input changed");
 		expectHeld(helper, player, dust, 5);
 		helper.succeed();
+	}
+
+	/**
+	 * The Garden Drone Station takes no wheat anywhere (its output is machine-fill only): a shift-clicked
+	 * stack moves main inventory to hotbar and back like the vanilla furnace, and the partial wheat stack in
+	 * the output stays untouched on both trips.
+	 *
+	 * @implements MOD-792-ROWS — shift-click of a stack no machine slot takes swaps inventory and hotbar
+	 * @covers MOD-792
+	 */
+	public static void quickMove_stackNoSlotTakesMovesBetweenInventoryAndHotbar(GameTestHelper helper) {
+		GardenDroneStationBlockEntity station = GardenDroneScenarios.place(helper);
+		ServerPlayer player = AlaGameTestHelper.survivalPlayer(helper);
+		GardenDroneStationMenu menu = new GardenDroneStationMenu(1, player.getInventory(), station,
+				ContainerLevelAccess.create(helper.getLevel(), station.getBlockPos()));
+		int wheatOut = GardenDroneStationBlockEntity.OUTPUT_SLOT_START;
+		station.setItem(wheatOut, new ItemStack(Items.WHEAT, 10));
+		Inventory inv = player.getInventory();
+
+		// Main inventory (slot 9) -> hotbar.
+		inv.clearContent();
+		inv.setItem(MAIN_SLOT, new ItemStack(Items.WHEAT, 5));
+		menu.clicked(menuSlot(helper, menu, inv, MAIN_SLOT), 0, ContainerInput.QUICK_MOVE, player);
+		expectSlotEmpty(helper, inv, MAIN_SLOT, "the stack stayed in the main inventory");
+		expectHeld(helper, player, Items.WHEAT, 5);
+		if (!hotbarHolds(inv, Items.WHEAT)) {
+			helper.fail("the wheat did not land in the hotbar");
+		}
+
+		// Hotbar -> main inventory.
+		inv.clearContent();
+		inv.setItem(0, new ItemStack(Items.WHEAT, 5));
+		menu.clicked(menuSlot(helper, menu, inv, 0), 0, ContainerInput.QUICK_MOVE, player);
+		expectSlotEmpty(helper, inv, 0, "the stack stayed in the hotbar");
+		expectHeld(helper, player, Items.WHEAT, 5);
+		if (hotbarHolds(inv, Items.WHEAT)) {
+			helper.fail("the wheat is still in the hotbar");
+		}
+
+		expect(helper, station, wheatOut, Items.WHEAT, 10, "the inventory shuffle poured wheat into the output");
+		helper.succeed();
+	}
+
+	/**
+	 * What the machine does take still goes into the machine, not across the rows; what it does not take
+	 * (dust with ore in the input) swaps the rows and never reaches the result slot.
+	 *
+	 * @implements MOD-792-ROWS — shift-click of a stack no machine slot takes swaps inventory and hotbar
+	 * @covers MOD-792
+	 */
+	public static void quickMove_acceptedStackStillGoesIntoTheMachine(GameTestHelper helper) {
+		MaceratorBlockEntity be = AlaGameTestHelper.place(helper, POS, ModContent.MACERATOR.get(),
+				MaceratorBlockEntity.class);
+		ServerPlayer player = AlaGameTestHelper.survivalPlayer(helper);
+		MaceratorMenu menu = new MaceratorMenu(1, player.getInventory(), be,
+				ContainerLevelAccess.create(helper.getLevel(), be.getBlockPos()));
+		Inventory inv = player.getInventory();
+		Item dust = ModContent.IRON_DUST.get();
+
+		inv.clearContent();
+		inv.setItem(MAIN_SLOT, new ItemStack(Items.IRON_ORE, 8));
+		menu.clicked(menuSlot(helper, menu, inv, MAIN_SLOT), 0, ContainerInput.QUICK_MOVE, player);
+		expect(helper, be, 0, Items.IRON_ORE, 8, "the ore did not go into the input slot");
+		expectHeld(helper, player, Items.IRON_ORE, 0);
+
+		be.setItem(1, new ItemStack(dust, 10));
+		inv.setItem(MAIN_SLOT, new ItemStack(dust, 5));
+		menu.clicked(menuSlot(helper, menu, inv, MAIN_SLOT), 0, ContainerInput.QUICK_MOVE, player);
+		expect(helper, be, 1, dust, 10, "the player's dust was poured into the result slot");
+		expectSlotEmpty(helper, inv, MAIN_SLOT, "the dust did not move to the hotbar");
+		expectHeld(helper, player, dust, 5);
+		helper.succeed();
+	}
+
+	/** First main-inventory slot of {@link Inventory} (0..8 is the hotbar). */
+	private static final int MAIN_SLOT = 9;
+
+	private static boolean hotbarHolds(Inventory inv, Item item) {
+		for (int i = 0; i < 9; i++) {
+			if (inv.getItem(i).is(item)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private static void expectSlotEmpty(GameTestHelper helper, Inventory inv, int index, String why) {
+		if (!inv.getItem(index).isEmpty()) {
+			helper.fail(why + ": slot " + index + " holds " + inv.getItem(index));
+		}
 	}
 
 	/** Give the player exactly {@code count} of {@code item} and shift-click that stack. */

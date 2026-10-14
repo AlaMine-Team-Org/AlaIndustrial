@@ -1,6 +1,8 @@
 package dev.alaindustrial.client;
 
+import dev.alaindustrial.block.ConcentratorOutline;
 import dev.alaindustrial.block.DistillationColumnOutline;
+import dev.alaindustrial.block.TeleporterCapsuleOutline;
 import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.DiamondChestBlockEntity;
 import dev.alaindustrial.block.entity.ElectrumChestBlockEntity;
@@ -587,7 +589,11 @@ public final class ClientContentManifest {
 	/** Every block outline; the first one that answers for the hovered block wins. */
 	public static final List<BlockOutline> BLOCK_OUTLINES = List.of(
 			// MOD-778: any storey of an assembled distillation column outlines the whole tower.
-			blockOutline(DistillationColumnOutline::shape));
+			blockOutline(DistillationColumnOutline::shape),
+			// MOD-803: any cell of an assembled Mirror Concentrator outlines the whole machine.
+			blockOutline(ConcentratorOutline::shape),
+			// MOD-803: the station or either glass cell of an assembled teleporter outlines the whole capsule.
+			blockOutline(TeleporterCapsuleOutline::shape));
 
 	// ─────────────────────────────────────────────────────────────────────────────────────────
 	// Picture-in-picture renderers (MOD-797)

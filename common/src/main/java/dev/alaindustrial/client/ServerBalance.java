@@ -36,6 +36,11 @@ import java.util.Optional;
  * from {@code Config} instead of from here. A knob missing from the snapshot (an older server) falls back
  * to the local value, knob by knob.
  *
+ * <p><b>Prediction reads here too (MOD-798).</b> What the electric mining tools decide before the server answers
+ * (the speed they report, the drill's torch, the hoe's tilling) asks this class, so the client predicts by the
+ * server's price. On a dedicated server nothing is ever received, so the same call there reads that server's own
+ * {@code Config}; in single player the snapshot equals the shared {@code Config} (a reload reaches it a tick late).
+ *
  * <p>Cleared when the player leaves a world ({@code ClientDisconnectReset}), so a single-player world
  * opened after a server shows its own balance, not the server's. Minecraft-free, so L1 covers it
  * directly; both loaders' receivers call {@link #receive} on the client thread.
@@ -229,6 +234,10 @@ public final class ServerBalance {
 		return current.intValue("electricDrillNetheriteTipBuffer", ToolConfig.electricDrillNetheriteTipBuffer);
 	}
 
+	public static int electricDrillTorchEuCost() {
+		return current.intValue("electricDrillTorchEuCost", ToolConfig.electricDrillTorchEuCost);
+	}
+
 	public static int electricFurnaceDuration() {
 		return current.intValue("electricFurnaceDuration", Config.electricFurnaceDuration);
 	}
@@ -247,6 +256,10 @@ public final class ServerBalance {
 
 	public static int electricHoeEuPerBlock() {
 		return current.intValue("electricHoeEuPerBlock", ToolConfig.electricHoeEuPerBlock);
+	}
+
+	public static int electricHoeTillEuCost() {
+		return current.intValue("electricHoeTillEuCost", ToolConfig.electricHoeTillEuCost);
 	}
 
 	public static int electricSaberBuffer() {

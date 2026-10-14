@@ -44,6 +44,11 @@ public final class ChargedCraft implements RecipeFamily<ChargedCraftRecipe> {
 	}
 
 	@Override
+	public Optional<RecipeType<?>> registeredType() {
+		return Optional.empty();
+	}
+
+	@Override
 	public RecipeSerializer<ChargedCraftRecipe> serializer() {
 		return serializer.get();
 	}

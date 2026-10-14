@@ -86,9 +86,13 @@ public class TeleporterBlock extends HorizontalMachineBlock implements CableArmR
 	 */
 	public static final double CAPSULE_FLOOR = 9.0 / 16.0;
 
-	/** The assembled station is the capsule's base: its outline stops at the deck. */
-	private static final VoxelShape FORMED_OUTLINE = Block.box(0.5, 0, 0.5, 15.5, 10, 15.5);
-	/** …and the floor underfoot stops at {@link #CAPSULE_FLOOR}. */
+	/**
+	 * The assembled station is the capsule's base: its outline is the octagonal ring of the model and stops
+	 * at the deck (MOD-803 — it used to be a square box, whose corners stood out past the ring's diagonals).
+	 */
+	private static final VoxelShape FORMED_OUTLINE =
+			TeleporterCapsuleBlock.octagon(TeleporterCapsuleBlock.RING_APOTHEM, 0, 10);
+	/** …and the floor underfoot stops at {@link #CAPSULE_FLOOR}, square as it always was. */
 	private static final VoxelShape FORMED_COLLISION = Block.box(0.5, 0, 0.5, 15.5, 9, 15.5);
 
 	/**

@@ -1,5 +1,6 @@
 package dev.alaindustrial.item.tool;
 
+import dev.alaindustrial.client.ServerBalance;
 import dev.alaindustrial.item.ToolConfig;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.item.wearable.EnergyPackItem;
@@ -350,7 +351,7 @@ public class ElectricDrillItem extends ElectricMiningToolItem {
 		// is exempt — the spend is dropped there anyway (MOD-081). CONSUME eats the click (no off-hand
 		// fallback, no place, no swing) while the drill keeps the torch in the inventory — but only now that
 		// the spot is known to be one where a charged drill would have placed something (MOD-398).
-		if (!player.getAbilities().instabuild && ItemEnergy.get(drill) < ToolConfig.electricDrillTorchEuCost) {
+		if (!player.getAbilities().instabuild && !affordsTorch(drill)) {
 			if (player instanceof ServerPlayer serverPlayer) {
 				serverPlayer.sendSystemMessage(
 						Component.translatable("item.alaindustrial.electric_drill.torch_no_charge")
@@ -379,8 +380,16 @@ public class ElectricDrillItem extends ElectricMiningToolItem {
 		}
 		// The MOD-097 gate above already refused a drill that couldn't afford this, so the spend is now
 		// unconditional; ItemEnergy.spend still drops the debit for a creative owner (MOD-081).
-		ItemEnergy.spend(drill, ToolConfig.electricDrillTorchEuCost, player);
+		ItemEnergy.spend(drill, ServerBalance.electricDrillTorchEuCost(), player);
 		return InteractionResult.SUCCESS;
+	}
+
+	/**
+	 * Whether {@code drill} holds the price of a torch, by the server's numbers: the client predicts the refusal
+	 * with this too (MOD-798), so it must not ask the local file.
+	 */
+	private static boolean affordsTorch(ItemStack drill) {
+		return ItemEnergy.shownGet(drill) >= ServerBalance.electricDrillTorchEuCost();
 	}
 
 	/**

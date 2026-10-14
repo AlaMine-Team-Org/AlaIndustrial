@@ -1,5 +1,6 @@
 package dev.alaindustrial.item.tool;
 
+import dev.alaindustrial.client.ServerBalance;
 import dev.alaindustrial.item.ToolConfig;
 import dev.alaindustrial.item.energy.ItemEnergy;
 
@@ -166,7 +167,7 @@ public class ElectricHoeItem extends ElectricMiningToolItem {
 		}
 
 		if (player != null && !player.getAbilities().instabuild
-				&& ItemEnergy.get(hoe) < ToolConfig.electricHoeTillEuCost) {
+				&& ItemEnergy.shownGet(hoe) < ServerBalance.electricHoeTillEuCost()) {
 			if (player instanceof ServerPlayer serverPlayer) {
 				serverPlayer.sendSystemMessage(
 						Component.translatable("item.alaindustrial.electric_hoe.till_no_charge")
@@ -178,7 +179,7 @@ public class ElectricHoeItem extends ElectricMiningToolItem {
 
 		InteractionResult result = RightClickTransform.HOE.apply(context);
 		if (result.consumesAction() && player != null && !context.getLevel().isClientSide()) {
-			ItemEnergy.spend(hoe, ToolConfig.electricHoeTillEuCost, player);
+			ItemEnergy.spend(hoe, ServerBalance.electricHoeTillEuCost(), player);
 		}
 		return result;
 	}

@@ -8,7 +8,9 @@ import dev.alaindustrial.core.structure.ReactorLog;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.storage.TagValueInput;
 
 /**
  * A wall broken on a running room, tick by tick (MOD-713, batch 0): what the controller does on the very tick its
@@ -35,6 +37,9 @@ public final class ReactorBreachOrderScenarios {
 						.ticks(100),
 				RosterEntry.of(ReactorBreachOrderScenarios::aBreachWithinReachFallsBareWithSilentRacks,
 								"reactor_breach_within_reach_falls_bare_with_silent_racks")
+						.ticks(100),
+				RosterEntry.of(ReactorBreachOrderScenarios::aBreachFoundByTheFirstScanAfterAReloadSilencesTheRacks,
+								"reactor_breach_after_reload_silences_the_racks")
 						.ticks(100));
 
 		private Roster() {}
@@ -106,6 +111,44 @@ public final class ReactorBreachOrderScenarios {
 			}
 			expectTail(helper, brain, before, "sixty ticks into bare mode",
 					ReactorLog.Kind.ROOM_UNSEALED, ReactorLog.Kind.BARE_ENTERED);
+			helper.succeed();
+		}
+	}
+
+	/**
+	 * A chunk that unloads while the room is whole and loads again after its wall has been opened: the first scan of
+	 * the reloaded controller is the one that finds the hole, with an empty rack list and a box that is only the saved
+	 * one. The racks still wear the drone flag (it rides in the chunk as blockstate), and that same tick must take it
+	 * off.
+	 *
+	 * <p>The reload is made as faithfully as the world allows: the controller is saved, the wall is opened, a fresh
+	 * block entity is loaded from the saved tag and put in the controller's place, replacing the live one. So the
+	 * rack list, the voice latch and the scan timer are all gone, exactly as after a chunk round-trip, while the
+	 * blockstates (the racks' flag) stay as they were. The reloaded controller's very first tick scans.
+	 *
+	 * @implements MOD-735 — a breach found by the first scan after a reload silences every rack of the room in that
+	 *     tick.
+	 */
+	public static void aBreachFoundByTheFirstScanAfterAReloadSilencesTheRacks(GameTestHelper helper) {
+		try (ConfigOverrides o = ConfigOverrides.sync().set("reactorBareSearchRadius", 0)) {
+			ReactorControllerBlockEntity running = runningRoom(helper);
+			net.minecraft.nbt.CompoundTag saved = running.saveCustomOnly(helper.getLevel().registryAccess());
+			helper.setBlock(HOLE, Blocks.AIR.defaultBlockState());
+			BlockPos absolute = helper.absolutePos(ReactorRig.CONTROLLER);
+			ReactorControllerBlockEntity reloaded =
+					new ReactorControllerBlockEntity(absolute, helper.getLevel().getBlockState(absolute));
+			reloaded.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING,
+					helper.getLevel().registryAccess(), saved));
+			helper.getLevel().setBlockEntity(reloaded);
+			if (!helper.getBlockState(RACK).getValue(FuelRodAssemblyBlock.ACTIVE)) {
+				helper.fail("the rack lost its drone flag before the reloaded controller scanned, so the reload "
+						+ "is not under test");
+			}
+			ReactorRig.drive(helper, reloaded, 1);
+			if (reloaded.getStatus() == ReactorRoomStatus.FORMED) {
+				helper.fail("the reloaded controller's first scan did not find the hole");
+			}
+			expectSilent(helper, "on the reloaded controller's first scan");
 			helper.succeed();
 		}
 	}

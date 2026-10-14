@@ -34,6 +34,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.entity.EntityTypeTest;
+import net.minecraft.world.phys.Vec3;
 
 import static dev.alaindustrial.gametest.AlaGameTestHelper.survivalPlayer;
 
@@ -103,9 +104,26 @@ public final class ElectricBowScenarios {
 		return stack;
 	}
 
-	/** A survival archer holding {@code bow} in the main hand with {@code arrows} arrows in the pack. */
+	/** Where every archer stands: inside the test's own structure, whose chunks the framework keeps loaded. */
+	private static final Vec3 STAND = new Vec3(1.5, 2.0, 1.5);
+
+	/**
+	 * Moves {@code player} into the test's structure. The vanilla in-level mock is placed by
+	 * {@code PlayerList.placeNewPlayer} at the world spawn, thousands of blocks from the test, in a chunk
+	 * the framework does not load. An arrow spawned there lands in an entity section that is not yet
+	 * accessible, so {@code Level.getEntities} — which reads only accessible entities — does not see it:
+	 * the shot fired, the test found 0 arrows (MOD-807). Whether that chunk happened to be loaded already
+	 * depended on what ran before, so it failed in filtered runs and passed in the full roster.
+	 */
+	private static void standInArena(GameTestHelper helper, ServerPlayer player) {
+		Vec3 at = helper.absoluteVec(STAND);
+		player.snapTo(at.x, at.y, at.z, 0.0F, 0.0F);
+	}
+
+	/** A survival archer, standing in the test's structure, holding {@code bow} with {@code arrows} arrows. */
 	private static ServerPlayer archer(GameTestHelper helper, ItemStack bow, int arrows) {
 		ServerPlayer player = survivalPlayer(helper);
+		standInArena(helper, player);
 		player.setItemInHand(InteractionHand.MAIN_HAND, bow);
 		if (arrows > 0) {
 			player.getInventory().add(new ItemStack(Items.ARROW, arrows));
@@ -302,6 +320,7 @@ public final class ElectricBowScenarios {
 	 */
 	public static void fun05CreativeSpendsNothing(GameTestHelper helper) {
 		ServerPlayer player = AlaGameTestHelper.mockPlayerInLevel(helper);
+		standInArena(helper, player);
 		player.getAbilities().instabuild = true;
 		ItemStack bow = bow(ToolConfig.electricBowBuffer);
 		player.setItemInHand(InteractionHand.MAIN_HAND, bow);

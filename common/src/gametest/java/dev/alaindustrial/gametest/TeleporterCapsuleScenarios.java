@@ -4,6 +4,7 @@ import dev.alaindustrial.Config;
 import dev.alaindustrial.block.CapsuleGlass;
 import dev.alaindustrial.block.TeleporterBlock;
 import dev.alaindustrial.block.TeleporterCapsuleBlock;
+import dev.alaindustrial.block.TeleporterCapsuleOutline;
 import dev.alaindustrial.block.entity.TeleporterBlockEntity;
 import dev.alaindustrial.item.teleport.TeleportPoint;
 import dev.alaindustrial.registry.ModContent;
@@ -21,6 +22,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 /**
  * L2 suite for the teleporter capsule (MOD-112): two glass blocks on a station become its capsule, the
@@ -64,6 +68,9 @@ public final class TeleporterCapsuleScenarios {
 				RosterEntry.of(TeleporterCapsuleScenarios::tcTele005Sec01_stationWithoutCapsuleRefusesJump,
 								"tc_tele005_sec01_station_without_capsule_refuses_jump")
 						.fabricId("TeleporterCapsuleGameTest", "tcTele005Sec01_stationWithoutCapsuleRefusesJump")
+						.ticks(20, 40),
+				RosterEntry.of(TeleporterCapsuleScenarios::tcTele005Vis01_outlineFollowsTheCapsule,
+								"tc_tele005_vis01_outline_follows_the_capsule")
 						.ticks(20, 40));
 
 		private Roster() {}
@@ -93,6 +100,74 @@ public final class TeleporterCapsuleScenarios {
 
 	private static BlockState at(GameTestHelper helper, BlockPos rel) {
 		return helper.getLevel().getBlockState(helper.absolutePos(rel));
+	}
+
+	/**
+	 * @implements MOD-803 — the assembled teleporter is selected as it looks: the station's and the crown's
+	 *     selection shapes drop the square corners the bodies a player bumps into still have, the floor
+	 *     underfoot stays where it was, and the hover outline is one contour of the whole capsule from
+	 *     any of its three blocks — and only while the capsule stands.
+	 */
+	public static void tcTele005Vis01_outlineFollowsTheCapsule(GameTestHelper helper) {
+		for (Direction facing : Direction.Plane.HORIZONTAL) {
+			helper.setBlock(MIDDLE, Blocks.AIR);
+			helper.setBlock(TOP, Blocks.AIR);
+			capsule(helper, facing);
+			if (!TeleporterBlock.isFormed(at(helper, STATION))) {
+				helper.fail(facing + ": the capsule did not form");
+				return;
+			}
+			AABB contour = null;
+			for (BlockPos rel : List.of(STATION, MIDDLE, TOP)) {
+				BlockPos pos = helper.absolutePos(rel);
+				BlockState state = helper.getLevel().getBlockState(pos);
+				VoxelShape outline = TeleporterCapsuleOutline.shape(helper.getLevel(), pos, state);
+				if (outline == null) {
+					helper.fail(facing + " " + rel + ": no whole-capsule contour");
+					return;
+				}
+				AABB here = outline.bounds().move(pos);
+				if (contour == null) {
+					contour = here;
+				} else if (here.getCenter().distanceTo(contour.getCenter()) > 1.0e-6
+						|| Math.abs(here.getYsize() - contour.getYsize()) > 1.0e-6) {
+					helper.fail(facing + " " + rel + ": the contour moved with the block: " + here + " vs " + contour);
+				}
+			}
+			AABB capsule = TeleporterBlock.capsuleBounds(helper.absolutePos(STATION));
+			if (contour.minY != capsule.minY || contour.maxY != capsule.maxY
+					|| !capsule.contains(contour.getCenter())) {
+				helper.fail(facing + ": the contour " + contour + " is not the capsule " + capsule);
+			}
+			// The square corner of the old station box is empty now; the floor under it still holds.
+			BlockPos station = helper.absolutePos(STATION);
+			BlockState stationState = at(helper, STATION);
+			VoxelShape corner = Shapes.box(0.5 / 16, 0, 0.5 / 16, 1.5 / 16, 9.0 / 16, 1.5 / 16);
+			if (Shapes.joinIsNotEmpty(stationState.getShape(helper.getLevel(), station), corner, BooleanOp.AND)) {
+				helper.fail(facing + ": the station is still selected by its square corner");
+			}
+			VoxelShape floor = stationState.getCollisionShape(helper.getLevel(), station);
+			if (!Shapes.joinIsNotEmpty(floor, corner, BooleanOp.AND)) {
+				helper.fail(facing + ": the station's floor lost its corner — collision must not change");
+			}
+			VoxelShape lidCorner = Shapes.box(0.5 / 16, 15.0 / 16, 0.5 / 16, 1.5 / 16, 1, 1.5 / 16);
+			BlockPos top = helper.absolutePos(TOP);
+			BlockState topState = at(helper, TOP);
+			if (Shapes.joinIsNotEmpty(topState.getShape(helper.getLevel(), top), lidCorner, BooleanOp.AND)) {
+				helper.fail(facing + ": the crown is still selected by a square lid");
+			}
+			if (!Shapes.joinIsNotEmpty(topState.getCollisionShape(helper.getLevel(), top), lidCorner, BooleanOp.AND)) {
+				helper.fail(facing + ": the crown's lid lost its corner — collision must not change");
+			}
+		}
+		helper.setBlock(MIDDLE, Blocks.AIR);
+		helper.setBlock(TOP, Blocks.AIR);
+		placeStation(helper, Direction.NORTH);
+		BlockPos station = helper.absolutePos(STATION);
+		if (TeleporterCapsuleOutline.shape(helper.getLevel(), station, at(helper, STATION)) != null) {
+			helper.fail("a station without a capsule drew the capsule's contour");
+		}
+		helper.succeed();
 	}
 
 	private static long itemsOf(GameTestHelper helper, Block block) {

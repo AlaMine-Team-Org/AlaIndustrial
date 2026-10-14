@@ -326,6 +326,8 @@ public final class IndustrializationNeoForge {
 		// player join AND on /reload; getPlayer()==null is the all-players sync, i.e. /reload — the exact
 		// analogue of Fabric's END_DATA_PACK_RELOAD. Guarding on null avoids re-reading on every single join.
 		NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.OnDatapackSyncEvent event) -> {
+			// MOD-750: every join and every /reload — NeoForge sends clients only the recipe types requested here.
+			NeoForgeRecipeSync.requestModRecipeTypes(event);
 			if (event.getPlayer() == null) {
 				// MOD-695: the reload is re-sent to every connected client.
 				NeoForgeConfigLoader.reload(net.neoforged.neoforge.server.ServerLifecycleHooks.getCurrentServer());

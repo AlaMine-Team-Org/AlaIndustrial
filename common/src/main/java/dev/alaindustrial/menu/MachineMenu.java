@@ -570,6 +570,18 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 		return moved;
 	}
 
+	/**
+	 * The vanilla furnace's fallback (MOD-792): a stack no machine slot takes goes from the main inventory
+	 * to the hotbar and from the hotbar to the main inventory. {@code invStart} is where the 27 main slots
+	 * begin, the 9 hotbar slots follow them.
+	 */
+	private boolean moveBetweenInventoryRows(ItemStack stack, int index, int invStart) {
+		int hotbarStart = invStart + 27;
+		return index < hotbarStart
+				? moveItemStackTo(stack, hotbarStart, hotbarStart + 9, false)
+				: moveItemStackTo(stack, invStart, hotbarStart, false);
+	}
+
 	@Override
 	public ItemStack quickMoveStack(Player player, int index) {
 		ItemStack result = ItemStack.EMPTY;
@@ -602,11 +614,14 @@ public abstract class MachineMenu extends AbstractContainerMenu {
 				// An upgrade chip from the inventory shift-clicks into the panel (MOD-080, widened by
 				// MOD-392 from "the one active slot" to all four). If every slot is full, leave the chips
 				// in the inventory — never spill into machine slots.
-				if (!moveItemStackTo(stack, base, invStart, false)) {
+				if (!moveItemStackTo(stack, base, invStart, false)
+						&& !moveBetweenInventoryRows(stack, index, invStart)) {
 					return ItemStack.EMPTY;
 				}
-			} else if (!moveItemStackTo(stack, 0, base, false)) {
-				// Any other item → the base slots that take it (moveItemStackTo); never the upgrades.
+			} else if (!moveItemStackTo(stack, 0, base, false)
+					&& !moveBetweenInventoryRows(stack, index, invStart)) {
+				// Any other item → the base slots that take it (moveItemStackTo); never the upgrades. If
+				// none takes it, it changes rows like in the vanilla furnace (MOD-792).
 				return ItemStack.EMPTY;
 			}
 			if (stack.isEmpty()) {

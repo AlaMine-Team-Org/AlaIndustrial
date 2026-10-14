@@ -712,6 +712,10 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 		ReactorRoomStatus scanned = ReactorRoomStatus.of(result.status());
 		boolean wasFormed = state.getValue(ReactorControllerBlock.FORMED);
 		boolean changed = room.adopt(scanned);
+		if (!result.formed()) {
+			// MOD-735: silence while the remembered box still exists; paintShell forgets it.
+			voice.silence(level, room);
+		}
 		int repainted = room.paintShell(level, result);
 		if (wasFormed != result.formed()) {
 			level.setBlock(pos, state.setValue(ReactorControllerBlock.FORMED, result.formed()), 3);
@@ -723,14 +727,8 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 		if (result.formed()) {
 			room.claimRoom(level, result);
 		} else {
-			// Silence the racks BEFORE forgetting where they are (MOD-472). The drone is painted onto the
-			// columns and cleared the same way, so a list emptied first would leave the flag set on blocks
-			// nothing owns any more — a breached room that goes on humming for as long as it stands.
-			//
-			// Order matters twice over: silenceColumns resolves the columns through collectColumns, which
-			// answers with the BARE list once the flag is set, so the bare sweep has to come after the room
-			// list has been silenced and cleared. Otherwise a breach would silence the wrong racks.
-			voice.silence(level, room);
+			// Racks were silenced above, BEFORE forgetting where they are (MOD-472); the bare sweep must follow
+			// forgetRoom, or collectColumns would answer with the bare list.
 			room.forgetRoom();
 			room.rescanBare(level, pos);
 		}

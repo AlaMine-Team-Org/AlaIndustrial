@@ -47,7 +47,10 @@ import java.util.TreeSet;
  * <p><b>Roots.</b> Every method of a class in the client packages ({@code ArchitectureRules.CLIENT_TYPE_HOSTS}:
  * the client tree, the client mixins, the client half of the version facades), {@code ServerBalance} excepted;
  * and, outside them, the item and block methods drawn on the client — the tooltip bodies, the tooltip image and
- * the item bar ({@link #ITEM_DISPLAY_HOOKS}).
+ * the item bar ({@link #ITEM_DISPLAY_HOOKS}); and, since MOD-798, the hooks the client PREDICTS with —
+ * {@code getDestroySpeed} and {@code useOn} of the electric mining tools ({@link #PREDICTION_HOOKS},
+ * {@link #PREDICTING_ITEMS}). A prediction asks the server's price through {@code ServerBalance}; its server-only
+ * debit ({@code ItemEnergy.spend}, behind {@code isClientSide}) is a row of {@link #ACCEPTED}.
  *
  * <p><b>Edges.</b> A call or a method reference to the member it resolves to, plus three bridges without which
  * the rule would be blind to exactly the defects it was written for:
@@ -105,6 +108,25 @@ public class ClientBalanceReachRules {
 			"getBarColor");
 
 	/**
+	 * Item methods the client runs to PREDICT before the server answers (MOD-798): {@code getDestroySpeed} (the
+	 * mining speed, asked with no level) and {@code useOn} (the right-click, run on both sides). A balance number a
+	 * prediction reads must be the server's, or the client digs a block the server puts back.
+	 */
+	static final List<String> PREDICTION_HOOKS = List.of("getDestroySpeed", "useOn");
+
+	/** The base of the items whose prediction hooks are roots: the electric mining tools, every tier of them. */
+	static final String PREDICTING_ITEM_BASE = "dev.alaindustrial.item.tool.ElectricMiningToolItem";
+
+	/**
+	 * Whose {@link #PREDICTION_HOOKS} are roots. Scoped to the electric mining tools on purpose: the same hooks of
+	 * the capsules, the teleporter remote, the network analyzer, the wind gauge and the scythe also reach balance
+	 * knobs, but through logic that runs on the server (a tank fill, a point list, a traversal) and needs its own
+	 * audit and its own decision per item. Widen the base when that audit is done, not by listing rows here.
+	 */
+	static final DescribedPredicate<JavaClass> PREDICTING_ITEMS = DescribedPredicate.describe(
+			"electric mining tools", (JavaClass c) -> c.isAssignableTo(PREDICTING_ITEM_BASE));
+
+	/**
 	 * {@code <renderer>.extractRenderState(<entity>, <renderer>$State, …) -> <entity>.<entry>}: a renderer under
 	 * {@code client.render} reading an animation figure of its block entity, as the report spells the pair.
 	 */
@@ -118,6 +140,10 @@ public class ClientBalanceReachRules {
 	private static final String RENDER_STATE_TAIL = ", float, net.minecraft.world.phys.Vec3, "
 			+ "net.minecraft.client.renderer.feature.ModelFeatureRenderer$CrumblingOverlay)";
 
+	/** {@code ItemEnergy.spend} as ArchUnit prints it: the entry of the server-only debit of a prediction hook. */
+	private static final String ENERGY_SPEND = "dev.alaindustrial.item.energy.ItemEnergy.spend("
+			+ "net.minecraft.world.item.ItemStack, long, net.minecraft.world.entity.Entity)";
+
 	/**
 	 * Paths accepted on purpose, keyed by root and entry with their parameter types
 	 * ({@code <root full name> -> <entry full name>}, as ArchUnit prints them), each with its reason. Not a
@@ -126,6 +152,14 @@ public class ClientBalanceReachRules {
 	 * gone; one whose entry class this lane does not import is kept as a record and not checked.
 	 */
 	static final Map<String, String> ACCEPTED = Map.of(
+			"dev.alaindustrial.item.tool.ElectricDrillItem.useOn(net.minecraft.world.item.context.UseOnContext)"
+					+ " -> " + ENERGY_SPEND,
+			"server branch of the torch debit: runs after the client's early return, ItemEnergy.spend clamps by the"
+					+ " local capacity, as every server debit does (MOD-798)",
+			"dev.alaindustrial.item.tool.ElectricHoeItem.useOn(net.minecraft.world.item.context.UseOnContext)"
+					+ " -> " + ENERGY_SPEND,
+			"server branch of the tilling debit: guarded by !isClientSide(), ItemEnergy.spend clamps by the local"
+					+ " capacity, as every server debit does (MOD-798)",
 			renderAnimation("EnergyCondenserBlockEntityRenderer", "EnergyCondenserBlockEntity", "tierForBank()"),
 			"renderer animation: picks which clot model to draw, shows no number (owner, 2026-10-08)",
 			renderAnimation("ReactorDoorBlockEntityRenderer", "ReactorDoorBlockEntity", "slideProgress(long, float)"),
@@ -168,11 +202,13 @@ public class ClientBalanceReachRules {
 
 	/** A tooltip body of {@code ArchitectureRules}, or an item hook drawn on the client. */
 	static boolean isDisplayBody(JavaCodeUnit codeUnit) {
-		if (ArchitectureRules.isTooltipBody(codeUnit)) {
-			return true;
-		}
+		return ArchitectureRules.isTooltipBody(codeUnit) || isNamed(codeUnit, ITEM_DISPLAY_HOOKS);
+	}
+
+	/** One of {@code hooks}, or a lambda written inside it. */
+	private static boolean isNamed(JavaCodeUnit codeUnit, List<String> hooks) {
 		String name = codeUnit.getName();
-		for (String hook : ITEM_DISPLAY_HOOKS) {
+		for (String hook : hooks) {
 			if (hook.equals(name) || name.startsWith("lambda$" + hook + "$")) {
 				return true;
 			}
@@ -188,18 +224,28 @@ public class ClientBalanceReachRules {
 	 */
 	static ArchCondition<JavaClass> reachABalanceKnob(DescribedPredicate<JavaClass> clientCode,
 			Map<String, String> accepted, Map<String, String> pending) {
+		return reachABalanceKnob(clientCode, PREDICTING_ITEMS, accepted, pending);
+	}
+
+	/**
+	 * The same, with {@code predictingItems} naming the classes whose {@link #PREDICTION_HOOKS} are roots (the
+	 * negative control hands in its stand-ins, which cannot extend a Minecraft class on this lane).
+	 */
+	static ArchCondition<JavaClass> reachABalanceKnob(DescribedPredicate<JavaClass> clientCode,
+			DescribedPredicate<JavaClass> predictingItems, Map<String, String> accepted,
+			Map<String, String> pending) {
 		return new ArchCondition<>("reach a balance knob from client code") {
 			private Reach reach;
 
 			@Override
 			public void init(Collection<JavaClass> allObjectsToTest) {
-				reach = new Reach(clientCode, pending);
+				reach = new Reach(clientCode, predictingItems, pending);
 			}
 
 			@Override
 			public void check(JavaClass item, ConditionEvents events) {
 				if (reach == null) {
-					reach = new Reach(clientCode, pending);
+					reach = new Reach(clientCode, predictingItems, pending);
 				}
 				for (JavaCodeUnit root : item.getCodeUnits()) {
 					if (!reach.isRoot(root)) {
@@ -229,18 +275,22 @@ public class ClientBalanceReachRules {
 		private static final String KNOB = Knob.class.getName();
 
 		private final DescribedPredicate<JavaClass> clientCode;
+		private final DescribedPredicate<JavaClass> predictingItems;
 		private final Map<String, String> pending;
 		private final Map<JavaCodeUnit, List<JavaCodeUnit>> successors = new HashMap<>();
 		private final Map<JavaCodeUnit, Set<String>> reached = new HashMap<>();
 
-		Reach(DescribedPredicate<JavaClass> clientCode, Map<String, String> pending) {
+		Reach(DescribedPredicate<JavaClass> clientCode, DescribedPredicate<JavaClass> predictingItems,
+				Map<String, String> pending) {
 			this.clientCode = clientCode;
+			this.predictingItems = predictingItems;
 			this.pending = pending;
 		}
 
 		boolean isRoot(JavaCodeUnit codeUnit) {
 			JavaClass owner = codeUnit.getOwner();
-			return !isServerBalance(owner) && (clientCode.test(owner) || isDisplayBody(codeUnit));
+			return !isServerBalance(owner) && (clientCode.test(owner) || isDisplayBody(codeUnit)
+					|| (predictingItems.test(owner) && isNamed(codeUnit, PREDICTION_HOOKS)));
 		}
 
 		/** Knob GETs in the code unit itself (its lambdas included), as {@code Holder.knob}. */
