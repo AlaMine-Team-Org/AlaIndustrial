@@ -4184,6 +4184,36 @@
           ]
         },
         {
+          "id": "advanced_industrial_workbench",
+          "title": "Avancerad industriell arbetsbänk",
+          "icon": "alaindustrial:advanced_industrial_workbench",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Avancerad industriell arbetsbänk",
+              "text": "Den andra nivån av Industriell arbetsbänk — ett 3×3-rutnät som minns senaste tillverkningen, behåller sina föremål när fönstret stängs, tar emot ingredienser från rör och tratter enligt det minnade receptet och tillverkar själv in i ett rör under."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formad tillverkning",
+              "grid": [
+                "",
+                "alaindustrial:electronic_circuit",
+                "",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:industrial_workbench",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "minecraft:chest",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:advanced_industrial_workbench",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "electrum_chest",
           "title": "Elektrumkista",
           "icon": "alaindustrial:electrum_chest",
@@ -6065,6 +6095,44 @@
                 ""
               ],
               "result_id": "alaindustrial:fluxweave_helmet",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluxweave_solar_helmet",
+          "title": "Solfluxvävshjälm",
+          "icon": "alaindustrial:fluxweave_solar_helmet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Solfluxvävshjälm",
+              "text": "En fluxvävshjälm med en solpanel ovanpå — i dagsljus under öppen himmel genererar den EU själv och laddar allt du bär; i övrigt är den en vanlig fluxvävshjälm."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Energi: 15 000 EU",
+                "Buffert: 15 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formad tillverkning",
+              "grid": [
+                "",
+                "alaindustrial:solar_panel",
+                "",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:fluxweave_helmet",
+                "alaindustrial:insulated_copper_cable",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:fluxweave_solar_helmet",
               "result_count": 1
             }
           ]

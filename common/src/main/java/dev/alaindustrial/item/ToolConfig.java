@@ -358,6 +358,10 @@ public final class ToolConfig {
 	@Knob(section = Section.TOOLS, min = 1,
 			doc = "EU the Fluxweave helmet spends per half-heart healed by the 4/4 set bonus.")
 	public static int fluxweaveRegenEuPerHeal = 200;
+	/** Solar Fluxweave Helmet (MOD-664): EU/s its panel yields under a clear daytime sky; 0 switches it off. */
+	@Knob(section = Section.TOOLS, clientVisible = true, min = 0,
+			doc = "EU/second the Solar Fluxweave Helmet yields under a clear daytime sky.")
+	public static int fluxweaveSolarEuPerSecond = 8;
 	/** EU burned per tick the jetpack engine actually thrusts (jump held while airborne, charge left).
 	 * Matches the drill's per-block cost: a second of flight ≈ 20 mined blocks' worth of EU. */
 	@Knob(section = Section.TOOLS, min = 1,

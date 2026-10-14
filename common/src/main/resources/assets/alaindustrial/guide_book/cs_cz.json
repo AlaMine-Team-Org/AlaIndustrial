@@ -4184,6 +4184,36 @@
           ]
         },
         {
+          "id": "advanced_industrial_workbench",
+          "title": "Pokročilý průmyslový pracovní stůl",
+          "icon": "alaindustrial:advanced_industrial_workbench",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Pokročilý průmyslový pracovní stůl",
+              "text": "Druhý stupeň průmyslového pracovního stolu — mřížka 3×3, která si pamatuje poslední výrobu, drží své předměty i po zavření okna, přijímá suroviny z trubek a násypek podle zapamatovaného receptu a sama vyrábí do trubky pod sebou."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Výroba podle vzoru",
+              "grid": [
+                "",
+                "alaindustrial:electronic_circuit",
+                "",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:industrial_workbench",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "minecraft:chest",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:advanced_industrial_workbench",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "electrum_chest",
           "title": "Elektrumová truhla",
           "icon": "alaindustrial:electrum_chest",
@@ -6065,6 +6095,44 @@
                 ""
               ],
               "result_id": "alaindustrial:fluxweave_helmet",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluxweave_solar_helmet",
+          "title": "Solární fluxová helma",
+          "icon": "alaindustrial:fluxweave_solar_helmet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Solární fluxová helma",
+              "text": "Fluxová helma se solárním panelem nahoře — za denního světla pod otevřeným nebem sama vyrábí EU a dobíjí vše, co neseš; jinak je to obyčejná fluxová helma."
+            },
+            {
+              "type": "stats",
+              "title": "Parametry",
+              "lines": [
+                "Energie: 15 000 EU",
+                "Zásobník: 15 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Výroba podle vzoru",
+              "grid": [
+                "",
+                "alaindustrial:solar_panel",
+                "",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:fluxweave_helmet",
+                "alaindustrial:insulated_copper_cable",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:fluxweave_solar_helmet",
               "result_count": 1
             }
           ]

@@ -372,6 +372,7 @@
     {"key": "fluxweaveOxygenBonus", "section": "tools", "type": "int", "default": 3, "min": 0.0, "exclusive": false, "doc": "OXYGEN_BONUS levels granted by a charged Fluxweave helmet."},
     {"key": "fluxweaveRegenEuPerHeal", "section": "tools", "type": "int", "default": 200, "min": 1.0, "exclusive": false, "doc": "EU the Fluxweave helmet spends per half-heart healed by the 4/4 set bonus."},
     {"key": "fluxweaveRunSpeedPercent", "section": "tools", "type": "int", "default": 12, "min": 0.0, "exclusive": false, "doc": "Percent added to run speed by charged Fluxweave leggings."},
+    {"key": "fluxweaveSolarEuPerSecond", "section": "tools", "type": "int", "default": 8, "min": 0.0, "exclusive": false, "doc": "EU/second the Solar Fluxweave Helmet yields under a clear daytime sky."},
     {"key": "fluxweaveStepHeightBonus", "section": "tools", "type": "int", "default": 60, "min": 0.0, "exclusive": false, "doc": "Extra step height (hundredths of a block) from charged Fluxweave leggings with the assist toggled on."},
     {"key": "fluxweaveSwimEfficiency", "section": "tools", "type": "int", "default": 50, "min": 0.0, "exclusive": false, "doc": "Percent of water movement efficiency granted by a charged Fluxweave helmet."},
     {"key": "fluxweaveUpkeepEuPerSecond", "section": "tools", "type": "int", "default": 1, "min": 0.0, "exclusive": false, "doc": "EU/second a charged, worn Fluxweave piece burns to keep its bonuses on."},

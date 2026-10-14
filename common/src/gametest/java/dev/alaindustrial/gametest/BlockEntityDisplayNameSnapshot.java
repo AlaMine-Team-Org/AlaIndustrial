@@ -56,6 +56,8 @@ final class BlockEntityDisplayNameSnapshot {
 			"electric_heater @electric_heater: block.alaindustrial.electric_heater",
 			"thermal_centrifuge @thermal_centrifuge: block.alaindustrial.thermal_centrifuge",
 			"block_breaker @block_breaker: block.alaindustrial.block_breaker",
+			"advanced_industrial_workbench @advanced_industrial_workbench:"
+					+ " container.alaindustrial.advanced_industrial_workbench",
 			"distillation_column @distillation_column: block.alaindustrial.distillation_column",
 			"pump @pump: block.alaindustrial.pump",
 			"fermenter @fermenter: block.alaindustrial.fermenter",

@@ -110,6 +110,8 @@ public final class MenuScreenManifest {
 			screen(() -> ModContent.CANNING_MACHINE_MENU.get(), CanningMachineScreen::new),
 			screen(() -> ModContent.SAWMILL_MENU.get(), SawmillScreen::new),
 			screen(() -> ModContent.BLOCK_BREAKER_MENU.get(), BlockBreakerScreen::new),
+			// MOD-810: the advanced workbench - crafting grid, recipe book, Clear button.
+			screen(() -> ModContent.ADVANCED_INDUSTRIAL_WORKBENCH_MENU.get(), AdvancedIndustrialWorkbenchScreen::new),
 			screen(() -> ModContent.ASSEMBLER_MENU.get(), AssemblerScreen::new),
 			screen(() -> ModContent.INCUBATOR_MENU.get(), IncubatorScreen::new),
 			screen(() -> ModContent.POLYMERIZER_MENU.get(), PolymerizerScreen::new),

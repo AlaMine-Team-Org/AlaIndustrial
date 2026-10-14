@@ -1,0 +1,17 @@
+{
+	"type": "alaindustrial:crafting_shaped_charge_transfer",
+	"category": "equipment",
+	"key": {
+		"S": "alaindustrial:solar_panel",
+		"H": "alaindustrial:fluxweave_helmet",
+		"C": "alaindustrial:insulated_copper_cable"
+	},
+	"pattern": [
+		" S ",
+		"CHC"
+	],
+	"result": {
+		"id": "alaindustrial:fluxweave_solar_helmet",
+		"count": 1
+	}
+}

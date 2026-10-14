@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_helmet": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "alaindustrial:fluxweave_helmet" } ] } },
+    "has_panel": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "alaindustrial:solar_panel" } ] } }
+  },
+  "requirements": [ [ "has_helmet" ], [ "has_panel" ] ],
+  "rewards": { "recipes": [ "alaindustrial:fluxweave_solar_helmet" ] }
+}

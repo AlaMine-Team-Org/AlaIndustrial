@@ -82,6 +82,19 @@ class MachineTooltipSpecTest {
 	}
 
 	@Test
+	void noHintWhenShiftWouldShowNothingMore() {
+		// The Advanced Industrial Workbench shape: no tier, only always-shown notes, nothing behind [SHIFT].
+		MachineTooltipSpec bench = new MachineTooltipSpec(null,
+				List.of(MachineTooltipSpec.note("tooltip.alaindustrial.a", Tone.GRAY),
+						MachineTooltipSpec.note("tooltip.alaindustrial.b", Tone.GRAY)),
+				List.of());
+		List<String> both = List.of("tooltip.alaindustrial.a", "tooltip.alaindustrial.b");
+		assertEquals(both, keys(bench.lines(false, true)));
+		assertEquals(both, keys(bench.lines(false, false)));
+		assertEquals(both, keys(bench.lines(true, false)));
+	}
+
+	@Test
 	void theHintAndTheTiersKeepTheirColours() {
 		Line hold = MACHINE.lines(false, true).get(2);
 		assertEquals(Tone.DARK_GRAY, hold.tone());

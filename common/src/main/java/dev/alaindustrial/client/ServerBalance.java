@@ -330,6 +330,10 @@ public final class ServerBalance {
 		return current.intValue("fluxweaveBuffer", ToolConfig.fluxweaveBuffer);
 	}
 
+	public static int fluxweaveSolarEuPerSecond() {
+		return current.intValue("fluxweaveSolarEuPerSecond", ToolConfig.fluxweaveSolarEuPerSecond);
+	}
+
 	public static int fuelEuPerTick() {
 		return current.intValue("fuelEuPerTick", GeneratorConfig.fuelEuPerTick);
 	}

@@ -62,6 +62,8 @@ final class MiscZone implements DemoZone {
 		w.set(64, 2, Z, ModContent.TEMPERED_IRON_PLATE_BLOCK.get());
 		// Industrial Workbench (MOD-062): the Industrialist villager's job-site block on display.
 		w.set(65, 2, Z, ModContent.INDUSTRIAL_WORKBENCH.get());
+		// MOD-810: its second tier, right beside it.
+		w.set(66, 2, Z, ModContent.ADVANCED_INDUSTRIAL_WORKBENCH.get());
 		// MOD-287: two storage modules side by side on the top shelf — adjacent on purpose, so the stand
 		// shows them merged into one warehouse rather than two separate ones (the gametest walks the cluster
 		// from the first one and expects both).

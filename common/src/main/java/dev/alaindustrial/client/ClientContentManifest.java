@@ -21,7 +21,9 @@ import dev.alaindustrial.block.entity.SilverChestBlockEntity;
 import dev.alaindustrial.block.entity.StormWindMillBlockEntity;
 import dev.alaindustrial.block.entity.SprinklerBlockEntity;
 import dev.alaindustrial.block.entity.TeleporterBlockEntity;
+import dev.alaindustrial.block.entity.AdvancedIndustrialWorkbenchBlockEntity;
 import dev.alaindustrial.block.entity.BlockBreakerBlockEntity;
+import dev.alaindustrial.client.render.AdvancedIndustrialWorkbenchBlockEntityRenderer;
 import dev.alaindustrial.client.render.BlockBreakerBlockEntityRenderer;
 import dev.alaindustrial.block.entity.ThermalCentrifugeBlockEntity;
 import dev.alaindustrial.block.entity.WaterMillBlockEntity;
@@ -255,6 +257,10 @@ public final class ClientContentManifest {
 			renderer(ContentManifest.blockEntity("block_breaker",
 					BlockBreakerBlockEntity.class),
 					BlockBreakerBlockEntityRenderer::new),
+			// MOD-810: the grid's items lying on the lid and the craft floating over them.
+			renderer(ContentManifest.blockEntity("advanced_industrial_workbench",
+					AdvancedIndustrialWorkbenchBlockEntity.class),
+					AdvancedIndustrialWorkbenchBlockEntityRenderer::new),
 			// MOD-763: the assembled mob wheel — frame, running wheel and gate. Drawn by the drive; every
 			// other member's formed model is empty.
 			renderer(ContentManifest.blockEntity("mob_wheel_controller", MobWheelBlockEntity.class),

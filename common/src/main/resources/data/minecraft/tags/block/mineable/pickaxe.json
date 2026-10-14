@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
+    "alaindustrial:advanced_industrial_workbench",
     "alaindustrial:advanced_machine_casing",
     "alaindustrial:alloy_smelter",
     "alaindustrial:assembler",

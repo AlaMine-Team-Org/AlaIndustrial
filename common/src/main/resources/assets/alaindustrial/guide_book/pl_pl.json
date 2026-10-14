@@ -4184,6 +4184,36 @@
           ]
         },
         {
+          "id": "advanced_industrial_workbench",
+          "title": "Zaawansowany warsztat przemysłowy",
+          "icon": "alaindustrial:advanced_industrial_workbench",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Zaawansowany warsztat przemysłowy",
+              "text": "Drugi poziom Warsztatu przemysłowego — siatka 3×3, która pamięta ostatnie wytworzenie, zachowuje przedmioty po zamknięciu okna, przyjmuje składniki z rur i lejów według zapamiętanej receptury i sama wytwarza do rury poniżej."
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "",
+                "alaindustrial:electronic_circuit",
+                "",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:industrial_workbench",
+                "alaindustrial:tempered_iron",
+                "alaindustrial:tempered_iron",
+                "minecraft:chest",
+                "alaindustrial:tempered_iron"
+              ],
+              "result_id": "alaindustrial:advanced_industrial_workbench",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "electrum_chest",
           "title": "Elektrumowa skrzynia",
           "icon": "alaindustrial:electrum_chest",
@@ -6065,6 +6095,44 @@
                 ""
               ],
               "result_id": "alaindustrial:fluxweave_helmet",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluxweave_solar_helmet",
+          "title": "Hełm fluksowy z panelem słonecznym",
+          "icon": "alaindustrial:fluxweave_solar_helmet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Hełm fluksowy z panelem słonecznym",
+              "text": "Hełm fluksowy z panelem słonecznym na górze — za dnia pod otwartym niebem sam wytwarza EU i ładuje wszystko, co nosisz; poza tym to zwykły hełm fluksowy."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Energia: 15 000 EU",
+                "Bufor: 15 000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "",
+                "alaindustrial:solar_panel",
+                "",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:fluxweave_helmet",
+                "alaindustrial:insulated_copper_cable",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:fluxweave_solar_helmet",
               "result_count": 1
             }
           ]
