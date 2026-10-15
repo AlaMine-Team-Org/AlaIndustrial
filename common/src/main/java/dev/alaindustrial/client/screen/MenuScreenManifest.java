@@ -128,6 +128,8 @@ public final class MenuScreenManifest {
 			screen(() -> ModContent.CHARGE_PAD_MENU.get(), ChargePadScreen::new),
 			// MOD-802 — the vacuum collector's 3x3 buffer.
 			screen(() -> ModContent.VACUUM_COLLECTOR_MENU.get(), VacuumCollectorScreen::new),
+			// MOD-818 — the Electric Mob Trap's buffer and liquid-experience gauge.
+			screen(() -> ModContent.ELECTRIC_MOB_TRAP_MENU.get(), ElectricMobTrapScreen::new),
 			screen(() -> ModContent.TELEPORTER_STATION_MENU.get(), TeleporterStationScreen::new),
 			screen(() -> ModContent.TELEPORTER_REMOTE_MENU.get(), TeleporterRemoteScreen::new),
 			screen(() -> ModContent.DAYLIGHT_SOLAR_PANEL_MENU.get(), DaylightSolarPanelScreen::new),

@@ -49,6 +49,7 @@ import dev.alaindustrial.menu.TeleporterStationMenu;
 import dev.alaindustrial.menu.ReactorControllerMenu;
 import dev.alaindustrial.menu.AdvancedIndustrialWorkbenchMenu;
 import dev.alaindustrial.menu.BlockBreakerMenu;
+import dev.alaindustrial.menu.ElectricMobTrapMenu;
 import dev.alaindustrial.menu.VacuumCollectorMenu;
 import dev.alaindustrial.menu.ThermalCentrifugeMenu;
 import dev.alaindustrial.menu.WaterMillMenu;
@@ -257,6 +258,7 @@ public final class ModContent {
 	public static Supplier<Block> MOB_REPELLER = unbound("MOB_REPELLER");
 	public static Supplier<Block> MOB_REPELLER_MV = unbound("MOB_REPELLER_MV");
 	public static Supplier<Block> MOB_REPELLER_HV = unbound("MOB_REPELLER_HV");
+	public static Supplier<Block> ELECTRIC_MOB_TRAP = unbound("ELECTRIC_MOB_TRAP");
 	public static Supplier<Block> INCUBATOR = unbound("INCUBATOR");
 	public static Supplier<Block> INCUBATOR_DOME = unbound("INCUBATOR_DOME");
 	/** The glass cells of an assembled teleporter capsule (MOD-112). */
@@ -414,6 +416,8 @@ public final class ModContent {
 	 * exhaust destroys, not terrain.
 	 */
 	public static Supplier<Fluid> STEAM = unbound("STEAM");
+	/** Liquid experience (MOD-818): tank-and-pipe only, like steam; the Electric Mob Trap's xp output. */
+	public static Supplier<Fluid> EXPERIENCE = unbound("EXPERIENCE");
 	public static Supplier<FlowingFluid> DIESEL = unbound("DIESEL");
 	public static Supplier<FlowingFluid> FLOWING_DIESEL = unbound("FLOWING_DIESEL");
 	public static Supplier<FlowingFluid> FUEL_OIL = unbound("FUEL_OIL");
@@ -954,6 +958,7 @@ public final class ModContent {
 	public static Supplier<BlockItem> MOB_REPELLER_ITEM = unbound("MOB_REPELLER_ITEM");
 	public static Supplier<BlockItem> MOB_REPELLER_MV_ITEM = unbound("MOB_REPELLER_MV_ITEM");
 	public static Supplier<BlockItem> MOB_REPELLER_HV_ITEM = unbound("MOB_REPELLER_HV_ITEM");
+	public static Supplier<BlockItem> ELECTRIC_MOB_TRAP_ITEM = unbound("ELECTRIC_MOB_TRAP_ITEM");
 	public static Supplier<BlockItem> INCUBATOR_ITEM = unbound("INCUBATOR_ITEM");
 	public static Supplier<BlockItem> TRELLIS_ITEM = unbound("TRELLIS_ITEM");
 	public static Supplier<BlockItem> CRYSTAL_FARM_FLOOR_ITEM = unbound("CRYSTAL_FARM_FLOOR_ITEM");
@@ -1128,6 +1133,7 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> MOB_REPELLER_BE = unbound("MOB_REPELLER_BE");
 	public static Supplier<BlockEntityType<?>> MOB_REPELLER_MV_BE = unbound("MOB_REPELLER_MV_BE");
 	public static Supplier<BlockEntityType<?>> MOB_REPELLER_HV_BE = unbound("MOB_REPELLER_HV_BE");
+	public static Supplier<BlockEntityType<?>> ELECTRIC_MOB_TRAP_BE = unbound("ELECTRIC_MOB_TRAP_BE");
 	public static Supplier<BlockEntityType<?>> INCUBATOR_BE = unbound("INCUBATOR_BE");
 	public static Supplier<BlockEntityType<?>> PUMP_BE = unbound("PUMP_BE");
 	public static Supplier<BlockEntityType<?>> GARDEN_DRONE_STATION_BE = unbound("GARDEN_DRONE_STATION_BE");
@@ -1191,6 +1197,7 @@ public final class ModContent {
 	public static Supplier<MenuType<MobRepellerMenu>> MOB_REPELLER_MENU = unbound("MOB_REPELLER_MENU");
 	public static Supplier<MenuType<MobRepellerMvMenu>> MOB_REPELLER_MV_MENU = unbound("MOB_REPELLER_MV_MENU");
 	public static Supplier<MenuType<MobRepellerHvMenu>> MOB_REPELLER_HV_MENU = unbound("MOB_REPELLER_HV_MENU");
+	public static Supplier<MenuType<ElectricMobTrapMenu>> ELECTRIC_MOB_TRAP_MENU = unbound("ELECTRIC_MOB_TRAP_MENU");
 	public static Supplier<MenuType<CesuMenu>> CESU_MENU = unbound("CESU_MENU");
 	/** Charging Station readout (MOD-416): buffer bar plus delivery rate, item count and estimate. */
 	public static Supplier<MenuType<ChargePadMenu>> CHARGE_PAD_MENU = unbound("CHARGE_PAD_MENU");

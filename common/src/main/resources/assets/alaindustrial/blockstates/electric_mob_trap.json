@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "alaindustrial:block/electric_mob_trap"
+    },
+    "lit=true": {
+      "model": "alaindustrial:block/electric_mob_trap_on"
+    }
+  }
+}

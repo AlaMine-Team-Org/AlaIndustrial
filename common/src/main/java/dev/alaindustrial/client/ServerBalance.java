@@ -262,6 +262,26 @@ public final class ServerBalance {
 		return current.intValue("electricHoeTillEuCost", ToolConfig.electricHoeTillEuCost);
 	}
 
+	public static int electricMobTrapBuffer() {
+		return current.intValue("electricMobTrapBuffer", Config.electricMobTrapBuffer);
+	}
+
+	public static int electricMobTrapDamage() {
+		return current.intValue("electricMobTrapDamage", Config.electricMobTrapDamage);
+	}
+
+	public static int electricMobTrapEuPerStrike() {
+		return current.intValue("electricMobTrapEuPerStrike", Config.electricMobTrapEuPerStrike);
+	}
+
+	public static int electricMobTrapRadius() {
+		return current.intValue("electricMobTrapRadius", Config.electricMobTrapRadius);
+	}
+
+	public static int electricMobTrapTankMb() {
+		return current.intValue("electricMobTrapTankMb", Config.electricMobTrapTankMb);
+	}
+
 	public static int electricSaberBuffer() {
 		return current.intValue("electricSaberBuffer", ToolConfig.electricSaberBuffer);
 	}

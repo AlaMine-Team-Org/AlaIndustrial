@@ -3,6 +3,7 @@ package dev.alaindustrial.gametest;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.fluid.BiofuelFluid;
 import dev.alaindustrial.fluid.DieselFluid;
+import dev.alaindustrial.fluid.ExperienceFluid;
 import dev.alaindustrial.fluid.FuelOilFluid;
 import dev.alaindustrial.fluid.NutrientSolutionFluid;
 import dev.alaindustrial.fluid.OilFluid;
@@ -23,7 +24,7 @@ import net.minecraft.world.level.material.Fluids;
 /**
  * L2 characterization of the mod's fluids (MOD-708, batch 0), on both loaders.
  *
- * <p>Every one of the eleven registered fluids is described by one line: the common fluid family it
+ * <p>Every one of the twelve registered fluids is described by one line: the common fluid family it
  * belongs to, its source and flowing forms, whether it is a source, which fluids it counts as itself,
  * its bucket, the block its default state becomes, and whether the loader-neutral {@link ModContent}
  * handles resolve to the very object in the registry. Moving the fluid declarations into one shared list
@@ -51,7 +52,7 @@ public final class FluidDefinitionScenarios {
 	/** One fluid and the loader-neutral handles that must name it, its bucket and its liquid block. */
 	private record Expected(String id, Supplier<? extends Fluid> fluid, Supplier<Item> bucket, Supplier<Block> block) {}
 
-	/** The eleven fluids in registration order, with the {@link ModContent} slots each loader binds. */
+	/** The twelve fluids in registration order, with the {@link ModContent} slots each loader binds. */
 	private static List<Expected> fluids() {
 		return List.of(
 				new Expected("oil", () -> ModContent.OIL.get(), () -> ModContent.OIL_BUCKET.get(),
@@ -77,6 +78,8 @@ public final class FluidDefinitionScenarios {
 						() -> ModContent.NUTRIENT_SOLUTION_BUCKET.get(),
 						() -> ModContent.NUTRIENT_SOLUTION_BLOCK.get()),
 				new Expected("steam", () -> ModContent.STEAM.get(), () -> net.minecraft.world.item.Items.AIR,
+						() -> net.minecraft.world.level.block.Blocks.AIR),
+				new Expected("experience", () -> ModContent.EXPERIENCE.get(), () -> net.minecraft.world.item.Items.AIR,
 						() -> net.minecraft.world.level.block.Blocks.AIR));
 	}
 
@@ -117,6 +120,8 @@ public final class FluidDefinitionScenarios {
 					+ " bucket=alaindustrial:nutrient_solution_bucket block=alaindustrial:nutrient_solution"
 					+ " handles=bound",
 			"steam family=SteamFluid source=- flowing=- isSource=true same=alaindustrial:steam"
+					+ " bucket=minecraft:air block=minecraft:air handles=bound",
+			"experience family=ExperienceFluid source=- flowing=- isSource=true same=alaindustrial:experience"
 					+ " bucket=minecraft:air block=minecraft:air handles=bound");
 
 	/** Every line this loader produces, in the order of {@link #fluids()}. */
@@ -175,6 +180,9 @@ public final class FluidDefinitionScenarios {
 		}
 		if (fluid instanceof SteamFluid) {
 			return "SteamFluid";
+		}
+		if (fluid instanceof ExperienceFluid) {
+			return "ExperienceFluid";
 		}
 		return "other";
 	}

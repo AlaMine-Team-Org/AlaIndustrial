@@ -4214,6 +4214,45 @@
           ]
         },
         {
+          "id": "electric_mob_trap",
+          "title": "Електропастка мобів",
+          "icon": "alaindustrial:electric_mob_trap",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Електропастка мобів",
+              "text": "Електрична камера, яка слабко притягує ворожих мобів, б'є їх струмом за EU, збирає здобич у буфер на дев'ять слотів і перетворює їхній досвід на рідкий; усе забирають труби."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Енергія: 100 EU за удар",
+                "Буфер: 4000 EU",
+                "Радіус: 6 бл"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "alaindustrial:ceramic_plate",
+                "minecraft:lightning_rod",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:vacuum_collector",
+                "alaindustrial:copper_coil",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:ceramic_plate"
+              ],
+              "result_id": "alaindustrial:electric_mob_trap",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "electrum_chest",
           "title": "Електрумова скриня",
           "icon": "alaindustrial:electrum_chest",

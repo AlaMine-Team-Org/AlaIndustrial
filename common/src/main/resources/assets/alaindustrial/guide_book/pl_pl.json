@@ -4214,6 +4214,45 @@
           ]
         },
         {
+          "id": "electric_mob_trap",
+          "title": "Elektryczna pułapka na potwory",
+          "icon": "alaindustrial:electric_mob_trap",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Elektryczna pułapka na potwory",
+              "text": "Elektryczna komora, która słabo przyciąga wrogie potwory, razi je prądem za EU, zbiera łup w buforze na dziewięć miejsc i zamienia ich doświadczenie w płynne doświadczenie; rury wyciągają wszystko."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Energia: 100 EU na uderzenie",
+                "Bufor: 4000 EU",
+                "Promień: 6 bloków"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "alaindustrial:ceramic_plate",
+                "minecraft:lightning_rod",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:vacuum_collector",
+                "alaindustrial:copper_coil",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:ceramic_plate"
+              ],
+              "result_id": "alaindustrial:electric_mob_trap",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "electrum_chest",
           "title": "Elektrumowa skrzynia",
           "icon": "alaindustrial:electrum_chest",

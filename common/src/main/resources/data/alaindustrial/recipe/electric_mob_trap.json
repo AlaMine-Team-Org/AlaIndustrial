@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"key": {
+		"K": "alaindustrial:ceramic_plate",
+		"R": "minecraft:lightning_rod",
+		"C": "alaindustrial:copper_coil",
+		"V": "alaindustrial:vacuum_collector",
+		"E": "alaindustrial:electronic_circuit"
+	},
+	"pattern": [
+		"KRK",
+		"CVC",
+		"KEK"
+	],
+	"result": { "id": "alaindustrial:electric_mob_trap" }
+}

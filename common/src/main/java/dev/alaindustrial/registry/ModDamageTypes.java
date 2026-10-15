@@ -5,6 +5,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 
 /** Data-driven damage types used by Ala Industrial. */
@@ -29,5 +30,12 @@ public final class ModDamageTypes {
 		return new DamageSource(level.registryAccess()
 				.lookupOrThrow(Registries.DAMAGE_TYPE)
 				.getOrThrow(ELECTRIC_SHOCK));
+	}
+
+	/** An electric shock dealt on behalf of {@code attacker} (the Electric Mob Trap's fake player, MOD-818). */
+	public static DamageSource electricShock(Level level, Entity attacker) {
+		return new DamageSource(level.registryAccess()
+				.lookupOrThrow(Registries.DAMAGE_TYPE)
+				.getOrThrow(ELECTRIC_SHOCK), attacker);
 	}
 }

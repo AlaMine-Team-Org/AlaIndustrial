@@ -80,5 +80,6 @@ final class BlockEntityDisplayNameSnapshot {
 			"sprinkler @sprinkler: block.alaindustrial.sprinkler",
 			"mob_repeller @mob_repeller: block.alaindustrial.mob_repeller",
 			"mob_repeller_mv @mob_repeller_mv: block.alaindustrial.mob_repeller_mv",
-			"mob_repeller_hv @mob_repeller_hv: block.alaindustrial.mob_repeller_hv");
+			"mob_repeller_hv @mob_repeller_hv: block.alaindustrial.mob_repeller_hv",
+			"electric_mob_trap @electric_mob_trap: block.alaindustrial.electric_mob_trap");
 }

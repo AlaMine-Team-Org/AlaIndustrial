@@ -154,6 +154,7 @@ final class ContentManifestOrder {
 			"block mob_repeller",
 			"block mob_repeller_mv",
 			"block mob_repeller_hv",
+			"block electric_mob_trap",
 			"block tempered_iron_block",
 			"block silver_plate_block",
 			"block tempered_iron_plate_block",
@@ -699,6 +700,7 @@ final class ContentManifestOrder {
 			"item broken_engraved_plate_d",
 			"item broken_engraved_plate_r",
 			"item broken_engraved_plate_m",
+			"item electric_mob_trap",
 			"block_entity generator: generator",
 			"block_entity geothermal_generator: geothermal_generator",
 			"block_entity solar_panel: solar_panel",
@@ -772,6 +774,7 @@ final class ContentManifestOrder {
 			"block_entity mob_repeller: mob_repeller",
 			"block_entity mob_repeller_mv: mob_repeller_mv",
 			"block_entity mob_repeller_hv: mob_repeller_hv",
+			"block_entity electric_mob_trap: electric_mob_trap",
 			"menu generator",
 			"menu solar_panel",
 			"menu moonlit_solar_panel",
@@ -830,5 +833,6 @@ final class ContentManifestOrder {
 			"menu magnet",
 			"menu mob_repeller",
 			"menu mob_repeller_mv",
-			"menu mob_repeller_hv");
+			"menu mob_repeller_hv",
+			"menu electric_mob_trap");
 }

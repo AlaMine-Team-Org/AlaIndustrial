@@ -4214,6 +4214,45 @@
           ]
         },
         {
+          "id": "electric_mob_trap",
+          "title": "مصيدة الوحوش الكهربائية",
+          "icon": "alaindustrial:electric_mob_trap",
+          "pages": [
+            {
+              "type": "text",
+              "title": "مصيدة الوحوش الكهربائية",
+              "text": "غرفة كهربائية تجذب الوحوش العدوانية بضعف وتصعقها مقابل EU، وتجمع غنائمها في احتياطي من تسع خانات، وتحوّل خبرتها إلى خبرة سائلة؛ والأنابيب تسحب كل شيء."
+            },
+            {
+              "type": "stats",
+              "title": "المواصفات",
+              "lines": [
+                "الطاقة: 100 EU لكل ضربة",
+                "الاحتياطي: 4000 EU",
+                "نصف القطر: 6 كتل"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
+              "grid": [
+                "alaindustrial:ceramic_plate",
+                "minecraft:lightning_rod",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:vacuum_collector",
+                "alaindustrial:copper_coil",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:ceramic_plate"
+              ],
+              "result_id": "alaindustrial:electric_mob_trap",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "electrum_chest",
           "title": "صندوق إلكتروم",
           "icon": "alaindustrial:electrum_chest",

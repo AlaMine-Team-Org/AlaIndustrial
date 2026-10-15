@@ -105,6 +105,10 @@ final class MiscZone implements DemoZone {
 	 */
 	private static void blockBreaker(StandWriter w) {
 		w.set(73, 1, Z, ModContent.BLOCK_BREAKER.get());
+		// The electric mob trap (MOD-818), x=72 on the gap between the fluid tank and the breaker: banked, so
+		// the stand's copy shows the lit model with its pulsing ring rather than a dark casing.
+		w.set(72, 1, Z, ModContent.ELECTRIC_MOB_TRAP.get());
+		w.chargeBuffer(72, 1, Z);
 	}
 
 	/** The standing and wall torches, the charging station and the energy condenser. */

@@ -4214,6 +4214,45 @@
           ]
         },
         {
+          "id": "electric_mob_trap",
+          "title": "Elektrikli Yaratık Tuzağı",
+          "icon": "alaindustrial:electric_mob_trap",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Elektrikli Yaratık Tuzağı",
+              "text": "Düşman yaratıkları zayıfça çeken, EU karşılığı elektrikle çarpan, ganimeti dokuz bölmeli bir tamponda toplayan ve deneyimlerini sıvı deneyime çeviren elektrikli bir oda; borular her şeyi alır."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: darbe başına 100 EU",
+                "Tampon: 4000 EU",
+                "Yarıçap: 6 blok"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:ceramic_plate",
+                "minecraft:lightning_rod",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:vacuum_collector",
+                "alaindustrial:copper_coil",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:ceramic_plate"
+              ],
+              "result_id": "alaindustrial:electric_mob_trap",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "electrum_chest",
           "title": "Elektrum Sandık",
           "icon": "alaindustrial:electrum_chest",

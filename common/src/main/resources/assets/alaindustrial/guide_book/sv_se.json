@@ -4214,6 +4214,45 @@
           ]
         },
         {
+          "id": "electric_mob_trap",
+          "title": "Elektrisk monsterfälla",
+          "icon": "alaindustrial:electric_mob_trap",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Elektrisk monsterfälla",
+              "text": "En elektrisk kammare som svagt drar till sig fientliga monster, chockar dem för EU, samlar bytet i en buffert med nio platser och förvandlar deras erfarenhet till flytande erfarenhet; rör tar ut allt."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Energi: 100 EU per slag",
+                "Buffert: 4000 EU",
+                "Radie: 6 block"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formad tillverkning",
+              "grid": [
+                "alaindustrial:ceramic_plate",
+                "minecraft:lightning_rod",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:vacuum_collector",
+                "alaindustrial:copper_coil",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:ceramic_plate"
+              ],
+              "result_id": "alaindustrial:electric_mob_trap",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "electrum_chest",
           "title": "Elektrumkista",
           "icon": "alaindustrial:electrum_chest",

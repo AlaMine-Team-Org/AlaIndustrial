@@ -41,6 +41,7 @@ final class BlockEntitySlotLayoutSnapshot {
 			"distillation_column_segment: size=- upgrades=- battery=- menu=no overclockable=no batteryFed=no",
 			"electric_furnace: size=7 upgrades=2 battery=6 menu=yes overclockable=yes batteryFed=yes",
 			"electric_heater: size=0 upgrades=- battery=- menu=yes overclockable=no batteryFed=no",
+			"electric_mob_trap: size=9 upgrades=- battery=- menu=yes overclockable=no batteryFed=no",
 			"electrum_chest: size=81 upgrades=- battery=- menu=yes overclockable=no batteryFed=no",
 			"energy_condenser: size=1 upgrades=- battery=- menu=yes overclockable=no batteryFed=no",
 			"extractor: size=7 upgrades=2 battery=6 menu=yes overclockable=yes batteryFed=yes",

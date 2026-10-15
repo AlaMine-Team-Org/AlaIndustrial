@@ -4214,6 +4214,45 @@
           ]
         },
         {
+          "id": "electric_mob_trap",
+          "title": "विद्युत जीव जाल",
+          "icon": "alaindustrial:electric_mob_trap",
+          "pages": [
+            {
+              "type": "text",
+              "title": "विद्युत जीव जाल",
+              "text": "एक विद्युत कक्ष जो शत्रु जीवों को हल्के से खींचता है, EU खर्च कर उन्हें झटका देता है, लूट को नौ खानों वाले बफ़र में जमा करता है और उनके अनुभव को तरल अनुभव में बदल देता है; सब कुछ पाइप निकाल लेते हैं।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 100 EU प्रति झटका",
+                "बफ़र: 4000 EU",
+                "त्रिज्या: 6 ब्लॉक"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:ceramic_plate",
+                "minecraft:lightning_rod",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:vacuum_collector",
+                "alaindustrial:copper_coil",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:ceramic_plate"
+              ],
+              "result_id": "alaindustrial:electric_mob_trap",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "electrum_chest",
           "title": "इलेक्ट्रम चेस्ट",
           "icon": "alaindustrial:electrum_chest",

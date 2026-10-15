@@ -4214,6 +4214,45 @@
           ]
         },
         {
+          "id": "electric_mob_trap",
+          "title": "Bẫy Quái Điện",
+          "icon": "alaindustrial:electric_mob_trap",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Bẫy Quái Điện",
+              "text": "Buồng điện hút yếu quái thù địch, giật điện chúng bằng EU, gom chiến lợi phẩm vào bộ đệm chín ô và biến kinh nghiệm của chúng thành kinh nghiệm lỏng; ống lấy hết mọi thứ ra."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 100 EU/lần giật",
+                "Bộ đệm: 4000 EU",
+                "Bán kính: 6 khối"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:ceramic_plate",
+                "minecraft:lightning_rod",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:vacuum_collector",
+                "alaindustrial:copper_coil",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:ceramic_plate"
+              ],
+              "result_id": "alaindustrial:electric_mob_trap",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "electrum_chest",
           "title": "Rương Electrum",
           "icon": "alaindustrial:electrum_chest",

@@ -919,6 +919,49 @@ public final class Config {
 			doc = "Personal hostile kills to evolve the MV repeller into HV; also the vessel hard cap.")
 	public static int mobRepellerEvolveKillsHv = 250;
 
+	// --- Electric Mob Trap, tier I (MOD-818): pulls hostile mobs in weakly, shocks them, keeps the drops. ---
+	/**
+	 * Reach of the trap: a cube this many blocks out from the centre of the block on every axis. A cube, not
+	 * a wider-than-tall box, so the shared zone preview ({@code ZonePreviewPayload} carries one half-size)
+	 * draws exactly what the trap acts on.
+	 */
+	@Knob(section = Section.MACHINES, clientVisible = true, min = 1,
+			doc = "Electric Mob Trap reach in blocks: a cube this far from the block centre along each axis.")
+	public static int electricMobTrapRadius = 6;
+	/** How close to the block centre a mob must be to be shocked: the ring of the model, not the whole zone. */
+	@Knob(section = Section.MACHINES, min = 1,
+			doc = "Distance from the Electric Mob Trap centre within which a mob is shocked, in blocks.")
+	public static int electricMobTrapStrikeRadius = 3;
+	/** Ticks between two pulses: one pass pulls the far mobs in and shocks the near ones. */
+	@Knob(section = Section.MACHINES, min = 1,
+			doc = "Server ticks between two pulses of the Electric Mob Trap.")
+	public static int electricMobTrapPulseTicks = 20;
+	/** Damage of one shock in half-hearts, dealt as electric-shock damage (armour counts). */
+	@Knob(section = Section.MACHINES, clientVisible = true, min = 1,
+			doc = "Electric Mob Trap damage of one shock, in half-hearts.")
+	public static int electricMobTrapDamage = 4;
+	/** EU one shock costs, paid per shock: no energy, no shock. Nothing is paid while no mob is in reach. */
+	@Knob(section = Section.MACHINES, clientVisible = true, min = 1,
+			doc = "Electric Mob Trap EU per shock (nothing while no mob is shocked).")
+	public static int electricMobTrapEuPerStrike = 100;
+	/** Most shocks one pulse deals, the nearest mobs first. */
+	@Knob(section = Section.MACHINES, min = 1,
+			doc = "Most mobs one Electric Mob Trap pulse shocks, nearest first.")
+	public static int electricMobTrapStrikesPerPulse = 8;
+	/** Most mobs one pulse sets walking towards the trap: path finding is the expensive part. */
+	@Knob(section = Section.MACHINES, min = 1,
+			doc = "Most mobs one Electric Mob Trap pulse pulls towards itself.")
+	public static int electricMobTrapPullsPerPulse = 16;
+	/** Internal EU buffer of the trap: about 100 shocks. */
+	@Knob(section = Section.MACHINES, clientVisible = true, min = 1,
+			doc = "Electric Mob Trap internal EU buffer. Applies to newly placed blocks.")
+	public static int electricMobTrapBuffer = 10000;
+	/** Capacity of the liquid-experience tank in mB: 400 points at 20 mB a point. */
+	@Knob(section = Section.MACHINES, clientVisible = true, min = 20,
+			doc = "Electric Mob Trap liquid-experience tank capacity in mB (20 mB is one point)."
+					+ " Applies to newly placed blocks.")
+	public static int electricMobTrapTankMb = 8000;
+
 	// --- Welcome message (MOD-596) ---
 	/**
 	 * Whether the mod greets a world on its first join with two chat lines and a Discord link; off for a

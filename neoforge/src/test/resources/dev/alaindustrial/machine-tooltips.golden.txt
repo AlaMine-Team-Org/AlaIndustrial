@@ -910,6 +910,28 @@ tooltip.alaindustrial.electric_hoe_diamond_tip.irrigation {aqua}
 tooltip.alaindustrial.electric_hoe.usage(50) {gray}
 tooltip.alaindustrial.electric_hoe.charge(10000, 10000) {gold}
 tooltip.alaindustrial.electric_hoe_diamond_tip.irrigation {aqua}
+== alaindustrial:electric_mob_trap plain
+-- plain eu
+tooltip.alaindustrial.electric_mob_trap.what {gray}
+tooltip.alaindustrial.range(6) {gray}
+tooltip.alaindustrial.electric_mob_trap.strike(4, 100) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.electric_mob_trap.what {gray}
+tooltip.alaindustrial.range(6) {gray}
+tooltip.alaindustrial.electric_mob_trap.strike(4, 100) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.electric_mob_trap.pipes {gray}
+tooltip.alaindustrial.buffer(10000) {gray}
+-- plain no-eu
+tooltip.alaindustrial.electric_mob_trap.what {gray}
+tooltip.alaindustrial.range(6) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.electric_mob_trap.what {gray}
+tooltip.alaindustrial.range(6) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.electric_mob_trap.pipes {gray}
 == alaindustrial:electric_saber plain
 -- plain eu
 tooltip.alaindustrial.electric_saber.usage(100) {gray}
