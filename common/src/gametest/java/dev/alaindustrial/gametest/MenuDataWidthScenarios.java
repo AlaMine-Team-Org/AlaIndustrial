@@ -68,7 +68,8 @@ public final class MenuDataWidthScenarios {
 	// 36 -> 37 (MOD-479): the creative energy source.
 	// 43 -> 44 (MOD-787): the block breaker.
 	// 44 -> 45 (MOD-802): the vacuum collector.
-	private static final int EXPECTED_MACHINE_MENUS = 45;
+	// 45 -> 46 (MOD-818): the electric mob trap.
+	private static final int EXPECTED_MACHINE_MENUS = 46;
 
 	/** Reused single cell inside the test region; each machine is placed here, read, then cleared. */
 	private static final BlockPos PROBE = new BlockPos(1, 2, 1);

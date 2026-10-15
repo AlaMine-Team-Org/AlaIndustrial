@@ -2,6 +2,7 @@ package dev.alaindustrial.registry;
 
 import dev.alaindustrial.fluid.BiofuelFluid;
 import dev.alaindustrial.fluid.DieselFluid;
+import dev.alaindustrial.fluid.ExperienceFluid;
 import dev.alaindustrial.fluid.FuelOilFluid;
 import dev.alaindustrial.fluid.NutrientSolutionFluid;
 import dev.alaindustrial.fluid.OilFluid;
@@ -115,7 +116,11 @@ public final class ModFluidsManifest {
 			// MOD-468: steam lives only in tanks and pipes — "water vapour at the boil". It has no block to
 			// borrow a name from, so its type uses the fluid key every lang file carries.
 			single("steam", SteamFluid::new, new FluidPhysics(1, 200, 373), "fluid.alaindustrial.steam",
-					s -> ModContent.STEAM = s));
+					s -> ModContent.STEAM = s),
+			// MOD-818: liquid experience, the Electric Mob Trap's second product. Tank-only like steam (no
+			// block, no bucket), at the water-like physics other mods give theirs.
+			single("experience", ExperienceFluid::new, new FluidPhysics(1000, 1000, 300),
+					"fluid.alaindustrial.experience", s -> ModContent.EXPERIENCE = s));
 
 	/** The entry with the still id {@code id}; throws for an unknown id. */
 	public static FluidDef<?> byId(String id) {

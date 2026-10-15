@@ -77,6 +77,7 @@ public final class ScenarioRoster {
 			ElectricDrillScenarios.Roster.ENTRIES,
 			ElectricHoeScenarios.Roster.ENTRIES,
 			ElectricMiningToolContractScenarios.Roster.ENTRIES,
+			ElectricMobTrapScenarios.Roster.ENTRIES,
 			ElectricSaberScenarios.Roster.ENTRIES,
 			ElectricShovelScenarios.Roster.ENTRIES,
 			ElectricToolPredictionScenarios.Roster.ENTRIES,

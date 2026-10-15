@@ -307,5 +307,11 @@ final class MenuChannelValuesSnapshot {
 			"mob_repeller_hv placed [0]: 0 32000 0 0",
 			"mob_repeller_hv placed getters: energy=0 capacity=32000 progress=0/0",
 			"mob_repeller_hv charged [0]: 16000 32000 0 0",
-			"mob_repeller_hv charged getters: energy=16000 capacity=32000 progress=0/0");
+			"mob_repeller_hv charged getters: energy=16000 capacity=32000 progress=0/0",
+			"electric_mob_trap placed [0]: 0 10000 0 0 0 -1 1",
+			"electric_mob_trap placed getters: energy=0 capacity=10000 progress=0/0",
+			"electric_mob_trap placed menu[0]: getXpFluidId=-1 getXpPermille=0",
+			"electric_mob_trap charged [0]: 5000 10000 0 0 0 -1 1",
+			"electric_mob_trap charged getters: energy=5000 capacity=10000 progress=0/0",
+			"electric_mob_trap charged menu[0]: getXpFluidId=-1 getXpPermille=0");
 }

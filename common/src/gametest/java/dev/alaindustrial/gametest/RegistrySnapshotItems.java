@@ -145,6 +145,7 @@ final class RegistrySnapshotItems {
 			"item electric_heater class=BlockItem stack=64 damage=0 rarity=COMMON fireproof=no",
 			"item electric_hoe class=ElectricHoeItem+loader stack=1 damage=0 rarity=COMMON fireproof=no",
 			"item electric_hoe_diamond_tip class=ElectricHoeDiamondTipItem+loader stack=1 damage=0 rarity=COMMON fireproof=no",
+			"item electric_mob_trap class=BlockItem stack=64 damage=0 rarity=COMMON fireproof=no",
 			"item electric_saber class=ElectricSaberItem stack=1 damage=0 rarity=COMMON fireproof=no",
 			"item electric_shovel class=ElectricShovelItem+loader stack=1 damage=0 rarity=COMMON fireproof=no",
 			"item electric_shovel_diamond_tip class=ElectricShovelDiamondTipItem+loader stack=1 damage=0 rarity=COMMON fireproof=no",

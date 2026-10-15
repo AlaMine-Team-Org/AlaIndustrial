@@ -4214,6 +4214,45 @@
           ]
         },
         {
+          "id": "electric_mob_trap",
+          "title": "กับดักม็อบไฟฟ้า",
+          "icon": "alaindustrial:electric_mob_trap",
+          "pages": [
+            {
+              "type": "text",
+              "title": "กับดักม็อบไฟฟ้า",
+              "text": "ห้องไฟฟ้าที่ดึงม็อบที่เป็นศัตรูเข้ามาอย่างอ่อน ช็อตด้วยไฟฟ้าโดยใช้ EU เก็บของที่ดรอปไว้ในบัฟเฟอร์เก้าช่อง และเปลี่ยนค่าประสบการณ์ของพวกมันเป็นค่าประสบการณ์เหลว ท่อจะดึงทุกอย่างออกไปเอง"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 100 EU ต่อการช็อตหนึ่งครั้ง",
+                "บัฟเฟอร์: 4000 EU",
+                "รัศมี: 6 บล็อก"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:ceramic_plate",
+                "minecraft:lightning_rod",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:vacuum_collector",
+                "alaindustrial:copper_coil",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:ceramic_plate"
+              ],
+              "result_id": "alaindustrial:electric_mob_trap",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "electrum_chest",
           "title": "หีบอิเล็กตรัม",
           "icon": "alaindustrial:electrum_chest",

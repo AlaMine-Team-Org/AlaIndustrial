@@ -175,6 +175,9 @@ public class ScreensClientGameTest implements FabricClientGameTest {
                     "Advanced Industrial Workbench"),
             // MOD-802: the vacuum collector — the 3x3 take-only buffer and the energy bar.
             new Screen("vacuum_collector", "vacuum_collector", "Vacuum Collector"),
+            // MOD-818: the electric mob trap — the 3x3 take-only buffer, the energy bar, the liquid-experience gauge
+            // and the zone preview button.
+            new Screen("electric_mob_trap", "electric_mob_trap", "Electric Mob Trap"),
             // MOD-479: the creative energy source. Shot in its placed state — switched on at the
             // default output, slot empty — because that is the state the stand can produce with a
             // right click and nothing else, and it already carries every control the panel owns:

@@ -6,6 +6,7 @@ import dev.alaindustrial.block.TeleporterCapsuleOutline;
 import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.block.entity.DiamondChestBlockEntity;
 import dev.alaindustrial.block.entity.ElectrumChestBlockEntity;
+import dev.alaindustrial.block.entity.ElectricMobTrapBlockEntity;
 import dev.alaindustrial.block.entity.EnergyCondenserBlockEntity;
 import dev.alaindustrial.block.entity.MobWheelBlockEntity;
 import dev.alaindustrial.block.entity.RadiantSolarPanelBlockEntity;
@@ -32,6 +33,7 @@ import dev.alaindustrial.block.entity.UpgradeTableBlockEntity;
 import dev.alaindustrial.block.entity.WorkstationBlockEntity;
 import dev.alaindustrial.client.render.CableAccessoryBlockEntityRenderer;
 import dev.alaindustrial.client.render.ChestBlockEntityRenderer;
+import dev.alaindustrial.client.render.ElectricMobTrapBlockEntityRenderer;
 import dev.alaindustrial.client.render.EnergyCondenserBlockEntityRenderer;
 import dev.alaindustrial.client.render.MobWheelBlockEntityRenderer;
 import dev.alaindustrial.client.render.RadiantSolarPanelBlockEntityRenderer;
@@ -288,6 +290,10 @@ public final class ClientContentManifest {
 			// solution to spray — so it is geometry this renderer places above the mast.
 			renderer(ContentManifest.blockEntity("sprinkler", SprinklerBlockEntity.class),
 					SprinklerHeadBlockEntityRenderer::new),
+			// MOD-818: the discharge of the Electric Mob Trap — the node's flash and the arcs down the open
+			// sides for 0.4 s after a shock, started by the server's block event.
+			renderer(ContentManifest.blockEntity("electric_mob_trap", ElectricMobTrapBlockEntity.class),
+					ElectricMobTrapBlockEntityRenderer::new),
 			// Reactor airlock (MOD-493): the panel sliding down out of the doorway. The block model is
 			// empty — everything the player sees of this door is drawn by the renderer.
 			renderer(ContentManifest.blockEntity("reactor_door", ReactorDoorBlockEntity.class),

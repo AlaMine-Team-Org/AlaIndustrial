@@ -1,6 +1,11 @@
 package dev.alaindustrial.entity;
 
+import dev.alaindustrial.Config;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Mob;
@@ -17,6 +22,7 @@ import net.minecraft.world.entity.monster.creaking.Creaking;
 import net.minecraft.world.entity.monster.hoglin.Hoglin;
 import net.minecraft.world.entity.monster.piglin.AbstractPiglin;
 import net.minecraft.world.entity.monster.warden.Warden;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -46,8 +52,20 @@ import net.minecraft.world.phys.Vec3;
  * <li><b>Ignore</b> — the shulker: every movement path on it is a physical no-op by design
  *     ({@code setDeltaMovement} empty, {@code push} empty, {@code setPos} snaps to the grid).</li>
  * </ol>
+ *
+ * <p><b>Active zones (MOD-818).</b> Every sweep also records that this field is live ({@link #isRepelled}), so
+ * the Electric Mob Trap can leave a mob alone while a repeller is guarding the place it stands: the repeller
+ * wins. The record is a short lease the next sweep renews, so a repeller that is broken, switched off by
+ * redstone or out of energy stops counting within a couple of sweeps with no hook of its own.
  */
 public final class MobRepellerField {
+	/** A live field: where it reaches and the game time its lease runs out. */
+	private record Lease(AABB zone, long expires) {
+	}
+
+	/** Live fields by level, then by the repeller's position. Server thread only, like every sweep. */
+	private static final Map<Level, Map<BlockPos, Lease>> LEASES = new WeakHashMap<>();
+
 	/** How far beyond the field edge a flee target is asked for (blocks) — same 16/7 spread the
 	 * vanilla {@code AvoidEntityGoal} uses, so the flight reads exactly like a creeper leaving. */
 	private static final int FLEE_HORIZONTAL = 16;
@@ -67,6 +85,9 @@ public final class MobRepellerField {
 	public static int sweep(ServerLevel level, BlockPos center, int radius) {
 		Vec3 centerVec = Vec3.atCenterOf(center);
 		AABB zone = new AABB(center).inflate(radius);
+		// Two sweeps' worth of lease: one missed sweep does not drop the trap's deference for a tick.
+		LEASES.computeIfAbsent(level, key -> new HashMap<>()).put(center.immutable(),
+				new Lease(zone, level.getGameTime() + 2L * Math.max(1, Config.mobRepellerScanIntervalTicks) + 1L));
 		List<Mob> threats = level.getEntitiesOfClass(Mob.class, zone,
 				mob -> HostileThreat.isActiveThreat(mob));
 		int repelled = 0;
@@ -76,6 +97,28 @@ public final class MobRepellerField {
 			}
 		}
 		return repelled;
+	}
+
+	/**
+	 * Whether {@code mob} stands inside the field of a repeller that swept recently — the Electric Mob Trap's
+	 * test for "this place is guarded, leave the mob alone". Expired leases are dropped on the way.
+	 */
+	public static boolean isRepelled(ServerLevel level, Mob mob) {
+		Map<BlockPos, Lease> leases = LEASES.get(level);
+		if (leases == null) {
+			return false;
+		}
+		long now = level.getGameTime();
+		boolean inside = false;
+		for (Iterator<Lease> it = leases.values().iterator(); it.hasNext();) {
+			Lease lease = it.next();
+			if (lease.expires() < now) {
+				it.remove();
+			} else if (lease.zone().intersects(mob.getBoundingBox())) {
+				inside = true;
+			}
+		}
+		return inside;
 	}
 
 	/** Route one mob through the cascade. Returns whether anything was done to it. */
@@ -96,7 +139,7 @@ public final class MobRepellerField {
 	}
 
 	/** The seven hostile brain-driven movers of 26.2 — verified list, see the task research log. */
-	private static boolean isBrainMover(Mob mob) {
+	public static boolean isBrainMover(Mob mob) {
 		return mob instanceof AbstractPiglin || mob instanceof Hoglin || mob instanceof Zoglin
 				|| mob instanceof Warden || mob instanceof Breeze || mob instanceof Creaking;
 	}

@@ -160,5 +160,8 @@ final class MachineCapabilitySnapshot {
 			"mob_repeller_mv keys: -EvolveProgress -EvolveChip",
 			"mob_repeller_hv: owner=Characterizer active=3 items=5 eu=11/13/17/19 panel=1 mute=1"
 					+ " stats=1 oc=0/0 rate=2 dur=200 evolve=-1/-1",
-			"mob_repeller_hv keys: -EvolveProgress -EvolveChip");
+			"mob_repeller_hv keys: -EvolveProgress -EvolveChip",
+			"electric_mob_trap: owner=Characterizer active=3 items=5 eu=11/13/17/19 panel=0 mute=0"
+					+ " stats=0 oc=0/0 rate=2 dur=200 evolve=-1/-1",
+			"electric_mob_trap keys: -EvolveProgress -EvolveChip");
 }

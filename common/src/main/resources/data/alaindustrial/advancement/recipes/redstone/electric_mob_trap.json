@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item_1": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "alaindustrial:ceramic_plate" } ] } },
+    "has_item_2": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "minecraft:lightning_rod" } ] } },
+    "has_item_3": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "alaindustrial:copper_coil" } ] } },
+    "has_item_4": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "alaindustrial:vacuum_collector" } ] } },
+    "has_item_5": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [ { "items": "alaindustrial:electronic_circuit" } ] } }
+  },
+  "requirements": [ [ "has_item_1" ], [ "has_item_2" ], [ "has_item_3" ], [ "has_item_4" ], [ "has_item_5" ] ],
+  "rewards": {
+    "recipes": [ "alaindustrial:electric_mob_trap" ]
+  }
+}

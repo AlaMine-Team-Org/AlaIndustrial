@@ -10,6 +10,7 @@ import static dev.alaindustrial.registry.content.ContentDeclarations.menu;
 import static dev.alaindustrial.registry.content.ContentDeclarations.registeredBlock;
 import static dev.alaindustrial.registry.content.TabEntries.show;
 
+import dev.alaindustrial.block.ElectricMobTrapBlock;
 import dev.alaindustrial.block.EngravedPlateBlock;
 import dev.alaindustrial.block.EnrichedUraniumTorchBlock;
 import dev.alaindustrial.block.EnrichedUraniumWallTorchBlock;
@@ -23,10 +24,12 @@ import dev.alaindustrial.block.SoundAbsorberBlock;
 import dev.alaindustrial.block.TemperedIronBarsBlock;
 import dev.alaindustrial.block.TemperedIronLadderBlock;
 import dev.alaindustrial.block.TemperedIronTrapdoorBlock;
+import dev.alaindustrial.block.entity.ElectricMobTrapBlockEntity;
 import dev.alaindustrial.block.entity.MobRepellerBlockEntity;
 import dev.alaindustrial.block.entity.MobRepellerHvBlockEntity;
 import dev.alaindustrial.block.entity.MobRepellerMvBlockEntity;
 import dev.alaindustrial.compat.LineBlockProps;
+import dev.alaindustrial.menu.ElectricMobTrapMenu;
 import dev.alaindustrial.menu.MobRepellerHvMenu;
 import dev.alaindustrial.menu.MobRepellerMenu;
 import dev.alaindustrial.menu.MobRepellerMvMenu;
@@ -83,6 +86,13 @@ public final class DecorContent {
 	public static final BlockDef<MobRepellerHvBlock> MOB_REPELLER_HV = block("mob_repeller_hv", MobRepellerHvBlock::new,
 			machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)
 					.lightLevel(ModBlockProperties::repellerLight)), s -> ModContent.MOB_REPELLER_HV = s);
+	// MOD-818 — the Electric Mob Trap: the repeller's opposite, so it sits beside it in this domain (the
+	// utility family of the player-facing docs), not with the item logistics its output lines feed.
+	public static final BlockDef<ElectricMobTrapBlock> ELECTRIC_MOB_TRAP =
+			block("electric_mob_trap", ElectricMobTrapBlock::new,
+					// noOcclusion: the body is 12 px tall, not a full cube (R-PHY-05).
+					machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion()),
+					s -> ModContent.ELECTRIC_MOB_TRAP = s);
 	// Material / decorative full cubes: cube_all model, one texture per block.
 	public static final BlockDef<Block> TEMPERED_IRON_BLOCK = block("tempered_iron_block", Block::new,
 			machine(MapColor.TERRACOTTA_LIGHT_BLUE, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
@@ -465,7 +475,9 @@ public final class DecorContent {
 			blockItem("broken_engraved_plate_b", s -> ModContent.BROKEN_ENGRAVED_PLATE_B_ITEM = s),
 			blockItem("broken_engraved_plate_d", s -> ModContent.BROKEN_ENGRAVED_PLATE_D_ITEM = s),
 			blockItem("broken_engraved_plate_r", s -> ModContent.BROKEN_ENGRAVED_PLATE_R_ITEM = s),
-			blockItem("broken_engraved_plate_m", s -> ModContent.BROKEN_ENGRAVED_PLATE_M_ITEM = s));
+			blockItem("broken_engraved_plate_m", s -> ModContent.BROKEN_ENGRAVED_PLATE_M_ITEM = s),
+			// MOD-818 — the Electric Mob Trap.
+			blockItem("electric_mob_trap", s -> ModContent.ELECTRIC_MOB_TRAP_ITEM = s));
 
 	private static final List<BlockEntityDef<?>> BLOCK_ENTITIES = List.of(
 			blockEntity("mob_repeller", MobRepellerBlockEntity.class, MobRepellerBlockEntity::new,
@@ -473,14 +485,19 @@ public final class DecorContent {
 			blockEntity("mob_repeller_mv", MobRepellerMvBlockEntity.class, MobRepellerMvBlockEntity::new,
 					s -> ModContent.MOB_REPELLER_MV_BE = s, MOB_REPELLER_MV),
 			blockEntity("mob_repeller_hv", MobRepellerHvBlockEntity.class, MobRepellerHvBlockEntity::new,
-					s -> ModContent.MOB_REPELLER_HV_BE = s, MOB_REPELLER_HV));
+					s -> ModContent.MOB_REPELLER_HV_BE = s, MOB_REPELLER_HV),
+			// MOD-818 — the Electric Mob Trap.
+			blockEntity("electric_mob_trap", ElectricMobTrapBlockEntity.class, ElectricMobTrapBlockEntity::new,
+					s -> ModContent.ELECTRIC_MOB_TRAP_BE = s, ELECTRIC_MOB_TRAP));
 
 	private static final List<MenuDef<?>> MENUS = List.of(
 			// MOD-278 — the guard field, one menu per tier (same class, tier-specific client factory:
 			// a menu type must map to exactly one block for stillValid, and the tiers are three blocks).
 			menu("mob_repeller", MobRepellerMenu::new, s -> ModContent.MOB_REPELLER_MENU = s),
 			menu("mob_repeller_mv", MobRepellerMvMenu::new, s -> ModContent.MOB_REPELLER_MV_MENU = s),
-			menu("mob_repeller_hv", MobRepellerHvMenu::new, s -> ModContent.MOB_REPELLER_HV_MENU = s));
+			menu("mob_repeller_hv", MobRepellerHvMenu::new, s -> ModContent.MOB_REPELLER_HV_MENU = s),
+			// MOD-818 — the Electric Mob Trap: a 3x3 take-only buffer and the liquid-experience gauge.
+			menu("electric_mob_trap", ElectricMobTrapMenu::new, s -> ModContent.ELECTRIC_MOB_TRAP_MENU = s));
 
 	/** Everything this domain declares; {@link dev.alaindustrial.registry.ContentManifest#DOMAINS} joins it in. */
 	public static final Domain DOMAIN = new Domain("Decor", BLOCKS, ITEMS, BLOCK_ENTITIES, MENUS);
@@ -589,6 +606,8 @@ public final class DecorContent {
 		show(out, ModContent.MOB_REPELLER_ITEM);
 		show(out, ModContent.MOB_REPELLER_MV_ITEM);
 		show(out, ModContent.MOB_REPELLER_HV_ITEM);
+		// MOD-818 — the trap, the repeller's opposite, closes the run.
+		show(out, ModContent.ELECTRIC_MOB_TRAP_ITEM);
 	}
 
 	/** The sound absorber (MOD-804): next to the repellers, the other block that acts on its surroundings. */

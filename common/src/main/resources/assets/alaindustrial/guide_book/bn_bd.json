@@ -4214,6 +4214,45 @@
           ]
         },
         {
+          "id": "electric_mob_trap",
+          "title": "বৈদ্যুতিক দানব ফাঁদ",
+          "icon": "alaindustrial:electric_mob_trap",
+          "pages": [
+            {
+              "type": "text",
+              "title": "বৈদ্যুতিক দানব ফাঁদ",
+              "text": "একটি বৈদ্যুতিক কক্ষ যা শত্রু দানবদের দুর্বলভাবে টেনে আনে, EU খরচ করে শক দেয়, লুট নয়টি স্লটের বাফারে জমায় এবং তাদের অভিজ্ঞতাকে তরল অভিজ্ঞতায় বদলে দেয়; সবকিছু পাইপ বের করে নেয়।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "শক্তি: প্রতি আঘাতে 100 EU",
+                "বাফার: 4000 EU",
+                "ব্যাসার্ধ: 6 ব্লক"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:ceramic_plate",
+                "minecraft:lightning_rod",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:copper_coil",
+                "alaindustrial:vacuum_collector",
+                "alaindustrial:copper_coil",
+                "alaindustrial:ceramic_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:ceramic_plate"
+              ],
+              "result_id": "alaindustrial:electric_mob_trap",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "electrum_chest",
           "title": "ইলেকট্রাম চেস্ট",
           "icon": "alaindustrial:electrum_chest",

@@ -48,6 +48,7 @@ public class FluidAttributesSnapshotGameTest {
 	private static final String BIOFUEL = custom(1000, 300);
 	private static final String NUTRIENT = custom(900, 300);
 	private static final String STEAM = custom(200, 373);
+	private static final String EXPERIENCE = custom(1000, 300);
 
 	/** The reference: one line per fluid, in registration order. */
 	static final List<String> EXPECTED = List.of(
@@ -61,7 +62,8 @@ public class FluidAttributesSnapshotGameTest {
 			"flowing_biofuel " + BIOFUEL + " name=block.alaindustrial.biofuel" + BUCKET,
 			"nutrient_solution " + NUTRIENT + " name=block.alaindustrial.nutrient_solution" + BUCKET,
 			"flowing_nutrient_solution " + NUTRIENT + " name=block.alaindustrial.nutrient_solution" + BUCKET,
-			"steam " + STEAM + " name=fluid.alaindustrial.steam" + BUCKET);
+			"steam " + STEAM + " name=fluid.alaindustrial.steam" + BUCKET,
+			"experience " + EXPERIENCE + " name=fluid.alaindustrial.experience" + BUCKET);
 
 	/** The Transfer API's answers in {@code ModFluidsManifest} terms. */
 	private static final FluidAttributesSnapshotScenarios.FactsProbe FACTS = (fluid, helper) -> {
