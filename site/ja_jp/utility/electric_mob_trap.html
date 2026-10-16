@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ja_jp" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>電撃モブトラップ — Ala Industrial — ガイド</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="メニューを開く" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  </div>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../../assets/item/guide_book_3d.png" alt="">すべてのコンテンツ</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/ky7cFDF8JD" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../../assets/platform/discord.svg" alt="Discord"></a>
+    </div>
+    <search class="site-search"><input type="search" data-wiki-search placeholder="ウィキを検索…" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-label="ガイドを検索" autocomplete="off" spellcheck="false" data-index="../search-index.json" data-root="../" data-l10n="{&quot;list&quot;:&quot;検索結果&quot;,&quot;one&quot;:&quot;ページ&quot;,&quot;few&quot;:&quot;ページ&quot;,&quot;many&quot;:&quot;ページ&quot;,&quot;loading&quot;:&quot;検索インデックスを読み込み中…&quot;,&quot;nothing&quot;:&quot;見つかりません&quot;}"></search>
+    <details class="language-menu"><summary aria-label="Language">日本語</summary><div class="language-popover"><span>日本語</span><a href="../../en/utility/electric_mob_trap.html">EN</a><a href="../../ru/utility/electric_mob_trap.html">RU</a><a href="../../uk/utility/electric_mob_trap.html">UA</a><a href="../../zh_cn/utility/electric_mob_trap.html">中文</a><a href="../../es_es/utility/electric_mob_trap.html">ES</a></div></details>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">ブラウズ</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../../assets/item/tempered_iron_pickaxe.png" alt=""><span>はじめに</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
+<div class="group-title">エネルギー</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="14 ページ">14</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
+<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>原子力</span><span class="cat-count" aria-label="15 ページ">15</span></a>
+<div class="group-title">加工</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>マシン</span><span class="cat-count" aria-label="17 ページ">17</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>液体マシン</span><span class="cat-count" aria-label="3 ページ">3</span></a>
+<div class="group-title">物流</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>アイテム輸送</span><span class="cat-count" aria-label="3 ページ">3</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>液体輸送</span><span class="cat-count" aria-label="5 ページ">5</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>液体貯蔵</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<div class="group-title">世界と自動化</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>素材</span><span class="cat-count" aria-label="26 ページ">26</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>農業</span><span class="cat-count" aria-label="6 ページ">6</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>高度なマシン</span><span class="cat-count" aria-label="1 ページ">1</span></a>
+<div class="group-title">その他</div>
+<a class="cat-link" href="../construction/index.html"><img class="nav-icon" src="../../assets/item/engraved_plate_0_3d.png" alt=""><span>建築ブロック</span><span class="cat-count" aria-label="3 ページ">3</span></a>
+<a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="22 ページ">22</span></a>
+<div class="group-title">アイテム</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="30 ページ">30</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="32 ページ">32</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">ホーム</a><span class="sep">/</span><a href="../utility/index.html">ユーティリティ</a><span class="sep">/</span><span>電撃モブトラップ</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../../assets/item/electric_mob_trap_3d.png" alt="電撃モブトラップ" width="64" height="64">
+    <div class="info">
+      <h1>電撃モブトラップ</h1>
+      <div class="block-id">alaindustrial:electric_mob_trap</div>
+      <div class="tags"><span class="tag cat" style="background:#14b8a6">ユーティリティ</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">実装済み</span><span class="tag">tier-lv</span><span class="tag">utility</span><span class="tag">defense</span><span class="tag">mob-farm</span><span class="tag">automation</span><span class="tag">electric</span></div>
+    </div>
+  </div>
+</div>
+<h2 id="概要">概要</h2>
+
+<p><strong>電気モブトラップ</strong>（ティア I）は<a href="mob_repeller.html">忌避装置</a>の対になるブロックです。忌避装置が敵対モブを追い払うのに 対し、トラップは敵対モブを<strong>集めて資源に変えます</strong>。一辺 12 ブロックの立方体（中心から各軸に 6 ブロック）の範囲からモブを 弱く引き寄せ、リングの 3 ブロック以内に来たモブに電撃を与え、落としたものをすべて回収します。アイテムは 9 スロットの バッファへ、経験値は液体経験値のタンクへ入ります。上面または下面につないだパイプが戦利品を運び出し、ケーブルは側面から つなぎます。</p>
+
+<p>トラップは<strong>モブを生成しません</strong>。スポーンの制御はプレイヤー自身が行います（暗い足場、明るさ、面積、高さは通常のモブ 農場と同じ）。トラップはそこで湧いたモブを集めるだけです。</p>
+
+<blockquote><strong>簡単な例：</strong> 暗いスポーン足場の上にトラップを置き、下からアイテムパイプをチェストへ、側面の 1 つに LV ケーブルを つなぎます。足場のゾンビ、スケルトン、クモがリングへ寄ってきて電撃を受け、骨・火薬・糸がひとりでにチェストへ入ります。</blockquote>
+
+<h2 id="対象と対象外">対象と対象外</h2>
+
+<p>トラップは<strong>すべてのモンスター</strong>を対象とします。怒っている中立モブも穏やかな中立モブも含みます（2026-10-15 のオーナーの 決定）。ただし独自の例外があります。この点で忌避装置より広く、忌避装置はゾンビ化ピグリンの群れを怒らせないよう穏やかな 中立モブには触れません。トラップにはその心配がありません。誰もターゲットにしないため、穏やかなゾンビ化ピグリンに電撃を 与えても周りの仲間は目を覚ましません。</p>
+
+<table><thead><tr><th>対象</th><th>動作</th></tr></thead><tbody><tr><td>通常のモンスター（ゾンビ、スケルトン、クリーパー、クモなど）</td><td>引き寄せられ、電撃を受ける</td></tr><tr><td>中立モンスター（エンダーマン、ゾンビ化ピグリン、ピグリン、昼間のクモ）</td><td>引き寄せられ、電撃を受ける。<strong>穏やかでも対象</strong></td></tr><tr><td>本MODの石油スライム</td><td>他の敵対モブと同様に対象 — ゴム農場は可能</td></tr><tr><td>スライム、ファントムなど経路探索を持たないモブ</td><td>押し出しで引き寄せられ（下記参照）、電撃を受ける</td></tr><tr><td>ピグリン、ホグリン、ゾグリン、ブリーズ、クリーキング（ブレイン駆動のモブ）</td><td>引き寄せられる：トラップが脳に直接歩行目標を設定する</td></tr><tr><td>プレイヤーを追っているモブ（ターゲットがプレイヤー）</td><td><strong>プレイヤーを忘れて</strong>引き寄せられる。そうしないと、そばにプレイヤーが立つ農場は何も引き寄せられない</td></tr><tr><td>エンダーマン</td><td>電撃を受け、<strong>テレポートしない</strong>：放電はトラップの偽プレイヤーの名義で行われる（「戦利品と経験値」参照）</td></tr><tr><td>シュルカー</td><td><strong>完全に除外：</strong>引き寄せも電撃もしない</td></tr><tr><td>ボス：エンダードラゴン、ウィザー、ウォーデン</td><td><strong>完全に除外：</strong>引き寄せも電撃もしない</td></tr><tr><td>サバイバルまたはアドベンチャーのプレイヤー</td><td>電撃半径内に立っていると<strong>電撃を受ける</strong>（2026-10-15 のオーナーの決定）。引き寄せられない</td></tr><tr><td>クリエイティブのプレイヤーまたはスペクテイター</td><td>対象外</td></tr><tr><td>村人、ペット、受動的モブ</td><td>対象外</td></tr><tr><td>稼働中の忌避装置の範囲内にいるモブ</td><td>対象外（「同じ範囲にある忌避装置」参照）</td></tr></tbody></table>
+
+<p>ボスは型のリストで除外する必要があります。一般的な敵対フィルターはボスを通してしまい、ゲームに「ボス」タグがないためです。 シュルカーも同じ方法で除外されます。他のMODのボスはこのリストの対象外で、そのMOD自身の問題です。</p>
+
+<h2 id="エネルギー">エネルギー</h2>
+
+<p>LV の消費機器。待機時の消費はなく、エネルギーは命中した電撃に対してのみ支払われます。</p>
+
+<table><thead><tr><th>項目</th><th>値</th><th>設定項目</th></tr></thead><tbody><tr><td>電撃 1 回のコスト</td><td>100 EU/FE</td><td></td></tr><tr><td>エネルギーバッファ</td><td>10000 EU/FE（約 100 回分）</td><td>（新しく置いたブロックに適用）</td></tr><tr><td>受電</td><td>最大 32 EU/FE/t（LV）</td><td>—</td></tr></tbody></table>
+
+<ul><li><strong>ケーブルは 4 つの側面につながります。</strong>上面と下面はケーブル用ではなく、2 本の出力ライン（アイテムと液体経験値）です。 ケーブルは上面・下面へ腕を伸ばしません。</li><li>電撃 1 回のコストは 100 EU/FE。<strong>命中した</strong>電撃にのみ支払われます。ダメージが通らなかった場合（無敵のモブ、直前の被弾による 無敵時間）はエネルギーを消費しません。体力 20 のゾンビで約 500 EU/FE。ピーク時のトラップの要求は 40 EU/FE/t（8 回 × 100 EU/FE / 20 ティック）で、LV の上限（32 EU/FE/t）を上回ります。10000 EU/FE のバッファがピークを支え、長期的には LV 給電で毎秒約 6 回の 電撃になります。</li><li><strong>エネルギーがなければトラップは何もしません。電撃も引き寄せもしません。</strong>範囲内に対象がいてもエネルギーが電撃 1 回分に 足りなければ、誰も引き寄せないうちにパルスは「エネルギー不足」ステータスで終わります。エネルギーは電撃ごとに全額を確認します。</li></ul>
+
+<h2 id="引き寄せ">引き寄せ</h2>
+
+<p><strong>パルス。</strong>トラップは 20 ティックごと（）の<strong>パルス</strong>で動作します。パルスの間は休止しますが、 次のパルスを越えて休むことはありません。スケジュールは保存されず、ワールドの再読み込み後は最初のティックで動作します。 1 回のパルスは次のように進みます。</p>
+
+<ol><li>箱が範囲の立方体と交差する適格なモブをすべて取得する（「対象と対象外」参照）。</li><li>対象なし — 「モブ待ち」ステータス、何も消費しない。</li><li>エネルギーが電撃 1 回分未満 — 「エネルギー不足」ステータス、それ以上は何もしない。</li><li>バッファに空きがない（空きスロットも上限未満のスタックもない） — 「バッファ満杯」ステータス、それ以上は何もしない： <strong>バッファが満杯だと電撃も引き寄せも止まります。</strong></li><li>それ以外は、対象をブロック中心からの距離順に並べ、同距離なら UUID 順（ワールドが返した順序に依存しない）。その後、 各モブは電撃半径内なら電撃を受け、そうでなければ引き寄せられます。</li></ol>
+
+<p>「電撃中」ステータスは、そのパルスで少なくとも 1 回電撃が命中した場合にのみ設定されます。<code>lit</code> 状態はパルスの結果に 依存せず、トラップに電力が来ていることを示します（「ブロックの特性」参照）。</p>
+
+<ul><li>サーバー側のみ、パルスごとに 1 回動作します。</li><li><strong>範囲は一辺 12 ブロックの立方体</strong>です（ブロック中心から各軸 6 ブロック、設定項目 ）。別の 垂直方向の範囲はありません。共通の範囲プレビューは数値を 1 つしか運ばないため、描かれる立方体がトラップの作用範囲と ちょうど一致します。</li><li>1 回のパルスで誘導するのは最大 16 体（）で、実際に動き出させたモブだけを数えます。 中心に近い順、同距離なら UUID 順。サーバー上の経路再計算を抑えるための制限です。</li><li>引き寄せは<strong>弱く</strong>、よく作られた足場の代わりにはなりません。同じモブを誘導するのは 20 ティックに 1 回までです。<ul><li>プレイヤーを追っていたモブは<strong>プレイヤーを忘れます</strong>。そうしないと、オーナーがそばに立つ農場は何も引き寄せられません。 数ティック後にモブが再びプレイヤーに気づくことがありますが、次のパルスがまた引き離します。</li><li>経路探索を持つモブ（すべての <code>PathfinderMob</code>）は、ナビゲーションによって通常の歩行速度でブロックへ誘導されます。経路が なければ引き寄せたことにはなりません。</li><li>ブレイン駆動のモブ（ピグリン、ホグリン、ゾグリン、ブリーズ、クリーキング）には、トラップが脳に直接歩行目標を書き込み、 攻撃目標を消去します。通常のナビゲーション経路は脳がすぐに上書きしてしまうためです。</li><li>経路探索のないモブ（スライム、ファントムなど）は、パルスごとに 1 回、中心へ向かう小さな水平方向の押し出しを受けます。 これがないと石油スライムによるゴム農場が機能しません。</li><li>テレポートはありません。</li></ul></li><li>すでに電撃半径内にいるモブは引き寄せられず、電撃を受けます。</li></ul>
+
+<h2 id="電撃">電撃</h2>
+
+<ul><li>ブロック中心から 3 ブロック以内（、距離はモブの位置から測る）にいるモブに電撃を与えます。 引き寄せられたモブだけでなく、自分で来たモブも電撃を受けます。</li><li>1 パルスにつき最大 8 回（）。中心に近い順、同距離なら UUID 順。</li><li>1 回のダメージは 4（ハート 2 つ分、）で、ダメージの種類は「感電」（<code>electric_shock</code>、ケーブルと 同じ）、防具は有効です。即死ではなくダメージです。体力 20 のゾンビは約 5 秒で倒れ、防具を着たモブはさらに時間がかかります。</li><li>電撃のたびにエネルギーとバッファの空きを再確認します。次の電撃分のエネルギーがない、または直前の電撃でバッファが 満杯になった場合、そのパルスの残りの電撃は行われません（引き寄せは同じパルス内で続きます）。</li><li>放電時には、ノードの閃光、開いた 4 つの側面を下へ走る青いジグザグの電弧（ブロックのレンダラーが描画、約 0.4 秒）、 モブの位置の <code>ELECTRIC_SPARK</code> の火花、短いバチッという音（バニラの落雷の衝撃音を小さく高めに）が見られます。</li></ul>
+
+<h2 id="戦利品と経験値">戦利品と経験値</h2>
+
+<p>死は通常どおりです。モブは他のダメージと同じように倒れ、防具、頭、特殊ドロップ、死亡イベントが機能します。<strong>戦利品と 経験値オーブは、どの死の場合とも同じように地面に落ちます</strong>。その後トラップは、 <a href="../item-transport/vacuum_collector.html">真空コレクター</a>と同じようにそれらを引き寄せます。</p>
+
+<ul><li>5 ティックごとに、トラップは自分の範囲（引き寄せと同じ立方体）を見回し、最も近い最大 16 個のアイテムと経験値オーブに 作用します。</li><li><strong>ブロックに触れた</strong>アイテムやオーブは回収されます。アイテムはバッファへ（入る分だけ）、経験値オーブは液体経験値タンクへ （丸ごとのみ）。それより遠いものは電磁石のようにトラップへ向かう押し出しを受け、テレポートではなく物理で飛んできます。</li><li>拾得の遅延があるアイテム（落ちたばかりのドロップ、プレイヤーが投げたアイテム）は遅延が終わるのを待ちます。溶岩の中の アイテムには触れません。近づかなくなったドロップ（壁の向こう、穴の中）は、トラップがしばらく放置します。</li><li>引き寄せは無料で、トラップの仕事の一部です。トラップは自分のモブの戦利品だけでなく、範囲内の<strong>あらゆる</strong>アイテムを 引き寄せます。近くに余計なものを置かないでください。</li><li><strong>戦利品は通常どおりです。</strong>電撃のたびに、モブはトラップの無名の偽プレイヤー <code>[Electric Mob Trap]</code>（メモリ上にだけ存在し、 ワールドには入らない）に「最近プレイヤーに攻撃された」と記録されるため、「プレイヤーに倒された」条件付きのドロップ （骨、火薬、糸 — 剣で倒したときと同様）と経験値が落ちます。トラップにドロップ増加（Looting）エンチャントはなく、ティア I は基本 ドロップです。</li><li><strong>魂の器は成長しません。</strong>ダメージ源にエンティティがなくプレイヤーでもないため、<a href="../items/soul_vessel.html">魂の器</a>は個人の 撃破しか数えず、<a href="mob_repeller.html">忌避装置</a>の育成はプレイヤーのものであり続けます。死亡メッセージが表示される場合は 「感電した」（<code>death.attack.electric_shock</code>）です。</li><li><strong>エンダーマンはダメージ源の例外です。</strong>生きた攻撃者のいないダメージを受けるとエンダーマンはテレポートで逃げるため、 エンダーマンへの放電はトラップの偽プレイヤーの名義で行われます。その場合も魂の器は成長せず（偽プレイヤーは器を持たない）、 電撃で生じた怒りはトラップがすぐに解除します。</li><li><strong>熟練度ポイントは付与されません</strong>（忌避装置と同様）。トラップはポイント稼ぎ農場になりません。</li><li><strong>アイテム</strong>は 9 スロットのバッファに入ります。<strong>バッファに空きがない間、トラップは電撃も引き寄せも行いません。</strong> バッファの詳細は後述。</li><li><strong>バッファに入りきらなかったものはワールドに残ります。</strong>通常のアイテムとして残り、消えることはありません。空きが できれば、トラップはそれを取りに戻ります。</li><li><strong>経験値</strong>は 1 ポイントあたり <strong>20 mB</strong>の<strong>液体経験値</strong>に変換され、内部の 8000 mB の タンク（400 ポイント、、新しく置いたブロックに適用）に溜まります。ゾンビ約 80 体分です。液体は という名前で <code>c:experience</code> タグに入っており、他のMODと互換性があります。蒸気と同様に バケツも液体ブロックもなく、タンクとパイプの中だけに存在し、ワールドに撒くことはできません。タンクは液体パイプへ （上面と下面からのみ）液体を渡し、何も受け付けません。</li><li><strong>タンクが満杯 — オーブはワールドに残ります。</strong>経験値は黙って消えません。プレイヤーが自分で拾え、見える理由はトラップの 周りの地面にあるオーブです。オーブは丸ごと回収されるか、まったく回収されないかのどちらかで、タンクに丸ごと入らない オーブはワールドに残ります。タンクが満杯でも、それだけでは電撃は止まりません。</li><li>経験値オーブは 8 ブロック以内にプレイヤーがいると自分でプレイヤーへ飛んでいきます。トラップのそばに立つプレイヤーは、 トラップより先に経験値を受け取ることがあります。</li></ul>
+
+<h2 id="バッファと輸送">バッファと輸送</h2>
+
+<ul><li>出力スロットは 9 つ。スロットの上限はアイテムのスタックサイズ（ただし最大 64）で、通常アイテム最大 576 個です。</li><li>GUI は機械画面です。取り出し専用の 3×3 スロット、左にエネルギーバー、右に液体経験値タンク（「液体：N / 容量 mB」の ツールチップ付き）、ステータス行、範囲をプレビューする「目」ボタン（忌避装置や真空コレクターと同様で、範囲の立方体を 表示）があります。アップグレードパネルはありません。パルス周期以上にチップで速くできるものがないためです。ステータス行 の値：「電撃中」「モブ待ち」「バッファ満杯」「エネルギー不足」（後ろの 2 つは停止要因で、停止として強調表示されます）。</li><li>アイテムは取り出せますが入れられません（手でも、ホッパーでも、パイプでも不可）。</li><li>トラップ自身は何も押し出しません。アイテムパイプはバッファから自力で取り出し、液体パイプはタンクから液体経験値を 取り出します。接続は<strong>上面または下面のみ</strong>（<a href="../item-transport/vacuum_collector.html">真空コレクター</a>と同じ）。 <strong>ケーブルは 4 つの側面のみ：</strong>トラップには 3 本のライン（エネルギー、アイテム、液体経験値）があり、エネルギーを側面に 置くことで 2 本のパイプの面を空けています。アイテムと液体にとって 4 つの側面は閉じています。</li><li>パイプがなければバッファが埋まり、プレイヤーが空きを作るまでトラップは電撃も引き寄せも止まります。</li></ul>
+
+<h2 id="同じ範囲にある忌避装置">同じ範囲にある忌避装置</h2>
+
+<p><a href="mob_repeller.html">忌避装置</a>が優先されます。忌避装置は掃引のたびに範囲の短い「リース」を更新します（スキャン間隔 2 回分 + 1 ティック）。箱がそのような有効なリースの範囲と交差するモブを、トラップは引き寄せも電撃もしません。壊れた、レッドストーン で停止された、またはエネルギー切れの忌避装置は掃引をやめ、リースは数回の掃引で失効して、モブは再びトラップの対象に なります。そのため、忌避装置の範囲内にトラップを置かないでください。モブはリングに届く前に追い払われます。</p>
+
+<h2 id="ブロックの特性">ブロックの特性</h2>
+
+<p>モデルは選ばれたコンセプト E「Spark Ring」（<code>tools/model_sources/electric_mob_trap_concepts/e_spark_ring/</code>）です。4 本の セラミック碍子の連なりに支えられた銅のリングと、中央の支柱に載った放電ノードで構成されます。モデルのサイズは 16×12×16 ピクセルで、選択範囲と衝突判定は同じ 16×12×16 の箱で、一度だけ構築されます。向きはなく、リングはどの側面から見ても 同じです。ブロックはフルキューブではないため、オクルージョン形状は空で光が通ります（真空コレクターと同様、隣接ブロックの 面が失われず、セルは角の影を落としません）。 は使いません。</p>
+
+<table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>形状</td><td>碍子上のリング、16×12×16 px、箱全体が固体</td></tr><tr><td>硬度</td><td>3.0 / 6.0、金属。道具：ツルハシ</td></tr><tr><td>状態</td><td><code>lit</code> — バッファに電撃 1 回分のエネルギーがある（トラップに電力が来ている）</td></tr><tr><td>アニメーション</td><td>電力が来ている間（<code>lit</code>）ノードが脈動する（アニメーションテクスチャ、<code>.png.mcmeta</code>）。エネルギーがなければノードは静止。電撃の瞬間はノードが閃光を放つ</td></tr><tr><td>描画</td><td>ブロックのレンダラーが開いた 4 つの側面を下へ走る青いジグザグの電弧を描く（約 0.4 秒）。モブの位置ではバニラの <code>ELECTRIC_SPARK</code> パーティクル</td></tr><tr><td>サウンド</td><td>MOD独自のサウンドはなし。電撃時にバニラの <code>LIGHTNING_BOLT_IMPACT</code>（音量 0.35、ピッチ 1.8）を再生</td></tr></tbody></table>
+
+<h2 id="レシピ">レシピ</h2>
+
+<p>3×3 全マスの成形クラフト：中央に<a href="../item-transport/vacuum_collector.html">真空コレクター</a>、その上に避雷針、下に電子回路、 左右に銅コイル、四隅にセラミックプレート。</p>
+
+<pre><code class="lang-">[セラミックプレート] [避雷針] [セラミックプレート]
+[銅コイル] [真空コレクター] [銅コイル]
+[セラミックプレート] [電子回路] [セラミックプレート]</code></pre>
+
+<ul><li><a href="../components/ceramic_plate.html">セラミックプレート</a>：リングの碍子。</li><li><a href="../components/copper_coil.html">銅コイル</a>と<a href="../components/electronic_circuit.html">電子回路</a>。</li><li>避雷針はバニラのもの（<code>minecraft:lightning_rod</code>）。</li></ul>
+
+<p>入手方法はこれだけです。トラップは成長も強化もしません。この文書はティア I のみを規定します。</p>
+
+<h2 id="進行">進行</h2>
+
+<p>ティア I は通常の農場向けの「弱い」トラップです。今後の発展（ の範囲外の別タスク）：エンチャントによる ドロップ増加、液体経験値用の経験値リザーバー、 の種ジャーナル。</p>
+
+<h2 id="関連">関連</h2>
+
+<ul><li><a href="mob_repeller.html">小型モブ忌避装置</a> — トラップの対になる存在。トラップより優先される。</li><li><a href="../items/soul_vessel.html">魂の器</a> — トラップは魂の器を満たさない。</li><li><a href="../item-transport/vacuum_collector.html">真空コレクター I</a> — 装置の手本でありレシピの材料。</li><li>タスク  — オーナーの決定と調査。</li></ul>
+
+<h2>クラフト</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="電撃モブトラップ alaindustrial:electric_mob_trap" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">定型クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="セラミックプレート"><img src="../../assets/item/ceramic_plate_3d.png" alt="セラミックプレート" width="32" height="32"></div> <div class="cell" title="避雷針"><img src="../../assets/item/lightning_rod_3d.png" alt="避雷針" width="32" height="32"></div> <div class="cell" title="セラミックプレート"><img src="../../assets/item/ceramic_plate_3d.png" alt="セラミックプレート" width="32" height="32"></div> <div class="cell" title="銅コイル"><img src="../../assets/item/copper_coil_3d.png" alt="銅コイル" width="32" height="32"></div> <div class="cell" title="真空コレクター"><img src="../../assets/item/vacuum_collector_3d.png" alt="真空コレクター" width="32" height="32"></div> <div class="cell" title="銅コイル"><img src="../../assets/item/copper_coil_3d.png" alt="銅コイル" width="32" height="32"></div> <div class="cell" title="セラミックプレート"><img src="../../assets/item/ceramic_plate_3d.png" alt="セラミックプレート" width="32" height="32"></div> <div class="cell" title="電子回路"><img src="../../assets/item/electronic_circuit_3d.png" alt="電子回路" width="32" height="32"></div> <div class="cell" title="セラミックプレート"><img src="../../assets/item/ceramic_plate_3d.png" alt="セラミックプレート" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="電撃モブトラップ"><img src="../../assets/item/electric_mob_trap_3d.png" alt="電撃モブトラップ" width="32" height="32"></div><div class="result-name">電撃モブトラップ</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>

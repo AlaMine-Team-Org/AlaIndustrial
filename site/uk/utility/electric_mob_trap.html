@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="uk" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>Електропастка мобів — Ala Industrial — Гід</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="Відкрити меню" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  </div>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../../assets/item/guide_book_3d.png" alt="">Увесь контент</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/ky7cFDF8JD" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../../assets/platform/discord.svg" alt="Discord"></a>
+    </div>
+    <search class="site-search"><input type="search" data-wiki-search placeholder="Пошук по гіду…" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-label="Пошук по гіду" autocomplete="off" spellcheck="false" data-index="../search-index.json" data-root="../" data-l10n="{&quot;list&quot;:&quot;Результати пошуку&quot;,&quot;one&quot;:&quot;сторінка знайдена&quot;,&quot;few&quot;:&quot;сторінки знайдені&quot;,&quot;many&quot;:&quot;сторінок знайдено&quot;,&quot;loading&quot;:&quot;Завантаження індексу пошуку…&quot;,&quot;nothing&quot;:&quot;Нічого не знайдено&quot;}"></search>
+    <details class="language-menu"><summary aria-label="Language">UA</summary><div class="language-popover"><span>UA</span><a href="../../en/utility/electric_mob_trap.html">EN</a><a href="../../ru/utility/electric_mob_trap.html">RU</a><a href="../../zh_cn/utility/electric_mob_trap.html">中文</a><a href="../../ja_jp/utility/electric_mob_trap.html">日本語</a><a href="../../es_es/utility/electric_mob_trap.html">ES</a></div></details>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">Огляд</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../../assets/item/tempered_iron_pickaxe.png" alt=""><span>З чого почати</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>Рецепти</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>Профіль гравця</span></a>
+<div class="group-title">Енергія</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>Генератори</span><span class="cat-count" aria-label="14 сторінок">14</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>Накопичувачі енергії</span><span class="cat-count" aria-label="4 сторінки">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>Передача енергії</span><span class="cat-count" aria-label="8 сторінок">8</span></a>
+<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>Ядерна техніка</span><span class="cat-count" aria-label="15 сторінок">15</span></a>
+<div class="group-title">Переробка</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>Машини</span><span class="cat-count" aria-label="17 сторінок">17</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>Машини для рідин</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
+<div class="group-title">Логістика</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>Логістика предметів</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Логістика рідин</span><span class="cat-count" aria-label="5 сторінок">5</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>Зберігання рідин</span><span class="cat-count" aria-label="2 сторінки">2</span></a>
+<div class="group-title">Світ та автоматизація</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Матеріали</span><span class="cat-count" aria-label="26 сторінок">26</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>Сільське господарство</span><span class="cat-count" aria-label="6 сторінок">6</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>Високотехнологічні машини</span><span class="cat-count" aria-label="1 сторінка">1</span></a>
+<div class="group-title">Інше</div>
+<a class="cat-link" href="../construction/index.html"><img class="nav-icon" src="../../assets/item/engraved_plate_0_3d.png" alt=""><span>Будівельні блоки</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
+<a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>Утилітарні блоки</span><span class="cat-count" aria-label="22 сторінки">22</span></a>
+<div class="group-title">Предмети</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>Апгрейди</span><span class="cat-count" aria-label="3 сторінки">3</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>Компоненти</span><span class="cat-count" aria-label="30 сторінок">30</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>Ігрові предмети</span><span class="cat-count" aria-label="32 сторінки">32</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">Головна</a><span class="sep">/</span><a href="../utility/index.html">Утилітарні блоки</a><span class="sep">/</span><span>Електропастка мобів</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../../assets/item/electric_mob_trap_3d.png" alt="Електропастка мобів" width="64" height="64">
+    <div class="info">
+      <h1>Електропастка мобів</h1>
+      <div class="block-id">alaindustrial:electric_mob_trap</div>
+      <div class="tags"><span class="tag cat" style="background:#14b8a6">Утилітарні блоки</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">Реалізовано</span><span class="tag">tier-lv</span><span class="tag">utility</span><span class="tag">defense</span><span class="tag">mob-farm</span><span class="tag">automation</span><span class="tag">electric</span></div>
+    </div>
+  </div>
+</div>
+<h2 id="зведення">Зведення</h2>
+
+<p><strong>Електропастка мобів</strong> (тир I) — протилежність <a href="mob_repeller.html">відлякувача</a>: відлякувач виганяє ворожих мобів, а пастка їх <strong>збирає й перетворює на ресурс</strong>. Вона слабко тягне мобів із куба зі стороною 12 блоків (6 блоків від центру по кожній осі), б'є струмом тих, хто підійшов до кільця на 3 блоки, і забирає все, що з них випало: предмети — у дев'ятислотовий буфер, досвід — у бак рідкого досвіду. Здобич забирають труби, під'єднані згори або знизу; кабель підводиться збоку.</p>
+
+<p>Пастка <strong>не створює мобів</strong>. Спавном керує сам гравець — темний майданчик, світло, площа, висота, як у звичайних мобофермах; пастка лише збирає тих, хто там з'явився.</p>
+
+<blockquote><strong>Міні-приклад:</strong> над темним майданчиком для спавну поставте пастку, знизу підведіть предметну трубу до скрині, збоку — LV-кабель. Зомбі, скелети й павуки з майданчика потягнуться до кільця, отримають розряд, а кістки, порох і нитки самі опиняться в скрині.</blockquote>
+
+<h2 id="кого-чіпає-і-кого-ні">Кого чіпає і кого ні</h2>
+
+<p>Пастка діє на <strong>всіх монстрів</strong> — і злих, і спокійних нейтральних (рішення власника 2026-10-15), — з власними винятками. Цим вона ширша за відлякувач: той не чіпає спокійних нейтральних, щоб не підняти зграю зомбованих піглінів. Пастці це не загрожує: вона нікого не робить ціллю, тому розряд по спокійному зомбованому пігліну не будить його сусідів.</p>
+
+<table><thead><tr><th>Хто</th><th>Що відбувається</th></tr></thead><tbody><tr><td>Звичайні монстри (зомбі, скелети, кріпери, павуки…)</td><td>Притягуються, б'ються струмом</td></tr><tr><td>Нейтральні монстри (ендермен, зомбований піглін, піглін, павук удень)</td><td>Притягуються й б'ються струмом, <strong>навіть спокійні</strong></td></tr><tr><td>Нафтовий слиз моду</td><td>Чіпається, як будь-який ворожий моб — ферма каучуку дозволена</td></tr><tr><td>Слизи, фантоми та інші моби без навігації</td><td>Притягуються поштовхом (див. нижче), б'ються струмом</td></tr><tr><td>Піглини, хоглини, зоглини, бриз, скрипун (мозкові моби)</td><td>Притягуються: пастка задає їм ціль ходьби просто в мозок</td></tr><tr><td>Моб, що зараз іде за гравцем (ціль — гравець)</td><td><strong>Забуває гравця</strong> й притягується: інакше ферма, біля якої стоїть гравець, не тягнула б нікого</td></tr><tr><td>Ендермен</td><td>Б'ється струмом і <strong>не телепортується</strong>: розряд для нього йде від імені фейкового гравця пастки (див. «Здобич і досвід»)</td></tr><tr><td>Шалкер</td><td><strong>Виключений повністю:</strong> не тягнеться і не б'ється</td></tr><tr><td>Боси: Дракон Краю, Візер, Вартовий</td><td><strong>Виключені повністю:</strong> не тягнуться і не б'ються</td></tr><tr><td>Гравець у виживанні чи пригодах</td><td><strong>Б'ється струмом</strong>, якщо стоїть у радіусі удару (рішення власника 2026-10-15); не притягується</td></tr><tr><td>Гравець у творчому режимі чи спостерігач</td><td>Не зачіпається</td></tr><tr><td>Жителі, улюбленці, мирні моби</td><td>Не зачіпаються</td></tr><tr><td>Моб у зоні активного відлякувача</td><td>Не зачіпається (див. «Відлякувач в одній зоні»)</td></tr></tbody></table>
+
+<p>Босів доводиться виключати списком типів: загальний фільтр ворожості їх пропускає, а тега «бос» у грі немає. Шалкер виключений так само. Бос з іншого моду цим списком не охоплений — це його власна справа.</p>
+
+<h2 id="енергія">Енергія</h2>
+
+<p>Споживач LV. Холостої витрати немає: енергія платиться лише за удар, що пройшов.</p>
+
+<table><thead><tr><th>Що</th><th>Значення</th><th>Ручка конфігу</th></tr></thead><tbody><tr><td>Ціна удару</td><td>100 EU/FE</td><td></td></tr><tr><td>Буфер енергії</td><td>10000 EU/FE (близько 100 ударів)</td><td>(діє на нові блоки)</td></tr><tr><td>Прийом</td><td>до 32 EU/FE/т (LV)</td><td>—</td></tr></tbody></table>
+
+<ul><li><strong>Кабель підключається до чотирьох бічних граней.</strong> Кришка й дно кабелю не належать — це дві лінії виводу (предмети й рідкий досвід). Кабель не малює руку до кришки й дна.</li><li>Один удар коштує 100 EU/FE. Платиться лише за удар, що <strong>пройшов</strong>: якщо шкода не пройшла (невразливий моб, вікно невразливості після попереднього удару), енергія не списується. Зомбі з 20 здоров'я коштує близько 500 EU/FE. У піку пастка просить 40 EU/FE/т (8 ударів × 100 EU/FE / 20 тактів) — це вище за стелю LV (32 EU/FE/т): буфер на 10000 EU/FE тримає пік, а на довгій дистанції LV-живлення дає близько 6 ударів на секунду.</li><li><strong>Без енергії пастка нічого не робить: ні б'є, ні тягне.</strong> Якщо в зоні є цілі, а енергії не вистачає на один удар, імпульс закінчується статусом «Недостатньо енергії» ще до того, як когось притягнуто. Енергію перевіряють повністю на кожен удар.</li></ul>
+
+<h2 id="притягування">Притягування</h2>
+
+<p><strong>Імпульс.</strong> Пастка працює <strong>імпульсами</strong> раз на 20 тактів; між імпульсами вона спить, але не довше за наступний імпульс. Розклад не зберігається: після перезавантаження світу пастка діє на першому ж такті. Один імпульс іде так:</p>
+
+<ol><li>Бере всіх придатних мобів, чиї коробки перетинають куб зони (див. «Кого чіпає»).</li><li>Цілей немає — статус «Очікування мобів», нічого не списується.</li><li>Енергії менше за ціну одного удару — статус «Недостатньо енергії», більше нічого не робиться.</li><li>У буфері немає місця (ні порожнього слота, ні стосу нижче за межу) — статус «Буфер повний», більше нічого не робиться: <strong>повний буфер зупиняє і удари, і притягування.</strong></li><li>Інакше цілі сортуються за відстанню до центру блока, за рівності — за UUID (порядок не залежить від порядку, в якому світ їх віддав). Далі кожен моб або б'ється (стоїть у радіусі удару), або притягується.</li></ol>
+
+<p>Статус «Б'є струмом» ставиться, лише якщо за імпульс бодай один удар пройшов. Стан <code>lit</code> від результату імпульсу не залежить: він показує, що пастка живлена (див. «Властивості блока»).</p>
+
+<ul><li>Працює лише на сервері, раз на імпульс.</li><li><strong>Зона — куб зі стороною 12 блоків</strong> (6 блоків від центру блока по кожній осі, ручка ). Окремої вертикалі немає: спільний перегляд зони несе одне число, і куб малюється саме той, на який діє пастка.</li><li>За імпульс пастка веде щонайбільше 16 мобів, рахуючи лише тих, кого справді вдалося повести: найближчі до центру першими, за рівної дистанції — за UUID. Це обмеження перерахунків шляху на сервері.</li><li>Притягування <strong>слабке</strong>, воно не замінює добре збудованого майданчика; одного й того ж моба пастка веде не<ul><li>моб, що йшов за гравцем, <strong>забуває гравця</strong> — інакше ферма, біля якої стоїть власник, не тягнула б нікого; за кілька тактів моб може знову помітити гравця, і наступний імпульс знову його поведе;</li><li>мобів із навігацією (усі <code>PathfinderMob</code>) веде навігація до блока зі своєю звичайною швидкістю; якщо шляху немає, моб не вважається притягнутим;</li><li>мозковим мобам (піглини, хоглини, зоглини, бриз, скрипун) пастка записує ціль ходьби просто в мозок і стирає їхню ціль атаки — звичайний шлях навігації їхній мозок одразу переписав би;</li><li>моби без навігації (слизи, фантоми та їм подібні) отримують невеликий горизонтальний поштовх до центру раз на імпульс — інакше ферма каучуку на нафтових слизах не працювала б;</li><li>телепортації немає.</li></ul></li><li>Моби, що вже стоять у радіусі удару, не притягуються — вони б'ються.</li></ul>
+
+<h2 id="удар-струмом">Удар струмом</h2>
+
+<ul><li>Б'є мобів, що стоять у радіусі 3 блоків від центру блока (відстань рахується від позиції моба), не лише притягнутих — ті, що підійшли самі, теж отримають розряд.</li><li>За імпульс — щонайбільше 8 ударів: найближчі до центру першими, за рівної дистанції — за UUID.</li><li>Шкода за удар — 4 (два серця,), тип шкоди «удар струмом» (<code>electric_shock</code>, той самий, що в кабеля), броня враховується. Це саме шкода, а не миттєве вбивство: зомбі з 20 здоров'я гине приблизно за п'ять секунд, броньований моб — довше.</li><li>Кожен удар заново перевіряє енергію та місце в буфері: якщо енергії на наступний удар не вистачає або попередній заповнив буфер, решта ударів імпульсу не завдається (притягування в межах того ж імпульсу триває).</li><li>Під час розряду в грі видно спалах вузла, блакитні зигзагоподібні дуги вниз по чотирьох відкритих боках (малює рендерер блока, близько 0,4 с), іскри <code>ELECTRIC_SPARK</code> біля моба й короткий тріск (ванільний звук удару блискавки, тихо й високо).</li></ul>
+
+<h2 id="здобич-і-досвід">Здобич і досвід</h2>
+
+<p>Смерть моба — звичайна: він гине, як від будь-якої шкоди, і спрацьовують броня, голови, особлива здобич і події смерті. <strong>Здобич і кулі досвіду падають на землю, як за будь-якої смерті</strong>, а пастка потім втягує їх до себе так само, як <a href="../item-transport/vacuum_collector.html">вакуумний збирач предметів</a>:</p>
+
+<ul><li>Раз на 5 тактів пастка оглядає свою зону (той самий куб, що й для притягування) і діє щонайбільше на 16 найближчих предметів і куль досвіду.</li><li>Предмет або куля, що <strong>торкнулися блока</strong>, забираються: предмети — у буфер (скільки поміститься), куля досвіду — у бак рідкого досвіду (лише цілою). Той, що далі, отримує поштовх до пастки, як від електромагніта, — він летить до неї за фізикою, без телепортації.</li><li>Предмет із затримкою підбору (свіжий дроп, викинутий гравцем предмет) чекає її закінчення; предмет у лаві не чіпається. Дроп, що перестав наближатися (за стіною, у ямі), пастка на час відпускає.</li><li>Втягування безплатне — воно частина роботи пастки. Пастка втягує <strong>будь-які</strong> предмети в зоні, а не лише здобич своїх мобів: не тримайте поруч із нею нічого зайвого.</li><li><strong>Лут звичайний.</strong> Перед кожним ударом моба позначають «нещодавно ударений гравцем» — безіменним фейковим гравцем <code>[Electric Mob Trap]</code> (живе в пам'яті, у світ не входить), тому випадає здобич з умовою «вбитий гравцем» (кістки, порох, нитки — як при вбивстві мечем) і випадає досвід. Зачарування «Здобич» у пастки немає: тир I дає базову здобич.</li><li><strong>Посудина душ не росте.</strong> Джерело шкоди — без сутності, а не гравець: <a href="../items/soul_vessel.html">Посудина душ</a> рахує лише особисті вбивства, тож прокачка <a href="mob_repeller.html">відлякувача</a> лишається за гравцем. Повідомлення про смерть, якщо воно показується, — «був уражений струмом» (<code>death.attack.electric_shock</code>, англійською «was electrocuted»).</li><li><strong>Ендермен — виняток за джерелом.</strong> Від шкоди без живого нападника ендермен телепортується геть, тому розряд по ньому завдається від імені фейкового гравця пастки. Посудина душ і тоді не росте (у фейкового гравця посудини немає), а злість, яку викликав удар, пастка одразу знімає.</li><li><strong>Очки майстерності не нараховуються</strong> (як у відлякувача): пастка не стає фермою очок.</li><li><strong>Предмети</strong> потрапляють у буфер на 9 слотів. <strong>Поки в буфері немає місця, пастка не б'є і не тягне.</strong> Подробиці буфера — нижче.</li><li><strong>Те, що не влізло в буфер, лишається у світі</strong> звичайним предметом і не зникає; пастка повернеться до нього, коли місце звільниться.</li><li><strong>Досвід</strong> перетворюється на <strong>рідкий досвід</strong> за курсом <strong>20 мБ за очко</strong> і накопичується у внутрішньому баку на 8000 мБ, тобто 400 очок (діє на нові блоки) — це близько 80 зомбі. Рідина називається і входить до тега <code>c:experience</code>, тож сумісна з чужими модами. Відра й рідкого блока в неї немає, як у пари: вона існує лише всередині баків і труб і не виливається у світ. Бак віддає рідину в рідинні труби (лише крізь кришку й дно) і нічого не приймає.</li><li><strong>Бак повний — кулі досвіду лишаються у світі.</strong> Досвід не зникає мовчки: гравець підбирає його сам, а видима причина — кулі на підлозі навколо пастки. Куля забирається цілою або не забирається зовсім: куля, що не вміщується в бак цілою, лишається у світі. Повний бак сам по собі удари <strong>не</strong> зупиняє.</li><li>Кулі досвіду самі летять до гравця, якщо він ближче за 8 блоків: стоячи біля пастки, гравець може перехопити досвід раніше за неї.</li></ul>
+
+<h2 id="буфер-і-транспорт">Буфер і транспорт</h2>
+
+<ul><li>9 вихідних слотів; межа слота — розмір стосу предмета, але не більше за 64, разом до 576 звичайних предметів.</li><li>GUI — машинний екран: сітка 3×3 слотів лише на видачу, шкала енергії ліворуч, бак рідкого досвіду праворуч (з підказкою «рідина: N / ємність мБ»), рядок статусу та кнопка-«око» перегляду зони (як у відлякувача й вакуумного збирача; показує куб зони). Панелі покращень немає: у пастки нічого прискорювати чипом понад період імпульсу. Статуси рядка: «Б'є струмом», «Очікування мобів», «Буфер повний», «Недостатньо енергії» (два останні — блокувальні, підсвічені як зупинка).</li><li>Предмети можна забирати, класти не можна — ні рукою, ні лійкою, ні трубою.</li><li>Пастка сама нічого нікуди не штовхає. Предметні труби забирають із буфера самі, рідинні труби забирають рідкий досвід із бака; підключення — <strong>лише згори або знизу</strong> (кришка й дно), як у <a href="../item-transport/vacuum_collector.html">вакуумного збирача</a>. <strong>Кабель — лише на чотирьох бічних гранях:</strong> у пастки три лінії (енергія, предмети, рідкий досвід), і бічні грані для енергії залишають обидві труби вільними. Для предметів і рідини чотири бічні грані закриті.</li><li>Якщо труб немає, буфер заповнюється, і пастка перестає бити й тягти, поки гравець не звільнить місце.</li></ul>
+
+<h2 id="відлякувач-в-одній-зоні">Відлякувач в одній зоні</h2>
+
+<p><a href="mob_repeller.html">Відлякувач</a> має пріоритет. Кожен обхід відлякувача продовжує коротку «оренду» його зони (два періоди сканування плюс один такт). Моба, чия коробка перетинає зону такої чинної оренди, пастка не притягує й не б'є. Зламаний, вимкнений редстоуном або знеструмлений відлякувач перестає обходити зону, оренда спливає за пару обходів, і моб знову стає ціллю пастки. Тому не ставте пастку всередині поля відлякувача — моби будуть вигнані раніше, ніж потраплять у кільце.</p>
+
+<h2 id="властивості-блока">Властивості блока</h2>
+
+<p>Модель — обраний концепт E «Spark Ring» (<code>tools/model_sources/electric_mob_trap_concepts/e_spark_ring/</code>): мідне кільце на чотирьох гірляндах керамічних ізоляторів, у центрі — вузол-розрядник на стійці. Габарит моделі — 16×12×16 пікселів; виділення й колізія — та сама коробка 16×12×16, зібрана один раз. Повороту немає: кільце однакове з усіх боків. Блок не повний куб, тому форма оклюзії порожня, а світло проходить (як у вакуумного збирача: сусіди не втрачають грані, у комірки немає кутової тіні); не використовується.</p>
+
+<table><thead><tr><th>Що</th><th>Значення</th></tr></thead><tbody><tr><td>Форма</td><td>кільце на ізоляторах, 16×12×16 px, уся коробка суцільна</td></tr><tr><td>Міцність</td><td>3,0 / 6,0, метал; інструмент — кирка</td></tr><tr><td>Стан</td><td><code>lit</code> — у буфері вистачає енергії на удар (пастка живлена)</td></tr><tr><td>Анімація</td><td>поки пастка живлена, вузол пульсує (анімована текстура, <code>.png.mcmeta</code>); без енергії вузол нерухомий; у мить удару — спалах вузла</td></tr><tr><td>Рендер</td><td>рендерер блока малює блакитні зигзагоподібні дуги вниз по чотирьох відкритих боках (близько 0,4 с); біля моба — ванільні частинки <code>ELECTRIC_SPARK</code></td></tr><tr><td>Звук</td><td>власних звуків моду немає; під час удару грає ванільний <code>LIGHTNING_BOLT_IMPACT</code> (гучність 0,35, тон 1,8)</td></tr></tbody></table>
+
+<h2 id="рецепт">Рецепт</h2>
+
+<p>Верстак 3×3, повна сітка: у центрі — <a href="../item-transport/vacuum_collector.html">вакуумний збирач</a>, над ним громовідвід, під ним електронна схема, з боків мідні котушки, у кутах керамічні пластини.</p>
+
+<pre><code class="lang-">[Керамічна пластина] [Громовідвід] [Керамічна пластина]
+[Мідна котушка] [Вакуумний збирач] [Мідна котушка]
+[Керамічна пластина] [Електронна схема] [Керамічна пластина]</code></pre>
+
+<ul><li><a href="../components/ceramic_plate.html">Керамічна пластина</a> — ізолятори кільця.</li><li><a href="../components/copper_coil.html">Мідна котушка</a> та <a href="../components/electronic_circuit.html">електронна схема</a>.</li><li>Громовідвід — ванільний (<code>minecraft:lightning_rod</code>).</li></ul>
+
+<p>Це єдиний шлях отримання: пастка не вирощується й не покращується. Ця специфікація охоплює лише тир I.</p>
+
+<h2 id="прогресія">Прогресія</h2>
+
+<p>Тир I — «слабка» пастка для звичайних ферм. Можливий розвиток (окремі задачі, поза: здобич із зачаруванням, резервуар досвіду для рідкого досвіду, журнал видів із.</p>
+
+<h2 id="повязане">Пов'язане</h2>
+
+<ul><li><a href="mob_repeller.html">Малий відлякувач</a> — протилежність пастки; має над нею пріоритет.</li><li><a href="../items/soul_vessel.html">Посудина душ</a> — пастка її не поповнює.</li><li><a href="../item-transport/vacuum_collector.html">Вакуумний збирач I</a> — взірець пристрою та інгредієнт рецепта.</li><li>Задача  — рішення власника й дослідження.</li></ul>
+
+<h2>Крафт</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="електропастка мобів alaindustrial:electric_mob_trap" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Крафт на верстаку</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Керамічна пластина"><img src="../../assets/item/ceramic_plate_3d.png" alt="Керамічна пластина" width="32" height="32"></div> <div class="cell" title="Блискавковідвід"><img src="../../assets/item/lightning_rod_3d.png" alt="Блискавковідвід" width="32" height="32"></div> <div class="cell" title="Керамічна пластина"><img src="../../assets/item/ceramic_plate_3d.png" alt="Керамічна пластина" width="32" height="32"></div> <div class="cell" title="Мідна котушка"><img src="../../assets/item/copper_coil_3d.png" alt="Мідна котушка" width="32" height="32"></div> <div class="cell" title="Вакуумний збирач"><img src="../../assets/item/vacuum_collector_3d.png" alt="Вакуумний збирач" width="32" height="32"></div> <div class="cell" title="Мідна котушка"><img src="../../assets/item/copper_coil_3d.png" alt="Мідна котушка" width="32" height="32"></div> <div class="cell" title="Керамічна пластина"><img src="../../assets/item/ceramic_plate_3d.png" alt="Керамічна пластина" width="32" height="32"></div> <div class="cell" title="Електронна схема"><img src="../../assets/item/electronic_circuit_3d.png" alt="Електронна схема" width="32" height="32"></div> <div class="cell" title="Керамічна пластина"><img src="../../assets/item/ceramic_plate_3d.png" alt="Керамічна пластина" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Верстак" title="Верстак" width="30" height="30"><div class="arrow" aria-label="Крафт">▶</div></div><div class="recipe-result"><div class="cell result" title="Електропастка мобів"><img src="../../assets/item/electric_mob_trap_3d.png" alt="Електропастка мобів" width="32" height="32"></div><div class="result-name">Електропастка мобів</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>

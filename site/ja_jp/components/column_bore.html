@@ -377,7 +377,7 @@
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>高度なマシン</span><span class="cat-count" aria-label="1 ページ">1</span></a>
 <div class="group-title">その他</div>
 <a class="cat-link" href="../construction/index.html"><img class="nav-icon" src="../../assets/item/engraved_plate_0_3d.png" alt=""><span>建築ブロック</span><span class="cat-count" aria-label="3 ページ">3</span></a>
-<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="21 ページ">21</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="22 ページ">22</span></a>
 <div class="group-title">アイテム</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link active" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="30 ページ">30</span></a>
@@ -397,15 +397,17 @@
 </div>
 <h2 id="概要">概要</h2>
 
-<p>ひとつの流れにある二つの部品です。<strong>コアバレル</strong>（<code>core_barrel</code>）はコアが通る中空の筒で、それ自体は何もせず、素材としてのみ存在します。<strong>柱状掘削モジュール</strong>（<code>drill_column_module</code>）はコアバレル2個から組み立て、電動ドリルに高さ3ブロックの柱を掘る力を与えます。狙ったブロックと、その上と下の1個ずつです。</p>
+<p>ひとつの流れにある三つの部品です。<strong>コアバレル</strong>（<code>core_barrel</code>）はコアが通る中空の筒で、それ自体は何もせず、素材としてのみ存在します。<strong>柱状掘削モジュール</strong>（<code>drill_column_module</code>）はコアバレル2個から組み立て、電動ドリルに高さ3ブロックの柱を掘る力を与えます。狙ったブロックと、その上と下の1個ずつです。</p>
 
-<p>どちらも、これまで使い道の乏しかった部品からわざと組んでいます。強化インバープレートは消費レシピが<strong>ひとつもなく</strong>、チョークと強化チョークは自分たちの系列の中だけで完結していました。</p>
+<p><strong>横列掘削モジュール</strong>（<code>drill_row_module</code>）は同種の二つ目の改造で、狙ったブロックの左と右のブロックも、プレイヤーが水平に向いている向きを基準に壊すようになります。幅3ブロックの列です。コアバレル1個と被曝ダイヤモンド2個から組み立てます。二つのモジュールは同じドリルに両方付けられ、その場合は5ブロックの十字を掘ります。</p>
+
+<p>これらはどれも、これまで使い道の乏しかった部品からわざと組んでいます。強化インバープレートは消費レシピが<strong>ひとつもなく</strong>、チョークと強化チョークは自分たちの系列の中だけで完結していました。</p>
 
 <p><strong>モジュールは手に持っても役に立ちません。</strong> ドリルに直接は付かず、右クリックにも反応しません。アップグレードテーブルがこれを受け取って消費し、道具そのものに改造を書き込みます。</p>
 
 <h2 id="性質">性質</h2>
 
-<table><thead><tr><th>項目</th><th>コアバレル</th><th>柱状掘削モジュール</th></tr></thead><tbody><tr><td>ID</td><td></td></tr><tr><td>スタック</td><td>64</td><td>64</td></tr><tr><td>EU/FE</td><td>なし</td><td>なし</td></tr><tr><td>耐久</td><td>なし</td><td>なし</td></tr></tbody></table>
+<table><thead><tr><th>項目</th><th>コアバレル</th><th>柱状掘削モジュール</th><th>横列掘削モジュール</th></tr></thead><tbody><tr><td>ID</td><td></td><td></td></tr><tr><td>スタック</td><td>64</td><td>64</td><td>64</td></tr><tr><td>EU/FE</td><td>なし</td><td>なし</td><td>なし</td></tr><tr><td>耐久</td><td>なし</td><td>なし</td><td>なし</td></tr></tbody></table>
 
 <h2 id="レシピ">レシピ</h2>
 
@@ -417,13 +419,21 @@
 
 <table><thead><tr><th></th><th></th><th></th></tr></thead><tbody><tr><td>コアバレル</td><td>被曝ダイヤモンド</td><td>コアバレル</td></tr><tr><td>強化チョーク</td><td>空のモジュール</td><td>強化チョーク</td></tr><tr><td>強化インバープレート</td><td>高性能回路</td><td>強化インバープレート</td></tr></tbody></table>
 
+<p><strong>横列掘削モジュール</strong> — 作業台。9マスすべて埋めます。</p>
+
+<table><thead><tr><th></th><th></th><th></th></tr></thead><tbody><tr><td>被曝ダイヤモンド</td><td>コアバレル</td><td>被曝ダイヤモンド</td></tr><tr><td>強化チョーク</td><td>空のモジュール</td><td>強化チョーク</td></tr><tr><td>強化インバープレート</td><td>高性能回路</td><td>強化インバープレート</td></tr></tbody></table>
+
 <h2 id="改造の効果">改造の効果</h2>
 
 <p>柱状掘削を積んだドリルは、狙ったブロックと同時にその上と下も壊します。人が歩ける高さの通路が一度で通ります。系列の決まりはそのままです。シルクタッチは、入っていれば3ブロックすべてに効き、幸運も同様です。保護地とアドベンチャーモードでは追加ブロックは壊れません。柱に入るのはツルハシで採れるブロックだけです。</p>
 
+<p>横列掘削を積んだドリルは、狙ったブロックの左と右のブロック（プレイヤーが水平に向いている向きが基準）も壊します。幅3ブロックの通路が一度で通ります。二つのモジュールを両方付けると、狙ったブロック・その上と下・左と右の5ブロックの十字を掘ります。追加ブロックはすべて同じ決まりに従います。ツルハシで採れるブロックだけ、メインハンドで掘るときだけ、壊せないブロックは飛ばします。</p>
+
+<p>横列掘削も追加ブロック1個あたりの値段は同じです。1列は 200 EU/FE、5ブロックの十字は 350 EU/FE（50 + 4 × 75）。セット全体を払えないドリルは、狙ったブロックだけを壊します。値段は実際に壊れるブロックだけで数えます。空気やツルハシで掘れないブロック（土、砂）はセットにも値段にも入らず、ひび割れが出るのもまさにそのブロックです。</p>
+
 <p>追加ブロック1個につき <strong>75 EU/FE</strong>（）。狙ったブロックは <strong>50 EU/FE</strong>（）なので、一振りで50ではなく200 EUです。柱の分を払えないドリルは1ブロックだけを壊し、終えられない仕事は始めません。</p>
 
-<p>切り替えは <strong>L</strong> キーです。このドリルはマウスの両ボタンが埋まっています。通常の右クリックは松明を置き、スニーク＋右クリックは上位2段のシルクタッチを切り替えます。</p>
+<p>切り替えは <strong>L</strong> キーです。このドリルはマウスの両ボタンが埋まっています。通常の右クリックは松明を置き、スニーク＋右クリックは上位2段のシルクタッチを切り替えます。モジュールが一つのときは L でそれをオン／オフし、二つあるときは L でモードを順に切り替えます：十字 → 柱状のみ → 横列のみ → 1ブロック → 十字。新しいモードはメッセージで知らされ、モジュールが無いときもその旨が表示されます。</p>
 
 <h2 id="関連">関連</h2>
 
@@ -432,7 +442,7 @@
 <h2>クラフト</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="コアバレル alaindustrial:core_barrel" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">定型クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="強化インバー板"><img src="../../assets/item/invar_reinforced_plate_3d.png" alt="強化インバー板" width="32" height="32"></div> <div class="cell" title="強化インバー板"><img src="../../assets/item/invar_reinforced_plate_3d.png" alt="強化インバー板" width="32" height="32"></div> <div class="cell" title="強化インバー板"><img src="../../assets/item/invar_reinforced_plate_3d.png" alt="強化インバー板" width="32" height="32"></div> <div class="cell" title="チョークコイル"><img src="../../assets/item/choke_3d.png" alt="チョークコイル" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell" title="チョークコイル"><img src="../../assets/item/choke_3d.png" alt="チョークコイル" width="32" height="32"></div> <div class="cell" title="強化インバー板"><img src="../../assets/item/invar_reinforced_plate_3d.png" alt="強化インバー板" width="32" height="32"></div> <div class="cell" title="強化インバー板"><img src="../../assets/item/invar_reinforced_plate_3d.png" alt="強化インバー板" width="32" height="32"></div> <div class="cell" title="強化インバー板"><img src="../../assets/item/invar_reinforced_plate_3d.png" alt="強化インバー板" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="コアバレル"><img src="../../assets/item/core_barrel_3d.png" alt="コアバレル" width="32" height="32"></div><div class="result-name">コアバレル</div></div></div></div></div>
 <h2>用途</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="柱状掘削モジュール alaindustrial:drill_column_module" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">定型クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="コアバレル"><img src="../../assets/item/core_barrel_3d.png" alt="コアバレル" width="32" height="32"></div> <div class="cell" title="照射ダイヤモンド"><img src="../../assets/item/irradiated_diamond_3d.png" alt="照射ダイヤモンド" width="32" height="32"></div> <div class="cell" title="コアバレル"><img src="../../assets/item/core_barrel_3d.png" alt="コアバレル" width="32" height="32"></div> <div class="cell" title="強化チョークコイル"><img src="../../assets/item/choke_reinforced_3d.png" alt="強化チョークコイル" width="32" height="32"></div> <div class="cell" title="空のモジュール"><img src="../../assets/item/module_blank_3d.png" alt="空のモジュール" width="32" height="32"></div> <div class="cell" title="強化チョークコイル"><img src="../../assets/item/choke_reinforced_3d.png" alt="強化チョークコイル" width="32" height="32"></div> <div class="cell" title="強化インバー板"><img src="../../assets/item/invar_reinforced_plate_3d.png" alt="強化インバー板" width="32" height="32"></div> <div class="cell" title="高度な回路"><img src="../../assets/item/advanced_circuit_3d.png" alt="高度な回路" width="32" height="32"></div> <div class="cell" title="強化インバー板"><img src="../../assets/item/invar_reinforced_plate_3d.png" alt="強化インバー板" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="柱状掘削モジュール"><img src="../../assets/item/drill_column_module_3d.png" alt="柱状掘削モジュール" width="32" height="32"></div><div class="result-name">柱状掘削モジュール</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="柱状掘削モジュール alaindustrial:drill_column_module" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">定型クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="コアバレル"><img src="../../assets/item/core_barrel_3d.png" alt="コアバレル" width="32" height="32"></div> <div class="cell" title="照射ダイヤモンド"><img src="../../assets/item/irradiated_diamond_3d.png" alt="照射ダイヤモンド" width="32" height="32"></div> <div class="cell" title="コアバレル"><img src="../../assets/item/core_barrel_3d.png" alt="コアバレル" width="32" height="32"></div> <div class="cell" title="強化チョークコイル"><img src="../../assets/item/choke_reinforced_3d.png" alt="強化チョークコイル" width="32" height="32"></div> <div class="cell" title="空のモジュール"><img src="../../assets/item/module_blank_3d.png" alt="空のモジュール" width="32" height="32"></div> <div class="cell" title="強化チョークコイル"><img src="../../assets/item/choke_reinforced_3d.png" alt="強化チョークコイル" width="32" height="32"></div> <div class="cell" title="強化インバー板"><img src="../../assets/item/invar_reinforced_plate_3d.png" alt="強化インバー板" width="32" height="32"></div> <div class="cell" title="高度な回路"><img src="../../assets/item/advanced_circuit_3d.png" alt="高度な回路" width="32" height="32"></div> <div class="cell" title="強化インバー板"><img src="../../assets/item/invar_reinforced_plate_3d.png" alt="強化インバー板" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="柱状掘削モジュール"><img src="../../assets/item/drill_column_module_3d.png" alt="柱状掘削モジュール" width="32" height="32"></div><div class="result-name">柱状掘削モジュール</div></div></div></div> <div class="recipe-card" data-name="横列掘削モジュール alaindustrial:drill_row_module" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">定型クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="照射ダイヤモンド"><img src="../../assets/item/irradiated_diamond_3d.png" alt="照射ダイヤモンド" width="32" height="32"></div> <div class="cell" title="コアバレル"><img src="../../assets/item/core_barrel_3d.png" alt="コアバレル" width="32" height="32"></div> <div class="cell" title="照射ダイヤモンド"><img src="../../assets/item/irradiated_diamond_3d.png" alt="照射ダイヤモンド" width="32" height="32"></div> <div class="cell" title="強化チョークコイル"><img src="../../assets/item/choke_reinforced_3d.png" alt="強化チョークコイル" width="32" height="32"></div> <div class="cell" title="空のモジュール"><img src="../../assets/item/module_blank_3d.png" alt="空のモジュール" width="32" height="32"></div> <div class="cell" title="強化チョークコイル"><img src="../../assets/item/choke_reinforced_3d.png" alt="強化チョークコイル" width="32" height="32"></div> <div class="cell" title="強化インバー板"><img src="../../assets/item/invar_reinforced_plate_3d.png" alt="強化インバー板" width="32" height="32"></div> <div class="cell" title="高度な回路"><img src="../../assets/item/advanced_circuit_3d.png" alt="高度な回路" width="32" height="32"></div> <div class="cell" title="強化インバー板"><img src="../../assets/item/invar_reinforced_plate_3d.png" alt="強化インバー板" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="横列掘削モジュール"><img src="../../assets/item/drill_row_module_3d.png" alt="横列掘削モジュール" width="32" height="32"></div><div class="result-name">横列掘削モジュール</div></div></div></div></div>
   </main>
 </div>
 

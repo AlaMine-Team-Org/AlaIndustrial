@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="es_es" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>Trampa eléctrica de monstruos — Ala Industrial — Guía</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="Abrir menú" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  </div>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../../assets/item/guide_book_3d.png" alt="">Todo el contenido</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/ky7cFDF8JD" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../../assets/platform/discord.svg" alt="Discord"></a>
+    </div>
+    <search class="site-search"><input type="search" data-wiki-search placeholder="Buscar en la wiki…" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-label="Buscar en la guía" autocomplete="off" spellcheck="false" data-index="../search-index.json" data-root="../" data-l10n="{&quot;list&quot;:&quot;Resultados de la búsqueda&quot;,&quot;one&quot;:&quot;página encontrada&quot;,&quot;few&quot;:&quot;páginas encontradas&quot;,&quot;many&quot;:&quot;páginas encontradas&quot;,&quot;loading&quot;:&quot;Cargando el índice de búsqueda…&quot;,&quot;nothing&quot;:&quot;Nada encontrado&quot;}"></search>
+    <details class="language-menu"><summary aria-label="Language">ES</summary><div class="language-popover"><span>ES</span><a href="../../en/utility/electric_mob_trap.html">EN</a><a href="../../ru/utility/electric_mob_trap.html">RU</a><a href="../../uk/utility/electric_mob_trap.html">UA</a><a href="../../zh_cn/utility/electric_mob_trap.html">中文</a><a href="../../ja_jp/utility/electric_mob_trap.html">日本語</a></div></details>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">Explorar</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../../assets/item/tempered_iron_pickaxe.png" alt=""><span>Primeros pasos</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>Recetas</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>Perfil del jugador</span></a>
+<div class="group-title">Energía</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>Generadores</span><span class="cat-count" aria-label="14 páginas">14</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>Almacenamiento de energía</span><span class="cat-count" aria-label="4 páginas">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>Transferencia de energía</span><span class="cat-count" aria-label="8 páginas">8</span></a>
+<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>Energía nuclear</span><span class="cat-count" aria-label="15 páginas">15</span></a>
+<div class="group-title">Procesamiento</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>Máquinas</span><span class="cat-count" aria-label="17 páginas">17</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>Máquinas de fluidos</span><span class="cat-count" aria-label="3 páginas">3</span></a>
+<div class="group-title">Logística</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>Transporte de objetos</span><span class="cat-count" aria-label="3 páginas">3</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Transporte de fluidos</span><span class="cat-count" aria-label="5 páginas">5</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>Almacenamiento de fluidos</span><span class="cat-count" aria-label="2 páginas">2</span></a>
+<div class="group-title">Mundo y automatización</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Materiales</span><span class="cat-count" aria-label="26 páginas">26</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>Agricultura</span><span class="cat-count" aria-label="6 páginas">6</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>Máquinas avanzadas</span><span class="cat-count" aria-label="1 página">1</span></a>
+<div class="group-title">Otros</div>
+<a class="cat-link" href="../construction/index.html"><img class="nav-icon" src="../../assets/item/engraved_plate_0_3d.png" alt=""><span>Construcción</span><span class="cat-count" aria-label="3 páginas">3</span></a>
+<a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>Utilidades</span><span class="cat-count" aria-label="22 páginas">22</span></a>
+<div class="group-title">Objetos</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>Mejoras</span><span class="cat-count" aria-label="3 páginas">3</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>Componentes</span><span class="cat-count" aria-label="30 páginas">30</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>Objetos</span><span class="cat-count" aria-label="32 páginas">32</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">Inicio</a><span class="sep">/</span><a href="../utility/index.html">Utilidades</a><span class="sep">/</span><span>Trampa eléctrica de monstruos</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../../assets/item/electric_mob_trap_3d.png" alt="Trampa eléctrica de monstruos" width="64" height="64">
+    <div class="info">
+      <h1>Trampa eléctrica de monstruos</h1>
+      <div class="block-id">alaindustrial:electric_mob_trap</div>
+      <div class="tags"><span class="tag cat" style="background:#14b8a6">Utilidades</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">Implementado</span><span class="tag">tier-lv</span><span class="tag">utility</span><span class="tag">defense</span><span class="tag">mob-farm</span><span class="tag">automation</span><span class="tag">electric</span></div>
+    </div>
+  </div>
+</div>
+<h2 id="resumen">Resumen</h2>
+
+<p>La <strong>Trampa eléctrica de mobs</strong> (nivel I) es lo contrario del <a href="mob_repeller.html">repelente</a>: el repelente aleja a los mobs hostiles, mientras que la trampa <strong>los reúne y los convierte en un recurso</strong>. Atrae débilmente a los mobs desde un cubo de 12 bloques de lado (6 bloques desde el centro en cada eje), da una descarga a los que se acercan a 3 bloques de su anillo y recoge todo lo que sueltan: los objetos, en un búfer de nueve ranuras; la experiencia, en un depósito de experiencia líquida. Las tuberías conectadas arriba o abajo sacan el botín; el cable llega por un lado.</p>
+
+<p>La trampa <strong>no crea mobs</strong>. El jugador controla la aparición: plataforma oscura, luz, superficie y altura, como en las granjas de mobs normales; la trampa solo recoge a los que han aparecido allí.</p>
+
+<blockquote><strong>Ejemplo rápido:</strong> sobre una plataforma oscura de aparición, coloca la trampa, lleva una tubería de objetos desde debajo hasta un cofre y un cable LV a uno de sus lados. Los zombis, esqueletos y arañas de la plataforma se acercarán al anillo, recibirán una descarga y los huesos, la pólvora y el hilo acabarán solos en el cofre.</blockquote>
+
+<h2 id="a-quién-afecta-y-a-quién-no">A quién afecta y a quién no</h2>
+
+<p>La trampa actúa sobre <strong>todos los monstruos</strong>, tanto los enfadados como los neutrales tranquilos (decisión del propietario del 2026-10-15), con excepciones propias. En esto es más amplia que el repelente: este no toca a los neutrales tranquilos para no levantar una manada de piglins zombificados. A la trampa eso no le pasa: no convierte a nadie en objetivo, así que una descarga a un piglin zombificado tranquilo no despierta a sus vecinos.</p>
+
+<table><thead><tr><th>Quién</th><th>Qué ocurre</th></tr></thead><tbody><tr><td>Monstruos normales (zombis, esqueletos, creepers, arañas…)</td><td>Atraídos y electrocutados</td></tr><tr><td>Monstruos neutrales (enderman, piglin zombificado, piglin, araña de día)</td><td>Atraídos y electrocutados, <strong>incluso los tranquilos</strong></td></tr><tr><td>El slime de petróleo del mod</td><td>Afectado como cualquier mob hostil: la granja de caucho está permitida</td></tr><tr><td>Slimes, fantasmas y otros mobs sin navegación</td><td>Atraídos con un empujón (ver abajo) y electrocutados</td></tr><tr><td>Piglins, hoglins, zoglins, brisa, creaking (mobs guiados por cerebro)</td><td>Atraídos: la trampa les fija un objetivo de marcha directamente en el cerebro</td></tr><tr><td>Un mob que persigue a un jugador (su objetivo es un jugador)</td><td><strong>Olvida al jugador</strong> y es atraído: si no, una granja con un jugador al lado no atraería a nadie</td></tr><tr><td>Enderman</td><td>Recibe la descarga y <strong>no se teletransporta</strong>: la descarga va en nombre del jugador falso de la trampa (ver «Botín y experiencia»)</td></tr><tr><td>Shulker</td><td><strong>Excluido por completo:</strong> ni se atrae ni recibe descarga</td></tr><tr><td>Jefes: Dragón del End, Wither, Warden</td><td><strong>Excluidos por completo:</strong> ni se atraen ni reciben descarga</td></tr><tr><td>Un jugador en supervivencia o aventura</td><td><strong>Recibe la descarga</strong> si está dentro del radio de golpe (decisión del propietario del 2026-10-15); no se atrae</td></tr><tr><td>Un jugador en creativo o espectador</td><td>No se ve afectado</td></tr><tr><td>Aldeanos, mascotas, mobs pasivos</td><td>No se ven afectados</td></tr><tr><td>Un mob dentro del campo de un repelente activo</td><td>No se ve afectado (ver «Un repelente en la misma zona»)</td></tr></tbody></table>
+
+<p>Los jefes hay que excluirlos con una lista de tipos: el filtro general de hostilidad los deja pasar y el juego no tiene etiqueta de «jefe». El shulker se excluye del mismo modo. Un jefe de otro mod no está cubierto por esta lista: es asunto suyo.</p>
+
+<h2 id="energía">Energía</h2>
+
+<p>Consumidor LV. No hay consumo en reposo: la energía se paga solo por una descarga que ha dado en el blanco.</p>
+
+<table><thead><tr><th>Qué</th><th>Valor</th><th>Opción de configuración</th></tr></thead><tbody><tr><td>Coste de una descarga</td><td>100 EU/FE</td><td></td></tr><tr><td>Búfer de energía</td><td>10000 EU/FE (unas 100 descargas)</td><td>(afecta a los bloques recién colocados)</td></tr><tr><td>Entrada</td><td>hasta 32 EU/FE/t (LV)</td><td>—</td></tr></tbody></table>
+
+<ul><li><strong>El cable se conecta a las cuatro caras laterales.</strong> La tapa y la base no son para cables: son las dos líneas de salida (objetos y experiencia líquida). El cable no dibuja brazo hacia la tapa ni la base.</li><li>Una descarga cuesta 100 EU/FE. Se paga solo por una descarga que <strong>ha dado</strong>: si el daño no pasa (mob invulnerable, ventana de invulnerabilidad tras un golpe anterior), no se gasta energía. Un zombi de 20 de salud cuesta unos 500 EU/FE. En el pico la trampa pide 40 EU/FE/t (8 descargas × 100 EU/FE / 20 ticks), por encima del techo LV (32 EU/FE/t): el búfer de 10000 EU/FE aguanta el pico, y a largo plazo la alimentación LV da unas 6 descargas por segundo.</li><li><strong>Sin energía la trampa no hace nada: ni golpea ni atrae.</strong> Si hay objetivos en la zona pero la energía no alcanza para una descarga, el pulso termina con el estado «Energía insuficiente» antes de atraer a nadie. La energía se comprueba completa para cada descarga.</li></ul>
+
+<h2 id="atracción">Atracción</h2>
+
+<p><strong>El pulso.</strong> La trampa trabaja por <strong>pulsos</strong> cada 20 ticks; entre pulsos duerme, pero nunca más allá del siguiente. El calendario no se guarda: tras recargar el mundo la trampa actúa en su primer tick. Un pulso transcurre así:</p>
+
+<ol><li>Toma todos los mobs adecuados cuya caja corta el cubo de la zona (ver «A quién afecta»).</li><li>Sin objetivos: estado «Esperando mobs», no se gasta nada.</li><li>Menos energía que el coste de una descarga: estado «Energía insuficiente», no se hace nada más.</li><li>Sin espacio en el búfer (ni ranura vacía ni pila por debajo de su tope): estado «Búfer lleno», no se hace nada más: <strong>un búfer lleno detiene tanto las descargas como la atracción.</strong></li><li>En caso contrario los objetivos se ordenan por distancia al centro del bloque, y a igual distancia por UUID (el orden no depende del orden en que el mundo los devolvió). Después cada mob o recibe una descarga (está dentro del radio de golpe) o es atraído.</li></ol>
+
+<p>El estado «Electrocutando» se fija solo si al menos una descarga dio en el blanco durante el pulso. El estado <code>lit</code> no depende del resultado del pulso: indica que la trampa tiene alimentación (ver «Propiedades del bloque»).</p>
+
+<ul><li>Funciona solo en el servidor, una vez por pulso.</li><li><strong>La zona es un cubo de 12 bloques de lado</strong> (6 bloques desde el centro del bloque en cada eje, opción ). No hay alcance vertical aparte: la vista previa común de la zona lleva un único número, y el cubo que dibuja es exactamente aquello sobre lo que actúa la trampa.</li><li>Por pulso la trampa guía como máximo a 16 mobs, contando solo los que realmente se pusieron en marcha: los más cercanos al centro primero, a igual distancia por UUID. Esto limita los recálculos de ruta en el servidor.</li><li>La atracción es <strong>débil</strong> y no sustituye a una plataforma bien construida; la trampa guía al mismo mob no más<ul><li>un mob que perseguía a un jugador <strong>olvida al jugador</strong>: si no, una granja con su dueño al lado no atraería a nadie; unos ticks después el mob puede volver a fijarse en el jugador, y el siguiente pulso vuelve a llevárselo;</li><li>los mobs con navegación (todos los <code>PathfinderMob</code>) son guiados por la navegación hacia el bloque a su ritmo normal; si no hay ruta, el mob no cuenta como atraído;</li><li>a los mobs guiados por cerebro (piglins, hoglins, zoglins, brisa, creaking) la trampa les escribe un objetivo de marcha directamente en el cerebro y borra su objetivo de ataque: su cerebro sobrescribiría al instante una ruta de navegación normal;</li><li>los mobs sin navegación (slimes, fantasmas y similares) reciben un pequeño empujón horizontal hacia el centro una vez por pulso; de otro modo la granja de caucho con slimes de petróleo no funcionaría;</li><li>no hay teletransporte.</li></ul></li><li>Los mobs que ya están dentro del radio de golpe no se atraen: reciben la descarga.</li></ul>
+
+<h2 id="descarga">Descarga</h2>
+
+<ul><li>Golpea a los mobs que están a 3 bloques del centro del bloque (la distancia se mide desde la posición del mob), no solo a los atraídos: los que llegan por su cuenta también la reciben.</li><li>Como máximo 8 descargas por pulso: los más cercanos al centro primero, a igual distancia por UUID.</li><li>El daño por descarga es 4 (dos corazones,), del tipo de daño «descarga eléctrica» (<code>electric_shock</code>, el mismo que el del cable); la armadura cuenta. Es daño, no una muerte instantánea: un zombi de 20 de salud muere en unos cinco segundos, un mob con armadura tarda más.</li><li>Cada descarga vuelve a comprobar la energía y el espacio del búfer: si no hay energía para la siguiente o la anterior llenó el búfer, el resto de las descargas del pulso no se asestan (la atracción continúa dentro del mismo pulso).</li><li>Al descargar se ven un destello del nodo, arcos azules en zigzag que bajan por los cuatro lados abiertos (los dibuja el renderizador del bloque, unos 0,4 s), chispas <code>ELECTRIC_SPARK</code> junto al mob y un breve chasquido (el sonido de impacto de rayo de vainilla, bajo y agudo).</li></ul>
+
+<h2 id="botín-y-experiencia">Botín y experiencia</h2>
+
+<p>La muerte es normal: el mob muere como por cualquier daño y se activan la armadura, las cabezas, el botín especial y los eventos de muerte. <strong>El botín y los orbes de experiencia caen al suelo, como en cualquier muerte</strong>, y después la trampa los atrae hacia sí igual que el <a href="../item-transport/vacuum_collector.html">colector de vacío</a>:</p>
+
+<ul><li>Cada 5 ticks la trampa revisa su zona (el mismo cubo que para la atracción) y actúa como máximo sobre los 16 objetos y orbes de experiencia más cercanos.</li><li>Un objeto u orbe que <strong>ha tocado el bloque</strong> se recoge: los objetos, al búfer (lo que quepa); un orbe, al depósito de experiencia líquida (solo entero). El que está más lejos recibe un empujón hacia la trampa, como de un electroimán: vuela hacia ella por física, sin teletransporte.</li><li>Un objeto con retardo de recogida (un botín recién caído, un objeto tirado por un jugador) espera a que termine; un objeto en lava no se toca. Un botín que dejó de acercarse (tras una pared, en un hoyo) la trampa lo suelta durante un tiempo.</li><li>La atracción es gratuita: forma parte del trabajo de la trampa. La trampa atrae <strong>cualquier</strong> objeto de su zona, no solo el botín de sus mobs: no guardes nada de más cerca de ella.</li><li><strong>El botín es normal.</strong> Antes de cada descarga el mob se marca como «golpeado recientemente por un jugador» con el jugador falso anónimo de la trampa, <code>[Electric Mob Trap]</code> (vive en memoria y nunca entra en el mundo), así que cae el botín con la condición «muerto por un jugador» (huesos, pólvora, hilo, como al matar con una espada) y cae experiencia. La trampa no tiene encantamiento de Botín: el nivel I da el botín base.</li><li><strong>La Vasija de almas no crece.</strong> La fuente de daño no tiene entidad y no es un jugador: la <a href="../items/soul_vessel.html">Vasija de almas</a> cuenta solo las muertes personales, así que la mejora del <a href="mob_repeller.html">repelente</a> sigue siendo del jugador. El mensaje de muerte, si se muestra, dice «fue electrocutado».</li><li><strong>El enderman es una excepción por la fuente.</strong> Ante un daño sin atacante vivo el enderman se teletransporta lejos, así que la descarga contra él se asesta en nombre del jugador falso de la trampa. Tampoco entonces crece la Vasija de almas (el jugador falso no tiene vasija), y la trampa le quita al momento el enfado que causó el golpe.</li><li><strong>No se otorgan puntos de maestría</strong> (como el repelente): la trampa no se convierte en una granja de puntos.</li><li>Los <strong>objetos</strong> van al búfer de 9 ranuras. <strong>Mientras el búfer no tiene espacio, la trampa ni golpea ni atrae.</strong> Los detalles del búfer están más abajo.</li><li><strong>Lo que no cabe en el búfer se queda en el mundo</strong> como un objeto normal y no desaparece; la trampa vuelve a por él cuando se libera espacio.</li><li>La <strong>experiencia</strong> se convierte en <strong>experiencia líquida</strong> a <strong>20 mB por punto</strong> y se acumula en un depósito interno de 8000 mB, es decir 400 puntos (afecta a los bloques recién colocados): unos 80 zombis. El líquido se llama y pertenece a la etiqueta <code>c:experience</code>, por lo que es compatible con otros mods. No tiene cubo ni bloque líquido, como el vapor: existe solo dentro de depósitos y tuberías y no se puede verter al mundo. El depósito entrega el líquido a tuberías de fluidos (solo por la tapa y la base) y no acepta nada.</li><li><strong>Depósito lleno: los orbes se quedan en el mundo.</strong> La experiencia no desaparece en silencio: el jugador la recoge por sí mismo, y la causa visible son los orbes en el suelo alrededor de la trampa. Un orbe se recoge entero o no se recoge: el que no cabe entero en el depósito se queda en el mundo. Un depósito lleno <strong>no</strong> detiene por sí solo las descargas.</li><li>Los orbes de experiencia vuelan solos hacia un jugador si está a menos de 8 bloques: de pie junto a la trampa, el jugador puede atrapar la experiencia antes que ella.</li></ul>
+
+<h2 id="búfer-y-transporte">Búfer y transporte</h2>
+
+<ul><li>9 ranuras de salida; el tope de una ranura es el tamaño de pila del objeto, sin pasar de 64, es decir hasta 576 objetos normales.</li><li>La GUI es una pantalla de máquina: cuadrícula 3×3 de ranuras solo para retirar, barra de energía a la izquierda, depósito de experiencia líquida a la derecha (con la ayuda «líquido: N / capacidad mB»), línea de estado y un botón de «ojo» que previsualiza la zona (como en el repelente y el colector de vacío; muestra el cubo de la zona). No hay panel de mejoras: la trampa no tiene nada que un chip pueda acelerar más allá del periodo del pulso. Valores de la línea de estado: «Electrocutando», «Esperando mobs», «Búfer lleno», «Energía insuficiente» (los dos últimos son bloqueantes y se resaltan como parada).</li><li>Los objetos se pueden sacar, pero no meter: ni a mano, ni con tolva, ni con tubería.</li><li>La trampa no empuja nada a ningún sitio por sí sola. Las tuberías de objetos sacan del búfer por su cuenta, las de fluidos sacan la experiencia líquida del depósito; la conexión es <strong>solo arriba o abajo</strong> (tapa y base), como en el <a href="../item-transport/vacuum_collector.html">colector de vacío</a>. <strong>El cable va solo en las cuatro caras laterales:</strong> la trampa tiene tres líneas (energía, objetos, experiencia líquida), y poner la energía en los lados deja libres ambas tuberías. Para objetos y líquido las cuatro caras laterales están cerradas.</li><li>Sin tuberías el búfer se llena y la trampa deja de golpear y de atraer hasta que el jugador libere espacio.</li></ul>
+
+<h2 id="un-repelente-en-la-misma-zona">Un repelente en la misma zona</h2>
+
+<p>El <a href="mob_repeller.html">repelente</a> tiene prioridad. Cada barrido de un repelente renueva un breve «arrendamiento» de su zona (dos intervalos de escaneo más un tick). La trampa no atrae ni golpea a un mob cuya caja corta la zona de un arrendamiento vigente. Un repelente roto, apagado por redstone o sin energía deja de barrer, el arrendamiento caduca en un par de barridos y el mob vuelve a ser objetivo de la trampa. Por eso no coloques la trampa dentro del campo de un repelente: los mobs serán expulsados antes de llegar al anillo.</p>
+
+<h2 id="propiedades-del-bloque">Propiedades del bloque</h2>
+
+<p>El modelo es el concepto elegido E «Spark Ring» (<code>tools/model_sources/electric_mob_trap_concepts/e_spark_ring/</code>): un anillo de cobre sobre cuatro cadenas de aisladores de cerámica, con un nodo de chispa sobre un poste en el centro. El modelo mide 16×12×16 píxeles; la selección y la colisión son la misma caja 16×12×16, construida una sola vez. No tiene orientación: el anillo se ve igual desde todos los lados. El bloque no es un cubo completo, así que su forma de oclusión está vacía y la luz pasa (como en el colector de vacío: los vecinos no pierden caras y la celda no proyecta sombra de esquina); no se usa.</p>
+
+<table><thead><tr><th>Qué</th><th>Valor</th></tr></thead><tbody><tr><td>Forma</td><td>anillo sobre aisladores, 16×12×16 px, toda la caja es sólida</td></tr><tr><td>Dureza</td><td>3,0 / 6,0, metal; herramienta: pico</td></tr><tr><td>Estado</td><td><code>lit</code>: el búfer tiene energía suficiente para una descarga (la trampa está alimentada)</td></tr><tr><td>Animación</td><td>mientras la trampa está alimentada el nodo pulsa (textura animada, <code>.png.mcmeta</code>); sin energía el nodo está quieto; en el momento de una descarga, un destello del nodo</td></tr><tr><td>Renderizado</td><td>el renderizador del bloque dibuja arcos azules en zigzag que bajan por los cuatro lados abiertos (unos 0,4 s); junto al mob, partículas <code>ELECTRIC_SPARK</code> de vainilla</td></tr><tr><td>Sonido</td><td>sin sonidos propios del mod; una descarga reproduce el <code>LIGHTNING_BOLT_IMPACT</code> de vainilla (volumen 0,35, tono 1,8)</td></tr></tbody></table>
+
+<h2 id="receta">Receta</h2>
+
+<p>Fabricación con forma en la cuadrícula 3×3 completa: el <a href="../item-transport/vacuum_collector.html">colector de vacío</a> en el centro, un pararrayos encima, un circuito electrónico debajo, bobinas de cobre a los lados y placas de cerámica en las esquinas.</p>
+
+<pre><code class="lang-">[Placa de cerámica] [Pararrayos] [Placa de cerámica]
+[Bobina de cobre] [Colector de vacío] [Bobina de cobre]
+[Placa de cerámica] [Circuito electrónico][Placa de cerámica]</code></pre>
+
+<ul><li><a href="../components/ceramic_plate.html">Placa de cerámica</a>: los aisladores del anillo.</li><li><a href="../components/copper_coil.html">Bobina de cobre</a> y <a href="../components/electronic_circuit.html">circuito electrónico</a>.</li><li>El pararrayos es el de vainilla (<code>minecraft:lightning_rod</code>).</li></ul>
+
+<p>Es la única forma de obtenerla: la trampa ni se cultiva ni se mejora. Este documento especifica solo el nivel I.</p>
+
+<h2 id="progresión">Progresión</h2>
+
+<p>El nivel I es una trampa «débil» para granjas normales. Posible desarrollo (tareas aparte, fuera de: botín con encantamiento, un depósito de reserva para la experiencia líquida, el diario de especies de.</p>
+
+<h2 id="relacionado">Relacionado</h2>
+
+<ul><li><a href="mob_repeller.html">Repelente pequeño</a>: lo contrario de la trampa; tiene prioridad sobre ella.</li><li><a href="../items/soul_vessel.html">Vasija de almas</a>: la trampa no la rellena.</li><li><a href="../item-transport/vacuum_collector.html">Colector de vacío I</a>: modelo del dispositivo e ingrediente de la receta.</li><li>Tarea : decisiones del propietario e investigación.</li></ul>
+
+<h2>Fabricación</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="trampa eléctrica de monstruos alaindustrial:electric_mob_trap" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Fabricación con forma</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Placa de cerámica"><img src="../../assets/item/ceramic_plate_3d.png" alt="Placa de cerámica" width="32" height="32"></div> <div class="cell" title="Pararrayos"><img src="../../assets/item/lightning_rod_3d.png" alt="Pararrayos" width="32" height="32"></div> <div class="cell" title="Placa de cerámica"><img src="../../assets/item/ceramic_plate_3d.png" alt="Placa de cerámica" width="32" height="32"></div> <div class="cell" title="Bobina de cobre"><img src="../../assets/item/copper_coil_3d.png" alt="Bobina de cobre" width="32" height="32"></div> <div class="cell" title="Colector de vacío"><img src="../../assets/item/vacuum_collector_3d.png" alt="Colector de vacío" width="32" height="32"></div> <div class="cell" title="Bobina de cobre"><img src="../../assets/item/copper_coil_3d.png" alt="Bobina de cobre" width="32" height="32"></div> <div class="cell" title="Placa de cerámica"><img src="../../assets/item/ceramic_plate_3d.png" alt="Placa de cerámica" width="32" height="32"></div> <div class="cell" title="Circuito electrónico"><img src="../../assets/item/electronic_circuit_3d.png" alt="Circuito electrónico" width="32" height="32"></div> <div class="cell" title="Placa de cerámica"><img src="../../assets/item/ceramic_plate_3d.png" alt="Placa de cerámica" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Mesa de trabajo" title="Mesa de trabajo" width="30" height="30"><div class="arrow" aria-label="Fabricación">▶</div></div><div class="recipe-result"><div class="cell result" title="Trampa eléctrica de monstruos"><img src="../../assets/item/electric_mob_trap_3d.png" alt="Trampa eléctrica de monstruos" width="32" height="32"></div><div class="result-name">Trampa eléctrica de monstruos</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>

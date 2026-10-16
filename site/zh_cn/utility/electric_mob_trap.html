@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="zh_cn" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>电击生物陷阱 — Ala Industrial — 指南</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="打开菜单" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  </div>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../../assets/item/guide_book_3d.png" alt="">全部内容</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/ky7cFDF8JD" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../../assets/platform/discord.svg" alt="Discord"></a>
+    </div>
+    <search class="site-search"><input type="search" data-wiki-search placeholder="搜索维基…" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-label="搜索指南" autocomplete="off" spellcheck="false" data-index="../search-index.json" data-root="../" data-l10n="{&quot;list&quot;:&quot;搜索结果&quot;,&quot;one&quot;:&quot;个页面&quot;,&quot;few&quot;:&quot;个页面&quot;,&quot;many&quot;:&quot;个页面&quot;,&quot;loading&quot;:&quot;正在加载搜索索引…&quot;,&quot;nothing&quot;:&quot;未找到结果&quot;}"></search>
+    <details class="language-menu"><summary aria-label="Language">中文</summary><div class="language-popover"><span>中文</span><a href="../../en/utility/electric_mob_trap.html">EN</a><a href="../../ru/utility/electric_mob_trap.html">RU</a><a href="../../uk/utility/electric_mob_trap.html">UA</a><a href="../../ja_jp/utility/electric_mob_trap.html">日本語</a><a href="../../es_es/utility/electric_mob_trap.html">ES</a></div></details>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">浏览</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../../assets/item/tempered_iron_pickaxe.png" alt=""><span>新手入门</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
+<div class="group-title">能源</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="14 个页面">14</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
+<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>核能设施</span><span class="cat-count" aria-label="15 个页面">15</span></a>
+<div class="group-title">加工</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>机器</span><span class="cat-count" aria-label="17 个页面">17</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>流体机器</span><span class="cat-count" aria-label="3 个页面">3</span></a>
+<div class="group-title">物流</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>物品物流</span><span class="cat-count" aria-label="3 个页面">3</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>流体物流</span><span class="cat-count" aria-label="5 个页面">5</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>流体储存</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<div class="group-title">世界与自动化</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="26 个页面">26</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>农业</span><span class="cat-count" aria-label="6 个页面">6</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>高级机器</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<div class="group-title">其他</div>
+<a class="cat-link" href="../construction/index.html"><img class="nav-icon" src="../../assets/item/engraved_plate_0_3d.png" alt=""><span>建筑方块</span><span class="cat-count" aria-label="3 个页面">3</span></a>
+<a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="22 个页面">22</span></a>
+<div class="group-title">物品</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="30 个页面">30</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="32 个页面">32</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">首页</a><span class="sep">/</span><a href="../utility/index.html">实用方块</a><span class="sep">/</span><span>电击生物陷阱</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../../assets/item/electric_mob_trap_3d.png" alt="电击生物陷阱" width="64" height="64">
+    <div class="info">
+      <h1>电击生物陷阱</h1>
+      <div class="block-id">alaindustrial:electric_mob_trap</div>
+      <div class="tags"><span class="tag cat" style="background:#14b8a6">实用方块</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">已实现</span><span class="tag">tier-lv</span><span class="tag">utility</span><span class="tag">defense</span><span class="tag">mob-farm</span><span class="tag">automation</span><span class="tag">electric</span></div>
+    </div>
+  </div>
+</div>
+<h2 id="概览">概览</h2>
+
+<p><strong>电击生物陷阱</strong>（一级）是<a href="mob_repeller.html">驱逐器</a>的反面：驱逐器把敌对生物赶走，陷阱则<strong>把它们聚拢并变成资源</strong>。 它从边长 12 格的立方体（从中心向每个轴各 6 格）范围内微弱地吸引生物，对走到环边 3 格以内的生物放电，并回收它们掉落 的一切：物品进入九格缓冲区，经验进入液态经验储罐。接在顶部或底部的管道把战利品运走；电缆从侧面接入。</p>
+
+<p>陷阱<strong>不会生成生物</strong>。刷怪由玩家自己掌控——黑暗的平台、光照、面积和高度，与普通刷怪塔一样；陷阱只收集在那里刷出 的生物。</p>
+
+<blockquote><strong>小示例：</strong> 在黑暗的刷怪平台上方放下陷阱，从下方接一条物品管道通向箱子，在任一侧面接一条 LV 电缆。平台上的僵尸、 骷髅和蜘蛛会向环靠拢并被电击，骨头、火药和线会自己进入箱子。</blockquote>
+
+<h2 id="影响谁不影响谁">影响谁，不影响谁</h2>
+
+<p>陷阱作用于<strong>所有怪物</strong>——无论是被激怒的还是平静的中立生物（所有者 2026-10-15 的决定）——但有自己的例外。在这一点上它比 驱逐器更宽：驱逐器不碰平静的中立生物，以免惊动一群僵尸猪灵。陷阱没有这种风险：它不把任何生物设为目标，所以电击一只平静 的僵尸猪灵不会惊醒它的同伴。</p>
+
+<table><thead><tr><th>对象</th><th>效果</th></tr></thead><tbody><tr><td>普通怪物（僵尸、骷髅、苦力怕、蜘蛛……）</td><td>被吸引并被电击</td></tr><tr><td>中立怪物（末影人、僵尸猪灵、猪灵、白天的蜘蛛）</td><td>被吸引并被电击，<strong>即使是平静的</strong></td></tr><tr><td>本模组的石油史莱姆</td><td>与任何敌对生物一样受影响——允许建橡胶农场</td></tr><tr><td>史莱姆、幻翼等没有寻路的生物</td><td>通过推力被吸引（见下），并被电击</td></tr><tr><td>猪灵、疣猪兽、僵尸疣猪兽、旋风人、苦力怕之树（由大脑驱动的生物）</td><td>被吸引：陷阱直接在它们的大脑中设置行走目标</td></tr><tr><td>正在追击玩家的生物（目标是玩家）</td><td><strong>忘掉玩家</strong>并被吸引：否则旁边站着玩家的农场将什么也吸引不到</td></tr><tr><td>末影人</td><td>被电击且<strong>不会传送</strong>：对它的放电以陷阱假玩家的名义进行（见"战利品与经验"）</td></tr><tr><td>潜影贝</td><td><strong>完全排除：</strong>既不吸引也不电击</td></tr><tr><td>首领：末影龙、凋灵、监守者</td><td><strong>完全排除：</strong>既不吸引也不电击</td></tr><tr><td>生存或冒险模式的玩家</td><td>站在电击半径内时<strong>会被电击</strong>（所有者 2026-10-15 的决定）；不会被吸引</td></tr><tr><td>创造模式的玩家或旁观者</td><td>不受影响</td></tr><tr><td>村民、宠物、被动生物</td><td>不受影响</td></tr><tr><td>位于工作中驱逐器范围内的生物</td><td>不受影响（见"同一区域内的驱逐器"）</td></tr></tbody></table>
+
+<p>必须用类型清单排除首领：通用的敌对过滤会放行它们，而游戏里没有"首领"标签。潜影贝以同样方式排除。其他模组的首领不在 此清单内，那是它自己的事。</p>
+
+<h2 id="能量">能量</h2>
+
+<p>LV 耗能方块。没有待机消耗：只有命中的电击才花费能量。</p>
+
+<table><thead><tr><th>项目</th><th>数值</th><th>配置项</th></tr></thead><tbody><tr><td>一次电击的费用</td><td>100 EU/FE</td><td></td></tr><tr><td>能量缓冲</td><td>10000 EU/FE（约 100 次电击）</td><td>（对新放置的方块生效）</td></tr><tr><td>输入</td><td>最高 32 EU/FE/t（LV）</td><td>—</td></tr></tbody></table>
+
+<ul><li><strong>电缆接在四个侧面。</strong>顶部和底部不属于电缆——它们是两条输出线路（物品和液态经验）。电缆不会向顶部和底部伸出连接臂。</li><li>一次电击花费 100 EU/FE。只为<strong>命中的</strong>电击付费：若伤害未生效（无敌的生物、上一击后的无敌时间窗口），则不扣能量。一只 20 点生命的僵尸约需 500 EU/FE。峰值时陷阱请求 40 EU/FE/t（8 次电击 × 100 EU/FE / 20 刻）——高于 LV 上限（32 EU/FE/t）：10000 EU/FE 的缓冲撑住峰值，而长期来看 LV 供电约可支持每秒 6 次电击。</li><li><strong>没有能量时，陷阱什么也不做：既不电击，也不吸引。</strong>若范围内有目标但能量不足一次电击，脉冲会在吸引任何生物之前以 "能量不足"状态结束。每次电击都会完整检查能量。</li></ul>
+
+<h2 id="吸引">吸引</h2>
+
+<p><strong>脉冲。</strong>陷阱以每 20 刻（）一次的<strong>脉冲</strong>方式工作；脉冲之间休眠，但不会越过下一次脉冲。 调度不会保存：世界重新加载后，陷阱在第一刻就会动作。一次脉冲这样进行：</p>
+
+<ol><li>取出所有碰撞箱与范围立方体相交的合适生物（见"影响谁，不影响谁"）。</li><li>没有目标——"等待生物"状态，不消耗任何东西。</li><li>能量少于一次电击的费用——"能量不足"状态，不再做其他事。</li><li>缓冲区没有空位（没有空格也没有未满的堆叠）——"缓冲区已满"状态，不再做其他事：<strong>缓冲区满时，电击和吸引都会停止。</strong></li><li>否则按到方块中心的距离排序目标，距离相同时按 UUID（顺序不取决于世界返回它们的顺序）。随后每个生物要么被电击 （位于电击半径内），要么被吸引。</li></ol>
+
+<p>只有当该脉冲中至少一次电击命中，才会设置"电击中"状态。<code>lit</code> 状态与脉冲结果无关：它表示陷阱已通电（见"方块属性"）。</p>
+
+<ul><li>仅在服务端工作，每次脉冲一次。</li><li><strong>范围是边长 12 格的立方体</strong>（从方块中心沿每个轴 6 格，配置项 ）。没有单独的垂直范围：通用的 范围预览只携带一个数值，所画出的立方体正是陷阱的作用范围。</li><li>每次脉冲最多引导 16 只生物（），只统计真正被带动的：离中心近的优先，距离相同时按 UUID。 这是为了限制服务端的路径重算。</li><li>吸引<strong>很弱</strong>，不能替代搭建良好的平台；同一只生物最多每 20 刻被陷阱引导一次：<ul><li>正在追击玩家的生物会<strong>忘掉玩家</strong>——否则旁边站着主人的农场将什么也吸引不到；几刻之后生物可能再次注意到玩家，下一次脉冲 会再次把它引开；</li><li>有寻路的生物（所有 <code>PathfinderMob</code>）由导航以其正常速度引导到方块；若没有路径，则不算被吸引；</li><li>对由大脑驱动的生物（猪灵、疣猪兽、僵尸疣猪兽、旋风人、苦力怕之树），陷阱直接把行走目标写入大脑并清除其攻击目标—— 普通的导航路径会立刻被它们的大脑覆盖；</li><li>没有寻路的生物（史莱姆、幻翼等）每次脉冲获得一次朝向中心的小幅水平推力——否则石油史莱姆的橡胶农场无法运作；</li><li>没有传送。</li></ul></li><li>已经位于电击半径内的生物不会被吸引——它们会被电击。</li></ul>
+
+<h2 id="电击">电击</h2>
+
+<ul><li>对位于方块中心 3 格以内（，距离按生物位置计算）的生物放电，不只是被吸引来的——自己走近的 生物同样会被电击。</li><li>每次脉冲最多 8 次电击（）：离中心近的优先，距离相同时按 UUID。</li><li>每次电击伤害为 4（两颗心，），伤害类型为"电击"（<code>electric_shock</code>，与电缆相同），计算护甲。这是 伤害而非瞬间击杀：一只 20 点生命的僵尸约五秒死亡，披甲的生物更久。</li><li>每次电击都会重新检查能量和缓冲区空位：若没有足够的能量进行下一次电击，或上一次电击已让缓冲区填满，则该脉冲剩余的 电击不再执行（吸引在同一次脉冲内继续）。</li><li>放电时可见节点闪光、沿四个开放侧面向下的蓝色锯齿电弧（由方块渲染器绘制，约 0.4 秒）、生物处的 <code>ELECTRIC_SPARK</code> 火花，以及短促的噼啪声（原版雷击声，轻而尖）。</li></ul>
+
+<h2 id="战利品与经验">战利品与经验</h2>
+
+<p>死亡是普通死亡：生物像受到任何伤害一样死去，护甲、头颅、特殊掉落和死亡事件都会生效。<strong>战利品和经验球像任何死亡一样落到 地上</strong>，随后陷阱像<a href="../item-transport/vacuum_collector.html">真空收集器</a>一样把它们吸过来：</p>
+
+<ul><li>陷阱每 5 刻检查一次自己的范围（与吸引用的是同一个立方体），最多作用于最近的 16 个物品和经验球。</li><li><strong>碰到方块的</strong>物品或经验球被回收：物品进入缓冲区（能放多少放多少），经验球进入液态经验储罐（只能整颗）。更远的会像被 电磁铁吸引一样得到朝向陷阱的推力——按物理飞向陷阱，没有传送。</li><li>带拾取延迟的物品（刚掉落的、玩家丢出的物品）会等延迟结束；岩浆中的物品不会被碰。不再靠近的掉落物（在墙后、在坑里）， 陷阱会暂时放开。</li><li>吸取是免费的——这是陷阱工作的一部分。陷阱会吸取范围内的<strong>任何</strong>物品，而不只是自己生物的战利品：不要在它附近存放多余的 东西。</li><li><strong>战利品是普通的。</strong>每次电击前，生物会被陷阱的匿名假玩家 <code>[Electric Mob Trap]</code>（只存在于内存中，从不进入世界）标记为 "最近被玩家攻击"，因此带"被玩家杀死"条件的掉落会出现（骨头、火药、线——就像用剑杀死一样），也会掉落经验。陷阱没有 抢夺附魔：一级只给基础掉落。</li><li><strong>灵魂容器不会成长。</strong>伤害来源没有实体，也不是玩家：<a href="../items/soul_vessel.html">灵魂容器</a>只统计亲手击杀，所以 <a href="mob_repeller.html">驱逐器</a>的成长仍由玩家负责。若显示死亡信息，内容为"被电死了"（<code>death.attack.electric_shock</code>）。</li><li><strong>末影人是来源上的例外。</strong>受到没有活体攻击者的伤害时，末影人会传送离开，因此对它的放电以陷阱假玩家的名义进行。此时灵魂 容器同样不会成长（假玩家没有容器），而电击引起的愤怒会被陷阱立即清除。</li><li><strong>不授予熟练度点数</strong>（与驱逐器相同）：陷阱不会变成刷点数的农场。</li><li><strong>物品</strong>进入 9 格缓冲区。<strong>缓冲区没有空位时，陷阱既不电击也不吸引。</strong>缓冲区详情见下文。</li><li><strong>放不进缓冲区的东西留在世界里</strong>，作为普通物品，不会消失；有空位后陷阱会回来取它。</li><li><strong>经验</strong>按每点 <strong>20 mB</strong> 转换为<strong>液态经验</strong>，存入 8000 mB 的内部储罐，即 400 点 （，对新放置的方块生效）——约 80 只僵尸。该液体名为 ，属于 <code>c:experience</code> 标签，因此与其他模组兼容。它与蒸汽一样没有桶也没有液体方块：只存在于储罐和管道内，不能倒入世界。储罐把 液体交给流体管道（仅通过顶部和底部），不接受任何输入。</li><li><strong>储罐已满——经验球留在世界里。</strong>经验不会悄悄消失：玩家可以自己捡起，可见的原因就是陷阱周围地面上的经验球。经验球要么 整颗回收，要么完全不回收：整颗放不进储罐的经验球留在世界里。储罐满本身<strong>不会</strong>停止电击。</li><li>如果玩家在 8 格以内，经验球会自己飞向玩家：站在陷阱旁的玩家可能比陷阱先接住经验。</li></ul>
+
+<h2 id="缓冲与运输">缓冲与运输</h2>
+
+<ul><li>9 个输出格；每格上限为物品的堆叠大小但不超过 64，因此最多 576 个普通物品。</li><li>GUI 是机器界面：3×3 的仅可取出的格子，左侧能量条，右侧液态经验储罐（带"液体：N / 容量 mB"提示），状态行，以及预览 范围的"眼睛"按钮（与驱逐器和真空收集器相同，显示范围立方体）。没有升级面板：除脉冲周期外，陷阱没有什么能被芯片加速。 状态行的取值："电击中""等待生物""缓冲区已满""能量不足"（后两者为阻塞状态，以停止样式高亮）。</li><li>物品可以取出，但不能放入——无论手动、漏斗还是管道。</li><li>陷阱自己不会把任何东西推向任何地方。物品管道会自行从缓冲区抽取，流体管道从储罐抽取液态经验；连接<strong>仅限顶部或底部</strong> （与<a href="../item-transport/vacuum_collector.html">真空收集器</a>相同）。<strong>电缆只接四个侧面：</strong>陷阱有三条线路（能量、物品、液态 经验），把能量放在侧面，就让两种管道都有空闲的面。对物品和液体来说，四个侧面是封闭的。</li><li>没有管道时缓冲区会被填满，陷阱停止电击和吸引，直到玩家腾出空间。</li></ul>
+
+<h2 id="同一区域内的驱逐器">同一区域内的驱逐器</h2>
+
+<p><a href="mob_repeller.html">驱逐器</a>优先。驱逐器每次扫描都会续订其范围的一份短"租约"（两个扫描间隔加一刻）。碰撞箱与这种有效租约范围 相交的生物，陷阱既不吸引也不电击。损坏、被红石关闭或没有能量的驱逐器会停止扫描，租约在几次扫描内到期，生物重新成为陷阱的 目标。因此不要把陷阱放在驱逐器的范围内——生物会在到达环之前就被赶走。</p>
+
+<h2 id="方块属性">方块属性</h2>
+
+<p>模型是选定的概念 E "Spark Ring"（<code>tools/model_sources/electric_mob_trap_concepts/e_spark_ring/</code>）：铜环挂在四串陶瓷绝缘子上， 中央立柱上是放电节点。模型尺寸为 16×12×16 像素；选取框与碰撞箱是同一个 16×12×16 的盒子，只构建一次。没有朝向：环从每个 方向看都一样。方块不是完整立方体，因此遮挡形状为空、光线可以穿过（与真空收集器相同：相邻方块不会丢失面，单元格不投射角落 阴影）；不使用 。</p>
+
+<table><thead><tr><th>项目</th><th>数值</th></tr></thead><tbody><tr><td>形状</td><td>绝缘子上的环，16×12×16 px，整个盒子为实心</td></tr><tr><td>硬度</td><td>3.0 / 6.0，金属；工具：镐</td></tr><tr><td>状态</td><td><code>lit</code>——缓冲区中的能量足够一次电击（陷阱已通电）</td></tr><tr><td>动画</td><td>陷阱通电（<code>lit</code>）时节点脉动（动画纹理，<code>.png.mcmeta</code>）；没有能量时节点静止；电击瞬间节点闪光</td></tr><tr><td>渲染</td><td>方块渲染器沿四个开放侧面向下绘制蓝色锯齿电弧（约 0.4 秒）；生物处为原版 <code>ELECTRIC_SPARK</code> 粒子</td></tr><tr><td>声音</td><td>没有模组自有声音；电击时播放原版 <code>LIGHTNING_BOLT_IMPACT</code>（音量 0.35，音调 1.8）</td></tr></tbody></table>
+
+<h2 id="配方">配方</h2>
+
+<p>3×3 完整网格的有序合成：中央是<a href="../item-transport/vacuum_collector.html">真空收集器</a>，其上是避雷针，其下是电子电路， 两侧是铜线圈，四角是陶瓷板。</p>
+
+<pre><code class="lang-">[陶瓷板] [避雷针] [陶瓷板]
+[铜线圈] [真空收集器] [铜线圈]
+[陶瓷板] [电子电路] [陶瓷板]</code></pre>
+
+<ul><li><a href="../components/ceramic_plate.html">陶瓷板</a>：环的绝缘子。</li><li><a href="../components/copper_coil.html">铜线圈</a>与<a href="../components/electronic_circuit.html">电子电路</a>。</li><li>避雷针为原版（<code>minecraft:lightning_rod</code>）。</li></ul>
+
+<p>这是唯一的获取方式：陷阱不可成长，也不可升级。本文档只规定一级。</p>
+
+<h2 id="进度">进度</h2>
+
+<p>一级是供普通农场使用的"弱"陷阱。可能的发展（单独的任务，不在 范围内）：附魔增加掉落、为液态经验准备的经验储备罐、 来自 的物种日志。</p>
+
+<h2 id="开放问题">开放问题</h2>
+
+<ul><li>一级数值已于 2026-10-15 由所有者在游戏中检查；负载测量：在 60 只生物上方的一次脉冲约耗时 1 毫秒（游戏测试 <code>mod818_pulse_work_is_bounded</code>）。值得在真实的大型农场上再次核对。</li><li>其他模组的首领没有被类型清单排除（游戏中没有"首领"标签）。等这样的模组出现时再决定。</li></ul>
+
+<h2 id="相关">相关</h2>
+
+<ul><li><a href="mob_repeller.html">小型驱逐器</a>——陷阱的反面；优先于陷阱。</li><li><a href="../items/soul_vessel.html">灵魂容器</a>——陷阱不会为它充能。</li><li><a href="../item-transport/vacuum_collector.html">真空收集器 I</a>——装置的范本和配方材料。</li><li>任务 ——所有者的决定与调查。</li></ul>
+
+<h2>合成</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="电击生物陷阱 alaindustrial:electric_mob_trap" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="陶瓷板"><img src="../../assets/item/ceramic_plate_3d.png" alt="陶瓷板" width="32" height="32"></div> <div class="cell" title="避雷针"><img src="../../assets/item/lightning_rod_3d.png" alt="避雷针" width="32" height="32"></div> <div class="cell" title="陶瓷板"><img src="../../assets/item/ceramic_plate_3d.png" alt="陶瓷板" width="32" height="32"></div> <div class="cell" title="铜线圈"><img src="../../assets/item/copper_coil_3d.png" alt="铜线圈" width="32" height="32"></div> <div class="cell" title="真空收集器"><img src="../../assets/item/vacuum_collector_3d.png" alt="真空收集器" width="32" height="32"></div> <div class="cell" title="铜线圈"><img src="../../assets/item/copper_coil_3d.png" alt="铜线圈" width="32" height="32"></div> <div class="cell" title="陶瓷板"><img src="../../assets/item/ceramic_plate_3d.png" alt="陶瓷板" width="32" height="32"></div> <div class="cell" title="电子电路"><img src="../../assets/item/electronic_circuit_3d.png" alt="电子电路" width="32" height="32"></div> <div class="cell" title="陶瓷板"><img src="../../assets/item/ceramic_plate_3d.png" alt="陶瓷板" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="电击生物陷阱"><img src="../../assets/item/electric_mob_trap_3d.png" alt="电击生物陷阱" width="32" height="32"></div><div class="result-name">电击生物陷阱</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>
