@@ -230,6 +230,10 @@ public final class ServerBalance {
 		return current.intValue("electricDrillEuPerBlock", ToolConfig.electricDrillEuPerBlock);
 	}
 
+	public static int electricDrillColumnEuPerBlock() {
+		return current.intValue("electricDrillColumnEuPerBlock", ToolConfig.electricDrillColumnEuPerBlock);
+	}
+
 	public static int electricDrillNetheriteTipBuffer() {
 		return current.intValue("electricDrillNetheriteTipBuffer", ToolConfig.electricDrillNetheriteTipBuffer);
 	}

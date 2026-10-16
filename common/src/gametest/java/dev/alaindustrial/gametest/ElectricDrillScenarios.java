@@ -10,6 +10,8 @@ import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.gametest.compat.UseResults;
 import dev.alaindustrial.item.ToolConfig;
 import dev.alaindustrial.item.energy.ItemEnergy;
+import dev.alaindustrial.item.tool.DrillBore;
+import dev.alaindustrial.item.tool.ElectricDrillItem;
 import java.util.List;
 import java.util.Optional;
 import dev.alaindustrial.item.tool.DrillUpgrades;
@@ -995,7 +997,7 @@ public final class ElectricDrillScenarios {
 	// ── MOD-482 — column bore module ─────────────────────────────────────────────────────────────
 
 	/** The block the player aims at; the column adds {@link #COLUMN_ABOVE} and {@link #COLUMN_BELOW}. */
-	private static final BlockPos COLUMN_AIM = new BlockPos(1, 3, 2);
+	static final BlockPos COLUMN_AIM = new BlockPos(1, 3, 2);
 	private static final BlockPos COLUMN_ABOVE = COLUMN_AIM.above();
 	private static final BlockPos COLUMN_BELOW = COLUMN_AIM.below();
 
@@ -1009,7 +1011,7 @@ public final class ElectricDrillScenarios {
 		ItemStack stack = new ItemStack(item);
 		ItemEnergy.set(stack, eu);
 		if (!DrillUpgrades.install(stack, DrillUpgrades.COLUMN_BORE)
-				|| !dev.alaindustrial.item.tool.ElectricDrillItem.isColumnActive(stack)) {
+				|| !DrillBore.isColumnActive(stack)) {
 			throw new IllegalStateException("fixture error: the column bore did not install on " + item);
 		}
 		return stack;
@@ -1020,7 +1022,7 @@ public final class ElectricDrillScenarios {
 	 * path that calls {@code ItemStack.mineBlock} and rolls loot with the real main-hand stack — with
 	 * {@code drill} placed in the main hand first (the column only runs from the main hand).
 	 */
-	private static void mineColumnAim(GameTestHelper helper, ServerPlayer player, ItemStack drill) {
+	static void mineColumnAim(GameTestHelper helper, ServerPlayer player, ItemStack drill) {
 		player.setItemInHand(InteractionHand.MAIN_HAND, drill);
 		if (!player.gameMode.destroyBlock(helper.absolutePos(COLUMN_AIM))) {
 			helper.fail("destroyBlock refused the aimed block — the rig is not testing the column");
@@ -1033,7 +1035,7 @@ public final class ElectricDrillScenarios {
 		helper.setBlock(COLUMN_BELOW, below);
 	}
 
-	private static void assertCharge(GameTestHelper helper, ItemStack drill, long expected, String what) {
+	static void assertCharge(GameTestHelper helper, ItemStack drill, long expected, String what) {
 		long actual = ItemEnergy.get(drill);
 		if (actual != expected) {
 			helper.fail(what + ": expected " + expected + " EU left, got " + actual);
@@ -1083,7 +1085,7 @@ public final class ElectricDrillScenarios {
 		// 3. Mode switched off: a plain stroke, neighbours untouched.
 		setColumn(helper, Blocks.STONE, Blocks.STONE, Blocks.STONE);
 		ItemStack off = columnDrill(drillItem, full);
-		dev.alaindustrial.item.tool.ElectricDrillItem.setColumnEnabled(off, false);
+		DrillBore.setColumnEnabled(off, false);
 		mineColumnAim(helper, player, off);
 		helper.assertBlockPresent(Blocks.STONE, COLUMN_ABOVE);
 		helper.assertBlockPresent(Blocks.STONE, COLUMN_BELOW);

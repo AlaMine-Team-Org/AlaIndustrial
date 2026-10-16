@@ -66,7 +66,8 @@ public final class ModKeyMappings {
 			InputConstants.KEY_G,
 			CATEGORY);
 
-	/** Toggle the column bore on the held drill (MOD-482). Default: L — free in vanilla, and the next
+	/** Switch the bore mode of the held drill (MOD-482 column, MOD-821 row; the key id is unchanged so
+	 * bindings survive). Default: L — free in vanilla, and the next
 	 * letter of the G/H/J/K row this mod already occupies. It is a key rather than a click because both
 	 * right-click gestures on the drill line are taken: a plain one places a torch on all three tiers,
 	 * sneak switches Silk Touch on the two tipped ones. */

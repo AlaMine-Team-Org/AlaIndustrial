@@ -13,11 +13,13 @@
   ],
   "client": [
     "client.AbstractClientPlayerElectricBowMixin",
+    "client.ClientLevelCrackMixin",
     "client.FirstPersonHandsAndItemsElectricBowMixin",
     "client.FirstPersonHandsAndItemsRendererElectricBowMixin",
     "client.FogRendererAccessor",
     "client.LivingEntityRendererInvoker",
     "client.LivingEntityRendererSolarHelmetMixin",
+    "client.MultiPlayerGameModeBoreMixin",
     "client.ScreenEffectRendererMixin",
     "client.SoundEngineAbsorberMixin",
     "client.VillagerRenderStateMixin",

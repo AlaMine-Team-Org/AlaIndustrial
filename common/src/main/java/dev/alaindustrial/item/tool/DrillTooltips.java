@@ -8,7 +8,7 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * The electric drills' tooltip (MOD-716), one shape for the three tiers: the usage line naming the tier's own
- * reference pickaxe, the Silk Touch state of the two tipped tiers, the column bore once installed, then the
+ * reference pickaxe, the Silk Touch state of the two tipped tiers, the bore modules once installed, then the
  * charge. Each tier passes its own key prefix, so the netherite drill — a subclass of the diamond one — names
  * itself rather than the tier below it (MOD-482, MOD-534).
  */
@@ -26,7 +26,7 @@ final class DrillTooltips {
 			tooltip = tooltip.withUsageKey(PREFIX + tip + ".usage")
 					.withBeforeCharge(SilkModeToggle.tooltipLine(PREFIX + tip));
 		}
-		return tooltip.withBeforeCharge(DrillTooltips::columnLine);
+		return tooltip.withBeforeCharge(DrillTooltips::columnLine).withBeforeCharge(DrillTooltips::rowLine);
 	}
 
 	/**
@@ -37,8 +37,18 @@ final class DrillTooltips {
 		if (!DrillUpgrades.has(stack, DrillUpgrades.COLUMN_BORE)) {
 			return null;
 		}
-		return ElectricDrillItem.isColumnEnabled(stack)
+		return DrillBore.isColumnEnabled(stack)
 				? MachineTooltipSpec.text(PREFIX + "electric_drill.column_on", MachineTooltipSpec.Tone.AQUA)
 				: MachineTooltipSpec.text(PREFIX + "electric_drill.column_off", MachineTooltipSpec.Tone.GRAY);
+	}
+
+	/** MOD-821: the row bore, on or off — shown only once installed, like the column line. */
+	private static MachineTooltipSpec.@Nullable Line rowLine(net.minecraft.world.item.ItemStack stack) {
+		if (!DrillUpgrades.has(stack, DrillUpgrades.ROW_BORE)) {
+			return null;
+		}
+		return DrillBore.isRowEnabled(stack)
+				? MachineTooltipSpec.text(PREFIX + "electric_drill.row_on", MachineTooltipSpec.Tone.AQUA)
+				: MachineTooltipSpec.text(PREFIX + "electric_drill.row_off", MachineTooltipSpec.Tone.GRAY);
 	}
 }

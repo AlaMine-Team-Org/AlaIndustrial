@@ -1,18 +1,11 @@
 # Changelog
 
-## 0.1.213
+## 0.1.214
 
-<p><img alt="Ala Industrial Minecraft mod: a reactor explodes on a base over the sea and leaves a flooded crater" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.213-mc26.3/release-media/v0.1.213-mc26.3/changelog.gif" width="720"></p>
+<p><img alt="Ala Industrial Minecraft mod: an electric drill with the column and row bore modules digging a tunnel in a five block cross" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.214-mc26.3/release-media/v0.1.214-mc26.3/changelog.gif" width="720"></p>
 
-Reactor accidents now leave a real crater.
+The electric drills get a second upgrade: the Row Bore Module digs left and right, and together with the column module the drill bores a five block cross.
 
-### Improved
+### New
 
-- **Reactor meltdown.** A blast that breaks the shell, or a reactor with no room, leaves a crater
-  up to 26 blocks wide, layered with fallout, basalt, magma and a lava lake. Obsidian and water no
-  longer shield it.
-
-### Bug Fixes
-
-- **Sealed reactor rooms.** The blast now goes off in the middle of the room, so the room holds a
-  mid-sized accident as it should.
+- **Row Bore Module.** A new drill module digs the blocks left and right of the one you hit. With the column module the drill digs a five block cross, and the L key switches the mode.

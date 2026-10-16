@@ -62,7 +62,8 @@ public class UpgradeTableScreen extends ProgressMachineScreen<UpgradeTableMenu> 
 						ModContent.ELECTRIC_DRILL_DIAMOND_TIP.get(),
 						ModContent.ELECTRIC_DRILL_NETHERITE_TIP.get())));
 		ghostHint(graphics, UpgradeTableBlockEntity.MODULE_SLOT,
-				cyclingHint(List.of(ModContent.DRILL_COLUMN_MODULE.get())));
+				cyclingHint(List.of(ModContent.DRILL_COLUMN_MODULE.get(),
+						ModContent.DRILL_ROW_MODULE.get())));
 	}
 
 	@Override

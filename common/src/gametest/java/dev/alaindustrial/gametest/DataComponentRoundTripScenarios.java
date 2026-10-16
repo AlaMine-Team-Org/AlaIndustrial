@@ -113,6 +113,7 @@ public final class DataComponentRoundTripScenarios {
 				new TeleportPoint(Level.NETHER, new BlockPos(-5, 70, 3), "", 2))));
 		s.put(ModDataComponents.DRILL_UPGRADES_ID, new DrillUpgrades(List.of(DrillUpgrades.COLUMN_BORE)));
 		s.put(ModDataComponents.DRILL_COLUMN_ENABLED_ID, true);
+		s.put(ModDataComponents.DRILL_ROW_ENABLED_ID, true);
 		s.put(ModDataComponents.TELEPORTER_LOG_ID, new RemoteLog(3, 1, List.of(
 				new RemoteLog.Entry(1, 100L, RemoteLog.Kind.JUMPED, false, new RemoteLog.Station("Home", 1),
 						RemoteLog.Station.NONE, 500, 0, 0),

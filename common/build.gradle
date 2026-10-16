@@ -234,6 +234,7 @@ pitest {
                      // could pin it (AnalyzerTotalsTest, PayloadBudgetTest, ScanThrottleTest,
                      // AnalyzerClickTest, OverlayMathTest).
                      'dev.alaindustrial.item.tool.AnalyzerClick',
+                     'dev.alaindustrial.item.tool.DrillBoreMode',
                      'dev.alaindustrial.item.tool.ScanThrottle',
                      'dev.alaindustrial.network.AnalyzerTotals',
                      'dev.alaindustrial.network.PayloadBudget',

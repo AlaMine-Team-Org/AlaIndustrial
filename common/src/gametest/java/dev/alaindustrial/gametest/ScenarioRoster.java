@@ -72,6 +72,7 @@ public final class ScenarioRoster {
 			DischargeChannelBoundaryScenarios.Roster.ENTRIES,
 			DistillationColumnScenarios.Roster.ENTRIES,
 			DoubleChestScenarios.Roster.ENTRIES,
+			DrillBoreScenarios.Roster.ENTRIES,
 			ElectricBowScenarios.Roster.ENTRIES,
 			ElectricChainsawScenarios.Roster.ENTRIES,
 			ElectricDrillScenarios.Roster.ENTRIES,

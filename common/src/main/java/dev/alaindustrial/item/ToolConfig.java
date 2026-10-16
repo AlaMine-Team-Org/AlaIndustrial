@@ -147,7 +147,7 @@ public final class ToolConfig {
 	 * EU per EXTRA block a column-bore drill breaks above and below (MOD-482): 1.5x the base, so a stroke
 	 * costs 200 for three blocks. A drill short of the whole column breaks one.
 	 */
-	@Knob(section = Section.TOOLS, min = 1,
+	@Knob(section = Section.TOOLS, clientVisible = true, min = 1,
 			doc = "EU the drill spends per extra block of a column bore (the block above and below the one hit).")
 	public static int electricDrillColumnEuPerBlock = 75;
 	// --- Electric Chainsaw (MOD-337, the drill's wood-side counterpart) ---

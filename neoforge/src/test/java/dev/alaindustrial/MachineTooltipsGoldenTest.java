@@ -13,6 +13,7 @@ import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.item.energy.PoweredItem;
 import dev.alaindustrial.item.misc.MutationGrades;
 import dev.alaindustrial.item.tool.AnalyzerMode;
+import dev.alaindustrial.item.tool.DrillBore;
 import dev.alaindustrial.item.tool.DrillUpgrades;
 import dev.alaindustrial.item.tool.ElectricChainsawDiamondTipItem;
 import dev.alaindustrial.item.tool.ElectricDrillDiamondTipItem;
@@ -229,7 +230,7 @@ class MachineTooltipsGoldenTest {
 		}
 		if (item instanceof ElectricDrillItem) {
 			DrillUpgrades.install(stack, DrillUpgrades.COLUMN_BORE);
-			ElectricDrillItem.setColumnEnabled(stack, true);
+			DrillBore.setColumnEnabled(stack, true);
 			any = true;
 		}
 		if (item instanceof ElectricSaberItem) {

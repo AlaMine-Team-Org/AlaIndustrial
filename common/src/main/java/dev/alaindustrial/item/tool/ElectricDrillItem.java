@@ -6,7 +6,6 @@ import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.item.wearable.EnergyPackItem;
 
 import dev.alaindustrial.registry.ModContent;
-import dev.alaindustrial.registry.ModDataComponents;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -134,7 +133,7 @@ public class ElectricDrillItem extends ElectricMiningToolItem {
 						.build());
 	}
 
-	// --- column bore (MOD-482): the block hit, plus the one above and the one below ---------------
+	// --- bore modules (MOD-482 column, MOD-821 row): the block hit, plus the blocks around it ----
 
 	/**
 	 * Whether this thread is already inside a column the drill is breaking for itself.
@@ -152,32 +151,36 @@ public class ElectricDrillItem extends ElectricMiningToolItem {
 	 */
 	private static final ThreadLocal<Boolean> BREAKING_COLUMN = ThreadLocal.withInitial(() -> Boolean.FALSE);
 
-	/** Is the column bore installed on this drill, and switched on? Both must hold for a column. */
-	public static boolean isColumnActive(ItemStack stack) {
-		return DrillUpgrades.has(stack, DrillUpgrades.COLUMN_BORE) && isColumnEnabled(stack);
-	}
-
 	/**
-	 * The column mode's switch. <b>Absent means on</b> (see {@code ModDataComponents.DRILL_COLUMN_ENABLED}):
-	 * an upgrade the player paid the Upgrade Table for should work the moment they take the drill out,
-	 * and only switching it off writes anything onto the stack.
+	 * The extra blocks a stroke on {@code pos} will break, with the SERVER's real charge and prices. The cracks
+	 * and the removal the miner sees are drawn from {@link #plannedExtrasShown} through the same planner
+	 * ({@link DrillBore#plannedExtras}), so they are the blocks this method names. Two methods and not one that
+	 * branches on the side: client code must reach no balance knob, and a branch would still be a path to one.
 	 */
-	public static boolean isColumnEnabled(ItemStack stack) {
-		return stack.getOrDefault(ModDataComponents.DRILL_COLUMN_ENABLED.get(), Boolean.TRUE);
-	}
-
-	/** Switching back on REMOVES the component rather than writing {@code true}, so a drill that has been
-	 * toggled twice is component-identical to one that never was. */
-	public static void setColumnEnabled(ItemStack stack, boolean enabled) {
-		if (enabled) {
-			stack.remove(ModDataComponents.DRILL_COLUMN_ENABLED.get());
-		} else {
-			stack.set(ModDataComponents.DRILL_COLUMN_ENABLED.get(), Boolean.FALSE);
+	public static List<BlockPos> plannedExtras(ItemStack stack, Level level, BlockPos pos, BlockState state,
+			Player player) {
+		if (!(stack.getItem() instanceof ElectricDrillItem drill)) {
+			return List.of();
 		}
+		return DrillBore.plannedExtras(stack, level, pos, state, player, ItemEnergy.get(stack),
+				drill.toolTier().euPerBlock(), ToolConfig.electricDrillColumnEuPerBlock);
 	}
 
 	/**
-	 * Breaks the block above and the one below the block just mined.
+	 * {@link #plannedExtras} as the client predicts it: the shown charge and the prices the server synced
+	 * ({@code ServerBalance}), until it has sent them this side's own.
+	 */
+	public static List<BlockPos> plannedExtrasShown(ItemStack stack, Level level, BlockPos pos, BlockState state,
+			Player player) {
+		if (!(stack.getItem() instanceof ElectricDrillItem drill)) {
+			return List.of();
+		}
+		return DrillBore.plannedExtras(stack, level, pos, state, player, ItemEnergy.shownGet(stack),
+				drill.toolTier().predictedEuPerBlock(), ServerBalance.electricDrillColumnEuPerBlock());
+	}
+
+	/**
+	 * Breaks the planned extra blocks of the active bore modules around the block just mined.
 	 *
 	 * <p>Each of them goes through {@code player.gameMode.destroyBlock(pos)} — the canonical "a player
 	 * mined this" path, and the only one that gets the rest right for free: loot is rolled with the real
@@ -190,40 +193,18 @@ public class ElectricDrillItem extends ElectricMiningToolItem {
 	 * same call and pays for itself, at the column price, which also means the creative exemption and the
 	 * skill discount apply per block with nothing duplicated. Charging here as well would bill twice.
 	 *
-	 * <p>Affordability is checked for the WHOLE column before the first extra block, at the raw config
-	 * price (the discount is applied inside {@code ItemEnergy.spend}, exactly as the torch gate does):
-	 * a drill that cannot pay for both extras breaks the one block the player aimed at rather than
-	 * digging half a corridor and stopping.
-	 *
-	 * <p>Only {@code #minecraft:mineable/pickaxe} blocks join a column — aiming at gravel with a drill
-	 * does not clear the stone over it — and only from the main hand, which is the only hand vanilla
-	 * breaks blocks with anyway.
+	 * <p>{@code planned} was drawn up BEFORE the aimed block was billed, from the whole charge: it holds only
+	 * blocks that qualify and that the drill can pay for together with the aimed block, so a drill that cannot
+	 * pay for them all breaks just the aimed block rather than digging half a corridor and stopping.
 	 */
-	private static void mineColumn(ItemStack stack, Level level, BlockState state, BlockPos pos,
-			LivingEntity owner) {
-		// The block the player aimed at has to be one a pickaxe takes, not just the two extras.
-		// Without this, boring through a dirt layer quietly took the stone above and below it —
-		// behaviour MOD-482's acceptance criteria and the shipped spec both say does not happen.
-		if (!state.is(BlockTags.MINEABLE_WITH_PICKAXE)) {
-			return;
-		}
-		if (!(owner instanceof ServerPlayer player) || player.getMainHandItem() != stack) {
-			return;
-		}
-		if (!isColumnActive(stack)) {
-			return;
-		}
-		long wholeColumn = 2L * ToolConfig.electricDrillColumnEuPerBlock;
-		if (!player.getAbilities().instabuild && ItemEnergy.get(stack) < wholeColumn) {
+	private static void mineExtras(ItemStack stack, Level level, List<BlockPos> planned, LivingEntity owner) {
+		if (planned.isEmpty() || !(owner instanceof ServerPlayer player) || player.getMainHandItem() != stack) {
 			return;
 		}
 		BREAKING_COLUMN.set(Boolean.TRUE);
 		try {
-			for (BlockPos extra : new BlockPos[] {pos.above(), pos.below()}) {
-				if (level.isOutsideBuildHeight(extra)) {
-					continue;
-				}
-				// Re-read every time: breaking the block above can drop gravel into the one below.
+			for (BlockPos extra : planned) {
+				// Re-read every time: breaking one block can drop gravel into the next.
 				BlockState extraState = level.getBlockState(extra);
 				if (extraState.isAir() || !extraState.is(BlockTags.MINEABLE_WITH_PICKAXE)
 						|| extraState.getDestroySpeed(level, extra) < 0.0f) {
@@ -253,10 +234,14 @@ public class ElectricDrillItem extends ElectricMiningToolItem {
 		// An extra block of a column pays the column price; the block the player aimed at pays the
 		// plain one. Nothing else can tell the two apart — see BREAKING_COLUMN.
 		boolean extraBlock = BREAKING_COLUMN.get();
+		// The plan is drawn up from the charge BEFORE the aimed block is billed, so "can afford all of it" is
+		// asked once, of the whole stroke.
+		List<BlockPos> planned = extraBlock || !(owner instanceof Player player)
+				? List.of() : plannedExtras(stack, level, pos, state, player);
 		spendIfAffordable(stack, extraBlock ? ToolConfig.electricDrillColumnEuPerBlock : toolTier().euPerBlock(),
 				owner);
 		if (!extraBlock) {
-			mineColumn(stack, level, state, pos, owner);
+			mineExtras(stack, level, planned, owner);
 		}
 	}
 
