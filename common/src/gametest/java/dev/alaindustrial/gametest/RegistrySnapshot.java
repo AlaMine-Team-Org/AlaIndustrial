@@ -415,6 +415,7 @@ final class RegistrySnapshot {
 			"data_component_type capsule_fluid",
 			"data_component_type distillation_column_contents",
 			"data_component_type drill_column_enabled",
+			"data_component_type drill_row_enabled",
 			"data_component_type drill_upgrades",
 			"data_component_type electric_bow_charged",
 			"data_component_type fluid_tank_contents",

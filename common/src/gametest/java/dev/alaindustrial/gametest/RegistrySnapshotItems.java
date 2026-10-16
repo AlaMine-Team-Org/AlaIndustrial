@@ -135,6 +135,7 @@ final class RegistrySnapshotItems {
 			"item diesel_bucket class=BucketItem stack=1 damage=0 rarity=COMMON fireproof=no",
 			"item distillation_column class=BlockItem stack=64 damage=0 rarity=COMMON fireproof=no",
 			"item drill_column_module class=Item stack=64 damage=0 rarity=COMMON fireproof=no",
+			"item drill_row_module class=Item stack=64 damage=0 rarity=COMMON fireproof=no",
 			"item electric_bow class=ElectricBowItem stack=1 damage=0 rarity=COMMON fireproof=no",
 			"item electric_chainsaw class=ElectricChainsawItem stack=1 damage=0 rarity=COMMON fireproof=no",
 			"item electric_chainsaw_diamond_tip class=ElectricChainsawDiamondTipItem stack=1 damage=0 rarity=COMMON fireproof=no",

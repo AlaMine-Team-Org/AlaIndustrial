@@ -218,6 +218,8 @@ public final class MaterialsContent {
 			// reinforced invar plate and palladium, neither of which had a consumer recipe at all.
 			plain("core_barrel", s -> ModContent.CORE_BARREL = s),
 			plain("drill_column_module", s -> ModContent.DRILL_COLUMN_MODULE = s),
+			// MOD-821: the row bore — the column's sideways twin, fitted at the same table.
+			plain("drill_row_module", s -> ModContent.DRILL_ROW_MODULE = s),
 			// Netherite Drill Upgrade smithing template (MOD-534): the gate on the top drill tier.
 			item("netherite_drill_upgrade_smithing_template", NetheriteDrillUpgradeTemplate::create,
 					s -> ModContent.NETHERITE_DRILL_UPGRADE_SMITHING_TEMPLATE = s),
@@ -391,6 +393,7 @@ public final class MaterialsContent {
 		show(out, ModContent.NETHERITE_DRILL_UPGRADE_SMITHING_TEMPLATE);
 		show(out, ModContent.CORE_BARREL);
 		show(out, ModContent.DRILL_COLUMN_MODULE);
+		show(out, ModContent.DRILL_ROW_MODULE);
 		// The rubber and cloth chains, each from raw to finished.
 		show(out, ModContent.RAW_RUBBER);
 		show(out, ModContent.OIL_SLIME_SPAWN_EGG);
@@ -592,6 +595,7 @@ public final class MaterialsContent {
 		show(out, ModContent.NETHERITE_DRILL_UPGRADE_SMITHING_TEMPLATE);
 		show(out, ModContent.CORE_BARREL);
 		show(out, ModContent.DRILL_COLUMN_MODULE);
+		show(out, ModContent.DRILL_ROW_MODULE);
 	}
 
 	/** The mod's ores as placed blocks, overworld then deepslate per metal (vanilla Natural Blocks). */

@@ -90,6 +90,9 @@ public class UpgradeTableBlockEntity extends MachineBlockEntity
 		if (module.is(ModContent.DRILL_COLUMN_MODULE.get())) {
 			return DrillUpgrades.COLUMN_BORE;
 		}
+		if (module.is(ModContent.DRILL_ROW_MODULE.get())) {
+			return DrillUpgrades.ROW_BORE;
+		}
 		return null;
 	}
 

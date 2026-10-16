@@ -586,6 +586,8 @@ public final class ModContent {
 	// Column Bore Module (MOD-482) — the drill's first installable upgrade. Useless in the hand: the
 	// Upgrade Table eats it and writes the upgrade onto the drill instead.
 	public static Supplier<Item> DRILL_COLUMN_MODULE = unbound("DRILL_COLUMN_MODULE");
+	// Row Bore Module (MOD-821) — the second drill upgrade: the block left and right of the one hit.
+	public static Supplier<Item> DRILL_ROW_MODULE = unbound("DRILL_ROW_MODULE");
 	public static Supplier<Item> SULFUR_DUST = unbound("SULFUR_DUST");
 	public static Supplier<Item> RAW_SULFUR = unbound("RAW_SULFUR");
 	public static Supplier<Item> URANIUM_DUST = unbound("URANIUM_DUST");

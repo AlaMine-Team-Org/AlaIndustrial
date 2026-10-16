@@ -446,6 +446,21 @@ tooltip.alaindustrial.hold_shift {dark_gray}
 tooltip.alaindustrial.drill_column_module.role {gray}
 tooltip.alaindustrial.drill_column_module.fitting {gray}
 tooltip.alaindustrial.drill_column_module.toggle {gray}
+== alaindustrial:drill_row_module plain
+-- plain eu
+tooltip.alaindustrial.drill_row_module.role {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.drill_row_module.role {gray}
+tooltip.alaindustrial.drill_row_module.fitting {gray}
+tooltip.alaindustrial.drill_row_module.toggle {gray}
+-- plain no-eu
+tooltip.alaindustrial.drill_row_module.role {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.drill_row_module.role {gray}
+tooltip.alaindustrial.drill_row_module.fitting {gray}
+tooltip.alaindustrial.drill_row_module.toggle {gray}
 == alaindustrial:electric_bow plain
 -- plain eu
 tooltip.alaindustrial.electric_bow.usage(150) {gray}

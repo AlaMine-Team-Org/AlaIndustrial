@@ -34,6 +34,9 @@ public record DrillUpgrades(List<String> installed) {
 	/** The column bore (MOD-482): the drill breaks the block above and below the one it hits. */
 	public static final String COLUMN_BORE = "column_bore";
 
+	/** The row bore (MOD-821): the drill breaks the block to the left and to the right of the one it hits. */
+	public static final String ROW_BORE = "row_bore";
+
 	/** A drill with nothing installed. Also what a stack without the component reads as. */
 	public static final DrillUpgrades NONE = new DrillUpgrades(List.of());
 

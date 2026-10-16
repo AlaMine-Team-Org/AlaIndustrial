@@ -76,6 +76,7 @@ public final class ModDataComponents {
 	public static final Identifier ELECTRIC_BOW_CHARGED_ID = Industrialization.id("electric_bow_charged");
 	public static final Identifier DRILL_UPGRADES_ID = Industrialization.id("drill_upgrades");
 	public static final Identifier DRILL_COLUMN_ENABLED_ID = Industrialization.id("drill_column_enabled");
+	public static final Identifier DRILL_ROW_ENABLED_ID = Industrialization.id("drill_row_enabled");
 
 	/** Rarity grade rolled by the incubator on a successful mutation (MOD-118). */
 	public static final Identifier MUTATION_GRADE_ID = Industrialization.id("mutation_grade");
@@ -343,6 +344,22 @@ public final class ModDataComponents {
 
 	/** Build the {@code drill_column_enabled} type both loaders register (MOD-482). */
 	public static DataComponentType<Boolean> createDrillColumnEnabled() {
+		return DataComponentType.<Boolean>builder()
+				.persistent(Codec.BOOL)
+				.networkSynchronized(ByteBufCodecs.BOOL)
+				.build();
+	}
+
+	/**
+	 * Whether the row bore is switched on (MOD-821). Same contract as {@link #DRILL_COLUMN_ENABLED}:
+	 * <b>absent = ON</b>, written only when the player switches it off, removed again on switching on.
+	 */
+	public static Supplier<DataComponentType<Boolean>> DRILL_ROW_ENABLED = () -> {
+		throw new IllegalStateException("ModDataComponents.DRILL_ROW_ENABLED read before its loader bound it");
+	};
+
+	/** Build the {@code drill_row_enabled} type both loaders register (MOD-821). */
+	public static DataComponentType<Boolean> createDrillRowEnabled() {
 		return DataComponentType.<Boolean>builder()
 				.persistent(Codec.BOOL)
 				.networkSynchronized(ByteBufCodecs.BOOL)
@@ -706,6 +723,8 @@ public final class ModDataComponents {
 			new ComponentDef<>(TELEPORTER_POINTS_ID, ModDataComponents::createTeleporterPoints, c -> TELEPORTER_POINTS = c),
 			new ComponentDef<>(DRILL_UPGRADES_ID, ModDataComponents::createDrillUpgrades, c -> DRILL_UPGRADES = c),
 			new ComponentDef<>(DRILL_COLUMN_ENABLED_ID, ModDataComponents::createDrillColumnEnabled, c -> DRILL_COLUMN_ENABLED = c),
+			new ComponentDef<>(DRILL_ROW_ENABLED_ID, ModDataComponents::createDrillRowEnabled,
+					c -> DRILL_ROW_ENABLED = c),
 			new ComponentDef<>(TELEPORTER_LOG_ID, ModDataComponents::createTeleporterLog, c -> TELEPORTER_LOG = c),
 			new ComponentDef<>(ELECTRIC_BOW_CHARGED_ID, ModDataComponents::createElectricBowCharged,
 					c -> ELECTRIC_BOW_CHARGED = c),

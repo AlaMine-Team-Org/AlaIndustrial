@@ -1,6 +1,8 @@
 package dev.alaindustrial.network;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.item.tool.DrillBore;
+import dev.alaindustrial.item.tool.DrillBoreMode;
 import dev.alaindustrial.item.tool.DrillUpgrades;
 import dev.alaindustrial.item.tool.ElectricDrillItem;
 import net.minecraft.ChatFormatting;
@@ -14,7 +16,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.ItemStack;
 
 /**
- * Switch the column bore on the held drill on or off (MOD-482).
+ * Switch the bore mode of the held drill (MOD-482 column on/off; MOD-821 cycles column and row).
  *
  * <p><b>Why a packet rather than sneak + right-click.</b> The mod's other item toggles ride on
  * {@code Item.use}, which vanilla already synchronises — but that gesture is taken on this line: a
@@ -25,7 +27,7 @@ import net.minecraft.world.item.ItemStack;
  * ({@link FluxweaveStepAssistPayload}).
  *
  * <p><b>Nothing is trusted.</b> The payload has no body; the server re-reads the stack actually in the
- * player's main hand and does nothing unless it is a drill with the upgrade installed. A client that
+ * player's main hand and does nothing unless it is a drill. A client that
  * spams this can only flip its own drill back and forth.
  */
 public record DrillColumnTogglePayload() implements CustomPacketPayload {
@@ -37,31 +39,41 @@ public record DrillColumnTogglePayload() implements CustomPacketPayload {
 			StreamCodec.unit(new DrillColumnTogglePayload());
 
 	/**
-	 * Flip the mode on the held drill and say which way it went on the action bar.
+	 * Switch the held drill to its next bore mode and say which one it is now on the action bar.
 	 *
-	 * <p>Three answers, all deliberate: a drill without the upgrade says so (otherwise the key looks
-	 * broken to a player who has not been to the Upgrade Table yet), anything else in hand is silent
-	 * (the key belongs to the drill, not to the player), and a successful flip gets the same copper-bulb
-	 * click the Silk Touch toggle uses — one mode switch, one sound, wherever the player learned it.
+	 * <p>With both modules installed the key cycles cross, column, row, single (MOD-821); with one it
+	 * flips that module on and off; with none the drill says so (otherwise the key looks broken to a
+	 * player who has not been to the Upgrade Table yet). Anything else in hand is silent (the key belongs
+	 * to the drill, not to the player), and a successful switch gets the same copper-bulb click the Silk
+	 * Touch toggle uses — one mode switch, one sound, wherever the player learned it.
 	 */
 	public static void handle(DrillColumnTogglePayload payload, ServerPlayer player) {
 		ItemStack drill = player.getMainHandItem();
 		if (!(drill.getItem() instanceof ElectricDrillItem)) {
 			return;
 		}
-		if (!DrillUpgrades.has(drill, DrillUpgrades.COLUMN_BORE)) {
+		boolean column = DrillUpgrades.has(drill, DrillUpgrades.COLUMN_BORE);
+		boolean row = DrillUpgrades.has(drill, DrillUpgrades.ROW_BORE);
+		if (!column && !row) {
 			player.sendSystemMessage(
-					Component.translatable("message.alaindustrial.drill_column.not_installed")
+					Component.translatable("message.alaindustrial.drill_mode.not_installed")
 							.withStyle(ChatFormatting.GRAY),
 					true);
 			return;
 		}
-		boolean nowOn = !ElectricDrillItem.isColumnEnabled(drill);
-		ElectricDrillItem.setColumnEnabled(drill, nowOn);
+		if (column && row) {
+			DrillBoreMode next = DrillBore.boreMode(drill).next();
+			DrillBore.setColumnEnabled(drill, next.column());
+			DrillBore.setRowEnabled(drill, next.row());
+		} else if (column) {
+			DrillBore.setColumnEnabled(drill, !DrillBore.isColumnEnabled(drill));
+		} else {
+			DrillBore.setRowEnabled(drill, !DrillBore.isRowEnabled(drill));
+		}
+		DrillBoreMode mode = DrillBore.boreMode(drill);
+		boolean nowOn = mode != DrillBoreMode.SINGLE;
 		player.sendSystemMessage(
-				Component.translatable(nowOn
-						? "message.alaindustrial.drill_column.on"
-						: "message.alaindustrial.drill_column.off")
+				Component.translatable("message.alaindustrial.drill_mode." + mode.key())
 						.withStyle(nowOn ? ChatFormatting.AQUA : ChatFormatting.GRAY),
 				true);
 		player.level().playSound(null, player.blockPosition(),

@@ -114,7 +114,7 @@ final class BenchZone implements DemoZone {
 				new ItemStack(ModContent.LIGHTNING_ROD_CONDUCTOR_TIP_ADVANCED.get()),
 				new ItemStack(ModContent.RECYCLER_BLADES_IRON.get()), new ItemStack(ModContent.RECYCLER_BLADES_TEMPERED.get()),
 				new ItemStack(ModContent.RECYCLER_BLADES_DIAMOND.get()), new ItemStack(ModContent.DRILL_COLUMN_MODULE.get()),
-				new ItemStack(ModContent.CORE_BARREL.get())));
+				new ItemStack(ModContent.DRILL_ROW_MODULE.get()), new ItemStack(ModContent.CORE_BARREL.get())));
 	}
 
 	/** Buckets, fuel, seeds and the odds and ends needed to try a machine. */

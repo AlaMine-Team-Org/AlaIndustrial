@@ -113,7 +113,11 @@ public final class MachineTooltips {
 			return;
 		}
 		if (stack.is(ModContent.DRILL_COLUMN_MODULE.get())) {
-			addColumnModuleTooltip(lines, detailed);
+			addBoreModuleTooltip(lines, detailed, "drill_column_module");
+			return;
+		}
+		if (stack.is(ModContent.DRILL_ROW_MODULE.get())) {
+			addBoreModuleTooltip(lines, detailed, "drill_row_module");
 			return;
 		}
 		if (stack.is(ModContent.CORE_BARREL.get())) {
@@ -367,17 +371,17 @@ public final class MachineTooltips {
 		}
 	}
 
-	private static void addColumnModuleTooltip(List<Component> lines, boolean detailed) {
-		lines.add(Component.translatable("tooltip.alaindustrial.drill_column_module.role")
+	private static void addBoreModuleTooltip(List<Component> lines, boolean detailed, String module) {
+		lines.add(Component.translatable("tooltip.alaindustrial." + module + ".role")
 				.withStyle(ChatFormatting.GRAY));
 		if (!detailed) {
 			lines.add(Component.translatable("tooltip.alaindustrial.hold_shift")
 					.withStyle(ChatFormatting.DARK_GRAY));
 			return;
 		}
-		lines.add(Component.translatable("tooltip.alaindustrial.drill_column_module.fitting")
+		lines.add(Component.translatable("tooltip.alaindustrial." + module + ".fitting")
 				.withStyle(ChatFormatting.GRAY));
-		lines.add(Component.translatable("tooltip.alaindustrial.drill_column_module.toggle")
+		lines.add(Component.translatable("tooltip.alaindustrial." + module + ".toggle")
 				.withStyle(ChatFormatting.GRAY));
 	}
 

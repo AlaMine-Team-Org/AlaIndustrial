@@ -454,6 +454,7 @@ final class ContentManifestOrder {
 			"item netherite_drill_head",
 			"item core_barrel",
 			"item drill_column_module",
+			"item drill_row_module",
 			"item netherite_drill_upgrade_smithing_template",
 			"item tempered_iron",
 			"item iron_dust",
