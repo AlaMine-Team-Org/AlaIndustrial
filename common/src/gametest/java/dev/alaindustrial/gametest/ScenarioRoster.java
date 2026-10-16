@@ -169,6 +169,7 @@ public final class ScenarioRoster {
 			RadiationVehicleScenarios.Roster.ENTRIES,
 			ReactorBreachOrderScenarios.Roster.ENTRIES,
 			ReactorControllerPersistenceScenarios.Roster.ENTRIES,
+			ReactorCraterScenarios.Roster.ENTRIES,
 			ReactorGoldenTraceScenarios.Roster.ENTRIES,
 			ReactorScenarios.Roster.ENTRIES,
 			ReactorSteamScenarios.Roster.ENTRIES,

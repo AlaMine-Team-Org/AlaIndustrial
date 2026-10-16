@@ -324,6 +324,60 @@ public final class ReactorConfig {
 			doc = "Lava sources poured into the crater, only into cells the explosion itself destroyed.")
 	public static int reactorBlastLavaCells = 6;
 	/**
+	 * Explosion resistance every breakable block and fluid outside the reactor shell counts as at most, in a reactor
+	 * blast (MOD-736): stone's 6 becomes this, obsidian's 1200 and water's 100 too; the shell and unbreakable blocks
+	 * keep theirs.
+	 */
+	@Knob(section = Section.MACHINES, min = 0.0,
+			doc = "Highest explosion resistance a block or fluid outside the reactor shell has against a reactor"
+					+ " blast; the shell and unbreakable blocks keep their own.")
+	public static float reactorBlastTerrainResistanceCap = 1.5f;
+	/** Crater radius of a core with no rods, once its blast has left the shell or it had none (MOD-736). */
+	@Knob(section = Section.MACHINES, min = 0,
+			doc = "Radius of the crater a reactor with no rods leaves once its blast escapes the shell or it had none.")
+	public static int reactorCraterBaseRadius = 6;
+	/** Crater radius added per TEN rods (0.2 per rod): a hundred-rod station reaches 26. */
+	@Knob(section = Section.MACHINES, min = 0,
+			doc = "Crater radius added per ten rods burning when the countdown ran out.")
+	public static int reactorCraterRadiusPerTenRods = 2;
+	/** Ceiling on the crater radius; a radius-28 crater removes some forty thousand blocks over a few seconds. */
+	@Knob(section = Section.MACHINES, min = 0,
+			doc = "Largest crater radius a reactor blast carves.")
+	public static int reactorCraterMaxRadius = 28;
+	/** Power of each wave of the crater cascade; at 16 one wave reaches about six blocks into stone. */
+	@Knob(section = Section.MACHINES, min = 1,
+			doc = "Explosion power of each wave of the crater cascade.")
+	public static int reactorCraterWavePower = 16;
+	/** Distance between neighbouring waves, in blocks; about the reach of one wave, so the bowl has no gaps. */
+	@Knob(section = Section.MACHINES, min = 1,
+			doc = "Distance between neighbouring waves of the crater cascade, in blocks.")
+	public static int reactorCraterWaveSpacing = 6;
+	/**
+	 * Waves set off per server tick. 400 is the whole cascade at the ceiling radius, so the crater appears in the
+	 * blast's own tick (owner playtest: a cascade spread over ticks read as layers peeling away); a large crater
+	 * then stalls that one tick for a couple of seconds. Lower it to spread the work at the cost of the look.
+	 */
+	@Knob(section = Section.MACHINES, min = 1,
+			doc = "How many waves of the crater cascade go off per server tick; the default fits the whole cascade in"
+					+ " the blast's own tick.")
+	public static int reactorCraterWavesPerTick = 400;
+	/** Lava sources added per block of crater radius, on top of {@link #reactorBlastLavaCells}. */
+	@Knob(section = Section.MACHINES, min = 0,
+			doc = "Lava sources added to the bottom of a crater per block of its radius.")
+	public static int reactorCraterLavaCellsPerRadius = 6;
+	/**
+	 * Percent of the crater's exposed walls dressed in layers: irradiated soil at the top, basalt and blackstone
+	 * below, magma at the bottom.
+	 */
+	@Knob(section = Section.MACHINES, min = 0,
+			doc = "Percent of a crater's exposed walls dressed in layers: irradiated soil at the top, basalt and"
+					+ " blackstone below, magma at the bottom.")
+	public static int reactorCraterScorchPercent = 80;
+	/** Percent of the empty cells in the top fifth of a crater, on a sturdy floor, that catch fire. */
+	@Knob(section = Section.MACHINES, min = 0,
+			doc = "Percent of the empty cells in the top fifth of a crater, on a sturdy floor, that catch fire.")
+	public static int reactorCraterFirePercent = 30;
+	/**
 	 * Instability per rod per tick of a bare reactor (MOD-471). Against {@link #reactorBareSettlePermille} one
 	 * to three racks settle below the ceiling; a fourth runs away.
 	 */

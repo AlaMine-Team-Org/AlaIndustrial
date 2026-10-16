@@ -1,11 +1,18 @@
 # Changelog
 
-## 0.1.212
+## 0.1.213
 
-<p><img alt="Ala Industrial Minecraft mod: the electric mob trap block shocks a monster and draws its loot and experience orbs inside" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.212-mc26.3/release-media/v0.1.212-mc26.3/changelog.gif" width="720"></p>
+<p><img alt="Ala Industrial Minecraft mod: a reactor explodes on a base over the sea and leaves a flooded crater" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.213-mc26.3/release-media/v0.1.213-mc26.3/changelog.gif" width="720"></p>
 
-This release adds the Electric Mob Trap, a machine that turns the monsters of a mob farm into loot and liquid experience.
+Reactor accidents now leave a real crater.
 
-### New
+### Improved
 
-- **Electric Mob Trap.** A new LV machine pulls monsters in and shocks them for EU. Their loot is drawn into its buffer and their experience becomes liquid experience for pipes.
+- **Reactor meltdown.** A blast that breaks the shell, or a reactor with no room, leaves a crater
+  up to 26 blocks wide, layered with fallout, basalt, magma and a lava lake. Obsidian and water no
+  longer shield it.
+
+### Bug Fixes
+
+- **Sealed reactor rooms.** The blast now goes off in the middle of the room, so the room holds a
+  mid-sized accident as it should.

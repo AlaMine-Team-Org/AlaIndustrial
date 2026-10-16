@@ -2,6 +2,7 @@ package dev.alaindustrial.lifecycle;
 
 import dev.alaindustrial.block.CableDyeing;
 import dev.alaindustrial.block.OilLiquidBlock;
+import dev.alaindustrial.block.entity.reactor.ReactorCraterWaves;
 import dev.alaindustrial.chat.WelcomeMessage;
 import dev.alaindustrial.command.demo.DemoStandDropSweeper;
 import dev.alaindustrial.command.demo.energy.EnergyStandCheck;
@@ -68,7 +69,9 @@ public final class ServerHookRoster {
 			EnergyStandCheck::afterNetworks,
 			ItemNetworkManager::tickAll,
 			FluidNetworkManager::tickAll,
-			MonitorNetworkManager::tickAll);
+			MonitorNetworkManager::tickAll,
+			// MOD-736: the waves of a reactor crater still being carved, a few per tick.
+			ReactorCraterWaves::tick);
 
 	/** End of every server tick, once per server, after {@link #SERVER_TICK_PER_LEVEL}. */
 	public static final List<Consumer<MinecraftServer>> SERVER_TICK = List.of(

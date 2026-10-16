@@ -1068,6 +1068,11 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 		return blast.total();
 	}
 
+	/** Where this core's blast went off, or {@code null} before it has (MOD-736) — see {@link ReactorBlastTimer}. */
+	public BlockPos getLastBlastEpicentre() {
+		return blast.lastEpicentre();
+	}
+
 	/** A bare core's instability on its own 0…capacity scale. Always zero for a sealed room. */
 	public long getInstability() {
 		return instability;
