@@ -1,17 +1,16 @@
 package dev.alaindustrial.block.entity.reactor;
 
 import dev.alaindustrial.core.reactor.ReactorConfig;
+import dev.alaindustrial.core.structure.CraterWaves;
 import dev.alaindustrial.core.structure.ReactorBlast;
 import dev.alaindustrial.core.structure.ReactorCore;
 import dev.alaindustrial.core.structure.ReactorLog;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Consumer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.minecraft.world.phys.Vec3;
 
 /**
  * The accident at the top of the scale (MOD-471; MOD-713, BE-5): the countdown between a pinned gauge and the
@@ -47,6 +46,9 @@ public final class ReactorBlastTimer {
 	 * it after the reload, rather than starting the window again. A save from before the key loads it as zero.
 	 */
 	private int blastBelowTicks;
+
+	/** Where the blast went off, once it has; a gametest's way to see the centre the shell was tested against. */
+	private BlockPos lastEpicentre;
 
 	public ReactorBlastTimer(Runnable changed) {
 		this.changed = changed;
@@ -111,6 +113,11 @@ public final class ReactorBlastTimer {
 	/**
 	 * The accident itself.
 	 *
+	 * <p><b>Where the blast goes off and where the shell runs are read FIRST (MOD-736).</b> {@code dismantle}
+	 * clears the room's box, and a centre computed after it fell back to the controller — a blast from inside
+	 * its own wall, which spent only half a cell of shell on the way out and let a twelve-rack core through a wall
+	 * the room was built to hold it with.
+	 *
 	 * <p><b>The room is taken apart BEFORE the blast, and that order is load-bearing.</b> The controller's
 	 * {@code unformOnRemoval} only ever runs from the player's own mining hook, because touching the
 	 * world from a block entity's removal path deadlocks the server on chunk unload — something this
@@ -120,20 +127,47 @@ public final class ReactorBlastTimer {
 	 * the controller is still standing — that is {@code dismantle}, which also hands out the hidden accident
 	 * step FIRST (MOD-473): everything after it dismantles the reactor, and the last statement destroys the
 	 * controller itself, so a trigger fired later would come from a block entity the world has already dropped.
+	 *
+	 * <p><b>A shell that held leaves no crater; one that did not, or none at all, leaves a big one</b> (owner
+	 * decision 1 of MOD-736). The primary blast decides which: if it destroyed anything outside the shell, the
+	 * crater's waves follow it out in the same tick, so it is one explosion, not a rolling one (owner playtest); only
+	 * a cascade larger than {@code reactorCraterWavesPerTick} spills over into the next ticks
+	 * ({@link ReactorCraterWaves}).
 	 */
 	private void explode(ServerLevel level, BlockPos pos, ReactorRoom room, Runnable dismantle) {
-		dismantle.run();
 		BlockPos epicentre = blastEpicentre(room, pos);
+		ReactorBox box = room.box();
+		boolean sealed = !room.isBare() && box.isSet();
+		// The shell is the ring one block outside the interior box; past it is "outside".
+		int minX = box.minX() - 1;
+		int minY = box.minY() - 1;
+		int minZ = box.minZ() - 1;
+		int maxX = box.maxX() + 1;
+		int maxY = box.maxY() + 1;
+		int maxZ = box.maxZ() + 1;
+		dismantle.run();
+		lastEpicentre = epicentre;
 		float power = ReactorCore.blastPower(room.rods(), ReactorConfig.reactorBlastBasePower,
 				ReactorConfig.reactorBlastPowerPerTenRods, ReactorConfig.reactorBlastMaxPower);
-		Set<BlockPos> before = ReactorBlast.snapshotSolids(level, epicentre, ReactorConfig.reactorFalloutRadius);
-		ReactorBlast.detonate(level, Vec3.atCenterOf(epicentre), power, ReactorConfig.reactorBlastFire);
+		int radius = CraterWaves.radius(room.rods(), ReactorConfig.reactorCraterBaseRadius,
+				ReactorConfig.reactorCraterRadiusPerTenRods, ReactorConfig.reactorCraterMaxRadius);
+		ReactorCrater crater = new ReactorCrater(level, epicentre, radius, ReactorConfig.reactorCraterWaveSpacing,
+				ReactorConfig.reactorCraterWavePower, ReactorCrater.WORLD);
 		// Everything after this is keyed to what the blast ACTUALLY destroyed, never to a radius. If a
-		// land-claim mod refused the explosion, this list comes back empty and there is no aftermath at
-		// all — the protection is honoured without this class knowing such mods exist.
-		List<BlockPos> destroyed = ReactorBlast.destroyedSince(level, before);
-		ReactorBlast.pourLava(level, destroyed, epicentre, ReactorConfig.reactorBlastLavaCells);
-		ReactorBlast.scatterFallout(level, destroyed, epicentre, ReactorConfig.reactorFalloutRadius);
+		// land-claim mod refused the explosion, the list comes back empty: no aftermath, and no crater either.
+		List<BlockPos> destroyed = crater.blast(epicentre, power, ReactorConfig.reactorBlastFire, true);
+		boolean escaped = !sealed || destroyed.stream().anyMatch(at -> at.getX() < minX || at.getX() > maxX
+				|| at.getY() < minY || at.getY() > maxY || at.getZ() < minZ || at.getZ() > maxZ);
+		if (escaped && radius > 0 && !destroyed.isEmpty()) {
+			crater.announce();
+			if (crater.step(ReactorConfig.reactorCraterWavesPerTick)) {
+				crater.finish(true);
+			} else {
+				ReactorCraterWaves.start(crater);
+			}
+		} else {
+			crater.finish(false);
+		}
 		// The controller goes LAST, and by hand rather than by hoping the blast reaches it.
 		//
 		// It is built of the same shielding alloy as the wall, so at the powers a small core produces
@@ -150,7 +184,7 @@ public final class ReactorBlastTimer {
 	 * <p>The middle of the sealed interior for a room — the point furthest from every wall, so the shell
 	 * gets its fair chance to contain the thing it was built to contain, and a fixed point a gametest can
 	 * assert. For a bare core, the middle of the pile it was driving: there is no shell to be fair to,
-	 * and the fuel is what exploded.
+	 * and the fuel is what exploded. Must be asked before the room is taken apart (see {@link #explode}).
 	 */
 	private static BlockPos blastEpicentre(ReactorRoom room, BlockPos pos) {
 		ReactorBox box = room.box();
@@ -172,6 +206,11 @@ public final class ReactorBlastTimer {
 			return new BlockPos((int) (x / count), (int) (y / count), (int) (z / count));
 		}
 		return pos;
+	}
+
+	/** Where this core's blast went off, or {@code null} before it has (MOD-736); not saved — the core is gone. */
+	public BlockPos lastEpicentre() {
+		return lastEpicentre;
 	}
 
 	/** How much of the countdown is left, 0…100 — a share, never the seconds (see the console's channel). */

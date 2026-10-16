@@ -73,6 +73,7 @@ final class ReactorBlastScenarios {
 			o.set("reactorBlastEnabled", false);
 
 			buildRoom(helper);
+			placeSentinels(helper);
 			ReactorControllerBlockEntity brain = controller(helper);
 			// MOD-473: same reasoning as the meltdown scenario — this is the only rig in the batch allowed
 			// to touch the blast keys, so the hidden accident step is asserted here. Phase one doubles as
@@ -159,14 +160,7 @@ final class ReactorBlastScenarios {
 						+ brain.getBlastCountdown() + "/" + brain.getBlastCountdownTotal()
 						+ " meltdown=" + brain.isMeltingDown() + " melts=" + brain.getMeltsScheduled());
 			}
-			// The containment is the whole reason the room costs what it costs. The far wall is four
-			// blocks from the epicentre through solid shell; if that has gone, the blast is not being
-			// contained and the neighbouring tests are next.
-			BlockPos farWall = new BlockPos(SHELL_MAX, 2, 2);
-			if (!helper.getBlockState(farWall).is(ModContent.REACTOR_CASING.get())) {
-				helper.fail("the blast blew through the far wall — containment failed, and in a live world "
-						+ "this rig's neighbours would be gone too");
-			}
+			assertCentredAndContained(helper, brain);
 			assertEarned(helper, owner, "reactor_blast");
 			// And the racks the drone was painted onto must not be left humming: the controller is gone,
 			// so nothing in the world could ever switch them off again (the reason unformOnRemoval runs
@@ -382,6 +376,48 @@ final class ReactorBlastScenarios {
 				}
 			}
 			helper.succeed();
+		}
+	}
+
+	/** Stone on the three outer faces of the shell the rig has room for: east, south and above. */
+	private static void placeSentinels(GameTestHelper helper) {
+		for (int a = 0; a <= SHELL_MAX; a++) {
+			for (int b = 0; b <= SHELL_MAX; b++) {
+				helper.setBlock(new BlockPos(SHELL_MAX + 1, a, b), Blocks.STONE.defaultBlockState());
+				helper.setBlock(new BlockPos(a, b, SHELL_MAX + 1), Blocks.STONE.defaultBlockState());
+				helper.setBlock(new BlockPos(a, SHELL_MAX + 1, b), Blocks.STONE.defaultBlockState());
+			}
+		}
+	}
+
+	/**
+	 * Where the blast went off and that the shell held it.
+	 *
+	 * <p>MOD-736: the centre is the middle of the sealed interior, asked BEFORE the room is taken apart — computed
+	 * after it, the box was already cleared and the blast went off inside the controller's own wall.
+	 *
+	 * <p>The containment is the whole reason the room costs what it costs, and it is a promise about the OUTSIDE: a
+	 * wall cell a block and a half from the epicentre may crack, nothing beyond the shell may change. Five racks are
+	 * under the power at which a ray can cross a wall cell, so a missing sentinel means the blast escaped — or that
+	 * a contained blast started the crater's waves (owner decision 1 of MOD-736).
+	 */
+	private static void assertCentredAndContained(GameTestHelper helper, ReactorControllerBlockEntity brain) {
+		BlockPos epicentre = brain.getLastBlastEpicentre();
+		BlockPos middle = helper.absolutePos(new BlockPos(2, 2, 2));
+		if (!middle.equals(epicentre)) {
+			helper.fail("the blast went off at " + epicentre + ", not in the middle of the sealed interior "
+					+ middle + " — the shell was tested from inside its own wall");
+		}
+		for (int a = 0; a <= SHELL_MAX; a++) {
+			for (int b = 0; b <= SHELL_MAX; b++) {
+				for (BlockPos at : List.of(new BlockPos(SHELL_MAX + 1, a, b), new BlockPos(a, b, SHELL_MAX + 1),
+						new BlockPos(a, SHELL_MAX + 1, b))) {
+					if (!helper.getBlockState(at).is(Blocks.STONE)) {
+						helper.fail("the sentinel outside the shell at " + at + " is now "
+								+ helper.getBlockState(at) + " — the blast got out of a room that should hold it");
+					}
+				}
+			}
 		}
 	}
 
