@@ -436,6 +436,10 @@ PUP</code></pre>
 
 <ul><li>A component with no tier of its own.</li><li>Gates water generation: without a wheel, the mill stays silent. The wheel itself is crafted from early materials, so it's available alongside the first mill.</li></ul>
 
+<h2 id="wear-warning">Wear warning</h2>
+
+<p>When the wheel's remaining durability falls below the threshold - the smaller of 10% of its current max and 120 points - a water-driven mill creaks now and then and throws splinters from the rim of the wheel; the less is left, the more often. So the wear is noticeable on the approach. A new or barely worn wheel, an empty slot and a mill with no water stay silent. The threshold is taken from the current max, so a repair at the bench ends the warning. A mute chip silences the creak; the splinters stay. The threshold, the window and the pauses are knobs <code>wornComponentCue*</code> (generators section).</p>
+
 <h2 id="related">Related</h2>
 
 <ul><li><a href="../machines/component_repair_bench.html">Component Repair Bench</a> — clears this part's wear for one item and some EU/FE; every repair lowers its durability ceiling, and there are four of them.</li><li><a href="../generators/water_mill.html">Water Mill</a> — consumer of the wheel slot.</li><li><a href="windmill_rotor.html">Wooden Rotor</a> — the thematic counterpart for wind generation.</li><li><a href="metal_gears.html">Wooden Gear</a> — the central component of the wheel.</li></ul>

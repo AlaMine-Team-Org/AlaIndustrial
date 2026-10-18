@@ -473,6 +473,10 @@
 
 <table><thead><tr><th>等级</th><th>天空分支（高度）</th><th>风暴分支（雷暴）</th></tr></thead><tbody><tr><td>T1</td><td>风力涡轮机（中性）</td><td>风力涡轮机（中性）</td></tr><tr><td>T2</td><td><a href="high_altitude_wind_mill.html">天空风车</a></td><td><a href="storm_wind_mill.html">风暴风车</a></td></tr></tbody></table>
 
+<h2 id="磨损预警">磨损预警</h2>
+
+<p>当转子的剩余耐久低于阈值（其当前最大耐久的 10% 与 120 点中较小者）时，运转中的风力发电机会不时发出嘎吱声，并从叶片圆盘的轴心冒烟；剩余越少越频繁，最后几个百分点时烟更浓。这样走近塔架时就能注意到磨损。全新或磨损很少的转子、空槽位以及停转的发电机（无风、无露天、叶片被挡）不会有任何提示。阈值按当前最大耐久计算，因此在修理台修好后预警会消失。静音芯片会让嘎吱声消失，烟仍会冒出。阈值、窗口与间隔由配置项 <code>wornComponentCue*</code> 控制（发电机分区）；避雷针不会这样。</p>
+
 <h2 id="相关内容">相关内容</h2>
 
 <ul><li><a href="../machines/component_repair_bench.html">部件修理台</a>——用一个物品和一些 EU/FE 修复磨损的转子；每次修理都会降低它的耐久上限，一共只有四次。</li><li><a href="high_altitude_wind_mill.html">天空风车</a> —— 进化的 T2 天空分支。</li><li><a href="storm_wind_mill.html">风暴风车</a> —— 进化的 T2 风暴分支。</li><li><a href="solar_panel.html">太阳能板</a> —— 与风机共用进化芯片。</li><li><a href="../energy-storage/battery_box.html">储能库</a> · <a href="../energy-transfer/copper_cable.html">铜缆</a></li></ul>

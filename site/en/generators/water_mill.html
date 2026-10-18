@@ -461,6 +461,10 @@
 
 <p>Crafted at a workbench from planks, copper ingots, a copper cable and a wooden gear. The <a href="../components/water_mill_wheel.html">water wheel</a> is crafted separately — the mill does not work without it.</p>
 
+<h2 id="wear-warning">Wear warning</h2>
+
+<p>When the wheel's remaining durability falls below the threshold - the smaller of 10% of its current max and 120 points - a water-driven mill creaks now and then and throws splinters from the rim of the wheel; the less is left, the more often. So the wear is noticeable on the approach. A new or barely worn wheel, an empty slot and a mill with no water stay silent. The threshold is taken from the current max, so a repair at the bench ends the warning. A mute chip silences the creak; the splinters stay. The threshold, the window and the pauses are knobs <code>wornComponentCue*</code> (generators section).</p>
+
 <h2 id="related">Related</h2>
 
 <ul><li><a href="solar_panel.html">Solar Panel</a> — the other passive source, but it depends on the sky and the time of day.</li><li><a href="generator.html">Generator</a> — twice the output, but it needs fuel.</li><li><a href="../components/water_mill_wheel.html">Water Wheel</a> — the consumable the mill cannot run without.</li></ul>

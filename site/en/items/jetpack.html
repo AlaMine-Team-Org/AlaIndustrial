@@ -411,6 +411,8 @@
 
 <p>The draw is taken <strong>server-side only</strong> (in 26.2 is called only on a <code>ServerLevel</code>); the server sees the held jump through the vanilla input sync, so the jetpack ships no custom packet. A creative/spectating owner pays nothing (the rule shared by every EU/FE item, the flight and the safety still work.</p>
 
+<p><strong>Low-charge warning.</strong> When the charge falls below <strong>10%</strong> of capacity, the owner hears a short beep and sees "Low charge: Jetpack — N%" above the hotbar. The warning is personal: only the player wearing the jetpack gets it, not those nearby. While thrust keeps burning below the threshold the beep repeats once a second (10% is about three seconds of thrust), and when the buffer reaches zero a separate signal plays together with an "Out of charge: Jetpack" line. Creative players and spectators get no warning, because their charge is not spent. The switch is.</p>
+
 <h2 id="inventory">Inventory</h2>
 
 <p>Not applicable — an item (stacks to 1) holding only its EU/FE charge.</p>

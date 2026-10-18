@@ -419,6 +419,8 @@
 
 <p>The drain happens <strong>server-side only</strong>, <strong>only after damage actually landed</strong>, and <strong>only for a player</strong>. Creative mode spends nothing.</p>
 
+<p><strong>Low-charge warning.</strong> When the charge falls below <strong>10%</strong> of capacity, the owner hears a short beep and sees "Low charge: item name — N%" above the hotbar. The warning is personal: only the player using the item gets it. It fires once, on crossing the threshold; while the item stays below it and keeps spending, it repeats no more than once every 60 seconds, and an item picked up already low warns on its first spend. When what is left no longer pays for the next action (a block, a hit or a shot), a separate signal sounds and the line "Out of charge: item name" appears — once, until the item is charged back above the price of an action. Such an item never reaches zero: below the price of an action it works as a plain one, without the electric drive. Creative players and spectators get no warning. The switch is.</p>
+
 <h2 id="inventory">Inventory</h2>
 
 <p>Not applicable — the saber has no internal item storage (stacks to 1).</p>
