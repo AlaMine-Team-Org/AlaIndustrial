@@ -106,6 +106,7 @@ public final class AlaCommandCommon {
 		if (demoEnabled) {
 			tree.then(demoTree());
 			tree.then(flyTree());
+			tree.then(WearCommand.tree());
 		}
 		dispatcher.register(tree);
 	}

@@ -124,6 +124,7 @@ public final class ScenarioRoster {
 			KokSagyzScenarios.Roster.ENTRIES,
 			LegacySaveCorpusScenarios.Roster.ENTRIES,
 			LightningRodScenarios.Roster.ENTRIES,
+			LowChargeWarningScenarios.Roster.ENTRIES,
 			MachineCapabilityRoundTripScenarios.Roster.ENTRIES,
 			MachineConfigReloadScenarios.Roster.ENTRIES,
 			MachineCycleTraceScenarios.Roster.ENTRIES,
@@ -211,7 +212,8 @@ public final class ScenarioRoster {
 			WorkstationScenarios.Roster.ENTRIES,
 			WorldContentScenarios.Roster.ENTRIES,
 			WorldgenFeatureSnapshotScenarios.Roster.ENTRIES,
-			WorldgenInjectionScenarios.Roster.ENTRIES);
+			WorldgenInjectionScenarios.Roster.ENTRIES,
+			WornComponentCueScenarios.Roster.ENTRIES);
 
 	/** Every entry, in declaration order. */
 	public static final List<RosterEntry> ALL = flatten(PARTS);

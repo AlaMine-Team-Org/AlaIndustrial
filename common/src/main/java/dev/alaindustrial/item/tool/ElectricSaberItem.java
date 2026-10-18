@@ -3,6 +3,7 @@ package dev.alaindustrial.item.tool;
 import dev.alaindustrial.item.ToolConfig;
 import dev.alaindustrial.item.energy.EnergyBar;
 import dev.alaindustrial.item.energy.PoweredItem;
+import dev.alaindustrial.item.energy.PoweredItem.LowChargeProfile;
 import dev.alaindustrial.item.energy.ItemBuffers;
 import dev.alaindustrial.item.energy.ItemEnergy;
 
@@ -44,6 +45,7 @@ import net.minecraft.world.level.block.Blocks;
 import dev.alaindustrial.client.ServerBalance;
 import dev.alaindustrial.core.tooltip.MachineTooltipSpec;
 import dev.alaindustrial.item.energy.PoweredToolTooltip;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Electric Saber (MOD-149) — the EU line's first weapon, after four hand tools (drill MOD-079,
@@ -361,6 +363,17 @@ public class ElectricSaberItem extends Item implements PoweredItem {
 	@Override
 	public long energyInputRate(ItemStack stack) {
 		return ToolConfig.electricSaberInputRate;
+	}
+
+	/** Warns when the charge drops below the threshold (MOD-652). */
+	@Override
+	public @Nullable LowChargeProfile lowChargeProfile() {
+		return LowChargeProfile.TOOL;
+	}
+
+	@Override
+	public long actionCost() {
+		return ToolConfig.electricSaberEuPerHit;
 	}
 
 	@Override

@@ -2,6 +2,9 @@ package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.block.HorizontalMachineBlock;
+import dev.alaindustrial.block.entity.machine.WornComponentVoice;
+import dev.alaindustrial.core.machine.WornCueKind;
 import dev.alaindustrial.core.energy.DirectAdjacencyDistributor;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
@@ -39,6 +42,47 @@ public abstract class AbstractGeneratorBlockEntity extends MachineBlockEntity {
 	 * against a component's multi-hundred-thousand-EU life. Never serialised.
 	 */
 	private int wearAccumulatorEu;
+
+	/** The creak-and-smoke warning of a nearly spent rotor / wheel (MOD-654); see {@link #wornCueKind}. */
+	private final WornComponentVoice wornVoice = new WornComponentVoice();
+
+	/**
+	 * What this generator shows when its consumable is nearly spent (MOD-654). {@link WornCueKind#NONE} by
+	 * default, so a generator that wears a part with no visible turning piece (the lightning rod's tip) stays
+	 * silent; the three wind mills say {@code ROTOR}, the water mill {@code WHEEL}.
+	 */
+	protected WornCueKind wornCueKind() {
+		return WornCueKind.NONE;
+	}
+
+	/** Warnings (creak + smoke) sent since load, for the gametests. */
+	public int wornCuesSent() {
+		return wornVoice.cuesSent();
+	}
+
+	/**
+	 * Operator / dev tool (MOD-654, {@code /ala wear}): set the durability left in the installed rotor / wheel
+	 * to {@code percent} of its CURRENT max, so the warning can be seen without waiting for the wear. Never
+	 * breaks the part ({@code 0} leaves one point). The component sits in slot 0 of all four generators that
+	 * show the warning.
+	 *
+	 * @return the part's remaining durability points, or -1 when this generator shows no warning or holds no part
+	 */
+	public int setWornComponentRemainingPercent(int percent) {
+		if (wornCueKind() == WornCueKind.NONE) {
+			return -1;
+		}
+		ItemStack stack = items.get(0);
+		if (stack.isEmpty() || !stack.isDamageableItem()) {
+			return -1;
+		}
+		int max = stack.getMaxDamage();
+		int remaining = Math.max(1, Math.min(max, (int) Math.ceil(max * Math.max(0, Math.min(100, percent)) / 100.0)));
+		stack.setDamageValue(max - remaining);
+		setChanged();
+		syncBlockEntityToClient();
+		return remaining;
+	}
 
 	/** EU generated this tick (before buffer capping). Subclasses may also update progress here. */
 	protected abstract int produce(Level level, BlockPos pos, BlockState state);
@@ -161,9 +205,16 @@ public abstract class AbstractGeneratorBlockEntity extends MachineBlockEntity {
 			}
 			setChanged();
 			syncBlockEntityToClient();
-		} else if (result.newDamage() != stack.getDamageValue()) {
-			stack.setDamageValue(result.newDamage());
-			setChanged();
+		} else {
+			if (result.newDamage() != stack.getDamageValue()) {
+				stack.setDamageValue(result.newDamage());
+				setChanged();
+			}
+			WornCueKind cue = wornCueKind();
+			if (cue != WornCueKind.NONE && level instanceof ServerLevel serverLevel) {
+				wornVoice.tick(serverLevel, pos, getBlockState().getValue(HorizontalMachineBlock.FACING), cue, stack,
+						isMuted());
+			}
 		}
 	}
 

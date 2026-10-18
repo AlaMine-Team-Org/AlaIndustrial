@@ -3,6 +3,7 @@ package dev.alaindustrial.item.energy;
 import dev.alaindustrial.skill.SkillEnergy;
 
 import dev.alaindustrial.registry.ModDataComponents;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -155,7 +156,14 @@ public final class ItemEnergy {
 		// of a carried item, so one edit covers the drill, saw, shovel, hoe, sabre, magnet, jetpack,
 		// armour upkeep and pouch at once — and no call site can forget the discount.
 		long price = SkillEnergy.toolCost(stack, eu, owner);
+		// MOD-652: the one debit a warning can follow. Null (and no charge read) for a mob, a switched-off
+		// warning and every item that does not warn — the jetpack gets here every tick.
+		ServerPlayer watcher = LowChargeWarning.watcher(stack, owner);
+		long before = watcher == null ? 0L : get(stack);
 		add(stack, -price);
+		if (watcher != null) {
+			LowChargeWarning.afterSpend(watcher, stack, before);
+		}
 		long back = SkillEnergy.recuperated(stack, price, owner);
 		if (back > 0) {
 			// Into the worn pack, never back into the tool: refunding the same buffer would just be the

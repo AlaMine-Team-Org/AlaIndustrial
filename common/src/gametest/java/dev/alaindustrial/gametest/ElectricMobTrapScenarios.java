@@ -14,6 +14,7 @@ import dev.alaindustrial.entity.MobRepellerField;
 import dev.alaindustrial.entity.SoulVesselKills;
 import dev.alaindustrial.fluid.ExperienceFluid;
 import dev.alaindustrial.item.misc.SoulVesselItem;
+import dev.alaindustrial.mixin.ExperienceOrbAccessor;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModDamageTypes;
 import java.util.ArrayList;
@@ -71,6 +72,7 @@ public final class ElectricMobTrapScenarios {
 				RosterEntry.of(ElectricMobTrapScenarios::lootGoesToTheBuffer, "mod818_loot_goes_to_the_buffer"),
 				RosterEntry.of(ElectricMobTrapScenarios::sweepPullsADropInReach, "mod818_sweep_pulls_a_drop_in_reach"),
 				RosterEntry.of(ElectricMobTrapScenarios::experienceBecomesLiquid, "mod818_experience_becomes_liquid"),
+				RosterEntry.of(ElectricMobTrapScenarios::mergedOrbIsTakenWhole, "mod822_merged_orb_is_taken_whole"),
 				RosterEntry.of(ElectricMobTrapScenarios::fullTankKeepsTheOrb, "mod818_full_tank_keeps_the_orb"),
 				RosterEntry.of(ElectricMobTrapScenarios::fullBufferStopsTheShocks,
 						"mod818_full_buffer_stops_the_shocks"),
@@ -167,10 +169,18 @@ public final class ElectricMobTrapScenarios {
 		loot.forEach(item -> item.setPickUpDelay(0));
 	}
 
+	/**
+	 * The points {@code orb} carries: vanilla merges a new orb of the same value into a near one by raising its
+	 * private count (one award in forty for a skeleton's 3 + 1 + 1), so the value alone undercounts (MOD-822).
+	 */
+	private static int orbPoints(ExperienceOrb orb) {
+		return orb.getValue() * ((ExperienceOrbAccessor) orb).alaindustrial$getCount();
+	}
+
 	private static int orbPointsNear(GameTestHelper helper) {
 		int points = 0;
 		for (ExperienceOrb orb : helper.getLevel().getEntitiesOfClass(ExperienceOrb.class, reachBox(helper))) {
-			points += orb.getValue();
+			points += orbPoints(orb);
 		}
 		return points;
 	}
@@ -297,7 +307,7 @@ public final class ElectricMobTrapScenarios {
 
 		be.shock(helper.getLevel(), fragile(helper, NEAR), cost());
 		List<ExperienceOrb> orbs = newEntities(helper, ExperienceOrb.class, before);
-		int points = orbs.stream().mapToInt(ExperienceOrb::getValue).sum();
+		int points = orbs.stream().mapToInt(ElectricMobTrapScenarios::orbPoints).sum();
 		helper.assertTrue(points == 5, "a skeleton killed for a player drops 5 points of orbs, got " + points);
 		orbs.forEach(orb -> layOnTheLid(be, orb));
 
@@ -309,6 +319,27 @@ public final class ElectricMobTrapScenarios {
 		helper.assertTrue(be.xpTank.fluid.fluid() == ModContent.EXPERIENCE.get(),
 				"the tank must hold liquid experience");
 		helper.assertTrue(orbs.stream().noneMatch(ExperienceOrb::isAlive), "the orbs must be gone from the world");
+		helper.succeed();
+	}
+
+	/**
+	 * @implements TC-MOBTRAP-001-FUN15 — an orb vanilla merged others into is taken with all of them: the tank
+	 *     gets its value times its count, not one copy (MOD-822).
+	 */
+	public static void mergedOrbIsTakenWhole(GameTestHelper helper) {
+		ElectricMobTrapBlockEntity be = place(helper, 0);
+		Vec3 c = Vec3.atCenterOf(be.getBlockPos());
+		ExperienceOrb orb = new ExperienceOrb(helper.getLevel(), c.x, c.y + 0.3, c.z, 2);
+		((ExperienceOrbAccessor) orb).alaindustrial$setCount(3);
+		orb.setNoGravity(true);
+		helper.getLevel().addFreshEntity(orb);
+
+		be.sweep(helper.getLevel());
+
+		helper.assertTrue(be.xpTank.amount == 6 * ExperienceFluid.MB_PER_POINT,
+				"three merged orbs of 2 points must be " + 6 * ExperienceFluid.MB_PER_POINT + " mB, tank holds "
+						+ be.xpTank.amount);
+		helper.assertFalse(orb.isAlive(), "the merged orb must be gone from the world");
 		helper.succeed();
 	}
 

@@ -4,6 +4,7 @@ import dev.alaindustrial.Config;
 import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.block.entity.machine.EvolutionHelper;
 import dev.alaindustrial.block.entity.machine.SyncChannels;
+import dev.alaindustrial.core.machine.WornCueKind;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.core.environment.GeneratorConfig;
@@ -381,5 +382,11 @@ public class WindMillBlockEntity extends AbstractGeneratorBlockEntity implements
 		super.loadMachineData(input);
 		evolveProgress = EvolutionHelper.loadEvolve(input);
 		evolveChip = EvolutionHelper.loadEvolveChip(input);
+	}
+
+	/** A nearly spent part makes this running mill creak (MOD-654): smoke from the rotor disc hub. */
+	@Override
+	protected WornCueKind wornCueKind() {
+		return WornCueKind.ROTOR;
 	}
 }

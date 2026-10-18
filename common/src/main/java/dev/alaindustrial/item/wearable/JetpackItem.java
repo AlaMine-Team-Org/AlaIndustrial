@@ -3,6 +3,7 @@ package dev.alaindustrial.item.wearable;
 import dev.alaindustrial.item.ToolConfig;
 import dev.alaindustrial.item.energy.EnergyBar;
 import dev.alaindustrial.item.energy.PoweredItem;
+import dev.alaindustrial.item.energy.PoweredItem.LowChargeProfile;
 import dev.alaindustrial.item.energy.ItemBuffers;
 import dev.alaindustrial.item.energy.ItemEnergy;
 
@@ -33,6 +34,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import dev.alaindustrial.item.energy.PoweredToolTooltip;
 import java.util.List;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Jetpack (MOD-148) — a worn EU flight device: {@link ToolConfig#jetpackBuffer} EU in the chest slot,
@@ -250,6 +252,12 @@ public class JetpackItem extends Item implements PoweredItem {
 	@Override
 	public long energyInputRate(ItemStack stack) {
 		return ToolConfig.jetpackInputRate;
+	}
+
+	/** Warns once, then every second, and says so when the buffer runs out (MOD-652). */
+	@Override
+	public @Nullable LowChargeProfile lowChargeProfile() {
+		return LowChargeProfile.JETPACK;
 	}
 
 	@Override

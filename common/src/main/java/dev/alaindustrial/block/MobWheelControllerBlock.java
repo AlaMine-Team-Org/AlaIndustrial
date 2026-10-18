@@ -3,10 +3,14 @@ package dev.alaindustrial.block;
 import dev.alaindustrial.block.entity.MobWheelBlockEntity;
 import dev.alaindustrial.core.tooltip.HasMachineTooltip;
 import dev.alaindustrial.core.tooltip.MachineTooltipSpec;
+import dev.alaindustrial.registry.ModSounds;
+import dev.alaindustrial.sound.MachineHum;
 import java.util.List;
+import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -37,7 +41,7 @@ import org.jspecify.annotations.Nullable;
  * copper port of the model) and the back. A loose drive keeps the same two faces, so a cable laid to a
  * half-built wheel is already in the right place.
  */
-public class MobWheelControllerBlock extends HorizontalMachineBlock implements HasMachineTooltip {
+public class MobWheelControllerBlock extends HorizontalMachineBlock implements HasMachineTooltip, MachineHumProvider {
 	public MobWheelControllerBlock(Properties properties) {
 		super(properties);
 		registerDefaultState(defaultBlockState().setValue(MobWheelStructure.FORMED, Boolean.FALSE));
@@ -59,14 +63,43 @@ public class MobWheelControllerBlock extends HorizontalMachineBlock implements H
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
 			BlockEntityType<T> type) {
 		if (level.isClientSide()) {
-			// The wheel's spin, the gate's swing and the occupant's legs (MOD-763): animation only.
+			// The wheel's spin, the gate's swing and the occupant's legs (MOD-763): animation, plus the drive's
+			// hum loop (MOD-447, pattern C) — the same client ticker feeds both, as `humMachineTicker` would.
+			MachineHum.ClientHook hook = MachineHum.CLIENT;
 			return (lvl, pos, st, be) -> {
 				if (be instanceof MobWheelBlockEntity wheel) {
 					wheel.clientTick(lvl, st);
 				}
+				if (hook != null) {
+					hook.tick(lvl, pos, st);
+				}
 			};
 		}
 		return machineTicker(level);
+	}
+
+	@Override
+	public Supplier<SoundEvent> humSound() {
+		return ModSounds.MOB_WHEEL_DRIVE;
+	}
+
+	/**
+	 * Louder than the mills' 0.22 (MOD-447): the wheel is one big machine, its loop sounds under the runner's
+	 * own noise, and at 0.22 the owner could not hear it at all in the dev client (2026-10-18).
+	 */
+	@Override
+	public float humVolume() {
+		return 0.5f;
+	}
+
+	/**
+	 * The drive sounds while the wheel turns — the very {@code running} flag the renderer's spin is eased
+	 * towards ({@link MobWheelBlockEntity#isRunning}), which the block-entity update packet already carries,
+	 * so the sound and the picture cannot disagree and nothing extra is sent (pattern C).
+	 */
+	@Override
+	public boolean isWorking(Level level, BlockPos pos, BlockState state) {
+		return level.getBlockEntity(pos) instanceof MobWheelBlockEntity wheel && wheel.isRunning();
 	}
 
 	/** The loose drive: its model stops a pixel short of the top, so it is not a full cube (ADR-023). */

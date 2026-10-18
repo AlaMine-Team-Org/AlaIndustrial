@@ -240,6 +240,26 @@
       }
     ]
   },
+  "low_charge_beep": {
+    "subtitle": "subtitles.alaindustrial.low_charge_beep",
+    "sounds": [
+      {
+        "name": "alaindustrial:low_charge_beep",
+        "stream": false,
+        "preload": true
+      }
+    ]
+  },
+  "charge_depleted": {
+    "subtitle": "subtitles.alaindustrial.charge_depleted",
+    "sounds": [
+      {
+        "name": "alaindustrial:charge_depleted",
+        "stream": false,
+        "preload": true
+      }
+    ]
+  },
   "reactor_alarm": {
     "subtitle": "subtitles.alaindustrial.reactor_alarm",
     "sounds": [
@@ -370,5 +390,49 @@
         "preload": true
       }
     ]
+  },
+  "teleport_charge": {
+    "subtitle": "subtitles.alaindustrial.teleport_charge",
+    "sounds": [
+      {
+        "name": "alaindustrial:teleport_charge",
+        "stream": false,
+        "preload": true
+      }
+    ]
+  },
+  "teleport_arrive": {
+    "subtitle": "subtitles.alaindustrial.teleport_arrive",
+    "sounds": [
+      {
+        "name": "alaindustrial:teleport_arrive",
+        "stream": false,
+        "preload": true
+      }
+    ]
+  },
+  "teleport_abort": {
+    "subtitle": "subtitles.alaindustrial.teleport_abort",
+    "sounds": [
+      {
+        "name": "alaindustrial:teleport_abort",
+        "stream": false,
+        "preload": true
+      }
+    ]
+  },
+  "mob_wheel_drive": {
+    "subtitle": "subtitles.alaindustrial.mob_wheel_drive",
+    "sounds": [
+      {
+        "name": "alaindustrial:mob_wheel_drive",
+        "stream": false,
+        "preload": true
+      }
+    ]
+  },
+  "worn_rotor_creak": {
+    "subtitle": "subtitles.alaindustrial.worn_rotor_creak",
+    "sounds": [{ "name": "alaindustrial:worn_rotor_creak", "stream": false, "preload": true }]
   }
 }

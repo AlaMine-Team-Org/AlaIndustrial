@@ -3,6 +3,7 @@ package dev.alaindustrial.item.tool;
 import dev.alaindustrial.item.ToolConfig;
 import dev.alaindustrial.item.energy.EnergyBar;
 import dev.alaindustrial.item.energy.PoweredItem;
+import dev.alaindustrial.item.energy.PoweredItem.LowChargeProfile;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.item.energy.ItemBuffers;
 import dev.alaindustrial.item.energy.ItemEnergy;
@@ -220,6 +221,17 @@ public class ElectricBowItem extends BowItem implements PoweredItem {
 	@Override
 	public long energyInputRate(ItemStack stack) {
 		return ToolConfig.electricBowInputRate;
+	}
+
+	/** Warns when the charge drops below the threshold (MOD-652). */
+	@Override
+	public @Nullable LowChargeProfile lowChargeProfile() {
+		return LowChargeProfile.TOOL;
+	}
+
+	@Override
+	public long actionCost() {
+		return ToolConfig.electricBowEuPerShot;
 	}
 
 	@Override

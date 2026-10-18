@@ -99,6 +99,19 @@ public final class ModSounds {
 	 * other mods is literally «a screeching cicada».
 	 */
 	public static Supplier<SoundEvent> GEIGER_CLICK = unbound("GEIGER_CLICK");
+
+	/**
+	 * The low-charge beep (MOD-652): one short note, sent as a targeted packet to the player whose jetpack,
+	 * tool, sabre or bow just fell below the threshold. Has to read as a warning and not as the charging
+	 * station's rising "all charged" chime ({@link #CHARGE_PAD_DONE}) — a flat or falling tone.
+	 */
+	public static Supplier<SoundEvent> LOW_CHARGE_BEEP = unbound("LOW_CHARGE_BEEP");
+
+	/**
+	 * The charge ran out (MOD-652) — only the jetpack announces it: its engine just cut out mid-air. A
+	 * different, lower sound than the beep so the two are never confused with each other.
+	 */
+	public static Supplier<SoundEvent> CHARGE_DEPLETED = unbound("CHARGE_DEPLETED");
 	public static Supplier<SoundEvent> REACTOR_SPINDOWN = unbound("REACTOR_SPINDOWN");
 	public static Supplier<SoundEvent> REACTOR_DOOR_OPEN = unbound("REACTOR_DOOR_OPEN");
 	public static Supplier<SoundEvent> REACTOR_DOOR_CLOSE = unbound("REACTOR_DOOR_CLOSE");
@@ -111,6 +124,23 @@ public final class ModSounds {
 	 * the vanilla files, nothing is copied — because vanilla's event for them has no subtitle.
 	 */
 	public static Supplier<SoundEvent> STEAM_NOZZLE_VENT = unbound("STEAM_NOZZLE_VENT");
+
+	/**
+	 * The teleporter's wind-up (MOD-447): ONE clip as long as the warm-up, with the build-up baked into the file —
+	 * it replaces a vanilla beacon hum restarted every four ticks (twenty-five overlapping copies per jump).
+	 */
+	public static Supplier<SoundEvent> TELEPORT_CHARGE = unbound("TELEPORT_CHARGE");
+	/** The jump landing (MOD-447): replaces vanilla's enderman teleport at the arrival point. */
+	public static Supplier<SoundEvent> TELEPORT_ARRIVE = unbound("TELEPORT_ARRIVE");
+	/** A wind-up that broke off before the jump (MOD-447): the charge is stopped and this plays instead. */
+	public static Supplier<SoundEvent> TELEPORT_ABORT = unbound("TELEPORT_ABORT");
+	/** The mob wheel's running drive (MOD-447, pattern C): a wooden wheel turning under a runner. */
+	public static Supplier<SoundEvent> MOB_WHEEL_DRIVE = unbound("MOB_WHEEL_DRIVE");
+	/**
+	 * The one-shot creak of a nearly spent wind mill rotor / water mill wheel while its mill runs (MOD-654).
+	 * Played by the server from the generator base, so it honours the mute chip there.
+	 */
+	public static Supplier<SoundEvent> WORN_ROTOR_CREAK = unbound("WORN_ROTOR_CREAK");
 
 	/**
 	 * Every sound event, in one shared registration order. Both loaders replay this list; see
@@ -188,6 +218,10 @@ public final class ModSounds {
 			// somewhere else that the reactor needs them.
 			fixedRange("reactor_alarm", 32.0f, s -> REACTOR_ALARM = s),
 			fixedRange("geiger_click", 16.0f, s -> GEIGER_CLICK = s),
+			// MOD-652 — the personal low-charge warning and its "ran out" cousin. Both go to one player as
+			// a targeted packet (pattern D), like the Geiger click, so the range is only the vanilla default.
+			fixedRange("low_charge_beep", 16.0f, s -> LOW_CHARGE_BEEP = s),
+			fixedRange("charge_depleted", 16.0f, s -> CHARGE_DEPLETED = s),
 			// It reports, it does not warn — so no extended range.
 			variableRange("reactor_spindown", s -> REACTOR_SPINDOWN = s),
 			// The airlock, replacing vanilla IRON_DOOR_OPEN / IRON_DOOR_CLOSE.
@@ -204,7 +238,18 @@ public final class ModSounds {
 			variableRange("mob_repeller_hum", s -> MOB_REPELLER_HUM = s),
 			// MOD-662 — the first dotted id in this list, the vanilla shape `block.<block>.<action>`: it is a one-shot
 			// the block plays, not a loop, and it names vanilla geyser files rather than an .ogg of ours.
-			variableRange("block.steam_nozzle.vent", s -> STEAM_NOZZLE_VENT = s));
+			variableRange("block.steam_nozzle.vent", s -> STEAM_NOZZLE_VENT = s),
+			// MOD-447 — the teleporter's three one-shots. The charge is sent to everyone in earshot of the player
+			// (a bystander watches the wind-up), so it is variable like the vanilla sound it replaces: volume 0.9
+			// keeps the 16-block default. Cancelling stops it by id and category (TeleportEffects.stopCharge).
+			variableRange("teleport_charge", s -> TELEPORT_CHARGE = s),
+			variableRange("teleport_arrive", s -> TELEPORT_ARRIVE = s),
+			variableRange("teleport_abort", s -> TELEPORT_ABORT = s),
+			// MOD-447 — the mob wheel's drive. Fixed 16: one wheel is a big machine heard under its runner's noise,
+			// and wheels still stand in rows on a mob farm (every loop adds ~6 dB per doubling).
+			fixedRange("mob_wheel_drive", 16.0f, s -> MOB_WHEEL_DRIVE = s),
+			// MOD-654 — a one-shot creak of a worn rotor / wheel. Mills stand in rows, so a fixed range like the hums.
+			fixedRange("worn_rotor_creak", 12.0f, s -> WORN_ROTOR_CREAK = s));
 
 	private ModSounds() {
 	}

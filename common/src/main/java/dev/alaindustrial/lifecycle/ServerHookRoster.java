@@ -16,6 +16,7 @@ import dev.alaindustrial.core.net.LevelStateRegistry;
 import dev.alaindustrial.core.radiation.GeigerTicker;
 import dev.alaindustrial.core.radiation.RadiationTicker;
 import dev.alaindustrial.entity.SoulVesselKills;
+import dev.alaindustrial.item.energy.LowChargeWarning;
 import dev.alaindustrial.item.fluid.VanillaBucketDeposit;
 import dev.alaindustrial.item.wearable.JetpackLight;
 import dev.alaindustrial.network.ConfigSync;
@@ -116,7 +117,9 @@ public final class ServerHookRoster {
 			player -> PlayerStatsTracker.get().flushPlayer(player),
 			player -> TeleportWarmupManager.forget(player.getUUID()),
 			// MOD-475: the counter reading is server-side and must not outlive the session.
-			player -> GeigerTicker.forget(player.getUUID()));
+			player -> GeigerTicker.forget(player.getUUID()),
+			// MOD-652: when the player was last warned about a low charge is server-side too.
+			player -> LowChargeWarning.forget(player.getUUID()));
 
 	/** A player joined the server — in this order, so the greeting never precedes the book. */
 	public static final List<Consumer<ServerPlayer>> PLAYER_JOIN = List.of(
@@ -150,7 +153,8 @@ public final class ServerHookRoster {
 			// MOD-176: a mid-flight glow light must not be saved into the chunk as an orphan.
 			JetpackLight::shutdown,
 			// MOD-475: the readings are static; one left behind would greet the next world.
-			server -> GeigerTicker.clear());
+			server -> GeigerTicker.clear(),
+			server -> LowChargeWarning.clear());
 
 	/** The server has stopped. MOD-401: the whole-server sweep of per-level state. */
 	public static final List<Consumer<MinecraftServer>> SERVER_STOPPED = List.of(
