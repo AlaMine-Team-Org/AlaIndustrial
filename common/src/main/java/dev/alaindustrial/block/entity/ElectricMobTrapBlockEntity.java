@@ -17,6 +17,7 @@ import dev.alaindustrial.core.world.StuckDropTracker;
 import dev.alaindustrial.entity.MobRepellerField;
 import dev.alaindustrial.fluid.ExperienceFluid;
 import dev.alaindustrial.menu.ElectricMobTrapMenu;
+import dev.alaindustrial.mixin.ExperienceOrbAccessor;
 import dev.alaindustrial.network.ZonePreviewPayload;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModDamageTypes;
@@ -466,8 +467,17 @@ public class ElectricMobTrapBlockEntity extends MachineBlockEntity
 
 	/** Whether the tank can hold the whole of {@code orb}: an orb is taken whole or not at all. */
 	private boolean orbFits(ExperienceOrb orb) {
-		long mb = (long) orb.getValue() * ExperienceFluid.MB_PER_POINT;
+		long mb = orbMb(orb);
 		return mb > 0 && xpTank.amount + mb <= xpTank.capacity;
+	}
+
+	/**
+	 * The liquid experience in {@code orb}: its value times the orbs vanilla merged into it (MOD-822). Counting
+	 * the value alone loses every merged copy, which {@code discard} then destroys.
+	 */
+	private static long orbMb(ExperienceOrb orb) {
+		long points = (long) orb.getValue() * ((ExperienceOrbAccessor) orb).alaindustrial$getCount();
+		return points * ExperienceFluid.MB_PER_POINT;
 	}
 
 	/** Move as many of the drop's items into the buffer as fit; the rest stays in the world as the same entity. */
@@ -492,7 +502,7 @@ public class ElectricMobTrapBlockEntity extends MachineBlockEntity
 		}
 		// The machine making its own product bypasses the tank's insert guard (false: nothing may be poured in).
 		xpTank.fluid = FluidHolder.of(ModContent.EXPERIENCE.get());
-		xpTank.amount += (long) orb.getValue() * ExperienceFluid.MB_PER_POINT;
+		xpTank.amount += orbMb(orb);
 		orb.discard();
 		wake();
 	}

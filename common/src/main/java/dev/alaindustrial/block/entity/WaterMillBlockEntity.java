@@ -3,6 +3,7 @@ package dev.alaindustrial.block.entity;
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.HorizontalMachineBlock;
 import dev.alaindustrial.block.entity.machine.SyncChannels;
+import dev.alaindustrial.core.machine.WornCueKind;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.core.environment.GeneratorConfig;
@@ -292,5 +293,11 @@ public class WaterMillBlockEntity extends AbstractGeneratorBlockEntity implement
 	@Override
 	public AbstractContainerMenu createMenu(int syncId, Inventory inventory, Player player) {
 		return new WaterMillMenu(syncId, inventory, this, ContainerLevelAccess.create(getLevel(), getBlockPos()));
+	}
+
+	/** A nearly spent part makes this running mill creak (MOD-654): splinters from the wheel rim. */
+	@Override
+	protected WornCueKind wornCueKind() {
+		return WornCueKind.WHEEL;
 	}
 }

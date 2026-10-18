@@ -198,6 +198,25 @@ public final class GeneratorConfig {
 			doc = "Extra rotor wear multiplier while running in rain/thunder (1.0 = off). Applies to all three wind"
 					+ " mills.")
 	public static float windMillStormWearFactor = 1.5f;
+	// --- Worn rotor / wheel warning (MOD-654): a creak and smoke / splinters near the end of its life ---
+	@Knob(section = Section.GENERATORS,
+			doc = "MOD-654: a nearly spent rotor / wheel makes its running mill creak and puff smoke (splinters on the"
+					+ " water mill). false = no warning at all. Server-side only.")
+	public static boolean wornComponentCueEnabled = true;
+	@Knob(section = Section.GENERATORS, min = 0,
+			doc = "MOD-654: the warning starts when the remaining durability is below this percent of the component's"
+					+ " current max (0 = off). The window is the smaller of this and wornComponentCueCapPoints.")
+	public static int wornComponentCueThresholdPercent = 10;
+	@Knob(section = Section.GENERATORS, min = 1,
+			doc = "MOD-654: cap of the warning window in durability points (about 10-15 minutes of running for any"
+					+ " grade). The window is the smaller of this and the percent threshold.")
+	public static int wornComponentCueCapPoints = 120;
+	@Knob(section = Section.GENERATORS, min = 1,
+			doc = "MOD-654: ticks between creaks at the edge of the warning window (+-30% random spread).")
+	public static int wornComponentCueSlowTicks = 200;
+	@Knob(section = Section.GENERATORS, min = 1,
+			doc = "MOD-654: ticks between creaks when the component is almost spent (+-30% random spread).")
+	public static int wornComponentCueFastTicks = 40;
 	// --- Reinforced / advanced rotor and wheel (MOD-385) — the second and third grades. ---
 	/** Reinforced rotor durability: ×3 the wooden one. Registration-time like every max_damage. */
 	@Knob(section = Section.GENERATORS, min = 1,

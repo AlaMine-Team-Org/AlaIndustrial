@@ -391,4 +391,21 @@ public final class ToolConfig {
 			doc = "Global multiplier on the scythe's per-tier bonus-seed chance (1.0 = shipped ladder, 0.0 = mechanic"
 					+ " off; a tier is clamped to 1.0).")
 	public static double scytheBonusSeedMultiplier = 1.0;
+	// --- Low-charge warning (MOD-652) ---
+	/** Master switch of the low-charge warning (a beep and an action-bar line for the owner of a powered item). */
+	@Knob(section = Section.TOOLS,
+			doc = "When true, a player whose jetpack, electric tool, sabre or bow runs low on charge hears a beep and"
+					+ " sees a line above the hotbar. false switches the warning off entirely.")
+	public static boolean lowChargeWarnEnabled = true;
+	/** Percent of the item's capacity below which it counts as low. 10 leaves about three seconds of jetpack
+	 * thrust and a score of drill blocks; values above 100 behave as 100. */
+	@Knob(section = Section.TOOLS, min = 1,
+			doc = "Charge percentage (of the item's capacity) below which the low-charge warning fires.")
+	public static int lowChargeWarnPercent = 10;
+	/** Seconds between repeats of the warning for a tool, sabre or bow that stays below the threshold and keeps
+	 * spending. The jetpack repeats every second regardless: its reserve is a matter of seconds. */
+	@Knob(section = Section.TOOLS, min = 1,
+			doc = "Seconds between repeats of the low-charge warning for a tool that stays below the threshold and"
+					+ " keeps spending (the jetpack repeats every second).")
+	public static int lowChargeWarnRepeatSeconds = 60;
 }

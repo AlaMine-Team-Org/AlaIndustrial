@@ -259,6 +259,11 @@ pitest {
                      // MOD-790: the powered items' buffers from one source — ToolConfig for the server's logic,
                      // ServerBalance for what the client draws. Covered by ItemBuffersTest.
                      'dev.alaindustrial.item.energy.ItemBuffers',
+                     // MOD-652: when a powered item warns its owner about a low charge. Minecraft-free decision
+                     // (crossing, repeat, depletion); the delivery lives in LowChargeWarning. LowChargeRuleTest.
+                     'dev.alaindustrial.item.energy.LowChargeRule',
+                     // MOD-652: who was warned when — the per-player, per-item clocks the repeat reads. LowChargeLedgerTest.
+                     'dev.alaindustrial.item.energy.LowChargeLedger',
                      'dev.alaindustrial.item.material.TemperedIronToolStats',
                      'dev.alaindustrial.item.misc.TooltipKeys',
                      // MOD-710 (ADR-034): the powered-tool knob holder. Minecraft-free like every holder and,

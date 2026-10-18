@@ -7,7 +7,8 @@
   "mixins": [
     "PistonQuenchPressMixin",
     "LivingEntityModFluidTravelMixin",
-    "ItemStackLavaCapsuleHealMixin"
+    "ItemStackLavaCapsuleHealMixin",
+    "ExperienceOrbAccessor"
   ],
   "client": [
     "client.RootInspectionStateMixin",

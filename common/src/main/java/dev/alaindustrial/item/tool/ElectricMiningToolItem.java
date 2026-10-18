@@ -5,12 +5,14 @@ import dev.alaindustrial.item.energy.EnergyBar;
 import dev.alaindustrial.item.energy.ItemBuffers;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.item.energy.PoweredItem;
+import dev.alaindustrial.item.energy.PoweredItem.LowChargeProfile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jspecify.annotations.Nullable;
 
 /**
  * The base of the four electric mining tools — {@link ElectricDrillItem}, {@link ElectricChainsawItem},
@@ -107,5 +109,16 @@ public abstract class ElectricMiningToolItem extends Item implements PoweredItem
 	@Override
 	public long energyInputRate(ItemStack stack) {
 		return toolTier().inputRate();
+	}
+
+	/** Warns when the charge drops below the threshold — every tier of the drill, saw, shovel and hoe (MOD-652). */
+	@Override
+	public @Nullable LowChargeProfile lowChargeProfile() {
+		return LowChargeProfile.TOOL;
+	}
+
+	@Override
+	public long actionCost() {
+		return toolTier().euPerBlock();
 	}
 }

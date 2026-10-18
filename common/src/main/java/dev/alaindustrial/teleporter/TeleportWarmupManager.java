@@ -182,12 +182,14 @@ public final class TeleportWarmupManager {
 	public static void forget(UUID player) {
 		WARMUPS.remove(player);
 		COOLDOWNS.remove(player);
+		TeleportEffects.forget(player);
 	}
 
 	/** Drop all state (server stop / test teardown), mirroring {@code NetworkManager.clearAll}. */
 	public static void clearAll() {
 		WARMUPS.clear();
 		COOLDOWNS.clear();
+		TeleportEffects.clearAll();
 	}
 
 	/**
@@ -210,6 +212,7 @@ public final class TeleportWarmupManager {
 			ServerPlayer player = server.getPlayerList().getPlayer(entry.getKey());
 			if (player == null) {
 				it.remove(); // logged out between the hook and now
+				TeleportEffects.forget(entry.getKey());
 				continue;
 			}
 			Warmup warmup = entry.getValue();
