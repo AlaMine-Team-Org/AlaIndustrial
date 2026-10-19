@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="zh_cn" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>定居点核心 — Ala Industrial — 指南</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="打开菜单" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  </div>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../../assets/item/guide_book_3d.png" alt="">全部内容</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/ky7cFDF8JD" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../../assets/platform/discord.svg" alt="Discord"></a>
+    </div>
+    <search class="site-search"><input type="search" data-wiki-search placeholder="搜索维基…" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-label="搜索指南" autocomplete="off" spellcheck="false" data-index="../search-index.json" data-root="../" data-l10n="{&quot;list&quot;:&quot;搜索结果&quot;,&quot;one&quot;:&quot;个页面&quot;,&quot;few&quot;:&quot;个页面&quot;,&quot;many&quot;:&quot;个页面&quot;,&quot;loading&quot;:&quot;正在加载搜索索引…&quot;,&quot;nothing&quot;:&quot;未找到结果&quot;}"></search>
+    <details class="language-menu"><summary aria-label="Language">中文</summary><div class="language-popover"><span>中文</span><a href="../../en/utility/settlement_core.html">EN</a><a href="../../ru/utility/settlement_core.html">RU</a><a href="../../uk/utility/settlement_core.html">UA</a><a href="../../ja_jp/utility/settlement_core.html">日本語</a><a href="../../es_es/utility/settlement_core.html">ES</a></div></details>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">浏览</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../../assets/item/tempered_iron_pickaxe.png" alt=""><span>新手入门</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
+<div class="group-title">能源</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="14 个页面">14</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
+<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>核能设施</span><span class="cat-count" aria-label="15 个页面">15</span></a>
+<div class="group-title">加工</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>机器</span><span class="cat-count" aria-label="17 个页面">17</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>流体机器</span><span class="cat-count" aria-label="3 个页面">3</span></a>
+<div class="group-title">物流</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>物品物流</span><span class="cat-count" aria-label="3 个页面">3</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>流体物流</span><span class="cat-count" aria-label="5 个页面">5</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>流体储存</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<div class="group-title">世界与自动化</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="26 个页面">26</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>农业</span><span class="cat-count" aria-label="6 个页面">6</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>高级机器</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<div class="group-title">其他</div>
+<a class="cat-link" href="../construction/index.html"><img class="nav-icon" src="../../assets/item/engraved_plate_0_3d.png" alt=""><span>建筑方块</span><span class="cat-count" aria-label="3 个页面">3</span></a>
+<a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="24 个页面">24</span></a>
+<div class="group-title">物品</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="30 个页面">30</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="32 个页面">32</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">首页</a><span class="sep">/</span><a href="../utility/index.html">实用方块</a><span class="sep">/</span><span>定居点核心</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../../assets/item/settlement_core_3d.png" alt="定居点核心" width="64" height="64">
+    <div class="info">
+      <h1>定居点核心</h1>
+      <div class="block-id">alaindustrial:settlement_core</div>
+      <div class="tags"><span class="tag cat" style="background:#14b8a6">实用方块</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">已实现</span><span class="tag">tier-lv</span><span class="tag">utility</span><span class="tag">energy</span><span class="tag">settlement</span></div>
+    </div>
+  </div>
+</div>
+<h2 id="概览">概览</h2>
+
+<p><strong>定居点核心</strong>位于每座 <strong>ALA 工人小镇</strong>的市政厅里——那是建在废弃实验室上方的一座死寂定居点。玩家找到它时，核心是熄灭的：定居点已经死去，没有领地，舱体也都空着。拉一根电缆到核心，它就会复苏：小镇周围出现定居点的领地，<a href="reception_capsule.html">接收舱</a>也就能带回第一名<strong>轮班工</strong>——定居点的居民。</p>
+
+<p>核心是整座小镇的中心：它决定领地的大小、定居点最多能有几栋房屋、几名轮班工。小镇的领地覆盖它的所有建筑，无论这些建筑离市政厅有多远。</p>
+
+<blockquote><strong>小例子：</strong> 找到一座小镇后，走进市政厅，找到熄灭的核心，从你的基地拉一根 LV 电缆过来。核心亮起；打开它，窗口会显示领地（比如一座沿管道延伸的沙漠小镇是 93 × 65 格）、「房屋：最多 4」「轮班工人：最多 4」，你也就成了这个定居点的所有者。</blockquote>
+
+<h2 id="工作方式">工作方式</h2>
+
+<ol><li><strong>熄灭。</strong> 熄灭的核心不消耗任何能量——它处于关闭状态。没有领地，接收舱不工作，定居点的轮班工（如果已经有了）原地静止不动。</li><li><strong>点亮。</strong> 当核心的缓存攒够 20 刻的运行量——<strong>160 EU/FE</strong>——时，核心就会亮起。亮着的时候，它每刻支付 <strong>8 EU/FE</strong>：领地保持，定居点存活。</li><li><strong>熄灭（断电）。</strong> 电网断了，核心就靠自己的缓存撑着。缓存用完后，核心开始欠账；欠账累积到同样的 20 刻时，核心熄灭。彻底断电时，这正好发生在缓存用完后的 <strong>20 刻</strong>（1 秒）。每刻低于 8 EU/FE 的供电同样会让核心熄灭，只是晚一些：四分之三的价格养不了定居点一辈子。轮班工停在原地，不会因此死亡；能量恢复后，从原处继续。</li></ol>
+
+<p>核心是否亮着，只由它的缓存决定：核心没有计时器，也没有开关。点亮所需的储备是为了让略低于维持消耗的供电不会让领地每刻闪烁。</p>
+
+<p>在这个版本里，所有核心都是 <strong>LV</strong> 等级：下面的领地、房屋上限和轮班工上限都是 LV 的数值。更高等级的核心（领地更大、定居点更大）以后才会加入。</p>
+
+<h2 id="领地">领地</h2>
+
+<ul><li><strong>形状。</strong> 领地是一个贯穿整个世界高度的矩形：市政厅下的实验室和市政厅的屋顶都包含在内。用矩形而不是圆形——沿着墙数步数就能找到边界。</li><li><strong>世界里生成的小镇</strong>占据能同时容纳两样东西的最小矩形：<ol><li>小镇的所有建筑、建筑之间的地面和实验室——每一侧再加 <strong>8</strong> 格余量；</li><li>以核心为中心的 <strong>65 × 65</strong> 格正方形（从核心向每个方向各 <strong>32</strong> 格）。</li></ol></li></ul>
+
+<p>所以一座狭长的沙漠小镇，所有建筑都在领地之内：在 LV 时它的领地约为 93 × 65 格。小镇的布局是随机的，所以你世界里的大小会不一样——核心窗口会显示出来。</p>
+<ul><li><strong>没有小镇的定居点</strong>（例如用命令放置的核心）只占据核心周围 65 × 65 格的正方形。</li><li>只有核心亮着时，领地才存在。</li><li>接收舱只在自己定居点的领地内、且核心亮着时工作。</li><li>定居点的轮班工不会走出它的领地。</li><li>上限就是天花板：接收舱不会放出超过上限的轮班工。</li><li><strong>边界可以用按钮显示</strong>——见「显示边界」。</li></ul>
+
+<h2 id="所有者">所有者</h2>
+
+<ul><li>定居点的所有者是<strong>第一个打开亮着的核心窗口的玩家</strong>。电缆不记得是谁铺的，所以重要的是谁打开了核心，而不是谁给它供了电。打开熄灭的核心并不等于占领定居点：死寂的小镇不能仅凭找到就据为己有。新所有者会在快捷栏上方看到「定居点现在归你了」。</li><li>其他玩家无法夺走所有权。重启世界后所有者保持不变。</li></ul>
+
+<h2 id="拆除与搬移">拆除与搬移</h2>
+
+<ul><li><strong>只有定居点的所有者能拆除核心，用任何镐都行</strong>——连木镐也可以；它的拆除速度相当于硬度 5 的方块。空手，或者对其他玩家来说，核心完全拆不动。定居点还没有所有者时，谁也拆不了核心。</li><li>对其他一切来说，核心像基岩一样无法破坏：爆炸、钻头、方块破坏器和一次破坏多个方块的工具都对它无效。</li><li>拆下的核心<strong>作为普通物品掉落</strong>——和创造模式物品栏里的那个一样。核心<strong>不记得它的定居点</strong>。定居点没有核心时，会像断电一样沉睡：轮班工、所有者和其他一切都会保留。</li><li><strong>放在没有核心的定居点领地上的任何核心，都会延续这个定居点</strong>：所有者、轮班工和其他一切都不变。核心的新位置成为领地正方形的中心，小镇的建筑照旧留在领地内。</li><li><strong>已经有核心的定居点里放不下第二个核心：</strong>方块放不下去，核心留在手里，聊天栏会告诉你这个定居点的核心在哪里。熄灭的定居点和无主的定居点也是如此。</li><li><strong>核心不会从零建立自己的定居点。</strong>放在所有定居点之外的核心，即使缓存满了也保持熄灭、不消耗能量，聊天栏会显示：「这个核心只能在定居点的市政厅里工作；从零建立自己的定居点要等以后。」放置这种核心的玩家可以用任何镐拆掉它。要让定居点复苏，需要把核心放到它的领地上。</li></ul>
+
+<h2 id="能量">能量</h2>
+
+<table><thead><tr><th>字段</th><th>数值</th></tr></thead><tbody><tr><td>角色</td><td>消耗者；电缆可接到六个面中的任何一面</td></tr><tr><td>等级 / 电网输入</td><td>LV；接受比自身高一级的电包——每刻最多 <strong>128</strong> EU/FE（MV 电包）</td></tr><tr><td>缓存</td><td><strong>2000</strong> EU/FE</td></tr><tr><td>亮着时的维持消耗</td><td><strong>8</strong> EU/FE/t</td></tr><tr><td>点亮储备与欠账上限</td><td><strong>20</strong> 刻的维持消耗（160 EU/FE）</td></tr><tr><td>输出</td><td>无</td></tr></tbody></table>
+
+<p>断网后，满缓存能维持定居点 2000 / 8 = <strong>250 刻</strong>（12.5 秒），再加 <strong>20 刻</strong>欠账，然后核心熄灭。短暂地重铺一下电缆不会让定居点沉睡，而真正的断电会很快关掉它。</p>
+
+<p>核心为<strong>整个定居点</strong>付费：接收舱另收自己的价格，轮班工自己不从电网取 EU/FE。维持消耗之外，核心像所有机器一样会充满自己的缓存。能送到多少能量也取决于导线：铜缆每刻通过 12 EU/FE，金缆 48，琥珀金缆 192。</p>
+
+<h2 id="界面">界面</h2>
+
+<ul><li>没有槽位的窗口——只有读数。</li><li>左侧是缓存条。右侧是以下几行：<ul><li>状态：「已供电：领地保持中」「无电力：没有领地」「第二个核心：定居点已有核心」或「无定居点：只能在市政厅里工作」；</li><li>「领地：宽 × 深 格」——领地矩形的大小；</li><li>「房屋：最多 N」和「轮班工人：最多 N」；</li><li>每刻消耗的 EU/FE；</li><li>所有者：「无」「你」或玩家名字。</li></ul></li><li>熄灭且无主的核心会在缓存条下方提示如何成为所有者。</li><li>缓存条下方有一个眼睛按钮「显示定居点边界」（见「显示边界」）。</li></ul>
+
+<h2 id="显示边界">显示边界</h2>
+
+<p>核心窗口里的眼睛按钮可以打开或关闭定居点边界的显示——<strong>只对按下它的玩家显示</strong>。放在所有定居点之外的核心没有边界，按钮也不会亮。</p>
+
+<ul><li><strong>墙面</strong>正好立在领地的边缘：从内侧贴着墙的方块在定居点内，从外侧贴着的就不在了。</li><li><strong>从外面看</strong>，边界是带网格的半透明薄荷色玻璃，每 8 格一道网格线：墙面、地板和穹顶。</li><li><strong>从里面看</strong>只能看到墙面和穹顶的<strong>网格</strong>，没有填充，也没有地板——否则玻璃会盖在每个房间和每条街道上，就分不清定居点的边缘了。</li><li><strong>穹顶</strong>是矩形上方封闭的拱顶，与墙面无缝衔接；从里面和外面看形状相同。</li><li>显示的地板在核心下方 <strong>16</strong> 格（那里是市政厅下的实验室），墙面止于核心上方 <strong>16</strong> 格（那里是市政厅的屋顶）。领地本身在高度上没有限制——这只是绘制的高度。</li><li>边界绘制在世界之上：地板通常在地下，远处的墙在山丘后面。</li><li>再按一次按钮、定居点的核心不在已加载区块中、切换维度、退出世界时，显示都会关闭。距离领地边缘超过 512 格时不绘制边界。</li></ul>
+
+<h2 id="方块属性">方块属性</h2>
+
+<table><thead><tr><th>字段</th><th>数值</th></tr></thead><tbody><tr><td>形状</td><td>完整的 16³ 方块；钢制外壳，侧面有铜窗，顶部有铜环</td></tr><tr><td>光照</td><td>亮着的核心会发光（亮度 13），窗口像在「呼吸」；熄灭时不发光</td></tr><tr><td>硬度与工具</td><td>像基岩一样无法破坏，不怕爆炸；定居点所有者可以用任何镐拆除，速度相当于硬度 5 的方块</td></tr><tr><td>活塞</td><td>推不动</td></tr><tr><td>掉落物</td><td>核心本身，普通物品；它不记得定居点</td></tr><tr><td>位置</td><td>每座工人小镇的市政厅里，实验室活板门的上方；核心正上方的屋顶上是无人机平台</td></tr><tr><td>创造模式物品栏</td><td>模组的标签页和原版「功能方块」</td></tr></tbody></table>
+
+<h2 id="配方">配方</h2>
+
+<p>核心是游戏后期的方块：工作台，3×3 有序合成。</p>
+
+<table><thead><tr><th></th><th></th><th></th></tr></thead><tbody><tr><td><a href="../components/resonant_crystal.html">共振水晶</a>（已充能）</td><td>反应堆控制电路</td><td><a href="../components/resonant_crystal.html">共振水晶</a>（已充能）</td></tr><tr><td><a href="../components/resonance_chain.html">共振线圈</a></td><td><a href="../components/advanced_machine_casing.html">高级机器外壳</a></td><td><a href="../components/resonance_chain.html">共振线圈</a></td></tr><tr><td><a href="../components/bearings.html">强化轴承</a></td><td><a href="../energy-storage/cesu.html">强化储能库</a></td><td><a href="../components/bearings.html">强化轴承</a></td></tr></tbody></table>
+
+<p>→ <strong>1 个定居点核心</strong>。当共振水晶、反应堆控制电路、强化轴承和强化储能库都曾出现在你的物品栏里后，配方书中就会解锁这个配方。</p>
+
+<p><strong>为什么这么贵。</strong> 核心是定居点的心脏，而不是机器。它包含<strong>三个</strong>高级机器外壳（一个自己的，两个在储能库里）、一个反应堆控制电路、两个共振线圈、两个水晶和两个轴承——比一对<a href="workstation.html">工作站</a>还多，也比任何 MV 机器都多。这些零件玩家要在造出反应堆之后才能做。底行中间的储能库是核心「高一级」的储备：LV 核心接受 MV 电包。</p>
+
+<p>合成核心并不会给你一个自己的定居点：放在所有定居点之外的核心保持熄灭。这个配方是为了把核心还给失去核心的定居点（核心烧毁了、沉入熔岩，或以别的方式丢失了）。</p>
+
+<h2 id="进阶">进阶</h2>
+
+<ul><li>在这个版本中为 LV 等级；更高等级以后加入。</li><li><a href="reception_capsule.html">接收舱</a>需要它——接收舱只在核心亮着时工作——轮班工的生活也需要它：没有核心，定居点就会沉睡。</li><li>位于 ALA 工人小镇的市政厅里。</li></ul>
+
+<h2 id="相关内容">相关内容</h2>
+
+<ul><li><a href="reception_capsule.html">接收舱</a>——核心亮着时带回轮班工。</li><li><a href="mob_repeller.html">小型生物驱逐器</a>——另一个消耗 EU/FE 在自身周围维持力场的方块。</li><li><a href="workstation.html">工作站</a>——由同一排组件制成。</li></ul>
+
+<h2>合成</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="定居点核心 alaindustrial:settlement_core" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="共振水晶"><img src="../../assets/item/resonant_crystal_3d.png" alt="共振水晶" width="32" height="32"></div> <div class="cell" title="反应堆控制电路"><img src="../../assets/item/reactor_circuit_3d.png" alt="反应堆控制电路" width="32" height="32"></div> <div class="cell" title="共振水晶"><img src="../../assets/item/resonant_crystal_3d.png" alt="共振水晶" width="32" height="32"></div> <div class="cell" title="共振线圈"><img src="../../assets/item/resonance_coil_3d.png" alt="共振线圈" width="32" height="32"></div> <div class="cell" title="高级机器外壳"><img src="../../assets/item/advanced_machine_casing_3d.png" alt="高级机器外壳" width="32" height="32"></div> <div class="cell" title="共振线圈"><img src="../../assets/item/resonance_coil_3d.png" alt="共振线圈" width="32" height="32"></div> <div class="cell" title="强化轴承"><img src="../../assets/item/reinforced_bearing_3d.png" alt="强化轴承" width="32" height="32"></div> <div class="cell" title="强化储能库"><img src="../../assets/item/cesu_3d.png" alt="强化储能库" width="32" height="32"></div> <div class="cell" title="强化轴承"><img src="../../assets/item/reinforced_bearing_3d.png" alt="强化轴承" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="定居点核心"><img src="../../assets/item/settlement_core_3d.png" alt="定居点核心" width="32" height="32"></div><div class="result-name">定居点核心</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>

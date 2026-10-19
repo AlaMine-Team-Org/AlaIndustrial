@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="ja_jp" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>集落コア — Ala Industrial — ガイド</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="メニューを開く" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  </div>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../../assets/item/guide_book_3d.png" alt="">すべてのコンテンツ</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/ky7cFDF8JD" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../../assets/platform/discord.svg" alt="Discord"></a>
+    </div>
+    <search class="site-search"><input type="search" data-wiki-search placeholder="ウィキを検索…" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-label="ガイドを検索" autocomplete="off" spellcheck="false" data-index="../search-index.json" data-root="../" data-l10n="{&quot;list&quot;:&quot;検索結果&quot;,&quot;one&quot;:&quot;ページ&quot;,&quot;few&quot;:&quot;ページ&quot;,&quot;many&quot;:&quot;ページ&quot;,&quot;loading&quot;:&quot;検索インデックスを読み込み中…&quot;,&quot;nothing&quot;:&quot;見つかりません&quot;}"></search>
+    <details class="language-menu"><summary aria-label="Language">日本語</summary><div class="language-popover"><span>日本語</span><a href="../../en/utility/settlement_core.html">EN</a><a href="../../ru/utility/settlement_core.html">RU</a><a href="../../uk/utility/settlement_core.html">UA</a><a href="../../zh_cn/utility/settlement_core.html">中文</a><a href="../../es_es/utility/settlement_core.html">ES</a></div></details>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">ブラウズ</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../../assets/item/tempered_iron_pickaxe.png" alt=""><span>はじめに</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
+<div class="group-title">エネルギー</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="14 ページ">14</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
+<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>原子力</span><span class="cat-count" aria-label="15 ページ">15</span></a>
+<div class="group-title">加工</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>マシン</span><span class="cat-count" aria-label="17 ページ">17</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>液体マシン</span><span class="cat-count" aria-label="3 ページ">3</span></a>
+<div class="group-title">物流</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>アイテム輸送</span><span class="cat-count" aria-label="3 ページ">3</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>液体輸送</span><span class="cat-count" aria-label="5 ページ">5</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>液体貯蔵</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<div class="group-title">世界と自動化</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>素材</span><span class="cat-count" aria-label="26 ページ">26</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>農業</span><span class="cat-count" aria-label="6 ページ">6</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>高度なマシン</span><span class="cat-count" aria-label="1 ページ">1</span></a>
+<div class="group-title">その他</div>
+<a class="cat-link" href="../construction/index.html"><img class="nav-icon" src="../../assets/item/engraved_plate_0_3d.png" alt=""><span>建築ブロック</span><span class="cat-count" aria-label="3 ページ">3</span></a>
+<a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="24 ページ">24</span></a>
+<div class="group-title">アイテム</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="30 ページ">30</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="32 ページ">32</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">ホーム</a><span class="sep">/</span><a href="../utility/index.html">ユーティリティ</a><span class="sep">/</span><span>集落コア</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../../assets/item/settlement_core_3d.png" alt="集落コア" width="64" height="64">
+    <div class="info">
+      <h1>集落コア</h1>
+      <div class="block-id">alaindustrial:settlement_core</div>
+      <div class="tags"><span class="tag cat" style="background:#14b8a6">ユーティリティ</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">実装済み</span><span class="tag">tier-lv</span><span class="tag">utility</span><span class="tag">energy</span><span class="tag">settlement</span></div>
+    </div>
+  </div>
+</div>
+<h2 id="概要">概要</h2>
+
+<p><strong>集落コア</strong>は、すべての <strong>ALA 労働者の町</strong>の役場に置かれています。労働者の町とは、放棄されたラボの上にある死んだ集落です。見つけたとき、コアは消えています。集落は死んでいて、領地はなく、カプセルは空です。コアにケーブルを引くと、コアが目を覚まします。町のまわりに集落の領地が現れ、<a href="reception_capsule.html">受け入れカプセル</a>が最初の<strong>交代要員</strong>（集落の住人）を呼び戻せるようになります。</p>
+
+<p>コアは町全体の中心です。領地の広さ、集落に建てられる家の数、交代要員の数を決めます。町の領地は、役場からどれだけ離れていても、町のすべての建物を覆います。</p>
+
+<blockquote><strong>ミニ例:</strong> 町を見つけたら役場に入り、消えたコアを見つけて、拠点から LV ケーブルを引いてください。コアが点灯したら開いてみましょう。ウィンドウに領地（たとえばパイプに沿って細長く伸びた砂漠の町なら 93 × 65 ブロック）、「家: 最大 4」「交代勤務者: 最大 4」が表示され、あなたが集落の所有者になります。</blockquote>
+
+<h2 id="仕組み">仕組み</h2>
+
+<ol><li><strong>消灯。</strong> 消えたコアは何も消費しません。電源が切れた状態です。領地はなく、受け入れカプセルは動かず、集落の交代要員（もういれば）はその場で固まっています。</li><li><strong>点灯。</strong> バッファーに 20 ティック分の稼働量、つまり <strong>160 EU/FE</strong> がたまるとコアは点灯します。点灯している間、コアは毎ティック <strong>8 EU/FE</strong> を払います。これで領地が保たれ、集落が生きています。</li><li><strong>電力切れ。</strong> ネットワークが途切れると、コアは自分のバッファーでしのぎます。バッファーが空になるとコアは借りをため始め、その借りが同じ 20 ティック分に達すると消えます。電力が完全に途切れた場合、バッファーが空になってからちょうど <strong>20 ティック</strong>（1 秒）後です。毎ティック 8 EU/FE 未満の供給でもコアは消えますが、もっと遅れてです。価格の 4 分の 3 では集落を永遠には支えられません。交代要員は立っていた場所で固まり、それで死ぬことはありません。電力が戻れば、同じ場所から続きを始めます。</li></ol>
+
+<p>コアが点灯しているかどうかは、バッファーだけが決めます。コアにはタイマーもスイッチもありません。点灯用の蓄えがあるのは、維持費をわずかに下回る供給で領地が毎ティック点滅しないようにするためです。</p>
+
+<p>このバージョンでは、すべてのコアが <strong>LV</strong> です。以下の領地、家の上限、交代要員の上限は LV の値です。より上のティアのコア（領地も集落もより大きいもの）は今後追加されます。</p>
+
+<h2 id="領地">領地</h2>
+
+<ul><li><strong>形。</strong> 領地はワールドの高さ全体にわたる長方形です。役場の下のラボも、役場の屋根も含まれます。円ではなく長方形なので、壁に沿って歩数を数えるだけで端が見つかります。</li><li><strong>ワールドで生成された町</strong>は、次の 2 つを同時に収める最小の長方形を領地にします。<ol><li>町のすべての建物、そのあいだの地面、ラボ — さらに各方向に <strong>8</strong> ブロックの余白；</li><li>コアを中心とした <strong>65 × 65</strong> ブロックの正方形（コアから各方向に <strong>32</strong> ブロック）。</li></ol></li></ul>
+
+<p>そのため細長い砂漠の町でも、建物はすべて領地の中に入ります。LV での領地はおよそ 93 × 65 ブロックです。町の配置はランダムなので、あなたのワールドでは大きさが違います。コアのウィンドウに表示されます。</p>
+<ul><li><strong>町のない集落</strong>（たとえばコマンドで置いたコア）は、コアのまわりの 65 × 65 ブロックの正方形だけを領地にします。</li><li>領地があるのは、コアが点灯している間だけです。</li><li>受け入れカプセルは、自分の集落の領地の中で、コアが点灯しているときだけ動きます。</li><li>集落の交代要員は領地の外へ出ません。</li><li>上限は天井です。カプセルは上限を超えて交代要員を出しません。</li><li><strong>境界はボタンで表示できます</strong> — 「境界の表示」を参照。</li></ul>
+
+<h2 id="所有者">所有者</h2>
+
+<ul><li>集落の所有者は、<strong>点灯しているコアのウィンドウを最初に開いたプレイヤー</strong>です。ケーブルは誰が引いたかを覚えていないので、大事なのは誰が電力を送ったかではなく、誰がコアを開いたかです。消えたコアを開いても集落は手に入りません。死んだ町は、見つけただけでは自分のものにできません。新しい所有者には、ホットバーの上に「集落はあなたのものになりました」と表示されます。</li><li>他のプレイヤーが所有権を奪うことはできません。所有者はワールドを再起動しても変わりません。</li></ul>
+
+<h2 id="破壊と移動">破壊と移動</h2>
+
+<ul><li><strong>コアを壊せるのは集落の所有者だけで、どのツルハシでも壊せます</strong> — 木のツルハシでもかまいません。硬さ 5 のブロックと同じ速さで壊れます。素手では、また他のプレイヤーには、コアはまったく壊せません。集落にまだ所有者がいない間は、誰もコアを壊せません。</li><li>それ以外のものにとって、コアは岩盤のように壊れません。爆発、ドリル、ブロックブレーカー、一度にたくさんのブロックを壊す道具も効きません。</li><li>壊したコアは<strong>普通のアイテムとしてドロップ</strong>します。クリエイティブタブにあるものと同じです。コアは<strong>自分の集落を覚えていません</strong>。集落にコアがない間、集落は電力がないときと同じように眠ります。交代要員も所有者も、それ以外のすべても保たれます。</li><li><strong>コアのない集落の領地に置いたコアは、どれでもその集落を引き継ぎます</strong>。所有者も交代要員も、それ以外のすべても同じです。コアの新しい位置が領地の正方形の中心になり、町の建物はこれまでどおり領地の中に残ります。</li><li><strong>すでにコアがある集落に 2 つ目のコアは置けません。</strong> ブロックは置かれず、コアは手に残り、チャットにその集落のコアの場所が表示されます。消えた集落でも、所有者のいない集落でも同じです。</li><li><strong>コアは、自分の集落をゼロから作りません。</strong> どの集落の外に置いたコアも、バッファーが満タンでも消えたままで、何も消費しません。チャットには「このコアは集落の役場でしか動きません。自分の集落をゼロから作るのは、もう少し先です。」と表示されます。そのコアは、置いた本人ならどのツルハシでも壊せます。集落を生き返らせるには、コアをその集落の領地に置きます。</li></ul>
+
+<h2 id="エネルギー">エネルギー</h2>
+
+<table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>役割</td><td>消費側。ケーブルは 6 面のどこにでもつながります</td></tr><tr><td>ティア / ネットワークからの受け入れ</td><td>LV。自分より 1 つ上のティアのパケットを受け取れます — 1 ティックあたり最大 <strong>128</strong> EU/FE（MV パケット）</td></tr><tr><td>バッファー</td><td><strong>2000</strong> EU/FE</td></tr><tr><td>点灯中の維持費</td><td><strong>8</strong> EU/FE/t</td></tr><tr><td>点灯用の蓄えと借りの上限</td><td>維持費 <strong>20</strong> ティック分（160 EU/FE）</td></tr><tr><td>出力</td><td>なし</td></tr></tbody></table>
+
+<p>ネットワークが途切れたあと、満タンのバッファーは 2000 / 8 = <strong>250 ティック</strong>（12.5 秒）集落を支え、さらに借り <strong>20 ティック</strong>分が続いてからコアが消えます。ケーブルを少しのあいだ引き直しても集落は眠りませんが、本当の停電ならすぐに止まります。</p>
+
+<p>コアは<strong>集落全体の分</strong>を払います。受け入れカプセルは自分の価格を別に取り、交代要員は自分でネットワークから EU/FE を取りません。維持費を超えた分で、コアはどの機械とも同じようにバッファーを満たします。届くエネルギーの量はケーブルにもよります。銅ケーブルは 1 ティックあたり 12 EU/FE、金ケーブルは 48、エレクトラムケーブルは 192 を通します。</p>
+
+<h2 id="インターフェース">インターフェース</h2>
+
+<ul><li>スロットのないウィンドウで、表示だけがあります。</li><li>左にバッファーのバー、右に次の行があります。<ul><li>状態：「稼働中: 領地を維持しています」「電力なし: 領地はありません」「2つ目のコア: 集落にはすでにコアがあります」または「集落なし: 役場でしか動きません」；</li><li>「領地: 幅 × 奥行き ブロック」 — 領地の長方形の大きさ；</li><li>「家: 最大 N」と「交代勤務者: 最大 N」；</li><li>1 ティックあたりの維持費（EU/FE）；</li><li>所有者：「なし」「あなた」またはプレイヤー名。</li></ul></li><li>所有者のいない消えたコアは、バッファーのバーの下に所有者になる方法を表示します。</li><li>バッファーのバーの下には目のボタン「集落の境界を表示」があります（「境界の表示」を参照）。</li></ul>
+
+<h2 id="境界の表示">境界の表示</h2>
+
+<p>コアのウィンドウにある目のボタンで、集落の境界の表示を切り替えます。<strong>表示されるのはボタンを押したプレイヤーだけ</strong>です。どの集落の外に置いたコアにも境界はなく、ボタンも点灯しません。</p>
+
+<ul><li><strong>壁</strong>は領地の端にぴったり立っています。壁に内側から接しているブロックは集落の中、外側から接しているブロックはもう外です。</li><li><strong>外から見ると</strong>、境界は 8 ブロックごとに格子の入った半透明のミント色のガラスです。壁、床、ドームがあります。</li><li><strong>中から見ると</strong>、壁とドームの<strong>格子だけ</strong>が見え、塗りつぶしも床もありません。そうしないと、ガラスがすべての部屋と通りにかぶさって、集落の端が見分けられなくなるからです。</li><li><strong>ドーム</strong>は長方形の上を閉じるアーチ屋根で、壁からなめらかにつながっています。中からも外からも同じ形です。</li><li>表示される床はコアの <strong>16</strong> ブロック下（役場の下のラボがある高さ）、壁の上端はコアの <strong>16</strong> ブロック上（役場の屋根がある高さ）です。領地そのものに高さの制限はありません。これは描画の高さにすぎません。</li><li>境界はワールドの上に重ねて描かれます。床はたいてい地下に、遠い壁は丘の向こうにあります。</li><li>もう一度ボタンを押したとき、集落のコアが読み込まれたチャンクからなくなったとき、ディメンションを移動したとき、ワールドから出たときに表示は消えます。領地の端から 512 ブロックより遠いと境界は描かれません。</li></ul>
+
+<h2 id="ブロック属性">ブロック属性</h2>
+
+<table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>形状</td><td>16³ のフルブロック。側面に銅の窓、上面に銅のリングがある鋼の筐体</td></tr><tr><td>光</td><td>点灯中のコアは光り（明るさ 13）、窓が「呼吸」します。消えているときは光りません</td></tr><tr><td>硬さと道具</td><td>岩盤のように壊れず、爆発にも強い。集落の所有者はどのツルハシでも、硬さ 5 のブロックと同じ速さで壊せます</td></tr><tr><td>ピストン</td><td>動かせません</td></tr><tr><td>ドロップ</td><td>コアそのもの（普通のアイテム）。集落は覚えていません</td></tr><tr><td>置かれている場所</td><td>すべての労働者の町の役場、ラボへのハッチの上。コアの真上の屋根にはドローン用の発着場があります</td></tr><tr><td>クリエイティブタブ</td><td>MOD のタブとバニラの「機能的ブロック」</td></tr></tbody></table>
+
+<h2 id="レシピ">レシピ</h2>
+
+<p>コアはゲーム終盤のブロックです。作業台で 3×3 の形にクラフトします。</p>
+
+<table><thead><tr><th></th><th></th><th></th></tr></thead><tbody><tr><td><a href="../components/resonant_crystal.html">共振クリスタル</a>（充電済み）</td><td>原子炉制御回路</td><td><a href="../components/resonant_crystal.html">共振クリスタル</a>（充電済み）</td></tr><tr><td><a href="../components/resonance_chain.html">共鳴コイル</a></td><td><a href="../components/advanced_machine_casing.html">高度なマシンケース</a></td><td><a href="../components/resonance_chain.html">共鳴コイル</a></td></tr><tr><td><a href="../components/bearings.html">強化ベアリング</a></td><td><a href="../energy-storage/cesu.html">強化エネルギー貯蔵庫</a></td><td><a href="../components/bearings.html">強化ベアリング</a></td></tr></tbody></table>
+
+<p>→ <strong>集落コア 1 個</strong>。共振クリスタル、原子炉制御回路、強化ベアリング、強化エネルギー貯蔵庫がインベントリに入ったことがあれば、レシピブックでレシピが解放されます。</p>
+
+<p><strong>なぜこんなに高いのか。</strong> コアは機械ではなく、集落の心臓です。<strong>3 つ</strong>の高度なマシンケース（自分の 1 つと、エネルギー貯蔵庫の中の 2 つ）、原子炉制御回路、共鳴コイル 2 つ、クリスタル 2 つ、ベアリング 2 つが入っています。<a href="workstation.html">ワークステーション</a> 2 台分よりも、どの MV 機械よりも多い量です。こうした部品を作るのは原子炉を建てたあとです。下段中央のエネルギー貯蔵庫は、コアの「1 つ上のティア」の蓄えです。LV のコアは MV パケットを受け取ります。</p>
+
+<p>コアをクラフトしても、自分の集落は手に入りません。どの集落の外に置いたコアも消えたままです。このレシピは、コアを失った集落（コアが燃えた、溶岩に沈んだ、ほかの理由でなくなった）にコアを返すためのものです。</p>
+
+<h2 id="進行">進行</h2>
+
+<ul><li>このバージョンでは LV。より上のティアは今後追加されます。</li><li><a href="reception_capsule.html">受け入れカプセル</a>に必要です（カプセルはコアが点灯しているときだけ動きます）。交代要員が暮らすためにも必要です。コアがないと集落は眠ります。</li><li>ALA 労働者の町の役場に置かれています。</li></ul>
+
+<h2 id="関連項目">関連項目</h2>
+
+<ul><li><a href="reception_capsule.html">受け入れカプセル</a> — コアが点灯している間、交代要員を呼び戻します。</li><li><a href="mob_repeller.html">小型モブ忌避装置</a> — EU/FE で自分のまわりにフィールドを張る、もう 1 つのブロック。</li><li><a href="workstation.html">ワークステーション</a> — 同じ系統の部品でクラフトします。</li></ul>
+
+<h2>クラフト</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="集落コア alaindustrial:settlement_core" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">定型クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="共振クリスタル"><img src="../../assets/item/resonant_crystal_3d.png" alt="共振クリスタル" width="32" height="32"></div> <div class="cell" title="原子炉制御回路"><img src="../../assets/item/reactor_circuit_3d.png" alt="原子炉制御回路" width="32" height="32"></div> <div class="cell" title="共振クリスタル"><img src="../../assets/item/resonant_crystal_3d.png" alt="共振クリスタル" width="32" height="32"></div> <div class="cell" title="共鳴コイル"><img src="../../assets/item/resonance_coil_3d.png" alt="共鳴コイル" width="32" height="32"></div> <div class="cell" title="高度なマシンケース"><img src="../../assets/item/advanced_machine_casing_3d.png" alt="高度なマシンケース" width="32" height="32"></div> <div class="cell" title="共鳴コイル"><img src="../../assets/item/resonance_coil_3d.png" alt="共鳴コイル" width="32" height="32"></div> <div class="cell" title="強化ベアリング"><img src="../../assets/item/reinforced_bearing_3d.png" alt="強化ベアリング" width="32" height="32"></div> <div class="cell" title="強化エネルギー貯蔵庫"><img src="../../assets/item/cesu_3d.png" alt="強化エネルギー貯蔵庫" width="32" height="32"></div> <div class="cell" title="強化ベアリング"><img src="../../assets/item/reinforced_bearing_3d.png" alt="強化ベアリング" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="集落コア"><img src="../../assets/item/settlement_core_3d.png" alt="集落コア" width="32" height="32"></div><div class="result-name">集落コア</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>
