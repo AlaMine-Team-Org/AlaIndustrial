@@ -1,5 +1,6 @@
 package dev.alaindustrial.command.demo;
 
+import dev.alaindustrial.block.ReceptionCapsuleBlock;
 import dev.alaindustrial.block.entity.FluidTankBlockEntity;
 import dev.alaindustrial.block.entity.KokSagyzRootBlockEntity;
 import dev.alaindustrial.registry.ModContent;
@@ -8,6 +9,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.WallTorchBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 
 /**
@@ -41,6 +43,7 @@ final class MiscZone implements DemoZone {
 		garden(w);
 		fluidPools(w);
 		teleporterStation(w);
+		settlementCore(w);
 	}
 
 	/** The storage cabinet, x=62..65, and the tempered iron block west of it. */
@@ -198,6 +201,30 @@ final class MiscZone implements DemoZone {
 		// itself leave soot — the coverage scan runs on the build tick, while it still stands.
 		w.set(86, 1, 28, ModContent.SOOT_LAYER.get());
 		w.set(86, 1, 32, ModContent.OIL_FIRE.get());
+	}
+
+	/**
+	 * The settlement core (MOD-831), x=70 on the second row, between the oil and the diesel pools: placed dark and
+	 * unpowered, the way a player finds it in a dead town's hall. It registers a town of its own when the stand's
+	 * chunk first ticks; a cable from the stand's battery would light it.
+	 */
+	private static void settlementCore(StandWriter w) {
+		w.set(70, 1, 24, ModContent.SETTLEMENT_CORE.get());
+		receptionCapsule(w);
+	}
+
+	/**
+	 * The reception capsule (MOD-833) beside the core, as it stands in a town hall: all three cells (MOD-850) written
+	 * through the ledger, the open front to the north, toward the zone's camera. Bare and unstocked: with the core
+	 * dark it says so on its status row, the state a player meets first.
+	 */
+	private static void receptionCapsule(StandWriter w) {
+		BlockState capsule = ModContent.RECEPTION_CAPSULE.get().defaultBlockState()
+				.setValue(ReceptionCapsuleBlock.FACING, Direction.NORTH);
+		for (ReceptionCapsuleBlock.Part part : ReceptionCapsuleBlock.Part.values()) {
+			w.place(w.origin().offset(71, 1 + part.aboveLower(), 24),
+					capsule.setValue(ReceptionCapsuleBlock.PART, part));
+		}
 	}
 
 	/** The teleporter station: a charged battery box, a cable, the station and its glass capsule. */

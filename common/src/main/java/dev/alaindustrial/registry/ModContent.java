@@ -58,6 +58,8 @@ import dev.alaindustrial.menu.AlloySmelterMenu;
 import dev.alaindustrial.menu.VulcanizerMenu;
 import dev.alaindustrial.menu.FermenterMenu;
 import dev.alaindustrial.menu.GalvanicBathMenu;
+import dev.alaindustrial.menu.ReceptionCapsuleMenu;
+import dev.alaindustrial.menu.SettlementCoreMenu;
 import dev.alaindustrial.menu.SprinklerMenu;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -384,6 +386,10 @@ public final class ModContent {
 	public static Supplier<Block> INDUSTRIAL_WORKBENCH = unbound("INDUSTRIAL_WORKBENCH");
 	/** MOD-810 - the second tier of the crafting bench: keeps its grid, shared by viewers, pipe-aware. */
 	public static Supplier<Block> ADVANCED_INDUSTRIAL_WORKBENCH = unbound("ADVANCED_INDUSTRIAL_WORKBENCH");
+	/** MOD-831 - the heart of an ALA town: holds its territory while it is paid its upkeep in EU. */
+	public static Supplier<Block> SETTLEMENT_CORE = unbound("SETTLEMENT_CORE");
+	/** MOD-833 - the reception capsule: restores the town's shift workers for EU and materials. */
+	public static Supplier<Block> RECEPTION_CAPSULE = unbound("RECEPTION_CAPSULE");
 	// Enriched Uranium Torch (MOD-085) — a vanilla-behaviour torch (light 15, green flame) in two
 	// blocks: standing + wall. The wall variant has NO block item; it drops/names from the standing
 	// torch via overrideLootTable/overrideDescription, exactly as vanilla WALL_TORCH mirrors TORCH.
@@ -1063,6 +1069,9 @@ public final class ModContent {
 	public static Supplier<BlockItem> INDUSTRIAL_WORKBENCH_ITEM = unbound("INDUSTRIAL_WORKBENCH_ITEM");
 	public static Supplier<BlockItem> ADVANCED_INDUSTRIAL_WORKBENCH_ITEM =
 			unbound("ADVANCED_INDUSTRIAL_WORKBENCH_ITEM");
+	// MOD-831
+	public static Supplier<BlockItem> SETTLEMENT_CORE_ITEM = unbound("SETTLEMENT_CORE_ITEM");
+	public static Supplier<BlockItem> RECEPTION_CAPSULE_ITEM = unbound("RECEPTION_CAPSULE_ITEM");
 	// Enriched Uranium Torch (MOD-085) — only the STANDING torch has a block item; the wall variant
 	// drops this item via its overrideLootTable, so it needs no item of its own.
 	public static Supplier<BlockItem> ENRICHED_URANIUM_TORCH_ITEM = unbound("ENRICHED_URANIUM_TORCH_ITEM");
@@ -1128,6 +1137,9 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> INDUSTRIAL_WORKBENCH_BE = unbound("INDUSTRIAL_WORKBENCH_BE");
 	public static Supplier<BlockEntityType<?>> ADVANCED_INDUSTRIAL_WORKBENCH_BE =
 			unbound("ADVANCED_INDUSTRIAL_WORKBENCH_BE");
+	// MOD-831
+	public static Supplier<BlockEntityType<?>> SETTLEMENT_CORE_BE = unbound("SETTLEMENT_CORE_BE");
+	public static Supplier<BlockEntityType<?>> RECEPTION_CAPSULE_BE = unbound("RECEPTION_CAPSULE_BE");
 	public static Supplier<BlockEntityType<?>> ELECTRIC_HEATER_BE = unbound("ELECTRIC_HEATER_BE");
 	public static Supplier<BlockEntityType<?>> CHARGE_PAD_BE = unbound("CHARGE_PAD_BE");
 	public static Supplier<BlockEntityType<?>> VACUUM_COLLECTOR_BE = unbound("VACUUM_COLLECTOR_BE");
@@ -1174,6 +1186,11 @@ public final class ModContent {
 			unbound("ADVANCED_INDUSTRIAL_WORKBENCH_MENU");
 	public static Supplier<MenuType<BlockBreakerMenu>> BLOCK_BREAKER_MENU =
 			unbound("BLOCK_BREAKER_MENU");
+	/** MOD-831 - the settlement core's readout and its claim button. */
+	public static Supplier<MenuType<SettlementCoreMenu>> SETTLEMENT_CORE_MENU = unbound("SETTLEMENT_CORE_MENU");
+	/** MOD-833 - the reception capsule's material slots and readout. */
+	public static Supplier<MenuType<ReceptionCapsuleMenu>> RECEPTION_CAPSULE_MENU =
+			unbound("RECEPTION_CAPSULE_MENU");
 	public static Supplier<MenuType<CanningMachineMenu>> CANNING_MACHINE_MENU = unbound("CANNING_MACHINE_MENU");
 	public static Supplier<MenuType<SawmillMenu>> SAWMILL_MENU = unbound("SAWMILL_MENU");
 	public static Supplier<MenuType<AssemblerMenu>> ASSEMBLER_MENU = unbound("ASSEMBLER_MENU");

@@ -48,5 +48,8 @@ public final class NeoForgeNetworkVisualization {
 		// MOD-804: the sound absorbers' zones under the wrench, and the focused group's HUD line.
 		dev.alaindustrial.client.render.SoundAbsorberOverlay.submitFrame(event.getSubmitNodeCollector(),
 				event.getLevelRenderState().cameraRenderState);
+		// MOD-843: a settlement's border, for the player who pressed "show borders" in its core's screen.
+		dev.alaindustrial.client.render.SettlementBorderOverlay.submitFrame(event.getSubmitNodeCollector(),
+				event.getLevelRenderState().cameraRenderState);
 	}
 }

@@ -1,0 +1,49 @@
+{
+  "variants": {
+    "facing=north,part=lower": {
+      "model": "alaindustrial:block/reception_capsule_lower"
+    },
+    "facing=north,part=middle": {
+      "model": "alaindustrial:block/reception_capsule_middle"
+    },
+    "facing=north,part=upper": {
+      "model": "alaindustrial:block/reception_capsule_upper"
+    },
+    "facing=east,part=lower": {
+      "model": "alaindustrial:block/reception_capsule_lower",
+      "y": 90
+    },
+    "facing=east,part=middle": {
+      "model": "alaindustrial:block/reception_capsule_middle",
+      "y": 90
+    },
+    "facing=east,part=upper": {
+      "model": "alaindustrial:block/reception_capsule_upper",
+      "y": 90
+    },
+    "facing=south,part=lower": {
+      "model": "alaindustrial:block/reception_capsule_lower",
+      "y": 180
+    },
+    "facing=south,part=middle": {
+      "model": "alaindustrial:block/reception_capsule_middle",
+      "y": 180
+    },
+    "facing=south,part=upper": {
+      "model": "alaindustrial:block/reception_capsule_upper",
+      "y": 180
+    },
+    "facing=west,part=lower": {
+      "model": "alaindustrial:block/reception_capsule_lower",
+      "y": 270
+    },
+    "facing=west,part=middle": {
+      "model": "alaindustrial:block/reception_capsule_middle",
+      "y": 270
+    },
+    "facing=west,part=upper": {
+      "model": "alaindustrial:block/reception_capsule_upper",
+      "y": 270
+    }
+  }
+}

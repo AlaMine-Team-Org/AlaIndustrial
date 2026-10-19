@@ -112,6 +112,10 @@ public final class MenuScreenManifest {
 			screen(() -> ModContent.BLOCK_BREAKER_MENU.get(), BlockBreakerScreen::new),
 			// MOD-810: the advanced workbench - crafting grid, recipe book, Clear button.
 			screen(() -> ModContent.ADVANCED_INDUSTRIAL_WORKBENCH_MENU.get(), AdvancedIndustrialWorkbenchScreen::new),
+			// MOD-831: the settlement core - the town's readout and the claim button.
+			screen(() -> ModContent.SETTLEMENT_CORE_MENU.get(), SettlementCoreScreen::new),
+			// MOD-833: the reception capsule - material slots, the town's workers and the restoration.
+			screen(() -> ModContent.RECEPTION_CAPSULE_MENU.get(), ReceptionCapsuleScreen::new),
 			screen(() -> ModContent.ASSEMBLER_MENU.get(), AssemblerScreen::new),
 			screen(() -> ModContent.INCUBATOR_MENU.get(), IncubatorScreen::new),
 			screen(() -> ModContent.POLYMERIZER_MENU.get(), PolymerizerScreen::new),

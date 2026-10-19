@@ -3,6 +3,7 @@ package dev.alaindustrial.client;
 import dev.alaindustrial.client.guide.ArchiveRecordClient;
 import dev.alaindustrial.client.hud.TeleportFadeHud;
 import dev.alaindustrial.client.render.NetworkOverlayRenderer;
+import dev.alaindustrial.client.render.SettlementBorderOverlay;
 import dev.alaindustrial.client.sound.SoundAbsorberZones;
 
 /**
@@ -24,5 +25,6 @@ public final class ClientDisconnectReset {
 		NetworkOverlayRenderer.clear(); // MOD-665
 		ServerBalance.reset(); // MOD-695
 		SoundAbsorberZones.reset(); // MOD-804
+		SettlementBorderOverlay.clear(); // MOD-843
 	}
 }

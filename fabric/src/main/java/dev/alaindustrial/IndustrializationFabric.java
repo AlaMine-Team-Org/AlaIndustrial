@@ -31,10 +31,12 @@ import dev.alaindustrial.registry.ModItems;
 import dev.alaindustrial.registry.ModMenus;
 import dev.alaindustrial.registry.ModRecipes;
 import dev.alaindustrial.registry.ModSounds;
+import dev.alaindustrial.registry.ModDataRegistries;
 import dev.alaindustrial.registry.ModWorldGen;
 import dev.alaindustrial.registry.RecipeFamily;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLevelEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -217,9 +219,22 @@ public class IndustrializationFabric implements ModInitializer {
 		}
 		ModCriteria.init();
 		ModWorldGen.init();
+		// MOD-830: the mod's datapack registries (ADR-050), one loop over the list both loaders replay.
+		for (ModDataRegistries.DataRegistry<?> registry : ModDataRegistries.REGISTRIES) {
+			registerDataRegistry(registry);
+		}
 		// MOD-062: villager profession + its POI (needs the workbench block registered by ModBlocks
 		// above). Fabric keeps both registries writable during init, so this is eager like the rest.
 		registerVillagerProfession();
+	}
+
+	/** One datapack registry: server only without a network codec, synced to the client with one. */
+	private static <T> void registerDataRegistry(ModDataRegistries.DataRegistry<T> registry) {
+		if (registry.networkCodec() == null) {
+			DynamicRegistries.register(registry.key(), registry.codec());
+		} else {
+			DynamicRegistries.registerSynced(registry.key(), registry.codec(), registry.networkCodec());
+		}
 	}
 
 	/**

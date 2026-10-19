@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "alaindustrial:block/settlement_core"
+    },
+    "lit=true": {
+      "model": "alaindustrial:block/settlement_core_lit"
+    }
+  }
+}

@@ -66,18 +66,21 @@ public final class AbandonedLabPlacer {
 	public static final List<String> LABS = List.of("hermit", "reactor", "archive", "workshop", "flooded", "cave",
 			"collapse");
 
-	/** Hatch to lab floor, in blocks: deeper than the prototypes (11–15), and different every time. */
-	static final int MIN_DEPTH = 24;
-	static final int MAX_DEPTH = 48;
+	/**
+	 * Hatch to lab floor, in blocks: deeper than the prototypes (11–15), and different every time. Public, with
+	 * the rules below, for the lab under a town hall (MOD-830), which follows the same ones.
+	 */
+	public static final int MIN_DEPTH = 24;
+	public static final int MAX_DEPTH = 48;
 
 	/** Shaft levels that always stay above the lab's highest block (the entrance spec asks for six). */
-	static final int MIN_SHAFT_ABOVE_LAB = 6;
+	public static final int MIN_SHAFT_ABOVE_LAB = 6;
 
 	/** The lab floor never comes closer than this to the bottom of the world. */
-	static final int FLOOR_ABOVE_MIN_Y = 8;
+	public static final int FLOOR_ABOVE_MIN_Y = 8;
 
 	/** Depths tried in solid rock before the site is given up. */
-	static final int DEPTH_ATTEMPTS = 4;
+	public static final int DEPTH_ATTEMPTS = 4;
 
 	/** The largest ground-height difference allowed inside the entrance footprint. */
 	static final int MAX_GROUND_STEP = 1;
@@ -102,14 +105,16 @@ public final class AbandonedLabPlacer {
 	 * How far past its own box the lab is read: the rock check looks at the shell one block thick, and
 	 * {@code StructureTemplate.placeInWorld} reads each placed block's neighbours to update its shape.
 	 */
-	static final int LAB_READ_MARGIN = 1;
+	public static final int LAB_READ_MARGIN = 1;
 
-	private static final List<Supplier<Block>> DIGITS = List.of(
+	/** The engraved digit plates, 0 to 9 by index — the plaque of a lab, and of a town's houses (MOD-830). */
+	public static final List<Supplier<Block>> DIGITS = List.of(
 			ModContent.ENGRAVED_PLATE_0, ModContent.ENGRAVED_PLATE_1, ModContent.ENGRAVED_PLATE_2,
 			ModContent.ENGRAVED_PLATE_3, ModContent.ENGRAVED_PLATE_4, ModContent.ENGRAVED_PLATE_5,
 			ModContent.ENGRAVED_PLATE_6, ModContent.ENGRAVED_PLATE_7, ModContent.ENGRAVED_PLATE_8,
 			ModContent.ENGRAVED_PLATE_9);
-	private static final List<Supplier<Block>> BROKEN_LETTERS = List.of(
+	/** The seven broken letter plates: the lost letter of a previous record. */
+	public static final List<Supplier<Block>> BROKEN_LETTERS = List.of(
 			ModContent.BROKEN_ENGRAVED_PLATE_W, ModContent.BROKEN_ENGRAVED_PLATE_K,
 			ModContent.BROKEN_ENGRAVED_PLATE_P, ModContent.BROKEN_ENGRAVED_PLATE_B,
 			ModContent.BROKEN_ENGRAVED_PLATE_D, ModContent.BROKEN_ENGRAVED_PLATE_R,
@@ -321,7 +326,8 @@ public final class AbandonedLabPlacer {
 		return !state.isAir() && state.getFluidState().isEmpty() && state.getCollisionShape(level, pos).isEmpty();
 	}
 
-	private static boolean isRock(BlockState state) {
+	/** Solid ground a lab may be dug into: not air, no fluid, nothing world generation must not replace. */
+	public static boolean isRock(BlockState state) {
 		return !state.isAir() && state.getFluidState().isEmpty() && !state.is(BlockTags.FEATURES_CANNOT_REPLACE);
 	}
 
@@ -346,20 +352,38 @@ public final class AbandonedLabPlacer {
 					hatch, plates.size());
 			return;
 		}
-		Direction readerRight = facing.getOpposite().getClockWise();
-		plates.sort(Comparator.comparingInt(
-				p -> p.getX() * readerRight.getStepX() + p.getZ() * readerRight.getStepZ()));
+		sortForReader(plates, facing);
 		int number = ArchiveRecord.labNumber(level.getSeed(), hatch.getX(), hatch.getY(), hatch.getZ());
-		List<Block> engraved = List.of(
-				BROKEN_LETTERS.get(random.nextInt(BROKEN_LETTERS.size())).get(),
-				DIGITS.get(number / 100).get(),
-				DIGITS.get(number / 10 % 10).get(),
-				DIGITS.get(number % 10).get());
+		List<Block> engraved = plaque(BROKEN_LETTERS.get(random.nextInt(BROKEN_LETTERS.size())).get(), number);
 		for (int i = 0; i < plates.size(); i++) {
 			level.setBlock(plates.get(i),
 					engraved.get(i).defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, facing),
 					Block.UPDATE_CLIENTS);
 		}
+	}
+
+	/**
+	 * Sorts the plates of one plaque, facing {@code facing}, from left to right as a reader in front of the wall
+	 * sees them: the letter first, then the three digits.
+	 */
+	public static void sortForReader(List<BlockPos> plates, Direction facing) {
+		Direction readerRight = facing.getOpposite().getClockWise();
+		plates.sort(Comparator.comparingInt(
+				p -> p.getX() * readerRight.getStepX() + p.getZ() * readerRight.getStepZ()));
+	}
+
+	/** The four plates of a plaque, in reading order: {@code letter}, then the three digits of {@code number}. */
+	public static List<Block> plaque(Block letter, int number) {
+		List<Block> plates = new ArrayList<>(4);
+		plates.add(letter);
+		plates.addAll(digits(number));
+		return List.copyOf(plates);
+	}
+
+	/** The three digit plates of {@code number}, 0 to 999, in reading order. */
+	public static List<Block> digits(int number) {
+		return List.of(DIGITS.get(number / 100).get(), DIGITS.get(number / 10 % 10).get(),
+				DIGITS.get(number % 10).get());
 	}
 
 	/** Ladder and stone walls from the lab's top up to the slab under the hatch. */
@@ -419,12 +443,13 @@ public final class AbandonedLabPlacer {
 		}
 	}
 
-	private static BlockState ladder(Rotation rotation) {
+	/** The shaft's ladder, on the wall the lab template's own ladder uses, turned with the lab. */
+	public static BlockState ladder(Rotation rotation) {
 		return turned(Blocks.LADDER.defaultBlockState().setValue(LadderBlock.FACING, Direction.WEST), rotation);
 	}
 
 	/** The one element that never changes with the biome: the oxidized copper hatch, shut, flush with the ground. */
-	private static BlockState trapdoor(Rotation rotation) {
+	public static BlockState trapdoor(Rotation rotation) {
 		return turned(Blocks.COPPER_TRAPDOOR.weathering().oxidized().defaultBlockState()
 				.setValue(TrapDoorBlock.HALF, Half.TOP)
 				.setValue(TrapDoorBlock.OPEN, false)

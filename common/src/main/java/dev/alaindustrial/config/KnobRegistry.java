@@ -122,6 +122,18 @@ public final class KnobRegistry {
 	}
 
 	/**
+	 * Switch every knob that declares a {@link Knob#devDefault()} to it (MOD-847). A loader calls this once, before
+	 * its first load, when it runs from a development environment; the knob's default is then the development one
+	 * for the whole run — the file's defaults block records it, so the ADR-033 rules see an untouched knob as
+	 * untouched and an edited one as the operator's. A production run never calls it.
+	 */
+	public void useDevelopmentDefaults() {
+		for (ConfigField field : fields) {
+			field.useDevelopmentDefault();
+		}
+	}
+
+	/**
 	 * Restore every tunable to the value compiled into this build — the state a fresh install starts
 	 * from. Used when the file is absent (MOD-694) and when its schema is from the future: leaving
 	 * whatever the previous load happened to apply would mean the server keeps running on a file nobody

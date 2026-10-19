@@ -1,0 +1,22 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "exclusion_zone": {
+      "chunk_count": 10,
+      "other_set": "minecraft:villages"
+    },
+    "salt": 830824019,
+    "separation": 16,
+    "spacing": 40
+  },
+  "structures": [
+    {
+      "structure": "alaindustrial:ala_town_plains",
+      "weight": 1
+    },
+    {
+      "structure": "alaindustrial:ala_town_desert",
+      "weight": 1
+    }
+  ]
+}

@@ -68,6 +68,7 @@ public final class ModDataComponents {
 	public static final Identifier CABLE_COLOR_ID = Industrialization.id("cable_color");
 	public static final Identifier ITEM_MODULES_ID = Industrialization.id("item_modules");
 	public static final Identifier MAGNET_FILTER_ID = Industrialization.id("magnet_filter");
+	public static final Identifier SETTLEMENT_ID_ID = Industrialization.id("settlement_id");
 	public static final Identifier STEP_ASSIST_ENABLED_ID = Industrialization.id("step_assist_enabled");
 	public static final Identifier SABER_ACTIVE_ID = Industrialization.id("saber_active");
 	public static final Identifier SOUL_VESSEL_KILLS_ID = Industrialization.id("soul_vessel_kills");
@@ -292,6 +293,22 @@ public final class ModDataComponents {
 	public static Supplier<DataComponentType<dev.alaindustrial.item.tool.MagnetFilter>> MAGNET_FILTER = () -> {
 		throw new IllegalStateException("ModDataComponents.MAGNET_FILTER read before its loader bound it");
 	};
+
+	/**
+	 * Retired by MOD-835 (R43: a core's item keeps no town): never written or read, registered only so a stack saved
+	 * between MOD-831 and MOD-835 still loads — vanilla drops a stack naming an unknown component. Never shipped.
+	 */
+	public static Supplier<DataComponentType<Integer>> SETTLEMENT_ID = () -> {
+		throw new IllegalStateException("ModDataComponents.SETTLEMENT_ID read before its loader bound it");
+	};
+
+	/** Build the retired {@code settlement_id} type both loaders still register (MOD-831, retired by MOD-835). */
+	public static DataComponentType<Integer> createSettlementId() {
+		return DataComponentType.<Integer>builder()
+				.persistent(Codec.INT)
+				.networkSynchronized(ByteBufCodecs.VAR_INT)
+				.build();
+	}
 
 	/** Build the {@code magnet_filter} type both loaders register (MOD-592). */
 	public static DataComponentType<dev.alaindustrial.item.tool.MagnetFilter> createMagnetFilter() {
@@ -730,5 +747,6 @@ public final class ModDataComponents {
 					c -> ELECTRIC_BOW_CHARGED = c),
 			new ComponentDef<>(CABLE_COLOR_ID, ModDataComponents::createCableColor, c -> CABLE_COLOR = c),
 			new ComponentDef<>(ITEM_MODULES_ID, ModDataComponents::createItemModules, c -> ITEM_MODULES = c),
-			new ComponentDef<>(MAGNET_FILTER_ID, ModDataComponents::createMagnetFilter, c -> MAGNET_FILTER = c));
+			new ComponentDef<>(MAGNET_FILTER_ID, ModDataComponents::createMagnetFilter, c -> MAGNET_FILTER = c),
+			new ComponentDef<>(SETTLEMENT_ID_ID, ModDataComponents::createSettlementId, c -> SETTLEMENT_ID = c));
 }

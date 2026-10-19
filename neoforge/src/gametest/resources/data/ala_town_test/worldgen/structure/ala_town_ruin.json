@@ -1,0 +1,15 @@
+{
+  "type": "alaindustrial:ala_town",
+  "biomes": "#alaindustrial:has_ala_town/plains",
+  "max_distance_from_center": 32,
+  "project_start_to_heightmap": "WORLD_SURFACE_WG",
+  "size": 1,
+  "spawn_overrides": {},
+  "start_height": {
+    "absolute": 0
+  },
+  "start_pool": "ala_town_test:ruin/start",
+  "step": "surface_structures",
+  "style": "ala_town_test:ruin",
+  "terrain_adaptation": "beard_thin"
+}

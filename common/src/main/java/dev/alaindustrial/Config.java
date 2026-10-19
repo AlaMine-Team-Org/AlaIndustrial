@@ -8,6 +8,7 @@ import dev.alaindustrial.core.environment.GeneratorConfig;
 import dev.alaindustrial.core.radiation.RadiationConfig;
 import dev.alaindustrial.core.reactor.ReactorConfig;
 import dev.alaindustrial.item.ToolConfig;
+import dev.alaindustrial.settlement.SettlementConfig;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Supplier;
@@ -23,11 +24,11 @@ import java.util.function.Supplier;
  * simply at its default. An untouched knob follows a changed default through the {@code builtinDefaults}
  * block, an edited one never does (ADR-033, which replaced ADR-013).
  *
- * <p>Knobs live in subsystem holders (ADR-034): {@code RadiationConfig}, {@code GeneratorConfig}, {@code
- * ToolConfig}, {@code ReactorConfig}; {@link #REGISTRY} scans them with this class. The FILE is structured: since
- * MOD-402 it carries a {@link dev.alaindustrial.config.ConfigSchema#VERSION} and groups its keys into
- * {@link Section}s, and the load layer ({@code dev.alaindustrial.config}) migrates an older file into the
- * current shape before reading it. Adding a knob never needs a migration; changing the file's shape does.
+ * <p>Knobs live in subsystem holders (ADR-034): {@code RadiationConfig}, {@code GeneratorConfig}, {@code ToolConfig},
+ * {@code ReactorConfig}, {@code SettlementConfig}; {@link #REGISTRY} scans them with this class. The FILE is
+ * structured: since MOD-402 it carries a {@link dev.alaindustrial.config.ConfigSchema#VERSION} and groups its keys
+ * into {@link Section}s, and the load layer ({@code dev.alaindustrial.config}) migrates an older file into the current
+ * shape before reading it. Adding a knob never needs a migration; changing the file's shape does.
  *
  * <p>The balance fields and the pure file read/write ({@link #loadFrom(Path)}) are loader-neutral
  * and live in {@code common}. Resolving the per-loader config directory and hooking the
@@ -1412,7 +1413,7 @@ public final class Config {
 	 * must stay BELOW the declarations: entries capture compiled defaults; static init runs in source order.
 	 */
 	public static final KnobRegistry REGISTRY = KnobRegistry.scan(List.of(Config.class, RadiationConfig.class,
-			GeneratorConfig.class, ToolConfig.class, ReactorConfig.class));
+			GeneratorConfig.class, ToolConfig.class, ReactorConfig.class, SettlementConfig.class));
 
 	/** Reads and writes {@code config/alaindustrial.json} for {@link #REGISTRY}. */
 	static final ConfigFile FILE = new ConfigFile(REGISTRY);

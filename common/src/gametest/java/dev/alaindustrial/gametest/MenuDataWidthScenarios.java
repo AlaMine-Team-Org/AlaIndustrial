@@ -69,7 +69,9 @@ public final class MenuDataWidthScenarios {
 	// 43 -> 44 (MOD-787): the block breaker.
 	// 44 -> 45 (MOD-802): the vacuum collector.
 	// 45 -> 46 (MOD-818): the electric mob trap.
-	private static final int EXPECTED_MACHINE_MENUS = 46;
+	// 46 -> 47 (MOD-831): the settlement core - twelve channels, the last eight its town's readout.
+	// 47 -> 48 (MOD-833): the reception capsule - fourteen channels, EU in 15-bit halves and the price's readout.
+	private static final int EXPECTED_MACHINE_MENUS = 48;
 
 	/** Reused single cell inside the test region; each machine is placed here, read, then cleared. */
 	private static final BlockPos PROBE = new BlockPos(1, 2, 1);

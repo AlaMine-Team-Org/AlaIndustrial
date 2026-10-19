@@ -98,6 +98,19 @@ public final class ShotFamilies {
                             + "open tab merged into the frame, the status chip names the state the frame is "
                             + "labelled with, the heat marks and their numbers do not collide, no row runs "
                             + "into its neighbour, and the advice box says what to do without clipping")},
+            new Object[] {"gui_settlement_core_", new Family(ShotGroup.GUI, List.of("R-GUI-03"),
+                    "Settlement core (MOD-831, MOD-842): the energy bar on the left, the readout beside it "
+                            + "(power state, radius, houses, workers, upkeep, owner; no tier row) inside the "
+                            + "frame, no inventory rows, an unpowered unowned core saying in red that it has no "
+                            + "power, the show-borders eye under the bar (MOD-843), and below it, across the full "
+                            + "width, how to become the owner, wrapped rather than running past the right border")},
+            new Object[] {"gui_reception_capsule_", new Family(ShotGroup.GUI, List.of("R-GUI-03"),
+                    "Reception capsule (MOD-833, MOD-844): a tall window; a 3D shift-worker head beside the "
+                            + "workers and EU rows, a full-width progress bar, then one row per material - its slot "
+                            + "with a faded hint, the material's name (wrapped, never overlapping) and an 'in slot / "
+                            + "needed' count right-aligned in red - with the energy bar beside the rows, the "
+                            + "player's inventory below, and a bare capsule with no core saying in red on its status "
+                            + "row why it waits, the text inside the frame")},
             new Object[] {"gui_skill_tree_", new Family(ShotGroup.GUI, List.of("R-GUI-03"),
                     "Skill wheel (MOD-483): the four branch captions stay pinned in their corners with "
                             + "their icons, no label crosses a node or the profile column, the board is "
@@ -132,6 +145,12 @@ public final class ShotFamilies {
                             + "wall, without a doubled or missing edge")},
 
             // ── Block-entity renderers ──────────────────────────────────────────────────────
+            new Object[] {"shift_worker_", new Family(ShotGroup.WORLD, List.of("R-VIS-13"),
+                    "Shift workers (MOD-832), left to right open M1, window F1, open M3, window F4: from the"
+                            + " front the classic and slim bodies, the faces readable (M3 and F4 too), the window's"
+                            + " glass over the face; from behind the balloon with the number in two lines readable,"
+                            + " the curls above the plate and not over it, no z-fighting on the back; _empty is the"
+                            + " same view without them")},
             new Object[] {"capsule_", new Family(ShotGroup.BER, List.of("R-VIS-04"),
                     "Teleporter capsule: the glass of the door and of the fixed facets is drawn, seen from "
                             + "inside looking ahead and looking down, and from outside")},

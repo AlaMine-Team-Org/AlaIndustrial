@@ -58,6 +58,8 @@ final class BlockEntityDisplayNameSnapshot {
 			"block_breaker @block_breaker: block.alaindustrial.block_breaker",
 			"advanced_industrial_workbench @advanced_industrial_workbench:"
 					+ " container.alaindustrial.advanced_industrial_workbench",
+			"settlement_core @settlement_core: block.alaindustrial.settlement_core",
+			"reception_capsule @reception_capsule: block.alaindustrial.reception_capsule",
 			"distillation_column @distillation_column: block.alaindustrial.distillation_column",
 			"pump @pump: block.alaindustrial.pump",
 			"fermenter @fermenter: block.alaindustrial.fermenter",

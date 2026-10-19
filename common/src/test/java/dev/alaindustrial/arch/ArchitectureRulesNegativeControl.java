@@ -207,6 +207,37 @@ class ArchitectureRulesNegativeControl {
 	}
 
 	/**
+	 * MOD-827 — the rules of {@link RecordNumberRules} are no tautology. Each listed member is really called by
+	 * the one class allowed to call it, so an owner or a name spelt wrong cannot leave a rule that matches
+	 * nothing; and the rule's own condition, run over the production classes with that class left in, reports
+	 * exactly it. The condition's ability to fail on calls and method references is the fixture case above.
+	 */
+	@Test
+	void everyRecordNumberSourceIsCalledByItsService() {
+		List<FacadeOnlyMember> members = new java.util.ArrayList<>(RecordNumberRules.ISSUING_MEMBERS);
+		members.addAll(RecordNumberRules.PLAYER_RECORD_MEMBERS);
+		for (FacadeOnlyMember member : members) {
+			assertTrue(productionClasses.contain(member.facade()), member.facade() + " is not a production class");
+			boolean calls = productionClasses.get(member.facade()).getCodeUnits().stream()
+					.flatMap(codeUnit -> codeUnit.getMethodCallsFromSelf().stream())
+					.anyMatch(call -> member.matches(call.getTargetOwner(), call.getName(),
+							call.getTarget().getRawParameterTypes()));
+			assertTrue(calls, member.facade() + " no longer calls " + member.name() + " — RecordNumberRules "
+					+ "would ban a member nobody calls");
+		}
+		EvaluationResult issuing = noClasses().should(callAFacadeOnlyMember(RecordNumberRules.ISSUING_MEMBERS))
+				.evaluate(productionClasses);
+		String report = issuing.getFailureReport().toString();
+		assertTrue(report.contains("RecordNumberSequence.indexAt in " + RecordNumberRules.ISSUING_SERVICE + "."),
+				report);
+		assertTrue(report.contains("RecordNumber.ofIndex in " + RecordNumberRules.ISSUING_SERVICE + "."), report);
+		EvaluationResult player = noClasses().should(callAFacadeOnlyMember(RecordNumberRules.PLAYER_RECORD_MEMBERS))
+				.evaluate(productionClasses);
+		assertTrue(player.getFailureReport().toString().contains("ArchiveRecord.of in "
+				+ RecordNumberRules.PLAYER_RECORD_BRIDGE + "."), player.getFailureReport().toString());
+	}
+
+	/**
 	 * MOD-780 — {@code renderersDrawGlassWithoutDepthWrites}: the condition reports the three shapes in which a
 	 * renderer reaches the depth-writing sheet ({@code DepthWritingSheetViolator}: a direct call, a call inside a
 	 * lambda — which ArchUnit files under the method that declares the lambda, here the static initialiser, not

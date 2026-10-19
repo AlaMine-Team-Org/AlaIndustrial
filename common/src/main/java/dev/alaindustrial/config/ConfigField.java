@@ -32,6 +32,8 @@ abstract class ConfigField {
 	final double floorTo;
 	/** Sent to clients and read there through {@code ServerBalance} (MOD-695). */
 	final boolean clientVisible;
+	/** The default in a development environment, or {@link Double#NaN} for none ({@link Knob#devDefault()}). */
+	final double devDefault;
 
 	ConfigField(Field field, Knob knob) {
 		this.key = field.getName();
@@ -42,6 +44,7 @@ abstract class ConfigField {
 		this.exclusive = knob.exclusive();
 		this.floorTo = knob.floorTo();
 		this.clientVisible = knob.clientVisible();
+		this.devDefault = knob.devDefault();
 	}
 
 	/**
@@ -52,6 +55,10 @@ abstract class ConfigField {
 		Class<?> type = field.getType();
 		if (type == int.class) {
 			return new IntField(field, knob);
+		}
+		if (!Double.isNaN(knob.devDefault())) {
+			throw new IllegalStateException("@Knob field " + field.getName()
+					+ " declares a devDefault, which only an int knob may carry");
 		}
 		if (type == float.class) {
 			return new FloatField(field, knob);
@@ -121,6 +128,14 @@ abstract class ConfigField {
 	 * built, before any file could touch it). Used by {@link KnobRegistry#resetToDefaults()}.
 	 */
 	abstract void resetToDefault();
+
+	/**
+	 * Make {@link Knob#devDefault()} this knob's compiled default and put the live field on it (MOD-847); a knob
+	 * that declares none is left alone. Called once, before the first load, by a loader running from a
+	 * development environment — so the builtin baseline every later load starts from is the development one.
+	 */
+	void useDevelopmentDefault() {
+	}
 
 	/** Add the {@code _comment_<field>} doc right before its field (Gson keeps insertion order); never read. */
 	void writeComment(JsonObject out) {

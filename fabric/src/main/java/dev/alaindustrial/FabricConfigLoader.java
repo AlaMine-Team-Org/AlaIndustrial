@@ -26,6 +26,10 @@ final class FabricConfigLoader {
 	 * A reload also re-sends the balance to every connected client (MOD-695). */
 	static void register() {
 		Config.configPath = FabricConfigLoader::configPath;
+		if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
+			// MOD-847: a dev run takes the knobs' development defaults before the first load reads them.
+			Config.REGISTRY.useDevelopmentDefaults();
+		}
 		Config.reload();
 		ServerLifecycleEvents.END_DATA_PACK_RELOAD.register(
 				(server, resources, success) -> ConfigSync.reloadAndBroadcast(server));

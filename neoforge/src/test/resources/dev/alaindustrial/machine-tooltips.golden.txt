@@ -1935,6 +1935,24 @@ tooltip.alaindustrial.tier_lv {green}
 == alaindustrial:reactor_lever plain : none
 == alaindustrial:reactor_outlet plain : none
 == alaindustrial:reactor_port plain : none
+== alaindustrial:reception_capsule plain
+-- plain eu
+tooltip.alaindustrial.reception_capsule.purpose {gray}
+tooltip.alaindustrial.reception_capsule.eu_per_worker(100000) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.reception_capsule.purpose {gray}
+tooltip.alaindustrial.reception_capsule.eu_per_worker(100000) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.buffer(200000) {gray}
+tooltip.alaindustrial.duration_ticks(200) {gray}
+-- plain no-eu
+tooltip.alaindustrial.reception_capsule.purpose {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.reception_capsule.purpose {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.duration_ticks(200) {gray}
 == alaindustrial:rectification_section plain : none
 == alaindustrial:recycler plain
 -- plain eu
@@ -1991,6 +2009,20 @@ tooltip.alaindustrial.tier_lv {green}
 == alaindustrial:scythe_stone plain : none
 == alaindustrial:scythe_tempered_iron plain : none
 == alaindustrial:scythe_wood plain : none
+== alaindustrial:settlement_core plain
+-- plain eu
+tooltip.alaindustrial.energy_input(8) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.energy_input(8) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.buffer(2000) {gray}
+tooltip.alaindustrial.range(32) {gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.range(32) {gray}
 == alaindustrial:shielding_alloy_block plain : none
 == alaindustrial:shielding_alloy_ingot plain : none
 == alaindustrial:shielding_alloy_plate plain : none

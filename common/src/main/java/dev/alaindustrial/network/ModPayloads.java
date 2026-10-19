@@ -142,6 +142,8 @@ public final class ModPayloads {
 			clientbound(ArchiveRecordPayload.TYPE, ArchiveRecordPayload.CODEC),
 			// MOD-695: the server's client-visible balance, at login and after every config reload.
 			clientbound(ConfigSyncPayload.TYPE, ConfigSyncPayload.CODEC),
+			// MOD-843: a settlement's border for its core's "show borders" button — personal, one per press.
+			clientbound(SettlementBorderPayload.TYPE, SettlementBorderPayload.CODEC),
 			// MOD-093: renaming a teleport point — the one string that needs a payload of its own.
 			serverbound(TeleportRenamePayload.TYPE, TeleportRenamePayload.CODEC, TeleportRenamePayload::handle),
 			// MOD-592: a recipe-viewer drop onto a magnet filter cell.

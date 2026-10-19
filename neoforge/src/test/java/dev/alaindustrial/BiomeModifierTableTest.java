@@ -30,8 +30,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
  *
  * <p>For every modifier name of the table, the file
  * {@code neoforge/src/main/resources/data/alaindustrial/neoforge/biome_modifier/<name>.json} must hold, byte
- * for byte, what {@link #render} writes for its rows, and every mob of {@link ModMobs#MOBS} has its
- * {@code <mob>_spawns.json} as {@link #renderSpawns} writes it; no other biome modifier file of this mod may
+ * for byte, what {@link #render} writes for its rows, and every mob of {@link ModMobs#MOBS} with a natural spawn
+ * has its {@code <mob>_spawns.json} as {@link #renderSpawns} writes it; no other biome modifier file of this mod may
  * exist. The files are read as the server loaded them, so a file the game does not see counts as missing.
  *
  * <p><b>Written only by an explicit command (ADR-032)</b>, never by the build, a hook or {@code regen.py}:
@@ -91,12 +91,16 @@ class BiomeModifierTableTest {
 	/**
 	 * One NeoForge {@code add_spawns} file per mob of {@link ModMobs#MOBS} (MOD-767), named
 	 * {@code <mob>_spawns}: the Fabric side replays the same {@link ModMobs.NaturalSpawn} in code. The spawner
-	 * entry's shape is the line's own ({@link MobSpawns#spawnerJson}).
+	 * entry's shape is the line's own ({@link MobSpawns#spawnerJson}). A mob that never appears on its own (the shift
+	 * worker, MOD-832) has no file.
 	 */
 	static Map<String, String> renderSpawns(List<ModMobs.MobDef<?>> mobs) {
 		Map<String, String> files = new LinkedHashMap<>();
 		for (ModMobs.MobDef<?> mob : mobs) {
 			ModMobs.NaturalSpawn spawn = mob.naturalSpawn();
+			if (spawn == null) {
+				continue;
+			}
 			files.put(mob.id() + "_spawns", "{\n"
 					+ "\t\"type\": \"neoforge:add_spawns\",\n"
 					+ "\t\"biomes\": \"#" + spawn.biomes().location() + "\",\n"

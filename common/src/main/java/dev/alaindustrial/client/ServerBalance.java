@@ -6,6 +6,7 @@ import dev.alaindustrial.KnobSnapshot;
 import dev.alaindustrial.core.environment.GeneratorConfig;
 import dev.alaindustrial.core.machine.MachineRates;
 import dev.alaindustrial.item.ToolConfig;
+import dev.alaindustrial.settlement.SettlementConfig;
 import java.util.Map;
 import java.util.Optional;
 
@@ -648,6 +649,26 @@ public final class ServerBalance {
 
 	public static double scytheBonusSeedMultiplier() {
 		return current.doubleValue("scytheBonusSeedMultiplier", ToolConfig.scytheBonusSeedMultiplier);
+	}
+
+	public static int capsuleEuPerWorker() {
+		return current.intValue("capsuleEuPerWorker", SettlementConfig.capsuleEuPerWorker);
+	}
+
+	public static int capsuleRestoreTicks() {
+		return current.intValue("capsuleRestoreTicks", SettlementConfig.capsuleRestoreTicks);
+	}
+
+	public static int settlementCoreBuffer() {
+		return current.intValue("settlementCoreBuffer", SettlementConfig.settlementCoreBuffer);
+	}
+
+	public static int settlementCoreEuPerTickLv() {
+		return current.intValue("settlementCoreEuPerTickLv", SettlementConfig.settlementCoreEuPerTickLv);
+	}
+
+	public static int settlementRadiusLv() {
+		return current.intValue("settlementRadiusLv", SettlementConfig.settlementRadiusLv);
 	}
 
 	public static int shieldingPouchCapacity() {

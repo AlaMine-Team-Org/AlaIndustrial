@@ -116,6 +116,12 @@ final class MachineCapabilitySnapshot {
 			"block_breaker: owner=Characterizer active=3 items=5 eu=11/13/17/19 panel=1 mute=1 stats=1"
 					+ " oc=0/0 rate=2 dur=200 evolve=-1/-1",
 			"block_breaker keys: -EvolveProgress -EvolveChip",
+			"settlement_core: owner=null active=3 items=5 eu=11/13/17/19 panel=0 mute=0 stats=0 oc=0/0"
+					+ " rate=2 dur=200 evolve=-1/-1",
+			"settlement_core keys: -Owner -OwnerName -EvolveProgress -EvolveChip",
+			"reception_capsule: owner=null active=3 items=5 eu=11/13/17/19 panel=0 mute=0 stats=0"
+					+ " oc=0/0 rate=2 dur=200 evolve=-1/-1",
+			"reception_capsule keys: -Owner -OwnerName -EvolveProgress -EvolveChip",
 			"distillation_column: owner=Characterizer active=3 items=5 eu=11/13/17/19 panel=1 mute=1"
 					+ " stats=1 oc=1/3 rate=4 dur=160 evolve=-1/-1",
 			"distillation_column keys: -EvolveProgress -EvolveChip",

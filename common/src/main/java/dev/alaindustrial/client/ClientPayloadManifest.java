@@ -4,6 +4,7 @@ import dev.alaindustrial.client.guide.ArchiveRecordClient;
 import dev.alaindustrial.client.hud.TeleportFadeHud;
 import dev.alaindustrial.client.hud.TeleportNotice;
 import dev.alaindustrial.client.render.NetworkOverlayRenderer;
+import dev.alaindustrial.client.render.SettlementBorderOverlay;
 import dev.alaindustrial.client.render.ZonePreviewRenderer;
 import dev.alaindustrial.network.ArchiveRecordPayload;
 import dev.alaindustrial.network.ConfigSyncPayload;
@@ -11,6 +12,7 @@ import dev.alaindustrial.network.MachineStatsPayload;
 import dev.alaindustrial.network.NetworkAnalyzerPayload;
 import dev.alaindustrial.network.ReactorLogPayload;
 import dev.alaindustrial.network.ReactorZonePayload;
+import dev.alaindustrial.network.SettlementBorderPayload;
 import dev.alaindustrial.network.ZonePreviewPayload;
 import dev.alaindustrial.network.TeleportFadePayload;
 import dev.alaindustrial.network.TeleportNoticePayload;
@@ -118,7 +120,9 @@ public final class ClientPayloadManifest {
 			// MOD-695: the server's balance, kept beside Config (never written into it).
 			queued(ConfigSyncPayload.TYPE, payload -> ServerBalance.receive(payload.data())),
 			// MOD-093: why a jump was refused, shown inside the remote's screen.
-			queued(TeleportNoticePayload.TYPE, payload -> TeleportNotice.receive(payload.message())));
+			queued(TeleportNoticePayload.TYPE, payload -> TeleportNotice.receive(payload.message())),
+			// MOD-843: toggles this client's view of a settlement's border.
+			queued(SettlementBorderPayload.TYPE, SettlementBorderOverlay::receive));
 
 	private static final Map<CustomPacketPayload.Type<?>, ClientHandlerDef<?>> BY_TYPE = index();
 
