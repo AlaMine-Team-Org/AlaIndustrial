@@ -50,4 +50,14 @@ public @interface Knob {
 	 * live balance in single player. {@code ServerBalanceTest} holds the flag and the readers in step.
 	 */
 	boolean clientVisible() default false;
+
+	/**
+	 * The default this knob compiles to in a DEVELOPMENT environment (a dev client, a dev server, a gametest run),
+	 * or {@link Double#NaN} — the default — for none (MOD-847). A loader that knows it runs from a development
+	 * environment calls {@link KnobRegistry#useDevelopmentDefaults()} before the first load, and from then on this
+	 * value IS the build's default for every rule of ADR-033: an absent file is written with it, a missing key takes
+	 * it, an untouched knob follows it and a value the operator edited stays theirs. Use it for a wait a tester
+	 * cannot sit through in game — a whole day's restoration shortened to seconds — never for balance. Int knobs only.
+	 */
+	double devDefault() default Double.NaN;
 }

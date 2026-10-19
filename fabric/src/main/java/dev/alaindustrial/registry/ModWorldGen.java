@@ -4,6 +4,7 @@ import dev.alaindustrial.worldgen.AbandonedLabFeature;
 import dev.alaindustrial.worldgen.OilGeyserFeature;
 import dev.alaindustrial.worldgen.OilLakeFeature;
 import dev.alaindustrial.worldgen.OilLakeFilter;
+import dev.alaindustrial.worldgen.town.AlaTownTypes;
 import java.util.function.Predicate;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext;
@@ -30,6 +31,11 @@ public final class ModWorldGen {
 		Registry.register(BuiltInRegistries.FEATURE, OilLakeFeature.ID, OilLakeFeature.INSTANCE);
 		Registry.register(BuiltInRegistries.FEATURE, OilGeyserFeature.ID, OilGeyserFeature.INSTANCE);
 		Registry.register(BuiltInRegistries.FEATURE, AbandonedLabFeature.ID, AbandonedLabFeature.INSTANCE);
+		// MOD-830: the ALA town — its structure type (a town file's "type") and the lab piece's type (written
+		// into saved chunks). Both must exist before the datapack and before the first saved town is read.
+		Registry.register(BuiltInRegistries.STRUCTURE_TYPE, AlaTownTypes.STRUCTURE_TYPE_ID,
+				AlaTownTypes.STRUCTURE_TYPE);
+		Registry.register(BuiltInRegistries.STRUCTURE_PIECE, AlaTownTypes.LAB_PIECE_ID, AlaTownTypes.LAB_PIECE);
 		// MOD-708: which placed feature goes into which biomes at which step is the shared table
 		// WorldgenInjections.INJECTIONS; NeoForge's biome modifier files are written from the same rows.
 		for (WorldgenInjections.Injection injection : WorldgenInjections.INJECTIONS) {

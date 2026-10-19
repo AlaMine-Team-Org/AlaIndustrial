@@ -2,6 +2,7 @@ package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.block.DistillationColumnBlock;
 import dev.alaindustrial.block.FuelRodAssemblyBlock;
+import dev.alaindustrial.block.ReceptionCapsuleBlock;
 import dev.alaindustrial.block.UpgradeTableBlock;
 import dev.alaindustrial.block.entity.FuelRodAssemblyBlockEntity;
 import dev.alaindustrial.block.entity.VulcanizerStatus;
@@ -132,6 +133,15 @@ public class ScreensClientGameTest implements FabricClientGameTest {
             // MOD-393: the condenser's readout IS its mechanic (which tier now, how far to the
             // next), so the frame is what guards those two lines against silently vanishing.
             new Screen("energy_condenser", "energy_condenser", "Energy Condenser"),
+            // MOD-831: the settlement core. The stand places a bare, unpowered core, so the frame captures
+            // the dead town a player finds: "no power" in red, the LV readout, no owner and the hint on how
+            // to become one, wrapped under the bar (MOD-842: no tier row, the hint stays inside the frame).
+            // A regression into a blank panel would hide the one way to claim a town.
+            new Screen("settlement_core", "settlement_core", "Settlement Core"),
+            // MOD-833: the reception capsule, two blocks tall (see placeScreenBlock). The rig has no core, so the
+            // frame captures the capsule's resting refusal in red, the empty material slots with their faded hints
+            // and counts, and the zero-filled bars. A regression into a blank status row would hide every refusal.
+            new Screen("reception_capsule", "reception_capsule", "Reception Capsule"),
             new Screen("teleporter_station", "teleporter", "Teleporter Station"),
             // Already had frames before MOD-362, but only under the historical name gui_geothermal_*
             // and only through data injection. Listed here so it is opened the real way like the rest.
@@ -376,6 +386,13 @@ public class ScreensClientGameTest implements FabricClientGameTest {
                 level.setBlockAndUpdate(lower.above(), casing);
                 UpgradeTableBlock.tryAssemble(level, lower.above());
             });
+            return;
+        }
+        if (screen.blockId().equals("reception_capsule")) {
+            // MOD-833: the capsule is three blocks tall (MOD-850) and raises its flask in setPlacedBy, which a
+            // programmatic placement never runs — all three cells through the block's own helper, as the demo stand.
+            server.runOnServer(mc -> ReceptionCapsuleBlock.placeWhole(mc.overworld(), new BlockPos(x, BLOCK_Y, RIG_Z),
+                    Direction.NORTH, ModContent.RECEPTION_CAPSULE.get()));
             return;
         }
         if (screen.menuId().equals("double_chest")) {

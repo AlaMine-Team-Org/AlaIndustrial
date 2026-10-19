@@ -3,6 +3,7 @@ package dev.alaindustrial.registry;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.entity.OilSlime;
 import dev.alaindustrial.entity.OilSlimeSpawning;
+import dev.alaindustrial.entity.ShiftWorker;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
@@ -21,6 +22,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.Heightmap;
+import org.jspecify.annotations.Nullable;
 
 /**
  * The mod's living mobs, declared once (MOD-767). Everything a loader needs to make a mob exist — the
@@ -47,12 +49,13 @@ public final class ModMobs {
 
 	/**
 	 * One mob: its registry id, factory and category, the vanilla builder calls (size, eye height, …), its
-	 * default attributes, where a spawn may stand and the rule that decides it, and its natural spawn.
+	 * default attributes, where a spawn may stand and the rule that decides it, and its natural spawn — null for
+	 * a mob that never appears on its own (the shift worker, MOD-832).
 	 */
 	public record MobDef<T extends Mob>(String id, EntityType.EntityFactory<T> factory, MobCategory category,
 			UnaryOperator<EntityType.Builder<T>> builder, Supplier<AttributeSupplier.Builder> attributes,
 			SpawnPlacementType placement, Heightmap.Types heightmap, SpawnPlacements.SpawnPredicate<T> spawnRule,
-			NaturalSpawn naturalSpawn) {
+			@Nullable NaturalSpawn naturalSpawn) {
 
 		public Identifier key() {
 			return Industrialization.id(id);
@@ -85,6 +88,17 @@ public final class ModMobs {
 			Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, OilSlimeSpawning::canSpawn,
 			new NaturalSpawn(HAS_OIL_SLIMES, 10, 1, 2));
 
+	/**
+	 * The shift worker (MOD-832, docs/mobs/shift_worker.md): a player's size and eye height (vanilla
+	 * {@code EntityTypes.PLAYER}: 0.6 × 1.8, eyes at 1.62), a villager's category and tracking range, no loot table.
+	 * It never spawns on its own — only the reception capsule makes one, through {@code ShiftWorkers.spawn} — so
+	 * its spawn rule refuses every natural, spawner and egg spawn, and it has no natural spawn.
+	 */
+	public static final MobDef<ShiftWorker> SHIFT_WORKER = new MobDef<>("shift_worker", ShiftWorker::new,
+			MobCategory.MISC, b -> b.sized(0.6F, 1.8F).eyeHeight(1.62F).clientTrackingRange(10).noLootTable(),
+			ShiftWorker::createAttributes, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+			(type, level, reason, pos, random) -> false, null);
+
 	/** Every mob of the mod, in registration order. */
-	public static final List<MobDef<?>> MOBS = List.of(OIL_SLIME);
+	public static final List<MobDef<?>> MOBS = List.of(OIL_SLIME, SHIFT_WORKER);
 }

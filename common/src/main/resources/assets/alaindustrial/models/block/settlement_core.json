@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "particle": "alaindustrial:block/settlement_core_side",
+    "top": "alaindustrial:block/settlement_core_top",
+    "bottom": "alaindustrial:block/machine_bottom",
+    "side": "alaindustrial:block/settlement_core_side"
+  }
+}

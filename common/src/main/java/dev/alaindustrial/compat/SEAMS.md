@@ -43,6 +43,7 @@ the authority on what its line does and why (javap evidence included).
 | `CriterionPlayer` | `MapCodec<…> FIELD` (the optional `"player"` field of a criterion instance) | `LootItemCondition.CODEC.optionalFieldOf("player")`, type `Optional<Holder<LootItemCondition>>` | `EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player")`, type `Optional<ContextAwarePredicate>` | MOD-704 |
 | `MobSpawns` | `List<EntityType<?>> typesAt(ServerLevel, MobCategory, BlockPos)`, `String spawnerJson(Identifier, int weight, int minGroup, int maxGroup)` | `getMobsAt(level, …)`; group size is one `count` int provider | `getMobsAt(level.getBiome(pos), …)`; group size is `minCount`/`maxCount` | MOD-767 |
 | `SignTexts` | `void setFront(SignBlockEntity, List<Component>)` | `SignText.EMPTY.asMutable().setLine(..)`, `setText(text.asImmutable(), SignTextSlot.FRONT)` | `new SignText().setMessage(..)`, `setText(text, true)` — no `SignText.Mutable`, no `SignTextSlot` | MOD-799 |
+| `LineStructures` | `StructureTemplateManager templates(MinecraftServer)`, `StructureTemplateManager templates(ServerLevel)`, `boolean isValidBiome(Structure.GenerationContext, Structure.GenerationStub)` | `getStructureTemplateManager()`; `context.isValidBiome(stub)` | `getStructureManager()`; the private `Structure.isValidBiome` repeated: the noise biome at the stub's start tested by `context.validBiome()` | MOD-830 |
 
 The field type of `CriterionPlayer.FIELD` is the line's: `SimpleCriterionTrigger.SimpleInstance#player()` fixes
 it, so the `player` component of the three triggers' record headers stays a one-line difference.
@@ -74,6 +75,7 @@ line-neutral.
 | `LineBlockFacts` | `String pushIntent(BlockState)`, `boolean washedAwayByLine(Block)` | the 26.3 push reactions; membership of `#minecraft:washed_away_by_fluids` | the 26.2 push reactions; the `forceSolidOff` flag of the block's properties | MOD-703 |
 | `UseResults` | `boolean isSwingSuccess(InteractionResult)`, `boolean isNoSwingConsume(InteractionResult)` | a `Success` with swing source `PREDICTED` / `NONE` | swing source `CLIENT` / `NONE` | MOD-703 |
 | `LineShovelFacts` | `boolean dousesLitCampfire(Direction, boolean)` | `!sneaking`: the campfire douses by the `#minecraft:douses_campfires` tag (NeoForge: `SHOVEL_DOUSE`, by the same tag) from any face, and a sneaking click skips the block | `face != DOWN`: `ShovelItem.useOn` answers `PASS` for `DOWN` first and ignores sneaking | MOD-744 |
+| `TownTerrain` | `RandomState randomState(RegistryAccess, Holder<NoiseGeneratorSettings>, long)`, `Climate.Sampler climate(RandomState)`, `Holder<Biome> noiseBiome(BiomeSource, Climate.Sampler, int, int, int)`, `StructureStart generate(ServerLevel, Holder<Structure>, ChunkGenerator, BiomeSource, Climate.Sampler, RandomState, long, ChunkPos)` | `RandomState.create(noises, seed, settings)`; `createClimateSampler(SamplerContext.EMPTY_UNCACHED)`; `createResolver(sampler).getNoiseBiome(x, y, z)`; `generate` with the sampler | `RandomState.create(settings, noises, seed)`; `randomState.sampler()`; `getNoiseBiome(x, y, z, sampler)`; `generate` without it | MOD-830 |
 
 ## `dev.alaindustrial.compat` (fabric/src/gametest, the L3 lane)
 

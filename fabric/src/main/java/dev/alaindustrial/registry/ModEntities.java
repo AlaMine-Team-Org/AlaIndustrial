@@ -90,14 +90,17 @@ public final class ModEntities {
 		return Registry.register(BuiltInRegistries.ENTITY_TYPE, key, builder.build(key));
 	}
 
-	/** Bind the eager-registered types into the loader-neutral {@link ModContent} facade. */
+	/** Bind the eager-registered types into the loader-neutral {@link ModContent} facade, add the mobs' spawns. */
 	public static void init() {
 		ModContent.STOCK_DISPLAY_FRAME = () -> STOCK_DISPLAY_FRAME;
-		// Natural spawns of the mobs (MOD-767): the NeoForge counterpart is the add_spawns biome modifier JSON.
+		// Natural spawns of the mobs (MOD-767): the NeoForge counterpart is the add_spawns biome modifier JSON. A mob
+		// without one (the shift worker, MOD-832) never appears on its own.
 		for (ModMobs.MobDef<?> def : ModMobs.MOBS) {
 			ModMobs.NaturalSpawn spawn = def.naturalSpawn();
-			BiomeModifications.addSpawn(BiomeSelectors.tag(spawn.biomes()), def.category(), MOBS.get(def.id()),
-					spawn.weight(), spawn.minGroup(), spawn.maxGroup());
+			if (spawn != null) {
+				BiomeModifications.addSpawn(BiomeSelectors.tag(spawn.biomes()), def.category(), MOBS.get(def.id()),
+						spawn.weight(), spawn.minGroup(), spawn.maxGroup());
+			}
 		}
 	}
 }

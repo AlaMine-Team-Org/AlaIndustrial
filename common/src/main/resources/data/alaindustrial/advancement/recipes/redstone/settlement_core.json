@@ -1,0 +1,64 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item_1": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:resonant_crystal"
+          }
+        ]
+      }
+    },
+    "has_item_2": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:reactor_circuit"
+          }
+        ]
+      }
+    },
+    "has_item_3": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:reinforced_bearing"
+          }
+        ]
+      }
+    },
+    "has_item_4": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:cesu"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_item_1"
+    ],
+    [
+      "has_item_2"
+    ],
+    [
+      "has_item_3"
+    ],
+    [
+      "has_item_4"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "alaindustrial:settlement_core"
+    ]
+  }
+}

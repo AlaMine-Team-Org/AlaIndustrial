@@ -91,6 +91,11 @@ dependencies {
 
 tasks.named('test', Test) {
     useJUnitPlatform()
+    // MOD-833: the L1 run outgrew Gradle's default 512 MB test heap. Three suites import every production class
+    // with ArchUnit (ArchitectureRules, ClientBalanceReachRules, ClientVisibleKnobsRules); on main after MOD-832
+    // ClientVisibleKnobsRules already took 6.8 s against 1.9 s with room — a JVM collecting at its ceiling — and
+    // the reception capsule's classes tipped it into "Java heap space". Measured 2026-10-19 (MOD-833 research.md).
+    maxHeapSize = '1g'
     // MOD-434 — deliberately NO maxParallelForks and NO reduced jqwik tries. Both were measured on
     // 2026-08-17 (numbers in the task log): the whole L1 run is only a few seconds of execution, about
     // half of it the single ArchitectureRules class import that no fork can split, and the six jqwik
@@ -458,6 +463,34 @@ pitest {
                      // Minecraft-free on purpose and covered by L1 tests, so they mutate like the core.
                      'dev.alaindustrial.skill.*',
                      'dev.alaindustrial.client.skill.SkillWheelLayout',
+                     // MOD-827: the record numbers' value, their seed-keyed order of issue and the issue
+                     // rule — Minecraft-free on purpose, listed WITH their L1 suites (RecordNumberTest,
+                     // RecordNumberSequenceTest, RecordNumberBookTest). RecordNumberLedger beside them is
+                     // the SavedData and stays out.
+                     'dev.alaindustrial.settlement.record.RecordNumber',
+                     'dev.alaindustrial.settlement.record.RecordNumber$Status',
+                     'dev.alaindustrial.settlement.record.RecordNumberBook',
+                     'dev.alaindustrial.settlement.record.RecordNumberSequence',
+                     // MOD-831: the settlement core's knob holder, its tier ladder, its territory's shape and
+                     // its upkeep rule — Minecraft-free on purpose, listed WITH their L1 suites
+                     // (SettlementTierTest, SettlementTerritoryTest, SettlementCoreUpkeepTest). Settlement and
+                     // SettlementRegistry beside them carry Minecraft types and stay out.
+                     'dev.alaindustrial.settlement.SettlementConfig',
+                     'dev.alaindustrial.settlement.SettlementCoreUpkeep',
+                     'dev.alaindustrial.settlement.SettlementTerritory',
+                     'dev.alaindustrial.settlement.SettlementTier',
+                     // MOD-832: the shift planner, the look rule and a town's path dispatcher —
+                     // Minecraft-free on purpose, listed WITH their L1 suites (ShiftScheduleTest,
+                     // LookPickTest, PathQuotaTest). ShiftMode (a bare enum) gives PIT nothing to mutate
+                     // and sits in pitest_check's NO_MUTABLE_BYTECODE; the knobs are in SettlementConfig.
+                     'dev.alaindustrial.settlement.shift.LookPick*',
+                     'dev.alaindustrial.settlement.shift.PathQuota',
+                     'dev.alaindustrial.settlement.shift.ShiftMode',
+                     'dev.alaindustrial.settlement.shift.ShiftSchedule*',
+                     // MOD-833: the reception capsule's price, refusals and progress — Minecraft-free on purpose,
+                     // listed WITH its L1 suite (ReceptionCapsuleRulesTest). The glob reaches the nested Material,
+                     // Verdict and Situation; ShiftWorkerHost beside it carries Minecraft types and stays out.
+                     'dev.alaindustrial.settlement.ReceptionCapsuleRules*',
                      // MOD-618: the reactor console's verdict, advice, throttle grid and heat trend.
                      // The glob reaches its nested HeatTrend; nothing else in the package starts with
                      // this name, and the tab page next to it (ConsoleTabPage) is Minecraft-bound on
@@ -472,7 +505,15 @@ pitest {
                      // MOD-621: what the Coolant tab says about the water loop — which fault to name first and
                      // how loud the badge is. The glob reaches the nested Survey and Advice records; StackGrid and
                      // CoolantTabPage beside it are Minecraft-bound on purpose. L1: ReactorCoolantTest.
-                     'dev.alaindustrial.client.screen.reactor.ReactorCoolant*'
+                     'dev.alaindustrial.client.screen.reactor.ReactorCoolant*',
+                     // MOD-842: the settlement core screen's text fitter and its layout — Minecraft-free so the
+                     // L1 suite SettlementCoreLayoutTest fits every language with the algorithm the screen draws
+                     // with. The glob reaches the nested Fit record.
+                     'dev.alaindustrial.client.screen.TextFit*',
+                     'dev.alaindustrial.client.screen.SettlementCoreLayout',
+                     // MOD-843: the settlement border shell (walls on the territory edge, floor, ceiling or dome) —
+                     // Minecraft-free, L1 suite SettlementShellTest. The glob reaches the nested Point, Box, Sink.
+                     'dev.alaindustrial.settlement.SettlementShell*'
             ]
     // The MC-coupled classes are excluded from MUTATION (the bytecode PIT rewrites). But PIT's
     // JUnit discovery also walks every class under `targetTests` via reflection to find @Test
@@ -787,6 +828,11 @@ pitest {
             // which L1 cannot load. Its one job, being called on disconnect by both loaders, is
             // guarded by loader_parity_check.py.
             'dev.alaindustrial.client.ClientDisconnectReset',
+            // MOD-832: the shift workers' book names no net.minecraft type itself, but its whole surface is
+            // DataFixerUpper (Codec, Dynamic) and its log line goes through Industrialization — neither is on
+            // common/'s test classpath, so L1 cannot load it (listed in pitest_check.py's TRANSITIVE_MC_COUPLING).
+            // Its rules are held by the shift worker game tests and the save-format snapshot.
+            'dev.alaindustrial.settlement.shift.ShiftWorkerBook',
             // NOTE: `dev.alaindustrial.Config` lived here as a deferred-coverage parking spot from
             // MOD-200 (135 mutants, only 35 killed) until MOD-204 wrote the full L1 suite
             // (ConfigSnapshotTest), which killed all 157 mutants it had at the time. It has moved to

@@ -61,6 +61,8 @@ import net.minecraft.world.level.gamerules.GameRules;
  *       record, the book's first page draws it, and a late or malformed value is handled
  *   <li>MOD-706  — {@link HudStackStand#check}                         — the HUD layers stack in their registered
  *       order: the Energy Pack readout stays legible over the teleport fade (a picture for review)
+ *   <li>MOD-832  — {@link ShiftWorkerStand#check}                      — four shift workers from the front and from
+ *       behind: body per look, hair, window glass, the number on the balloon (frames for review)
  * </ul>
  *
  * <p>Screenshots land in {@code build/run/clientGameTest/screenshots/}.
@@ -123,6 +125,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
                 BerQuadStands.shoot(context, singleplayer);                      // MOD-716 BER quad baseline
                 NetworkOverlayStand.check(context, singleplayer);                // MOD-665 analyzer trace reaches the frame
                 TeleporterCapsuleStand.checkGlassFromInside(context, singleplayer); // MOD-632 door glass from inside
+                ShiftWorkerStand.check(context, singleplayer);                   // MOD-832 shift workers
                 StorageModuleStands.checkStorageModuleSeams(context, singleplayer); // MOD-287 connected textures
                 // R-PHY-10: mc.debugHitboxes removed in MC 26.2; re-enable when API is found.
             }

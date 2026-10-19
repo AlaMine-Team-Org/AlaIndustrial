@@ -7,7 +7,7 @@ import java.util.List;
 
 /** An {@code int} knob. */
 final class IntField extends ConfigField {
-	private final int fallback;
+	private int fallback;
 
 	IntField(Field field, Knob knob) {
 		super(field, knob);
@@ -48,6 +48,14 @@ final class IntField extends ConfigField {
 	@Override
 	void writeDefault(JsonObject out) {
 		out.addProperty(key, fallback);
+	}
+
+	@Override
+	void useDevelopmentDefault() {
+		if (!Double.isNaN(devDefault)) {
+			fallback = (int) devDefault;
+			assign(fallback);
+		}
 	}
 
 	@Override

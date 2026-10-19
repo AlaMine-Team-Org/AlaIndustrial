@@ -151,6 +151,8 @@ final class CreativeTabSnapshot {
 			"main alaindustrial:sound_absorber",
 			"main alaindustrial:workstation",
 			"main alaindustrial:upgrade_table",
+			"main alaindustrial:settlement_core",
+			"main alaindustrial:reception_capsule",
 			"main alaindustrial:enriched_uranium_torch",
 			"main alaindustrial:cable_breaker",
 			"main alaindustrial:vacuum_capsule",
@@ -798,5 +800,7 @@ final class CreativeTabSnapshot {
 			"functional_blocks alaindustrial:electric_mob_trap",
 			"functional_blocks alaindustrial:sound_absorber",
 			"functional_blocks alaindustrial:workstation",
-			"functional_blocks alaindustrial:upgrade_table");
+			"functional_blocks alaindustrial:upgrade_table",
+			"functional_blocks alaindustrial:settlement_core",
+			"functional_blocks alaindustrial:reception_capsule");
 }

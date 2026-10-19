@@ -174,6 +174,8 @@ public final class CreativeTabContent {
 		DecorContent.mobRepellers(out);
 		DecorContent.soundAbsorber(out);
 		ProcessingContent.stations(out);
+		// MOD-831 - the settlement core, found in a town hall rather than built.
+		ProcessingContent.settlement(out);
 		// Shaped last (MOD-574): the torch is a sprite among cubes.
 		DecorContent.torch(out);
 	}
@@ -215,13 +217,14 @@ public final class CreativeTabContent {
 	}
 
 	/**
-	 * Decorative and utility blocks of vanilla Functional Blocks: the torch, the repellers, the sound absorber
-	 * and the two stations.
+	 * Decorative and utility blocks of vanilla Functional Blocks: the torch, the repellers, the sound absorber,
+	 * the two stations and the settlement core.
 	 */
 	private static void utility(Sink out) {
 		DecorContent.torch(out);
 		DecorContent.mobRepellers(out);
 		DecorContent.soundAbsorber(out);
 		ProcessingContent.stations(out);
+		ProcessingContent.settlement(out);
 	}
 }

@@ -2,6 +2,7 @@ package dev.alaindustrial.client.screen;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import dev.alaindustrial.client.render.ZonePreviewRenderer;
+import java.util.function.BooleanSupplier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -24,8 +25,15 @@ import net.minecraft.sounds.SoundEvents;
  * @param buttonId the menu-button id the owning menu answers with the zone
  * @param showKey  tooltip while the zone is hidden
  * @param hideKey  tooltip while the zone is shown
+ * @param state    whether the thing it controls is shown — the zone preview's by default; the settlement core's
+ *                 "show borders" eye reads its own overlay (MOD-843)
  */
-public record ZonePreviewButton(int x, int y, int buttonId, String showKey, String hideKey) {
+public record ZonePreviewButton(int x, int y, int buttonId, String showKey, String hideKey, BooleanSupplier state) {
+
+	/** The reach-preview eye of a {@code ZonePreviewBlock}: lit while {@link ZonePreviewRenderer} shows its zone. */
+	public ZonePreviewButton(int x, int y, int buttonId, String showKey, String hideKey) {
+		this(x, y, buttonId, showKey, hideKey, ZonePreviewRenderer::isShownForOpenScreen);
+	}
 
 	public static final int SIZE = 22;
 
@@ -41,7 +49,7 @@ public record ZonePreviewButton(int x, int y, int buttonId, String showKey, Stri
 
 	/** Whether the zone of the block whose screen is open is shown. */
 	public boolean shown() {
-		return ZonePreviewRenderer.isShownForOpenScreen();
+		return state.getAsBoolean();
 	}
 
 	public boolean isOver(int leftPos, int topPos, double mx, double my) {

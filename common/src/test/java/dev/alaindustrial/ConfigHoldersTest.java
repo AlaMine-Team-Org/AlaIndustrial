@@ -27,9 +27,9 @@ class ConfigHoldersTest {
 	/** Every class the registry scans; the golden file, not this list, is the independent side. */
 	private static final List<Class<?>> HOLDERS = Config.REGISTRY.holders();
 
-	/** The eleven sections of the file, in the order the golden file renders them. */
+	/** The twelve sections of the file, in the order the golden file renders them. */
 	private static final List<String> SECTIONS = List.of("global", "generators", "machines", "storage",
-			"cables", "safety", "network", "tools", "logistics", "player", "world");
+			"cables", "safety", "network", "tools", "logistics", "player", "world", "settlements");
 
 	@Test
 	void everyKnobOfEveryHolderIsOneKeyOfTheGoldenFile() {

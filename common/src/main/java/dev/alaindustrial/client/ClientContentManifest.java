@@ -56,6 +56,8 @@ import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModFluidsManifest;
 import java.util.List;
 import dev.alaindustrial.client.render.entity.OilSlimeRenderer;
+import dev.alaindustrial.client.render.entity.ShiftWorkerModel;
+import dev.alaindustrial.client.render.entity.ShiftWorkerRenderer;
 import dev.alaindustrial.registry.ModMobs;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.entity.Entity;
@@ -163,7 +165,8 @@ public final class ClientContentManifest {
 
 	/** The renderer of every mob of {@code ModMobs.MOBS}, in the same order; both loaders replay it. */
 	public static final List<MobRendererDef<?>> MOB_RENDERERS = List.of(
-			new MobRendererDef<>(ModMobs.OIL_SLIME, OilSlimeRenderer::new));
+			new MobRendererDef<>(ModMobs.OIL_SLIME, OilSlimeRenderer::new),
+			new MobRendererDef<>(ModMobs.SHIFT_WORKER, ShiftWorkerRenderer::new));
 
 	// ─────────────────────────────────────────────────────────────────────────────────────────
 	// Block-entity renderers
@@ -354,7 +357,12 @@ public final class ClientContentManifest {
 			new ModelLayerDef(ThermalCentrifugeBlockEntityRenderer.MODEL_LAYER,
 					ThermalCentrifugeBlockEntityRenderer::createLayer),
 			new ModelLayerDef(SprinklerHeadBlockEntityRenderer.MODEL_LAYER,
-					SprinklerHeadBlockEntityRenderer::createLayer));
+					SprinklerHeadBlockEntityRenderer::createLayer),
+			// MOD-832: the shift worker — the classic and the slim body, its balloon and hose, the window's glass.
+			new ModelLayerDef(ShiftWorkerRenderer.CLASSIC_LAYER, () -> ShiftWorkerModel.createLayer(false)),
+			new ModelLayerDef(ShiftWorkerRenderer.SLIM_LAYER, () -> ShiftWorkerModel.createLayer(true)),
+			new ModelLayerDef(ShiftWorkerRenderer.GEAR_LAYER, ShiftWorkerModel::createGearLayer),
+			new ModelLayerDef(ShiftWorkerRenderer.GLASS_LAYER, ShiftWorkerModel::createGlassLayer));
 
 	// ─────────────────────────────────────────────────────────────────────────────────────────
 	// Block tint sources

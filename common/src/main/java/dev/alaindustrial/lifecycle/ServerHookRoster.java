@@ -20,6 +20,7 @@ import dev.alaindustrial.item.energy.LowChargeWarning;
 import dev.alaindustrial.item.fluid.VanillaBucketDeposit;
 import dev.alaindustrial.item.wearable.JetpackLight;
 import dev.alaindustrial.network.ConfigSync;
+import dev.alaindustrial.settlement.record.RecordNumberLedger;
 import dev.alaindustrial.stats.PlayerStatsTracker;
 import dev.alaindustrial.teleporter.TeleportWarmupManager;
 import dev.alaindustrial.worldgen.VillagePoolInjector;
@@ -130,7 +131,9 @@ public final class ServerHookRoster {
 			// MOD-513: the archive record for the book's first page, every login.
 			ArchiveRecordSync::sendOnJoin,
 			// MOD-695: the server's balance, so the client's tooltips and screens show its numbers.
-			ConfigSync::sendOnJoin);
+			ConfigSync::sendOnJoin,
+			// MOD-827: the player's record is taken in this world, so no shift worker is given it later.
+			RecordNumberLedger::notePlayerOnJoin);
 
 	/**
 	 * A server level unloaded. MOD-401: one sweep over everything that holds per-level state instead of

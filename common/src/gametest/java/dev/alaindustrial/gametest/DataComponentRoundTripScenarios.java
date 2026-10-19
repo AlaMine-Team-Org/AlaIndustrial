@@ -126,6 +126,8 @@ public final class DataComponentRoundTripScenarios {
 		s.put(ModDataComponents.MAGNET_FILTER_ID, new MagnetFilter(List.of(
 				new MagnetFilter.Cell("minecraft:stone", ""), MagnetFilter.Cell.EMPTY,
 				new MagnetFilter.Cell("minecraft:iron_ingot", "c:ingots")), true, MagnetFilter.Match.TAG));
+		// MOD-831: a town number past one byte, so the VAR_INT network codec writes more than one.
+		s.put(ModDataComponents.SETTLEMENT_ID_ID, 300);
 		return s;
 	}
 

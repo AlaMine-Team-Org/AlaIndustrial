@@ -192,6 +192,28 @@ final class MenuChannelValuesSnapshot {
 			"block_breaker placed getters: energy=0 capacity=800 progress=0/0",
 			"block_breaker charged [0]: 400 800 0 0 1 0",
 			"block_breaker charged getters: energy=400 capacity=800 progress=0/0",
+			"settlement_core placed [0]: 0 2000 0 0 0 0 0 65 65 4 4 8",
+			"settlement_core placed [12]: 0",
+			"settlement_core placed getters: energy=0 capacity=2000 progress=0/0",
+			"settlement_core placed menu[0]: getHouseLimit=4 getOwnerRelation=0 getTerritoryDepth=65"
+					+ " getTerritoryWidth=65 getUpkeep=8 getWorkerLimit=4",
+			"settlement_core placed menu[6]: isActive=false isMisplaced=false isUnbound=false",
+			"settlement_core charged [0]: 1000 2000 0 0 0 0 0 65 65 4 4 8",
+			"settlement_core charged [12]: 0",
+			"settlement_core charged getters: energy=1000 capacity=2000 progress=0/0",
+			"settlement_core charged menu[0]: getHouseLimit=4 getOwnerRelation=0 getTerritoryDepth=65"
+					+ " getTerritoryWidth=65 getUpkeep=8 getWorkerLimit=4",
+			"settlement_core charged menu[6]: isActive=false isMisplaced=false isUnbound=false",
+			"reception_capsule placed [0]: 0 3392 0 1000 0 6 1696 3 0 0 0 1",
+			"reception_capsule placed [12]: 8 4 0 0 0",
+			"reception_capsule placed getters: energy=0 capacity=200000 progress=0/1000",
+			"reception_capsule placed menu[0]: getAwaiting=0 getEuMissing=100000 getEuPrice=100000"
+					+ " getLimit=0 getLiving=0",
+			"reception_capsule charged [0]: 1696 3392 0 1000 3 6 1696 3 0 0 0 1",
+			"reception_capsule charged [12]: 8 4 0 0 0",
+			"reception_capsule charged getters: energy=100000 capacity=200000 progress=0/1000",
+			"reception_capsule charged menu[0]: getAwaiting=0 getEuMissing=0 getEuPrice=100000"
+					+ " getLimit=0 getLiving=0",
 			"distillation_column placed [0]: 0 800 0 200 0 0 0 -1 -1 -1 3 0",
 			"distillation_column placed [12]: 0 0",
 			"distillation_column placed getters: energy=0 capacity=800 progress=0/200",

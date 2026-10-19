@@ -25,7 +25,10 @@ public enum Section {
 	LOGISTICS("logistics", "Moving things around: item and fluid pipes, the pump, portable tanks,"
 			+ " the teleporter and the stock display frame."),
 	PLAYER("player", "Mod XP, the player profile curve, and what each Workstation skill is worth."),
-	WORLD("world", "World behaviour: bonus chest injection, burning oil, crop growth.");
+	WORLD("world", "World behaviour: bonus chest injection, burning oil, crop growth."),
+	SETTLEMENTS("settlements", "ALA towns: the settlement core's tiers (territory radius, house and worker limits),"
+			+ " its upkeep and how long it holds the territory once the power stops; the shift workers; what the"
+			+ " reception capsule charges for one shift worker.");
 
 	/** Json key of the section object. */
 	public final String id;

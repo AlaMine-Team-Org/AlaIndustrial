@@ -107,6 +107,7 @@ public final class AlaCommandCommon {
 			tree.then(demoTree());
 			tree.then(flyTree());
 			tree.then(WearCommand.tree());
+			tree.then(ShiftWorkerCommand.tree()).then(TownEditCommand.tree());
 		}
 		dispatcher.register(tree);
 	}

@@ -251,6 +251,10 @@ public final class IndustrializationNeoForge {
 		// MOD-022: NeoForge payload registration (every ModPayloads entry) — counterpart to the
 		// Fabric PayloadTypeRegistry calls + receivers.
 		modBus.addListener(NeoForgeNetwork::register);
+		// MOD-830: the mod's datapack registries (ADR-050), the list both loaders replay; the ALA town's structure
+		// and lab-piece types (two DeferredRegisters — before datapack load and the first saved town).
+		modBus.addListener(dev.alaindustrial.registry.neoforge.ModDataRegistriesNeoForge::addAll);
+		dev.alaindustrial.registry.neoforge.ModWorldGenNeoForge.registerTownTypes(modBus);
 		// MOD-238: dispenser support for the filled oil bucket. DispenserBlock.registerBehavior writes a
 		// plain (unsynchronised) map and mod setup runs in parallel on NeoForge, so it must go through
 		// enqueueWork — the Fabric side registers it directly in its single-threaded mod init.

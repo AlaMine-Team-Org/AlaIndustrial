@@ -79,6 +79,23 @@ public final class OilLakeFilter extends PlacementFilter {
 			TagKey.create(Registries.STRUCTURE, Industrialization.id("no_oil_lakes"));
 
 	/**
+	 * Structures an oil feature must keep out of as a whole AREA, not piece by piece (MOD-830): the structure's
+	 * own bounding box — its pieces and the terrain margin around them — rather than the boxes of the pieces.
+	 * An ALA town ({@code #alaindustrial:ala_towns}) is ground between buildings, and its ground pieces follow
+	 * the terrain, so their boxes say little about where their blocks lie; "no oil lake inside the town" is a
+	 * question about the area. Data-driven like {@link #NO_OIL_LAKES}
+	 * ({@code data/alaindustrial/tags/worldgen/structure/no_oil_lakes_in_area.json}).
+	 *
+	 * <p>Answered from the chunk's own structure references, never from the start: the game records a reference in
+	 * every chunk the structure's box reaches ({@code ChunkGenerator.createReferences}, javap 26.3), so a reference
+	 * here means the area reaches this chunk. That holds wherever the town began — its start chunk may lie outside
+	 * the region the oil feature may read, and a town is wider than that region — at the price of a chunk's
+	 * precision at the area's edge.
+	 */
+	public static final TagKey<Structure> NO_OIL_LAKES_IN_AREA =
+			TagKey.create(Registries.STRUCTURE, Industrialization.id("no_oil_lakes_in_area"));
+
+	/**
 	 * The footprint this instance guards, in blocks around the placement origin (MOD-248). Until then
 	 * the filter was stateless and hard-coded to the 16 × 8 × 16 box of {@code minecraft:lake}; there
 	 * are now four oil features with four different extents, and a filter calibrated for a lake would
@@ -134,22 +151,27 @@ public final class OilLakeFilter extends PlacementFilter {
 		List<Holder<Structure>> protectedStructures = new ArrayList<>();
 		region.registryAccess().lookupOrThrow(Registries.STRUCTURE)
 				.getTagOrEmpty(NO_OIL_LAKES).forEach(protectedStructures::add);
-		if (protectedStructures.isEmpty()) {
-			// Empty (or absent) tag — a modpack opting out. Nothing to protect, nothing to look up.
+		List<Holder<Structure>> protectedAreas = new ArrayList<>();
+		region.registryAccess().lookupOrThrow(Registries.STRUCTURE)
+				.getTagOrEmpty(NO_OIL_LAKES_IN_AREA).forEach(protectedAreas::add);
+		if (protectedStructures.isEmpty() && protectedAreas.isEmpty()) {
+			// Empty (or absent) tags — a modpack opting out. Nothing to protect, nothing to look up.
 			return true;
 		}
 		return !OilLakeSamples.anyBlocked(origin.getX(), origin.getY(), origin.getZ(),
 				horizontalRadius, minYOffset, maxYOffset, yStep,
-				(x, y, z) -> isProtected(region, protectedStructures, new BlockPos(x, y, z)));
+				(x, y, z) -> isProtected(region, protectedStructures, false, new BlockPos(x, y, z))
+						|| isProtected(region, protectedAreas, true, new BlockPos(x, y, z)));
 	}
 
 	/**
-	 * Whether a piece of a protected structure covers {@code pos}, asking only chunks this region is
-	 * allowed to touch. Both chunk reads are gated by {@link WorldGenRegion#hasChunk} — see the class
-	 * doc for why that is the only safe gate and what the soft failure costs.
+	 * Whether a piece of a protected structure — or, with {@code wholeArea}, its area at a chunk's precision (see
+	 * {@link #NO_OIL_LAKES_IN_AREA}) — covers {@code pos}, asking only chunks this region is allowed to touch.
+	 * Both chunk reads are gated by {@link WorldGenRegion#hasChunk} — see the class doc for why that is the only
+	 * safe gate and what the soft failure costs.
 	 */
 	private static boolean isProtected(WorldGenRegion region, List<Holder<Structure>> protectedStructures,
-			BlockPos pos) {
+			boolean wholeArea, BlockPos pos) {
 		int chunkX = SectionPos.blockToSectionCoord(pos.getX());
 		int chunkZ = SectionPos.blockToSectionCoord(pos.getZ());
 		if (!region.hasChunk(chunkX, chunkZ)) {
@@ -158,6 +180,12 @@ public final class OilLakeFilter extends PlacementFilter {
 		ChunkAccess chunk = region.getChunk(chunkX, chunkZ, ChunkStatus.STRUCTURE_STARTS, false);
 		for (Holder<Structure> holder : protectedStructures) {
 			Structure structure = holder.value();
+			if (wholeArea) {
+				if (!chunk.getReferencesForStructure(structure).isEmpty()) {
+					return true;
+				}
+				continue;
+			}
 			for (long reference : chunk.getReferencesForStructure(structure)) {
 				// References are packed chunk coordinates; unpack without allocating a ChunkPos.
 				int startX = ChunkPos.getX(reference);

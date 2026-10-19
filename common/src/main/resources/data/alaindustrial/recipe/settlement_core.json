@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "KRK",
+    "CAC",
+    "BEB"
+  ],
+  "key": {
+    "K": "alaindustrial:resonant_crystal",
+    "R": "alaindustrial:reactor_circuit",
+    "C": "alaindustrial:resonance_coil",
+    "A": "alaindustrial:advanced_machine_casing",
+    "B": "alaindustrial:reinforced_bearing",
+    "E": "alaindustrial:cesu"
+  },
+  "result": {
+    "id": "alaindustrial:settlement_core",
+    "count": 1
+  }
+}

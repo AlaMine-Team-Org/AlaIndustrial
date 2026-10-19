@@ -25,8 +25,10 @@ import dev.alaindustrial.block.IndustrialWorkbenchBlock;
 import dev.alaindustrial.block.IronFurnaceBlock;
 import dev.alaindustrial.block.MaceratorBlock;
 import dev.alaindustrial.block.PolymerizerBlock;
+import dev.alaindustrial.block.ReceptionCapsuleBlock;
 import dev.alaindustrial.block.RecyclerBlock;
 import dev.alaindustrial.block.SawmillBlock;
+import dev.alaindustrial.block.SettlementCoreBlock;
 import dev.alaindustrial.block.TeleporterBlock;
 import dev.alaindustrial.block.ThermalCentrifugeBlock;
 import dev.alaindustrial.block.UpgradeTableBlock;
@@ -47,8 +49,10 @@ import dev.alaindustrial.block.entity.IndustrialWorkbenchBlockEntity;
 import dev.alaindustrial.block.entity.IronFurnaceBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
 import dev.alaindustrial.block.entity.PolymerizerBlockEntity;
+import dev.alaindustrial.block.entity.ReceptionCapsuleBlockEntity;
 import dev.alaindustrial.block.entity.RecyclerBlockEntity;
 import dev.alaindustrial.block.entity.SawmillBlockEntity;
+import dev.alaindustrial.block.entity.SettlementCoreBlockEntity;
 import dev.alaindustrial.block.entity.TeleporterBlockEntity;
 import dev.alaindustrial.block.entity.ThermalCentrifugeBlockEntity;
 import dev.alaindustrial.block.entity.UpgradeTableBlockEntity;
@@ -68,8 +72,10 @@ import dev.alaindustrial.menu.ExtractorMenu;
 import dev.alaindustrial.menu.GalvanicBathMenu;
 import dev.alaindustrial.menu.MaceratorMenu;
 import dev.alaindustrial.menu.PolymerizerMenu;
+import dev.alaindustrial.menu.ReceptionCapsuleMenu;
 import dev.alaindustrial.menu.RecyclerMenu;
 import dev.alaindustrial.menu.SawmillMenu;
+import dev.alaindustrial.menu.SettlementCoreMenu;
 import dev.alaindustrial.menu.TeleporterStationMenu;
 import dev.alaindustrial.menu.ThermalCentrifugeMenu;
 import dev.alaindustrial.menu.UpgradeTableMenu;
@@ -205,6 +211,24 @@ public final class ProcessingContent {
 					machine(p -> p.strength(2.5f, 6.0f).sound(SoundType.METAL)),
 					s -> ModContent.ADVANCED_INDUSTRIAL_WORKBENCH = s);
 
+	// ---- settlement: the ALA towns (epic MOD-824) ----
+	// MOD-831 - the heart of a town, in its town hall: lit, and holding the territory, while it is paid in EU.
+	// Unbreakable like bedrock for everyone but the town's owner, who mines it with any pickaxe (epic R36): the
+	// block's own destroy progress lets the owner through, see SettlementCoreBlock.
+	public static final BlockDef<SettlementCoreBlock> SETTLEMENT_CORE =
+			block("settlement_core", SettlementCoreBlock::new,
+					machine(p -> p.strength(-1.0f, 3_600_000.0f).sound(SoundType.METAL)
+							.lightLevel(ModBlockProperties::litLight)),
+					s -> ModContent.SETTLEMENT_CORE = s);
+	// MOD-833 - the reception capsule beside the core: three blocks tall (MOD-850), a glass flask open at the front
+	// where the archive restores a shift worker for EU and materials. Unbreakable like the core for everyone but the
+	// town's owner (R36, ReceptionCapsuleBlock), see-through, and no occluder: its walls are glass and its inside is a
+	// room.
+	public static final BlockDef<ReceptionCapsuleBlock> RECEPTION_CAPSULE =
+			block("reception_capsule", ReceptionCapsuleBlock::new,
+					machine(p -> p.strength(-1.0f, 3_600_000.0f).sound(SoundType.METAL).noOcclusion()),
+					s -> ModContent.RECEPTION_CAPSULE = s);
+
 	private static final List<BlockDef<?>> BLOCKS = endBlocks();
 
 	private static final List<ItemDef> ITEMS = List.of(
@@ -234,7 +258,11 @@ public final class ProcessingContent {
 			// MOD-787 — appended at the very tail; the order of this list is the registration order.
 			blockItem("block_breaker", s -> ModContent.BLOCK_BREAKER_ITEM = s),
 			// MOD-810 - appended at the very tail; the order of this list is the registration order.
-			blockItem("advanced_industrial_workbench", s -> ModContent.ADVANCED_INDUSTRIAL_WORKBENCH_ITEM = s));
+			blockItem("advanced_industrial_workbench", s -> ModContent.ADVANCED_INDUSTRIAL_WORKBENCH_ITEM = s),
+			// MOD-831 - appended at the very tail; the order of this list is the registration order.
+			blockItem("settlement_core", s -> ModContent.SETTLEMENT_CORE_ITEM = s),
+			// MOD-833 - appended at the very tail; the order of this list is the registration order.
+			blockItem("reception_capsule", s -> ModContent.RECEPTION_CAPSULE_ITEM = s));
 
 	private static final List<BlockEntityDef<?>> BLOCK_ENTITIES = List.of(
 			blockEntity("macerator", MaceratorBlockEntity.class, MaceratorBlockEntity::new,
@@ -289,7 +317,13 @@ public final class ProcessingContent {
 			// MOD-810: the grid that keeps its items; a plain container, so the item capability follows.
 			blockEntity("advanced_industrial_workbench", AdvancedIndustrialWorkbenchBlockEntity.class,
 					AdvancedIndustrialWorkbenchBlockEntity::new,
-					s -> ModContent.ADVANCED_INDUSTRIAL_WORKBENCH_BE = s, ADVANCED_INDUSTRIAL_WORKBENCH));
+					s -> ModContent.ADVANCED_INDUSTRIAL_WORKBENCH_BE = s, ADVANCED_INDUSTRIAL_WORKBENCH),
+			// MOD-831: the core keeps only its town's number; the town is a record of SettlementRegistry.
+			blockEntity("settlement_core", SettlementCoreBlockEntity.class, SettlementCoreBlockEntity::new,
+					s -> ModContent.SETTLEMENT_CORE_BE = s, SETTLEMENT_CORE),
+			// MOD-833: the capsule's lower cell; the flask above it has no block entity.
+			blockEntity("reception_capsule", ReceptionCapsuleBlockEntity.class, ReceptionCapsuleBlockEntity::new,
+					s -> ModContent.RECEPTION_CAPSULE_BE = s, RECEPTION_CAPSULE));
 
 	private static final List<MenuDef<?>> MENUS = List.of(
 			menu("macerator", MaceratorMenu::new, s -> ModContent.MACERATOR_MENU = s),
@@ -318,7 +352,11 @@ public final class ProcessingContent {
 			menu("block_breaker", BlockBreakerMenu::new, s -> ModContent.BLOCK_BREAKER_MENU = s),
 			// MOD-810 - the advanced workbench: crafting grid shared by its viewers.
 			menu("advanced_industrial_workbench", AdvancedIndustrialWorkbenchMenu::new,
-					s -> ModContent.ADVANCED_INDUSTRIAL_WORKBENCH_MENU = s));
+					s -> ModContent.ADVANCED_INDUSTRIAL_WORKBENCH_MENU = s),
+			// MOD-831 - the settlement core: a slotless readout with the claim button.
+			menu("settlement_core", SettlementCoreMenu::new, s -> ModContent.SETTLEMENT_CORE_MENU = s),
+			// MOD-833 - the reception capsule: three material slots and the restoration's readout.
+			menu("reception_capsule", ReceptionCapsuleMenu::new, s -> ModContent.RECEPTION_CAPSULE_MENU = s));
 
 	/** Everything this domain declares; {@link dev.alaindustrial.registry.ContentManifest#DOMAINS} joins it in. */
 	public static final Domain DOMAIN = new Domain("Processing", BLOCKS, ITEMS, BLOCK_ENTITIES, MENUS);
@@ -363,5 +401,15 @@ public final class ProcessingContent {
 	public static void stations(Sink out) {
 		show(out, ModContent.WORKSTATION_ITEM);
 		show(out, ModContent.UPGRADE_TABLE_ITEM);
+	}
+
+	/**
+	 * The ALA towns (epic MOD-824). MOD-831 - the settlement core: found in a town hall rather than built, so it
+	 * stands with the blocks, after the stations. MOD-833 - the reception capsule beside it. Shown in the mod's own
+	 * tab and in vanilla Functional Blocks.
+	 */
+	public static void settlement(Sink out) {
+		show(out, ModContent.SETTLEMENT_CORE_ITEM);
+		show(out, ModContent.RECEPTION_CAPSULE_ITEM);
 	}
 }

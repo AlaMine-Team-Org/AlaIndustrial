@@ -3,6 +3,7 @@ package dev.alaindustrial;
 import dev.alaindustrial.network.ConfigSync;
 import java.nio.file.Path;
 import net.minecraft.server.MinecraftServer;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.loading.FMLPaths;
 
 /**
@@ -30,6 +31,10 @@ final class NeoForgeConfigLoader {
 	 * {@link Config#configPath} so loader-neutral callers ({@code /ala config reload}) resolve the same file. */
 	static void register() {
 		Config.configPath = NeoForgeConfigLoader::configPath;
+		if (!FMLEnvironment.isProduction()) {
+			// MOD-847: a dev run takes the knobs' development defaults before the first load reads them.
+			Config.REGISTRY.useDevelopmentDefaults();
+		}
 		Config.reload();
 	}
 
