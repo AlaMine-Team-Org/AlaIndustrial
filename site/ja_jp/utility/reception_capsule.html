@@ -318,7 +318,7 @@
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>高度なマシン</span><span class="cat-count" aria-label="1 ページ">1</span></a>
 <div class="group-title">その他</div>
 <a class="cat-link" href="../construction/index.html"><img class="nav-icon" src="../../assets/item/engraved_plate_0_3d.png" alt=""><span>建築ブロック</span><span class="cat-count" aria-label="3 ページ">3</span></a>
-<a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="24 ページ">24</span></a>
+<a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="25 ページ">25</span></a>
 <div class="group-title">アイテム</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="30 ページ">30</span></a>
@@ -352,11 +352,15 @@
 
 <p>死亡した交代要員の番号が新しい交代要員に渡ることはありません。初期設定では、交代要員の死は永久です。サーバーでこれをオフにすると、死亡した者は呼び戻されるのを待ち、カプセルで選べるようになります。ウィンドウのボタンで「新しい勤務者」→ 集落の死亡者（番号順）→ また「新しい勤務者」と切り替わります。</p>
 
-<ul><li>呼び戻されるのは同じ交代要員です。同じ番号、同じ見た目で、新しい体に入ります。</li><li>呼び戻しは<strong>新しい交代要員の 2 倍の価格</strong>です。200 000 EU/FE、回路 2 個、ゴム 16 個、銅板 8 枚。カプセルのバッファーには、呼び戻しの価格がちょうど入ります。</li><li>交代要員の死が永久の設定なら、死亡した者は呼び戻しを待たず、選択肢も出ません。</li></ul>
+<ul><li>呼び戻されるのは同じ交代要員です。同じ番号、同じ見た目で、新しい体に入ります。バッテリーは満タン、体力も満タンで戻りますが、レベルは 1 つ下がり（最初のレベルより下にはなりません）、最後に振った能力値ポイントを 1 つ失います。身上書には呼び戻しの記録が加わります。</li><li>呼び戻しは<strong>新しい交代要員の 2 倍の価格</strong>です。200 000 EU/FE、回路 2 個、ゴム 16 個、銅板 8 枚。カプセルのバッファーには、呼び戻しの価格がちょうど入ります。</li><li>交代要員の死が永久の設定なら、死亡した者は呼び戻しを待たず、選択肢も出ません。</li></ul>
+
+<h3 id="交代要員のポイントのリセット">交代要員のポイントのリセット</h3>
+
+<p>カプセルは交代要員の能力値を振り直す場所でもあります。集落の生きている交代要員が自分の集落のカプセルから 3 ブロック以内に立っていると、集落の所有者にはその交代要員のカードに「ポイントをリセット（50 000 EU/FE）」ボタンが見えます。振ったポイントをすべて未使用に戻し、改めて振り直せます。代金はカプセルのバッファーから引かれるので、ボタンが出るのはバッファーに 50 000 EU/FE があり、交代要員に振ったポイントが 1 つ以上あるときだけです。カードとポイントの説明は<a href="settlement_core.html">集落コア</a>のページの「集落の交代要員」にあります。</p>
 
 <h2 id="集落が眠るとき">集落が眠るとき</h2>
 
-<p>集落が眠るのはカプセルのせいではなく、コアのせいです。コアが消えると、集落の交代要員は全員その場で固まりますが、それで死ぬことはありません。電力が戻れば、同じ場所から続きを始めます。コアが消えている間はカプセルも止まります。進行中の復元は止まり、あとで同じところから続き、何も失われません。</p>
+<p>集落が眠るのはカプセルのせいではなく、コアのせいです。コアが消えると、集落の交代要員はバッテリーに充電が残っている間は働き続け、切れるとその場で固まりますが、それで死ぬことはありません。電力が戻れば、コアが彼らを充電し、同じ場所から続きを始めます。コアが消えている間はカプセルも止まります。進行中の復元は止まり、あとで同じところから続き、何も失われません。</p>
 
 <h2 id="エネルギー">エネルギー</h2>
 

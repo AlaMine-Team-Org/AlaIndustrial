@@ -318,7 +318,7 @@
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>Máquinas avanzadas</span><span class="cat-count" aria-label="1 página">1</span></a>
 <div class="group-title">Otros</div>
 <a class="cat-link" href="../construction/index.html"><img class="nav-icon" src="../../assets/item/engraved_plate_0_3d.png" alt=""><span>Construcción</span><span class="cat-count" aria-label="3 páginas">3</span></a>
-<a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>Utilidades</span><span class="cat-count" aria-label="24 páginas">24</span></a>
+<a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>Utilidades</span><span class="cat-count" aria-label="25 páginas">25</span></a>
 <div class="group-title">Objetos</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>Mejoras</span><span class="cat-count" aria-label="3 páginas">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>Componentes</span><span class="cat-count" aria-label="30 páginas">30</span></a>
@@ -352,11 +352,15 @@
 
 <p>El número de un trabajador de turno muerto nunca pasa a uno nuevo. Por defecto, la muerte de un trabajador de turno es definitiva. Si el servidor lo desactiva, el caído espera a ser traído de vuelta y la cápsula te deja elegir: un botón de la ventana recorre «Trabajador nuevo» → los caídos del asentamiento por número → otra vez «Trabajador nuevo».</p>
 
-<ul><li>El que vuelve es el mismo trabajador de turno: el mismo número y el mismo aspecto, en un cuerpo nuevo.</li><li>Traer de vuelta a uno cuesta <strong>el doble que uno nuevo</strong>: 200 000 EU/FE, 2 circuitos, 16 de caucho y 8 placas de cobre. El búfer de la cápsula admite exactamente el precio de una vuelta.</li><li>Si la muerte de los trabajadores de turno es definitiva, el caído no espera a volver y no hay elección.</li></ul>
+<ul><li>El que vuelve es el mismo trabajador de turno: el mismo número y el mismo aspecto, en un cuerpo nuevo. Vuelve con la batería llena y la salud completa, pero un nivel más abajo (nunca por debajo del primero) y sin el último punto invertido en sus características; en su expediente aparece una anotación de su regreso.</li><li>Traer de vuelta a uno cuesta <strong>el doble que uno nuevo</strong>: 200 000 EU/FE, 2 circuitos, 16 de caucho y 8 placas de cobre. El búfer de la cápsula admite exactamente el precio de una vuelta.</li><li>Si la muerte de los trabajadores de turno es definitiva, el caído no espera a volver y no hay elección.</li></ul>
+
+<h3 id="restablecer-los-puntos-de-un-trabajador">Restablecer los puntos de un trabajador</h3>
+
+<p>La cápsula también es el lugar donde se redistribuyen las características de un trabajador de turno. Cuando un trabajador vivo del asentamiento está a 3 bloques o menos de una cápsula de su asentamiento, el propietario del asentamiento ve en la ficha del trabajador el botón «Restablecer puntos (50 000 EU/FE)». Convierte todos los puntos invertidos otra vez en libres, listos para invertirse de nuevo. El precio sale del búfer de la cápsula, así que el botón solo aparece cuando el búfer tiene 50 000 EU/FE y el trabajador tiene al menos un punto invertido. La ficha y los puntos se describen en la página del <a href="settlement_core.html">núcleo del asentamiento</a>, sección «Los trabajadores de turno del asentamiento».</p>
 
 <h2 id="cuando-el-asentamiento-duerme">Cuando el asentamiento duerme</h2>
 
-<p>El asentamiento se duerme por el núcleo, no por la cápsula: si el núcleo se apaga, todos los trabajadores de turno del asentamiento se quedan quietos donde estaban y no mueren por ello; cuando vuelve la energía, siguen desde el mismo punto. Mientras el núcleo está apagado, la cápsula también se detiene: la restauración en curso se congela y luego sigue desde el mismo punto, sin perder nada.</p>
+<p>El asentamiento se duerme por el núcleo, no por la cápsula: si el núcleo se apaga, los trabajadores de turno del asentamiento siguen trabajando con sus baterías mientras les quede carga, luego se quedan quietos donde estaban y no mueren por ello; cuando vuelve la energía, el núcleo los recarga y siguen desde el mismo punto. Mientras el núcleo está apagado, la cápsula también se detiene: la restauración en curso se congela y luego sigue desde el mismo punto, sin perder nada.</p>
 
 <h2 id="energía">Energía</h2>
 

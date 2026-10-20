@@ -377,7 +377,7 @@
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>高级机器</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <div class="group-title">其他</div>
 <a class="cat-link" href="../construction/index.html"><img class="nav-icon" src="../../assets/item/engraved_plate_0_3d.png" alt=""><span>建筑方块</span><span class="cat-count" aria-label="3 个页面">3</span></a>
-<a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="24 个页面">24</span></a>
+<a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="25 个页面">25</span></a>
 <div class="group-title">物品</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="30 个页面">30</span></a>
@@ -397,7 +397,7 @@
 </div>
 <h2 id="概览">概览</h2>
 
-<p><strong>电击生物陷阱</strong>（一级）是<a href="mob_repeller.html">驱逐器</a>的反面：驱逐器把敌对生物赶走，陷阱则<strong>把它们聚拢并变成资源</strong>。 它从边长 12 格的立方体（从中心向每个轴各 6 格）范围内微弱地吸引生物，对走到环边 3 格以内的生物放电，并回收它们掉落 的一切：物品进入九格缓冲区，经验进入液态经验储罐。接在顶部或底部的管道把战利品运走；电缆从侧面接入。</p>
+<p><strong>电击生物陷阱</strong>（一级）是<a href="mob_repeller.html">驱逐器</a>的反面：驱逐器把敌对生物赶走，陷阱则<strong>把它们聚拢并变成资源</strong>。 它从边长 12 格的立方体（从中心向每个轴各 6 格）范围内微弱地吸引生物，对走到环边 3 格以内的生物放电，并回收它们掉落 的一切：物品进入九格缓冲区，经验进入液态经验储罐。管道把战利品运走。电缆和管道接在四个侧面和底部；顶部不连接任何东西。</p>
 
 <p>陷阱<strong>不会生成生物</strong>。刷怪由玩家自己掌控——黑暗的平台、光照、面积和高度，与普通刷怪塔一样；陷阱只收集在那里刷出 的生物。</p>
 
@@ -417,7 +417,7 @@
 
 <table><thead><tr><th>项目</th><th>数值</th><th>配置项</th></tr></thead><tbody><tr><td>一次电击的费用</td><td>100 EU/FE</td><td></td></tr><tr><td>能量缓冲</td><td>10000 EU/FE（约 100 次电击）</td><td>（对新放置的方块生效）</td></tr><tr><td>输入</td><td>最高 32 EU/FE/t（LV）</td><td>—</td></tr></tbody></table>
 
-<ul><li><strong>电缆接在四个侧面。</strong>顶部和底部不属于电缆——它们是两条输出线路（物品和液态经验）。电缆不会向顶部和底部伸出连接臂。</li><li>一次电击花费 100 EU/FE。只为<strong>命中的</strong>电击付费：若伤害未生效（无敌的生物、上一击后的无敌时间窗口），则不扣能量。一只 20 点生命的僵尸约需 500 EU/FE。峰值时陷阱请求 40 EU/FE/t（8 次电击 × 100 EU/FE / 20 刻）——高于 LV 上限（32 EU/FE/t）：10000 EU/FE 的缓冲撑住峰值，而长期来看 LV 供电约可支持每秒 6 次电击。</li><li><strong>没有能量时，陷阱什么也不做：既不电击，也不吸引。</strong>若范围内有目标但能量不足一次电击，脉冲会在吸引任何生物之前以 "能量不足"状态结束。每次电击都会完整检查能量。</li></ul>
+<ul><li><strong>电缆接在四个侧面和底部</strong>（）。顶部是生物过来的一侧：电缆不接顶部，也不向它伸出连接臂。在侧面，电缆像接<a href="../generators/solar_panel.html">太阳能板</a>一样以低位与陷阱相接：连接臂降到底座板，并在其上方一直延伸到放电节点下方的板，而不是插进绝缘子之间敞开的侧面。从下方，电缆像接任何方块一样接在格子中央。</li><li>一次电击花费 100 EU/FE。只为<strong>命中的</strong>电击付费：若伤害未生效（无敌的生物、上一击后的无敌时间窗口），则不扣能量。一只 20 点生命的僵尸约需 500 EU/FE。峰值时陷阱请求 40 EU/FE/t（8 次电击 × 100 EU/FE / 20 刻）——高于 LV 上限（32 EU/FE/t）：10000 EU/FE 的缓冲撑住峰值，而长期来看 LV 供电约可支持每秒 6 次电击。</li><li><strong>没有能量时，陷阱什么也不做：既不电击，也不吸引。</strong>若范围内有目标但能量不足一次电击，脉冲会在吸引任何生物之前以 "能量不足"状态结束。每次电击都会完整检查能量。</li></ul>
 
 <h2 id="吸引">吸引</h2>
 
@@ -437,11 +437,11 @@
 
 <p>死亡是普通死亡：生物像受到任何伤害一样死去，护甲、头颅、特殊掉落和死亡事件都会生效。<strong>战利品和经验球像任何死亡一样落到 地上</strong>，随后陷阱像<a href="../item-transport/vacuum_collector.html">真空收集器</a>一样把它们吸过来：</p>
 
-<ul><li>陷阱每 5 刻检查一次自己的范围（与吸引用的是同一个立方体），最多作用于最近的 16 个物品和经验球。</li><li><strong>碰到方块的</strong>物品或经验球被回收：物品进入缓冲区（能放多少放多少），经验球进入液态经验储罐（只能整颗）。更远的会像被 电磁铁吸引一样得到朝向陷阱的推力——按物理飞向陷阱，没有传送。</li><li>带拾取延迟的物品（刚掉落的、玩家丢出的物品）会等延迟结束；岩浆中的物品不会被碰。不再靠近的掉落物（在墙后、在坑里）， 陷阱会暂时放开。</li><li>吸取是免费的——这是陷阱工作的一部分。陷阱会吸取范围内的<strong>任何</strong>物品，而不只是自己生物的战利品：不要在它附近存放多余的 东西。</li><li><strong>战利品是普通的。</strong>每次电击前，生物会被陷阱的匿名假玩家 <code>[Electric Mob Trap]</code>（只存在于内存中，从不进入世界）标记为 "最近被玩家攻击"，因此带"被玩家杀死"条件的掉落会出现（骨头、火药、线——就像用剑杀死一样），也会掉落经验。陷阱没有 抢夺附魔：一级只给基础掉落。</li><li><strong>灵魂容器不会成长。</strong>伤害来源没有实体，也不是玩家：<a href="../items/soul_vessel.html">灵魂容器</a>只统计亲手击杀，所以 <a href="mob_repeller.html">驱逐器</a>的成长仍由玩家负责。若显示死亡信息，内容为"被电死了"（<code>death.attack.electric_shock</code>）。</li><li><strong>末影人是来源上的例外。</strong>受到没有活体攻击者的伤害时，末影人会传送离开，因此对它的放电以陷阱假玩家的名义进行。此时灵魂 容器同样不会成长（假玩家没有容器），而电击引起的愤怒会被陷阱立即清除。</li><li><strong>不授予熟练度点数</strong>（与驱逐器相同）：陷阱不会变成刷点数的农场。</li><li><strong>物品</strong>进入 9 格缓冲区。<strong>缓冲区没有空位时，陷阱既不电击也不吸引。</strong>缓冲区详情见下文。</li><li><strong>放不进缓冲区的东西留在世界里</strong>，作为普通物品，不会消失；有空位后陷阱会回来取它。</li><li><strong>经验</strong>按每点 <strong>20 mB</strong> 转换为<strong>液态经验</strong>，存入 8000 mB 的内部储罐，即 400 点 （，对新放置的方块生效）——约 80 只僵尸。该液体名为 ，属于 <code>c:experience</code> 标签，因此与其他模组兼容。它与蒸汽一样没有桶也没有液体方块：只存在于储罐和管道内，不能倒入世界。储罐把 液体交给流体管道（仅通过顶部和底部），不接受任何输入。</li><li><strong>储罐已满——经验球留在世界里。</strong>经验不会悄悄消失：玩家可以自己捡起，可见的原因就是陷阱周围地面上的经验球。经验球要么 整颗回收，要么完全不回收：整颗放不进储罐的经验球留在世界里。储罐满本身<strong>不会</strong>停止电击。</li><li>如果玩家在 8 格以内，经验球会自己飞向玩家：站在陷阱旁的玩家可能比陷阱先接住经验。</li></ul>
+<ul><li>陷阱每 5 刻检查一次自己的范围（与吸引用的是同一个立方体），最多作用于最近的 16 个物品和经验球。</li><li><strong>碰到方块的</strong>物品或经验球被回收：物品进入缓冲区（能放多少放多少），经验球进入液态经验储罐（只能整颗）。更远的会像被 电磁铁吸引一样得到朝向陷阱的推力——按物理飞向陷阱，没有传送。</li><li>带拾取延迟的物品（刚掉落的、玩家丢出的物品）会等延迟结束；岩浆中的物品不会被碰。不再靠近的掉落物（在墙后、在坑里）， 陷阱会暂时放开。</li><li>吸取是免费的——这是陷阱工作的一部分。陷阱会吸取范围内的<strong>任何</strong>物品，而不只是自己生物的战利品：不要在它附近存放多余的 东西。</li><li><strong>战利品是普通的。</strong>每次电击前，生物会被陷阱的匿名假玩家 <code>[Electric Mob Trap]</code>（只存在于内存中，从不进入世界）标记为 "最近被玩家攻击"，因此带"被玩家杀死"条件的掉落会出现（骨头、火药、线——就像用剑杀死一样），也会掉落经验。陷阱没有 抢夺附魔：一级只给基础掉落。</li><li><strong>灵魂容器不会成长。</strong>伤害来源没有实体，也不是玩家：<a href="../items/soul_vessel.html">灵魂容器</a>只统计亲手击杀，所以 <a href="mob_repeller.html">驱逐器</a>的成长仍由玩家负责。若显示死亡信息，内容为"被电死了"（<code>death.attack.electric_shock</code>）。</li><li><strong>末影人是来源上的例外。</strong>受到没有活体攻击者的伤害时，末影人会传送离开，因此对它的放电以陷阱假玩家的名义进行。此时灵魂 容器同样不会成长（假玩家没有容器），而电击引起的愤怒会被陷阱立即清除。</li><li><strong>不授予熟练度点数</strong>（与驱逐器相同）：陷阱不会变成刷点数的农场。</li><li><strong>物品</strong>进入 9 格缓冲区。<strong>缓冲区没有空位时，陷阱既不电击也不吸引。</strong>缓冲区详情见下文。</li><li><strong>放不进缓冲区的东西留在世界里</strong>，作为普通物品，不会消失；有空位后陷阱会回来取它。</li><li><strong>经验</strong>按每点 <strong>20 mB</strong> 转换为<strong>液态经验</strong>，存入 8000 mB 的内部储罐，即 400 点 （，对新放置的方块生效）——约 80 只僵尸。该液体名为 ，属于 <code>c:experience</code> 标签，因此与其他模组兼容。它与蒸汽一样没有桶也没有液体方块：只存在于储罐和管道内，不能倒入世界。储罐把 液体交给流体管道（通过四个侧面和底部，不通过顶部），不接受任何输入。</li><li><strong>储罐已满——经验球留在世界里。</strong>经验不会悄悄消失：玩家可以自己捡起，可见的原因就是陷阱周围地面上的经验球。经验球要么 整颗回收，要么完全不回收：整颗放不进储罐的经验球留在世界里。储罐满本身<strong>不会</strong>停止电击。</li><li>如果玩家在 8 格以内，经验球会自己飞向玩家：站在陷阱旁的玩家可能比陷阱先接住经验。</li></ul>
 
 <h2 id="缓冲与运输">缓冲与运输</h2>
 
-<ul><li>9 个输出格；每格上限为物品的堆叠大小但不超过 64，因此最多 576 个普通物品。</li><li>GUI 是机器界面：3×3 的仅可取出的格子，左侧能量条，右侧液态经验储罐（带"液体：N / 容量 mB"提示），状态行，以及预览 范围的"眼睛"按钮（与驱逐器和真空收集器相同，显示范围立方体）。没有升级面板：除脉冲周期外，陷阱没有什么能被芯片加速。 状态行的取值："电击中""等待生物""缓冲区已满""能量不足"（后两者为阻塞状态，以停止样式高亮）。</li><li>物品可以取出，但不能放入——无论手动、漏斗还是管道。</li><li>陷阱自己不会把任何东西推向任何地方。物品管道会自行从缓冲区抽取，流体管道从储罐抽取液态经验；连接<strong>仅限顶部或底部</strong> （与<a href="../item-transport/vacuum_collector.html">真空收集器</a>相同）。<strong>电缆只接四个侧面：</strong>陷阱有三条线路（能量、物品、液态 经验），把能量放在侧面，就让两种管道都有空闲的面。对物品和液体来说，四个侧面是封闭的。</li><li>没有管道时缓冲区会被填满，陷阱停止电击和吸引，直到玩家腾出空间。</li></ul>
+<ul><li>9 个输出格；每格上限为物品的堆叠大小但不超过 64，因此最多 576 个普通物品。</li><li>GUI 是机器界面：3×3 的仅可取出的格子，左侧能量条，右侧液态经验储罐（带"液体：N / 容量 mB"提示），状态行，以及预览 范围的"眼睛"按钮（与驱逐器和真空收集器相同，显示范围立方体）。没有升级面板：除脉冲周期外，陷阱没有什么能被芯片加速。 状态行的取值："电击中""等待生物""缓冲区已满""能量不足"（后两者为阻塞状态，以停止样式高亮）。</li><li>物品可以取出，但不能放入——无论手动、漏斗还是管道。</li><li>陷阱自己不会把任何东西推向任何地方。物品管道会自行从缓冲区抽取，流体管道从储罐抽取液态经验；<strong>电缆、物品管道和流体管道 都可以接在四个侧面中的任意一个以及底部</strong>（）：这五个面都接收能量，并同时输出战利品和液态经验。在侧面，管道和电缆 一样以低位与陷阱相接。<strong>顶部不连接任何东西：</strong>能量、物品、液体都不通过；电缆和管道都不会向它伸出连接臂。</li><li>没有管道时缓冲区会被填满，陷阱停止电击和吸引，直到玩家腾出空间。</li></ul>
 
 <h2 id="同一区域内的驱逐器">同一区域内的驱逐器</h2>
 
@@ -451,7 +451,7 @@
 
 <p>模型是选定的概念 E "Spark Ring"（<code>tools/model_sources/electric_mob_trap_concepts/e_spark_ring/</code>）：铜环挂在四串陶瓷绝缘子上， 中央立柱上是放电节点。模型尺寸为 16×12×16 像素；选取框与碰撞箱是同一个 16×12×16 的盒子，只构建一次。没有朝向：环从每个 方向看都一样。方块不是完整立方体，因此遮挡形状为空、光线可以穿过（与真空收集器相同：相邻方块不会丢失面，单元格不投射角落 阴影）；不使用 。</p>
 
-<table><thead><tr><th>项目</th><th>数值</th></tr></thead><tbody><tr><td>形状</td><td>绝缘子上的环，16×12×16 px，整个盒子为实心</td></tr><tr><td>硬度</td><td>3.0 / 6.0，金属；工具：镐</td></tr><tr><td>状态</td><td><code>lit</code>——缓冲区中的能量足够一次电击（陷阱已通电）</td></tr><tr><td>动画</td><td>陷阱通电（<code>lit</code>）时节点脉动（动画纹理，<code>.png.mcmeta</code>）；没有能量时节点静止；电击瞬间节点闪光</td></tr><tr><td>渲染</td><td>方块渲染器沿四个开放侧面向下绘制蓝色锯齿电弧（约 0.4 秒）；生物处为原版 <code>ELECTRIC_SPARK</code> 粒子</td></tr><tr><td>声音</td><td>没有模组自有声音；电击时播放原版 <code>LIGHTNING_BOLT_IMPACT</code>（音量 0.35，音调 1.8）</td></tr></tbody></table>
+<table><thead><tr><th>项目</th><th>数值</th></tr></thead><tbody><tr><td>形状</td><td>绝缘子上的环，16×12×16 px，整个盒子为实心</td></tr><tr><td>连接</td><td>四个侧面和底部：能量、物品、液态经验；顶部：无。在侧面，电缆和管道以低位与方块相接（连接臂位于 2..8 px）；电缆把连接臂向内延伸 5 px，直到放电节点下方的板</td></tr><tr><td>硬度</td><td>3.0 / 6.0，金属；工具：镐</td></tr><tr><td>状态</td><td><code>lit</code>——缓冲区中的能量足够一次电击（陷阱已通电）</td></tr><tr><td>动画</td><td>陷阱通电（<code>lit</code>）时节点脉动（动画纹理，<code>.png.mcmeta</code>）；没有能量时节点静止；电击瞬间节点闪光</td></tr><tr><td>渲染</td><td>方块渲染器沿四个开放侧面向下绘制蓝色锯齿电弧（约 0.4 秒）；生物处为原版 <code>ELECTRIC_SPARK</code> 粒子</td></tr><tr><td>声音</td><td>没有模组自有声音；电击时播放原版 <code>LIGHTNING_BOLT_IMPACT</code>（音量 0.35，音调 1.8）</td></tr></tbody></table>
 
 <h2 id="配方">配方</h2>
 
@@ -467,7 +467,7 @@
 
 <h2 id="进度">进度</h2>
 
-<p>一级是供普通农场使用的"弱"陷阱。可能的发展（单独的任务，不在 范围内）：附魔增加掉落、为液态经验准备的经验储备罐、 来自 的物种日志。</p>
+<p>一级是供普通农场使用的"弱"陷阱。储罐中的液态经验通过<a href="fluid_tap.html">龙头</a>（）以经验球的形式回到玩家手中： 直接挂在陷阱下方，或接在流体管道末端。可能的发展（单独的任务，不在 范围内）：附魔增加掉落、来自 的物种日志。</p>
 
 <h2 id="开放问题">开放问题</h2>
 
@@ -475,7 +475,7 @@
 
 <h2 id="相关">相关</h2>
 
-<ul><li><a href="mob_repeller.html">小型驱逐器</a>——陷阱的反面；优先于陷阱。</li><li><a href="../items/soul_vessel.html">灵魂容器</a>——陷阱不会为它充能。</li><li><a href="../item-transport/vacuum_collector.html">真空收集器 I</a>——装置的范本和配方材料。</li><li>任务 ——所有者的决定与调查。</li></ul>
+<ul><li><a href="mob_repeller.html">小型驱逐器</a>——陷阱的反面；优先于陷阱。</li><li><a href="../items/soul_vessel.html">灵魂容器</a>——陷阱不会为它充能。</li><li><a href="../item-transport/vacuum_collector.html">真空收集器 I</a>——装置的范本和配方材料。</li><li>任务 ——所有者的决定与调查。</li><li>任务 ——顶部以外所有面的连接。</li></ul>
 
 <h2>合成</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="电击生物陷阱 alaindustrial:electric_mob_trap" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="陶瓷板"><img src="../../assets/item/ceramic_plate_3d.png" alt="陶瓷板" width="32" height="32"></div> <div class="cell" title="避雷针"><img src="../../assets/item/lightning_rod_3d.png" alt="避雷针" width="32" height="32"></div> <div class="cell" title="陶瓷板"><img src="../../assets/item/ceramic_plate_3d.png" alt="陶瓷板" width="32" height="32"></div> <div class="cell" title="铜线圈"><img src="../../assets/item/copper_coil_3d.png" alt="铜线圈" width="32" height="32"></div> <div class="cell" title="真空收集器"><img src="../../assets/item/vacuum_collector_3d.png" alt="真空收集器" width="32" height="32"></div> <div class="cell" title="铜线圈"><img src="../../assets/item/copper_coil_3d.png" alt="铜线圈" width="32" height="32"></div> <div class="cell" title="陶瓷板"><img src="../../assets/item/ceramic_plate_3d.png" alt="陶瓷板" width="32" height="32"></div> <div class="cell" title="电子电路"><img src="../../assets/item/electronic_circuit_3d.png" alt="电子电路" width="32" height="32"></div> <div class="cell" title="陶瓷板"><img src="../../assets/item/ceramic_plate_3d.png" alt="陶瓷板" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="电击生物陷阱"><img src="../../assets/item/electric_mob_trap_3d.png" alt="电击生物陷阱" width="32" height="32"></div><div class="result-name">电击生物陷阱</div></div></div></div></div>

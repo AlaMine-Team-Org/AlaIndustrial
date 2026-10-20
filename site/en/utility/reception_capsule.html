@@ -318,7 +318,7 @@
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
 <a class="cat-link" href="../construction/index.html"><img class="nav-icon" src="../../assets/item/engraved_plate_0_3d.png" alt=""><span>Construction</span><span class="cat-count" aria-label="3 pages">3</span></a>
-<a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="24 pages">24</span></a>
+<a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="25 pages">25</span></a>
 <div class="group-title">Items</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="30 pages">30</span></a>
@@ -352,11 +352,15 @@
 
 <p>A dead shift worker's number is never handed to a new one. By default a shift worker's death is final. If the server turns that off, a dead worker waits to be brought back, and the capsule offers a choice: a button in the window cycles "New worker" → the settlement's dead by number → "New worker" again.</p>
 
-<ul><li>The worker brought back is the same shift worker: the same number and the same look, in a new body.</li><li>Bringing one back costs <strong>twice as much as a new one</strong>: 200 000 EU/FE, 2 circuits, 16 rubber, 8 copper plates. The capsule's buffer holds exactly the price of bringing one back.</li><li>If a shift worker's death is final, a dead worker does not wait to be brought back, and there is no choice.</li></ul>
+<ul><li>The worker brought back is the same shift worker: the same number and the same look, in a new body. They come back with a full battery and full health, but one level lower (never below the first) and without the last point invested in their stats; their personal file gets a mark that they were brought back.</li><li>Bringing one back costs <strong>twice as much as a new one</strong>: 200 000 EU/FE, 2 circuits, 16 rubber, 8 copper plates. The capsule's buffer holds exactly the price of bringing one back.</li><li>If a shift worker's death is final, a dead worker does not wait to be brought back, and there is no choice.</li></ul>
+
+<h3 id="resetting-a-workers-points">Resetting a worker's points</h3>
+
+<p>The capsule is also where a shift worker's stats get redistributed. When a living worker of the settlement stands no more than 3 blocks from a capsule of its settlement, the settlement's owner sees a "Reset points (50 000 EU/FE)" button on the worker's card. It turns all invested points back into free ones, ready to be invested again. The price is taken from the capsule's buffer, so the button only shows when the buffer holds 50 000 EU/FE and the worker has at least one invested point. The card and the points are described on the <a href="settlement_core.html">Settlement Core</a> page, section "The settlement's shift workers".</p>
 
 <h2 id="when-the-settlement-sleeps">When the settlement sleeps</h2>
 
-<p>The settlement falls asleep because of the core, not the capsule: when the core goes dark, all the settlement's shift workers freeze where they stood and do not die from it; when the power comes back, they carry on from the same spot. While the core is dark, the capsule stands still too: a restoring in progress freezes and later carries on from the same spot, losing nothing.</p>
+<p>The settlement falls asleep because of the core, not the capsule: when the core goes dark, the settlement's shift workers keep working on their batteries while there is charge in them, then freeze where they stood and do not die from it; when the power comes back, the core recharges them and they carry on from the same spot. While the core is dark, the capsule stands still too: a restoring in progress freezes and later carries on from the same spot, losing nothing.</p>
 
 <h2 id="energy">Energy</h2>
 

@@ -318,7 +318,7 @@
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
 <a class="cat-link" href="../construction/index.html"><img class="nav-icon" src="../../assets/item/engraved_plate_0_3d.png" alt=""><span>Construction</span><span class="cat-count" aria-label="3 pages">3</span></a>
-<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="24 pages">24</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="25 pages">25</span></a>
 <div class="group-title">Items</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="30 pages">30</span></a>
@@ -342,13 +342,13 @@
 
 <p>It exists for one job — <strong>testing setups</strong>. When you are wiring a cable run, a reactor bench or a chain of machines and want to know whether it works, an ordinary generator gets in the way: it becomes the bottleneck itself, and you cannot tell whether the layout is wrong or the fuel simply ran out. This block removes the question entirely.</p>
 
-<blockquote><strong>Quick example:</strong> place the source, dial the output up to <strong>512 EU/FE/t</strong>, run an electrum cable to a machine — and it will keep working for as long as you need, without a single lump of coal.</blockquote>
+<blockquote><strong>Quick example:</strong> place the source — it gives <strong>512 EU/FE/t</strong> (the HV preset) right away — run an electrum cable to a machine — and it will keep working for as long as you need, without a single lump of coal.</blockquote>
 
 <p><strong>You cannot get it in survival.</strong> There is no recipe at all: the block comes only from the mod's creative tab. The pink name in its tooltip is the same signal the dragon egg and the barrier carry — this is a technical thing.</p>
 
 <h2 id="energy">Energy</h2>
 
-<table><thead><tr><th>Property</th><th>Value</th></tr></thead><tbody><tr><td>Output</td><td>adjustable: <strong>32-8192 EU/FE/t</strong></td></tr><tr><td>Intake</td><td><strong>none</strong> — the block only gives</td></tr><tr><td>Tier</td><td>not fixed; set by the output</td></tr></tbody></table>
+<table><thead><tr><th>Property</th><th>Value</th></tr></thead><tbody><tr><td>Output</td><td>adjustable: <strong>32-8192 EU/FE/t</strong></td></tr><tr><td>Output of a new block</td><td><strong>512 EU/FE/t</strong> — the HV preset; a block already placed keeps its own setting</td></tr><tr><td>Intake</td><td><strong>none</strong> — the block only gives</td></tr><tr><td>Tier</td><td>not fixed; set by the output</td></tr></tbody></table>
 
 <p>The output you set is the <strong>block's total for a tick</strong>, not a limit per side. If several machines stand around it, the number you set is shared out between them rather than multiplied by them.</p>
 

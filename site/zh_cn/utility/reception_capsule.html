@@ -318,7 +318,7 @@
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>高级机器</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <div class="group-title">其他</div>
 <a class="cat-link" href="../construction/index.html"><img class="nav-icon" src="../../assets/item/engraved_plate_0_3d.png" alt=""><span>建筑方块</span><span class="cat-count" aria-label="3 个页面">3</span></a>
-<a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="24 个页面">24</span></a>
+<a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="25 个页面">25</span></a>
 <div class="group-title">物品</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="30 个页面">30</span></a>
@@ -352,11 +352,15 @@
 
 <p>死去的轮班工的编号永远不会给新的轮班工。默认情况下，轮班工的死亡是永久的。如果服务器关闭了这一设置，死者会等待被召回，接收舱会让你选择：窗口里的按钮依次切换「新工人」→ 定居点的死者（按编号）→ 再回到「新工人」。</p>
 
-<ul><li>召回的是同一名轮班工：同样的编号、同样的外观，换了一具新身体。</li><li>召回的价格是<strong>新工人的两倍</strong>：200 000 EU/FE、2 个电路、16 个橡胶、8 块铜板。接收舱的缓存正好装得下召回的价格。</li><li>如果轮班工的死亡是永久的，死者不会等待召回，也就没有选择。</li></ul>
+<ul><li>召回的是同一名轮班工：同样的编号、同样的外观，换了一具新身体。他回来时电池满电、生命值全满，但等级降一级（不低于第一级），并失去最后投入的一个属性点；个人档案里会添加一条被召回的记录。</li><li>召回的价格是<strong>新工人的两倍</strong>：200 000 EU/FE、2 个电路、16 个橡胶、8 块铜板。接收舱的缓存正好装得下召回的价格。</li><li>如果轮班工的死亡是永久的，死者不会等待召回，也就没有选择。</li></ul>
+
+<h3 id="重置轮班工的点数">重置轮班工的点数</h3>
+
+<p>接收舱也是给轮班工重新分配属性的地方。定居点里活着的轮班工站在本定居点接收舱 3 格以内时，定居点所有者会在他的卡片上看到「重置点数（50 000 EU/FE）」按钮。它把所有已投入的点数变回空闲点数，可以重新分配。费用从接收舱的缓存扣除，所以只有缓存里有 50 000 EU/FE、且轮班工至少投入过一点时，按钮才会出现。卡片和点数的说明见<a href="settlement_core.html">定居点核心</a>页面的「定居点的轮班工」一节。</p>
 
 <h2 id="定居点沉睡时">定居点沉睡时</h2>
 
-<p>定居点沉睡的原因是核心，而不是接收舱：核心熄灭时，定居点的所有轮班工停在原地，不会因此死亡；能量恢复后，从原处继续。核心熄灭期间，接收舱也会停住：正在进行的复原暂停，之后从原处继续，不会损失任何东西。</p>
+<p>定居点沉睡的原因是核心，而不是接收舱：核心熄灭时，定居点的轮班工继续靠电池工作，直到电量用完，然后停在原地，不会因此死亡；能量恢复后，核心给他们充电，他们从原处继续。核心熄灭期间，接收舱也会停住：正在进行的复原暂停，之后从原处继续，不会损失任何东西。</p>
 
 <h2 id="能量">能量</h2>
 

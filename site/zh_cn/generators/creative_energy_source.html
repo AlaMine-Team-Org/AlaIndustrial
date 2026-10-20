@@ -318,7 +318,7 @@
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>高级机器</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <div class="group-title">其他</div>
 <a class="cat-link" href="../construction/index.html"><img class="nav-icon" src="../../assets/item/engraved_plate_0_3d.png" alt=""><span>建筑方块</span><span class="cat-count" aria-label="3 个页面">3</span></a>
-<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="24 个页面">24</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="25 个页面">25</span></a>
 <div class="group-title">物品</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="30 个页面">30</span></a>
@@ -342,13 +342,13 @@
 
 <p>它只为一件事而存在——<strong>测试线路</strong>。当你在铺设电缆、搭建反应堆试验台或串联一整条机器链，想知道它能不能跑起来时，普通发电机反而碍事：它自己成了瓶颈，你分不清是布局有问题还是燃料烧完了。这个方块把这个疑问彻底去掉。</p>
 
-<blockquote><strong>小例子：</strong> 放下能量源，把输出拧到 <strong>512 EU/FE/t</strong>，用电金电缆接到机器上——它就能一直运转下去，一块煤都不用。</blockquote>
+<blockquote><strong>小例子：</strong> 放下能量源（它一开始就输出 <strong>512 EU/FE/t</strong>，即 HV 预设），用电金电缆接到机器上——它就能一直运转下去，一块煤都不用。</blockquote>
 
 <p><strong>生存模式里拿不到它。</strong> 它没有任何合成配方：只能从模组的创造模式物品栏里取得。提示框里的粉色名称与龙蛋、屏障是同一个标记——这是技术性物品。</p>
 
 <h2 id="能量">能量</h2>
 
-<table><thead><tr><th>参数</th><th>数值</th></tr></thead><tbody><tr><td>输出</td><td>可调：<strong>32-8192 EU/FE/t</strong></td></tr><tr><td>输入</td><td><strong>无</strong>——本方块只输出</td></tr><tr><td>电压等级</td><td>不固定，由输出决定</td></tr></tbody></table>
+<table><thead><tr><th>参数</th><th>数值</th></tr></thead><tbody><tr><td>输出</td><td>可调：<strong>32-8192 EU/FE/t</strong></td></tr><tr><td>新方块的输出</td><td><strong>512 EU/FE/t</strong>，即 HV 预设（）；已放置的方块保留自己的设置</td></tr><tr><td>输入</td><td><strong>无</strong>——本方块只输出</td></tr><tr><td>电压等级</td><td>不固定，由输出决定</td></tr></tbody></table>
 
 <p>你设定的输出是<strong>方块每刻的总上限</strong>，而不是每一面的上限。如果周围站着好几台机器，这个数值是在它们之间分配，而不是乘以它们的数量。</p>
 
