@@ -1160,13 +1160,6 @@
               "text": "Jedyne miejsce, w którym płyn może przekroczyć szczelną powłokę: przepust 50 mB/t działający w obie strony — woda do środka, para na zewnątrz — a przy tym nadal pełnoprawny kawałek ściany."
             },
             {
-              "type": "stats",
-              "title": "Statystyki",
-              "lines": [
-                "Bufor: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Przepis",
               "recipe_type": "Wytwarzanie wg wzoru",
@@ -1232,13 +1225,6 @@
               "type": "text",
               "title": "Dźwignia reaktora",
               "text": "Dźwignia ze stopu osłonowego: sygnał podtrzymywany z wnętrza szczelnej sali — awaryjne zatrzymanie reaktora, które nie narusza osłony sali i nie topi się wraz z jej zawartością."
-            },
-            {
-              "type": "stats",
-              "title": "Statystyki",
-              "lines": [
-                "Bufor: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3190,13 +3176,6 @@
               "text": "Obracająca się głowica na maszcie, która zrasza roztworem odżywczym wszystko, co rośnie w promieniu 4 bloków. Jedyna maszyna moda, która w ogóle nie pobiera EU — nie podłącza się do niej kabla, działa wyłącznie na roztwór. Montowana na podłodze lub pod sufitem."
             },
             {
-              "type": "stats",
-              "title": "Statystyki",
-              "lines": [
-                "Bufor: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Przepis",
               "recipe_type": "Wytwarzanie wg wzoru",
@@ -3357,13 +3336,6 @@
               "text": "Cztery elementy budowlane z hartowanego żelaza na wzór waniliowych — kraty, drabina, klapa i łańcuch. Działają jak waniliowe, a wyglądają jak stal moda."
             },
             {
-              "type": "stats",
-              "title": "Statystyki",
-              "lines": [
-                "Bufor: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Przepis",
               "recipe_type": "Wytwarzanie wg wzoru",
@@ -3392,13 +3364,6 @@
               "type": "text",
               "title": "Przycisk reaktora",
               "text": "Przycisk ze stopu osłonowego: sposób na podanie impulsu do śluzy z wnętrza zamkniętego pomieszczenia; zbudowany dokładnie jak przycisk z podstawki, ale odporny na to, do czego to pomieszczenie służy."
-            },
-            {
-              "type": "stats",
-              "title": "Statystyki",
-              "lines": [
-                "Bufor: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3431,13 +3396,6 @@
               "text": "Blok powłoki, który zapala się dopiero wtedy, gdy pomieszczenie jest złożone: jedyne źródło światła w zamkniętej skrzyni, a zarazem widoczny z zewnątrz znak, że budowla została przyjęta."
             },
             {
-              "type": "stats",
-              "title": "Statystyki",
-              "lines": [
-                "Bufor: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Przepis",
               "recipe_type": "Wytwarzanie wg wzoru",
@@ -3466,13 +3424,6 @@
               "type": "text",
               "title": "Obudowa reaktora",
               "text": "Płyta ze stopu osłonowego — jedyny materiał, z którego wolno zbudować szczelną powłokę pomieszczenia reaktora."
-            },
-            {
-              "type": "stats",
-              "title": "Statystyki",
-              "lines": [
-                "Bufor: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3505,13 +3456,6 @@
               "text": "Przezroczysta płyta powłoki: liczy się jako ściana dokładnie tak jak poszycie, ale szkło może zająć najwyżej 30 % powłoki — powyżej tego pomieszczenie przestaje być osłoną, a staje się gablotą."
             },
             {
-              "type": "stats",
-              "title": "Statystyki",
-              "lines": [
-                "Bufor: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Przepis",
               "recipe_type": "Wytwarzanie wg wzoru",
@@ -3542,13 +3486,6 @@
               "text": "Przezroczyste szkło w ramie z hartowanego żelaza — pęka jak kamień i wytrzymuje wybuch creepera lub TNT. Blok budowlany i składnik późniejszych receptur."
             },
             {
-              "type": "stats",
-              "title": "Statystyki",
-              "lines": [
-                "Bufor: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Przepis",
               "recipe_type": "Wytwarzanie wg wzoru",
@@ -3577,13 +3514,6 @@
               "type": "text",
               "title": "Drzwi śluzy reaktora",
               "text": "Jedyne wejście do pomieszczenia reaktora: otwierają się wyłącznie na impuls czerwonego kamienia, same zamykają po dwóch sekundach i nigdy nie zamkną się na kimś, kto stoi w przejściu."
-            },
-            {
-              "type": "stats",
-              "title": "Statystyki",
-              "lines": [
-                "Bufor: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3718,13 +3648,6 @@
               "type": "text",
               "title": "Moduł magazynowy",
               "text": "Blok magazynowy na 27 miejsc: moduły ustawione jeden przy drugim działają jak jeden magazyn do 108 miejsc za jednym oknem."
-            },
-            {
-              "type": "stats",
-              "title": "Statystyki",
-              "lines": [
-                "Bufor: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3881,13 +3804,6 @@
               "text": "Maleńkie światło 4×4 piksele o ciepłym świetle poziomu 15 — na podłogę, sufit lub dowolną ścianę. Bez menu, bez energii."
             },
             {
-              "type": "stats",
-              "title": "Statystyki",
-              "lines": [
-                "Bufor: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Przepis",
               "recipe_type": "Wytwarzanie wg wzoru",
@@ -3904,6 +3820,26 @@
               ],
               "result_id": "alaindustrial:industrial_light",
               "result_count": 4
+            }
+          ]
+        },
+        {
+          "id": "reception_capsule",
+          "title": "Kapsuła przyjęć",
+          "icon": "alaindustrial:reception_capsule",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kapsuła przyjęć",
+              "text": "Przywraca zmienników osady jednego po drugim za EU i materiały — tylko dopóki rdzeń osady świeci, osada ma właściciela, a limit zmienników nie jest osiągnięty; każdy nowy zmiennik dostaje własny numer, jedyny na całym świecie."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Energia: 100 000 EU na zmiennika",
+                "Bufor: 200 000 EU"
+              ]
             }
           ]
         },
@@ -3933,6 +3869,36 @@
                 ""
               ],
               "result_id": "alaindustrial:guide_book",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluid_tap",
+          "title": "Kran",
+          "icon": "alaindustrial:fluid_tap",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kran",
+              "text": "Szklana złączka na zbiorniku lub na końcu rury. Wypuszcza płyn do świata, a płynne doświadczenie oddaje jako kule. PPM otwiera go i zamyka, czerwony kamień też go otwiera."
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "minecraft:lever",
+                "",
+                "alaindustrial:fluid_pipe",
+                "",
+                "",
+                "minecraft:iron_ingot",
+                ""
+              ],
+              "result_id": "alaindustrial:fluid_tap",
               "result_count": 1
             }
           ]
@@ -4055,6 +4021,36 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "sound_absorber",
+          "title": "Pochłaniacz dźwięku",
+          "icon": "alaindustrial:sound_absorber",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Pochłaniacz dźwięku",
+              "text": "Blok z ramy z hartowanego żelaza, kraty i wypełnienia, który tłumi dźwięki bloków i otoczenia wokół siebie; pochłaniacze stykające się ścianą tworzą grupę, a im większa grupa, tym szersza i silniejsza strefa ciszy."
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:note_block",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool"
+              ],
+              "result_id": "alaindustrial:sound_absorber",
+              "result_count": 2
             }
           ]
         },
@@ -4228,8 +4224,9 @@
               "title": "Statystyki",
               "lines": [
                 "Energia: 100 EU na uderzenie",
-                "Bufor: 4000 EU",
-                "Promień: 6 bloków"
+                "Bufor: 10000 EU",
+                "Promień: 3 bloki",
+                "Strefa przyciągania: 6 bloków"
               ]
             },
             {
@@ -4285,6 +4282,44 @@
                 "alaindustrial:electrum_ingot"
               ],
               "result_id": "alaindustrial:electrum_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "settlement_core",
+          "title": "Rdzeń osady",
+          "icon": "alaindustrial:settlement_core",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Rdzeń osady",
+              "text": "Serce osiedla robotniczego, stojące w jego ratuszu — dopóki sieć dostarcza mu EU, utrzymuje teren osady, wyznacza, ile domów i zmienników może mieć osiedle, i pamięta swojego właściciela; bez zasilania gaśnie, a osiedle zasypia."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Energia: 8 EU/t",
+                "Bufor: 2000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "alaindustrial:resonant_crystal",
+                "alaindustrial:reactor_circuit",
+                "alaindustrial:resonant_crystal",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:reinforced_bearing",
+                "alaindustrial:cesu",
+                "alaindustrial:reinforced_bearing"
+              ],
+              "result_id": "alaindustrial:settlement_core",
               "result_count": 1
             }
           ]
@@ -4551,7 +4586,7 @@
             {
               "type": "text",
               "title": "Rura rdzeniowa",
-              "text": "Rura rdzeniowa i moduł wiercenia kolumnowego — części, z których buduje się ulepszenie pozwalające wiertłu kopać na wysokość trzech bloków."
+              "text": "Rura rdzeniowa oraz moduły wiercenia kolumnowego i rzędowego — części, z których buduje się ulepszenie pozwalające wiertłu kopać na wysokość lub szerokość trzech bloków (razem — krzyż z pięciu bloków)."
             },
             {
               "type": "recipe",
@@ -4995,7 +5030,7 @@
             {
               "type": "text",
               "title": "Skrzep energii I",
-              "text": "Trzy poziomy skrzepów — nadmiar z sieci, zamrożony na twardo przez kondensator energii. Jedyny składnik, z którego powstają układy przyspieszające."
+              "text": "Trzy poziomy skrzepów — nadmiar z sieci, zamrożony na twardo przez kondensator energii. Główny składnik układów przyspieszających; skrzepy II i III poziomu idą też na kryształy."
             }
           ]
         },

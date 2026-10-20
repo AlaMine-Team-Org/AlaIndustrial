@@ -41,9 +41,9 @@ import org.jspecify.annotations.Nullable;
  * summoned by command has no record and leaves the world on its first tick (ADR-050 point 8).
  *
  * <p><b>The worker's town</b> ({@code SettlementRegistry}, MOD-831) is where its anchor is (the core), how far it
- * walks (never past the territory), whose it is (the town's owner, R34) and whether it works: a dark core — out of
- * power or taken away — puts its workers into hibernation (R10). A worker of no town (number 0: a test, a stand)
- * belongs to nobody and always works.
+ * walks (never past the territory), whose it is (the town's owner, R34) and whether it works: a worker of a dark
+ * core — out of power or taken away — works on its battery until it is empty, then hibernates (R68, MOD-854,
+ * {@link ShiftWorkerBattery}). A worker of no town (number 0: a test, a stand) belongs to nobody and always works.
  */
 public final class ShiftWorkers {
 
@@ -87,8 +87,12 @@ public final class ShiftWorkers {
 			return Optional.empty();
 		}
 		Choice look = chooseLook(level, number, level.getBiome(BlockPos.containing(at)), null);
+		long now = level.getGameTime();
+		ShiftWorkerProfile.ServiceMark issuedMark = new ShiftWorkerProfile.ServiceMark(
+				ShiftWorkerProfile.ServiceMark.Kind.ISSUED, now, List.of());
 		ShiftWorkerRecord record = ShiftWorkerRecord.issued(number, worker.getUUID(), look.id(), look.slim(),
-				settlement);
+				settlement).withProfile(ShiftWorkerProfile.FRESH.issuedAt(now).marked(issuedMark).withBiography(
+						ShiftWorkerProfiles.chooseBiography(level.getServer(), number, settlement, worker.getUUID())));
 		if (!enter(level, worker, record, null)) {
 			ledger.close(number);
 			Industrialization.LOGGER.warn("[ala-towns] shift worker {} could not join the world at {}; its number "
@@ -117,13 +121,23 @@ public final class ShiftWorkers {
 		if (worker == null) {
 			return Optional.empty();
 		}
-		if (!enter(level, worker, waiting.returned(worker.getUUID()), waiting)) {
+		if (!enter(level, worker, returnedRecord(waiting, worker, level.getGameTime()), waiting)) {
 			Industrialization.LOGGER.warn("[ala-towns] shift worker {} could not come back at {}; it waits on", number,
 					at);
 			return Optional.empty();
 		}
 		Industrialization.LOGGER.info("[ala-towns] worker brought back {} at {}", number, BlockPos.containing(at));
 		return Optional.of(worker);
+	}
+
+	/**
+	 * The record of a dead worker brought back in {@code body} (R39, R56): one level down — its last invested point
+	 * taken back — with a full battery and a {@code RETURNED} mark naming the level it came back at.
+	 */
+	static ShiftWorkerRecord returnedRecord(ShiftWorkerRecord waiting, ShiftWorker body, long gameTime) {
+		ShiftWorkerProfile down = waiting.profile().returnedOneLevelDown().withCharge(ShiftWorkerProfile.FULL);
+		return waiting.returned(body.getUUID()).withProfile(down.marked(new ShiftWorkerProfile.ServiceMark(
+				ShiftWorkerProfile.ServiceMark.Kind.RETURNED, gameTime, List.of(Integer.toString(down.level())))));
 	}
 
 	/** A new body standing at {@code at}, looking along {@code yaw}, at full health; null if the type made none. */
@@ -156,6 +170,7 @@ public final class ShiftWorkers {
 		worker.joinTown(record.settlement(), town.map(Settlement::corePos).orElse(worker.blockPosition()),
 				wanderRadius(town));
 		worker.showRecord(record);
+		ShiftWorkerProfiles.applyStats(worker, record.profile(), true);
 		if (!level.addFreshEntity(worker)) {
 			book.remove(worker.getUUID());
 			if (replaced != null) {
@@ -217,7 +232,8 @@ public final class ShiftWorkers {
 	 * Looks the record of a loaded {@code worker} up and shows it to the clients; false when the entity must leave
 	 * the world without a drop: it has no record (summoned by command, or its record was lost), its record is not
 	 * alive (a copy that came back after its death, or one of a rolled-back chunk), or the ledger does not hold its
-	 * number as a living worker's. A record whose look left the datapack gets a new one by the same rule. The
+	 * number as a living worker's. A record whose look left the datapack gets a new one by the same rule, and a number
+	 * marked for a new one gets it now, before the body shows any (R41, {@link ShiftWorkerRenumbering}). The
 	 * worker takes its town's state: hibernating while the core is dark — the {@code NoAI} flag it was saved with
 	 * is not what decides (ADR-050 point 8).
 	 */
@@ -244,12 +260,14 @@ public final class ShiftWorkers {
 			record = record.withLook(again.id());
 			book.put(record);
 		}
+		record = ShiftWorkerRenumbering.onJoin(level, record);
 		Optional<Settlement> town = town(level.getServer(), record.settlement());
 		BlockPos anchor = town.map(Settlement::corePos)
 				.orElse(worker.hasHome() ? worker.getHomePosition() : worker.blockPosition());
 		worker.joinTown(record.settlement(), anchor, wanderRadius(town));
 		worker.showRecord(record);
-		boolean hibernate = !townState(town).powered();
+		ShiftWorkerProfiles.applyStats(worker, record.profile(), false);
+		boolean hibernate = !townState(town, record.profile().chargeNow() > 0).powered();
 		worker.setMode(hibernate ? ShiftMode.HIBERNATE : ShiftMode.IDLE);
 		worker.setNoAi(hibernate);
 		return true;
@@ -260,7 +278,9 @@ public final class ShiftWorkers {
 		if (!ShiftSchedule.thinksOn(worker.tickCount, worker.getId(), worker.mode())) {
 			return;
 		}
-		ShiftSchedule.TownState state = townState(town(level.getServer(), worker.settlement()));
+		ShiftWorkerBattery.settle(level, worker);
+		ShiftSchedule.TownState state = townState(town(level.getServer(), worker.settlement()),
+				ShiftWorkerBattery.charged(level.getServer(), worker));
 		ShiftMode mode = ShiftSchedule.modeAt(level.getOverworldClockTime(), false, state);
 		if (mode == worker.mode()) {
 			return;
@@ -294,9 +314,13 @@ public final class ShiftWorkers {
 		}
 	}
 
-	/** The state town {@code town} gives its workers; no town (or one that is gone) — always running. */
-	static ShiftSchedule.TownState townState(Optional<Settlement> town) {
-		return town.map(settlement -> new ShiftSchedule.TownState(settlement.active(), true))
+	/**
+	 * The state town {@code town} gives a worker whose battery is {@code charged}: powered while the core is lit, or
+	 * while the battery still holds charge (R68) — a dark core's worker works on until it is empty, then sleeps. No
+	 * town (or one that is gone) — always running.
+	 */
+	static ShiftSchedule.TownState townState(Optional<Settlement> town, boolean charged) {
+		return town.map(settlement -> new ShiftSchedule.TownState(settlement.active() || charged, true))
 				.orElse(ShiftSchedule.TownState.RUNNING);
 	}
 

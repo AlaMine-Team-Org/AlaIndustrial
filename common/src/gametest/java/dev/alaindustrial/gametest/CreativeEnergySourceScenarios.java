@@ -2,6 +2,7 @@ package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.block.entity.CreativeEnergySourceBlockEntity;
 import dev.alaindustrial.block.entity.MachineBlockEntity;
+import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.registry.ModContent;
 import java.util.List;
@@ -62,7 +63,9 @@ public final class CreativeEnergySourceScenarios {
 								"creative_source_charge_slot")
 						.fabricId("NetworkGameTest", "it479_chargeSlotFillsItemAndRefusesAutomation").ticks(100),
 				RosterEntry.of(CreativeEnergySourceScenarios::noRecipeYieldsTheBlock, "creative_source_has_no_recipe")
-						.fabricId("NetworkGameTest", "it479_noRecipeYieldsTheBlock").ticks(40));
+						.fabricId("NetworkGameTest", "it479_noRecipeYieldsTheBlock").ticks(40),
+				RosterEntry.of(CreativeEnergySourceScenarios::newSourceGivesTheHvPreset,
+						"creative_source_new_block_gives_512"));
 
 		private Roster() {}
 	}
@@ -179,6 +182,10 @@ public final class CreativeEnergySourceScenarios {
 	public static void deliversManyTimesItsOwnCapacity(GameTestHelper helper) {
 		EnergyLine line = line(helper);
 		CreativeEnergySourceBlockEntity source = sourceOf(helper, line);
+		// The claim needs a setting the macerator's draw outruns over the run; the default rose to the HV
+		// preset of 512 EU/t (MOD-855), which one machine never takes eight times over, so the setting the
+		// test was written against is set here explicitly.
+		source.setOutputLimit(128);
 
 		// The yardstick is what the block ever HOLDS at one moment, not its declared capacity: the
 		// buffer is topped to the output setting and never above it, so that is the whole of what a
@@ -266,6 +273,36 @@ public final class CreativeEnergySourceScenarios {
 					+ " will keep waking for a block that gives nothing");
 			return;
 		}
+		helper.succeed();
+	}
+
+	/**
+	 * A newly placed source gives 512 EU/t, the HV preset, and holds exactly that after a tick of its own;
+	 * a block saved with another output (the old default of 128) keeps it on load (MOD-855).
+	 *
+	 * @implements IT-479-DEF — a new source gives the HV preset of 512 EU/t; a saved output is kept.
+	 */
+	public static void newSourceGivesTheHvPreset(GameTestHelper helper) {
+		ServerLevel level = helper.getLevel();
+		CreativeEnergySourceBlockEntity source = placeSource(helper, SOURCE);
+		helper.assertTrue(source.getOutputLimit() == 512, "a new source must give 512 EU/t, gives "
+				+ source.getOutputLimit());
+		helper.assertTrue(source.getOutputLimit() == EnergyTier.HV.maxVoltage(),
+				"the default must be the HV preset (" + EnergyTier.HV.maxVoltage() + "), got "
+						+ source.getOutputLimit());
+		EnergyScenarioSupport.tick(helper, source);
+		helper.assertTrue(source.getEnergyStorage().getAmount() == 512,
+				"after its own tick a new source holds 512 EU, holds " + source.getEnergyStorage().getAmount());
+
+		RegistryAccess registries = level.registryAccess();
+		BlockPos abs = helper.absolutePos(SOURCE);
+		CompoundTag tag = source.saveCustomOnly(registries);
+		tag.putInt("Output", 128);
+		CreativeEnergySourceBlockEntity restored =
+				new CreativeEnergySourceBlockEntity(abs, level.getBlockState(abs));
+		restored.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, registries, tag));
+		helper.assertTrue(restored.getOutputLimit() == 128, "a block saved at 128 EU/t must keep it, loads "
+				+ restored.getOutputLimit());
 		helper.succeed();
 	}
 

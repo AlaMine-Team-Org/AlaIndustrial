@@ -1160,13 +1160,6 @@
               "text": "De enige plek waar vloeistof een verzegelde schil mag kruisen: een doorvoer van 50 mB/t die beide kanten op werkt — water erin, stoom eruit — en toch een volwaardig stuk muur blijft."
             },
             {
-              "type": "stats",
-              "title": "Statistieken",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Recept",
               "recipe_type": "Gevormd vervaardigen",
@@ -1232,13 +1225,6 @@
               "type": "text",
               "title": "Reactorhendel",
               "text": "Een hendel van afschermingslegering: een vastgehouden signaal vanuit een verzegelde ruimte — de noodstop van de reactor, die de afscherming van de ruimte niet breekt en niet meesmelt met de inhoud."
-            },
-            {
-              "type": "stats",
-              "title": "Statistieken",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3190,13 +3176,6 @@
               "text": "Een draaiende kop op een mast die voedingsoplossing vernevelt over alles wat binnen 4 blokken groeit. De enige machine van de mod die helemaal geen EU trekt — er gaat geen kabel naartoe, hij draait alleen op de oplossing. Monteer op de vloer of onder het plafond."
             },
             {
-              "type": "stats",
-              "title": "Statistieken",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Recept",
               "recipe_type": "Gevormd vervaardigen",
@@ -3357,13 +3336,6 @@
               "text": "Vier bouwblokken van gehard ijzer naar vanillevoorbeeld — tralies, ladder, valluik en ketting. Ze gedragen zich als vanilla en zien eruit als het staal van de mod."
             },
             {
-              "type": "stats",
-              "title": "Statistieken",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Recept",
               "recipe_type": "Gevormd vervaardigen",
@@ -3392,13 +3364,6 @@
               "type": "text",
               "title": "Reactorknop",
               "text": "Een knop van afschermlegering: de manier om vanuit een verzegelde ruimte een puls naar de sluis te sturen, precies gebouwd als een vanilla-knop maar bestand tegen datgene waarvoor de ruimte bedoeld is."
-            },
-            {
-              "type": "stats",
-              "title": "Statistieken",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3431,13 +3396,6 @@
               "text": "Een schilblok dat pas oplicht als de ruimte gevormd is: de enige lichtbron binnen een verzegelde doos en tegelijk een van buiten zichtbaar teken dat het bouwwerk is geaccepteerd."
             },
             {
-              "type": "stats",
-              "title": "Statistieken",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Recept",
               "recipe_type": "Gevormd vervaardigen",
@@ -3466,13 +3424,6 @@
               "type": "text",
               "title": "Reactorbehuizing",
               "text": "Een paneel van afschermlegering — het enige materiaal waaruit de verzegelde schil van een reactorruimte gebouwd mag worden."
-            },
-            {
-              "type": "stats",
-              "title": "Statistieken",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3505,13 +3456,6 @@
               "text": "Een doorzichtig schilpaneel: het telt precies als muur, net als bekleding, maar hoogstens 30 % van een schil mag glas zijn — daarboven is de ruimte geen insluiting meer maar een vitrine."
             },
             {
-              "type": "stats",
-              "title": "Statistieken",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Recept",
               "recipe_type": "Gevormd vervaardigen",
@@ -3542,13 +3486,6 @@
               "text": "Helder glas in een frame van gehard ijzer — het breekt als steen en houdt een creeper- of TNT-explosie tegen. Een bouwblok en een ingrediënt voor latere recepten."
             },
             {
-              "type": "stats",
-              "title": "Statistieken",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Recept",
               "recipe_type": "Gevormd vervaardigen",
@@ -3577,13 +3514,6 @@
               "type": "text",
               "title": "Reactorsluisdeur",
               "text": "De enige toegang tot een reactorruimte: hij gaat alleen open op een redstonepuls, sluit zichzelf twee seconden later en gaat nooit dicht door wie er in de doorgang staat."
-            },
-            {
-              "type": "stats",
-              "title": "Statistieken",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3718,13 +3648,6 @@
               "type": "text",
               "title": "Opslagmodule",
               "text": "Een opslagblok met 27 vakken: modules die tegen elkaar aan staan werken als één magazijn van maximaal 108 vakken achter één venster."
-            },
-            {
-              "type": "stats",
-              "title": "Statistieken",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3881,13 +3804,6 @@
               "text": "Een piepklein lampje van 4×4 pixels met warm licht van niveau 15 — op de vloer, het plafond of elke muur. Geen menu, geen energie."
             },
             {
-              "type": "stats",
-              "title": "Statistieken",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Recept",
               "recipe_type": "Gevormd vervaardigen",
@@ -3904,6 +3820,26 @@
               ],
               "result_id": "alaindustrial:industrial_light",
               "result_count": 4
+            }
+          ]
+        },
+        {
+          "id": "reception_capsule",
+          "title": "Ontvangstcapsule",
+          "icon": "alaindustrial:reception_capsule",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Ontvangstcapsule",
+              "text": "Haalt de ploegwerkers van een nederzetting één voor één terug voor EU en materialen — alleen zolang de nederzettingskern brandt, het dorp een eigenaar heeft en de werkerslimiet niet is bereikt; elke nieuwe werker krijgt een eigen nummer dat in de hele wereld maar één keer voorkomt."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: 100 000 EU per werker",
+                "Buffer: 200 000 EU"
+              ]
             }
           ]
         },
@@ -3933,6 +3869,36 @@
                 ""
               ],
               "result_id": "alaindustrial:guide_book",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluid_tap",
+          "title": "Kraan",
+          "icon": "alaindustrial:fluid_tap",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kraan",
+              "text": "Een glazen fitting op een tank of aan het eind van een buis. Laat vloeistof de wereld in en geeft vloeibare ervaring terug als bollen. Rechtsklik opent en sluit hem, redstone opent hem ook."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "minecraft:lever",
+                "",
+                "alaindustrial:fluid_pipe",
+                "",
+                "",
+                "minecraft:iron_ingot",
+                ""
+              ],
+              "result_id": "alaindustrial:fluid_tap",
               "result_count": 1
             }
           ]
@@ -4055,6 +4021,36 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "sound_absorber",
+          "title": "Geluidsdemper",
+          "icon": "alaindustrial:sound_absorber",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Geluidsdemper",
+              "text": "Een blok van een frame van gehard ijzer, een rooster en vulling dat blok- en omgevingsgeluiden om zich heen dempt; dempers die elkaar met een zijde raken vormen een groep, en hoe groter de groep, hoe breder en sterker de stille zone."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:note_block",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool"
+              ],
+              "result_id": "alaindustrial:sound_absorber",
+              "result_count": 2
             }
           ]
         },
@@ -4228,8 +4224,9 @@
               "title": "Statistieken",
               "lines": [
                 "Energie: 100 EU per klap",
-                "Buffer: 4000 EU",
-                "Straal: 6 blokken"
+                "Buffer: 10000 EU",
+                "Straal: 3 blokken",
+                "Aantrekkingszone: 6 blokken"
               ]
             },
             {
@@ -4285,6 +4282,44 @@
                 "alaindustrial:electrum_ingot"
               ],
               "result_id": "alaindustrial:electrum_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "settlement_core",
+          "title": "Nederzettingskern",
+          "icon": "alaindustrial:settlement_core",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Nederzettingskern",
+              "text": "Het hart van een arbeidersdorp, in het raadhuis — zolang het net hem EU geeft, houdt hij het gebied van de nederzetting vast, bepaalt hij hoeveel huizen en ploegwerkers het dorp mag hebben en onthoudt hij zijn eigenaar; zonder stroom gaat hij uit en slaapt het dorp."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: 8 EU/t",
+                "Buffer: 2000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:resonant_crystal",
+                "alaindustrial:reactor_circuit",
+                "alaindustrial:resonant_crystal",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:reinforced_bearing",
+                "alaindustrial:cesu",
+                "alaindustrial:reinforced_bearing"
+              ],
+              "result_id": "alaindustrial:settlement_core",
               "result_count": 1
             }
           ]
@@ -4551,7 +4586,7 @@
             {
               "type": "text",
               "title": "Kernbuis",
-              "text": "De kernbuis en de kolomboormodule — de onderdelen waaruit een upgrade wordt gebouwd waarmee een boor drie blokken hoog graaft."
+              "text": "De kernbuis en de kolom- en rijboormodule — de onderdelen waaruit een upgrade wordt gebouwd waarmee een boor drie blokken hoog of breed graaft (samen een kruis van vijf blokken)."
             },
             {
               "type": "recipe",
@@ -4995,7 +5030,7 @@
             {
               "type": "text",
               "title": "Energieklont I",
-              "text": "Drie rangen klonten — het overschot van het net, hard bevroren door de energiecondensator. Het enige ingrediënt waar overklokchips van gemaakt worden."
+              "text": "Drie rangen klonten — het overschot van het net, hard bevroren door de energiecondensator. Het hoofdingrediënt van overklokchips; klonten van rang II en III gaan ook in kristallen."
             }
           ]
         },

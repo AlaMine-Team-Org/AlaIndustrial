@@ -1160,13 +1160,6 @@
               "text": "流體唯一可以穿過密封外殼的地方：一個 50 mB/刻 的通道，雙向運作——水進、蒸汽出——而它本身仍是一塊完整的牆。"
             },
             {
-              "type": "stats",
-              "title": "數據",
-              "lines": [
-                "緩衝：0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "配方",
               "recipe_type": "有序合成",
@@ -1232,13 +1225,6 @@
               "type": "text",
               "title": "反應爐拉桿",
               "text": "用屏蔽合金製成的拉桿：從密封房間內部保持的訊號——反應爐的急停開關，既不會破壞房間的屏蔽，也不會隨內容物一起熔化。"
-            },
-            {
-              "type": "stats",
-              "title": "數據",
-              "lines": [
-                "緩衝：0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3190,13 +3176,6 @@
               "text": "桅杆上旋轉的噴頭，向4格範圍內所有生長中的作物噴灑營養液。模組中唯一完全不消耗EU的機器——沒有電纜能連接它，僅靠營養液運轉。可安裝在地面上或天花板下。"
             },
             {
-              "type": "stats",
-              "title": "數據",
-              "lines": [
-                "緩衝：0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "配方",
               "recipe_type": "有序合成",
@@ -3357,13 +3336,6 @@
               "text": "仿照原版製作的四種淬火鐵建築方塊——鐵柵欄、梯子、地板門和鎖鏈。行為與原版相同，外觀是模組的鋼材。"
             },
             {
-              "type": "stats",
-              "title": "數據",
-              "lines": [
-                "緩衝：0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "配方",
               "recipe_type": "有序合成",
@@ -3392,13 +3364,6 @@
               "type": "text",
               "title": "反應爐按鈕",
               "text": "用屏蔽合金做的按鈕：在密封房間內部給氣閘門發脈衝的方法。它與原版按鈕的構造完全相同，卻經得起這個房間存在的理由。"
-            },
-            {
-              "type": "stats",
-              "title": "數據",
-              "lines": [
-                "緩衝：0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3431,13 +3396,6 @@
               "text": "只有房間成形後才會亮起的外殼方塊：密封盒子裡唯一的光源，同時也是從外面就能看見的「建築已獲認可」標誌。"
             },
             {
-              "type": "stats",
-              "title": "數據",
-              "lines": [
-                "緩衝：0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "配方",
               "recipe_type": "有序合成",
@@ -3466,13 +3424,6 @@
               "type": "text",
               "title": "反應爐外殼",
               "text": "一塊屏蔽合金板——反應爐房間的密封外殼唯一可用的材料。"
-            },
-            {
-              "type": "stats",
-              "title": "數據",
-              "lines": [
-                "緩衝：0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3505,13 +3456,6 @@
               "text": "透明的外殼板：它和外殼一樣算作牆，但玻璃最多只能占外殼的 30%——超過之後，房間就不再是圍阻體，而成了陳列櫃。"
             },
             {
-              "type": "stats",
-              "title": "數據",
-              "lines": [
-                "緩衝：0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "配方",
               "recipe_type": "有序合成",
@@ -3542,13 +3486,6 @@
               "text": "裝在淬火鐵框中的透明玻璃——像石頭一樣碎裂，能擋住苦力怕或 TNT 的爆炸。既是建築方塊，也是後續配方的材料。"
             },
             {
-              "type": "stats",
-              "title": "數據",
-              "lines": [
-                "緩衝：0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "配方",
               "recipe_type": "有序合成",
@@ -3577,13 +3514,6 @@
               "type": "text",
               "title": "反應爐氣閘門",
               "text": "進入反應爐房間的唯一通道：它只由紅石脈衝開啟，兩秒後自行關閉，而且絕不會夾住站在門洞裡的人。"
-            },
-            {
-              "type": "stats",
-              "title": "數據",
-              "lines": [
-                "緩衝：0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3718,13 +3648,6 @@
               "type": "text",
               "title": "儲存模組",
               "text": "擁有 27 個格子的儲存方塊：彼此相鄰放置的模組會作為一個倉庫運作，在同一個視窗內最多 108 個格子。"
-            },
-            {
-              "type": "stats",
-              "title": "數據",
-              "lines": [
-                "緩衝：0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3881,13 +3804,6 @@
               "text": "一盞 4×4 像素的小燈，暖光亮度 15——可裝在地面、天花板或任意牆面上。無介面，不需能量。"
             },
             {
-              "type": "stats",
-              "title": "數據",
-              "lines": [
-                "緩衝：0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "配方",
               "recipe_type": "有序合成",
@@ -3904,6 +3820,26 @@
               ],
               "result_id": "alaindustrial:industrial_light",
               "result_count": 4
+            }
+          ]
+        },
+        {
+          "id": "reception_capsule",
+          "title": "接收艙",
+          "icon": "alaindustrial:reception_capsule",
+          "pages": [
+            {
+              "type": "text",
+              "title": "接收艙",
+              "text": "用 EU 和材料把聚落的輪班工一個一個帶回來——只有在聚落核心亮著、小鎮有擁有者、輪班工尚未達到上限時才運作；每名新輪班工都會得到一個屬於自己的編號，在整個世界中獨一無二。"
+            },
+            {
+              "type": "stats",
+              "title": "數據",
+              "lines": [
+                "能量：每名輪班工 100 000 EU",
+                "緩衝：200 000 EU"
+              ]
             }
           ]
         },
@@ -3933,6 +3869,36 @@
                 ""
               ],
               "result_id": "alaindustrial:guide_book",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluid_tap",
+          "title": "龍頭",
+          "icon": "alaindustrial:fluid_tap",
+          "pages": [
+            {
+              "type": "text",
+              "title": "龍頭",
+              "text": "裝在儲槽上或管線末端的玻璃管件。把液體放回世界，液態經驗則變成經驗球還給玩家。右鍵開啟或關閉，紅石也能開啟。"
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "minecraft:lever",
+                "",
+                "alaindustrial:fluid_pipe",
+                "",
+                "",
+                "minecraft:iron_ingot",
+                ""
+              ],
+              "result_id": "alaindustrial:fluid_tap",
               "result_count": 1
             }
           ]
@@ -4055,6 +4021,36 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "sound_absorber",
+          "title": "吸音器",
+          "icon": "alaindustrial:sound_absorber",
+          "pages": [
+            {
+              "type": "text",
+              "title": "吸音器",
+              "text": "由回火鐵框架、柵格和填充物構成的方塊，能減弱周圍方塊與環境的聲音；以面相接的吸音器組成一組，組越大，靜音區域越廣、效果越強。"
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:note_block",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool"
+              ],
+              "result_id": "alaindustrial:sound_absorber",
+              "result_count": 2
             }
           ]
         },
@@ -4228,8 +4224,9 @@
               "title": "數據",
               "lines": [
                 "能量：100 EU/次電擊",
-                "緩衝：4000 EU",
-                "半徑 6 格"
+                "緩衝：10000 EU",
+                "半徑 3 格",
+                "吸引範圍 6 格"
               ]
             },
             {
@@ -4285,6 +4282,44 @@
                 "alaindustrial:electrum_ingot"
               ],
               "result_id": "alaindustrial:electrum_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "settlement_core",
+          "title": "聚落核心",
+          "icon": "alaindustrial:settlement_core",
+          "pages": [
+            {
+              "type": "text",
+              "title": "聚落核心",
+              "text": "工人小鎮的心臟，位於小鎮的市政廳裡——只要電網為它供應 EU，它就會維持聚落的領地，決定小鎮最多能有幾棟房屋、幾名輪班工，並記住它的擁有者；沒有電力時它會熄滅，小鎮隨之沉睡。"
+            },
+            {
+              "type": "stats",
+              "title": "數據",
+              "lines": [
+                "能量：8 EU/t",
+                "緩衝：2000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:resonant_crystal",
+                "alaindustrial:reactor_circuit",
+                "alaindustrial:resonant_crystal",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:reinforced_bearing",
+                "alaindustrial:cesu",
+                "alaindustrial:reinforced_bearing"
+              ],
+              "result_id": "alaindustrial:settlement_core",
               "result_count": 1
             }
           ]
@@ -4551,7 +4586,7 @@
             {
               "type": "text",
               "title": "取芯筒",
-              "text": "取芯筒與柱狀開採模組——組成讓電鑽挖掘三格高的升級所需的零件。"
+              "text": "取芯筒與柱狀、橫排開採模組——組成讓電鑽挖掘三格高或三格寬（兩者同時為五格十字）的升級所需的零件。"
             },
             {
               "type": "recipe",
@@ -4995,7 +5030,7 @@
             {
               "type": "text",
               "title": "能量凝塊 I",
-              "text": "三階凝塊——電網的餘裕，被能量凝聚器凍成實心。超頻晶片唯一的原料。"
+              "text": "三階凝塊——電網的餘裕，被能量凝聚器凍成實心。超頻晶片的主要原料；II、III 階凝塊也用於水晶。"
             }
           ]
         },

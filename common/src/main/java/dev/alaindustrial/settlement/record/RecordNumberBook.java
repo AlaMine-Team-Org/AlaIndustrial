@@ -25,6 +25,13 @@ import java.util.Optional;
  * intact save a live or closed number could not come round twice anyway; checking them as well is what keeps
  * the rule true if the sequence's constants ever change, or a number was closed before the walk reached it.
  *
+ * <p><b>A late coincidence</b> (R41 of MOD-824, MOD-834). A player's record and a town lab's digits become known only
+ * when the player joins or the town generates, so a living worker may already hold what turns up later — and a
+ * town plaque may engrave it (R40). Such a number is marked {@linkplain #isDue due}: its worker gets a new number
+ * from {@link #renumber} when no player can see it, and the old one is closed for good. A book read back from a
+ * save marks again every living number that clashes with a known player or lab, so a clash logged by a build
+ * before MOD-834 is caught up on too.
+ *
  * <p><b>When the space runs out.</b> After the last position {@link #issue()} returns empty, for good:
  * every number has been handed out or skipped, and none of them may be handed out again. The ledger logs it
  * once; what a capsule does with "no number left" is its own decision (MOD-833).
@@ -45,6 +52,8 @@ final class RecordNumberBook {
 	private final BitSet closed = new BitSet(ArchiveRecord.SPACE);
 	private final BitSet playerCodes = new BitSet(ArchiveRecord.SPACE);
 	private final BitSet labNumbers = new BitSet(LAB_NUMBERS);
+	/** Living numbers marked for a new one (R41); always a subset of {@link #live}. */
+	private final BitSet due = new BitSet(ArchiveRecord.SPACE);
 
 	/** A fresh world: nothing issued, nothing known. */
 	RecordNumberBook(long worldSeed) {
@@ -58,6 +67,16 @@ final class RecordNumberBook {
 	 */
 	RecordNumberBook(long worldSeed, int next, Collection<RecordNumber> live, Collection<RecordNumber> closed,
 			Collection<RecordNumber> playerCodes, Collection<Integer> labNumbers) {
+		this(worldSeed, next, live, closed, playerCodes, labNumbers, List.of());
+	}
+
+	/**
+	 * A world read back from its save, with the numbers that were marked for a new one. Beside the saved marks, every
+	 * living number that is a known player's record or shares its digits with a known lab is marked; a mark on a
+	 * number that is not living is dropped.
+	 */
+	RecordNumberBook(long worldSeed, int next, Collection<RecordNumber> live, Collection<RecordNumber> closed,
+			Collection<RecordNumber> playerCodes, Collection<Integer> labNumbers, Collection<RecordNumber> due) {
 		this(worldSeed);
 		this.next = Math.clamp(next, 0, ArchiveRecord.SPACE);
 		closed.forEach(number -> this.closed.set(number.index()));
@@ -65,6 +84,14 @@ final class RecordNumberBook {
 		this.live.andNot(this.closed);
 		playerCodes.forEach(number -> this.playerCodes.set(number.index()));
 		labNumbers.stream().filter(lab -> lab >= 0 && lab < LAB_NUMBERS).forEach(this.labNumbers::set);
+		due.forEach(number -> this.due.set(number.index()));
+		this.live.stream().filter(this::clashes).forEach(this.due::set);
+		this.due.and(this.live);
+	}
+
+	/** Whether the number at {@code index} is a known player's record or has a known lab's digits. */
+	private boolean clashes(int index) {
+		return playerCodes.get(index) || labNumbers.get(index % LAB_NUMBERS);
 	}
 
 	/** The next number nobody in this world has had, or empty when the space is spent. See the class comment. */
@@ -94,8 +121,36 @@ final class RecordNumberBook {
 	RecordNumber.Status close(RecordNumber number) {
 		RecordNumber.Status before = statusOf(number);
 		live.clear(number.index());
+		due.clear(number.index());
 		closed.set(number.index());
 		return before;
+	}
+
+	/**
+	 * Whether the living {@code number} is marked for a new one (R41): a player with this record, a town lab with
+	 * these digits or a town plaque with this number turned up after it was handed out.
+	 */
+	boolean isDue(RecordNumber number) {
+		return due.get(number.index());
+	}
+
+	/** The numbers marked for a new one, in the order of the space. */
+	List<RecordNumber> due() {
+		return numbers(due);
+	}
+
+	/**
+	 * The new number of the worker whose number {@code old} is marked for one (R41): the next number of the issue
+	 * rule; {@code old} is closed for good and is no longer marked. Empty — nothing changes — when {@code old} is
+	 * not marked, or when the space is spent (it stays marked).
+	 */
+	Optional<RecordNumber> renumber(RecordNumber old) {
+		if (!isDue(old)) {
+			return Optional.empty();
+		}
+		Optional<RecordNumber> fresh = issue();
+		fresh.ifPresent(number -> close(old));
+		return fresh;
 	}
 
 	/**
@@ -113,15 +168,17 @@ final class RecordNumberBook {
 
 	/**
 	 * Closes the number of a former resident of a generated town (R40): a tombstone of the previous era, never
-	 * handed out. A number a living worker holds stays live — a town generated after the worker was given it is a
-	 * late coincidence for the hidden renumbering of MOD-834, and closing it here would make the worker look like
-	 * a copy.
+	 * handed out. A number a living worker holds stays live and is marked for a new one — a town generated after the
+	 * worker was given it is a late coincidence (R41, MOD-834), and closing it here would make the worker look like
+	 * a copy; the renumbering closes it.
 	 *
-	 * @return the status the number had before; {@code LIVE} means nothing changed
+	 * @return the status the number had before; {@code LIVE} means it is marked, not closed
 	 */
 	RecordNumber.Status closeFormerResident(RecordNumber number) {
 		RecordNumber.Status before = statusOf(number);
-		if (before != RecordNumber.Status.LIVE) {
+		if (before == RecordNumber.Status.LIVE) {
+			due.set(number.index());
+		} else {
 			closed.set(number.index());
 		}
 		return before;
@@ -138,6 +195,9 @@ final class RecordNumberBook {
 	boolean notePlayerCode(RecordNumber code) {
 		boolean known = playerCodes.get(code.index());
 		playerCodes.set(code.index());
+		if (live.get(code.index())) {
+			due.set(code.index());
+		}
 		return !known;
 	}
 
@@ -150,6 +210,11 @@ final class RecordNumberBook {
 		requireLabNumber(labNumber);
 		boolean known = labNumbers.get(labNumber);
 		labNumbers.set(labNumber);
+		for (int index = labNumber; index < ArchiveRecord.SPACE; index += LAB_NUMBERS) {
+			if (live.get(index)) {
+				due.set(index);
+			}
+		}
 		return !known;
 	}
 

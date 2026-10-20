@@ -104,6 +104,16 @@ public final class ShotFamilies {
                             + "frame, no inventory rows, an unpowered unowned core saying in red that it has no "
                             + "power, the show-borders eye under the bar (MOD-843), and below it, across the full "
                             + "width, how to become the owner, wrapped rather than running past the right border")},
+            new Object[] {"gui_settlement_core_roster", new Family(ShotGroup.GUI, List.of("R-GUI-03"),
+                    "Settlement core, «Shift workers» tab (MOD-854): the three tabs down the panel's left edge with "
+                            + "the second one merged into the frame, the tab's name as the heading, one row per worker "
+                            + "- number, name, level, status - each column inside its width, no energy bar")},
+            new Object[] {"gui_shift_worker_card_", new Family(ShotGroup.GUI, List.of("R-GUI-03"),
+                    "Shift worker card (MOD-854): the dark header with the number and name, the three tab buttons "
+                            + "and close at the right, the open tab greyed; the worker in its frame on the left with "
+                            + "the battery bar, charge and health under it; on the right the open tab's modules, every "
+                            + "row inside its card, a «+» only on a working stat's row, the two inactive stats grey "
+                            + "with their caption; a dead record grey under its stamp with no buttons")},
             new Object[] {"gui_reception_capsule_", new Family(ShotGroup.GUI, List.of("R-GUI-03"),
                     "Reception capsule (MOD-833, MOD-844): a tall window; a 3D shift-worker head beside the "
                             + "workers and EU rows, a full-width progress bar, then one row per material - its slot "

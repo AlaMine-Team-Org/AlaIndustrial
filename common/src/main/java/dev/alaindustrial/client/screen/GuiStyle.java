@@ -39,6 +39,22 @@ public final class GuiStyle {
 	/** Translucent white laid over a button under the cursor, before its icon. */
 	public static final int HOVER_WASH = 0x40FFFFFF;
 
+	// Profile cards (MOD-854, the shift worker's card): the player profile's palette, shared by name.
+	/** A recessed module card on the panel. */
+	public static final int CARD = 0xFFB2B2B2;
+	/** The dark header bar of a profile card and the text on it. */
+	public static final int HEADER_BAR = 0xFF141414;
+	public static final int HEADER_TEXT = 0xFFF4F4F4;
+	/** The backdrop behind a model: a cool dark top fading darker to the bottom. */
+	public static final int MODEL_BACK_TOP = 0xFF1B1D24;
+	public static final int MODEL_BACK_BOTTOM = 0xFF0C0D12;
+	/** A level bar: its fill, its bright leading edge and its track. */
+	public static final int LEVEL_FILL = 0xFF57C7FF;
+	public static final int LEVEL_FILL_HI = 0xFFBFEBFF;
+	public static final int LEVEL_TRACK = 0xFF23262B;
+	/** Laid over the model of a closed record, so it reads as a photograph in a file. */
+	public static final int CLOSED_WASH = 0xB0707070;
+
 	/** Panel face with bevel border and a copper accent strip under the header. */
 	public static void panel(GuiGraphicsExtractor g, int x, int y, int w, int h) {
 		g.fill(x, y, x + w, y + h, PANEL);

@@ -48,6 +48,7 @@ final class BlockEntitySlotLayoutSnapshot {
 			"fermenter: size=10 upgrades=6 battery=- menu=yes overclockable=yes batteryFed=no",
 			"fluid_pipe: size=- upgrades=- battery=- menu=no overclockable=no batteryFed=no",
 			"fluid_tank: size=- upgrades=- battery=- menu=no overclockable=no batteryFed=no",
+			"fluid_tap: size=- upgrades=- battery=- menu=no overclockable=no batteryFed=no",
 			"fuel_rod_assembly: size=- upgrades=- battery=- menu=no overclockable=no batteryFed=no",
 			"galvanic_bath: size=10 upgrades=5 battery=9 menu=yes overclockable=yes batteryFed=yes",
 			"garden_drone_station: size=13 upgrades=8 battery=12 menu=yes overclockable=no batteryFed=yes",

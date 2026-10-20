@@ -1,0 +1,10 @@
+{
+  "slot": "memory",
+  "key": "settlement.alaindustrial.bio.memory.snowfield",
+  "tags": [
+    "snow"
+  ],
+  "forbid": [
+    "desert"
+  ]
+}

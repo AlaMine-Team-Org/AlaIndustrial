@@ -1160,13 +1160,6 @@
               "text": "Den enda plats där vätska får korsa ett förseglat skal: en genomföring på 50 mB/t som fungerar åt båda hållen — vatten in, ånga ut — och ändå förblir en fullvärdig bit vägg."
             },
             {
-              "type": "stats",
-              "title": "Statistik",
-              "lines": [
-                "Buffert: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Recept",
               "recipe_type": "Formad tillverkning",
@@ -1232,13 +1225,6 @@
               "type": "text",
               "title": "Reaktorspak",
               "text": "En spak i avskärmningslegering: en hållen signal inifrån ett förslutet rum — reaktorns nödstop, som varken bryter rummets avskärmning eller smälter med dess innehåll."
-            },
-            {
-              "type": "stats",
-              "title": "Statistik",
-              "lines": [
-                "Buffert: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3190,13 +3176,6 @@
               "text": "Ett roterande huvud på en mast som sprejer näringslösning över allt som växer inom 4 block. Moddens enda maskin som inte drar någon EU alls — ingen kabel ansluts till den, och den drivs enbart av lösningen. Monteras på golvet eller under taket."
             },
             {
-              "type": "stats",
-              "title": "Statistik",
-              "lines": [
-                "Buffert: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Recept",
               "recipe_type": "Formad tillverkning",
@@ -3357,13 +3336,6 @@
               "text": "Fyra byggblock av härdat järn efter vanilla-förebild — galler, stege, fallucka och kedja. De beter sig som vanilla och ser ut som moddens stål."
             },
             {
-              "type": "stats",
-              "title": "Statistik",
-              "lines": [
-                "Buffert: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Recept",
               "recipe_type": "Formad tillverkning",
@@ -3392,13 +3364,6 @@
               "type": "text",
               "title": "Reaktorknapp",
               "text": "En knapp av skärmlegering: sättet att skicka en puls till slussen inifrån ett förseglat rum, byggd precis som en vanilla-knapp men tålig nog för det rummet är till för."
-            },
-            {
-              "type": "stats",
-              "title": "Statistik",
-              "lines": [
-                "Buffert: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3431,13 +3396,6 @@
               "text": "Ett skalblock som tänds först när rummet är format: den enda ljuskällan inuti en förseglad låda och samtidigt ett utifrån synligt tecken på att bygget godkänts."
             },
             {
-              "type": "stats",
-              "title": "Statistik",
-              "lines": [
-                "Buffert: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Recept",
               "recipe_type": "Formad tillverkning",
@@ -3466,13 +3424,6 @@
               "type": "text",
               "title": "Reaktorhölje",
               "text": "En panel av skärmlegering — det enda material som reaktorrummets förseglade skal får byggas av."
-            },
-            {
-              "type": "stats",
-              "title": "Statistik",
-              "lines": [
-                "Buffert: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3505,13 +3456,6 @@
               "text": "En genomskinlig skalpanel: den räknas som vägg precis som beklädnaden, men högst 30 % av ett skal får vara glas — därutöver upphör rummet att vara inneslutning och blir ett skyltskåp."
             },
             {
-              "type": "stats",
-              "title": "Statistik",
-              "lines": [
-                "Buffert: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Recept",
               "recipe_type": "Formad tillverkning",
@@ -3542,13 +3486,6 @@
               "text": "Klart glas i en ram av härdat järn — det går sönder som sten och står emot en creeper- eller TNT-explosion. Ett byggblock och en ingrediens i senare recept."
             },
             {
-              "type": "stats",
-              "title": "Statistik",
-              "lines": [
-                "Buffert: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Recept",
               "recipe_type": "Formad tillverkning",
@@ -3577,13 +3514,6 @@
               "type": "text",
               "title": "Reaktorslussdörr",
               "text": "Enda vägen in i ett reaktorrum: den öppnas bara av en redstonepuls, stänger sig själv två sekunder senare och stängs aldrig genom den som står i dörröppningen."
-            },
-            {
-              "type": "stats",
-              "title": "Statistik",
-              "lines": [
-                "Buffert: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3718,13 +3648,6 @@
               "type": "text",
               "title": "Lagringsmodul",
               "text": "Ett lagringsblock med 27 platser: moduler placerade mot varandra fungerar som ett enda lager med upp till 108 platser bakom ett fönster."
-            },
-            {
-              "type": "stats",
-              "title": "Statistik",
-              "lines": [
-                "Buffert: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3881,13 +3804,6 @@
               "text": "En pytteliten lampa på 4×4 pixlar med varmt ljus av nivå 15 — på golvet, i taket eller på valfri vägg. Ingen meny, ingen energi."
             },
             {
-              "type": "stats",
-              "title": "Statistik",
-              "lines": [
-                "Buffert: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Recept",
               "recipe_type": "Formad tillverkning",
@@ -3904,6 +3820,26 @@
               ],
               "result_id": "alaindustrial:industrial_light",
               "result_count": 4
+            }
+          ]
+        },
+        {
+          "id": "reception_capsule",
+          "title": "Mottagningskapsel",
+          "icon": "alaindustrial:reception_capsule",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Mottagningskapsel",
+              "text": "Hämtar tillbaka en bosättnings skiftarbetare en i taget mot EU och material — bara så länge bosättningskärnan lyser, samhället har en ägare och arbetargränsen inte är nådd; varje ny arbetare får ett eget nummer som är unikt i hela världen."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Energi: 100 000 EU per arbetare",
+                "Buffert: 200 000 EU"
+              ]
             }
           ]
         },
@@ -3933,6 +3869,36 @@
                 ""
               ],
               "result_id": "alaindustrial:guide_book",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluid_tap",
+          "title": "Kran",
+          "icon": "alaindustrial:fluid_tap",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kran",
+              "text": "En glaskoppling på en tank eller i änden av ett rör. Släpper ut vätska i världen och ger tillbaka flytande erfarenhet som klot. Högerklick öppnar och stänger den, rödsten öppnar den också."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formad tillverkning",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "minecraft:lever",
+                "",
+                "alaindustrial:fluid_pipe",
+                "",
+                "",
+                "minecraft:iron_ingot",
+                ""
+              ],
+              "result_id": "alaindustrial:fluid_tap",
               "result_count": 1
             }
           ]
@@ -4055,6 +4021,36 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "sound_absorber",
+          "title": "Ljudabsorbent",
+          "icon": "alaindustrial:sound_absorber",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Ljudabsorbent",
+              "text": "Ett block av en ram av härdat järn, ett galler och stoppning som dämpar block- och omgivningsljud runt sig; absorbenter som rör vid varandra med en sida bildar en grupp, och ju större gruppen är, desto bredare och starkare blir den tysta zonen."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formad tillverkning",
+              "grid": [
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:note_block",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool"
+              ],
+              "result_id": "alaindustrial:sound_absorber",
+              "result_count": 2
             }
           ]
         },
@@ -4228,8 +4224,9 @@
               "title": "Statistik",
               "lines": [
                 "Energi: 100 EU per slag",
-                "Buffert: 4000 EU",
-                "Radie: 6 block"
+                "Buffert: 10000 EU",
+                "Radie: 3 block",
+                "Dragzon: 6 block"
               ]
             },
             {
@@ -4285,6 +4282,44 @@
                 "alaindustrial:electrum_ingot"
               ],
               "result_id": "alaindustrial:electrum_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "settlement_core",
+          "title": "Bosättningskärna",
+          "icon": "alaindustrial:settlement_core",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Bosättningskärna",
+              "text": "Hjärtat i ett arbetarsamhälle, som står i dess rådhus — så länge nätet ger den EU håller den bosättningens område, bestämmer hur många hus och skiftarbetare samhället får ha och minns sin ägare; utan ström slocknar den och samhället sover."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Energi: 8 EU/t",
+                "Buffert: 2000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formad tillverkning",
+              "grid": [
+                "alaindustrial:resonant_crystal",
+                "alaindustrial:reactor_circuit",
+                "alaindustrial:resonant_crystal",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:reinforced_bearing",
+                "alaindustrial:cesu",
+                "alaindustrial:reinforced_bearing"
+              ],
+              "result_id": "alaindustrial:settlement_core",
               "result_count": 1
             }
           ]
@@ -4551,7 +4586,7 @@
             {
               "type": "text",
               "title": "Kärnrör",
-              "text": "Kärnröret och pelarborrmodulen — delarna som en uppgradering byggs av, som får en borr att gräva tre block högt."
+              "text": "Kärnröret samt pelar- och radborrmodulen — delarna som en uppgradering byggs av, som får en borr att gräva tre block högt eller brett (tillsammans ett kors av fem block)."
             },
             {
               "type": "recipe",
@@ -4995,7 +5030,7 @@
             {
               "type": "text",
               "title": "Energiklump I",
-              "text": "Tre nivåer av klumpar — nätets överskott, fastfryst av energikondensatorn. Den enda ingrediens som överklockningschip görs av."
+              "text": "Tre nivåer av klumpar — nätets överskott, fastfryst av energikondensatorn. Huvudingrediensen i överklockningschip; klumpar av nivå II och III går också till kristaller."
             }
           ]
         },

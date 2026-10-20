@@ -4,6 +4,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.alaindustrial.settlement.record.RecordNumber;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import net.minecraft.core.UUIDUtil;
@@ -30,9 +32,19 @@ import net.minecraft.util.StringRepresentable;
  *                   worker's (R34), and the town's core decides whether it works or hibernates (R10)
  * @param status     alive, dead for good, or dead and waiting to be brought back (R30, R39)
  * @param death      how it died, while it is dead
+ * @param formerNumbers the numbers this worker held before, oldest first — the history of its numbers that its
+ *                   profile shows (R3, R41); a number moves here when a late coincidence renumbers the worker
+ *                   (MOD-834)
+ * @param profile    the worker's battery, level, invested points and service marks (MOD-854); a record saved before
+ *                   it reads as {@link ShiftWorkerProfile#FRESH} — a full battery at level 1
  */
 public record ShiftWorkerRecord(RecordNumber number, UUID entity, Identifier look, boolean slim, String name,
-		int settlement, Status status, Optional<Death> death) {
+		int settlement, Status status, Optional<Death> death, List<RecordNumber> formerNumbers,
+		ShiftWorkerProfile profile) {
+
+	public ShiftWorkerRecord {
+		formerNumbers = List.copyOf(formerNumbers);
+	}
 
 	/** The version of the saved form this build writes (ADR-050 point 8, the ladder in {@link ShiftWorkerBook}). */
 	public static final int DATA_VERSION = 1;
@@ -89,19 +101,24 @@ public record ShiftWorkerRecord(RecordNumber number, UUID entity, Identifier loo
 			Codec.STRING.optionalFieldOf("name", "").forGetter(ShiftWorkerRecord::name),
 			Codec.INT.optionalFieldOf("settlement", 0).forGetter(ShiftWorkerRecord::settlement),
 			Status.CODEC.optionalFieldOf("status", Status.ALIVE).forGetter(ShiftWorkerRecord::status),
-			Death.CODEC.optionalFieldOf("death").forGetter(ShiftWorkerRecord::death)
+			Death.CODEC.optionalFieldOf("death").forGetter(ShiftWorkerRecord::death),
+			NUMBER_CODEC.listOf().optionalFieldOf("former_numbers", List.of())
+					.forGetter(ShiftWorkerRecord::formerNumbers),
+			ShiftWorkerProfile.CODEC.optionalFieldOf("profile", ShiftWorkerProfile.FRESH)
+					.forGetter(ShiftWorkerRecord::profile)
 	).apply(instance, ShiftWorkerRecord::new));
 
 	/** A worker just issued: alive, no name, no death. */
 	public static ShiftWorkerRecord issued(RecordNumber number, UUID entity, Identifier look, boolean slim,
 			int settlement) {
-		return new ShiftWorkerRecord(number, entity, look, slim, "", settlement, Status.ALIVE, Optional.empty());
+		return new ShiftWorkerRecord(number, entity, look, slim, "", settlement, Status.ALIVE, Optional.empty(),
+				List.of(), ShiftWorkerProfile.FRESH);
 	}
 
 	/** This record after the worker died; dead for good with {@code permadeath}, waiting to come back without (R39). */
 	public ShiftWorkerRecord died(Death how, boolean permadeath) {
 		return new ShiftWorkerRecord(number, entity, look, slim, name, settlement,
-				permadeath ? Status.DEAD : Status.AWAITING_RETURN, Optional.of(how));
+				permadeath ? Status.DEAD : Status.AWAITING_RETURN, Optional.of(how), formerNumbers, profile);
 	}
 
 	/**
@@ -109,16 +126,43 @@ public record ShiftWorkerRecord(RecordNumber number, UUID entity, Identifier loo
 	 * with the same number, look, name and town, its death forgotten — the hall's log keeps the line about it.
 	 */
 	public ShiftWorkerRecord returned(UUID newEntity) {
-		return new ShiftWorkerRecord(number, newEntity, look, slim, name, settlement, Status.ALIVE, Optional.empty());
+		return new ShiftWorkerRecord(number, newEntity, look, slim, name, settlement, Status.ALIVE, Optional.empty(),
+				formerNumbers, profile);
 	}
 
 	/** This record with another look — the old one left the datapack and the rule chose again. */
 	public ShiftWorkerRecord withLook(Identifier newLook) {
-		return new ShiftWorkerRecord(number, entity, newLook, slim, name, settlement, status, death);
+		return new ShiftWorkerRecord(number, entity, newLook, slim, name, settlement, status, death, formerNumbers,
+				profile);
 	}
 
 	/** This record with another look and its body — a look chosen by hand (a stand, an admin's command). */
 	public ShiftWorkerRecord withLook(Identifier newLook, boolean newSlim) {
-		return new ShiftWorkerRecord(number, entity, newLook, newSlim, name, settlement, status, death);
+		return new ShiftWorkerRecord(number, entity, newLook, newSlim, name, settlement, status, death,
+				formerNumbers, profile);
+	}
+
+	/**
+	 * This record under the new number {@code newNumber} (R41, MOD-834): the old one goes to the end of
+	 * {@link #formerNumbers}; the look, the body, the name, the town and the status are the same — the worker is the
+	 * same person, re-registered.
+	 */
+	public ShiftWorkerRecord renumbered(RecordNumber newNumber) {
+		List<RecordNumber> history = new ArrayList<>(formerNumbers);
+		history.add(number);
+		return new ShiftWorkerRecord(newNumber, entity, look, slim, name, settlement, status, death, history,
+				profile);
+	}
+
+	/** This record with the name {@code newName} (R3v, MOD-854) — the caller has sanitised it. */
+	public ShiftWorkerRecord withName(String newName) {
+		return new ShiftWorkerRecord(number, entity, look, slim, newName, settlement, status, death, formerNumbers,
+				profile);
+	}
+
+	/** This record with {@code newProfile} (MOD-854): the battery, the level, the points or a new service mark. */
+	public ShiftWorkerRecord withProfile(ShiftWorkerProfile newProfile) {
+		return new ShiftWorkerRecord(number, entity, look, slim, name, settlement, status, death, formerNumbers,
+				newProfile);
 	}
 }

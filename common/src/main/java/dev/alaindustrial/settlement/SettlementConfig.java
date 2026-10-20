@@ -128,6 +128,48 @@ public final class SettlementConfig {
 			doc = "New paths the shift workers of one town may plan in one tick; the others wait for the next.")
 	public static int shiftWorkerPathsPerTick = 2;
 
+	// ── MOD-854: the shift worker's profile (battery, level, stats; epic decisions R67–R70) ──────
+	/** Epic decision R68: the battery a new worker carries — over three game days of idle drain. */
+	@Knob(section = Section.SETTLEMENTS, min = 1,
+			doc = "EU a shift worker's battery holds before any point in the Battery stat.")
+	public static int shiftWorkerBatteryBase = 20000;
+	/** Epic decision R69: what one point in the «Battery» stat adds. */
+	@Knob(section = Section.SETTLEMENTS, min = 0,
+			doc = "EU of battery capacity one point in a shift worker's Battery stat adds.")
+	public static int shiftWorkerBatteryPerPoint = 5000;
+	/** Epic decision R67: the suit, the helmet and walking — what an awake worker drains while it has no work. */
+	@Knob(section = Section.SETTLEMENTS, min = 0,
+			doc = "EU per tick an awake shift worker drains from its battery while it has no work; its town's core"
+					+ " recharges it and pays this on top of its own upkeep.")
+	public static double shiftWorkerIdleEuPerTick = 0.25;
+	/** Epic decision R67: the player's mastery rate — one XP for this many EU that left the battery. */
+	@Knob(section = Section.SETTLEMENTS, min = 1, floorTo = 1,
+			doc = "EU that must leave a shift worker's battery for one point of its experience; charging counts"
+					+ " for nothing.")
+	public static int shiftWorkerEuPerXp = 1000;
+	/** Epic decision R70: XP of a worker's first level (1 to 2). */
+	@Knob(section = Section.SETTLEMENTS, min = 1, floorTo = 1,
+			doc = "Experience a shift worker needs for level 2; each next level costs shiftWorkerLevelXpMultiplier"
+					+ " times the previous one, over 40 levels.")
+	public static int shiftWorkerXpLevelOneCost = 15;
+	/** Epic decision R70: the growth of a worker's level cost — level 5 at about 72 000 EU, level 40 at 10 million. */
+	@Knob(section = Section.SETTLEMENTS, min = 1.0, exclusive = true,
+			doc = "How many times each shift worker level costs more experience than the previous one. Must be > 1.0.")
+	public static double shiftWorkerLevelXpMultiplier = 1.12;
+	/** Epic decision R69: what one point in the «Strength» stat adds. */
+	@Knob(section = Section.SETTLEMENTS, min = 0,
+			doc = "Maximum health (half-hearts) one point in a shift worker's Strength stat adds.")
+	public static int shiftWorkerHealthPerPoint = 2;
+	/** Epic decision R69: points one stat holds at most. */
+	@Knob(section = Section.SETTLEMENTS, min = 1,
+			doc = "Points one stat of a shift worker holds at most.")
+	public static int shiftWorkerStatCap = 10;
+	/** Epic decision R69: redistributing all points at the reception capsule, paid from its buffer. */
+	@Knob(section = Section.SETTLEMENTS, min = 0,
+			doc = "EU taking back all of a shift worker's invested points costs, paid from the reception capsule"
+					+ " it stands at.")
+	public static int shiftWorkerRespecCost = 50000;
+
 	// ── MOD-833: the reception capsule ───────────────────────────────────────────────────────────
 	/**
 	 * EU one new shift worker costs, paid from the capsule's own buffer when the worker steps out. A worker is a

@@ -1,0 +1,10 @@
+{
+  "slot": "occupation",
+  "key": "settlement.alaindustrial.bio.occupation.miner",
+  "tags": [
+    "underground"
+  ],
+  "forbid": [
+    "surface_only"
+  ]
+}

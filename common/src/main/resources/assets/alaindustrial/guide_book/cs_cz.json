@@ -1160,13 +1160,6 @@
               "text": "Jediné místo, kudy smí tekutina projít utěsněným pláštěm: průchod 50 mB/t oběma směry — voda dovnitř, pára ven — a přitom plnohodnotný kus stěny."
             },
             {
-              "type": "stats",
-              "title": "Parametry",
-              "lines": [
-                "Zásobník: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Recept",
               "recipe_type": "Výroba podle vzoru",
@@ -1232,13 +1225,6 @@
               "type": "text",
               "title": "Páka reaktoru",
               "text": "Páka ze stínicí slitiny: trvalý signál zevnitř utěsněné komory — havarijní vypínač reaktoru, který nenaruší stínění komory ani se neroztaví s jejím obsahem."
-            },
-            {
-              "type": "stats",
-              "title": "Parametry",
-              "lines": [
-                "Zásobník: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3190,13 +3176,6 @@
               "text": "Rotující hlavice na stožáru, která rozstřikuje živný roztok na vše, co roste do vzdálenosti 4 bloků. Jediný stroj v modu, který vůbec neodebírá EU — nepřipojuje se k němu žádný kabel a běží jen na roztok. Montuje se na podlahu nebo pod strop."
             },
             {
-              "type": "stats",
-              "title": "Parametry",
-              "lines": [
-                "Zásobník: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Recept",
               "recipe_type": "Výroba podle vzoru",
@@ -3357,13 +3336,6 @@
               "text": "Čtyři stavební bloky z kaleného železa podle vanilkových předloh — mříže, žebřík, poklop a řetěz. Chovají se jako vanilkové a vypadají jako ocel módu."
             },
             {
-              "type": "stats",
-              "title": "Parametry",
-              "lines": [
-                "Zásobník: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Recept",
               "recipe_type": "Výroba podle vzoru",
@@ -3392,13 +3364,6 @@
               "type": "text",
               "title": "Tlačítko reaktoru",
               "text": "Tlačítko ze stínicí slitiny: způsob, jak zevnitř uzavřené komory vyslat impulz do přechodových dveří. Je postavené přesně jako vanilla tlačítko, ale přežije to, k čemu komora slouží."
-            },
-            {
-              "type": "stats",
-              "title": "Parametry",
-              "lines": [
-                "Zásobník: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3431,13 +3396,6 @@
               "text": "Blok pláště, který se rozsvítí, až když je komora zformovaná: jediný zdroj světla uvnitř uzavřené krabice a zároveň viditelné znamení zvenku, že stavba byla přijata."
             },
             {
-              "type": "stats",
-              "title": "Parametry",
-              "lines": [
-                "Zásobník: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Recept",
               "recipe_type": "Výroba podle vzoru",
@@ -3466,13 +3424,6 @@
               "type": "text",
               "title": "Plášť reaktoru",
               "text": "Panel ze stínicí slitiny — jediný materiál, ze kterého smí být postaven uzavřený plášť reaktorové komory."
-            },
-            {
-              "type": "stats",
-              "title": "Parametry",
-              "lines": [
-                "Zásobník: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3505,13 +3456,6 @@
               "text": "Průhledný panel pláště: počítá se jako stěna úplně stejně jako plášť reaktoru, ale sklo smí tvořit nejvýše 30 % pláště — nad tuto hranici přestává být komora ochrannou obálkou a stává se vitrínou."
             },
             {
-              "type": "stats",
-              "title": "Parametry",
-              "lines": [
-                "Zásobník: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Recept",
               "recipe_type": "Výroba podle vzoru",
@@ -3542,13 +3486,6 @@
               "text": "Čiré sklo v rámu z kaleného železa — láme se jako kámen a vydrží výbuch creepera nebo TNT. Stavební blok a surovina pro pozdější recepty."
             },
             {
-              "type": "stats",
-              "title": "Parametry",
-              "lines": [
-                "Zásobník: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Recept",
               "recipe_type": "Výroba podle vzoru",
@@ -3577,13 +3514,6 @@
               "type": "text",
               "title": "Přechodové dveře reaktoru",
               "text": "Jediný vstup do reaktorové komory: otevírají se pouze redstonovým impulzem, samy se za dvě sekundy zavřou a nikdy se nezavřou přes toho, kdo stojí ve dveřích."
-            },
-            {
-              "type": "stats",
-              "title": "Parametry",
-              "lines": [
-                "Zásobník: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3718,13 +3648,6 @@
               "type": "text",
               "title": "Úložný modul",
               "text": "Úložný blok s 27 pozicemi: moduly postavené k sobě fungují jako jeden sklad až se 108 pozicemi za jediným oknem."
-            },
-            {
-              "type": "stats",
-              "title": "Parametry",
-              "lines": [
-                "Zásobník: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3881,13 +3804,6 @@
               "text": "Drobné světlo 4×4 pixely s teplým světlem úrovně 15 — na podlahu, strop nebo jakoukoli stěnu. Bez rozhraní, bez energie."
             },
             {
-              "type": "stats",
-              "title": "Parametry",
-              "lines": [
-                "Zásobník: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Recept",
               "recipe_type": "Výroba podle vzoru",
@@ -3904,6 +3820,26 @@
               ],
               "result_id": "alaindustrial:industrial_light",
               "result_count": 4
+            }
+          ]
+        },
+        {
+          "id": "reception_capsule",
+          "title": "Přijímací kapsle",
+          "icon": "alaindustrial:reception_capsule",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Přijímací kapsle",
+              "text": "Vrací směnové dělníky osady jednoho po druhém za EU a materiály — jen dokud jádro osady svítí, osada má majitele a limit dělníků není naplněný; každý nový dělník dostane vlastní číslo, které je v celém světě jen jedno."
+            },
+            {
+              "type": "stats",
+              "title": "Parametry",
+              "lines": [
+                "Energie: 100 000 EU za dělníka",
+                "Zásobník: 200 000 EU"
+              ]
             }
           ]
         },
@@ -3933,6 +3869,36 @@
                 ""
               ],
               "result_id": "alaindustrial:guide_book",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluid_tap",
+          "title": "Kohout",
+          "icon": "alaindustrial:fluid_tap",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kohout",
+              "text": "Skleněná armatura na nádrži nebo na konci trubky. Vypouští tekutinu do světa a tekuté zkušenosti vrací jako koule. Pravé tlačítko ho otevírá a zavírá, otevírá ho i rudit."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Výroba podle vzoru",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "minecraft:lever",
+                "",
+                "alaindustrial:fluid_pipe",
+                "",
+                "",
+                "minecraft:iron_ingot",
+                ""
+              ],
+              "result_id": "alaindustrial:fluid_tap",
               "result_count": 1
             }
           ]
@@ -4055,6 +4021,36 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "sound_absorber",
+          "title": "Pohlcovač zvuku",
+          "icon": "alaindustrial:sound_absorber",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Pohlcovač zvuku",
+              "text": "Blok z rámu z kaleného železa, mřížky a výplně, který kolem sebe tlumí zvuky bloků a okolí; pohlcovače, které se dotýkají stěnou, tvoří skupinu, a čím je skupina větší, tím je tichá zóna širší a silnější."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Výroba podle vzoru",
+              "grid": [
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:note_block",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool"
+              ],
+              "result_id": "alaindustrial:sound_absorber",
+              "result_count": 2
             }
           ]
         },
@@ -4228,8 +4224,9 @@
               "title": "Parametry",
               "lines": [
                 "Energie: 100 EU na výboj",
-                "Zásobník: 4000 EU",
-                "Poloměr: 6 bloků"
+                "Zásobník: 10 000 EU",
+                "Poloměr: 3 bloky",
+                "Oblast přitahování: 6 bloků"
               ]
             },
             {
@@ -4285,6 +4282,44 @@
                 "alaindustrial:electrum_ingot"
               ],
               "result_id": "alaindustrial:electrum_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "settlement_core",
+          "title": "Jádro osady",
+          "icon": "alaindustrial:settlement_core",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Jádro osady",
+              "text": "Srdce dělnické osady, které stojí na její radnici — dokud mu síť dodává EU, drží území osady, určuje, kolik domů a směnových dělníků v osadě smí být, a pamatuje si svého majitele; bez energie zhasne a osada usne."
+            },
+            {
+              "type": "stats",
+              "title": "Parametry",
+              "lines": [
+                "Energie: 8 EU/t",
+                "Zásobník: 2000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Výroba podle vzoru",
+              "grid": [
+                "alaindustrial:resonant_crystal",
+                "alaindustrial:reactor_circuit",
+                "alaindustrial:resonant_crystal",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:reinforced_bearing",
+                "alaindustrial:cesu",
+                "alaindustrial:reinforced_bearing"
+              ],
+              "result_id": "alaindustrial:settlement_core",
               "result_count": 1
             }
           ]
@@ -4551,7 +4586,7 @@
             {
               "type": "text",
               "title": "Jádrovnice",
-              "text": "Jádrovnice a modul sloupcového vrtání — díly, ze kterých se staví vylepšení, díky němuž vrták kope tři bloky vysoko."
+              "text": "Jádrovnice a moduly sloupcového a řádkového vrtání — díly, ze kterých se staví vylepšení, díky němuž vrták kope tři bloky vysoko nebo široko (oba dohromady kříž z pěti bloků)."
             },
             {
               "type": "recipe",
@@ -4995,7 +5030,7 @@
             {
               "type": "text",
               "title": "Shluk energie I",
-              "text": "Tři úrovně shluků — přebytek sítě zmrazený do pevné podoby energetickým kondenzátorem. Jediná přísada, ze které se vyrábějí čipy přetaktování."
+              "text": "Tři úrovně shluků — přebytek sítě zmrazený do pevné podoby energetickým kondenzátorem. Hlavní přísada čipů přetaktování; shluky II. a III. úrovně se používají i na krystaly."
             }
           ]
         },

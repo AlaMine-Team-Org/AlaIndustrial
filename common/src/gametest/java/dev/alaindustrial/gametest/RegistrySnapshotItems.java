@@ -192,6 +192,7 @@ final class RegistrySnapshotItems {
 			"item fluid_pipe_advanced class=FluidPipeBlockItem stack=64 damage=0 rarity=COMMON fireproof=no",
 			"item fluid_tank class=FluidTankBlockItem stack=64 damage=0 rarity=COMMON fireproof=no",
 			"item fluid_tank_advanced class=FluidTankBlockItem stack=64 damage=0 rarity=COMMON fireproof=yes",
+			"item fluid_tap class=BlockItem stack=64 damage=0 rarity=COMMON fireproof=no",
 			"item flux_thread class=Item stack=64 damage=0 rarity=COMMON fireproof=no",
 			"item fluxweave_boots class=FluxweaveArmorItem stack=1 damage=195 rarity=COMMON fireproof=no",
 			"item fluxweave_chestplate class=FluxweaveArmorItem stack=1 damage=240 rarity=COMMON fireproof=no",

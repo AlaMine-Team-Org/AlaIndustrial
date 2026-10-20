@@ -1,6 +1,7 @@
 package dev.alaindustrial.item.fluid;
 
 import dev.alaindustrial.registry.ModContent;
+import java.util.OptionalInt;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.Mth;
@@ -44,35 +45,20 @@ public final class FluidTankVisuals {
 	 */
 	private static final int STEAM = 0xD7E6F3;
 
+	/**
+	 * Liquid experience (MOD-818), the average colour of {@code block/experience_still}. It has no block
+	 * either, so without this line it fell through to the id-hash, which for its id is a pink-red: the pipe
+	 * core showed red while the tank beside it, drawn from the sprite, showed green (MOD-837).
+	 */
+	private static final int EXPERIENCE = 0x80E62F;
+
 	private FluidTankVisuals() {
 	}
 
 	public static int fallbackColor(Fluid fluid) {
-		if (fluid == Fluids.WATER) {
-			return WATER;
-		}
-		if (fluid == Fluids.LAVA) {
-			return LAVA;
-		}
-		// isSame covers each fluid's flowing form too: a pipe or tank can hold either, and the two must
-		// not read as different liquids. Reading the ModContent facade here is runtime-only, as required.
-		if (ModContent.OIL.get().isSame(fluid)) {
-			return OIL;
-		}
-		if (ModContent.DIESEL.get().isSame(fluid)) {
-			return DIESEL;
-		}
-		if (ModContent.FUEL_OIL.get().isSame(fluid)) {
-			return FUEL_OIL;
-		}
-		if (ModContent.BIOFUEL.get().isSame(fluid)) {
-			return BIOFUEL;
-		}
-		if (ModContent.NUTRIENT_SOLUTION.get().isSame(fluid)) {
-			return NUTRIENT_SOLUTION;
-		}
-		if (ModContent.STEAM.get().isSame(fluid)) {
-			return STEAM;
+		OptionalInt named = namedColor(fluid);
+		if (named.isPresent()) {
+			return named.getAsInt();
 		}
 		MapColor mapColor = fluid.defaultFluidState().createLegacyBlock().getMapColor(null, BlockPos.ZERO);
 		if (mapColor != MapColor.NONE) {
@@ -81,5 +67,43 @@ public final class FluidTankVisuals {
 		var id = BuiltInRegistries.FLUID.getKey(fluid);
 		float hue = Math.floorMod(id.hashCode(), 360) / 360.0F;
 		return Mth.hsvToRgb(hue, 0.65F, 0.9F);
+	}
+
+	/**
+	 * The colour this table names for {@code fluid}, or empty when it falls to the map colour or the id-hash.
+	 * Every fluid of the mod must be named here: the both-lane {@code FluidColourScenarios} fails on one that
+	 * is not, because the id-hash is a stable but arbitrary hue (it drew liquid experience red, MOD-837).
+	 */
+	public static OptionalInt namedColor(Fluid fluid) {
+		if (fluid == Fluids.WATER) {
+			return OptionalInt.of(WATER);
+		}
+		if (fluid == Fluids.LAVA) {
+			return OptionalInt.of(LAVA);
+		}
+		// isSame covers each fluid's flowing form too: a pipe or tank can hold either, and the two must
+		// not read as different liquids. Reading the ModContent facade here is runtime-only, as required.
+		if (ModContent.OIL.get().isSame(fluid)) {
+			return OptionalInt.of(OIL);
+		}
+		if (ModContent.DIESEL.get().isSame(fluid)) {
+			return OptionalInt.of(DIESEL);
+		}
+		if (ModContent.FUEL_OIL.get().isSame(fluid)) {
+			return OptionalInt.of(FUEL_OIL);
+		}
+		if (ModContent.BIOFUEL.get().isSame(fluid)) {
+			return OptionalInt.of(BIOFUEL);
+		}
+		if (ModContent.NUTRIENT_SOLUTION.get().isSame(fluid)) {
+			return OptionalInt.of(NUTRIENT_SOLUTION);
+		}
+		if (ModContent.STEAM.get().isSame(fluid)) {
+			return OptionalInt.of(STEAM);
+		}
+		if (ModContent.EXPERIENCE.get().isSame(fluid)) {
+			return OptionalInt.of(EXPERIENCE);
+		}
+		return OptionalInt.empty();
 	}
 }

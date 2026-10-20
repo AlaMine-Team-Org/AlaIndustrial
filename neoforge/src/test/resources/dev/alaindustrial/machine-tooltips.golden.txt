@@ -1304,6 +1304,23 @@ tooltip.alaindustrial.tier_lv {green}
 == alaindustrial:fluid_pipe_advanced plain : none
 == alaindustrial:fluid_tank plain : none
 == alaindustrial:fluid_tank_advanced plain : none
+== alaindustrial:fluid_tap plain
+-- plain eu
+tooltip.alaindustrial.fluid_tap.what {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.fluid_tap.what {gray}
+tooltip.alaindustrial.fluid_tap.use {gray}
+tooltip.alaindustrial.fluid_tap.redstone {gray}
+tooltip.alaindustrial.tank_mb(1000) {gray}
+-- plain no-eu
+tooltip.alaindustrial.fluid_tap.what {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.fluid_tap.what {gray}
+tooltip.alaindustrial.fluid_tap.use {gray}
+tooltip.alaindustrial.fluid_tap.redstone {gray}
+tooltip.alaindustrial.tank_mb(1000) {gray}
 == alaindustrial:flux_thread plain : none
 == alaindustrial:fluxweave_boots plain : none
 == alaindustrial:fluxweave_boots eu=1 : none

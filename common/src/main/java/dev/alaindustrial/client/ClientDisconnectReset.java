@@ -4,6 +4,7 @@ import dev.alaindustrial.client.guide.ArchiveRecordClient;
 import dev.alaindustrial.client.hud.TeleportFadeHud;
 import dev.alaindustrial.client.render.NetworkOverlayRenderer;
 import dev.alaindustrial.client.render.SettlementBorderOverlay;
+import dev.alaindustrial.client.screen.shiftworker.ShiftWorkerCardClient;
 import dev.alaindustrial.client.sound.SoundAbsorberZones;
 
 /**
@@ -26,5 +27,6 @@ public final class ClientDisconnectReset {
 		ServerBalance.reset(); // MOD-695
 		SoundAbsorberZones.reset(); // MOD-804
 		SettlementBorderOverlay.clear(); // MOD-843
+		ShiftWorkerCardClient.clear(); // MOD-854
 	}
 }

@@ -1160,13 +1160,6 @@
               "text": "Die einzige Stelle, an der Flüssigkeit eine versiegelte Hülle queren darf: ein Durchlass mit 50 mB/t, der in beide Richtungen arbeitet — Wasser hinein, Dampf hinaus — und trotzdem ein vollwertiges Stück Wand bleibt."
             },
             {
-              "type": "stats",
-              "title": "Werte",
-              "lines": [
-                "Puffer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Rezept",
               "recipe_type": "Geformtes Handwerk",
@@ -1232,13 +1225,6 @@
               "type": "text",
               "title": "Reaktorhebel",
               "text": "Ein Hebel aus Abschirmlegierung: ein gehaltenes Signal aus einem versiegelten Raum — der Notausschalter des Reaktors, der weder die Abschirmung des Raums bricht noch mit dessen Inhalt schmilzt."
-            },
-            {
-              "type": "stats",
-              "title": "Werte",
-              "lines": [
-                "Puffer: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3190,13 +3176,6 @@
               "text": "Ein rotierender Kopf auf einem Mast, der Nährlösung über alles sprüht, was innerhalb von 4 Blöcken wächst. Die eine Maschine des Mods, die überhaupt keine EU zieht — kein Kabel wird angeschlossen, sie läuft allein mit Lösung. Montiert am Boden oder unter der Decke."
             },
             {
-              "type": "stats",
-              "title": "Werte",
-              "lines": [
-                "Puffer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Rezept",
               "recipe_type": "Geformtes Handwerk",
@@ -3357,13 +3336,6 @@
               "text": "Vier Bauteile aus gehärtetem Eisen nach Vanilla-Vorbild — Gitter, Leiter, Falltür und Kette. Sie verhalten sich wie Vanilla und sehen aus wie der Stahl der Mod."
             },
             {
-              "type": "stats",
-              "title": "Werte",
-              "lines": [
-                "Puffer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Rezept",
               "recipe_type": "Geformtes Handwerk",
@@ -3392,13 +3364,6 @@
               "type": "text",
               "title": "Reaktorknopf",
               "text": "Ein Knopf aus Abschirmlegierung: die Art, die Schleuse aus einem versiegelten Raum heraus anzusteuern — genau wie ein Vanilla-Knopf gebaut, aber dem gewachsen, wofür der Raum da ist."
-            },
-            {
-              "type": "stats",
-              "title": "Werte",
-              "lines": [
-                "Puffer: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3431,13 +3396,6 @@
               "text": "Ein Hüllenblock, der erst leuchtet, wenn der Raum steht: die einzige Lichtquelle in einer versiegelten Kiste und zugleich ein von außen sichtbares Zeichen, dass der Bau angenommen wurde."
             },
             {
-              "type": "stats",
-              "title": "Werte",
-              "lines": [
-                "Puffer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Rezept",
               "recipe_type": "Geformtes Handwerk",
@@ -3466,13 +3424,6 @@
               "type": "text",
               "title": "Reaktorgehäuse",
               "text": "Eine Platte aus Abschirmlegierung — das einzige Material, aus dem die versiegelte Hülle eines Reaktorraums bestehen darf."
-            },
-            {
-              "type": "stats",
-              "title": "Werte",
-              "lines": [
-                "Puffer: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3505,13 +3456,6 @@
               "text": "Eine durchsichtige Hüllenplatte: Sie zählt genau wie Verkleidung als Wand, doch höchstens 30 % einer Hülle dürfen Glas sein — darüber hinaus ist der Raum kein Einschluss mehr, sondern eine Vitrine."
             },
             {
-              "type": "stats",
-              "title": "Werte",
-              "lines": [
-                "Puffer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Rezept",
               "recipe_type": "Geformtes Handwerk",
@@ -3542,13 +3486,6 @@
               "text": "Klares Glas in einem Rahmen aus gehärtetem Eisen — bricht wie Stein und hält einer Creeper- oder TNT-Explosion stand. Ein Baublock und eine Zutat für spätere Rezepte."
             },
             {
-              "type": "stats",
-              "title": "Werte",
-              "lines": [
-                "Puffer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Rezept",
               "recipe_type": "Geformtes Handwerk",
@@ -3577,13 +3514,6 @@
               "type": "text",
               "title": "Reaktor-Schleusentür",
               "text": "Der einzige Weg in einen Reaktorraum: Sie öffnet allein auf einen Redstone-Impuls, schließt sich zwei Sekunden später von selbst und schließt niemals durch jemanden hindurch, der im Durchgang steht."
-            },
-            {
-              "type": "stats",
-              "title": "Werte",
-              "lines": [
-                "Puffer: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3718,13 +3648,6 @@
               "type": "text",
               "title": "Lagermodul",
               "text": "Ein Lagerblock mit 27 Plätzen: aneinandergesetzte Module arbeiten als ein Lager mit bis zu 108 Plätzen hinter einem Fenster."
-            },
-            {
-              "type": "stats",
-              "title": "Werte",
-              "lines": [
-                "Puffer: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3881,13 +3804,6 @@
               "text": "Eine winzige Leuchte von 4×4 Pixeln mit warmem Licht der Stufe 15 — auf Boden, Decke oder jede Wand. Kein Menü, keine Energie."
             },
             {
-              "type": "stats",
-              "title": "Werte",
-              "lines": [
-                "Puffer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Rezept",
               "recipe_type": "Geformtes Handwerk",
@@ -3904,6 +3820,26 @@
               ],
               "result_id": "alaindustrial:industrial_light",
               "result_count": 4
+            }
+          ]
+        },
+        {
+          "id": "reception_capsule",
+          "title": "Empfangskapsel",
+          "icon": "alaindustrial:reception_capsule",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Empfangskapsel",
+              "text": "Holt die Schichtarbeiter einer Siedlung einen nach dem anderen gegen EU und Material zurück — nur solange der Siedlungskern leuchtet, die Siedlung einen Besitzer hat und ihr Arbeiterlimit nicht erreicht ist; jeder neue Arbeiter bekommt eine eigene Nummer, die es in der Welt nur einmal gibt."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 100 000 EU pro Arbeiter",
+                "Puffer: 200 000 EU"
+              ]
             }
           ]
         },
@@ -3933,6 +3869,36 @@
                 ""
               ],
               "result_id": "alaindustrial:guide_book",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluid_tap",
+          "title": "Hahn",
+          "icon": "alaindustrial:fluid_tap",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Hahn",
+              "text": "Ein Glas-Fitting an einem Tank oder am Ende eines Rohrs. Lässt Flüssigkeit in die Welt und gibt flüssige Erfahrung als Kugeln zurück. Rechtsklick öffnet und schließt ihn, Redstone öffnet ihn auch."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "minecraft:lever",
+                "",
+                "alaindustrial:fluid_pipe",
+                "",
+                "",
+                "minecraft:iron_ingot",
+                ""
+              ],
+              "result_id": "alaindustrial:fluid_tap",
               "result_count": 1
             }
           ]
@@ -4055,6 +4021,36 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "sound_absorber",
+          "title": "Schalldämpfer",
+          "icon": "alaindustrial:sound_absorber",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Schalldämpfer",
+              "text": "Ein Block aus einem Rahmen aus gehärtetem Eisen, einem Gitter und einer Polsterung, der Block- und Umgebungsgeräusche um sich herum dämpft; Dämpfer, die sich mit einer Seite berühren, bilden eine Gruppe, und je größer die Gruppe, desto weiter und stärker die stille Zone."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:note_block",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool"
+              ],
+              "result_id": "alaindustrial:sound_absorber",
+              "result_count": 2
             }
           ]
         },
@@ -4228,8 +4224,9 @@
               "title": "Werte",
               "lines": [
                 "Energie: 100 EU pro Schlag",
-                "Puffer: 4000 EU",
-                "Radius: 6 Blöcke"
+                "Puffer: 10000 EU",
+                "Radius: 3 Blöcke",
+                "Anziehungszone: 6 Blöcke"
               ]
             },
             {
@@ -4285,6 +4282,44 @@
                 "alaindustrial:electrum_ingot"
               ],
               "result_id": "alaindustrial:electrum_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "settlement_core",
+          "title": "Siedlungskern",
+          "icon": "alaindustrial:settlement_core",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Siedlungskern",
+              "text": "Das Herz einer Arbeitersiedlung, das in ihrem Rathaus steht — solange das Netz ihn mit EU versorgt, hält er das Gebiet der Siedlung, legt fest, wie viele Häuser und Schichtarbeiter die Siedlung haben darf, und merkt sich seinen Besitzer; ohne Strom erlischt er, und die Siedlung schläft."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 8 EU/t",
+                "Puffer: 2000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:resonant_crystal",
+                "alaindustrial:reactor_circuit",
+                "alaindustrial:resonant_crystal",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:reinforced_bearing",
+                "alaindustrial:cesu",
+                "alaindustrial:reinforced_bearing"
+              ],
+              "result_id": "alaindustrial:settlement_core",
               "result_count": 1
             }
           ]
@@ -4551,7 +4586,7 @@
             {
               "type": "text",
               "title": "Kernrohr",
-              "text": "Das Kernrohr und das Säulenbohrmodul — die Teile, aus denen ein Upgrade gebaut wird, mit dem ein Bohrer drei Blöcke hoch gräbt."
+              "text": "Das Kernrohr sowie das Säulen- und das Reihenbohrmodul — die Teile, aus denen ein Upgrade gebaut wird, mit dem ein Bohrer drei Blöcke hoch oder breit gräbt (beide zusammen: ein Kreuz aus fünf Blöcken)."
             },
             {
               "type": "recipe",
@@ -4995,7 +5030,7 @@
             {
               "type": "text",
               "title": "Energieklumpen I",
-              "text": "Drei Stufen von Klumpen — der Überschuss des Netzes, vom Energieverdichter fest zusammengepresst. Die einzige Zutat, aus der Übertaktungs-Chips bestehen."
+              "text": "Drei Stufen von Klumpen — der Überschuss des Netzes, vom Energieverdichter fest zusammengepresst. Die Hauptzutat der Übertaktungs-Chips; Klumpen der Stufen II und III gehen auch in Kristalle."
             }
           ]
         },

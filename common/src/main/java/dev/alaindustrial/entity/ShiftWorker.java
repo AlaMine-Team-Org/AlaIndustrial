@@ -1,16 +1,23 @@
 package dev.alaindustrial.entity;
 
 import dev.alaindustrial.settlement.shift.ShiftMode;
+import dev.alaindustrial.settlement.shift.ShiftWorkerBattery;
 import dev.alaindustrial.settlement.SettlementConfig;
+import dev.alaindustrial.settlement.shift.ShiftWorkerProfiles;
 import dev.alaindustrial.settlement.shift.ShiftWorkerRecord;
 import dev.alaindustrial.settlement.shift.ShiftWorkers;
+import java.util.OptionalLong;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
@@ -20,6 +27,7 @@ import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A shift worker (MOD-832, docs/mobs/shift_worker.md): a former record of this world in a working suit, with a number
@@ -64,10 +72,37 @@ public class ShiftWorker extends PathfinderMob {
 	private int settlement;
 	/** Server only: how far it walks from its anchor — the knob, never past its town's territory. */
 	private int wanderRadius = SettlementConfig.shiftWorkerWanderRadius;
+	/** Server only: game time of the last battery settle, -1 — none yet (MOD-854, {@code ShiftWorkerBattery}). */
+	private long batteryClock = -1L;
+	/** Server only: the fraction of an EU drained but not yet taken from the battery; not saved. */
+	private double drainCarry;
+	/** Server only: game time of the last wound, -1 — none; one fight is one service mark. */
+	private long lastHurtAt = -1L;
 
 	public ShiftWorker(EntityType<? extends ShiftWorker> type, Level level) {
 		super(type, level);
 		setPersistenceRequired();
+	}
+
+	/**
+	 * The id a body made only to be looked at carries ({@link #displayBody}). A level hands out ids from 1 upwards
+	 * when it adds an entity, so a negative id is never a real one; this body is never added to any level, so nothing
+	 * can look it up by this id either.
+	 */
+	public static final int DISPLAY_ENTITY_ID = -854_001;
+
+	/**
+	 * A worker's body for a screen to draw (MOD-854, the card of a worker this client has not loaded): made through
+	 * {@code type}'s factory as the game spawns one, never added to {@code level}. Since 26.3 an entity has no id until
+	 * a level adds it, and {@code getId()} throws until then; the renderer asks for it (the held items' model seed),
+	 * so the body gets {@link #DISPLAY_ENTITY_ID} here. Null when the type makes nothing.
+	 */
+	public static @Nullable ShiftWorker displayBody(EntityType<? extends ShiftWorker> type, Level level) {
+		ShiftWorker body = type.create(level, EntitySpawnReason.LOAD);
+		if (body != null) {
+			body.setId(DISPLAY_ENTITY_ID);
+		}
+		return body;
 	}
 
 	/** Default attributes: a player's health (the knob scales a new worker's), a villager's speed. */
@@ -146,6 +181,36 @@ public class ShiftWorker extends PathfinderMob {
 		return wanderRadius;
 	}
 
+	/** Game time of the last battery settle, -1 — none yet. Server side. */
+	public long batteryClock() {
+		return batteryClock;
+	}
+
+	/** Server side, by {@code ShiftWorkerBattery} only. */
+	public void setBatteryClock(long gameTime) {
+		this.batteryClock = gameTime;
+	}
+
+	/** The fraction of an EU drained but not yet taken. Server side. */
+	public double drainCarry() {
+		return drainCarry;
+	}
+
+	/** Server side, by {@code ShiftWorkerBattery} only. */
+	public void setDrainCarry(double carry) {
+		this.drainCarry = carry;
+	}
+
+	/** Game time of the last wound, -1 — none. Server side. */
+	public long lastHurtAt() {
+		return lastHurtAt;
+	}
+
+	/** Server side, by {@code ShiftWorkerBattery} only. */
+	public void setLastHurtAt(long gameTime) {
+		this.lastHurtAt = gameTime;
+	}
+
 	/** The worker's town number (0 — none), as its record says. Server side. */
 	public int settlement() {
 		return settlement;
@@ -173,7 +238,11 @@ public class ShiftWorker extends PathfinderMob {
 		if (source.getEntity() instanceof Player player && !ShiftWorkers.mayHurt(level, this, player)) {
 			return false;
 		}
-		return super.hurtServer(level, source, damage);
+		boolean hurt = super.hurtServer(level, source, damage);
+		if (hurt) {
+			ShiftWorkerBattery.noteWound(level, this, source);
+		}
+		return hurt;
 	}
 
 	@Override
@@ -182,6 +251,26 @@ public class ShiftWorker extends PathfinderMob {
 			ShiftWorkers.recordDeath(serverLevel, this, source);
 		}
 		super.die(source);
+	}
+
+	/**
+	 * A right click with a charged battery charges the worker ({@link ShiftWorkerBattery#chargeFrom}, a line on the
+	 * action bar); any other right click opens its card for anyone (MOD-854, R74 — others see it read-only).
+	 */
+	@Override
+	protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+		if (hand != InteractionHand.MAIN_HAND) {
+			return InteractionResult.PASS;
+		}
+		if (player instanceof ServerPlayer serverPlayer) {
+			OptionalLong moved = ShiftWorkerBattery.chargeFrom(serverPlayer.level(), this, player.getItemInHand(hand));
+			if (moved.isPresent()) {
+				serverPlayer.sendOverlayMessage(ShiftWorkerBattery.chargeMessage(number(), moved.getAsLong()));
+			} else {
+				ShiftWorkerProfiles.openFromEntity(serverPlayer, this);
+			}
+		}
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override

@@ -113,6 +113,15 @@ public class SettlementCoreMenu extends MachineMenu {
 		return channel(SettlementCoreBlockEntity.Channel.UPKEEP);
 	}
 
+	/**
+	 * The core this menu was opened on — server side only; null on the client. A roster request takes its core from
+	 * here (MOD-854), so the client never names a position the server would have to trust.
+	 */
+	@Nullable
+	public SettlementCoreBlockEntity core() {
+		return core;
+	}
+
 	/** {@code SettlementCoreBlockEntity.OWNER_NONE}, {@code OWNER_VIEWER} or {@code OWNER_OTHER}. */
 	public int getOwnerRelation() {
 		return channel(SettlementCoreBlockEntity.Channel.OWNER);

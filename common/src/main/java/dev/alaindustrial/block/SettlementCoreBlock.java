@@ -1,6 +1,7 @@
 package dev.alaindustrial.block;
 
 import dev.alaindustrial.block.entity.SettlementCoreBlockEntity;
+import dev.alaindustrial.chat.ModChat;
 import dev.alaindustrial.client.ServerBalance;
 import dev.alaindustrial.core.tooltip.HasMachineTooltip;
 import dev.alaindustrial.core.tooltip.MachineTooltipSpec;
@@ -9,6 +10,7 @@ import dev.alaindustrial.settlement.SettlementRegistry;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
@@ -36,7 +38,8 @@ import org.jspecify.annotations.Nullable;
  * bedrock blast resistance — so explosions, the mod's drills and block breaker, and other mods' area tools, which
  * all skip a block of negative hardness, leave it alone. Only {@link #getDestroyProgress} lets it go, and only for
  * the town's owner holding a tool that mines it: any pickaxe, at the pace of a block of {@link #OWNER_HARDNESS}. A
- * creative player breaks it as they break bedrock.
+ * creative player breaks it as they break bedrock; it drops nothing then, and the town is left without its core all the
+ * same — the player is told so in chat ({@link #playerWillDestroy}, MOD-836).
  *
  * <p><b>One core to a town (epic decision R43).</b> A player cannot place a core inside the territory of a town that
  * already has its core ({@link #getStateForPlacement}): the core stays in the hand, and the chat says where the town's
@@ -47,6 +50,11 @@ import org.jspecify.annotations.Nullable;
  */
 public class SettlementCoreBlock extends AbstractMachineBlock implements HasMachineTooltip {
 	public static final BooleanProperty LIT = BlockStateProperties.LIT;
+	/**
+	 * The chat line of the player who takes a town's core out of the world (MOD-836): the town sleeps without it, and a
+	 * core placed on its territory carries it on.
+	 */
+	public static final String REMOVED_MESSAGE_KEY = "settlement.alaindustrial.core.removed";
 
 	/** The hardness the owner mines the core at — a teleporter station's: a few seconds with a wooden pickaxe. */
 	public static final float OWNER_HARDNESS = 5.0F;
@@ -112,6 +120,31 @@ public class SettlementCoreBlock extends AbstractMachineBlock implements HasMach
 				&& level.getBlockEntity(pos) instanceof SettlementCoreBlockEntity core) {
 			core.placedBy(player);
 		}
+	}
+
+	/**
+	 * Tells the player taking a town's core out of the world what became of the town (MOD-836, {@link #removalNotice}):
+	 * the owner in survival, anyone in creative, where the core drops nothing. Here rather than in the removal hook
+	 * below, which no longer knows who broke the block.
+	 */
+	@Override
+	public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+		if (player instanceof ServerPlayer serverPlayer && level instanceof ServerLevel serverLevel) {
+			removalNotice(serverLevel, pos).ifPresent(line -> serverPlayer.sendSystemMessage(line, false));
+		}
+		return super.playerWillDestroy(level, pos, state, player);
+	}
+
+	/**
+	 * The chat line for the player taking the core at {@code pos} out of the world (MOD-836): when it is its town's
+	 * core, the town is left without one and sleeps, and any core placed on its territory carries it on (R43) — the
+	 * owner breaking it in survival and anyone breaking it in creative read the same line. Empty for a second core
+	 * (R43) or a core of no town (R53): neither leaves a town without its core. Asked before the block goes, while the
+	 * registry still records the core where it stands.
+	 */
+	public static Optional<Component> removalNotice(ServerLevel level, BlockPos pos) {
+		return SettlementRegistry.get(level.getServer()).findAt(level.dimension(), pos)
+				.map(town -> ModChat.line(Component.translatable(REMOVED_MESSAGE_KEY)));
 	}
 
 	/**

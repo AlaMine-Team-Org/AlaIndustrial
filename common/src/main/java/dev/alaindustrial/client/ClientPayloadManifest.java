@@ -6,6 +6,7 @@ import dev.alaindustrial.client.hud.TeleportNotice;
 import dev.alaindustrial.client.render.NetworkOverlayRenderer;
 import dev.alaindustrial.client.render.SettlementBorderOverlay;
 import dev.alaindustrial.client.render.ZonePreviewRenderer;
+import dev.alaindustrial.client.screen.shiftworker.ShiftWorkerCardClient;
 import dev.alaindustrial.network.ArchiveRecordPayload;
 import dev.alaindustrial.network.ConfigSyncPayload;
 import dev.alaindustrial.network.MachineStatsPayload;
@@ -13,6 +14,8 @@ import dev.alaindustrial.network.NetworkAnalyzerPayload;
 import dev.alaindustrial.network.ReactorLogPayload;
 import dev.alaindustrial.network.ReactorZonePayload;
 import dev.alaindustrial.network.SettlementBorderPayload;
+import dev.alaindustrial.network.ShiftWorkerCardPayload;
+import dev.alaindustrial.network.ShiftWorkerRosterPayload;
 import dev.alaindustrial.network.ZonePreviewPayload;
 import dev.alaindustrial.network.TeleportFadePayload;
 import dev.alaindustrial.network.TeleportNoticePayload;
@@ -122,7 +125,11 @@ public final class ClientPayloadManifest {
 			// MOD-093: why a jump was refused, shown inside the remote's screen.
 			queued(TeleportNoticePayload.TYPE, payload -> TeleportNotice.receive(payload.message())),
 			// MOD-843: toggles this client's view of a settlement's border.
-			queued(SettlementBorderPayload.TYPE, SettlementBorderOverlay::receive));
+			queued(SettlementBorderPayload.TYPE, SettlementBorderOverlay::receive),
+			// MOD-854: a shift worker's card — kept as the latest, and opens its screen when asked to.
+			queued(ShiftWorkerCardPayload.TYPE, ShiftWorkerCardClient::receiveCard),
+			// MOD-854: a town's roster for its core's screen.
+			queued(ShiftWorkerRosterPayload.TYPE, ShiftWorkerCardClient::receiveRoster));
 
 	private static final Map<CustomPacketPayload.Type<?>, ClientHandlerDef<?>> BY_TYPE = index();
 

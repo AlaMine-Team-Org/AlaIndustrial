@@ -358,7 +358,7 @@ public final class AlaTownScenarios {
 	}
 
 	/** The digits the digit plates among {@code plates} show, in their order; broken letters are skipped. */
-	private static List<Integer> digitsOf(ServerLevel level, List<BlockPos> plates) {
+	static List<Integer> digitsOf(ServerLevel level, List<BlockPos> plates) {
 		List<Integer> digits = new ArrayList<>();
 		for (BlockPos plate : plates) {
 			Block block = level.getBlockState(plate).getBlock();
@@ -442,7 +442,7 @@ public final class AlaTownScenarios {
 		return cores;
 	}
 
-	private static List<BlockPos> plates(ServerLevel level, BoundingBox box) {
+	static List<BlockPos> plates(ServerLevel level, BoundingBox box) {
 		List<BlockPos> plates = new ArrayList<>();
 		BlockPos.betweenClosed(box.minX(), box.minY(), box.minZ(), box.maxX(), box.maxY(), box.maxZ()).forEach(pos -> {
 			if (level.getBlockState(pos).getBlock() instanceof EngravedPlateBlock) {

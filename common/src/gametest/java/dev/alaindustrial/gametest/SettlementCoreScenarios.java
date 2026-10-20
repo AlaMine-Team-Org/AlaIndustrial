@@ -1,5 +1,6 @@
 package dev.alaindustrial.gametest;
 
+import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.SettlementCoreBlock;
 import dev.alaindustrial.block.entity.SettlementCoreBlockEntity;
 import dev.alaindustrial.core.energy.EnergyTier;
@@ -10,6 +11,8 @@ import dev.alaindustrial.settlement.Settlement;
 import dev.alaindustrial.settlement.SettlementConfig;
 import dev.alaindustrial.settlement.SettlementRegistry;
 import dev.alaindustrial.settlement.SettlementTier;
+import dev.alaindustrial.settlement.record.RecordNumber;
+import dev.alaindustrial.settlement.shift.ShiftWorkerRecord;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +24,8 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -33,6 +38,7 @@ import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -92,6 +98,10 @@ public final class SettlementCoreScenarios {
 						"settlement_core_player_cannot_place_second_core").ticks(40),
 				RosterEntry.of(SettlementCoreScenarios::tcSettle001Brk06PlayerCoreOutsideEveryTerritoryFoundsNoTown,
 						"settlement_core_player_core_outside_founds_no_town").ticks(40),
+				RosterEntry.of(SettlementCoreScenarios::tcSettle001Brk07CoreBrokenInCreativeLeavesTownForAnyCore,
+						"settlement_core_creative_break_town_continues").ticks(40),
+				RosterEntry.of(SettlementCoreScenarios::tcSettle001Brk08RemovalNoticeOnlyForATownsCore,
+						"settlement_core_removal_notice_town_core_only").ticks(40),
 				RosterEntry.of(SettlementCoreScenarios::tcSettle001Rec01CoreRecipeIsTheLateStageCraft,
 						"settlement_core_recipe_late_stage").ticks(20));
 
@@ -196,8 +206,8 @@ public final class SettlementCoreScenarios {
 
 	/**
 	 * @implements TC-SETTLE-001-FUN04 — an LV core takes the packet of the tier above (epic decision R44): its intake
-	 *     is the MV packet, and over a real line that carries more than an LV packet (creative source at the MV preset
-	 *     → electrum cables → core) it gains more in five ticks than five LV packets could bring.
+	 *     is the MV packet, and over a real line that carries more than an LV packet (creative source at its default
+	 *     preset → electrum cables → core) it gains more in five ticks than five LV packets could bring.
 	 */
 	public static void tcSettle001Fun04CoreTakesThePacketOfTheTierAbove(GameTestHelper helper) {
 		EnergyLine line = EnergyLine.in(helper)
@@ -733,6 +743,146 @@ public final class SettlementCoreScenarios {
 			helper.setBlock(copyAt, Blocks.AIR);
 		}
 		helper.succeed();
+	}
+
+	/**
+	 * @implements TC-SETTLE-001-BRK07 — a creative player who does not own the town breaks its core (MOD-836): nothing
+	 *     drops, and the town is left exactly as after its owner broke it — in the registry, dark, without its core,
+	 *     with its number, owner, tier and shift workers. A core from the tab placed by hand two blocks away continues
+	 *     the same town and lights on power, the workers still its own. The break goes through the server's real path,
+	 *     the one that also writes the chat line (BRK08 checks the line itself).
+	 */
+	public static void tcSettle001Brk07CoreBrokenInCreativeLeavesTownForAnyCore(GameTestHelper helper) {
+		SettlementCoreBlockEntity core = place(helper);
+		ServerPlayer owner = AlaGameTestHelper.survivalPlayer(helper);
+		charge(core, core.getEnergyStorage().getCapacity());
+		AlaGameTestHelper.drive(core, helper, 1);
+		open(core, owner);
+		int id = core.settlementId();
+		Settlement before = town(helper, core, "before the break");
+		if (!before.isOwnedBy(owner.getUUID()) || !before.active()) {
+			helper.fail("control: the lit core was not claimed by its first opener: " + before);
+			return;
+		}
+		ServerLevel level = helper.getLevel();
+		SettlementRegistry registry = SettlementRegistry.get(level.getServer());
+		UUID workerId = UUID.nameUUIDFromBytes(("settlement-brk07-" + id).getBytes(StandardCharsets.UTF_8));
+		registry.workers().put(ShiftWorkerRecord.issued(RecordNumber.parse("Q-836").orElseThrow(), workerId,
+				Industrialization.id("window_f1"), false, id));
+		try {
+			ServerPlayer creative = AlaGameTestHelper.mockPlayerInLevel(helper);
+			creative.setGameMode(GameType.CREATIVE);
+			BlockPos at = helper.absolutePos(CORE);
+			if (!creative.preventsBlockDrops() || creative.getUUID().equals(owner.getUUID())) {
+				helper.fail("control: the breaker must be a creative player who does not own the town");
+				return;
+			}
+			if (!creative.gameMode.destroyBlock(at) || !level.getBlockState(at).isAir()) {
+				helper.fail("a creative player could not break the core");
+				return;
+			}
+			if (!level.getEntitiesOfClass(ItemEntity.class, new AABB(at).inflate(2),
+					drop -> drop.getItem().is(ModContent.SETTLEMENT_CORE_ITEM.get())).isEmpty()) {
+				helper.fail("a core broken in creative must drop nothing");
+				return;
+			}
+			Optional<Settlement> asleep = registry.find(id);
+			if (asleep.isEmpty() || asleep.get().corePlaced() || asleep.get().active()
+					|| !asleep.get().isOwnedBy(owner.getUUID()) || asleep.get().tier() != before.tier()) {
+				helper.fail("a core broken in creative must leave town " + id
+						+ " dark, without its core, with its owner and tier: " + asleep);
+				return;
+			}
+
+			BlockPos moved = CORE.east(2);
+			InteractionResult result = placeByHand(helper, creative, moved,
+					new ItemStack(ModContent.SETTLEMENT_CORE_ITEM.get()));
+			if (!result.consumesAction()
+					|| !(level.getBlockEntity(helper.absolutePos(moved)) instanceof SettlementCoreBlockEntity placed)) {
+				helper.fail("a core from the tab could not be placed inside the territory: " + result);
+				return;
+			}
+			charge(placed, placed.getEnergyStorage().getCapacity());
+			AlaGameTestHelper.drive(placed, helper, 1);
+			Settlement after = town(helper, placed, "after placing a new core");
+			if (placed.settlementId() != id || placed.isMisplaced() || !placed.isActive()) {
+				helper.fail("a core placed in the territory of the town broken in creative must continue town " + id
+						+ " and light: id " + placed.settlementId() + ", second " + placed.isMisplaced() + ", lit "
+						+ placed.isActive());
+				return;
+			}
+			if (!after.isOwnedBy(owner.getUUID()) || after.tier() != before.tier()
+					|| !after.style().equals(before.style()) || !after.corePlaced() || !after.active()
+					|| !after.corePos().equals(helper.absolutePos(moved))) {
+				helper.fail("the continued town must keep its owner, tier and style and record the new spot: " + after);
+				return;
+			}
+			if (!registry.workers().byEntity(workerId).map(worker -> worker.settlement() == id).orElse(false)) {
+				helper.fail("the continued town lost its shift worker: " + registry.workers().byEntity(workerId));
+				return;
+			}
+			helper.setBlock(moved, Blocks.AIR);
+		} finally {
+			registry.workers().remove(workerId);
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * @implements TC-SETTLE-001-BRK08 — the chat line for the player who takes a core out of the world (MOD-836): a
+	 *     town's own core yields the mod's tagged line saying the town is left without its core; a second core of that
+	 *     town (R43) and a core of no town (R53) yield none, since neither leaves a town without its core. The line is
+	 *     read from the function the block sends it through: a mock player's chat cannot be read back here.
+	 */
+	public static void tcSettle001Brk08RemovalNoticeOnlyForATownsCore(GameTestHelper helper) {
+		SettlementCoreBlockEntity core = place(helper);
+		AlaGameTestHelper.drive(core, helper, 1);
+		ServerLevel level = helper.getLevel();
+		Optional<Component> notice = notice(helper, CORE);
+		if (notice.isEmpty() || !mentionsKey(notice.get(), SettlementCoreBlock.REMOVED_MESSAGE_KEY)
+				|| !mentionsKey(notice.get(), "command.alaindustrial.name")) {
+			helper.fail("a town's core must give the tagged line about the town left without its core: " + notice);
+			return;
+		}
+
+		BlockPos copyAt = CORE.east(3);
+		SettlementCoreBlockEntity copy = place(helper, copyAt);
+		SaveFormatTestSupport.load(copy, level.registryAccess(), core.saveWithoutMetadata(level.registryAccess()));
+		AlaGameTestHelper.drive(copy, helper, 1);
+		if (!copy.isMisplaced() || notice(helper, copyAt).isPresent()) {
+			helper.fail("a second core must give no line: second " + copy.isMisplaced() + ", line "
+					+ notice(helper, copyAt));
+			return;
+		}
+		helper.setBlock(copyAt, Blocks.AIR);
+
+		BlockPos looseAt = CORE.east(2);
+		SettlementCoreBlockEntity loose = place(helper, looseAt);
+		CompoundTag tag = loose.saveWithoutMetadata(level.registryAccess());
+		tag.putInt("SettlementId", 0);
+		tag.putBoolean("Unbound", true);
+		SaveFormatTestSupport.load(loose, level.registryAccess(), tag);
+		AlaGameTestHelper.drive(loose, helper, 1);
+		if (!loose.isUnbound() || notice(helper, looseAt).isPresent()) {
+			helper.fail("a core of no town must give no line: of no town " + loose.isUnbound() + ", line "
+					+ notice(helper, looseAt));
+			return;
+		}
+		helper.setBlock(looseAt, Blocks.AIR);
+		helper.succeed();
+	}
+
+	/** The line the block would send whoever breaks the core at {@code relative} now. */
+	private static Optional<Component> notice(GameTestHelper helper, BlockPos relative) {
+		return SettlementCoreBlock.removalNotice(helper.getLevel(), helper.absolutePos(relative));
+	}
+
+	/** Whether {@code line} or any part of it is the translation {@code key}. */
+	private static boolean mentionsKey(Component line, String key) {
+		if (line.getContents() instanceof TranslatableContents translatable && translatable.getKey().equals(key)) {
+			return true;
+		}
+		return line.getSiblings().stream().anyMatch(part -> mentionsKey(part, key));
 	}
 
 	/**

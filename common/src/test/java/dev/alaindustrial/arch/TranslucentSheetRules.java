@@ -65,6 +65,7 @@ public class TranslucentSheetRules {
 	 */
 	static final List<AllowedSite> LIQUID_SITES = List.of(
 			new AllowedSite(RENDER + "FluidTankBlockEntityRenderer", "submit", LIQUID),
+			new AllowedSite(RENDER + "FluidTapBlockEntityRenderer", "submit", LIQUID),
 			new AllowedSite(RENDER + "IncubatorBlockEntityRenderer", "submitBath", LIQUID),
 			new AllowedSite(RENDER + "IncubatorBlockEntityRenderer", "submitGauge", LIQUID),
 			new AllowedSite(RENDER + "FluidTankBlockEntityRenderer", "glassType", GLASS_OVER_LIQUID),
