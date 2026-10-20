@@ -631,6 +631,10 @@ public final class ReceptionCapsuleScenarios {
 			helper.fail("control: the core did not go dark");
 			return;
 		}
+		// MOD-854, R68: a dark core's worker works on its battery and sleeps only once it is empty.
+		ShiftWorkerRecord charged = ShiftWorkers.book(helper.getLevel().getServer()).byEntity(worker.getUUID())
+				.orElseThrow(() -> helper.assertionException("control: the released worker has no record"));
+		ShiftWorkers.book(helper.getLevel().getServer()).put(charged.withProfile(charged.profile().withCharge(0)));
 		Vec3[] stood = new Vec3[1];
 		float[] look = new float[2];
 		float[] health = new float[1];

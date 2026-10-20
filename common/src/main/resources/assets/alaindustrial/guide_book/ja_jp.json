@@ -1160,13 +1160,6 @@
               "text": "流体が密閉シェルを越えられる唯一の場所です。50 mB/tの通り道で、水は内へ、蒸気は外へと両方向に働き、それでいて壁としても完全な一片のままです。"
             },
             {
-              "type": "stats",
-              "title": "ステータス",
-              "lines": [
-                "バッファ: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "レシピ",
               "recipe_type": "定形クラフト",
@@ -1232,13 +1225,6 @@
               "type": "text",
               "title": "原子炉レバー",
               "text": "遮蔽合金のレバー：密閉された部屋の内側から押し続ける信号——原子炉の非常停止。部屋の遮蔽を破壊せず、内容物と一緒に溶けることもありません。"
-            },
-            {
-              "type": "stats",
-              "title": "ステータス",
-              "lines": [
-                "バッファ: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3190,13 +3176,6 @@
               "text": "マストの上で回る散水ヘッドが、4ブロック内で育つすべてに養液を撒きます。モッドで唯一まったくEUを消費しない機械 — ケーブルは接続できず、養液だけで動きます。床にも天井の下にも取り付けられます。"
             },
             {
-              "type": "stats",
-              "title": "ステータス",
-              "lines": [
-                "バッファ: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "レシピ",
               "recipe_type": "定形クラフト",
@@ -3357,13 +3336,6 @@
               "text": "バニラを手本にした焼き入れ鉄の建築ブロック4種 — 鉄格子、はしご、トラップドア、鎖。挙動はバニラと同じで、見た目はMODの鋼です。"
             },
             {
-              "type": "stats",
-              "title": "ステータス",
-              "lines": [
-                "バッファ: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "レシピ",
               "recipe_type": "定形クラフト",
@@ -3392,13 +3364,6 @@
               "type": "text",
               "title": "原子炉ボタン",
               "text": "遮蔽合金でできたボタンです。密閉した部屋の内側からエアロックへパルスを送るための手段で、バニラのボタンとまったく同じ作りながら、この部屋の目的に耐えられます。"
-            },
-            {
-              "type": "stats",
-              "title": "ステータス",
-              "lines": [
-                "バッファ: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3431,13 +3396,6 @@
               "text": "部屋が組み上がったときにだけ光るシェルのブロックです。密閉された箱の中で唯一の光源であり、同時に、建物が受理されたことを外からも示す合図になります。"
             },
             {
-              "type": "stats",
-              "title": "ステータス",
-              "lines": [
-                "バッファ: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "レシピ",
               "recipe_type": "定形クラフト",
@@ -3466,13 +3424,6 @@
               "type": "text",
               "title": "原子炉ケース",
               "text": "遮蔽合金の板です。原子炉室の密閉シェルを組める唯一の素材です。"
-            },
-            {
-              "type": "stats",
-              "title": "ステータス",
-              "lines": [
-                "バッファ: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3505,13 +3456,6 @@
               "text": "透明なシェルの板です。ケースとまったく同じく壁として数えられますが、シェルに占めるガラスは30 %までです。それを超えると部屋は閉じ込めではなく、ただの陳列ケースになります。"
             },
             {
-              "type": "stats",
-              "title": "ステータス",
-              "lines": [
-                "バッファ: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "レシピ",
               "recipe_type": "定形クラフト",
@@ -3542,13 +3486,6 @@
               "text": "焼き入れ鉄の枠に収めた透明なガラス — 石のように壊れ、クリーパーやTNTの爆発に耐えます。建築ブロックであり、後のレシピの材料です。"
             },
             {
-              "type": "stats",
-              "title": "ステータス",
-              "lines": [
-                "バッファ: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "レシピ",
               "recipe_type": "定形クラフト",
@@ -3577,13 +3514,6 @@
               "type": "text",
               "title": "原子炉エアロックドア",
               "text": "原子炉室への唯一の入口です。レッドストーンのパルスだけで開き、2秒後に自分で閉まり、通路に立っている相手を挟むことは決してありません。"
-            },
-            {
-              "type": "stats",
-              "title": "ステータス",
-              "lines": [
-                "バッファ: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3718,13 +3648,6 @@
               "type": "text",
               "title": "ストレージモジュール",
               "text": "27スロットの収納ブロック。隣接して置いたモジュール同士は、1つの窓の向こうで最大108スロットの1つの倉庫として機能します。"
-            },
-            {
-              "type": "stats",
-              "title": "ステータス",
-              "lines": [
-                "バッファ: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3881,13 +3804,6 @@
               "text": "4×4ピクセルの小さな照明で、暖かい明るさ15 — 床・天井・どの壁にも設置できます。メニューなし、エネルギー不要。"
             },
             {
-              "type": "stats",
-              "title": "ステータス",
-              "lines": [
-                "バッファ: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "レシピ",
               "recipe_type": "定形クラフト",
@@ -3904,6 +3820,26 @@
               ],
               "result_id": "alaindustrial:industrial_light",
               "result_count": 4
+            }
+          ]
+        },
+        {
+          "id": "reception_capsule",
+          "title": "受け入れカプセル",
+          "icon": "alaindustrial:reception_capsule",
+          "pages": [
+            {
+              "type": "text",
+              "title": "受け入れカプセル",
+              "text": "EU と素材と引き換えに、集落の交代要員を 1 人ずつ呼び戻します。集落コアが点灯していて、町に所有者がいて、交代要員の上限に達していないときだけ動きます。新しい交代要員はそれぞれ、ワールドで 1 つだけの自分の番号を受け取ります。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: 交代要員1人につき100 000 EU",
+                "バッファ: 200 000 EU"
+              ]
             }
           ]
         },
@@ -3933,6 +3869,36 @@
                 ""
               ],
               "result_id": "alaindustrial:guide_book",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluid_tap",
+          "title": "蛇口",
+          "icon": "alaindustrial:fluid_tap",
+          "pages": [
+            {
+              "type": "text",
+              "title": "蛇口",
+              "text": "タンクやパイプの端に付けるガラスの継手。液体をワールドへ出し、液体経験値はオーブにして返す。右クリックで開け閉めし、レッドストーンでも開く。"
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "minecraft:lever",
+                "",
+                "alaindustrial:fluid_pipe",
+                "",
+                "",
+                "minecraft:iron_ingot",
+                ""
+              ],
+              "result_id": "alaindustrial:fluid_tap",
               "result_count": 1
             }
           ]
@@ -4055,6 +4021,36 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "sound_absorber",
+          "title": "吸音材",
+          "icon": "alaindustrial:sound_absorber",
+          "pages": [
+            {
+              "type": "text",
+              "title": "吸音材",
+              "text": "焼き入れ鉄の枠、格子、詰め物でできたブロックで、周囲のブロックや環境の音を弱めます。面で接した吸音材はグループになり、グループが大きいほど静かな範囲は広く、効果も強くなります。"
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:note_block",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool"
+              ],
+              "result_id": "alaindustrial:sound_absorber",
+              "result_count": 2
             }
           ]
         },
@@ -4228,8 +4224,9 @@
               "title": "ステータス",
               "lines": [
                 "エネルギー: 100 EU/1回",
-                "バッファ: 4000 EU",
-                "半径: 6 ブロック"
+                "バッファ: 10000 EU",
+                "半径: 3 ブロック",
+                "引き寄せ範囲: 6 ブロック"
               ]
             },
             {
@@ -4285,6 +4282,44 @@
                 "alaindustrial:electrum_ingot"
               ],
               "result_id": "alaindustrial:electrum_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "settlement_core",
+          "title": "集落コア",
+          "icon": "alaindustrial:settlement_core",
+          "pages": [
+            {
+              "type": "text",
+              "title": "集落コア",
+              "text": "労働者の町の心臓で、役場に置かれています。ネットワークから EU が届いている間は集落の領地を保ち、町に建てられる家と交代要員の数を決め、所有者を覚えています。電力がないと消え、町は眠ります。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: 8 EU/t",
+                "バッファ: 2000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "alaindustrial:resonant_crystal",
+                "alaindustrial:reactor_circuit",
+                "alaindustrial:resonant_crystal",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:reinforced_bearing",
+                "alaindustrial:cesu",
+                "alaindustrial:reinforced_bearing"
+              ],
+              "result_id": "alaindustrial:settlement_core",
               "result_count": 1
             }
           ]
@@ -4551,7 +4586,7 @@
             {
               "type": "text",
               "title": "コアバレル",
-              "text": "コアバレルと柱状掘削モジュール — 電動ドリルに高さ3ブロック分を掘らせるアップグレードを組み立てる部品です。"
+              "text": "コアバレルと柱状・横列掘削モジュール — 電動ドリルに高さまたは幅3ブロック分を掘らせるアップグレード（両方で5ブロックの十字）を組み立てる部品です。"
             },
             {
               "type": "recipe",
@@ -4995,7 +5030,7 @@
             {
               "type": "text",
               "title": "エネルギー塊 I",
-              "text": "3等級の塊 — 送電網の余剰をエネルギー凝縮器が固めたもの。オーバークロックチップの唯一の材料だ。"
+              "text": "3等級の塊 — 送電網の余剰をエネルギー凝縮器が固めたもの。オーバークロックチップの主な材料で、II・III等級の塊はクリスタルにも使う。"
             }
           ]
         },

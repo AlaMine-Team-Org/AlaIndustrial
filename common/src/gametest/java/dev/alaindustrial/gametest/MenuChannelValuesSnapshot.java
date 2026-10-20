@@ -93,12 +93,12 @@ final class MenuChannelValuesSnapshot {
 			"lightning_rod_generator charged getters: energy=2000 capacity=4000 progress=0/1000",
 			"lightning_rod_generator charged menu[0]: getCapacitorPermille=0 getMode=0"
 					+ " getProductionRate=0",
-			"creative_energy_source placed [0]: 0 8192 0 0 1 128",
+			"creative_energy_source placed [0]: 0 8192 0 0 1 512",
 			"creative_energy_source placed getters: energy=0 capacity=8192 progress=0/0",
-			"creative_energy_source placed menu[0]: getOutputLimit=128 isSourceEnabled=true",
-			"creative_energy_source charged [0]: 4096 8192 0 0 1 128",
+			"creative_energy_source placed menu[0]: getOutputLimit=512 isSourceEnabled=true",
+			"creative_energy_source charged [0]: 4096 8192 0 0 1 512",
 			"creative_energy_source charged getters: energy=4096 capacity=8192 progress=0/0",
-			"creative_energy_source charged menu[0]: getOutputLimit=128 isSourceEnabled=true",
+			"creative_energy_source charged menu[0]: getOutputLimit=512 isSourceEnabled=true",
 			"mob_wheel_controller placed [0]: 0 12 0 0 0 0 0",
 			"mob_wheel_controller placed getters: energy=0 capacity=12 progress=0/0",
 			"mob_wheel_controller placed menu[0]: getProductionRate=0 getSpeedPercent=0"

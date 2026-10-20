@@ -1,0 +1,254 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "ceiling": "false",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_tap_wall"
+      }
+    },
+    {
+      "when": {
+        "ceiling": "false",
+        "facing": "south",
+        "open": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_tap_wall_lever_open"
+      }
+    },
+    {
+      "when": {
+        "ceiling": "false",
+        "facing": "south",
+        "open": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_tap_wall_lever_closed"
+      }
+    },
+    {
+      "when": {
+        "ceiling": "false",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_tap_wall",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "ceiling": "false",
+        "facing": "west",
+        "open": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_tap_wall_lever_open",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "ceiling": "false",
+        "facing": "west",
+        "open": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_tap_wall_lever_closed",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "ceiling": "false",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_tap_wall",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "ceiling": "false",
+        "facing": "north",
+        "open": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_tap_wall_lever_open",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "ceiling": "false",
+        "facing": "north",
+        "open": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_tap_wall_lever_closed",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "ceiling": "false",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_tap_wall",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "ceiling": "false",
+        "facing": "east",
+        "open": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_tap_wall_lever_open",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "ceiling": "false",
+        "facing": "east",
+        "open": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_tap_wall_lever_closed",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "ceiling": "true",
+        "facing": "south"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_tap_ceiling"
+      }
+    },
+    {
+      "when": {
+        "ceiling": "true",
+        "facing": "south",
+        "open": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_tap_ceiling_lever_open"
+      }
+    },
+    {
+      "when": {
+        "ceiling": "true",
+        "facing": "south",
+        "open": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_tap_ceiling_lever_closed"
+      }
+    },
+    {
+      "when": {
+        "ceiling": "true",
+        "facing": "west"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_tap_ceiling",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "ceiling": "true",
+        "facing": "west",
+        "open": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_tap_ceiling_lever_open",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "ceiling": "true",
+        "facing": "west",
+        "open": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_tap_ceiling_lever_closed",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "ceiling": "true",
+        "facing": "north"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_tap_ceiling",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "ceiling": "true",
+        "facing": "north",
+        "open": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_tap_ceiling_lever_open",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "ceiling": "true",
+        "facing": "north",
+        "open": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_tap_ceiling_lever_closed",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "ceiling": "true",
+        "facing": "east"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_tap_ceiling",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "ceiling": "true",
+        "facing": "east",
+        "open": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_tap_ceiling_lever_open",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "ceiling": "true",
+        "facing": "east",
+        "open": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/fluid_tap_ceiling_lever_closed",
+        "y": 270
+      }
+    }
+  ]
+}

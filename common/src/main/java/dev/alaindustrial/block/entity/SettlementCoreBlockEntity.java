@@ -12,6 +12,7 @@ import dev.alaindustrial.settlement.SettlementConfig;
 import dev.alaindustrial.settlement.SettlementCoreUpkeep;
 import dev.alaindustrial.settlement.SettlementRegistry;
 import dev.alaindustrial.settlement.SettlementTerritory;
+import dev.alaindustrial.settlement.shift.ShiftWorkerBattery;
 import dev.alaindustrial.settlement.shift.ShiftWorkers;
 import dev.alaindustrial.settlement.SettlementTier;
 import dev.alaindustrial.worldgen.town.TownFootprint;
@@ -36,6 +37,8 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jspecify.annotations.Nullable;
 
+// size-justified: the town's one ticking block — upkeep, territory, claiming, the second-core rule, screen sync
+// and its workers' recharge (MOD-854); the pure parts already live in SettlementCoreUpkeep and ShiftWorkerBattery.
 /**
  * The settlement core (MOD-831; epic MOD-824, decisions R5, R36, R37, R43, R44): the heart of an ALA town, standing
  * in its town hall. While it is paid its tier's upkeep in EU it is lit and the town holds its territory; without
@@ -106,6 +109,10 @@ public final class SettlementCoreBlockEntity extends MachineBlockEntity implemen
 	private int settlementId;
 	/** Whether the core is lit, and what it owes. Saved. */
 	private SettlementCoreUpkeep upkeep = new SettlementCoreUpkeep();
+	/** What the town's living workers drain per tick, rounded up (MOD-854); refreshed by every recharge. Not saved. */
+	private long workerDemand;
+	/** Lit ticks until the next recharge of the workers; the first lit tick recharges. Not saved. */
+	private int rechargeCountdown;
 	/** The town's tier as last read from the registry; the screen and the network's per-tick need read it. */
 	private SettlementTier tier = SettlementTier.FIRST;
 	/** A second core of a town whose core stands elsewhere (R43): dark, founding no town. Recomputed every tick. */
@@ -224,6 +231,9 @@ public final class SettlementCoreBlockEntity extends MachineBlockEntity implemen
 			setChanged();
 		}
 		boolean active = upkeep.active();
+		if (active) {
+			rechargeWorkers(serverLevel);
+		}
 		recordEuRate(active ? (int) Math.min(Integer.MAX_VALUE, drain) : 0);
 		if (active != wasActive) {
 			setChanged();
@@ -388,7 +398,8 @@ public final class SettlementCoreBlockEntity extends MachineBlockEntity implemen
 	 * GUI channels (MOD-712, BE-7): the base four, then whether the core is lit, whether it stands outside its
 	 * town, the tier, the territory's width and depth (MOD-848) and the limits, its upkeep and who owns the town —
 	 * all computed here, on the server, so a server that retuned its tiers shows its own numbers. Every value is a
-	 * block count or a small number well inside the short a channel carries.
+	 * block count or a small number well inside the short a channel carries. The core's position is not among them:
+	 * a roster request names no core, the server takes it from the requester's open menu (MOD-854).
 	 */
 	public enum Channel {
 		ENERGY, CAPACITY, PROGRESS, MAX_PROGRESS, ACTIVE, MISPLACED, TIER, TERRITORY_X, TERRITORY_Z, HOUSE_LIMIT,
@@ -490,9 +501,33 @@ public final class SettlementCoreBlockEntity extends MachineBlockEntity implemen
 		}
 	}
 
-	/** Its per-tick need for the network (MOD-789, ADR-049): its tier's upkeep, not the shared machine rate. */
+	/**
+	 * Its per-tick need for the network (MOD-789, ADR-049): its tier's upkeep, not the shared machine rate, plus what
+	 * its living workers drain (MOD-854) — the core pays their recharge on top of its upkeep.
+	 */
 	@Override
 	public long perTickDemand() {
-		return Math.max(1, tier.euPerTick());
+		return Math.max(1, tier.euPerTick()) + workerDemand;
+	}
+
+	/**
+	 * Recharges the town's workers once every {@link ShiftWorkerBattery#RECHARGE_INTERVAL} lit ticks (R67):
+	 * from what the buffer holds above {@code settlementCoreGraceTicks} ticks of upkeep, so the workers never eat the
+	 * reserve the upkeep needs, and drains what they took on top of the upkeep.
+	 */
+	private void rechargeWorkers(ServerLevel level) {
+		if (--rechargeCountdown > 0) {
+			return;
+		}
+		rechargeCountdown = ShiftWorkerBattery.RECHARGE_INTERVAL;
+		int living = ShiftWorkers.livingWorkers(level.getServer(), settlementId);
+		workerDemand = (long) Math.ceil(living * Math.max(0.0, SettlementConfig.shiftWorkerIdleEuPerTick));
+		long reserve = (long) Math.max(1, tier.euPerTick()) * Math.max(1, SettlementConfig.settlementCoreGraceTicks);
+		long used = ShiftWorkerBattery.recharge(level.getServer(), settlementId,
+				Math.max(0L, energy.getAmount() - reserve));
+		if (used > 0) {
+			energy.drainInternal(used);
+			setChanged();
+		}
 	}
 }

@@ -12,7 +12,9 @@ import dev.alaindustrial.item.fluid.ItemFluid;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.worldgen.OilLakeConfiguration;
 import dev.alaindustrial.worldgen.OilLakeFeature;
+import dev.alaindustrial.worldgen.OilLakePlacer;
 import dev.alaindustrial.worldgen.OilLakeShape;
+import it.unimi.dsi.fastutil.shorts.ShortList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
@@ -33,12 +35,18 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BucketPickup;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.entity.DispenserBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ImposterProtoChunk;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.chunk.PalettedContainerFactory;
+import net.minecraft.world.level.chunk.ProtoChunk;
+import net.minecraft.world.level.chunk.UpgradeData;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
@@ -85,6 +93,9 @@ public final class OilScenarios {
 		public static final List<RosterEntry> ENTRIES = List.of(
 				RosterEntry.of(OilScenarios::neg04HangingBasinIsRefused, "oil_hanging_basin_refused")
 						.fabricId("OilGameTest", "tcOil001Neg04_hangingBasinIsRefused").ticks(20, 40),
+				RosterEntry.of(OilScenarios::neg05PostProcessFlagOnlyOnProtoChunk,
+								"oil_post_process_flag_only_on_proto_chunk")
+						.fabricId("OilGameTest", "tcOil001Neg05_postProcessFlagOnlyOnProtoChunk"),
 				RosterEntry.of(OilScenarios::fun01BucketPlaceAndPickup, "oil_bucket_place_and_pickup")
 						.fabricId("OilGameTest", "tcOil001Fun01_bucketPlaceAndPickup").ticks(20, 60),
 				RosterEntry.of(OilScenarios::fun02CapsulePickupAndPlace, "oil_capsule_pickup_and_place")
@@ -1234,6 +1245,57 @@ public final class OilScenarios {
 				"a deposit whose whole basin floor is a cave must be refused, not sealed into a bowl");
 		helper.assertTrue(oilCells(helper) == 0,
 				"a refused site must not have written a single block");
+		helper.succeed();
+	}
+
+	/**
+	 * MOD-823 — the lake flags a cell for post-processing only on a chunk that keeps the flag.
+	 *
+	 * <p>{@link OilLakePlacer#markForPostProcessing} is the one door every flag of the lake goes through.
+	 * Three chunks: a real {@code ProtoChunk} — the chunk of an ordinary generation — must come out with
+	 * the cell in its post-processing list; a {@code LevelChunk} and an {@code ImposterProtoChunk} must not
+	 * be asked at all. The last two count the calls they receive: on {@code LevelChunk} a call is the WARN
+	 * line {@code ChunkAccess} writes (a chunk of the Distant Horizons SeedGen add-on inherits the same
+	 * default, which is how the bug reached a player), on the imposter it is a no-op worth skipping. Assert
+	 * only the two negatives and "never flag anything" would stay green; assert only the positive and the
+	 * old unconditional call would.
+	 *
+	 * @implements TC-OIL-001-NEG05 — the post-processing flag is set on a ProtoChunk and never asked of a
+	 * LevelChunk or an ImposterProtoChunk (MOD-823).
+	 */
+	public static void neg05PostProcessFlagOnlyOnProtoChunk(GameTestHelper helper) {
+		ServerLevel level = helper.getLevel();
+		BlockPos cell = helper.absolutePos(new BlockPos(1, 2, 1));
+		ChunkPos chunkPos = ChunkPos.containing(cell);
+
+		ProtoChunk proto = new ProtoChunk(chunkPos, UpgradeData.EMPTY, level,
+				PalettedContainerFactory.create(level.registryAccess()), null);
+		OilLakePlacer.markForPostProcessing(proto, cell);
+		ShortList flagged = proto.getPostProcessing()[proto.getSectionIndex(cell.getY())];
+		helper.assertTrue(flagged != null && flagged.size() == 1,
+				"a ProtoChunk must keep the flag: ordinary generation relies on it to drop hanging sand");
+
+		int[] levelChunkCalls = {0};
+		LevelChunk live = new LevelChunk(level, chunkPos) {
+			@Override
+			public void markPosForPostProcessing(BlockPos pos) {
+				levelChunkCalls[0]++;
+			}
+		};
+		OilLakePlacer.markForPostProcessing(live, cell);
+		helper.assertTrue(levelChunkCalls[0] == 0,
+				"a LevelChunk must not be asked to flag a cell: ChunkAccess answers with a WARN line per call");
+
+		int[] imposterCalls = {0};
+		ImposterProtoChunk imposter = new ImposterProtoChunk(new LevelChunk(level, chunkPos), true) {
+			@Override
+			public void markPosForPostProcessing(BlockPos pos) {
+				imposterCalls[0]++;
+			}
+		};
+		OilLakePlacer.markForPostProcessing(imposter, cell);
+		helper.assertTrue(imposterCalls[0] == 0,
+				"an ImposterProtoChunk is a ProtoChunk by type but drops the flag; it must not be asked");
 		helper.succeed();
 	}
 }

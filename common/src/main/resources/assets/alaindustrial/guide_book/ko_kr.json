@@ -1160,13 +1160,6 @@
               "text": "유체가 밀폐된 외벽을 통과할 수 있는 유일한 자리입니다. 양방향으로 작동하는 50 mB/틱 통로로 — 물은 안으로, 증기는 밖으로 — 그러면서도 온전한 벽 한 조각입니다."
             },
             {
-              "type": "stats",
-              "title": "정보",
-              "lines": [
-                "버퍼: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "레시피",
               "recipe_type": "정형 제작",
@@ -1232,13 +1225,6 @@
               "type": "text",
               "title": "원자로 레버",
               "text": "차폐 합금으로 만든 레버: 밀폐된 방 안에서 유지되는 신호 — 원자로의 비상 정지. 방의 차폐를 깨지 않고, 내용물과 함께 녹지도 않습니다."
-            },
-            {
-              "type": "stats",
-              "title": "정보",
-              "lines": [
-                "버퍼: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3190,13 +3176,6 @@
               "text": "마스트 위에서 회전하며 4블록 안에서 자라는 모든 것에 양액을 뿌리는 헤드. 모드에서 유일하게 EU를 전혀 소비하지 않는 기계 — 케이블을 연결할 수 없고, 양액만으로 작동합니다. 바닥이나 천장 아래에 설치할 수 있습니다."
             },
             {
-              "type": "stats",
-              "title": "정보",
-              "lines": [
-                "버퍼: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "레시피",
               "recipe_type": "정형 제작",
@@ -3357,13 +3336,6 @@
               "text": "바닐라를 본뜬 강화 철 건축 블록 네 가지 — 창살, 사다리, 다락문, 사슬. 바닐라처럼 동작하고 모드의 강철처럼 보입니다."
             },
             {
-              "type": "stats",
-              "title": "정보",
-              "lines": [
-                "버퍼: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "레시피",
               "recipe_type": "정형 제작",
@@ -3392,13 +3364,6 @@
               "type": "text",
               "title": "원자로 버튼",
               "text": "차폐 합금으로 만든 버튼입니다. 밀폐된 방 안에서 에어록에 펄스를 보내는 수단이며, 바닐라 버튼과 똑같이 만들어졌지만 이 방이 존재하는 이유를 견뎌 냅니다."
-            },
-            {
-              "type": "stats",
-              "title": "정보",
-              "lines": [
-                "버퍼: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3431,13 +3396,6 @@
               "text": "방이 완성되었을 때만 켜지는 외벽 블록입니다. 밀폐된 상자 안의 유일한 광원이자, 건물이 인정받았다는 것을 밖에서도 알 수 있는 표시입니다."
             },
             {
-              "type": "stats",
-              "title": "정보",
-              "lines": [
-                "버퍼: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "레시피",
               "recipe_type": "정형 제작",
@@ -3466,13 +3424,6 @@
               "type": "text",
               "title": "원자로 케이스",
               "text": "차폐 합금 판 — 원자로실의 밀폐 외벽을 쌓을 수 있는 유일한 재료입니다."
-            },
-            {
-              "type": "stats",
-              "title": "정보",
-              "lines": [
-                "버퍼: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3505,13 +3456,6 @@
               "text": "투명한 외벽 판입니다. 외장과 똑같이 벽으로 계산되지만, 유리는 외벽의 30 %를 넘을 수 없습니다. 그 이상이면 방은 격납이 아니라 진열장이 됩니다."
             },
             {
-              "type": "stats",
-              "title": "정보",
-              "lines": [
-                "버퍼: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "레시피",
               "recipe_type": "정형 제작",
@@ -3542,13 +3486,6 @@
               "text": "강화 철 틀에 끼운 투명한 유리 — 돌처럼 부서지고 크리퍼나 TNT 폭발을 견딥니다. 건축 블록이자 이후 제작법의 재료입니다."
             },
             {
-              "type": "stats",
-              "title": "정보",
-              "lines": [
-                "버퍼: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "레시피",
               "recipe_type": "정형 제작",
@@ -3577,13 +3514,6 @@
               "type": "text",
               "title": "원자로 에어록 문",
               "text": "원자로실로 들어가는 유일한 통로입니다. 레드스톤 펄스로만 열리고 2초 뒤 스스로 닫히며, 문간에 서 있는 사람을 향해 닫히는 일은 결코 없습니다."
-            },
-            {
-              "type": "stats",
-              "title": "정보",
-              "lines": [
-                "버퍼: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3718,13 +3648,6 @@
               "type": "text",
               "title": "저장 모듈",
               "text": "27칸 저장 블록: 서로 맞붙여 놓은 모듈은 하나의 창 뒤에서 최대 108칸의 단일 창고로 작동합니다."
-            },
-            {
-              "type": "stats",
-              "title": "정보",
-              "lines": [
-                "버퍼: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3881,13 +3804,6 @@
               "text": "4×4 픽셀 크기의 작은 조명으로 따뜻한 밝기 15 — 바닥, 천장, 어느 벽에나 설치할 수 있습니다. 메뉴도 에너지도 필요 없습니다."
             },
             {
-              "type": "stats",
-              "title": "정보",
-              "lines": [
-                "버퍼: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "레시피",
               "recipe_type": "정형 제작",
@@ -3904,6 +3820,26 @@
               ],
               "result_id": "alaindustrial:industrial_light",
               "result_count": 4
+            }
+          ]
+        },
+        {
+          "id": "reception_capsule",
+          "title": "수용 캡슐",
+          "icon": "alaindustrial:reception_capsule",
+          "pages": [
+            {
+              "type": "text",
+              "title": "수용 캡슐",
+              "text": "EU와 재료를 받고 정착지의 교대 근무자를 한 명씩 되돌려 놓습니다. 정착지 코어가 켜져 있고, 마을에 주인이 있으며, 근무자 한도에 이르지 않았을 때만 작동합니다. 새 근무자는 저마다 세계에서 하나뿐인 번호를 받습니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 근무자 1명당 100 000 EU",
+                "버퍼: 200 000 EU"
+              ]
             }
           ]
         },
@@ -3933,6 +3869,36 @@
                 ""
               ],
               "result_id": "alaindustrial:guide_book",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluid_tap",
+          "title": "수도꼭지",
+          "icon": "alaindustrial:fluid_tap",
+          "pages": [
+            {
+              "type": "text",
+              "title": "수도꼭지",
+              "text": "탱크나 파이프 끝에 다는 유리 이음관입니다. 액체를 월드로 내보내고 액체 경험치는 구슬로 돌려줍니다. 우클릭으로 열고 닫으며, 레드스톤으로도 열립니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "minecraft:lever",
+                "",
+                "alaindustrial:fluid_pipe",
+                "",
+                "",
+                "minecraft:iron_ingot",
+                ""
+              ],
+              "result_id": "alaindustrial:fluid_tap",
               "result_count": 1
             }
           ]
@@ -4055,6 +4021,36 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "sound_absorber",
+          "title": "흡음재",
+          "icon": "alaindustrial:sound_absorber",
+          "pages": [
+            {
+              "type": "text",
+              "title": "흡음재",
+              "text": "담금질 철 틀, 창살, 충전재로 만든 블록으로, 주변의 블록 소리와 환경음을 줄여 줍니다. 면으로 맞닿은 흡음재는 그룹을 이루며, 그룹이 클수록 조용한 구역이 넓고 강해집니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:note_block",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool"
+              ],
+              "result_id": "alaindustrial:sound_absorber",
+              "result_count": 2
             }
           ]
         },
@@ -4228,8 +4224,9 @@
               "title": "정보",
               "lines": [
                 "에너지: 100 EU/타격",
-                "버퍼: 4000 EU",
-                "반경: 6 블록"
+                "버퍼: 10000 EU",
+                "반경: 3 블록",
+                "끌어당김 범위: 6 블록"
               ]
             },
             {
@@ -4285,6 +4282,44 @@
                 "alaindustrial:electrum_ingot"
               ],
               "result_id": "alaindustrial:electrum_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "settlement_core",
+          "title": "정착지 코어",
+          "icon": "alaindustrial:settlement_core",
+          "pages": [
+            {
+              "type": "text",
+              "title": "정착지 코어",
+              "text": "노동자 마을의 시청에 있는 마을의 심장입니다. 전력망에서 EU를 받는 동안 정착지 영토를 유지하고, 마을에 둘 수 있는 집과 교대 근무자의 수를 정하며, 주인을 기억합니다. 전력이 없으면 꺼지고 마을은 잠듭니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 8 EU/t",
+                "버퍼: 2000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:resonant_crystal",
+                "alaindustrial:reactor_circuit",
+                "alaindustrial:resonant_crystal",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:reinforced_bearing",
+                "alaindustrial:cesu",
+                "alaindustrial:reinforced_bearing"
+              ],
+              "result_id": "alaindustrial:settlement_core",
               "result_count": 1
             }
           ]
@@ -4551,7 +4586,7 @@
             {
               "type": "text",
               "title": "코어 배럴",
-              "text": "코어 배럴과 기둥 굴착 모듈 — 전동 드릴이 세 블록 높이로 파게 하는 업그레이드를 만드는 부품입니다."
+              "text": "코어 배럴과 기둥·가로 굴착 모듈 — 전동 드릴이 세 블록 높이나 너비로 파게 하는 업그레이드(둘을 함께 쓰면 다섯 블록 십자)를 만드는 부품입니다."
             },
             {
               "type": "recipe",
@@ -4995,7 +5030,7 @@
             {
               "type": "text",
               "title": "에너지 응결체 I",
-              "text": "세 등급의 응결체 — 전력망의 잉여를 에너지 응축기가 단단히 굳힌 것입니다. 오버클럭 칩을 만드는 유일한 재료입니다."
+              "text": "세 등급의 응결체 — 전력망의 잉여를 에너지 응축기가 단단히 굳힌 것입니다. 오버클럭 칩의 주재료이며, II·III 등급 응결체는 크리스털에도 쓰입니다."
             }
           ]
         },

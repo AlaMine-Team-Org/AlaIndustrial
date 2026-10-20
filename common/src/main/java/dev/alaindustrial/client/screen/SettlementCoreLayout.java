@@ -70,7 +70,38 @@ public final class SettlementCoreLayout {
 
 	public static final String HINT = "settlement.alaindustrial.core.owner.hint";
 
+	/**
+	 * The roster tabs (MOD-854): «Shift workers» (the living and the dead waiting to come back) and «Closed» (the
+	 * dead for good), down the panel's left edge after the core's own tab. One row per worker — number, name, level,
+	 * status — under the heading; the wheel scrolls a longer list, a click opens the worker's card.
+	 */
+	public static final String TAB_CORE = "settlement.alaindustrial.core.tab.core";
+	public static final String TAB_WORKERS = "settlement.alaindustrial.core.tab.workers";
+	public static final String TAB_CLOSED = "settlement.alaindustrial.core.tab.closed";
+	public static final String ROSTER_EMPTY = "settlement.alaindustrial.core.roster.empty";
+	public static final String ROSTER_CLOSED_EMPTY = "settlement.alaindustrial.core.roster.closed_empty";
+	public static final String ROSTER_LOADING = "settlement.alaindustrial.core.roster.loading";
+	public static final String ROSTER_OPEN = "settlement.alaindustrial.core.roster.open";
+	/** A row's status word, by {@code ShiftWorkerRecord.Status} serialized name. */
+	public static final String ROSTER_STATUS = "settlement.alaindustrial.core.roster.status.";
+
+	public static final int ROSTER_LEFT = 7;
+	public static final int ROSTER_RIGHT = 169;
+	public static final int ROSTER_TOP = 19;
+	public static final int ROSTER_ROW = 11;
+	public static final int ROSTER_ROWS = 10;
+	/** Column starts inside a row: number, name, level, status. */
+	public static final int COL_NUMBER = 2;
+	public static final int COL_NAME = 36;
+	public static final int COL_LEVEL = 94;
+	public static final int COL_STATUS = 122;
+
 	private SettlementCoreLayout() {
+	}
+
+	/** How many rows a roster of {@code size} can scroll by. */
+	public static int maxRosterScroll(int size) {
+		return Math.max(0, size - ROSTER_ROWS);
 	}
 
 	public static int columnWidth() {

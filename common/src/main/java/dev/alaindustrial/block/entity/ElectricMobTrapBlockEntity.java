@@ -115,8 +115,8 @@ import net.minecraft.world.phys.Vec3;
  * ({@link StuckDropTracker}). The sweep is free: it is part of the trap's work. What the buffer or the tank
  * cannot hold stays in the world, and a buffer with no room stops the shocks.
  *
- * <p><b>Faces.</b> Cables join the four sides. The lid and the floor each expose the nine extract-only
- * slots and the extract-only tank; nothing can be put in by hand, hopper or pipe.
+ * <p><b>Faces</b> (MOD-855). The four sides and the floor each take energy and expose the nine extract-only
+ * slots and the extract-only tank; nothing can be put in by hand, hopper or pipe. The top takes nothing.
  */
 public class ElectricMobTrapBlockEntity extends MachineBlockEntity
 		implements MenuProvider, NoUpgradePanel, FluidPortHost {
@@ -649,22 +649,22 @@ public class ElectricMobTrapBlockEntity extends MachineBlockEntity
 		return slot >= 0 && slot < SLOT_COUNT;
 	}
 
-	/** Items leave through the lid and the floor only; the sides are for cables. */
+	/** Items leave through every face but the top, which takes nothing (MOD-855). */
 	@Override
 	public int[] getSlotsForFace(Direction side) {
-		return side.getAxis().isVertical() ? BUFFER_SLOTS : NO_SLOTS;
+		return side == Direction.UP ? NO_SLOTS : BUFFER_SLOTS;
 	}
 
-	/** Liquid experience leaves through the same two faces as the items. */
+	/** Liquid experience leaves through the same five faces as the items. */
 	@Override
 	public FluidPort fluidPort(Direction side) {
-		return side.getAxis().isVertical() ? xpTank : null;
+		return side == Direction.UP ? null : xpTank;
 	}
 
-	/** Energy comes in through the four sides; the lid and the floor are the output lines. */
+	/** Energy comes in through the same five faces; the top is where the mobs come from. */
 	@Override
 	public EnergyRole energyRoleForFace(Direction worldFace) {
-		return worldFace.getAxis().isHorizontal() ? EnergyRole.IN : EnergyRole.NONE;
+		return worldFace == Direction.UP ? EnergyRole.NONE : EnergyRole.IN;
 	}
 
 	// --- sync, menu, persistence ---

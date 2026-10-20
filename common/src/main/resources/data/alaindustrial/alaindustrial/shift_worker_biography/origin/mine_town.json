@@ -1,0 +1,10 @@
+{
+  "slot": "origin",
+  "key": "settlement.alaindustrial.bio.origin.mine_town",
+  "tags": [
+    "underground"
+  ],
+  "forbid": [
+    "surface_only"
+  ]
+}

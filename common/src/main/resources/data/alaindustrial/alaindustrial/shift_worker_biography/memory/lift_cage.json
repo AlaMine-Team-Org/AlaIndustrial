@@ -1,0 +1,10 @@
+{
+  "slot": "memory",
+  "key": "settlement.alaindustrial.bio.memory.lift_cage",
+  "tags": [
+    "underground"
+  ],
+  "forbid": [
+    "surface_only"
+  ]
+}

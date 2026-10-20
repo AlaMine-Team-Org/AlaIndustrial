@@ -113,8 +113,9 @@ public final class RecordNumberLedgerScenarios {
 
 	/**
 	 * The saved form, by hand, in the shape the file has: a number listed both live and closed reads back
-	 * closed, a string that is not a number is dropped instead of failing the whole ledger, and the result is
-	 * stable through another save.
+	 * closed, a string that is not a number is dropped instead of failing the whole ledger, a living number marked
+	 * for a new one (MOD-834) stays marked and a mark on a closed one is dropped, and the result is stable through
+	 * another save.
 	 *
 	 * @implements MOD-827-FORMAT-SAVE — the ledger's file reads as written; a tombstone is never undone.
 	 * @covers R-PER-01
@@ -123,17 +124,18 @@ public final class RecordNumberLedgerScenarios {
 		RegistryOps<Tag> ops = helper.getLevel().registryAccess().createSerializationContext(NbtOps.INSTANCE);
 		RecordNumberLedger ledger = RecordNumberLedger.CODEC.parse(ops, parse("{seed:5L,next:12,"
 				+ "live:[\"W-117\",\"not-a-number\",\"C-001\"],closed:[\"K-482\",\"W-117\"],players:[\"A-000\"],"
-				+ "labs:[304]}")).getOrThrow();
+				+ "labs:[304],renumber:[\"C-001\",\"W-117\"]}")).getOrThrow();
 		RecordNumber w117 = RecordNumber.parse("W-117").orElseThrow();
 		RecordNumber k482 = RecordNumber.parse("K-482").orElseThrow();
 		RecordNumber c001 = RecordNumber.parse("C-001").orElseThrow();
 		RecordNumber a000 = RecordNumber.parse("A-000").orElseThrow();
 		if (ledger.statusOf(w117) != RecordNumber.Status.CLOSED || ledger.statusOf(k482) != RecordNumber.Status.CLOSED
 				|| ledger.statusOf(c001) != RecordNumber.Status.LIVE || !ledger.isKnownPlayerCode(a000)
-				|| !ledger.isKnownLabNumber(304)) {
+				|| !ledger.isKnownLabNumber(304) || !ledger.dueForRenumbering().equals(List.of(c001))) {
 			helper.fail("hand-written ledger did not come back: W-117 " + ledger.statusOf(w117) + ", K-482 "
 					+ ledger.statusOf(k482) + ", C-001 " + ledger.statusOf(c001) + ", A-000 player "
-					+ ledger.isKnownPlayerCode(a000) + ", lab 304 " + ledger.isKnownLabNumber(304));
+					+ ledger.isKnownPlayerCode(a000) + ", lab 304 " + ledger.isKnownLabNumber(304) + ", marked "
+					+ ledger.dueForRenumbering());
 			return;
 		}
 		Tag first = RecordNumberLedger.CODEC.encodeStart(ops, ledger).getOrThrow();

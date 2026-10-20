@@ -7,6 +7,9 @@ import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.chunk.ImposterProtoChunk;
+import net.minecraft.world.level.chunk.ProtoChunk;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
@@ -254,6 +257,8 @@ public final class OilLakePlacer {
 	 * the walk vanilla's {@code Feature#markAboveForPostProcessing} does (a default method of the
 	 * {@code Feature} interface on 26.3, a protected method of the {@code Feature} class on 26.2, the same
 	 * bytecode on both by javap). It is restated here because the placer is not a {@code Feature}.
+	 * One step differs from vanilla: the flag goes through {@link #markForPostProcessing}, which skips a
+	 * chunk that cannot hold it (MOD-823).
 	 */
 	private static void markAboveForPostProcessing(WorldGenLevel level, BlockPos pos) {
 		BlockPos.MutableBlockPos above = pos.mutable();
@@ -262,7 +267,24 @@ public final class OilLakePlacer {
 			if (level.getBlockState(above).isAir()) {
 				return;
 			}
-			level.getChunk(above).markPosForPostProcessing(above);
+			markForPostProcessing(level.getChunk(above), above);
+		}
+	}
+
+	/**
+	 * Flags {@code pos} for the chunk's post-processing, but only on a chunk that keeps the flag: a
+	 * {@link ProtoChunk} that is not an {@link ImposterProtoChunk} (MOD-823).
+	 *
+	 * <p>Only {@code ProtoChunk} stores the position. {@code ImposterProtoChunk} drops it silently, and
+	 * every other chunk — {@code LevelChunk}, or a chunk a world generator of another mod builds, such as
+	 * the Distant Horizons SeedGen add-on — inherits {@code ChunkAccess}'s default, which writes a WARN
+	 * line per call and does nothing else. Under SeedGen that was millions of lines a minute and a log of
+	 * almost a gigabyte. Skipping such a chunk loses nothing, since the call there never did anything; on
+	 * an ordinary generation the chunk is a {@code ProtoChunk} and the flag is set exactly as before.
+	 */
+	public static void markForPostProcessing(ChunkAccess chunk, BlockPos pos) {
+		if (chunk instanceof ProtoChunk && !(chunk instanceof ImposterProtoChunk)) {
+			chunk.markPosForPostProcessing(pos);
 		}
 	}
 }

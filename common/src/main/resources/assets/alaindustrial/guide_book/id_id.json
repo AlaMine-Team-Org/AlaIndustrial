@@ -1160,13 +1160,6 @@
               "text": "Satu-satunya tempat fluida boleh menembus cangkang kedap: lintasan 50 mB/t yang bekerja dua arah — air masuk, uap keluar — dan tetap merupakan sepotong dinding utuh."
             },
             {
-              "type": "stats",
-              "title": "Statistik",
-              "lines": [
-                "Bufer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Resep",
               "recipe_type": "Pembuatan Berpola",
@@ -1232,13 +1225,6 @@
               "type": "text",
               "title": "Tuas Reaktor",
               "text": "Tuas dari paduan perisai: sinyal yang ditahan dari dalam ruangan tersegel — tombol darurat reaktor, yang tak merusak perisai ruangan maupun meleleh bersama isinya."
-            },
-            {
-              "type": "stats",
-              "title": "Statistik",
-              "lines": [
-                "Bufer: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3190,13 +3176,6 @@
               "text": "Kepala berputar di atas tiang yang menyemprotkan larutan nutrisi ke semua yang tumbuh dalam radius 4 blok. Satu-satunya mesin di mod yang sama sekali tidak menggunakan EU — tak ada kabel yang tersambung, dan hanya berjalan dengan larutan. Dipasang di lantai atau di bawah langit-langit."
             },
             {
-              "type": "stats",
-              "title": "Statistik",
-              "lines": [
-                "Bufer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Resep",
               "recipe_type": "Pembuatan Berpola",
@@ -3357,13 +3336,6 @@
               "text": "Empat blok bangunan dari besi tempa yang meniru versi vanilla — jeruji, tangga, pintu kolong, dan rantai. Berperilaku seperti vanilla dan tampak seperti baja mod."
             },
             {
-              "type": "stats",
-              "title": "Statistik",
-              "lines": [
-                "Bufer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Resep",
               "recipe_type": "Pembuatan Berpola",
@@ -3392,13 +3364,6 @@
               "type": "text",
               "title": "Tombol Reaktor",
               "text": "Tombol dari paduan pelindung: cara mengirim pulsa ke pintu kedap dari dalam ruang tertutup, dibuat persis seperti tombol vanilla tetapi sanggup bertahan terhadap alasan keberadaan ruang itu."
-            },
-            {
-              "type": "stats",
-              "title": "Statistik",
-              "lines": [
-                "Bufer: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3431,13 +3396,6 @@
               "text": "Blok cangkang yang menyala hanya setelah ruangan terbentuk: satu-satunya sumber cahaya di dalam kotak tertutup sekaligus tanda yang terlihat dari luar bahwa bangunan telah diterima."
             },
             {
-              "type": "stats",
-              "title": "Statistik",
-              "lines": [
-                "Bufer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Resep",
               "recipe_type": "Pembuatan Berpola",
@@ -3466,13 +3424,6 @@
               "type": "text",
               "title": "Rangka Reaktor",
               "text": "Panel paduan pelindung — satu-satunya bahan yang boleh dipakai membangun cangkang kedap ruang reaktor."
-            },
-            {
-              "type": "stats",
-              "title": "Statistik",
-              "lines": [
-                "Bufer: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3505,13 +3456,6 @@
               "text": "Panel cangkang transparan: ia dihitung sebagai dinding persis seperti pelapis, tetapi kaca tidak boleh lebih dari 30 % cangkang — lewat batas itu ruangan berhenti menjadi penahan dan berubah jadi lemari pajang."
             },
             {
-              "type": "stats",
-              "title": "Statistik",
-              "lines": [
-                "Bufer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Resep",
               "recipe_type": "Pembuatan Berpola",
@@ -3542,13 +3486,6 @@
               "text": "Kaca bening dalam bingkai besi tempa — pecah seperti batu dan tahan ledakan creeper atau TNT. Blok bangunan sekaligus bahan resep berikutnya."
             },
             {
-              "type": "stats",
-              "title": "Statistik",
-              "lines": [
-                "Bufer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Resep",
               "recipe_type": "Pembuatan Berpola",
@@ -3577,13 +3514,6 @@
               "type": "text",
               "title": "Pintu Kedap Reaktor",
               "text": "Satu-satunya jalan masuk ke ruang reaktor: pintu hanya terbuka oleh pulsa redstone, menutup sendiri dua detik kemudian, dan tidak pernah menutup menimpa siapa pun yang berdiri di ambangnya."
-            },
-            {
-              "type": "stats",
-              "title": "Statistik",
-              "lines": [
-                "Bufer: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3718,13 +3648,6 @@
               "type": "text",
               "title": "Modul Penyimpanan",
               "text": "Blok penyimpanan 27 slot: modul yang dipasang saling menempel bekerja sebagai satu gudang hingga 108 slot di balik satu jendela."
-            },
-            {
-              "type": "stats",
-              "title": "Statistik",
-              "lines": [
-                "Bufer: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3881,13 +3804,6 @@
               "text": "Lampu mungil 4×4 piksel dengan cahaya hangat tingkat 15 — pasang di lantai, langit-langit, atau dinding mana pun. Tanpa menu, tanpa energi."
             },
             {
-              "type": "stats",
-              "title": "Statistik",
-              "lines": [
-                "Bufer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Resep",
               "recipe_type": "Pembuatan Berpola",
@@ -3904,6 +3820,26 @@
               ],
               "result_id": "alaindustrial:industrial_light",
               "result_count": 4
+            }
+          ]
+        },
+        {
+          "id": "reception_capsule",
+          "title": "Kapsul Penerimaan",
+          "icon": "alaindustrial:reception_capsule",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kapsul Penerimaan",
+              "text": "Mengembalikan pekerja sif sebuah permukiman satu per satu dengan EU dan bahan — hanya selama inti permukiman menyala, kota punya pemilik, dan batas pekerjanya belum tercapai; setiap pekerja baru mendapat nomornya sendiri yang unik di seluruh dunia."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Energi: 100 000 EU per pekerja",
+                "Bufer: 200 000 EU"
+              ]
             }
           ]
         },
@@ -3933,6 +3869,36 @@
                 ""
               ],
               "result_id": "alaindustrial:guide_book",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluid_tap",
+          "title": "Keran",
+          "icon": "alaindustrial:fluid_tap",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Keran",
+              "text": "Sambungan kaca pada tangki atau di ujung pipa. Mengeluarkan fluida ke dunia dan mengembalikan pengalaman cair sebagai bola. Klik kanan membuka dan menutupnya, redstone juga membukanya."
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "minecraft:lever",
+                "",
+                "alaindustrial:fluid_pipe",
+                "",
+                "",
+                "minecraft:iron_ingot",
+                ""
+              ],
+              "result_id": "alaindustrial:fluid_tap",
               "result_count": 1
             }
           ]
@@ -4055,6 +4021,36 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "sound_absorber",
+          "title": "Peredam Suara",
+          "icon": "alaindustrial:sound_absorber",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Peredam Suara",
+              "text": "Blok berbingkai besi temper dengan kisi dan bantalan yang meredam suara blok dan lingkungan di sekitarnya; peredam yang bersentuhan pada satu sisi membentuk kelompok, dan makin besar kelompoknya, makin luas dan kuat zona sunyinya."
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:note_block",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool"
+              ],
+              "result_id": "alaindustrial:sound_absorber",
+              "result_count": 2
             }
           ]
         },
@@ -4228,8 +4224,9 @@
               "title": "Statistik",
               "lines": [
                 "Energi: 100 EU/sengatan",
-                "Bufer: 4000 EU",
-                "Radius: 6 blok"
+                "Bufer: 10000 EU",
+                "Radius: 3 blok",
+                "Zona tarik: 6 blok"
               ]
             },
             {
@@ -4285,6 +4282,44 @@
                 "alaindustrial:electrum_ingot"
               ],
               "result_id": "alaindustrial:electrum_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "settlement_core",
+          "title": "Inti Permukiman",
+          "icon": "alaindustrial:settlement_core",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Inti Permukiman",
+              "text": "Jantung sebuah kota pekerja yang berdiri di balai kotanya — selama jaringan memberinya EU, inti ini menjaga wilayah permukiman, menentukan berapa banyak rumah dan pekerja sif yang boleh dimiliki kota itu, dan mengingat pemiliknya; tanpa daya ia padam dan kota tertidur."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Energi: 8 EU/t",
+                "Bufer: 2000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "alaindustrial:resonant_crystal",
+                "alaindustrial:reactor_circuit",
+                "alaindustrial:resonant_crystal",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:reinforced_bearing",
+                "alaindustrial:cesu",
+                "alaindustrial:reinforced_bearing"
+              ],
+              "result_id": "alaindustrial:settlement_core",
               "result_count": 1
             }
           ]
@@ -4551,7 +4586,7 @@
             {
               "type": "text",
               "title": "Tabung inti",
-              "text": "Tabung inti dan Modul bor kolom — komponen untuk merakit peningkatan yang membuat bor listrik menggali setinggi tiga blok."
+              "text": "Tabung inti serta Modul bor kolom dan Modul bor baris — komponen untuk merakit peningkatan yang membuat bor listrik menggali setinggi atau selebar tiga blok (keduanya bersama: salib lima blok)."
             },
             {
               "type": "recipe",
@@ -4995,7 +5030,7 @@
             {
               "type": "text",
               "title": "Gumpalan Energi I",
-              "text": "Tiga tingkat gumpalan — kelebihan jaringan yang dibekukan oleh kondensor energi. Satu-satunya bahan pembuat chip percepatan."
+              "text": "Tiga tingkat gumpalan — kelebihan jaringan yang dibekukan oleh kondensor energi. Bahan utama chip percepatan; gumpalan tingkat II dan III juga dipakai untuk kristal."
             }
           ]
         },

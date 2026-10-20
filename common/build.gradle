@@ -312,6 +312,8 @@ pitest {
                      // MOD-672: the cable arm's reach into the assembled teleporter. MC-free so its
                      // L1 suite (TeleporterCableArmTest) can re-measure the model and pin it.
                      'dev.alaindustrial.block.TeleporterCableArm',
+                     // MOD-855: the same for the Electric Mob Trap (ElectricMobTrapCableArmTest).
+                     'dev.alaindustrial.block.ElectricMobTrapCableArm',
                      // MOD-473: the datapack names of the reactor advancement steps. MC-free so the
                      // name<->constant mapping the JSON depends on can be asserted on the L1 lane
                      // (ReactorMilestoneTest); added here WITH the class, not a release later.
@@ -487,6 +489,16 @@ pitest {
                      'dev.alaindustrial.settlement.shift.PathQuota',
                      'dev.alaindustrial.settlement.shift.ShiftMode',
                      'dev.alaindustrial.settlement.shift.ShiftSchedule*',
+                     // MOD-834: when a worker marked for a new number may get it — Minecraft-free, listed WITH its
+                     // L1 suite (RenumberWindowTest); the glob reaches the nested Body and Observer.
+                     'dev.alaindustrial.settlement.shift.RenumberWindow*',
+                     // MOD-854: the shift worker's level, points, capacity and health arithmetic — Minecraft-free,
+                     // listed WITH its L1 suite (ShiftWorkerLevelsTest).
+                     'dev.alaindustrial.settlement.shift.ShiftWorkerLevels',
+                     // MOD-854: the biography rule and the town facts it quotes — Minecraft-free, listed WITH their
+                     // L1 suite (BiographyPickTest); the glob reaches the nested Candidate and Line.
+                     'dev.alaindustrial.settlement.shift.BiographyPick*',
+                     'dev.alaindustrial.settlement.shift.TownFacts',
                      // MOD-833: the reception capsule's price, refusals and progress — Minecraft-free on purpose,
                      // listed WITH its L1 suite (ReceptionCapsuleRulesTest). The glob reaches the nested Material,
                      // Verdict and Situation; ShiftWorkerHost beside it carries Minecraft types and stays out.
@@ -511,6 +523,9 @@ pitest {
                      // with. The glob reaches the nested Fit record.
                      'dev.alaindustrial.client.screen.TextFit*',
                      'dev.alaindustrial.client.screen.SettlementCoreLayout',
+                     // MOD-854: where the shift worker's card puts its modules — Minecraft-free, L1 suite
+                     // ShiftWorkerCardLayoutTest.
+                     'dev.alaindustrial.client.screen.shiftworker.ShiftWorkerCardLayout',
                      // MOD-843: the settlement border shell (walls on the territory edge, floor, ceiling or dome) —
                      // Minecraft-free, L1 suite SettlementShellTest. The glob reaches the nested Point, Box, Sink.
                      'dev.alaindustrial.settlement.SettlementShell*'
@@ -566,6 +581,11 @@ pitest {
             // is nothing to mutate either: two abstract accessors, no behaviour. What a frame
             // may contain is decided in KokSagyzRoots and covered by the kok sagyz game tests.
             'dev.alaindustrial.client.render.RootInspectionState',
+            // MOD-854: the client end of the shift worker's card and roster. Since the roster request names no
+            // core it imports no net.minecraft type itself, but every operation sends or keeps a payload record
+            // (StreamCodec, CustomPacketPayload) through NetworkDispatcher — types common/'s test classpath does
+            // not carry, so L1 cannot call it. Its behaviour is what the core screen shows (the L3 roster frame).
+            'dev.alaindustrial.client.screen.shiftworker.ShiftWorkerCardClient',
             // MOD-452: the one place both loaders register the mod's item tint sources. It names no
             // net.minecraft type itself, but each call lands in vanilla's late-bound ItemTintSources
             // registry, which common/'s test classpath does not carry, so L1 cannot run it. Nor is

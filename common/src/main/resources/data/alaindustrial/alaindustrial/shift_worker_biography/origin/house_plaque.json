@@ -1,0 +1,8 @@
+{
+  "slot": "origin",
+  "key": "settlement.alaindustrial.bio.origin.house_plaque",
+  "substitutions": [
+    "plaque"
+  ],
+  "clue": "alaindustrial:why_numbers"
+}

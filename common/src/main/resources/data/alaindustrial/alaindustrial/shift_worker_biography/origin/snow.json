@@ -1,0 +1,10 @@
+{
+  "slot": "origin",
+  "key": "settlement.alaindustrial.bio.origin.snow",
+  "tags": [
+    "snow"
+  ],
+  "forbid": [
+    "desert"
+  ]
+}

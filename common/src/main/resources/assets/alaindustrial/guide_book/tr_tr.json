@@ -1160,13 +1160,6 @@
               "text": "Bir sıvının mühürlü kabuğu geçebileceği tek yer: iki yönde de çalışan 50 mB/t'lik bir geçiş — su içeri, buhar dışarı — ve yine de tam anlamıyla bir duvar parçası."
             },
             {
-              "type": "stats",
-              "title": "İstatistikler",
-              "lines": [
-                "Tampon: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Tarif",
               "recipe_type": "Şekilli Üretim",
@@ -1232,13 +1225,6 @@
               "type": "text",
               "title": "Reaktör Kolu",
               "text": "Koruyucu alaşımdan bir kol: mühürlü bir odanın içinden tutulan bir sinyal — reaktörün acil durdurması; odanın kalkanını bozmaz, içeriğiyle birlikte erimez de."
-            },
-            {
-              "type": "stats",
-              "title": "İstatistikler",
-              "lines": [
-                "Tampon: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3190,13 +3176,6 @@
               "text": "Bir direk üzerinde dönerek 4 blok içinde büyüyen her şeyin üzerine besin çözeltisi serpen başlık. Modda hiç EU çekmeyen tek makine — kablo bağlanmaz, yalnızca çözeltiyle çalışır. Yere veya tavana monte edilir."
             },
             {
-              "type": "stats",
-              "title": "İstatistikler",
-              "lines": [
-                "Tampon: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Tarif",
               "recipe_type": "Şekilli Üretim",
@@ -3357,13 +3336,6 @@
               "text": "Vanilya örneklerine göre yapılmış dört su verilmiş demir yapı bloğu — parmaklık, merdiven, kapak ve zincir. Vanilya gibi davranır, modun çeliği gibi görünür."
             },
             {
-              "type": "stats",
-              "title": "İstatistikler",
-              "lines": [
-                "Tampon: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Tarif",
               "recipe_type": "Şekilli Üretim",
@@ -3392,13 +3364,6 @@
               "type": "text",
               "title": "Reaktör Düğmesi",
               "text": "Koruyucu alaşımdan bir düğme: mühürlü bir odanın içinden hava kilidine darbe göndermenin yolu; tıpkı bir vanilla düğmesi gibi yapılmıştır ama odanın var oluş nedenine dayanabilir."
-            },
-            {
-              "type": "stats",
-              "title": "İstatistikler",
-              "lines": [
-                "Tampon: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3431,13 +3396,6 @@
               "text": "Yalnızca oda kurulduğunda yanan bir kabuk bloğu: mühürlü bir kutunun içindeki tek ışık kaynağı ve aynı zamanda yapının kabul edildiğini dışarıdan gösteren bir işaret."
             },
             {
-              "type": "stats",
-              "title": "İstatistikler",
-              "lines": [
-                "Tampon: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Tarif",
               "recipe_type": "Şekilli Üretim",
@@ -3466,13 +3424,6 @@
               "type": "text",
               "title": "Reaktör Gövdesi",
               "text": "Koruyucu alaşımdan bir panel — bir reaktör odasının mühürlü kabuğunun yapılabileceği tek malzeme."
-            },
-            {
-              "type": "stats",
-              "title": "İstatistikler",
-              "lines": [
-                "Tampon: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3505,13 +3456,6 @@
               "text": "Şeffaf bir kabuk paneli: tıpkı kaplama gibi duvar sayılır, ancak bir kabuğun en fazla %30'u cam olabilir — bunun ötesinde oda bir muhafaza olmaktan çıkıp vitrine döner."
             },
             {
-              "type": "stats",
-              "title": "İstatistikler",
-              "lines": [
-                "Tampon: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Tarif",
               "recipe_type": "Şekilli Üretim",
@@ -3542,13 +3486,6 @@
               "text": "Sertleştirilmiş demir çerçevede şeffaf cam — taş gibi kırılır ve creeper ya da TNT patlamasına dayanır. Bir yapı bloğu ve sonraki tarifler için bir malzeme."
             },
             {
-              "type": "stats",
-              "title": "İstatistikler",
-              "lines": [
-                "Tampon: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Tarif",
               "recipe_type": "Şekilli Üretim",
@@ -3577,13 +3514,6 @@
               "type": "text",
               "title": "Reaktör Hava Kilidi Kapısı",
               "text": "Bir reaktör odasına giden tek yol: yalnızca bir redstone darbesiyle açılır, iki saniye sonra kendiliğinden kapanır ve kapı boşluğunda duranın üzerine asla kapanmaz."
-            },
-            {
-              "type": "stats",
-              "title": "İstatistikler",
-              "lines": [
-                "Tampon: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3718,13 +3648,6 @@
               "type": "text",
               "title": "Depolama Modülü",
               "text": "27 yuvalı bir depolama bloğu: birbirine bitişik yerleştirilen modüller, tek pencere arkasında 108 yuvaya kadar tek bir ambar gibi çalışır."
-            },
-            {
-              "type": "stats",
-              "title": "İstatistikler",
-              "lines": [
-                "Tampon: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3881,13 +3804,6 @@
               "text": "Sıcak ışık seviyesi 15 olan 4×4 piksellik minik bir lamba — zemine, tavana ya da herhangi bir duvara. Menü yok, enerji yok."
             },
             {
-              "type": "stats",
-              "title": "İstatistikler",
-              "lines": [
-                "Tampon: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Tarif",
               "recipe_type": "Şekilli Üretim",
@@ -3904,6 +3820,26 @@
               ],
               "result_id": "alaindustrial:industrial_light",
               "result_count": 4
+            }
+          ]
+        },
+        {
+          "id": "reception_capsule",
+          "title": "Karşılama Kapsülü",
+          "icon": "alaindustrial:reception_capsule",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Karşılama Kapsülü",
+              "text": "Bir yerleşimin vardiya işçilerini EU ve malzeme karşılığında birer birer geri getirir — yalnızca yerleşim çekirdeği yanarken, kasabanın bir sahibi varken ve işçi sınırına ulaşılmamışken; her yeni işçi dünyada tek olan kendi numarasını alır."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: işçi başına 100 000 EU",
+                "Tampon: 200 000 EU"
+              ]
             }
           ]
         },
@@ -3933,6 +3869,36 @@
                 ""
               ],
               "result_id": "alaindustrial:guide_book",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluid_tap",
+          "title": "Musluk",
+          "icon": "alaindustrial:fluid_tap",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Musluk",
+              "text": "Bir tanka ya da borunun ucuna takılan cam bir bağlantı parçası. Sıvıyı dünyaya bırakır, sıvı deneyimi küre olarak geri verir. Sağ tık açar ve kapatır, kızıltaş da açar."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "minecraft:lever",
+                "",
+                "alaindustrial:fluid_pipe",
+                "",
+                "",
+                "minecraft:iron_ingot",
+                ""
+              ],
+              "result_id": "alaindustrial:fluid_tap",
               "result_count": 1
             }
           ]
@@ -4055,6 +4021,36 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "sound_absorber",
+          "title": "Ses Emici",
+          "icon": "alaindustrial:sound_absorber",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Ses Emici",
+              "text": "Su verilmiş demirden bir çerçeve, bir ızgara ve dolgudan oluşan, çevresindeki blok ve ortam seslerini kısan bir blok; bir yüzüyle birbirine değen emiciler bir grup oluşturur ve grup büyüdükçe sessiz bölge genişler ve güçlenir."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:note_block",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool"
+              ],
+              "result_id": "alaindustrial:sound_absorber",
+              "result_count": 2
             }
           ]
         },
@@ -4228,8 +4224,9 @@
               "title": "İstatistikler",
               "lines": [
                 "Enerji: darbe başına 100 EU",
-                "Tampon: 4000 EU",
-                "Yarıçap: 6 blok"
+                "Tampon: 10000 EU",
+                "Yarıçap: 3 blok",
+                "Çekim bölgesi: 6 blok"
               ]
             },
             {
@@ -4285,6 +4282,44 @@
                 "alaindustrial:electrum_ingot"
               ],
               "result_id": "alaindustrial:electrum_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "settlement_core",
+          "title": "Yerleşim Çekirdeği",
+          "icon": "alaindustrial:settlement_core",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Yerleşim Çekirdeği",
+              "text": "Belediye binasında duran işçi kasabasının kalbi — şebeke ona EU verdiği sürece yerleşimin bölgesini korur, kasabada kaç ev ve vardiya işçisi olabileceğini belirler ve sahibini hatırlar; enerji yoksa söner ve kasaba uykuya dalar."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: 8 EU/t",
+                "Tampon: 2000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:resonant_crystal",
+                "alaindustrial:reactor_circuit",
+                "alaindustrial:resonant_crystal",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:reinforced_bearing",
+                "alaindustrial:cesu",
+                "alaindustrial:reinforced_bearing"
+              ],
+              "result_id": "alaindustrial:settlement_core",
               "result_count": 1
             }
           ]
@@ -4551,7 +4586,7 @@
             {
               "type": "text",
               "title": "Karot borusu",
-              "text": "Karot borusu ve sütun delme modülü — bir matkabın üç blok yüksekliğinde kazmasını sağlayan yükseltmenin yapıldığı parçalar."
+              "text": "Karot borusu ile sütun ve sıra delme modülleri — bir matkabın üç blok yüksekliğinde ya da genişliğinde kazmasını sağlayan yükseltmenin (ikisi birlikte beş bloklu bir haç) yapıldığı parçalar."
             },
             {
               "type": "recipe",
@@ -4995,7 +5030,7 @@
             {
               "type": "text",
               "title": "Enerji Pıhtısı I",
-              "text": "Üç kademe pıhtı — şebekenin fazlası, enerji yoğunlaştırıcı tarafından katılaştırılmış hâli. Hızlandırma çiplerinin yapıldığı tek malzeme."
+              "text": "Üç kademe pıhtı — şebekenin fazlası, enerji yoğunlaştırıcı tarafından katılaştırılmış hâli. Hızlandırma çiplerinin ana malzemesi; II. ve III. kademe pıhtılar kristallere de girer."
             }
           ]
         },

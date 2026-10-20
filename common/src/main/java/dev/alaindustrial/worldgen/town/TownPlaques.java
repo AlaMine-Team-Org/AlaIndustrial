@@ -55,19 +55,7 @@ final class TownPlaques {
 	/** Engraves the plaques of {@code piece} that fall into {@code chunkBox}, and reports their numbers. */
 	static void engrave(WorldGenLevel level, StructureTemplateManager templates, PoolElementStructurePiece piece,
 			BoundingBox chunkBox) {
-		if (!(piece.getElement() instanceof SinglePoolElement single)
-				|| single.getProjection() != StructureTemplatePool.Projection.RIGID) {
-			return;
-		}
-		StructureTemplate template = templates.getOrCreate(single.getTemplateLocation());
-		StructurePlaceSettings settings = new StructurePlaceSettings().setRotation(piece.getRotation());
-		Map<BlockPos, BlockState> plates = new HashMap<>();
-		for (Supplier<Block> plate : plateBlocks()) {
-			for (StructureTemplate.StructureBlockInfo info : template.filterBlocks(piece.getPosition(), settings,
-					plate.get())) {
-				plates.put(info.pos(), info.state());
-			}
-		}
+		Map<BlockPos, BlockState> plates = plates(templates, piece);
 		for (List<BlockPos> plaque : plaques(plates)) {
 			BlockPos anchor = plaque.getFirst();
 			Direction facing = plates.get(anchor).getValue(HorizontalDirectionalBlock.FACING);
@@ -87,6 +75,45 @@ final class TownPlaques {
 				report(level, number);
 			}
 		}
+	}
+
+	/**
+	 * The numbers the whole plaques of {@code piece} show — those that kept all three digit plates — in the world with
+	 * {@code worldSeed}: what a shift worker's biography may quote (MOD-854). A plaque that fell with a collapsed
+	 * corner shows only the last digits of its number and is left out.
+	 */
+	static List<RecordNumber> wholePlaqueNumbers(long worldSeed, StructureTemplateManager templates,
+			PoolElementStructurePiece piece) {
+		Map<BlockPos, BlockState> plates = plates(templates, piece);
+		List<RecordNumber> numbers = new ArrayList<>();
+		for (List<BlockPos> plaque : plaques(plates)) {
+			long digitPlates = plaque.stream().filter(pos -> !isBrokenLetter(plates.get(pos))).count();
+			if (digitPlates == PLATES - 1) {
+				BlockPos anchor = plaque.getFirst();
+				numbers.add(RecordNumberLedger.formerResidentAt(worldSeed, anchor.getX(), anchor.getY(),
+						anchor.getZ()));
+			}
+		}
+		return numbers;
+	}
+
+	/** The plaque plates of {@code piece}'s template as placed, or none for a piece that is not a rigid template. */
+	private static Map<BlockPos, BlockState> plates(StructureTemplateManager templates,
+			PoolElementStructurePiece piece) {
+		Map<BlockPos, BlockState> plates = new HashMap<>();
+		if (!(piece.getElement() instanceof SinglePoolElement single)
+				|| single.getProjection() != StructureTemplatePool.Projection.RIGID) {
+			return plates;
+		}
+		StructureTemplate template = templates.getOrCreate(single.getTemplateLocation());
+		StructurePlaceSettings settings = new StructurePlaceSettings().setRotation(piece.getRotation());
+		for (Supplier<Block> plate : plateBlocks()) {
+			for (StructureTemplate.StructureBlockInfo info : template.filterBlocks(piece.getPosition(), settings,
+					plate.get())) {
+				plates.put(info.pos(), info.state());
+			}
+		}
+		return plates;
 	}
 
 	/**

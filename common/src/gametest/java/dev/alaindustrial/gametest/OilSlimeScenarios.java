@@ -36,6 +36,7 @@ public final class OilSlimeScenarios {
 	public static final class Roster {
 		public static final List<RosterEntry> ENTRIES = List.of(
 				RosterEntry.of(OilSlimeScenarios::isRegisteredWithAttributesAndSpawns, "oil_slime_is_registered"),
+				RosterEntry.of(OilSlimeScenarios::naturalSpawnIsListedOnce, "oil_slime_spawn_listed_once"),
 				RosterEntry.of(OilSlimeScenarios::slimeInOilTurnsKeepingItsSize, "oil_slime_soak_turns_slime"),
 				RosterEntry.of(OilSlimeScenarios::leavingTheOilStartsTheSoakAgain, "oil_slime_soak_restarts"),
 				RosterEntry.of(OilSlimeScenarios::knobOffLeavesSlimesAlone, "oil_slime_knob_off_no_turn"),
@@ -98,6 +99,26 @@ public final class OilSlimeScenarios {
 		helper.assertTrue(monsters.contains(type),
 				"the Overworld biome under the test does not list the oil slime among its monsters: " + monsters);
 		helper.assertTrue(ModContent.OIL_SLIME_SPAWN_EGG.get() != null, "the spawn egg is missing");
+		helper.succeed();
+	}
+
+	/**
+	 * The biome under the test lists the oil slime among its monsters exactly once. A second entry is a second
+	 * lottery ticket: the spawn weight doubles while every entry still reads the declared weight. Fabric adds
+	 * the spawn in code ({@code BiomeModifications.addSpawn}, which appends without deduplication), NeoForge
+	 * from the {@code add_spawns} biome modifier JSON; both must end up with one entry.
+	 *
+	 * @implements MOD-840-ONCE — the oil slime's natural spawn is added to a biome once, so its weight is the
+	 *     declared one on both loaders
+	 * @covers MOD-840
+	 */
+	public static void naturalSpawnIsListedOnce(GameTestHelper helper) {
+		EntityType<OilSlime> type = ModMobs.OIL_SLIME.type();
+		List<EntityType<?>> monsters = MobSpawns.typesAt(helper.getLevel(), MobCategory.MONSTER,
+				helper.absolutePos(POOL));
+		long entries = monsters.stream().filter(listed -> listed == type).count();
+		helper.assertTrue(entries == 1, "the biome under the test lists the oil slime " + entries
+				+ " times among its monsters, expected once: " + monsters);
 		helper.succeed();
 	}
 

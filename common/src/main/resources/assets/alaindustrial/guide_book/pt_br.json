@@ -1160,13 +1160,6 @@
               "text": "O único lugar por onde um fluido pode atravessar um casco vedado: uma passagem de 50 mB/t que funciona nos dois sentidos — água para dentro, vapor para fora — e ainda assim continua sendo um pedaço inteiro de parede."
             },
             {
-              "type": "stats",
-              "title": "Estatísticas",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Receita",
               "recipe_type": "Fabricação com forma",
@@ -1232,13 +1225,6 @@
               "type": "text",
               "title": "Alavanca do Reator",
               "text": "Uma alavanca de liga de blindagem: um sinal mantido de dentro de uma sala selada — a parada de emergência do reator, que nem rompe a blindagem da sala nem derrete com seu conteúdo."
-            },
-            {
-              "type": "stats",
-              "title": "Estatísticas",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3190,13 +3176,6 @@
               "text": "Uma cabeça giratória num mastro que borrifa solução nutritiva sobre tudo que cresce num raio de 4 blocos. A única máquina do mod que não consome EU algum — nenhum cabo se conecta a ela, e ela funciona só com a solução. Monta-se no chão ou sob o teto."
             },
             {
-              "type": "stats",
-              "title": "Estatísticas",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Receita",
               "recipe_type": "Fabricação com forma",
@@ -3357,13 +3336,6 @@
               "text": "Quatro peças de construção de ferro temperado inspiradas nas do vanilla: grades, escada de mão, alçapão e corrente. Funcionam como as do vanilla e têm a cara do aço do mod."
             },
             {
-              "type": "stats",
-              "title": "Estatísticas",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Receita",
               "recipe_type": "Fabricação com forma",
@@ -3392,13 +3364,6 @@
               "type": "text",
               "title": "Botão de Reator",
               "text": "Um botão de liga de blindagem: o jeito de mandar um pulso para a eclusa de dentro de uma sala vedada, construído igualzinho a um botão vanilla, mas capaz de aguentar aquilo para o que a sala existe."
-            },
-            {
-              "type": "stats",
-              "title": "Estatísticas",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3431,13 +3396,6 @@
               "text": "Um bloco de casco que só acende quando a sala está formada: a única fonte de luz dentro de uma caixa vedada e, ao mesmo tempo, um sinal visível de fora de que a construção foi aceita."
             },
             {
-              "type": "stats",
-              "title": "Estatísticas",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Receita",
               "recipe_type": "Fabricação com forma",
@@ -3466,13 +3424,6 @@
               "type": "text",
               "title": "Estrutura de Reator",
               "text": "Um painel de liga de blindagem — o único material com que se pode erguer o casco vedado de uma sala de reator."
-            },
-            {
-              "type": "stats",
-              "title": "Estatísticas",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3505,13 +3456,6 @@
               "text": "Um painel de casco transparente: conta como parede exatamente como o revestimento, mas no máximo 30 % de um casco pode ser vidro — passando disso a sala deixa de ser contenção e vira vitrine."
             },
             {
-              "type": "stats",
-              "title": "Estatísticas",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Receita",
               "recipe_type": "Fabricação com forma",
@@ -3542,13 +3486,6 @@
               "text": "Vidro transparente numa moldura de ferro temperado: quebra como pedra e aguenta a explosão de um creeper ou de TNT. Um bloco de construção e ingrediente de receitas futuras."
             },
             {
-              "type": "stats",
-              "title": "Estatísticas",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Receita",
               "recipe_type": "Fabricação com forma",
@@ -3577,13 +3514,6 @@
               "type": "text",
               "title": "Porta Estanque do Reator",
               "text": "A única entrada de uma sala de reator: abre apenas com um pulso de redstone, fecha sozinha dois segundos depois e nunca fecha em cima de quem estiver na passagem."
-            },
-            {
-              "type": "stats",
-              "title": "Estatísticas",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3718,13 +3648,6 @@
               "type": "text",
               "title": "Módulo de Armazenamento",
               "text": "Um bloco de armazenamento de 27 espaços: módulos colocados uns contra os outros funcionam como um único armazém de até 108 espaços atrás de uma só janela."
-            },
-            {
-              "type": "stats",
-              "title": "Estatísticas",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3881,13 +3804,6 @@
               "text": "Uma luz minúscula de 4×4 pixels com luz quente de nível 15: no chão, no teto ou em qualquer parede. Sem menu, sem energia."
             },
             {
-              "type": "stats",
-              "title": "Estatísticas",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Receita",
               "recipe_type": "Fabricação com forma",
@@ -3904,6 +3820,26 @@
               ],
               "result_id": "alaindustrial:industrial_light",
               "result_count": 4
+            }
+          ]
+        },
+        {
+          "id": "reception_capsule",
+          "title": "Cápsula de recepção",
+          "icon": "alaindustrial:reception_capsule",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Cápsula de recepção",
+              "text": "Traz de volta os trabalhadores de turno de um assentamento um de cada vez em troca de EU e materiais — só enquanto o núcleo do assentamento está aceso, a vila tem dono e o limite de trabalhadores não foi atingido; cada trabalhador novo recebe um número próprio, único no mundo."
+            },
+            {
+              "type": "stats",
+              "title": "Estatísticas",
+              "lines": [
+                "Energia: 100 000 EU por trabalhador",
+                "Buffer: 200 000 EU"
+              ]
             }
           ]
         },
@@ -3933,6 +3869,36 @@
                 ""
               ],
               "result_id": "alaindustrial:guide_book",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluid_tap",
+          "title": "Torneira",
+          "icon": "alaindustrial:fluid_tap",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Torneira",
+              "text": "Uma conexão de vidro num tanque ou na ponta de um cano. Deixa o fluido sair para o mundo e devolve a experiência líquida em orbes. O clique direito a abre e fecha, a redstone também a abre."
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação com forma",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "minecraft:lever",
+                "",
+                "alaindustrial:fluid_pipe",
+                "",
+                "",
+                "minecraft:iron_ingot",
+                ""
+              ],
+              "result_id": "alaindustrial:fluid_tap",
               "result_count": 1
             }
           ]
@@ -4055,6 +4021,36 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "sound_absorber",
+          "title": "Absorvedor de som",
+          "icon": "alaindustrial:sound_absorber",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Absorvedor de som",
+              "text": "Um bloco com moldura de ferro temperado, grade e enchimento que abafa os sons de blocos e do ambiente ao seu redor; absorvedores que se tocam por uma face formam um grupo, e quanto maior o grupo, mais ampla e forte é a zona de silêncio."
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação com forma",
+              "grid": [
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:note_block",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool"
+              ],
+              "result_id": "alaindustrial:sound_absorber",
+              "result_count": 2
             }
           ]
         },
@@ -4228,8 +4224,9 @@
               "title": "Estatísticas",
               "lines": [
                 "Energia: 100 EU por golpe",
-                "Buffer: 4000 EU",
-                "Raio: 6 blocos"
+                "Buffer: 10000 EU",
+                "Raio: 3 blocos",
+                "Zona de atração: 6 blocos"
               ]
             },
             {
@@ -4285,6 +4282,44 @@
                 "alaindustrial:electrum_ingot"
               ],
               "result_id": "alaindustrial:electrum_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "settlement_core",
+          "title": "Núcleo do assentamento",
+          "icon": "alaindustrial:settlement_core",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Núcleo do assentamento",
+              "text": "O coração de uma vila operária, na prefeitura dela — enquanto a rede lhe fornece EU, mantém o território do assentamento, define quantas casas e trabalhadores de turno a vila pode ter e lembra do seu dono; sem energia, ele se apaga e a vila dorme."
+            },
+            {
+              "type": "stats",
+              "title": "Estatísticas",
+              "lines": [
+                "Energia: 8 EU/t",
+                "Buffer: 2000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação com forma",
+              "grid": [
+                "alaindustrial:resonant_crystal",
+                "alaindustrial:reactor_circuit",
+                "alaindustrial:resonant_crystal",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:reinforced_bearing",
+                "alaindustrial:cesu",
+                "alaindustrial:reinforced_bearing"
+              ],
+              "result_id": "alaindustrial:settlement_core",
               "result_count": 1
             }
           ]
@@ -4551,7 +4586,7 @@
             {
               "type": "text",
               "title": "Tubo testemunhador",
-              "text": "O tubo testemunhador e o módulo de perfuração em coluna — as peças de uma melhoria que faz uma furadeira cavar três blocos de altura."
+              "text": "O tubo testemunhador e os módulos de perfuração em coluna e em linha — as peças de uma melhoria que faz uma furadeira cavar três blocos de altura ou de largura (juntos, uma cruz de cinco blocos)."
             },
             {
               "type": "recipe",
@@ -4995,7 +5030,7 @@
             {
               "type": "text",
               "title": "Coágulo de energia I",
-              "text": "Três níveis de coágulos — a sobra da rede, congelada pelo condensador de energia. O único ingrediente de que são feitos os chips de overclock."
+              "text": "Três níveis de coágulos — a sobra da rede, congelada pelo condensador de energia. O ingrediente principal dos chips de overclock; os de nível II e III também vão em cristais."
             }
           ]
         },

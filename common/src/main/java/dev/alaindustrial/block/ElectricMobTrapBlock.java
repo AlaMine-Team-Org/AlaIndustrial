@@ -28,16 +28,18 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * <p><b>No facing.</b> A ring of insulators round a spark gap, the same from every side. {@link #LIT}
  * shows that it has just shocked something.
  *
- * <p><b>Connections.</b> The four sides take cables; the lid and the floor are the two output lines — items
- * on one, liquid experience on the other (a pipe joins whichever face its network meets). The collector
- * gives both its lid and its floor to energy and items; this block has a third output, so energy moves to
- * the sides.
+ * <p><b>Connections</b> (MOD-855). The four sides and the floor take cables and both kinds of pipe: energy
+ * in, the drops and the liquid experience out. The top is where the mobs come from and takes nothing, so no
+ * arm is drawn to it. A cable or pipe on a side meets the block low, the way it meets a solar panel
+ * ({@link CableArmReach}): only the base plate reaches the cell edge, and a cable carries its dropped sleeve
+ * on to the plate under the spark gap ({@link ElectricMobTrapCableArm}).
  *
  * <p><b>Light and neighbours.</b> The body is 12 pixels tall and open work, so it is not a full cube and
  * does not occlude ({@code noOcclusion()} on its properties, R-PHY-05): a neighbour keeps drawing the face
  * that looks into the ring, and light passes through.
  */
-public class ElectricMobTrapBlock extends AbstractMachineBlock implements HasMachineTooltip, ZonePreviewBlock {
+public class ElectricMobTrapBlock extends AbstractMachineBlock
+		implements HasMachineTooltip, ZonePreviewBlock, CableArmReach {
 
 	public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
@@ -65,10 +67,16 @@ public class ElectricMobTrapBlock extends AbstractMachineBlock implements HasMac
 		return SHAPE;
 	}
 
-	/** A cable draws an arm only to the four sides: the lid and the floor carry the output pipes. */
+	/** A cable draws an arm to every face but the top, which takes nothing (MOD-855). */
 	@Override
 	public boolean isCableConnectable(BlockState state, Direction side) {
-		return side.getAxis().isHorizontal();
+		return side != Direction.UP;
+	}
+
+	/** A cable on a side is met low and reaches in to the plate under the spark gap (MOD-855). */
+	@Override
+	public List<CableArmReach.Band> cableArmReach(BlockState state) {
+		return ElectricMobTrapCableArm.BANDS;
 	}
 
 	@Override

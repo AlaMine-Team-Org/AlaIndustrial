@@ -1,0 +1,8 @@
+{
+  "slot": "memory",
+  "key": "settlement.alaindustrial.bio.memory.capsule_plaque",
+  "substitutions": [
+    "plaque"
+  ],
+  "clue": "alaindustrial:why_numbers"
+}

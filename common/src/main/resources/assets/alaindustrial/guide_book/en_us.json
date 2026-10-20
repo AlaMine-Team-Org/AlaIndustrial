@@ -1160,13 +1160,6 @@
               "text": "The one place fluid may cross a sealed shell: a 50 mB/t crossing that works both ways — water in, steam out — and is still a full piece of wall."
             },
             {
-              "type": "stats",
-              "title": "Stats",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Recipe",
               "recipe_type": "Shaped Crafting",
@@ -1232,13 +1225,6 @@
               "type": "text",
               "title": "Reactor Lever",
               "text": "A lever made of shielding alloy: a held signal from inside a sealed room — the reactor's emergency stop, which neither breaks the room's shielding nor melts with its contents."
-            },
-            {
-              "type": "stats",
-              "title": "Stats",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3190,13 +3176,6 @@
               "text": "A spinning head on a mast that sprays nutrient solution over everything growing within 4 blocks. The one machine in the mod that draws no EU at all — no cable connects to it, and it runs on solution alone. Mounts on a floor or under a ceiling."
             },
             {
-              "type": "stats",
-              "title": "Stats",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Recipe",
               "recipe_type": "Shaped Crafting",
@@ -3357,13 +3336,6 @@
               "text": "Four tempered iron building blocks modelled on vanilla ones — bars, a ladder, a trapdoor and a chain. They behave like vanilla and look like the mod's steel."
             },
             {
-              "type": "stats",
-              "title": "Stats",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Recipe",
               "recipe_type": "Shaped Crafting",
@@ -3392,13 +3364,6 @@
               "type": "text",
               "title": "Reactor Button",
               "text": "A button made of shielding alloy: the way to pulse the airlock from inside a sealed room, built exactly like a vanilla button but able to survive what the room is for."
-            },
-            {
-              "type": "stats",
-              "title": "Stats",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3431,13 +3396,6 @@
               "text": "A shell block that lights up only once the room is formed: the only source of light inside a sealed box, and at the same time a visible outside sign that the build was accepted."
             },
             {
-              "type": "stats",
-              "title": "Stats",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Recipe",
               "recipe_type": "Shaped Crafting",
@@ -3466,13 +3424,6 @@
               "type": "text",
               "title": "Reactor Casing",
               "text": "A shielding-alloy panel — the only material a reactor room's sealed shell may be built from."
-            },
-            {
-              "type": "stats",
-              "title": "Stats",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3505,13 +3456,6 @@
               "text": "A transparent shell panel: it counts as wall exactly like casing, but no more than 30 % of a shell may be glass — past that the room stops being containment and becomes a display case."
             },
             {
-              "type": "stats",
-              "title": "Stats",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Recipe",
               "recipe_type": "Shaped Crafting",
@@ -3542,13 +3486,6 @@
               "text": "Clear glass in a tempered iron steel frame — it breaks like stone and holds against a creeper or TNT blast. A building block and an ingredient for later recipes."
             },
             {
-              "type": "stats",
-              "title": "Stats",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Recipe",
               "recipe_type": "Shaped Crafting",
@@ -3577,13 +3514,6 @@
               "type": "text",
               "title": "Reactor Airlock Door",
               "text": "The only way into a reactor room: it opens on a redstone pulse alone, shuts itself two seconds later, and never closes through whoever is standing in the doorway."
-            },
-            {
-              "type": "stats",
-              "title": "Stats",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3718,13 +3648,6 @@
               "type": "text",
               "title": "Storage Module",
               "text": "A 27-slot storage block: modules placed against each other work as one warehouse of up to 108 slots behind one window."
-            },
-            {
-              "type": "stats",
-              "title": "Stats",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3881,13 +3804,6 @@
               "text": "A tiny 4×4-pixel light with warm light level 15 — place it on the floor, the ceiling or any wall. No menu, no energy."
             },
             {
-              "type": "stats",
-              "title": "Stats",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Recipe",
               "recipe_type": "Shaped Crafting",
@@ -3904,6 +3820,26 @@
               ],
               "result_id": "alaindustrial:industrial_light",
               "result_count": 4
+            }
+          ]
+        },
+        {
+          "id": "reception_capsule",
+          "title": "Reception Capsule",
+          "icon": "alaindustrial:reception_capsule",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reception Capsule",
+              "text": "Brings a settlement's shift workers back one at a time for EU and materials — only while the settlement core is lit, the town has an owner and its worker limit is not reached; every new worker gets a number of their own, unique in the world."
+            },
+            {
+              "type": "stats",
+              "title": "Stats",
+              "lines": [
+                "Energy: 100 000 EU per worker",
+                "Buffer: 200 000 EU"
+              ]
             }
           ]
         },
@@ -3933,6 +3869,36 @@
                 ""
               ],
               "result_id": "alaindustrial:guide_book",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluid_tap",
+          "title": "Tap",
+          "icon": "alaindustrial:fluid_tap",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tap",
+              "text": "A glass fitting on a tank or the end of a pipe. Lets fluid out into the world and gives liquid experience back as orbs. Right-click opens and closes it, redstone opens it too."
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "minecraft:lever",
+                "",
+                "alaindustrial:fluid_pipe",
+                "",
+                "",
+                "minecraft:iron_ingot",
+                ""
+              ],
+              "result_id": "alaindustrial:fluid_tap",
               "result_count": 1
             }
           ]
@@ -4055,6 +4021,36 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "sound_absorber",
+          "title": "Sound Absorber",
+          "icon": "alaindustrial:sound_absorber",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Sound Absorber",
+              "text": "A block of tempered iron frame, grille and padding that muffles block and ambient sounds around it; absorbers touching by a face form a group, and the bigger the group, the wider and stronger the quiet zone."
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:note_block",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool"
+              ],
+              "result_id": "alaindustrial:sound_absorber",
+              "result_count": 2
             }
           ]
         },
@@ -4228,8 +4224,9 @@
               "title": "Stats",
               "lines": [
                 "Energy: 100 EU per hit",
-                "Buffer: 4000 EU",
-                "Radius: 6 blocks"
+                "Buffer: 10000 EU",
+                "Radius: 3 blocks",
+                "Pull zone: 6 blocks"
               ]
             },
             {
@@ -4285,6 +4282,44 @@
                 "alaindustrial:electrum_ingot"
               ],
               "result_id": "alaindustrial:electrum_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "settlement_core",
+          "title": "Settlement Core",
+          "icon": "alaindustrial:settlement_core",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Settlement Core",
+              "text": "The heart of a work town, standing in its town hall — while the grid feeds it EU it holds the settlement's territory, sets how many houses and shift workers the town may have and remembers its owner; without power it goes dark and the town sleeps."
+            },
+            {
+              "type": "stats",
+              "title": "Stats",
+              "lines": [
+                "Energy: 8 EU/t",
+                "Buffer: 2000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "alaindustrial:resonant_crystal",
+                "alaindustrial:reactor_circuit",
+                "alaindustrial:resonant_crystal",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:reinforced_bearing",
+                "alaindustrial:cesu",
+                "alaindustrial:reinforced_bearing"
+              ],
+              "result_id": "alaindustrial:settlement_core",
               "result_count": 1
             }
           ]
@@ -4551,7 +4586,7 @@
             {
               "type": "text",
               "title": "Core Barrel",
-              "text": "The core barrel and the column bore module — the parts an upgrade that makes a drill dig three blocks tall is built from."
+              "text": "The core barrel and the column and row bore modules — the parts an upgrade that makes a drill dig three blocks tall or wide (together, a cross of five blocks) is built from."
             },
             {
               "type": "recipe",
@@ -4995,7 +5030,7 @@
             {
               "type": "text",
               "title": "Energy Clot I",
-              "text": "Three tiers of clots — the grid's surplus, frozen solid by the Energy Condenser. The only ingredient overclockers are made of."
+              "text": "Three tiers of clots — the grid's surplus, frozen solid by the Energy Condenser. The main ingredient of overclockers; tiers II and III also go into crystals."
             }
           ]
         },

@@ -8,7 +8,7 @@ import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 
 /**
  * L3 characterization of the client fluid models (MOD-708, batch 0): the shared
- * {@link ClientContentManifest#FLUID_MODELS} names the same six (texture, still fluid, flowing fluid)
+ * {@link ClientContentManifest#FLUID_MODELS} names the same seven (texture, still fluid, flowing fluid)
  * triples, in the same order, that both clients register today. Deriving that list from the shared fluid
  * declarations must leave it unchanged.
  *
@@ -28,7 +28,8 @@ public class FluidModelManifestTest implements FabricClientGameTest {
 			"fuel_oil fuel_oil flowing_fuel_oil",
 			"biofuel biofuel flowing_biofuel",
 			"nutrient_solution nutrient_solution flowing_nutrient_solution",
-			"steam steam -");
+			"steam steam -",
+			"experience experience -");
 
 	/** The lines of {@code models}, in order. */
 	public static List<String> lines(List<ClientContentManifest.FluidModelDef> models) {
@@ -47,7 +48,7 @@ public class FluidModelManifestTest implements FabricClientGameTest {
 	}
 
 	/**
-	 * @implements MOD-708-FLD03 — the client registers the same six fluid models, texture and fluids, in the
+	 * @implements MOD-708-FLD03 — the client registers the same seven fluid models, texture and fluids, in the
 	 *     same order
 	 */
 	@Override

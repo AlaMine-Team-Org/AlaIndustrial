@@ -21,6 +21,8 @@ import dev.alaindustrial.item.fluid.VanillaBucketDeposit;
 import dev.alaindustrial.item.wearable.JetpackLight;
 import dev.alaindustrial.network.ConfigSync;
 import dev.alaindustrial.settlement.record.RecordNumberLedger;
+import dev.alaindustrial.settlement.shift.ShiftWorkerRenumbering;
+import dev.alaindustrial.settlement.shift.ShiftWorkerProfiles;
 import dev.alaindustrial.stats.PlayerStatsTracker;
 import dev.alaindustrial.teleporter.TeleportWarmupManager;
 import dev.alaindustrial.worldgen.VillagePoolInjector;
@@ -90,7 +92,9 @@ public final class ServerHookRoster {
 			// MOD-674: drops that rain onto the demo stand after it was built (decaying leaves).
 			DemoStandDropSweeper::tick,
 			// MOD-799: advance a running energy stand check, sampled after the networks.
-			EnergyStandCheck::tick);
+			EnergyStandCheck::tick,
+			// MOD-834: shift workers whose number turned up later get a new one while nobody sees them.
+			ShiftWorkerRenumbering::tick);
 
 	/**
 	 * A player took damage (the loader passes only a server player that lost health). Three hooks — hurt,
@@ -162,7 +166,9 @@ public final class ServerHookRoster {
 	/** The server has stopped. MOD-401: the whole-server sweep of per-level state. */
 	public static final List<Consumer<MinecraftServer>> SERVER_STOPPED = List.of(
 			server -> LevelStateRegistry.clearAll(),
-			server -> PlayerStatsTracker.get().clear());
+			server -> PlayerStatsTracker.get().clear(),
+			// MOD-854: the towns' biography facts belong to the world that stopped.
+			server -> ShiftWorkerProfiles.clearTownFacts());
 
 	/**
 	 * One link of the early block-use chain: given the click, a result other than {@code PASS} takes the

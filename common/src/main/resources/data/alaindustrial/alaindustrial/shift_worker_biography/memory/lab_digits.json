@@ -1,0 +1,9 @@
+{
+  "slot": "memory",
+  "key": "settlement.alaindustrial.bio.memory.lab_digits",
+  "substitutions": [
+    "lab_digit_1",
+    "lab_digit_2"
+  ],
+  "clue": "alaindustrial:the_lab"
+}

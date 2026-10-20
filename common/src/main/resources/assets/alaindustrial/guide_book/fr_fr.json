@@ -1160,13 +1160,6 @@
               "text": "Le seul endroit où un fluide peut traverser une enveloppe scellée : un passage de 50 mB/t qui fonctionne dans les deux sens — l’eau entre, la vapeur sort — tout en restant un morceau de mur à part entière."
             },
             {
-              "type": "stats",
-              "title": "Statistiques",
-              "lines": [
-                "Tampon : 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Recette",
               "recipe_type": "Fabrication façonnée",
@@ -1232,13 +1225,6 @@
               "type": "text",
               "title": "Levier de réacteur",
               "text": "Un levier en alliage de blindage : un signal maintenu depuis l’intérieur d’une salle scellée — l’arrêt d’urgence du réacteur, qui ne rompt ni le blindage de la salle ni ne fond avec son contenu."
-            },
-            {
-              "type": "stats",
-              "title": "Statistiques",
-              "lines": [
-                "Tampon : 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3190,13 +3176,6 @@
               "text": "Une tête tournante sur un mât qui pulvérise la solution nutritive sur tout ce qui pousse à moins de 4 blocs. La seule machine du mod qui ne consomme pas d’EU du tout — aucun câble ne s’y branche, elle fonctionne uniquement à la solution. Se monte au sol ou sous un plafond."
             },
             {
-              "type": "stats",
-              "title": "Statistiques",
-              "lines": [
-                "Tampon : 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Recette",
               "recipe_type": "Fabrication façonnée",
@@ -3357,13 +3336,6 @@
               "text": "Quatre pièces de construction en fer trempé inspirées de la vanilla : barreaux, échelle, trappe et chaîne. Elles se comportent comme la vanilla et ont l’aspect de l’acier du mod."
             },
             {
-              "type": "stats",
-              "title": "Statistiques",
-              "lines": [
-                "Tampon : 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Recette",
               "recipe_type": "Fabrication façonnée",
@@ -3392,13 +3364,6 @@
               "type": "text",
               "title": "Bouton de réacteur",
               "text": "Un bouton en alliage de blindage : le moyen d’envoyer une impulsion au sas depuis l’intérieur d’une salle scellée, construit exactement comme un bouton vanilla mais capable de survivre à ce pour quoi la salle existe."
-            },
-            {
-              "type": "stats",
-              "title": "Statistiques",
-              "lines": [
-                "Tampon : 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3431,13 +3396,6 @@
               "text": "Un bloc d’enveloppe qui ne s’allume qu’une fois la salle formée : la seule source de lumière dans une boîte scellée et, en même temps, un signe visible de l’extérieur que la construction a été acceptée."
             },
             {
-              "type": "stats",
-              "title": "Statistiques",
-              "lines": [
-                "Tampon : 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Recette",
               "recipe_type": "Fabrication façonnée",
@@ -3466,13 +3424,6 @@
               "type": "text",
               "title": "Châssis de réacteur",
               "text": "Un panneau en alliage de blindage — le seul matériau dont l’enveloppe scellée d’une salle de réacteur puisse être bâtie."
-            },
-            {
-              "type": "stats",
-              "title": "Statistiques",
-              "lines": [
-                "Tampon : 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3505,13 +3456,6 @@
               "text": "Un panneau d’enveloppe transparent : il compte comme mur exactement comme le blindage, mais 30 % au plus d’une enveloppe peuvent être en verre — au-delà, la salle cesse d’être un confinement pour devenir une vitrine."
             },
             {
-              "type": "stats",
-              "title": "Statistiques",
-              "lines": [
-                "Tampon : 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Recette",
               "recipe_type": "Fabrication façonnée",
@@ -3542,13 +3486,6 @@
               "text": "Du verre clair dans un cadre en fer trempé : il se brise comme la pierre et résiste à l’explosion d’un creeper ou de la TNT. Un bloc de construction et un ingrédient de recettes futures."
             },
             {
-              "type": "stats",
-              "title": "Statistiques",
-              "lines": [
-                "Tampon : 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Recette",
               "recipe_type": "Fabrication façonnée",
@@ -3577,13 +3514,6 @@
               "type": "text",
               "title": "Porte de sas du réacteur",
               "text": "Le seul accès à une salle de réacteur : elle s’ouvre uniquement sur une impulsion de redstone, se referme deux secondes plus tard et ne se referme jamais sur qui se tient dans l’embrasure."
-            },
-            {
-              "type": "stats",
-              "title": "Statistiques",
-              "lines": [
-                "Tampon : 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3718,13 +3648,6 @@
               "type": "text",
               "title": "Module de stockage",
               "text": "Un bloc de stockage de 27 emplacements : les modules placés les uns contre les autres fonctionnent comme un seul entrepôt allant jusqu’à 108 emplacements derrière une seule fenêtre."
-            },
-            {
-              "type": "stats",
-              "title": "Statistiques",
-              "lines": [
-                "Tampon : 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3881,13 +3804,6 @@
               "text": "Une minuscule lampe de 4×4 pixels à la lumière chaude de niveau 15 : au sol, au plafond ou sur n’importe quel mur. Sans menu, sans énergie."
             },
             {
-              "type": "stats",
-              "title": "Statistiques",
-              "lines": [
-                "Tampon : 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Recette",
               "recipe_type": "Fabrication façonnée",
@@ -3904,6 +3820,26 @@
               ],
               "result_id": "alaindustrial:industrial_light",
               "result_count": 4
+            }
+          ]
+        },
+        {
+          "id": "reception_capsule",
+          "title": "Capsule d'accueil",
+          "icon": "alaindustrial:reception_capsule",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Capsule d'accueil",
+              "text": "Ramène les ouvriers de relève d'une colonie un par un contre des EU et des matériaux — seulement tant que le noyau de colonie est allumé, que la cité a un propriétaire et que sa limite d'ouvriers n'est pas atteinte ; chaque nouvel ouvrier reçoit son propre numéro, unique dans le monde."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiques",
+              "lines": [
+                "Énergie : 100 000 EU par ouvrier",
+                "Tampon : 200 000 EU"
+              ]
             }
           ]
         },
@@ -3933,6 +3869,36 @@
                 ""
               ],
               "result_id": "alaindustrial:guide_book",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluid_tap",
+          "title": "Robinet",
+          "icon": "alaindustrial:fluid_tap",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Robinet",
+              "text": "Un raccord en verre sur un réservoir ou au bout d’un tuyau. Laisse sortir le fluide dans le monde et rend l’expérience liquide en orbes. Le clic droit l’ouvre et le ferme, la redstone l’ouvre aussi."
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "minecraft:lever",
+                "",
+                "alaindustrial:fluid_pipe",
+                "",
+                "",
+                "minecraft:iron_ingot",
+                ""
+              ],
+              "result_id": "alaindustrial:fluid_tap",
               "result_count": 1
             }
           ]
@@ -4055,6 +4021,36 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "sound_absorber",
+          "title": "Absorbeur acoustique",
+          "icon": "alaindustrial:sound_absorber",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Absorbeur acoustique",
+              "text": "Un bloc fait d’un cadre en fer trempé, d’une grille et d’un rembourrage, qui atténue les sons des blocs et de l’environnement autour de lui ; les absorbeurs qui se touchent par une face forment un groupe, et plus le groupe est grand, plus la zone de calme est large et forte."
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:note_block",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool"
+              ],
+              "result_id": "alaindustrial:sound_absorber",
+              "result_count": 2
             }
           ]
         },
@@ -4228,8 +4224,9 @@
               "title": "Statistiques",
               "lines": [
                 "Énergie : 100 EU par coup",
-                "Tampon : 4000 EU",
-                "Rayon : 6 blocs"
+                "Tampon : 10000 EU",
+                "Rayon : 3 blocs",
+                "Zone d'attraction : 6 blocs"
               ]
             },
             {
@@ -4285,6 +4282,44 @@
                 "alaindustrial:electrum_ingot"
               ],
               "result_id": "alaindustrial:electrum_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "settlement_core",
+          "title": "Noyau de colonie",
+          "icon": "alaindustrial:settlement_core",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Noyau de colonie",
+              "text": "Le cœur d'une cité ouvrière, installé dans son hôtel de ville — tant que le réseau lui fournit des EU, il maintient le territoire de la colonie, fixe combien de maisons et d'ouvriers de relève la cité peut avoir et se souvient de son propriétaire ; sans énergie, il s'éteint et la cité s'endort."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiques",
+              "lines": [
+                "Énergie : 8 EU/t",
+                "Tampon : 2000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "alaindustrial:resonant_crystal",
+                "alaindustrial:reactor_circuit",
+                "alaindustrial:resonant_crystal",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:reinforced_bearing",
+                "alaindustrial:cesu",
+                "alaindustrial:reinforced_bearing"
+              ],
+              "result_id": "alaindustrial:settlement_core",
               "result_count": 1
             }
           ]
@@ -4551,7 +4586,7 @@
             {
               "type": "text",
               "title": "Carottier",
-              "text": "Le carottier et le module de forage en colonne — les pièces dont est faite l’amélioration qui fait creuser une foreuse sur trois blocs de haut."
+              "text": "Le carottier et les modules de forage en colonne et en rangée — les pièces dont est faite l’amélioration qui fait creuser une foreuse sur trois blocs de haut ou de large (ensemble, une croix de cinq blocs)."
             },
             {
               "type": "recipe",
@@ -4995,7 +5030,7 @@
             {
               "type": "text",
               "title": "Caillot d’énergie I",
-              "text": "Trois paliers de caillots — le surplus du réseau, figé par le condenseur d’énergie. Le seul ingrédient dont sont faites les puces d’overclocking."
+              "text": "Trois paliers de caillots — le surplus du réseau, figé par le condenseur d’énergie. L’ingrédient principal des puces d’overclocking ; les caillots II et III entrent aussi dans les cristaux."
             }
           ]
         },

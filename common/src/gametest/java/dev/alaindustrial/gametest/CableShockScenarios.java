@@ -290,7 +290,7 @@ public final class CableShockScenarios {
 				return;
 			}
 			if (Invulnerability.graceTicks(player) != 7) {
-				helper.fail("blocked shock left no grace window; invulnerableTime="
+				helper.fail("blocked shock left no grace window; graceTicks="
 						+ Invulnerability.graceTicks(player));
 				return;
 			}
@@ -418,7 +418,7 @@ public final class CableShockScenarios {
 			return;
 		}
 		if (Invulnerability.graceTicks(player) != Config.shockGuardGraceTicks) {
-			helper.fail("an absorbed shock left no contact window; invulnerableTime="
+			helper.fail("an absorbed shock left no contact window; graceTicks="
 					+ Invulnerability.graceTicks(player));
 			return;
 		}

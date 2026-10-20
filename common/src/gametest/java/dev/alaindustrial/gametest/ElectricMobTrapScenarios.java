@@ -2,13 +2,24 @@ package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.block.CableBlock;
+import dev.alaindustrial.block.FluidPipeBlock;
+import dev.alaindustrial.block.ItemPipeBlock;
+import dev.alaindustrial.block.FluidTapBlock;
 import dev.alaindustrial.block.entity.ElectricMobTrapBlockEntity;
+import dev.alaindustrial.block.entity.CreativeEnergySourceBlockEntity;
 import dev.alaindustrial.block.entity.ElectricMobTrapBlockEntity.Status;
+import dev.alaindustrial.block.entity.FluidTapBlockEntity;
+import dev.alaindustrial.block.entity.FluidPipeBlockEntity;
 import dev.alaindustrial.block.entity.ItemPipeBlockEntity;
 import dev.alaindustrial.compat.Invulnerability;
+import dev.alaindustrial.core.energy.EnergyLookup;
+import dev.alaindustrial.core.energy.EnergyTransactions;
 import dev.alaindustrial.core.energy.EnergyRole;
+import dev.alaindustrial.core.fluid.FluidNetworkManager;
 import dev.alaindustrial.core.fluid.FluidHolder;
 import dev.alaindustrial.core.item.ItemNetworkManager;
+import dev.alaindustrial.core.item.PipeFaceMode;
 import dev.alaindustrial.entity.HostileThreat;
 import dev.alaindustrial.entity.MobRepellerField;
 import dev.alaindustrial.entity.SoulVesselKills;
@@ -93,7 +104,12 @@ public final class ElectricMobTrapScenarios {
 				RosterEntry.of(ElectricMobTrapScenarios::pulseWorkIsBounded, "mod818_pulse_work_is_bounded"),
 				RosterEntry.of(ElectricMobTrapScenarios::pipeCarriesTheLootOut, "mod818_pipe_carries_the_loot_out"),
 				RosterEntry.of(ElectricMobTrapScenarios::soulVesselStaysEmpty, "mod818_soul_vessel_stays_empty"),
-				RosterEntry.of(ElectricMobTrapScenarios::stateSurvivesReload, "mod818_state_survives_reload"));
+				RosterEntry.of(ElectricMobTrapScenarios::stateSurvivesReload, "mod818_state_survives_reload"),
+				RosterEntry.of(ElectricMobTrapScenarios::energyOnEveryFaceButTheTop,
+						"mod855_energy_on_every_face_but_the_top"),
+				RosterEntry.of(ElectricMobTrapScenarios::fluidPipeOnASideTakesTheExperience,
+						"mod855_fluid_pipe_on_a_side_takes_the_experience"),
+				RosterEntry.of(ElectricMobTrapScenarios::nothingConnectsOnTop, "mod855_nothing_connects_on_top"));
 
 		private Roster() {}
 	}
@@ -543,8 +559,9 @@ public final class ElectricMobTrapScenarios {
 	}
 
 	/**
-	 * @implements TC-MOBTRAP-001-FUN06 — liquid experience carries the {@code c:experience} tag, comes out
-	 *     of the lid and the floor only, and nothing goes in by hand: the sides take cables.
+	 * @implements TC-MOBTRAP-001-FUN06 — liquid experience carries the {@code c:experience} tag; the four
+	 *     sides and the floor give out the buffer and the tank and take energy, nothing goes in by hand, and
+	 *     the top takes nothing at all (MOD-855).
 	 */
 	public static void facesAndFluid(GameTestHelper helper) {
 		ElectricMobTrapBlockEntity be = place(helper, 0);
@@ -553,18 +570,118 @@ public final class ElectricMobTrapScenarios {
 				"liquid experience must carry c:experience");
 		ItemStack stack = new ItemStack(Items.IRON_INGOT);
 		for (Direction face : Direction.values()) {
-			boolean vertical = face.getAxis().isVertical();
-			helper.assertTrue((be.fluidPort(face) != null) == vertical,
-					"face " + face + (vertical ? " must" : " must not") + " expose the experience tank");
-			int expected = vertical ? ElectricMobTrapBlockEntity.SLOT_COUNT : 0;
+			boolean open = face != Direction.UP;
+			helper.assertTrue((be.fluidPort(face) != null) == open,
+					"face " + face + (open ? " must" : " must not") + " expose the experience tank");
+			int expected = open ? ElectricMobTrapBlockEntity.SLOT_COUNT : 0;
 			helper.assertTrue(be.getSlotsForFace(face).length == expected,
 					"face " + face + " must expose " + expected + " buffer slots");
 			for (int slot : be.getSlotsForFace(face)) {
 				helper.assertFalse(be.canPlaceItemThroughFace(slot, stack, face), "nothing goes in through " + face);
 			}
-			helper.assertTrue((be.energyRoleForFace(face) == EnergyRole.IN) != vertical,
-					"only the four sides take energy, got " + be.energyRoleForFace(face) + " on " + face);
+			helper.assertTrue((be.energyRoleForFace(face) == EnergyRole.IN) == open,
+					"every face but the top takes energy, got " + be.energyRoleForFace(face) + " on " + face);
 		}
+		long[] poured = {-1};
+		EnergyTransactions.get().runCommitting(txn ->
+				poured[0] = be.xpTank.insert(FluidHolder.of(ModContent.EXPERIENCE.get()), 100, txn));
+		helper.assertTrue(poured[0] == 0 && be.xpTank.amount == 0,
+				"the experience tank must refuse liquid poured in, took " + poured[0]);
+		helper.succeed();
+	}
+
+	/**
+	 * @implements TC-MOBTRAP-001-FUN16 — a creative source flush against each side and the floor charges the
+	 *     trap and one on the top charges nothing; a cable on each side and the floor draws an arm, and on a
+	 *     side it meets the trap low, as it meets a solar panel (MOD-855).
+	 */
+	public static void energyOnEveryFaceButTheTop(GameTestHelper helper) {
+		ElectricMobTrapBlockEntity be = place(helper, 0);
+		BlockPos abs = be.getBlockPos();
+		for (Direction face : Direction.values()) {
+			boolean open = face != Direction.UP;
+			BlockPos sourcePos = TRAP.relative(face);
+			helper.setBlock(sourcePos, ModContent.CREATIVE_ENERGY_SOURCE.get());
+			CreativeEnergySourceBlockEntity source = helper.getBlockEntity(sourcePos,
+					CreativeEnergySourceBlockEntity.class);
+			be.getEnergyStorage().setAmountUntracked(0);
+			for (int t = 0; t < 3; t++) {
+				EnergyScenarioSupport.tick(helper, source);
+			}
+			long got = be.getEnergyStorage().getAmount();
+			helper.assertTrue((got > 0) == open, "a creative source on the " + face + " face must "
+					+ (open ? "" : "not ") + "charge the trap, it got " + got + " EU");
+			helper.assertTrue((EnergyLookup.get().find(helper.getLevel(), abs, face) != null) == open,
+					"face " + face + (open ? " must" : " must not") + " offer an energy port");
+
+			// The cable goes in first and the trap after it, as a player lays a line up to a placed block's
+			// neighbour: the trap's placement is the neighbour update that shapes the cable's arm.
+			helper.setBlock(sourcePos, ModContent.COPPER_CABLE.get());
+			helper.setBlock(TRAP, net.minecraft.world.level.block.Blocks.AIR);
+			be = place(helper, 0);
+			BlockPos cableAbs = helper.absolutePos(sourcePos);
+			Direction back = face.getOpposite();
+			helper.assertTrue(CableBlock.shouldConnectTo(helper.getLevel(), cableAbs, back) == open,
+					"a cable on the " + face + " face must " + (open ? "" : "not ") + "draw an arm to the trap");
+			if (face.getAxis().isHorizontal()) {
+				helper.assertTrue(helper.getBlockState(sourcePos).getValue(CableBlock.lowFlagFor(back)),
+						"a cable on the " + face + " face must meet the trap low");
+			}
+			helper.setBlock(sourcePos, net.minecraft.world.level.block.Blocks.AIR);
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * @implements TC-MOBTRAP-001-FUN17 — a fluid pipe on a side, extracting, carries the liquid experience
+	 *     into a fluid tap, and meets the trap low (MOD-855).
+	 */
+	public static void fluidPipeOnASideTakesTheExperience(GameTestHelper helper) {
+		ElectricMobTrapBlockEntity be = place(helper, 0);
+		BlockPos pipePos = TRAP.east();
+		BlockPos tapPos = pipePos.east();
+		helper.setBlock(tapPos, ModContent.FLUID_TAP.get().defaultBlockState()
+				.setValue(FluidTapBlock.FACING, Direction.EAST).setValue(FluidTapBlock.CEILING, false));
+		helper.setBlock(pipePos, ModContent.FLUID_PIPE.get());
+		FluidPipeBlockEntity pipe = helper.getBlockEntity(pipePos, FluidPipeBlockEntity.class);
+		pipe.setFaceMode(Direction.WEST, PipeFaceMode.EXTRACT);
+		pipe.setFaceMode(Direction.EAST, PipeFaceMode.INSERT);
+		helper.assertTrue(FluidPipeBlock.renderAt(helper.getBlockState(pipePos), Direction.WEST).low(),
+				"a fluid pipe beside the trap must connect and meet it low, got "
+						+ FluidPipeBlock.renderAt(helper.getBlockState(pipePos), Direction.WEST));
+		long total = 20L * ExperienceFluid.MB_PER_POINT;
+		be.xpTank.fluid = FluidHolder.of(ModContent.EXPERIENCE.get());
+		be.xpTank.amount = total;
+		FluidTapBlockEntity tap = helper.getBlockEntity(tapPos, FluidTapBlockEntity.class);
+		ServerLevel level = helper.getLevel();
+		pipe.serverTick(level, pipe.getBlockPos(), pipe.getBlockState());
+		for (int t = 0; t < 200 && tap.tank.amount < total; t++) {
+			FluidNetworkManager.tickAll(level);
+		}
+		helper.assertTrue(be.xpTank.amount == 0 && tap.tank.amount == total, "the pipe must carry all " + total
+				+ " mB out of the trap's side; trap holds " + be.xpTank.amount + ", tap " + tap.tank.amount);
+		helper.succeed();
+	}
+
+	/**
+	 * @implements TC-MOBTRAP-001-NEG07 — on the top nothing connects: no cable arm, no item pipe arm, no fluid
+	 *     pipe arm, no energy port (MOD-855).
+	 */
+	public static void nothingConnectsOnTop(GameTestHelper helper) {
+		ElectricMobTrapBlockEntity be = place(helper, 0);
+		BlockPos top = TRAP.above();
+		BlockPos topAbs = helper.absolutePos(top);
+		helper.setBlock(top, ModContent.COPPER_CABLE.get());
+		helper.assertFalse(CableBlock.shouldConnectTo(helper.getLevel(), topAbs, Direction.DOWN),
+				"a cable on the top must not draw an arm to the trap");
+		helper.setBlock(top, ModContent.ITEM_PIPE.get());
+		helper.assertFalse(ItemPipeBlock.shouldConnectTo(helper.getLevel(), topAbs, Direction.DOWN),
+				"an item pipe on the top must not connect to the trap");
+		helper.setBlock(top, ModContent.FLUID_PIPE.get());
+		helper.assertFalse(FluidPipeBlock.shouldConnectTo(helper.getLevel(), topAbs, Direction.DOWN),
+				"a fluid pipe on the top must not connect to the trap");
+		helper.assertTrue(EnergyLookup.get().find(helper.getLevel(), be.getBlockPos(), Direction.UP) == null,
+				"the top must offer no energy port");
 		helper.succeed();
 	}
 
@@ -599,15 +716,19 @@ public final class ElectricMobTrapScenarios {
 	}
 
 	/**
-	 * @implements TC-MOBTRAP-001-FUN08 — a plain item pipe on the lid carries the buffer into a chest, so the
-	 *     loot reaches an inventory without ever lying in the world.
+	 * @implements TC-MOBTRAP-001-FUN08 — a plain item pipe on a side carries the buffer into a chest, so the
+	 *     loot reaches an inventory without ever lying in the world; the pipe meets the trap low, as it meets
+	 *     a solar panel (MOD-855).
 	 */
 	public static void pipeCarriesTheLootOut(GameTestHelper helper) {
-		BlockPos pipePos = TRAP.above();
-		BlockPos chestPos = pipePos.above();
+		BlockPos pipePos = TRAP.east();
+		BlockPos chestPos = pipePos.east();
 		helper.setBlock(pipePos, ModContent.ITEM_PIPE.get());
 		helper.setBlock(chestPos, ModContent.IRON_CHEST.get());
 		ElectricMobTrapBlockEntity be = place(helper, 0);
+		helper.assertTrue(ItemPipeBlock.renderAt(helper.getBlockState(pipePos), Direction.WEST).low(),
+				"an item pipe beside the trap must meet it low, got "
+						+ ItemPipeBlock.renderAt(helper.getBlockState(pipePos), Direction.WEST));
 		be.setItem(0, new ItemStack(Items.BONE, 16));
 		ItemPipeBlockEntity pipe = helper.getBlockEntity(pipePos, ItemPipeBlockEntity.class);
 		pipe.serverTick(helper.getLevel(), pipe.getBlockPos(), pipe.getBlockState());

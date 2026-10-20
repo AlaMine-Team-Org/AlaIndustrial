@@ -1,6 +1,8 @@
 package dev.alaindustrial.command.demo;
 
+import dev.alaindustrial.block.FluidTapBlock;
 import dev.alaindustrial.block.ReceptionCapsuleBlock;
+import dev.alaindustrial.block.entity.FluidTapBlockEntity;
 import dev.alaindustrial.block.entity.FluidTankBlockEntity;
 import dev.alaindustrial.block.entity.KokSagyzRootBlockEntity;
 import dev.alaindustrial.registry.ModContent;
@@ -112,6 +114,12 @@ final class MiscZone implements DemoZone {
 		// the stand's copy shows the lit model with its pulsing ring rather than a dark casing.
 		w.set(72, 1, Z, ModContent.ELECTRIC_MOB_TRAP.get());
 		w.chargeBuffer(72, 1, Z);
+		// The tap (MOD-837) on the trap's front, nozzle toward the camera. The trap's sides carry no
+		// fluid, so the stand fills the tap's own buffer halfway: the liquid shows in the glass.
+		w.place(w.origin().offset(72, 1, Z - 1), ModContent.FLUID_TAP.get().defaultBlockState()
+				.setValue(FluidTapBlock.FACING, Direction.NORTH));
+		w.fillTank(72, 1, Z - 1, FluidTapBlockEntity.class, be -> be.tank, ModContent.EXPERIENCE.get(),
+				capacity -> capacity / 2);
 	}
 
 	/** The standing and wall torches, the charging station and the energy condenser. */

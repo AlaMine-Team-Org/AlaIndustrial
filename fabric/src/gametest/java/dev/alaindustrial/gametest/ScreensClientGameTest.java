@@ -6,6 +6,8 @@ import dev.alaindustrial.block.ReceptionCapsuleBlock;
 import dev.alaindustrial.block.UpgradeTableBlock;
 import dev.alaindustrial.block.entity.FuelRodAssemblyBlockEntity;
 import dev.alaindustrial.block.entity.VulcanizerStatus;
+import dev.alaindustrial.client.screen.SettlementCoreScreen;
+import dev.alaindustrial.client.screen.shiftworker.ShiftWorkerCardClient;
 import dev.alaindustrial.compat.L3Chunks;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.gametest.visual.MenuState;
@@ -14,6 +16,8 @@ import dev.alaindustrial.gametest.visual.ShotRecorder;
 import dev.alaindustrial.gametest.visual.VisualWorld;
 import dev.alaindustrial.menu.MachineMenu;
 import dev.alaindustrial.menu.VulcanizerMenu;
+import dev.alaindustrial.network.ShiftWorkerRosterPayload;
+import dev.alaindustrial.settlement.shift.ShiftWorkerRecord;
 import java.util.List;
 import java.util.Set;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
@@ -471,8 +475,42 @@ public class ScreensClientGameTest implements FabricClientGameTest {
                             + "check that the whole window is in frame and no label is clipped");
 
             captureMachineStates(context, screen);
+            if (screen.menuId().equals("settlement_core")) {
+                captureCoreRoster(context, pos);
+            }
             VisualWorld.awaitNoScreen(context);
         }
+    }
+
+    /**
+     * The settlement core's «Shift workers» tab (MOD-854). The rig's core is bare and of no town, so the server
+     * answers no roster request; a roster is handed to the client as the server would send it, for this core,
+     * after the tab was opened through the screen's own selector.
+     */
+    private static void captureCoreRoster(ClientGameTestContext context, BlockPos pos) {
+        context.runOnClient(mc -> {
+            if (mc.gui.screen() instanceof SettlementCoreScreen core) {
+                core.selectTab(SettlementCoreScreen.TAB_WORKERS);
+                ShiftWorkerCardClient.receiveRoster(new ShiftWorkerRosterPayload(pos, 3, List.of(
+                        new ShiftWorkerRosterPayload.Row("Q-117", "Anya", 6, ShiftWorkerRecord.Status.ALIVE, true),
+                        new ShiftWorkerRosterPayload.Row("Q-118", "", 1, ShiftWorkerRecord.Status.ALIVE, true),
+                        new ShiftWorkerRosterPayload.Row("Q-121", "Konstantin", 23,
+                                ShiftWorkerRecord.Status.ALIVE, true),
+                        new ShiftWorkerRosterPayload.Row("Q-125", "Mira", 4,
+                                ShiftWorkerRecord.Status.AWAITING_RETURN, false)),
+                        List.of(new ShiftWorkerRosterPayload.Row("Q-090", "Oleg", 9, ShiftWorkerRecord.Status.DEAD,
+                                false))));
+            }
+        });
+        context.waitFor(mc -> mc.gui.screen() instanceof SettlementCoreScreen core
+                && core.selectedTab() == SettlementCoreScreen.TAB_WORKERS);
+        context.waitTicks(2);
+        ShotRecorder.captureScreen("settlement_core", "roster", ShotRecorder.rules("R-GUI-03"),
+                "Shift workers tab: the tab strip on the panel's left edge with the second tab open, the heading "
+                        + "names the tab, four rows - number, name, level, status - inside the frame, the long name "
+                        + "scaled rather than running into the level, the waiting worker's status in red, no energy "
+                        + "bar");
+        ShiftWorkerCardClient.clear();
     }
 
     /**

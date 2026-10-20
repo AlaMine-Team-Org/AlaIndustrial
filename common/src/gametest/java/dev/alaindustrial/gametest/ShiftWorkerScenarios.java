@@ -483,8 +483,9 @@ public final class ShiftWorkerScenarios {
 	}
 
 	/**
-	 * R10: a town whose core goes dark puts its workers to sleep, goals off, at their next think; when the core lights
-	 * again the town wakes them; a worker loaded while its town is dark comes back asleep, whatever it was saved with.
+	 * R10, R68: a town whose core goes dark puts its workers whose battery is empty to sleep, goals off, at their next
+	 * think; when the core lights again the town wakes them; a worker loaded while its town is dark comes back asleep,
+	 * whatever it was saved with.
 	 *
 	 * @implements MOD-832-HIBERNATE — without power the workers hibernate and wake up where they stood
 	 */
@@ -495,6 +496,7 @@ public final class ShiftWorkerScenarios {
 		helper.startSequence()
 				.thenExecuteAfter(5, () -> {
 					helper.assertTrue(!worker.isNoAi(), "a worker of a lit town hibernates");
+					emptyBattery(helper, worker); // R68: with charge left a dark town's worker works on (MOD-854)
 					registry.setActive(town, false);
 				})
 				.thenWaitUntil(() -> helper.assertTrue(worker.isNoAi(), "a dark town's worker still runs its goals"))
@@ -524,6 +526,12 @@ public final class ShiftWorkerScenarios {
 		registry.setActive(town, true);
 		registry.claim(town, owner.getUUID(), "owner");
 		return town;
+	}
+
+	/** Empties the worker's battery (MOD-854): a dark town's worker sleeps only once it has no charge left (R68). */
+	private static void emptyBattery(GameTestHelper helper, ShiftWorker worker) {
+		ShiftWorkerRecord record = record(helper, worker);
+		ShiftWorkers.book(helper.getLevel().getServer()).put(record.withProfile(record.profile().withCharge(0)));
 	}
 
 	/** Leaves the test's town dark, so its territory holds nothing for the scenarios that run after this one. */

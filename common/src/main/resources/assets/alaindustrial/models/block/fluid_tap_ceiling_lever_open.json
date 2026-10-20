@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "alaindustrial:block/fluid_pipe_ring",
+    "lever": "alaindustrial:block/fluid_tap_lever"
+  },
+  "elements": [
+    {
+      "from": [
+        11.5,
+        7,
+        7
+      ],
+      "to": [
+        12.5,
+        9,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#lever"
+        },
+        "south": {
+          "texture": "#lever"
+        },
+        "east": {
+          "texture": "#lever"
+        },
+        "west": {
+          "texture": "#lever"
+        },
+        "up": {
+          "texture": "#lever"
+        },
+        "down": {
+          "texture": "#lever"
+        }
+      }
+    }
+  ]
+}

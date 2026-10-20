@@ -1160,13 +1160,6 @@
               "text": "L'unico punto in cui un fluido può attraversare un guscio sigillato: un passaggio da 50 mB/t che funziona nei due sensi — acqua dentro, vapore fuori — e resta comunque un pezzo di parete a tutti gli effetti."
             },
             {
-              "type": "stats",
-              "title": "Statistiche",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Ricetta",
               "recipe_type": "Fabbricazione sagomata",
@@ -1232,13 +1225,6 @@
               "type": "text",
               "title": "Leva del reattore",
               "text": "Una leva in lega di schermatura: un segnale mantenuto dall'interno di una stanza sigillata — l'arresto di emergenza del reattore, che non rompe la schermatura della stanza né fonde con il suo contenuto."
-            },
-            {
-              "type": "stats",
-              "title": "Statistiche",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3190,13 +3176,6 @@
               "text": "Una testa rotante su un palo che spruzza soluzione nutritiva su tutto ciò che cresce entro 4 blocchi. L'unica macchina del mod che non consuma affatto EU — nessun cavo la collega, e funziona solo con la soluzione. Si monta a pavimento o a soffitto."
             },
             {
-              "type": "stats",
-              "title": "Statistiche",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Ricetta",
               "recipe_type": "Fabbricazione sagomata",
@@ -3357,13 +3336,6 @@
               "text": "Quattro elementi da costruzione in ferro temprato sul modello di quelli vanilla: sbarre, scala a pioli, botola e catena. Si comportano come i vanilla e hanno l’aspetto dell’acciaio della mod."
             },
             {
-              "type": "stats",
-              "title": "Statistiche",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Ricetta",
               "recipe_type": "Fabbricazione sagomata",
@@ -3392,13 +3364,6 @@
               "type": "text",
               "title": "Pulsante del reattore",
               "text": "Un pulsante in lega schermante: il modo di inviare un impulso alla camera stagna dall'interno di una sala sigillata, costruito esattamente come un pulsante vanilla ma capace di reggere ciò per cui la sala esiste."
-            },
-            {
-              "type": "stats",
-              "title": "Statistiche",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3431,13 +3396,6 @@
               "text": "Un blocco del guscio che si accende solo quando la sala è formata: l'unica fonte di luce dentro una scatola sigillata e, allo stesso tempo, un segnale visibile dall'esterno che la costruzione è stata accettata."
             },
             {
-              "type": "stats",
-              "title": "Statistiche",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Ricetta",
               "recipe_type": "Fabbricazione sagomata",
@@ -3466,13 +3424,6 @@
               "type": "text",
               "title": "Telaio del reattore",
               "text": "Un pannello in lega schermante: l'unico materiale con cui si può costruire il guscio sigillato di una sala reattore."
-            },
-            {
-              "type": "stats",
-              "title": "Statistiche",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3505,13 +3456,6 @@
               "text": "Un pannello trasparente del guscio: conta come parete esattamente come il rivestimento, ma non più del 30 % di un guscio può essere vetro — oltre quella soglia la sala smette di essere un contenimento e diventa una vetrina."
             },
             {
-              "type": "stats",
-              "title": "Statistiche",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Ricetta",
               "recipe_type": "Fabbricazione sagomata",
@@ -3542,13 +3486,6 @@
               "text": "Vetro trasparente in una cornice di ferro temprato: si rompe come la pietra e regge l’esplosione di un creeper o del TNT. Un blocco da costruzione e un ingrediente per ricette successive."
             },
             {
-              "type": "stats",
-              "title": "Statistiche",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Ricetta",
               "recipe_type": "Fabbricazione sagomata",
@@ -3577,13 +3514,6 @@
               "type": "text",
               "title": "Porta stagna del reattore",
               "text": "L'unico ingresso a una sala reattore: si apre solo con un impulso di redstone, si richiude da sola due secondi dopo e non si chiude mai addosso a chi sta nel vano."
-            },
-            {
-              "type": "stats",
-              "title": "Statistiche",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3718,13 +3648,6 @@
               "type": "text",
               "title": "Modulo di stoccaggio",
               "text": "Un blocco di stoccaggio da 27 slot: i moduli affiancati l'uno all'altro funzionano come un unico magazzino fino a 108 slot dietro una sola finestra."
-            },
-            {
-              "type": "stats",
-              "title": "Statistiche",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3881,13 +3804,6 @@
               "text": "Una minuscola luce di 4×4 pixel con luce calda di livello 15: sul pavimento, sul soffitto o su qualsiasi parete. Niente menu, niente energia."
             },
             {
-              "type": "stats",
-              "title": "Statistiche",
-              "lines": [
-                "Buffer: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Ricetta",
               "recipe_type": "Fabbricazione sagomata",
@@ -3904,6 +3820,26 @@
               ],
               "result_id": "alaindustrial:industrial_light",
               "result_count": 4
+            }
+          ]
+        },
+        {
+          "id": "reception_capsule",
+          "title": "Capsula di accoglienza",
+          "icon": "alaindustrial:reception_capsule",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Capsula di accoglienza",
+              "text": "Riporta indietro gli operai di turno di un insediamento uno alla volta in cambio di EU e materiali, solo finché il nucleo dell'insediamento è acceso, il villaggio ha un proprietario e il limite di operai non è raggiunto; ogni nuovo operaio riceve un numero tutto suo, unico nel mondo."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiche",
+              "lines": [
+                "Energia: 100 000 EU per operaio",
+                "Buffer: 200 000 EU"
+              ]
             }
           ]
         },
@@ -3933,6 +3869,36 @@
                 ""
               ],
               "result_id": "alaindustrial:guide_book",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluid_tap",
+          "title": "Rubinetto",
+          "icon": "alaindustrial:fluid_tap",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Rubinetto",
+              "text": "Un raccordo di vetro su un serbatoio o in fondo a un tubo. Fa uscire il fluido nel mondo e restituisce l’esperienza liquida in sfere. Il clic destro lo apre e lo chiude, anche la pietrarossa lo apre."
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione sagomata",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "minecraft:lever",
+                "",
+                "alaindustrial:fluid_pipe",
+                "",
+                "",
+                "minecraft:iron_ingot",
+                ""
+              ],
+              "result_id": "alaindustrial:fluid_tap",
               "result_count": 1
             }
           ]
@@ -4055,6 +4021,36 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "sound_absorber",
+          "title": "Assorbitore acustico",
+          "icon": "alaindustrial:sound_absorber",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Assorbitore acustico",
+              "text": "Un blocco con telaio di ferro temprato, griglia e imbottitura che attutisce i suoni dei blocchi e dell'ambiente intorno a sé; gli assorbitori che si toccano con una faccia formano un gruppo, e più il gruppo è grande, più la zona di silenzio è ampia e forte."
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione sagomata",
+              "grid": [
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:note_block",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool"
+              ],
+              "result_id": "alaindustrial:sound_absorber",
+              "result_count": 2
             }
           ]
         },
@@ -4228,8 +4224,9 @@
               "title": "Statistiche",
               "lines": [
                 "Energia: 100 EU per colpo",
-                "Buffer: 4000 EU",
-                "Raggio: 6 blocchi"
+                "Buffer: 10000 EU",
+                "Raggio: 3 blocchi",
+                "Zona di attrazione: 6 blocchi"
               ]
             },
             {
@@ -4285,6 +4282,44 @@
                 "alaindustrial:electrum_ingot"
               ],
               "result_id": "alaindustrial:electrum_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "settlement_core",
+          "title": "Nucleo dell'insediamento",
+          "icon": "alaindustrial:settlement_core",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Nucleo dell'insediamento",
+              "text": "Il cuore di un villaggio operaio, nel suo municipio: finché la rete gli fornisce EU, mantiene il territorio dell'insediamento, stabilisce quante case e quanti operai di turno può avere il villaggio e ricorda il suo proprietario; senza energia si spegne e il villaggio dorme."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiche",
+              "lines": [
+                "Energia: 8 EU/t",
+                "Buffer: 2000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione sagomata",
+              "grid": [
+                "alaindustrial:resonant_crystal",
+                "alaindustrial:reactor_circuit",
+                "alaindustrial:resonant_crystal",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:reinforced_bearing",
+                "alaindustrial:cesu",
+                "alaindustrial:reinforced_bearing"
+              ],
+              "result_id": "alaindustrial:settlement_core",
               "result_count": 1
             }
           ]
@@ -4551,7 +4586,7 @@
             {
               "type": "text",
               "title": "Carotiere",
-              "text": "Il carotiere e il modulo di perforazione a colonna — i pezzi di un potenziamento che fa scavare a un trapano tre blocchi in altezza."
+              "text": "Il carotiere e i moduli di perforazione a colonna e a fila — i pezzi di un potenziamento che fa scavare a un trapano tre blocchi in altezza o in larghezza (insieme, una croce di cinque blocchi)."
             },
             {
               "type": "recipe",
@@ -4995,7 +5030,7 @@
             {
               "type": "text",
               "title": "Grumo di energia I",
-              "text": "Tre livelli di grumi — il surplus della rete, congelato dal condensatore di energia. L'unico ingrediente di cui sono fatti i chip di overclock."
+              "text": "Tre livelli di grumi — il surplus della rete, congelato dal condensatore di energia. L'ingrediente principale dei chip di overclock; i grumi di livello II e III servono anche per i cristalli."
             }
           ]
         },

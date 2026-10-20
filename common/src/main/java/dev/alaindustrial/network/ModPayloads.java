@@ -144,6 +144,10 @@ public final class ModPayloads {
 			clientbound(ConfigSyncPayload.TYPE, ConfigSyncPayload.CODEC),
 			// MOD-843: a settlement's border for its core's "show borders" button — personal, one per press.
 			clientbound(SettlementBorderPayload.TYPE, SettlementBorderPayload.CODEC),
+			// MOD-854: a shift worker's card — opened by a right click or a roster row, refreshed after an action.
+			clientbound(ShiftWorkerCardPayload.TYPE, ShiftWorkerCardPayload.CODEC),
+			// MOD-854: a town's workers for its core's «Workers» and «Closed» tabs.
+			clientbound(ShiftWorkerRosterPayload.TYPE, ShiftWorkerRosterPayload.CODEC),
 			// MOD-093: renaming a teleport point — the one string that needs a payload of its own.
 			serverbound(TeleportRenamePayload.TYPE, TeleportRenamePayload.CODEC, TeleportRenamePayload::handle),
 			// MOD-592: a recipe-viewer drop onto a magnet filter cell.
@@ -156,5 +160,11 @@ public final class ModPayloads {
 			serverbound(DrillColumnTogglePayload.TYPE, DrillColumnTogglePayload.CODEC,
 					DrillColumnTogglePayload::handle),
 			// MOD-483: every skill purchase and reset; the skills attachment syncs itself back.
-			serverbound(SkillActionPayload.TYPE, SkillActionPayload.CODEC, SkillActionPayload::handle));
+			serverbound(SkillActionPayload.TYPE, SkillActionPayload.CODEC, SkillActionPayload::handle),
+			// MOD-854: the client asks for a worker's card or a town's roster; the server checks and replies.
+			serverbound(ShiftWorkerRequestPayload.TYPE, ShiftWorkerRequestPayload.CODEC,
+					ShiftWorkerRequestPayload::handle),
+			// MOD-854: the owner's changes from a worker's card — invest, respec, rename.
+			serverbound(ShiftWorkerActionPayload.TYPE, ShiftWorkerActionPayload.CODEC,
+					ShiftWorkerActionPayload::handle));
 }

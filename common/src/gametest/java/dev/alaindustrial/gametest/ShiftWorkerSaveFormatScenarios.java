@@ -6,6 +6,7 @@ import dev.alaindustrial.settlement.record.RecordNumber;
 import dev.alaindustrial.settlement.shift.ShiftWorkerRecord;
 import dev.alaindustrial.settlement.SettlementRegistry;
 import dev.alaindustrial.settlement.shift.ShiftWorkerBook;
+import dev.alaindustrial.settlement.shift.ShiftWorkerProfile;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -51,13 +52,30 @@ public final class ShiftWorkerSaveFormatScenarios {
 	/** System property naming the file the explicit update command writes the new snapshot into. */
 	static final String WRITE_TO_PROPERTY = "alaindustrial.shiftWorkerSnapshot.writeTo";
 
-	/** Every field of the form spelt out, in the shape the file has (version 1). */
+	/**
+	 * Every field of the form spelt out, in the shape the file has (version 1): a worker re-registered from K-001 to
+	 * W-117 (MOD-834) who later died, with a profile (MOD-854); the hall's log has the re-registration line, then the
+	 * death.
+	 */
 	private static final String FULL_SAVE = "{data_version:1,"
 			+ "workers:[{number:\"W-117\",entity:[I;1,2,3,4],look:\"alaindustrial:window_f1\",slim:1b,name:\"Anna\","
 			+ "settlement:3,status:\"awaiting_return\","
-			+ "death:{cause:\"minecraft:mob_attack\",killer:\"minecraft:zombie\",game_time:240000L}}],"
-			+ "hall_log:[{settlement:3,number:\"W-117\",name:\"Anna\","
+			+ "death:{cause:\"minecraft:mob_attack\",killer:\"minecraft:zombie\",game_time:240000L},"
+			+ "former_numbers:[\"K-001\"],"
+			+ "profile:{charge:12000L,eu_drained:80000L,highest_level:5,investments:[\"strength\",\"battery\"],"
+			+ "issued_game_time:24000L,marks:[{kind:\"issued\",game_time:24000L},"
+			+ "{kind:\"named\",game_time:30000L,args:[\"Anna\"]}],"
+			+ "biography:[\"alaindustrial:origin/here\"]}}],"
+			+ "hall_log:[{settlement:3,number:\"K-001\",name:\"Anna\",renumbered:{to:\"W-117\",game_time:120000L}},"
+			+ "{settlement:3,number:\"W-117\",name:\"Anna\","
 			+ "death:{cause:\"minecraft:mob_attack\",killer:\"minecraft:zombie\",game_time:240000L}}]}";
+
+	/**
+	 * A worker as the first slice saved it, before MOD-854 — no {@code profile} field: it must read with a full
+	 * battery at level 1.
+	 */
+	private static final String FIRST_SLICE_SAVE = "{data_version:1,"
+			+ "workers:[{number:\"K-002\",entity:[I;5,6,7,8],look:\"alaindustrial:window_f1\",settlement:3}]}";
 
 	private static final UUID ENTITY = UUIDUtil.uuidFromIntArray(new int[] {1, 2, 3, 4});
 
@@ -114,8 +132,27 @@ public final class ShiftWorkerSaveFormatScenarios {
 		helper.assertTrue(record.death().isPresent() && record.death().get().gameTime() == 240000L
 				&& record.death().get().killer().equals(Optional.of(Identifier.parse("minecraft:zombie"))),
 				"its death came back as " + record.death());
-		helper.assertTrue(registry.log().size() == 1 && registry.log().get(0).number().equals(number),
-				"the hall's log came back as " + registry.log());
+		RecordNumber former = RecordNumber.parse("K-001").orElseThrow();
+		helper.assertTrue(record.formerNumbers().equals(List.of(former)),
+				"its former numbers came back as " + record.formerNumbers());
+		ShiftWorkerProfile profile = record.profile();
+		helper.assertTrue(profile.charge() == 12000L && profile.euDrained() == 80000L && profile.highestLevel() == 5
+				&& profile.investments().equals(List.of(ShiftWorkerProfile.Stat.STRENGTH,
+						ShiftWorkerProfile.Stat.BATTERY))
+				&& profile.issuedGameTime() == 24000L && profile.marks().size() == 2
+				&& profile.marks().get(1).kind() == ShiftWorkerProfile.ServiceMark.Kind.NAMED
+				&& profile.marks().get(1).args().equals(List.of("Anna")), "its profile came back as " + profile);
+		ShiftWorkerRecord firstSlice = decode(helper, FIRST_SLICE_SAVE)
+				.byEntity(UUIDUtil.uuidFromIntArray(new int[] {5, 6, 7, 8}))
+				.orElseThrow(() -> helper.assertionException("the first-slice worker did not come back"));
+		helper.assertTrue(firstSlice.profile().equals(ShiftWorkerProfile.FRESH) && firstSlice.profile().level() == 1
+				&& firstSlice.profile().chargeNow() == firstSlice.profile().capacity(),
+				"a first-slice worker must read with a full battery at level 1, came back as " + firstSlice.profile());
+		helper.assertTrue(registry.log().size() == 2 && registry.log().get(0).number().equals(former)
+				&& registry.log().get(0).renumbering().equals(Optional.of(new ShiftWorkerBook.Renumbering(number,
+						120000L))) && registry.log().get(0).death().isEmpty()
+				&& registry.log().get(1).number().equals(number) && registry.log().get(1).death().isPresent()
+				&& registry.log().get(1).renumbering().isEmpty(), "the hall's log came back as " + registry.log());
 		Tag first = ShiftWorkerBook.CODEC.encodeStart(ops(helper), registry).getOrThrow();
 		Tag second = ShiftWorkerBook.CODEC.encodeStart(ops(helper),
 				ShiftWorkerBook.CODEC.parse(ops(helper), first).getOrThrow()).getOrThrow();
@@ -161,7 +198,7 @@ public final class ShiftWorkerSaveFormatScenarios {
 				"towns without workers are written with a shift_workers field: " + rewritten);
 		SettlementRegistry full = SettlementRegistry.CODEC.parse(ops(helper),
 				parse(towns + ",shift_workers:" + FULL_SAVE + "}")).getOrThrow();
-		helper.assertTrue(full.workers().byEntity(ENTITY).isPresent() && full.workers().log().size() == 1,
+		helper.assertTrue(full.workers().byEntity(ENTITY).isPresent() && full.workers().log().size() == 2,
 				"the workers did not come back inside the towns' save");
 		SettlementRegistry again = SettlementRegistry.CODEC.parse(ops(helper),
 				SettlementRegistry.CODEC.encodeStart(ops(helper), full).getOrThrow()).getOrThrow();
@@ -178,7 +215,7 @@ public final class ShiftWorkerSaveFormatScenarios {
 		return ShiftWorkerBook.CODEC.parse(ops(helper), parse(snbt)).getOrThrow();
 	}
 
-	/** {@code path.key: type} for every leaf of {@code tag}; a list is walked through its first element. */
+	/** {@code path.key: type} for every leaf of {@code tag}; a list of compounds is walked through every element. */
 	private static List<String> fieldLines(String path, Tag tag) {
 		List<String> out = new ArrayList<>();
 		if (tag instanceof CompoundTag compound) {
@@ -188,7 +225,9 @@ public final class ShiftWorkerSaveFormatScenarios {
 				}
 			}
 		} else if (tag instanceof ListTag list && !list.isEmpty() && list.get(0) instanceof CompoundTag) {
-			out.addAll(fieldLines(path + "[]", list.get(0)));
+			for (Tag element : list) {
+				out.addAll(fieldLines(path + "[]", element));
+			}
 		} else {
 			out.add(path + ": " + tag.getType().getName().toLowerCase(java.util.Locale.ROOT));
 		}

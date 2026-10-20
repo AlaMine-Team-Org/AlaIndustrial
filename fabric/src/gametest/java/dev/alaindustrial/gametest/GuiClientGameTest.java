@@ -143,6 +143,9 @@ public class GuiClientGameTest implements FabricClientGameTest {
             // ── MOD-483: the skill wheel. Not a menu, so ScreensClientGameTest never sees it ──
             SkillTreeGuiStand.shootSkillTree(context);
 
+            // ── MOD-854: the shift worker's card, three tabs and two dead records. Not a menu either ──
+            ShiftWorkerCardGuiStand.shootCards(context);
+
             // ── MOD-513: the archive record on the book's first page, from this lane's own login ──
             // Before the RTL and Thai stands, so it reads the English book the lane starts in.
             GuideBookRecordStand.check(context, singleplayer);

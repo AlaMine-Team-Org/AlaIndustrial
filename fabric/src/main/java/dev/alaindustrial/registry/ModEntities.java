@@ -90,8 +90,21 @@ public final class ModEntities {
 		return Registry.register(BuiltInRegistries.ENTITY_TYPE, key, builder.build(key));
 	}
 
-	/** Bind the eager-registered types into the loader-neutral {@link ModContent} facade, add the mobs' spawns. */
+	/** Set by the first {@link #init()}: the spawns it adds must be added once. */
+	private static boolean initialised;
+
+	/**
+	 * Bind the eager-registered types into the loader-neutral {@link ModContent} facade, add the mobs' spawns.
+	 *
+	 * <p>Idempotent (MOD-840): the entrypoint calls it, and so does {@code ModItems} as a class-load trigger
+	 * before it builds the spawn eggs. {@code BiomeModifications.addSpawn} appends without deduplication, so a
+	 * second pass used to list every mob twice in its biomes and double its natural spawn weight.
+	 */
 	public static void init() {
+		if (initialised) {
+			return;
+		}
+		initialised = true;
 		ModContent.STOCK_DISPLAY_FRAME = () -> STOCK_DISPLAY_FRAME;
 		// Natural spawns of the mobs (MOD-767): the NeoForge counterpart is the add_spawns biome modifier JSON. A mob
 		// without one (the shift worker, MOD-832) never appears on its own.

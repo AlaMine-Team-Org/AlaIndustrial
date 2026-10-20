@@ -1160,13 +1160,6 @@
               "text": "Nơi duy nhất chất lỏng được phép băng qua lớp vỏ kín: một lối thông 50 mB/tick hoạt động cả hai chiều — nước vào, hơi ra — mà vẫn là một mảng tường trọn vẹn."
             },
             {
-              "type": "stats",
-              "title": "Thông số",
-              "lines": [
-                "Bộ đệm: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Công thức",
               "recipe_type": "Chế tạo định hình",
@@ -1232,13 +1225,6 @@
               "type": "text",
               "title": "Cần gạt lò phản ứng",
               "text": "Cần gạt bằng hợp kim che chắn: tín hiệu được giữ từ bên trong căn phòng kín — phanh khẩn cấp của lò phản ứng, không phá lớp che chắn của phòng cũng không chảy ra cùng nội dung bên trong."
-            },
-            {
-              "type": "stats",
-              "title": "Thông số",
-              "lines": [
-                "Bộ đệm: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3190,13 +3176,6 @@
               "text": "Đầu quay trên cột phun dung dịch dinh dưỡng lên mọi thứ đang mọc trong phạm vi 4 khối. Cỗ máy duy nhất trong mod không tiêu thụ EU chút nào — không cáp nào nối vào nó, và nó chạy hoàn toàn bằng dung dịch. Lắp trên sàn hoặc dưới trần."
             },
             {
-              "type": "stats",
-              "title": "Thông số",
-              "lines": [
-                "Bộ đệm: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Công thức",
               "recipe_type": "Chế tạo định hình",
@@ -3357,13 +3336,6 @@
               "text": "Bốn khối xây dựng bằng sắt tôi theo mẫu vanilla — song sắt, thang, cửa sập và xích. Hoạt động như vanilla và trông như thép của mod."
             },
             {
-              "type": "stats",
-              "title": "Thông số",
-              "lines": [
-                "Bộ đệm: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Công thức",
               "recipe_type": "Chế tạo định hình",
@@ -3392,13 +3364,6 @@
               "type": "text",
               "title": "Nút Lò Phản Ứng",
               "text": "Nút bấm làm bằng hợp kim che chắn: cách phát xung tới cửa khí từ bên trong một căn phòng kín; được dựng y hệt nút bấm nguyên bản nhưng chịu được đúng thứ mà căn phòng này sinh ra để chứa."
-            },
-            {
-              "type": "stats",
-              "title": "Thông số",
-              "lines": [
-                "Bộ đệm: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3431,13 +3396,6 @@
               "text": "Khối vỏ chỉ sáng lên khi căn phòng đã thành hình: nguồn sáng duy nhất bên trong một chiếc hộp kín, đồng thời là dấu hiệu nhìn từ ngoài cho biết công trình đã được chấp nhận."
             },
             {
-              "type": "stats",
-              "title": "Thông số",
-              "lines": [
-                "Bộ đệm: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Công thức",
               "recipe_type": "Chế tạo định hình",
@@ -3466,13 +3424,6 @@
               "type": "text",
               "title": "Khung Lò Phản Ứng",
               "text": "Tấm hợp kim che chắn — vật liệu duy nhất được phép dùng để dựng lớp vỏ kín của phòng lò."
-            },
-            {
-              "type": "stats",
-              "title": "Thông số",
-              "lines": [
-                "Bộ đệm: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3505,13 +3456,6 @@
               "text": "Tấm vỏ trong suốt: nó được tính là tường y như vỏ thường, nhưng kính không được vượt quá 30 % lớp vỏ — quá mức đó, căn phòng thôi là lớp bao chứa mà thành tủ trưng bày."
             },
             {
-              "type": "stats",
-              "title": "Thông số",
-              "lines": [
-                "Bộ đệm: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Công thức",
               "recipe_type": "Chế tạo định hình",
@@ -3542,13 +3486,6 @@
               "text": "Kính trong suốt trong khung sắt tôi — vỡ như đá và chịu được vụ nổ của creeper hoặc TNT. Một khối xây dựng và nguyên liệu cho các công thức sau."
             },
             {
-              "type": "stats",
-              "title": "Thông số",
-              "lines": [
-                "Bộ đệm: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Công thức",
               "recipe_type": "Chế tạo định hình",
@@ -3577,13 +3514,6 @@
               "type": "text",
               "title": "Cửa Kín Khí Lò Phản Ứng",
               "text": "Lối duy nhất vào phòng lò: cửa chỉ mở bằng một xung đá đỏ, tự đóng lại sau hai giây, và không bao giờ đóng vào người đang đứng ở ngưỡng cửa."
-            },
-            {
-              "type": "stats",
-              "title": "Thông số",
-              "lines": [
-                "Bộ đệm: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3718,13 +3648,6 @@
               "type": "text",
               "title": "Mô-đun Lưu Trữ",
               "text": "Khối lưu trữ 27 ô: các mô-đun đặt sát nhau hoạt động như một nhà kho duy nhất lên tới 108 ô sau một cửa sổ."
-            },
-            {
-              "type": "stats",
-              "title": "Thông số",
-              "lines": [
-                "Bộ đệm: 0 EU"
-              ]
             },
             {
               "type": "recipe",
@@ -3881,13 +3804,6 @@
               "text": "Một chiếc đèn nhỏ xíu 4×4 điểm ảnh với ánh sáng ấm mức 15 — đặt trên sàn, trần hoặc bất kỳ bức tường nào. Không có menu, không cần năng lượng."
             },
             {
-              "type": "stats",
-              "title": "Thông số",
-              "lines": [
-                "Bộ đệm: 0 EU"
-              ]
-            },
-            {
               "type": "recipe",
               "title": "Công thức",
               "recipe_type": "Chế tạo định hình",
@@ -3904,6 +3820,26 @@
               ],
               "result_id": "alaindustrial:industrial_light",
               "result_count": 4
+            }
+          ]
+        },
+        {
+          "id": "reception_capsule",
+          "title": "Khoang tiếp nhận",
+          "icon": "alaindustrial:reception_capsule",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Khoang tiếp nhận",
+              "text": "Đưa công nhân ca của khu định cư trở lại từng người một để đổi lấy EU và vật liệu — chỉ khi lõi khu định cư đang sáng, thị trấn có chủ và chưa đạt giới hạn công nhân; mỗi công nhân mới nhận một số hiệu riêng, là duy nhất trong cả thế giới."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 100 000 EU mỗi công nhân",
+                "Bộ đệm: 200 000 EU"
+              ]
             }
           ]
         },
@@ -3933,6 +3869,36 @@
                 ""
               ],
               "result_id": "alaindustrial:guide_book",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "fluid_tap",
+          "title": "Vòi",
+          "icon": "alaindustrial:fluid_tap",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Vòi",
+              "text": "Một khớp nối bằng kính gắn trên bồn hoặc ở đầu ống. Xả chất lỏng ra thế giới và trả lại kinh nghiệm lỏng dưới dạng quả cầu. Chuột phải để mở và đóng, đá đỏ cũng mở được."
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:fluid_pipe",
+                "alaindustrial:fluid_pipe",
+                "minecraft:lever",
+                "",
+                "alaindustrial:fluid_pipe",
+                "",
+                "",
+                "minecraft:iron_ingot",
+                ""
+              ],
+              "result_id": "alaindustrial:fluid_tap",
               "result_count": 1
             }
           ]
@@ -4055,6 +4021,36 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "sound_absorber",
+          "title": "Bộ tiêu âm",
+          "icon": "alaindustrial:sound_absorber",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Bộ tiêu âm",
+              "text": "Một khối gồm khung sắt tôi, lưới và lớp đệm, làm giảm âm thanh của khối và môi trường xung quanh nó; các bộ tiêu âm chạm nhau bằng một mặt tạo thành một nhóm, nhóm càng lớn thì vùng yên tĩnh càng rộng và càng mạnh."
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:note_block",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool",
+                "alaindustrial:tempered_iron_bars",
+                "minecraft:white_wool"
+              ],
+              "result_id": "alaindustrial:sound_absorber",
+              "result_count": 2
             }
           ]
         },
@@ -4228,8 +4224,9 @@
               "title": "Thông số",
               "lines": [
                 "Năng lượng: 100 EU/lần giật",
-                "Bộ đệm: 4000 EU",
-                "Bán kính: 6 khối"
+                "Bộ đệm: 10000 EU",
+                "Bán kính: 3 khối",
+                "Vùng hút: 6 khối"
               ]
             },
             {
@@ -4285,6 +4282,44 @@
                 "alaindustrial:electrum_ingot"
               ],
               "result_id": "alaindustrial:electrum_chest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "settlement_core",
+          "title": "Lõi khu định cư",
+          "icon": "alaindustrial:settlement_core",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Lõi khu định cư",
+              "text": "Trái tim của một thị trấn công nhân, đặt trong tòa thị chính — chừng nào lưới điện còn cấp EU, lõi giữ lãnh thổ của khu định cư, quyết định thị trấn được có bao nhiêu nhà và công nhân ca, và ghi nhớ chủ của nó; không có điện, lõi tắt và thị trấn ngủ."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 8 EU/t",
+                "Bộ đệm: 2000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:resonant_crystal",
+                "alaindustrial:reactor_circuit",
+                "alaindustrial:resonant_crystal",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:advanced_machine_casing",
+                "alaindustrial:resonance_coil",
+                "alaindustrial:reinforced_bearing",
+                "alaindustrial:cesu",
+                "alaindustrial:reinforced_bearing"
+              ],
+              "result_id": "alaindustrial:settlement_core",
               "result_count": 1
             }
           ]
@@ -4551,7 +4586,7 @@
             {
               "type": "text",
               "title": "Ống lấy lõi",
-              "text": "Ống lấy lõi và Mô-đun khoan cột — các bộ phận để chế tạo nâng cấp giúp máy khoan điện đào cao ba khối."
+              "text": "Ống lấy lõi cùng Mô-đun khoan cột và Mô-đun khoan hàng — các bộ phận để chế tạo nâng cấp giúp máy khoan điện đào cao hoặc rộng ba khối (cả hai cùng lúc — một hình chữ thập năm khối)."
             },
             {
               "type": "recipe",
@@ -4995,7 +5030,7 @@
             {
               "type": "text",
               "title": "Khối Năng Lượng I",
-              "text": "Ba bậc khối — phần dư của lưới điện, bị máy cô đặc năng lượng đóng rắn lại. Nguyên liệu duy nhất làm nên chip tăng tốc."
+              "text": "Ba bậc khối — phần dư của lưới điện, bị máy cô đặc năng lượng đóng rắn lại. Nguyên liệu chính làm chip tăng tốc; khối bậc II và III còn dùng để làm tinh thể."
             }
           ]
         },

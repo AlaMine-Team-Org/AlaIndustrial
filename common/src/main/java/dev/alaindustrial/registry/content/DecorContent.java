@@ -14,6 +14,7 @@ import dev.alaindustrial.block.ElectricMobTrapBlock;
 import dev.alaindustrial.block.EngravedPlateBlock;
 import dev.alaindustrial.block.EnrichedUraniumTorchBlock;
 import dev.alaindustrial.block.EnrichedUraniumWallTorchBlock;
+import dev.alaindustrial.block.FluidTapBlock;
 import dev.alaindustrial.block.MetalStairBlock;
 import dev.alaindustrial.block.MobRepellerBlock;
 import dev.alaindustrial.block.MobRepellerHvBlock;
@@ -25,6 +26,7 @@ import dev.alaindustrial.block.TemperedIronBarsBlock;
 import dev.alaindustrial.block.TemperedIronLadderBlock;
 import dev.alaindustrial.block.TemperedIronTrapdoorBlock;
 import dev.alaindustrial.block.entity.ElectricMobTrapBlockEntity;
+import dev.alaindustrial.block.entity.FluidTapBlockEntity;
 import dev.alaindustrial.block.entity.MobRepellerBlockEntity;
 import dev.alaindustrial.block.entity.MobRepellerHvBlockEntity;
 import dev.alaindustrial.block.entity.MobRepellerMvBlockEntity;
@@ -93,6 +95,13 @@ public final class DecorContent {
 					// noOcclusion: the body is 12 px tall, not a full cube (R-PHY-05).
 					machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL).noOcclusion()),
 					s -> ModContent.ELECTRIC_MOB_TRAP = s);
+	// MOD-837 — the Tap: lets any fluid out of a tank or pipe; it began as the trap's experience outlet, so it
+	// stands beside the trap.
+	public static final BlockDef<FluidTapBlock> FLUID_TAP =
+			block("fluid_tap", FluidTapBlock::new,
+					// The fluid pipes' numbers (it is a pipe fitting), noOcclusion: a few 6 px tubes (R-PHY-05).
+					machine(p -> p.strength(1.5f, 6.0f).sound(SoundType.COPPER).noOcclusion()),
+					s -> ModContent.FLUID_TAP = s);
 	// Material / decorative full cubes: cube_all model, one texture per block.
 	public static final BlockDef<Block> TEMPERED_IRON_BLOCK = block("tempered_iron_block", Block::new,
 			machine(MapColor.TERRACOTTA_LIGHT_BLUE, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
@@ -477,7 +486,9 @@ public final class DecorContent {
 			blockItem("broken_engraved_plate_r", s -> ModContent.BROKEN_ENGRAVED_PLATE_R_ITEM = s),
 			blockItem("broken_engraved_plate_m", s -> ModContent.BROKEN_ENGRAVED_PLATE_M_ITEM = s),
 			// MOD-818 — the Electric Mob Trap.
-			blockItem("electric_mob_trap", s -> ModContent.ELECTRIC_MOB_TRAP_ITEM = s));
+			blockItem("electric_mob_trap", s -> ModContent.ELECTRIC_MOB_TRAP_ITEM = s),
+			// MOD-837 — the Tap.
+			blockItem("fluid_tap", s -> ModContent.FLUID_TAP_ITEM = s));
 
 	private static final List<BlockEntityDef<?>> BLOCK_ENTITIES = List.of(
 			blockEntity("mob_repeller", MobRepellerBlockEntity.class, MobRepellerBlockEntity::new,
@@ -488,7 +499,10 @@ public final class DecorContent {
 					s -> ModContent.MOB_REPELLER_HV_BE = s, MOB_REPELLER_HV),
 			// MOD-818 — the Electric Mob Trap.
 			blockEntity("electric_mob_trap", ElectricMobTrapBlockEntity.class, ElectricMobTrapBlockEntity::new,
-					s -> ModContent.ELECTRIC_MOB_TRAP_BE = s, ELECTRIC_MOB_TRAP));
+					s -> ModContent.ELECTRIC_MOB_TRAP_BE = s, ELECTRIC_MOB_TRAP),
+			// MOD-837 — the Tap: its buffer and its pouring.
+			blockEntity("fluid_tap", FluidTapBlockEntity.class, FluidTapBlockEntity::new,
+					s -> ModContent.FLUID_TAP_BE = s, FLUID_TAP));
 
 	private static final List<MenuDef<?>> MENUS = List.of(
 			// MOD-278 — the guard field, one menu per tier (same class, tier-specific client factory:
@@ -608,6 +622,8 @@ public final class DecorContent {
 		show(out, ModContent.MOB_REPELLER_HV_ITEM);
 		// MOD-818 — the trap, the repeller's opposite, closes the run.
 		show(out, ModContent.ELECTRIC_MOB_TRAP_ITEM);
+		// MOD-837 — the tap, which also turns the trap's liquid experience back into orbs, right after it.
+		show(out, ModContent.FLUID_TAP_ITEM);
 	}
 
 	/** The sound absorber (MOD-804): next to the repellers, the other block that acts on its surroundings. */

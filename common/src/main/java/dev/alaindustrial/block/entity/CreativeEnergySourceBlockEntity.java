@@ -89,8 +89,12 @@ public class CreativeEnergySourceBlockEntity extends MachineBlockEntity implemen
 	 */
 	public static final int MAX_OUTPUT = 8192;
 
-	/** Output on placement — the MV preset, enough to drive early machines without swamping a test. */
-	public static final int DEFAULT_OUTPUT = 128;
+	/**
+	 * Output on placement — the HV preset at the shipped tier voltage (MOD-855, owner decision): the most a
+	 * single receiver ever takes, so a fresh source is never the bottleneck of a stand. A saved block reads
+	 * its own {@code Output} instead.
+	 */
+	public static final int DEFAULT_OUTPUT = 512;
 
 	private boolean enabled = true;
 	private int outputLimit = DEFAULT_OUTPUT;

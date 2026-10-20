@@ -3,6 +3,7 @@ package dev.alaindustrial.registry;
 import com.mojang.serialization.Codec;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.settlement.SettlementStyle;
+import dev.alaindustrial.settlement.shift.ShiftWorkerBiographyFragment;
 import dev.alaindustrial.settlement.shift.ShiftWorkerLook;
 import java.util.List;
 import java.util.Objects;
@@ -45,10 +46,18 @@ public final class ModDataRegistries {
 	public static final ResourceKey<Registry<ShiftWorkerLook>> SHIFT_WORKER_LOOK =
 			ResourceKey.createRegistryKey(Industrialization.id("shift_worker_look"));
 
+	/**
+	 * {@code alaindustrial:shift_worker_biography} — the fragments of the shift workers' biographies (MOD-854, epic
+	 * decision R26a), server only: the server writes a worker's card and sends the lines as text.
+	 */
+	public static final ResourceKey<Registry<ShiftWorkerBiographyFragment>> SHIFT_WORKER_BIOGRAPHY =
+			ResourceKey.createRegistryKey(Industrialization.id("shift_worker_biography"));
+
 	/** Every datapack registry of the mod, in the order the loaders add them. */
 	public static final List<DataRegistry<?>> REGISTRIES = List.of(
 			new DataRegistry<>(SETTLEMENT_STYLE, SettlementStyle.CODEC, null),
-			new DataRegistry<>(SHIFT_WORKER_LOOK, ShiftWorkerLook.CODEC, ShiftWorkerLook.NETWORK_CODEC));
+			new DataRegistry<>(SHIFT_WORKER_LOOK, ShiftWorkerLook.CODEC, ShiftWorkerLook.NETWORK_CODEC),
+			new DataRegistry<>(SHIFT_WORKER_BIOGRAPHY, ShiftWorkerBiographyFragment.CODEC, null));
 
 	private ModDataRegistries() {
 	}

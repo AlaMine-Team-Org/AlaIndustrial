@@ -11,6 +11,7 @@ import dev.alaindustrial.block.entity.EnergyCondenserBlockEntity;
 import dev.alaindustrial.block.entity.MobWheelBlockEntity;
 import dev.alaindustrial.block.entity.RadiantSolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.FluidTankBlockEntity;
+import dev.alaindustrial.block.entity.FluidTapBlockEntity;
 import dev.alaindustrial.block.entity.GardenDroneStationBlockEntity;
 import dev.alaindustrial.block.entity.GoldChestBlockEntity;
 import dev.alaindustrial.block.entity.HighAltitudeWindMillBlockEntity;
@@ -40,6 +41,7 @@ import dev.alaindustrial.client.render.RadiantSolarPanelBlockEntityRenderer;
 import dev.alaindustrial.client.render.CableSleeveTint;
 import dev.alaindustrial.client.render.FluidPipeTint;
 import dev.alaindustrial.client.render.FluidTankBlockEntityRenderer;
+import dev.alaindustrial.client.render.FluidTapBlockEntityRenderer;
 import dev.alaindustrial.client.render.GardenDroneBlockEntityRenderer;
 import dev.alaindustrial.client.render.IncubatorBlockEntityRenderer;
 import dev.alaindustrial.client.render.IncubatorDomeTint;
@@ -282,6 +284,9 @@ public final class ClientContentManifest {
 					WindMillRotorBlockEntityRenderer::new),
 			renderer(ContentManifest.blockEntity("fluid_tank", FluidTankBlockEntity.class),
 					FluidTankBlockEntityRenderer::new),
+			// Tap (MOD-837): the fluid it holds, behind its glass, with that fluid's own sprite and colour.
+			renderer(ContentManifest.blockEntity("fluid_tap", FluidTapBlockEntity.class),
+					FluidTapBlockEntityRenderer::new),
 			// Incubator (MOD-118): bound to the base, draws into the dome chamber above it.
 			renderer(ContentManifest.blockEntity("incubator", IncubatorBlockEntity.class),
 					IncubatorBlockEntityRenderer::new),

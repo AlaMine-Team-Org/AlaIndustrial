@@ -261,6 +261,8 @@ public final class ModContent {
 	public static Supplier<Block> MOB_REPELLER_MV = unbound("MOB_REPELLER_MV");
 	public static Supplier<Block> MOB_REPELLER_HV = unbound("MOB_REPELLER_HV");
 	public static Supplier<Block> ELECTRIC_MOB_TRAP = unbound("ELECTRIC_MOB_TRAP");
+	/** The Tap (MOD-837): lets any fluid out of a tank or pipe; liquid experience comes out as orbs. */
+	public static Supplier<Block> FLUID_TAP = unbound("FLUID_TAP");
 	public static Supplier<Block> INCUBATOR = unbound("INCUBATOR");
 	public static Supplier<Block> INCUBATOR_DOME = unbound("INCUBATOR_DOME");
 	/** The glass cells of an assembled teleporter capsule (MOD-112). */
@@ -961,6 +963,7 @@ public final class ModContent {
 	public static Supplier<BlockItem> MOB_REPELLER_MV_ITEM = unbound("MOB_REPELLER_MV_ITEM");
 	public static Supplier<BlockItem> MOB_REPELLER_HV_ITEM = unbound("MOB_REPELLER_HV_ITEM");
 	public static Supplier<BlockItem> ELECTRIC_MOB_TRAP_ITEM = unbound("ELECTRIC_MOB_TRAP_ITEM");
+	public static Supplier<BlockItem> FLUID_TAP_ITEM = unbound("FLUID_TAP_ITEM");
 	public static Supplier<BlockItem> INCUBATOR_ITEM = unbound("INCUBATOR_ITEM");
 	public static Supplier<BlockItem> TRELLIS_ITEM = unbound("TRELLIS_ITEM");
 	public static Supplier<BlockItem> CRYSTAL_FARM_FLOOR_ITEM = unbound("CRYSTAL_FARM_FLOOR_ITEM");
@@ -1142,6 +1145,7 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> MOB_REPELLER_MV_BE = unbound("MOB_REPELLER_MV_BE");
 	public static Supplier<BlockEntityType<?>> MOB_REPELLER_HV_BE = unbound("MOB_REPELLER_HV_BE");
 	public static Supplier<BlockEntityType<?>> ELECTRIC_MOB_TRAP_BE = unbound("ELECTRIC_MOB_TRAP_BE");
+	public static Supplier<BlockEntityType<?>> FLUID_TAP_BE = unbound("FLUID_TAP_BE");
 	public static Supplier<BlockEntityType<?>> INCUBATOR_BE = unbound("INCUBATOR_BE");
 	public static Supplier<BlockEntityType<?>> PUMP_BE = unbound("PUMP_BE");
 	public static Supplier<BlockEntityType<?>> GARDEN_DRONE_STATION_BE = unbound("GARDEN_DRONE_STATION_BE");

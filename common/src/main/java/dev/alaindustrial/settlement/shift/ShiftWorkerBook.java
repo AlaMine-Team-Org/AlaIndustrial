@@ -21,7 +21,8 @@ import java.util.UUID;
 /**
  * Every shift worker of the save and the town halls' log (MOD-832, ADR-050 point 8): the source of truth of the
  * workers, kept inside the towns' {@code SettlementRegistry} as its {@code shift_workers} field. The entity in the
- * world finds its record here by its own UUID; the log has one line per death (R10a, R31), each carrying its town.
+ * world finds its record here by its own UUID; the log has one line per death (R10a, R31) and one per re-registered
+ * number (R41, MOD-834), each carrying its town.
  *
  * <p><b>Saved in number order</b>, so the same workers always write the same file; the form carries a version and a
  * ladder of upgrades ({@link Versioned}). The path dispatchers of the towns ({@link PathQuota}) live here too, but
@@ -33,21 +34,50 @@ import java.util.UUID;
 public final class ShiftWorkerBook {
 
 	/**
-	 * One line of a town hall's log: who died, how and when (R10a).
+	 * One line of a town hall's log: who died, how and when (R10a) — or, as a dry archive line, whose record was
+	 * re-registered under a new number, and when (R41, MOD-834). A line carries exactly one of the two.
 	 *
-	 * @param settlement the town the worker belonged to, 0 — none
-	 * @param number     the worker's number
-	 * @param name       the worker's name, empty — none
-	 * @param death      how it died
+	 * @param settlement  the town the worker belonged to, 0 — none
+	 * @param number      the worker's number at the time of the line — for a re-registration, the old one
+	 * @param name        the worker's name, empty — none
+	 * @param death       how it died, on a line about a death
+	 * @param renumbering the new number and when it was given, on a line about a re-registration
 	 */
-	public record LogLine(int settlement, RecordNumber number, String name, ShiftWorkerRecord.Death death) {
+	public record LogLine(int settlement, RecordNumber number, String name, Optional<ShiftWorkerRecord.Death> death,
+			Optional<Renumbering> renumbering) {
 
+		/** A line about a death. */
+		public LogLine(int settlement, RecordNumber number, String name, ShiftWorkerRecord.Death death) {
+			this(settlement, number, name, Optional.of(death), Optional.empty());
+		}
+
+		/** A line about the worker with {@code old} re-registered under {@code renumbering}'s number. */
+		public static LogLine renumbered(int settlement, RecordNumber old, String name, Renumbering renumbering) {
+			return new LogLine(settlement, old, name, Optional.empty(), Optional.of(renumbering));
+		}
+
+		// "death" was required before MOD-834; a save written then always has it, so it reads as before.
 		public static final Codec<LogLine> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 				Codec.INT.optionalFieldOf("settlement", 0).forGetter(LogLine::settlement),
 				ShiftWorkerRecord.NUMBER_CODEC.fieldOf("number").forGetter(LogLine::number),
 				Codec.STRING.optionalFieldOf("name", "").forGetter(LogLine::name),
-				ShiftWorkerRecord.Death.CODEC.fieldOf("death").forGetter(LogLine::death)
+				ShiftWorkerRecord.Death.CODEC.optionalFieldOf("death").forGetter(LogLine::death),
+				Renumbering.CODEC.optionalFieldOf("renumbered").forGetter(LogLine::renumbering)
 		).apply(instance, LogLine::new));
+	}
+
+	/**
+	 * A worker's record re-registered under a new number (R41, MOD-834).
+	 *
+	 * @param number   the new number
+	 * @param gameTime the game time of the re-registration; the day is {@code gameTime / 24000}
+	 */
+	public record Renumbering(RecordNumber number, long gameTime) {
+
+		public static final Codec<Renumbering> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+				ShiftWorkerRecord.NUMBER_CODEC.fieldOf("to").forGetter(Renumbering::number),
+				Codec.LONG.fieldOf("game_time").forGetter(Renumbering::gameTime)
+		).apply(instance, Renumbering::new));
 	}
 
 	private static final Codec<ShiftWorkerBook> BODY = RecordCodecBuilder.create(instance -> instance.group(
