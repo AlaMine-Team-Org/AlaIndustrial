@@ -7,7 +7,10 @@
   "mixins": [
     "PistonQuenchPressMixin",
     "LivingEntityModFluidTravelMixin",
-    "ExperienceOrbAccessor"
+    "ExperienceOrbAccessor",
+    "MobTargetSelectorAccessor",
+    "NearestAttackableTargetGoalAccessor",
+    "TargetGoalAccessor"
   ],
   "client": [
     "client.RootInspectionStateMixin",

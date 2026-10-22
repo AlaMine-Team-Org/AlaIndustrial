@@ -503,6 +503,24 @@ pitest {
                      // listed WITH its L1 suite (ReceptionCapsuleRulesTest). The glob reaches the nested Material,
                      // Verdict and Situation; ShiftWorkerHost beside it carries Minecraft types and stays out.
                      'dev.alaindustrial.settlement.ReceptionCapsuleRules*',
+                     // Owner's round 3: who may use a town's machines (R98), Minecraft-free for
+                     // SettlementAccessTest.
+                     'dev.alaindustrial.settlement.SettlementAccess*',
+                     // MOD-859: the town hall plan sheets' assembly rules and the hint keys — Minecraft-free,
+                     // listed WITH their L1 suite (PlanSheetRulesTest); the glob reaches the nested Sheet, Plan,
+                     // Result and Reason.
+                     'dev.alaindustrial.settlement.plan.PlanSheetRules*',
+                     'dev.alaindustrial.settlement.plan.PlanSheetHints',
+                     // MOD-858: the builder drone's rules — what to do with a cell, the nests' limits and the flight's
+                     // cost, who of a town works, the dispatcher's status and when its «Start» may be pressed —
+                     // Minecraft-free, listed WITH their L1 suites (DroneCellRulesTest, DroneNestRulesTest,
+                     // TownDroneRosterTest, StartReadinessTest). The globs reach the nested Cell, Action, Job, Status
+                     // and Blocker.
+                     'dev.alaindustrial.settlement.drone.DroneCellRules*',
+                     'dev.alaindustrial.settlement.drone.DroneNestRules*',
+                     'dev.alaindustrial.settlement.drone.TownDroneRoster*',
+                     'dev.alaindustrial.settlement.drone.DispatcherStatus',
+                     'dev.alaindustrial.settlement.drone.StartReadiness*',
                      // MOD-618: the reactor console's verdict, advice, throttle grid and heat trend.
                      // The glob reaches its nested HeatTrend; nothing else in the package starts with
                      // this name, and the tab page next to it (ConsoleTabPage) is Minecraft-bound on
@@ -528,7 +546,32 @@ pitest {
                      'dev.alaindustrial.client.screen.shiftworker.ShiftWorkerCardLayout',
                      // MOD-843: the settlement border shell (walls on the territory edge, floor, ceiling or dome) —
                      // Minecraft-free, L1 suite SettlementShellTest. The glob reaches the nested Point, Box, Sink.
-                     'dev.alaindustrial.settlement.SettlementShell*'
+                     'dev.alaindustrial.settlement.SettlementShell*',
+                     // MOD-857: a town's work queue, its jobs and reasons, the building state rule and the
+                     // «Construction» row — Minecraft-free on purpose, L1 suites WorkQueueTest,
+                     // BuildingStateRulesTest, ConstructionRowTest. The globs reach WorkJobType, WorkJobStatus,
+                     // BuildingStateRules and the nested records; SettlementWorks, TownWorks and the plan beside
+                     // them carry Codec and Minecraft types and stay out.
+                     'dev.alaindustrial.settlement.works.WorkQueue*',
+                     'dev.alaindustrial.settlement.works.WorkJob*',
+                     'dev.alaindustrial.settlement.works.BlockReason',
+                     'dev.alaindustrial.settlement.works.BuildingState*',
+                     'dev.alaindustrial.settlement.works.ConstructionRow',
+                     'dev.alaindustrial.settlement.works.ConstructionRow$*',
+                     // MOD-860: building in stages and the dispatcher's work journal — Minecraft-free on purpose,
+                     // L1 suites BuildStageRulesTest and WorkJournalTest. The globs reach the nested records and
+                     // enums; the material source is a pure interface (pitest_check.py's NO_MUTABLE_BYTECODE).
+                     'dev.alaindustrial.settlement.works.BuildStage',
+                     'dev.alaindustrial.settlement.works.BuildStageRules*',
+                     'dev.alaindustrial.settlement.works.MaterialSource',
+                     'dev.alaindustrial.settlement.works.WorkJournal',
+                     'dev.alaindustrial.settlement.works.WorkJournal$*',
+                     // MOD-857 (owner's round 2): which missing cells a town hall schematic reply carries —
+                     // Minecraft-free on purpose, L1 suite SchematicSelectionTest.
+                     'dev.alaindustrial.settlement.works.SchematicSelection',
+                     // MOD-859: the «Plan sheets» rows of the «Construction» tab — Minecraft-free, L1 suite
+                     // PlanSheetRowsTest.
+                     'dev.alaindustrial.settlement.works.PlanSheetRows'
             ]
     // The MC-coupled classes are excluded from MUTATION (the bytecode PIT rewrites). But PIT's
     // JUnit discovery also walks every class under `targetTests` via reflection to find @Test
@@ -640,6 +683,8 @@ pitest {
             'dev.alaindustrial.client.render.UpgradeTableGeometry',
             // MOD-763: the mob wheel's formed structure, written by tools/gen_mob_wheel_assets.py.
             'dev.alaindustrial.client.render.MobWheelGeometry',
+            // MOD-858: the builder drone's cubes, written by tools/gen_town_drone_assets.py — a generated table.
+            'dev.alaindustrial.client.render.ConstructionDroneGeometry',
             // MOD-787: the block breaker's moving parts, written by
             // tools/model_sources/block_breaker/build_block_breaker.py — generated number tables like the above.
             'dev.alaindustrial.client.render.BlockBreakerGeometry',
@@ -853,6 +898,24 @@ pitest {
             // common/'s test classpath, so L1 cannot load it (listed in pitest_check.py's TRANSITIVE_MC_COUPLING).
             // Its rules are held by the shift worker game tests and the save-format snapshot.
             'dev.alaindustrial.settlement.shift.ShiftWorkerBook',
+            // MOD-857: the towns' works book and one town's works name no net.minecraft type themselves, but the
+            // book is a DataFixerUpper Codec over TownBuilding (Identifier, BlockPos, Rotation) and a town's works
+            // hold BuildingPlan (BlockState); the client end of the «Construction» tab sends record payloads through
+            // NetworkDispatcher — none of it loads on common/'s test classpath (pitest_check.py's
+            // TRANSITIVE_MC_COUPLING). Their rules live in WorkQueue and BuildingStateRules (targeted above) and are
+            // held by the town_works game tests and the L3 frame.
+            'dev.alaindustrial.settlement.works.SettlementWorks',
+            'dev.alaindustrial.settlement.works.TownWorks',
+            'dev.alaindustrial.client.screen.works.TownWorksClient',
+            // MOD-860: the journal's save codec is a DataFixerUpper Codec, and the «Stages» rows read a town's staged
+            // plan (BlockState, ServerLevel) — neither loads on common/'s test classpath (pitest_check.py's
+            // TRANSITIVE_MC_COUPLING). Their rules live in WorkJournal and BuildStageRules (targeted above) and are
+            // held by the town_build_materials game tests.
+            'dev.alaindustrial.settlement.works.WorkJournalCodec',
+            'dev.alaindustrial.settlement.works.StageRows',
+            // MOD-858: the dispatcher's tab lines with their DataFixerUpper Codec, for the update tag only; worded by
+            // DispatcherViews (a ServerLevel) and held by the town_drone game tests.
+            'dev.alaindustrial.settlement.drone.DispatcherView',
             // NOTE: `dev.alaindustrial.Config` lived here as a deferred-coverage parking spot from
             // MOD-200 (135 mutants, only 35 killed) until MOD-204 wrote the full L1 suite
             // (ConfigSnapshotTest), which killed all 157 mutants it had at the time. It has moved to

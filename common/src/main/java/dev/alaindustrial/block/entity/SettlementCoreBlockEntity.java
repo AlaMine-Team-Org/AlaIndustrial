@@ -10,11 +10,15 @@ import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.settlement.Settlement;
 import dev.alaindustrial.settlement.SettlementConfig;
 import dev.alaindustrial.settlement.SettlementCoreUpkeep;
+import dev.alaindustrial.settlement.SettlementGate;
 import dev.alaindustrial.settlement.SettlementRegistry;
 import dev.alaindustrial.settlement.SettlementTerritory;
 import dev.alaindustrial.settlement.shift.ShiftWorkerBattery;
 import dev.alaindustrial.settlement.shift.ShiftWorkers;
 import dev.alaindustrial.settlement.SettlementTier;
+import dev.alaindustrial.settlement.works.PlanSheetNews;
+import dev.alaindustrial.settlement.works.TownWorksScanner;
+import dev.alaindustrial.worldgen.town.TownBuildings;
 import dev.alaindustrial.worldgen.town.TownFootprint;
 import java.util.Optional;
 import java.util.UUID;
@@ -223,6 +227,7 @@ public final class SettlementCoreBlockEntity extends MachineBlockEntity implemen
 		}
 
 		settlement = learnFootprint(serverLevel, registry, settlement);
+		TownBuildings.learnOnce(serverLevel, registry, settlementId, worldPosition); // MOD-857: a town of an older save
 		boolean wasActive = upkeep.active();
 		long drain = upkeep.tick(energy.getAmount(), energy.getCapacity(), tier.euPerTick(),
 				SettlementConfig.settlementCoreGraceTicks);
@@ -233,6 +238,7 @@ public final class SettlementCoreBlockEntity extends MachineBlockEntity implemen
 		boolean active = upkeep.active();
 		if (active) {
 			rechargeWorkers(serverLevel);
+			TownWorksScanner.tick(serverLevel, settlementId); // MOD-857: a lit town compares its buildings
 		}
 		recordEuRate(active ? (int) Math.min(Integer.MAX_VALUE, drain) : 0);
 		if (active != wasActive) {
@@ -247,6 +253,7 @@ public final class SettlementCoreBlockEntity extends MachineBlockEntity implemen
 			if (active) {
 				// The workers go to sleep on their own when the core goes dark; waking them is the town's (MOD-832).
 				ShiftWorkers.townLit(serverLevel, settlementId);
+				PlanSheetNews.coreWoke(serverLevel, settlementId); // MOD-859: where the hall's plan sheets lie
 			}
 		}
 		updateLit(active);
@@ -347,6 +354,19 @@ public final class SettlementCoreBlockEntity extends MachineBlockEntity implemen
 				: settlement().flatMap(Settlement::owner);
 		return owner.isPresent() && owner.get().equals(player.getUUID())
 				&& player.getMainHandItem().isCorrectToolForDrops(getBlockState());
+	}
+
+	/**
+	 * Whether {@code player} may open and read this core (R98): a member of its town, an inspector, or anybody while
+	 * nobody has woken the town; a core of no town is open to all. Asked on opening and by the open menu every tick.
+	 */
+	public boolean admits(Player player) {
+		return SettlementGate.admits(town(), player);
+	}
+
+	/** The town the core speaks for: its own, a second core's town (R43), none for a core of no town (R53). */
+	private Optional<Settlement> town() {
+		return unbound ? Optional.empty() : settlement();
 	}
 
 	/** {@link Channel#OWNER} for {@code viewer}: nobody, the viewer, or somebody else. */
@@ -467,7 +487,11 @@ public final class SettlementCoreBlockEntity extends MachineBlockEntity implemen
 	 * client learns which town's border the screen's "show borders" button controls (MOD-843).
 	 */
 	@Override
+	@Nullable
 	public AbstractContainerMenu createMenu(int syncId, Inventory inventory, Player player) {
+		if (!SettlementGate.admitOrTell(town(), player)) {
+			return null; // a stranger to a woken town (R98): the chat says why, the screen stays shut
+		}
 		if (player instanceof ServerPlayer serverPlayer) {
 			sendBorder(serverPlayer, false);
 			if (unbound) {
@@ -508,6 +532,25 @@ public final class SettlementCoreBlockEntity extends MachineBlockEntity implemen
 	@Override
 	public long perTickDemand() {
 		return Math.max(1, tier.euPerTick()) + workerDemand;
+	}
+
+	/**
+	 * EU the core hands the town's builder drones (MOD-858, epic decision R94): a nest's charge, or the price of a
+	 * block a drone placed or took away — never more than the buffer holds above {@code settlementCoreGraceTicks}
+	 * ticks of upkeep, so the drones never eat the reserve that keeps the town lit, and nothing while the core is
+	 * dark or a second core. Drains what it gives; returns it.
+	 */
+	public long giveToDrones(long wanted) {
+		if (wanted <= 0 || !upkeep.active() || misplaced || unbound) {
+			return 0L;
+		}
+		long reserve = (long) Math.max(1, tier.euPerTick()) * Math.max(1, SettlementConfig.settlementCoreGraceTicks);
+		long given = Math.min(wanted, Math.max(0L, energy.getAmount() - reserve));
+		if (given > 0) {
+			energy.drainInternal(given);
+			setChanged();
+		}
+		return given;
 	}
 
 	/**

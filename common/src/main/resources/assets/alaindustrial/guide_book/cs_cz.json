@@ -3831,7 +3831,7 @@
             {
               "type": "text",
               "title": "Přijímací kapsle",
-              "text": "Vrací směnové dělníky osady jednoho po druhém za EU a materiály — jen dokud jádro osady svítí, osada má majitele a limit dělníků není naplněný; každý nový dělník dostane vlastní číslo, které je v celém světě jen jedno."
+              "text": "Vrací směnové dělníky osady jednoho po druhém za EU a materiály — jen dokud jádro osady svítí, osada má obnovitele a limit dělníků není naplněný; každý nový dělník dostane vlastní číslo, které je v celém světě jen jedno."
             },
             {
               "type": "stats",
@@ -4294,7 +4294,7 @@
             {
               "type": "text",
               "title": "Jádro osady",
-              "text": "Srdce dělnické osady, které stojí na její radnici — dokud mu síť dodává EU, drží území osady, určuje, kolik domů a směnových dělníků v osadě smí být, a pamatuje si svého majitele; bez energie zhasne a osada usne."
+              "text": "Srdce dělnické osady, které stojí na její radnici — dokud mu síť dodává EU, drží území osady, určuje, kolik domů a směnových dělníků v osadě smí být, a pamatuje si svého obnovitele; bez energie zhasne a osada usne."
             },
             {
               "type": "stats",

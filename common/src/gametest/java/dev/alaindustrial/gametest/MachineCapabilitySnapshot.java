@@ -122,6 +122,12 @@ final class MachineCapabilitySnapshot {
 			"reception_capsule: owner=null active=3 items=5 eu=11/13/17/19 panel=0 mute=0 stats=0"
 					+ " oc=0/0 rate=2 dur=200 evolve=-1/-1",
 			"reception_capsule keys: -Owner -OwnerName -EvolveProgress -EvolveChip",
+			"town_dispatcher: owner=null active=3 items=5 eu=11/13/17/19 panel=0 mute=0 stats=0 oc=0/0"
+					+ " rate=2 dur=200 evolve=-1/-1",
+			"town_dispatcher keys: -Owner -OwnerName -EvolveProgress -EvolveChip",
+			"drone_nest: owner=null active=3 items=5 eu=11/13/17/19 panel=0 mute=0 stats=0 oc=0/0"
+					+ " rate=2 dur=200 evolve=-1/-1",
+			"drone_nest keys: -Owner -OwnerName -EvolveProgress -EvolveChip",
 			"distillation_column: owner=Characterizer active=3 items=5 eu=11/13/17/19 panel=1 mute=1"
 					+ " stats=1 oc=1/3 rate=4 dur=160 evolve=-1/-1",
 			"distillation_column keys: -EvolveProgress -EvolveChip",

@@ -313,6 +313,7 @@ tooltip.alaindustrial.hold_shift {dark_gray}
 -- shift no-eu
 tooltip.alaindustrial.tier_lv {green}
 == alaindustrial:concentrator_section plain : none
+== alaindustrial:construction_drone plain : none
 == alaindustrial:control_rod_drive plain : none
 == alaindustrial:copper_cable plain
 -- plain eu
@@ -461,6 +462,19 @@ tooltip.alaindustrial.hold_shift {dark_gray}
 tooltip.alaindustrial.drill_row_module.role {gray}
 tooltip.alaindustrial.drill_row_module.fitting {gray}
 tooltip.alaindustrial.drill_row_module.toggle {gray}
+== alaindustrial:drone_nest plain
+-- plain eu
+tooltip.alaindustrial.drone_nest.purpose {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.drone_nest.purpose {gray}
+tooltip.alaindustrial.tier_lv {green}
+-- plain no-eu
+tooltip.alaindustrial.drone_nest.purpose {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.drone_nest.purpose {gray}
+tooltip.alaindustrial.tier_lv {green}
 == alaindustrial:electric_bow plain
 -- plain eu
 tooltip.alaindustrial.electric_bow.usage(150) {gray}
@@ -1994,6 +2008,7 @@ tooltip.alaindustrial.tier_lv {green}
 == alaindustrial:resonant_crystal_blank eu=1 : none
 == alaindustrial:resonant_crystal_blank full : none
 == alaindustrial:resonant_shard plain : none
+== alaindustrial:restoration_plan plain : none
 == alaindustrial:rtp_chip plain : none
 == alaindustrial:rubber plain : none
 == alaindustrial:sawdust plain : none
@@ -2364,6 +2379,20 @@ tooltip.alaindustrial.cable_shock_warning {red}
 == alaindustrial:tin_slab plain : none
 == alaindustrial:tin_stairs plain : none
 == alaindustrial:tin_wall plain : none
+== alaindustrial:town_dispatcher plain
+-- plain eu
+tooltip.alaindustrial.town_dispatcher.purpose {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.town_dispatcher.purpose {gray}
+tooltip.alaindustrial.tier_lv {green}
+-- plain no-eu
+tooltip.alaindustrial.town_dispatcher.purpose {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.town_dispatcher.purpose {gray}
+tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:town_hall_plan_sheet plain : none
 == alaindustrial:trellis plain : none
 == alaindustrial:unstable_isotope plain : none
 == alaindustrial:upgrade_table plain

@@ -10,6 +10,7 @@ import dev.alaindustrial.compat.LineStructures;
 import dev.alaindustrial.registry.ModDataRegistries;
 import dev.alaindustrial.settlement.SettlementStyle;
 import dev.alaindustrial.settlement.SettlementTerritory;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -261,7 +262,8 @@ public final class AlaTownStructure extends Structure {
 
 	/**
 	 * After the pieces of this chunk are down: the plaques of the former residents ({@link TownPlaques}) and the
-	 * settlement of the core ({@link TownCore}); and the block-entity placeholders the game left where no block
+	 * settlement of the core ({@link TownCore}); the loot tables of the hall plan sheets ({@link TownPlanSheets},
+	 * MOD-859); and the block-entity placeholders the game left where no block
 	 * entity lives, the reception capsule's cells above its lower one ({@link TownBlockEntities}).
 	 */
 	@Override
@@ -275,12 +277,14 @@ public final class AlaTownStructure extends Structure {
 		StructureTemplateManager templates = LineStructures.templates(server);
 		// The whole town's, not this chunk's: every piece of the start is in the container (MOD-848).
 		Optional<SettlementTerritory.Area> footprint = TownFootprint.of(pieces.pieces());
+		List<TownBuildings.PieceRef> buildings = TownBuildings.refs(pieces.pieces());
 		for (StructurePiece piece : pieces.pieces()) {
 			if (piece instanceof PoolElementStructurePiece pool && pool.getBoundingBox().intersects(chunkBox)) {
 				TownPlaques.engrave(level, templates, pool, chunkBox);
-				TownCore.register(level, templates, pool, chunkBox, style, footprint);
+				TownCore.register(level, templates, pool, chunkBox, style, footprint, buildings);
 			}
 		}
+		TownPlanSheets.place(level, templates, pieces.pieces(), chunkBox, style, random);
 	}
 
 	@Override

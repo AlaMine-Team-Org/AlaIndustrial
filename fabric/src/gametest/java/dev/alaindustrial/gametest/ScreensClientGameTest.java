@@ -1,5 +1,6 @@
 package dev.alaindustrial.gametest;
 
+import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.DistillationColumnBlock;
 import dev.alaindustrial.block.FuelRodAssemblyBlock;
 import dev.alaindustrial.block.ReceptionCapsuleBlock;
@@ -146,6 +147,10 @@ public class ScreensClientGameTest implements FabricClientGameTest {
             // frame captures the capsule's resting refusal in red, the empty material slots with their faded hints
             // and counts, and the zero-filled bars. A regression into a blank status row would hide every refusal.
             new Screen("reception_capsule", "reception_capsule", "Reception Capsule"),
+            // MOD-858: the town dispatcher. The rig stands in no town, so the status row says so in red; the frame
+            // guards the «Task» tab (the plan row and the four-step checklist with its crosses) and the side tab
+            // strip; captureDispatcherTabs photographs the other three tabs.
+            new Screen("town_dispatcher", "town_dispatcher", "Town Dispatcher"),
             new Screen("teleporter_station", "teleporter", "Teleporter Station"),
             // Already had frames before MOD-362, but only under the historical name gui_geothermal_*
             // and only through data injection. Listed here so it is opened the real way like the rest.
@@ -475,8 +480,13 @@ public class ScreensClientGameTest implements FabricClientGameTest {
                             + "check that the whole window is in frame and no label is clipped");
 
             captureMachineStates(context, screen);
+            if (screen.menuId().equals("town_dispatcher")) {
+                TownDispatcherShots.captureTabs(context);
+            }
             if (screen.menuId().equals("settlement_core")) {
                 captureCoreRoster(context, pos);
+                SettlementCoreWorksShot.capture(context, pos);
+                SettlementCoreWorksShot.captureSheets(context, pos);
             }
             VisualWorld.awaitNoScreen(context);
         }
@@ -492,14 +502,17 @@ public class ScreensClientGameTest implements FabricClientGameTest {
             if (mc.gui.screen() instanceof SettlementCoreScreen core) {
                 core.selectTab(SettlementCoreScreen.TAB_WORKERS);
                 ShiftWorkerCardClient.receiveRoster(new ShiftWorkerRosterPayload(pos, 3, List.of(
-                        new ShiftWorkerRosterPayload.Row("Q-117", "Anya", 6, ShiftWorkerRecord.Status.ALIVE, true),
-                        new ShiftWorkerRosterPayload.Row("Q-118", "", 1, ShiftWorkerRecord.Status.ALIVE, true),
+                        new ShiftWorkerRosterPayload.Row("Q-117", "Anya", 6, ShiftWorkerRecord.Status.ALIVE, true,
+                                Industrialization.id("open_f2"), true),
+                        new ShiftWorkerRosterPayload.Row("Q-118", "", 1, ShiftWorkerRecord.Status.ALIVE, true,
+                                Industrialization.id("window_m3"), false),
                         new ShiftWorkerRosterPayload.Row("Q-121", "Konstantin", 23,
-                                ShiftWorkerRecord.Status.ALIVE, true),
+                                ShiftWorkerRecord.Status.ALIVE, true, Industrialization.id("open_m1"), false),
                         new ShiftWorkerRosterPayload.Row("Q-125", "Mira", 4,
-                                ShiftWorkerRecord.Status.AWAITING_RETURN, false)),
+                                ShiftWorkerRecord.Status.AWAITING_RETURN, false,
+                                Industrialization.id("window_f5"), true)),
                         List.of(new ShiftWorkerRosterPayload.Row("Q-090", "Oleg", 9, ShiftWorkerRecord.Status.DEAD,
-                                false))));
+                                false, Industrialization.id("open_m4"), false))));
             }
         });
         context.waitFor(mc -> mc.gui.screen() instanceof SettlementCoreScreen core
@@ -507,7 +520,8 @@ public class ScreensClientGameTest implements FabricClientGameTest {
         context.waitTicks(2);
         ShotRecorder.captureScreen("settlement_core", "roster", ShotRecorder.rules("R-GUI-03"),
                 "Shift workers tab: the tab strip on the panel's left edge with the second tab open, the heading "
-                        + "names the tab, four rows - number, name, level, status - inside the frame, the long name "
+                        + "names the tab, four rows - the worker's own face, number, name, level, status - inside the "
+                        + "frame, each face a different look and the waiting worker's face greyed, the long name "
                         + "scaled rather than running into the level, the waiting worker's status in red, no energy "
                         + "bar");
         ShiftWorkerCardClient.clear();

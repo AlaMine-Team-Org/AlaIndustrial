@@ -3831,7 +3831,7 @@
             {
               "type": "text",
               "title": "Capsule d'accueil",
-              "text": "Ramène les ouvriers de relève d'une colonie un par un contre des EU et des matériaux — seulement tant que le noyau de colonie est allumé, que la cité a un propriétaire et que sa limite d'ouvriers n'est pas atteinte ; chaque nouvel ouvrier reçoit son propre numéro, unique dans le monde."
+              "text": "Ramène les ouvriers de relève d'une colonie un par un contre des EU et des matériaux — seulement tant que le noyau de colonie est allumé, que la cité a un restaurateur et que sa limite d'ouvriers n'est pas atteinte ; chaque nouvel ouvrier reçoit son propre numéro, unique dans le monde."
             },
             {
               "type": "stats",
@@ -4294,7 +4294,7 @@
             {
               "type": "text",
               "title": "Noyau de colonie",
-              "text": "Le cœur d'une cité ouvrière, installé dans son hôtel de ville — tant que le réseau lui fournit des EU, il maintient le territoire de la colonie, fixe combien de maisons et d'ouvriers de relève la cité peut avoir et se souvient de son propriétaire ; sans énergie, il s'éteint et la cité s'endort."
+              "text": "Le cœur d'une cité ouvrière, installé dans son hôtel de ville — tant que le réseau lui fournit des EU, il maintient le territoire de la colonie, fixe combien de maisons et d'ouvriers de relève la cité peut avoir et se souvient de son restaurateur ; sans énergie, il s'éteint et la cité s'endort."
             },
             {
               "type": "stats",

@@ -12,6 +12,7 @@ import dev.alaindustrial.registry.ModDataRegistries;
 import dev.alaindustrial.settlement.ReceptionCapsuleRules;
 import dev.alaindustrial.settlement.Settlement;
 import dev.alaindustrial.settlement.SettlementConfig;
+import dev.alaindustrial.settlement.SettlementGate;
 import dev.alaindustrial.settlement.SettlementRegistry;
 import dev.alaindustrial.settlement.record.RecordNumber;
 import dev.alaindustrial.stats.LevelMath;
@@ -91,7 +92,7 @@ public final class ShiftWorkerProfiles {
 		BlockPos core = coreBe.getBlockPos();
 		ServerLevel level = viewer.level();
 		if (coreBe.isRemoved() || coreBe.getLevel() != level || !near(viewer, Vec3.atCenterOf(core))
-				|| !level.isLoaded(core) || level.getBlockEntity(core) != coreBe) {
+				|| !level.isLoaded(core) || level.getBlockEntity(core) != coreBe || !coreBe.admits(viewer)) {
 			return;
 		}
 		coreBe.settlement().ifPresent(town -> send(viewer, roster(level.getServer(), town, core)));
@@ -189,7 +190,8 @@ public final class ShiftWorkerProfiles {
 	/**
 	 * Whether {@code viewer} may see the card of {@code record} (R74 — everyone, read-only): within
 	 * {@link #VIEW_DISTANCE} of the loaded worker in the viewer's level, or of its town's core in the viewer's
-	 * dimension (the roster at the core shows the dead too).
+	 * dimension (the roster at the core shows the dead too). The core's way is the town's data, so it is closed to a
+	 * stranger to the town (R98); the worker standing in the world stays visible to everybody, as R74 has it.
 	 */
 	public static boolean mayView(ServerPlayer viewer, ShiftWorkerRecord record) {
 		ServerLevel level = viewer.level();
@@ -198,6 +200,7 @@ public final class ShiftWorkerProfiles {
 			return true;
 		}
 		return town(level.getServer(), record).filter(town -> town.dimension().equals(level.dimension()))
+				.filter(town -> SettlementGate.admits(Optional.of(town), viewer))
 				.map(town -> near(viewer, Vec3.atCenterOf(town.corePos()))).orElse(false);
 	}
 
@@ -297,7 +300,7 @@ public final class ShiftWorkerProfiles {
 		for (ShiftWorkerRecord record : records) {
 			ShiftWorkerRosterPayload.Row row = new ShiftWorkerRosterPayload.Row(record.number().toString(),
 					record.name(), record.profile().level(), record.status(),
-					record.status() == ShiftWorkerRecord.Status.ALIVE);
+					record.status() == ShiftWorkerRecord.Status.ALIVE, record.look(), record.slim());
 			boolean dead = record.status() == ShiftWorkerRecord.Status.DEAD;
 			List<ShiftWorkerRosterPayload.Row> into = dead ? closed : active;
 			if (into.size() < ShiftWorkerRosterPayload.MAX_ROWS) {
@@ -434,7 +437,7 @@ public final class ShiftWorkerProfiles {
 		for (RecordNumber old : record.formerNumbers()) {
 			long when = -1L;
 			for (ShiftWorkerBook.LogLine line : log) {
-				if (line.number().equals(old) && line.renumbering().isPresent()) {
+				if (line.about(old) && line.renumbering().isPresent()) {
 					when = line.renumbering().get().gameTime();
 				}
 			}

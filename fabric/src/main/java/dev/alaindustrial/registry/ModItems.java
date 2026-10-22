@@ -165,7 +165,7 @@ public final class ModItems {
 						// Single source of truth shared with NeoForge (CreativeTabContent) so the mod tab
 						// is identical on both loaders. Hidden pre-release content (non-copper cables,
 						// water/high-altitude mills) is omitted there, so it stays hidden here too — MOD-102.
-						CreativeTabContent.main(output::accept))
+						CreativeTabContent.main(CreativeTabContent.Sink.of(output::accept, output::accept)))
 				.build();
 		Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, TAB, tab);
 

@@ -54,8 +54,8 @@ public final class ShiftWorkerSaveFormatScenarios {
 
 	/**
 	 * Every field of the form spelt out, in the shape the file has (version 1): a worker re-registered from K-001 to
-	 * W-117 (MOD-834) who later died, with a profile (MOD-854); the hall's log has the re-registration line, then the
-	 * death.
+	 * W-117 (MOD-834) who later died, with a profile (MOD-854); the hall's log has the re-registration line, the
+	 * death, then the town hall restored (MOD-857) — a line with no worker number.
 	 */
 	private static final String FULL_SAVE = "{data_version:1,"
 			+ "workers:[{number:\"W-117\",entity:[I;1,2,3,4],look:\"alaindustrial:window_f1\",slim:1b,name:\"Anna\","
@@ -68,7 +68,10 @@ public final class ShiftWorkerSaveFormatScenarios {
 			+ "biography:[\"alaindustrial:origin/here\"]}}],"
 			+ "hall_log:[{settlement:3,number:\"K-001\",name:\"Anna\",renumbered:{to:\"W-117\",game_time:120000L}},"
 			+ "{settlement:3,number:\"W-117\",name:\"Anna\","
-			+ "death:{cause:\"minecraft:mob_attack\",killer:\"minecraft:zombie\",game_time:240000L}}]}";
+			+ "death:{cause:\"minecraft:mob_attack\",killer:\"minecraft:zombie\",game_time:240000L}},"
+			+ "{settlement:3,building:{template:\"alaindustrial:ala_town/plains/town_hall\","
+			+ "name:\"settlement.alaindustrial.building.town_hall\",game_time:300000L}},"
+			+ "{settlement:3,note:{key:\"settlement.alaindustrial.journal.core_awake_plan\",game_time:360000L}}]}";
 
 	/**
 	 * A worker as the first slice saved it, before MOD-854 — no {@code profile} field: it must read with a full
@@ -148,11 +151,18 @@ public final class ShiftWorkerSaveFormatScenarios {
 		helper.assertTrue(firstSlice.profile().equals(ShiftWorkerProfile.FRESH) && firstSlice.profile().level() == 1
 				&& firstSlice.profile().chargeNow() == firstSlice.profile().capacity(),
 				"a first-slice worker must read with a full battery at level 1, came back as " + firstSlice.profile());
-		helper.assertTrue(registry.log().size() == 2 && registry.log().get(0).number().equals(former)
+		helper.assertTrue(registry.log().size() == 4 && registry.log().get(0).about(former)
 				&& registry.log().get(0).renumbering().equals(Optional.of(new ShiftWorkerBook.Renumbering(number,
 						120000L))) && registry.log().get(0).death().isEmpty()
-				&& registry.log().get(1).number().equals(number) && registry.log().get(1).death().isPresent()
-				&& registry.log().get(1).renumbering().isEmpty(), "the hall's log came back as " + registry.log());
+				&& registry.log().get(1).about(number) && registry.log().get(1).death().isPresent()
+				&& registry.log().get(1).renumbering().isEmpty()
+				&& registry.log().get(2).number().isEmpty() && registry.log().get(2).building().equals(Optional.of(
+						new ShiftWorkerBook.BuildingRestored("alaindustrial:ala_town/plains/town_hall",
+								"settlement.alaindustrial.building.town_hall", 300000L)))
+				&& registry.log().get(2).note().isEmpty() && registry.log().get(3).building().isEmpty()
+				&& registry.log().get(3).note().equals(Optional.of(new ShiftWorkerBook.Note(
+						"settlement.alaindustrial.journal.core_awake_plan", 360000L))),
+				"the hall's log came back as " + registry.log());
 		Tag first = ShiftWorkerBook.CODEC.encodeStart(ops(helper), registry).getOrThrow();
 		Tag second = ShiftWorkerBook.CODEC.encodeStart(ops(helper),
 				ShiftWorkerBook.CODEC.parse(ops(helper), first).getOrThrow()).getOrThrow();
@@ -198,7 +208,7 @@ public final class ShiftWorkerSaveFormatScenarios {
 				"towns without workers are written with a shift_workers field: " + rewritten);
 		SettlementRegistry full = SettlementRegistry.CODEC.parse(ops(helper),
 				parse(towns + ",shift_workers:" + FULL_SAVE + "}")).getOrThrow();
-		helper.assertTrue(full.workers().byEntity(ENTITY).isPresent() && full.workers().log().size() == 2,
+		helper.assertTrue(full.workers().byEntity(ENTITY).isPresent() && full.workers().log().size() == 4,
 				"the workers did not come back inside the towns' save");
 		SettlementRegistry again = SettlementRegistry.CODEC.parse(ops(helper),
 				SettlementRegistry.CODEC.encodeStart(ops(helper), full).getOrThrow()).getOrThrow();

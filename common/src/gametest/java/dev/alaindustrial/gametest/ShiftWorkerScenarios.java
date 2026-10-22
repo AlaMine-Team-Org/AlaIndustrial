@@ -119,7 +119,7 @@ public final class ShiftWorkerScenarios {
 	/** The lines of the hall's log about {@code number}. */
 	private static long logLines(GameTestHelper helper, RecordNumber number) {
 		return ShiftWorkers.book(helper.getLevel().getServer()).log().stream()
-				.filter(line -> line.number().equals(number)).count();
+				.filter(line -> line.about(number)).count();
 	}
 
 	/**
@@ -476,7 +476,7 @@ public final class ShiftWorkerScenarios {
 		RecordNumber number = record(helper, worker).number();
 		worker.kill(helper.getLevel());
 		helper.assertTrue(ShiftWorkers.book(helper.getLevel().getServer()).log().stream()
-				.anyMatch(line -> line.number().equals(number) && line.settlement() == town),
+				.anyMatch(line -> line.about(number) && line.settlement() == town),
 				"the death of " + number + " is not in town " + town + "'s log");
 		closeTown(helper, town);
 		helper.succeed();

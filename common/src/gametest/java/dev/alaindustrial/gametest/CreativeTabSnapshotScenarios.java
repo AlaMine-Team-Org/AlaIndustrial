@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 
 /**
@@ -46,7 +47,18 @@ public final class CreativeTabSnapshotScenarios {
 	/** Every line the tab entry points produce on this loader, in order. */
 	static List<String> capture() {
 		List<String> lines = new ArrayList<>();
-		CreativeTabContent.main(item -> lines.add("main " + id(item)));
+		CreativeTabContent.main(new CreativeTabContent.Sink() {
+			@Override
+			public void accept(ItemLike item) {
+				lines.add("main " + id(item));
+			}
+
+			// A stack with data components: its id, then its components' values (a plan sheet's style and number).
+			@Override
+			public void accept(ItemStack stack) {
+				lines.add("main " + id(stack.getItem()) + " " + components(stack));
+			}
+		});
 		CreativeTabContent.combat(anchored("combat", lines));
 		CreativeTabContent.toolsAndUtilities(anchored("tools_and_utilities", lines));
 		CreativeTabContent.ingredients(item -> lines.add("ingredients " + id(item)));
@@ -72,6 +84,19 @@ public final class CreativeTabSnapshotScenarios {
 				lines.add(tab + " after " + id(anchor) + ": " + String.join(" ", ids));
 			}
 		};
+	}
+
+	/**
+	 * A stack's components, short enough for one line of the reference: «{ns:plan_sheet=>PlanSheet[style=ns:plains,
+	 * sheet=1]}» reads «[style=plains, sheet=1]» — the component and record names and the mod's namespace dropped.
+	 */
+	private static String components(ItemStack stack) {
+		return stack.getComponentsPatch().toString()
+				.replaceAll("[{,]\\s*[^,{\\[]*=>", " ")
+				.replaceAll("\\b[A-Z]\\w*\\[", "[")
+				.replace(Industrialization.MOD_ID + ":", "")
+				.replace("}", "")
+				.strip();
 	}
 
 	private static String id(ItemLike item) {

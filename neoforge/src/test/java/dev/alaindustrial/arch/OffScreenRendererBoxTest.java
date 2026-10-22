@@ -60,7 +60,9 @@ class OffScreenRendererBoxTest {
 	 * detection has stopped reaching the code this test exists for, and an empty violation list means nothing.
 	 */
 	private static final List<String> KNOWN_OFF_SCREEN = List.of(
+			"dev.alaindustrial.client.render.ConstructionDroneRenderer",
 			"dev.alaindustrial.client.render.GardenDroneBlockEntityRenderer",
+			"dev.alaindustrial.client.render.HallSchematicRenderer",
 			"dev.alaindustrial.client.render.IncubatorBlockEntityRenderer",
 			"dev.alaindustrial.client.render.MobWheelBlockEntityRenderer",
 			"dev.alaindustrial.client.render.RadiantSolarPanelBlockEntityRenderer",

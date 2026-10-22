@@ -214,6 +214,14 @@ final class MenuChannelValuesSnapshot {
 			"reception_capsule charged getters: energy=100000 capacity=200000 progress=0/1000",
 			"reception_capsule charged menu[0]: getAwaiting=0 getEuMissing=0 getEuPrice=100000"
 					+ " getLimit=0 getLiving=0",
+			"town_dispatcher placed [0]: 0 0 0 0 0 0 0 0 0 1 0",
+			"town_dispatcher placed getters: energy=0 capacity=0 progress=0/0",
+			"town_dispatcher placed menu[0]: getBusyNests=0 getMissing=0 getNestLimit=0 getReadyNests=0"
+					+ " getReason=0",
+			"town_dispatcher charged [0]: 0 0 0 0 0 0 0 0 0 1 0",
+			"town_dispatcher charged getters: energy=0 capacity=0 progress=0/0",
+			"town_dispatcher charged menu[0]: getBusyNests=0 getMissing=0 getNestLimit=0"
+					+ " getReadyNests=0 getReason=0",
 			"distillation_column placed [0]: 0 800 0 200 0 0 0 -1 -1 -1 3 0",
 			"distillation_column placed [12]: 0 0",
 			"distillation_column placed getters: energy=0 capacity=800 progress=0/200",

@@ -13,9 +13,11 @@ import dev.alaindustrial.registry.content.ToolsAndGearContent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 
 /**
@@ -42,6 +44,33 @@ public final class CreativeTabContent {
 	@FunctionalInterface
 	public interface Sink {
 		void accept(ItemLike item);
+
+		/**
+		 * A stack that carries data components: a plan sheet of one style and number (MOD-859, round 2). A sink
+		 * that keeps only ids (a gametest's capture) sees the stack's item; the loaders' sink ({@link #of}) shows
+		 * the stack itself, so several stacks of one item stand side by side.
+		 */
+		default void accept(ItemStack stack) {
+			accept(stack.getItem());
+		}
+
+		/**
+		 * A loader's tab output as a {@link Sink}: plain entries and stacks alike reach the tab. Takes the output's
+		 * two {@code accept} verbs ({@code output::accept, output::accept}): its type is not public in every loader.
+		 */
+		static Sink of(Consumer<ItemLike> items, Consumer<ItemStack> stacks) {
+			return new Sink() {
+				@Override
+				public void accept(ItemLike item) {
+					items.accept(item);
+				}
+
+				@Override
+				public void accept(ItemStack stack) {
+					stacks.accept(stack);
+				}
+			};
+		}
 	}
 
 	/**
@@ -87,20 +116,29 @@ public final class CreativeTabContent {
 	 * INSIDE each section, where it cannot separate a family from itself.
 	 */
 	private static final class ShapeSorted implements Sink {
-		private final List<ItemLike> placeable = new ArrayList<>();
-		private final List<ItemLike> carryable = new ArrayList<>();
+		private final List<Consumer<Sink>> placeable = new ArrayList<>();
+		private final List<Consumer<Sink>> carryable = new ArrayList<>();
 
 		@Override
 		public void accept(ItemLike item) {
+			band(item).add(out -> out.accept(item));
+		}
+
+		@Override
+		public void accept(ItemStack stack) {
+			band(stack.getItem()).add(out -> out.accept(stack));
+		}
+
+		private List<Consumer<Sink>> band(ItemLike item) {
 			Identifier id = BuiltInRegistries.ITEM.getKey(item.asItem());
 			boolean withBlocks = item.asItem() instanceof BlockItem
 					|| (id != null && ITEMS_SHOWN_WITH_BLOCKS.contains(id.getPath()));
-			(withBlocks ? placeable : carryable).add(item);
+			return withBlocks ? placeable : carryable;
 		}
 
 		void drainTo(Sink out) {
-			placeable.forEach(out::accept);
-			carryable.forEach(out::accept);
+			placeable.forEach(entry -> entry.accept(out));
+			carryable.forEach(entry -> entry.accept(out));
 		}
 	}
 
@@ -176,6 +214,8 @@ public final class CreativeTabContent {
 		ProcessingContent.stations(out);
 		// MOD-831 - the settlement core, found in a town hall rather than built.
 		ProcessingContent.settlement(out);
+		// MOD-859 - the plan sheets and the restoration plan; items, so they land in the carryable band.
+		ProcessingContent.settlementPlans(out);
 		// Shaped last (MOD-574): the torch is a sprite among cubes.
 		DecorContent.torch(out);
 	}

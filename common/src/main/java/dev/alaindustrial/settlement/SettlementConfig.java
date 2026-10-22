@@ -200,4 +200,45 @@ public final class SettlementConfig {
 	@Knob(section = Section.SETTLEMENTS, min = 0,
 			doc = "Copper plates one new shift worker costs at the reception capsule (at most 32).")
 	public static int capsuleCopperPlatesPerWorker = 4;
+
+	// ── MOD-858: the dispatcher, the drone nests and the tier-1 builder drone (epic decisions R91, R94) ──
+	/** R91: drone nests that work in a town with an LV core; the rest stand idle and say why. */
+	@Knob(section = Section.SETTLEMENTS, min = 0,
+			doc = "Drone nests that work in a town whose core is LV; extra nests stand idle.")
+	public static int settlementDroneNestsLv = 1;
+	@Knob(section = Section.SETTLEMENTS, min = 0,
+			doc = "Drone nests that work in a town whose core is MV.")
+	public static int settlementDroneNestsMv = 2;
+	@Knob(section = Section.SETTLEMENTS, min = 0,
+			doc = "Drone nests that work in a town whose core is HV.")
+	public static int settlementDroneNestsHv = 3;
+	@Knob(section = Section.SETTLEMENTS, min = 0,
+			doc = "Drone nests that work in a town whose core is atomic.")
+	public static int settlementDroneNestsAtomic = 4;
+	/** R91: a restored town hall finishes the landing pad on its roof — this many nests more. */
+	@Knob(section = Section.SETTLEMENTS, min = 0,
+			doc = "Extra drone nests that work once the town hall is restored.")
+	public static int settlementDroneNestsRestoredBonus = 1;
+	/** R94: the drone's own battery; it finishes a flight on it when the core goes dark. */
+	@Knob(section = Section.SETTLEMENTS, min = 1, clientVisible = true,
+			doc = "EU a builder drone's battery holds.")
+	public static int settlementDroneBattery = 4000;
+	/** R94: what a nest takes from its town's core per tick while its drone is docked. */
+	@Knob(section = Section.SETTLEMENTS, min = 0,
+			doc = "EU per tick a drone nest charges its drone's battery with from the settlement core, out of what"
+					+ " the core holds above its upkeep reserve.")
+	public static int settlementDroneChargePerTick = 16;
+	/** R94: the core pays for every block a drone places and every block it takes away. */
+	@Knob(section = Section.SETTLEMENTS, min = 0,
+			doc = "EU the settlement core pays for every block a builder drone places or removes; the drone's"
+					+ " battery pays it while the core is dark.")
+	public static int settlementDroneEuPerBlock = 20;
+	/** The flight itself is paid by the battery: per block of the path, out and back. */
+	@Knob(section = Section.SETTLEMENTS, min = 0,
+			doc = "EU a builder drone's battery spends per block of flight path, out and back.")
+	public static int settlementDroneEuPerBlockFlown = 1;
+	/** Tier 1's speed (R87): ticks per block of flight path. */
+	@Knob(section = Section.SETTLEMENTS, min = 1,
+			doc = "Ticks a tier-1 builder drone takes per block of flight path.")
+	public static int settlementDroneFlightTicksPerBlock = 2;
 }

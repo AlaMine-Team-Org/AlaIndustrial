@@ -78,6 +78,8 @@ public final class ModDataComponents {
 	public static final Identifier DRILL_UPGRADES_ID = Industrialization.id("drill_upgrades");
 	public static final Identifier DRILL_COLUMN_ENABLED_ID = Industrialization.id("drill_column_enabled");
 	public static final Identifier DRILL_ROW_ENABLED_ID = Industrialization.id("drill_row_enabled");
+	public static final Identifier PLAN_SHEET_ID = Industrialization.id("plan_sheet");
+	public static final Identifier RESTORATION_PLAN_ID = Industrialization.id("restoration_plan");
 
 	/** Rarity grade rolled by the incubator on a successful mutation (MOD-118). */
 	public static final Identifier MUTATION_GRADE_ID = Industrialization.id("mutation_grade");
@@ -307,6 +309,38 @@ public final class ModDataComponents {
 		return DataComponentType.<Integer>builder()
 				.persistent(Codec.INT)
 				.networkSynchronized(ByteBufCodecs.VAR_INT)
+				.build();
+	}
+
+	/**
+	 * Which town hall plan sheet a stack is (MOD-859): style and number, written by the town's loot tables. Absent on
+	 * a blank sheet. Persistent and synchronised: the tooltip and the name read it on the client.
+	 */
+	public static Supplier<DataComponentType<dev.alaindustrial.item.misc.PlanSheet>> PLAN_SHEET = () -> {
+		throw new IllegalStateException("ModDataComponents.PLAN_SHEET read before its loader bound it");
+	};
+
+	/** Build the {@code plan_sheet} type both loaders register (MOD-859). */
+	public static DataComponentType<dev.alaindustrial.item.misc.PlanSheet> createPlanSheet() {
+		return DataComponentType.<dev.alaindustrial.item.misc.PlanSheet>builder()
+				.persistent(dev.alaindustrial.item.misc.PlanSheet.CODEC)
+				.networkSynchronized(dev.alaindustrial.item.misc.PlanSheet.STREAM_CODEC)
+				.build();
+	}
+
+	/**
+	 * What a restoration plan points at (MOD-859): its style and the id of the intact template, never block
+	 * contents. Absent on an empty plan.
+	 */
+	public static Supplier<DataComponentType<dev.alaindustrial.item.misc.RestorationPlan>> RESTORATION_PLAN = () -> {
+		throw new IllegalStateException("ModDataComponents.RESTORATION_PLAN read before its loader bound it");
+	};
+
+	/** Build the {@code restoration_plan} type both loaders register (MOD-859). */
+	public static DataComponentType<dev.alaindustrial.item.misc.RestorationPlan> createRestorationPlan() {
+		return DataComponentType.<dev.alaindustrial.item.misc.RestorationPlan>builder()
+				.persistent(dev.alaindustrial.item.misc.RestorationPlan.CODEC)
+				.networkSynchronized(dev.alaindustrial.item.misc.RestorationPlan.STREAM_CODEC)
 				.build();
 	}
 
@@ -748,5 +782,8 @@ public final class ModDataComponents {
 			new ComponentDef<>(CABLE_COLOR_ID, ModDataComponents::createCableColor, c -> CABLE_COLOR = c),
 			new ComponentDef<>(ITEM_MODULES_ID, ModDataComponents::createItemModules, c -> ITEM_MODULES = c),
 			new ComponentDef<>(MAGNET_FILTER_ID, ModDataComponents::createMagnetFilter, c -> MAGNET_FILTER = c),
-			new ComponentDef<>(SETTLEMENT_ID_ID, ModDataComponents::createSettlementId, c -> SETTLEMENT_ID = c));
+			new ComponentDef<>(SETTLEMENT_ID_ID, ModDataComponents::createSettlementId, c -> SETTLEMENT_ID = c),
+			new ComponentDef<>(PLAN_SHEET_ID, ModDataComponents::createPlanSheet, c -> PLAN_SHEET = c),
+			new ComponentDef<>(RESTORATION_PLAN_ID, ModDataComponents::createRestorationPlan,
+					c -> RESTORATION_PLAN = c));
 }

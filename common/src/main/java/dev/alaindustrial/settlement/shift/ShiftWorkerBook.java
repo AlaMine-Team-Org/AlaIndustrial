@@ -21,8 +21,9 @@ import java.util.UUID;
 /**
  * Every shift worker of the save and the town halls' log (MOD-832, ADR-050 point 8): the source of truth of the
  * workers, kept inside the towns' {@code SettlementRegistry} as its {@code shift_workers} field. The entity in the
- * world finds its record here by its own UUID; the log has one line per death (R10a, R31) and one per re-registered
- * number (R41, MOD-834), each carrying its town.
+ * world finds its record here by its own UUID; the log has one line per death (R10a, R31), one per re-registered
+ * number (R41, MOD-834), one per restored building (R86, MOD-857) and the town's notes, such as the plan hint its
+ * core writes when it wakes (MOD-859), each carrying its town.
  *
  * <p><b>Saved in number order</b>, so the same workers always write the same file; the form carries a version and a
  * ladder of upgrades ({@link Versioned}). The path dispatchers of the towns ({@link PathQuota}) live here too, but
@@ -35,35 +36,94 @@ public final class ShiftWorkerBook {
 
 	/**
 	 * One line of a town hall's log: who died, how and when (R10a) — or, as a dry archive line, whose record was
-	 * re-registered under a new number, and when (R41, MOD-834). A line carries exactly one of the two.
+	 * re-registered under a new number, and when (R41, MOD-834) — or which building of the town was restored, and when
+	 * (R86, MOD-857) — or a note of the town, a translated sentence and when (MOD-859). A line carries exactly one of
+	 * the four.
 	 *
-	 * @param settlement  the town the worker belonged to, 0 — none
-	 * @param number      the worker's number at the time of the line — for a re-registration, the old one
+	 * @param settlement  the town the line belongs to, 0 — none
+	 * @param number      the worker's number at the time of the line — for a re-registration, the old one; empty on a
+	 *                    line about a building
 	 * @param name        the worker's name, empty — none
 	 * @param death       how it died, on a line about a death
 	 * @param renumbering the new number and when it was given, on a line about a re-registration
+	 * @param building    the restored building and when, on a line about a building
+	 * @param note        the sentence and when, on a note of the town
 	 */
-	public record LogLine(int settlement, RecordNumber number, String name, Optional<ShiftWorkerRecord.Death> death,
-			Optional<Renumbering> renumbering) {
+	public record LogLine(int settlement, Optional<RecordNumber> number, String name,
+			Optional<ShiftWorkerRecord.Death> death, Optional<Renumbering> renumbering,
+			Optional<BuildingRestored> building, Optional<Note> note) {
 
 		/** A line about a death. */
 		public LogLine(int settlement, RecordNumber number, String name, ShiftWorkerRecord.Death death) {
-			this(settlement, number, name, Optional.of(death), Optional.empty());
+			this(settlement, Optional.of(number), name, Optional.of(death), Optional.empty(), Optional.empty(),
+					Optional.empty());
 		}
 
 		/** A line about the worker with {@code old} re-registered under {@code renumbering}'s number. */
 		public static LogLine renumbered(int settlement, RecordNumber old, String name, Renumbering renumbering) {
-			return new LogLine(settlement, old, name, Optional.empty(), Optional.of(renumbering));
+			return new LogLine(settlement, Optional.of(old), name, Optional.empty(), Optional.of(renumbering),
+					Optional.empty(), Optional.empty());
 		}
 
-		// "death" was required before MOD-834; a save written then always has it, so it reads as before.
+		/** A line about a building of town {@code settlement} restored (MOD-857). */
+		public static LogLine restored(int settlement, BuildingRestored building) {
+			return new LogLine(settlement, Optional.empty(), "", Optional.empty(), Optional.empty(),
+					Optional.of(building), Optional.empty());
+		}
+
+		/** A note of town {@code settlement} (MOD-859). */
+		public static LogLine noted(int settlement, Note note) {
+			return new LogLine(settlement, Optional.empty(), "", Optional.empty(), Optional.empty(),
+					Optional.empty(), Optional.of(note));
+		}
+
+		/** Whether this line is about the worker who held {@code held} at the time of the line. */
+		public boolean about(RecordNumber held) {
+			return number.isPresent() && number.get().equals(held);
+		}
+
+		// "death" was required before MOD-834, "number" before MOD-857; a save written then always has them, so it
+		// reads as before.
 		public static final Codec<LogLine> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 				Codec.INT.optionalFieldOf("settlement", 0).forGetter(LogLine::settlement),
-				ShiftWorkerRecord.NUMBER_CODEC.fieldOf("number").forGetter(LogLine::number),
+				ShiftWorkerRecord.NUMBER_CODEC.optionalFieldOf("number").forGetter(LogLine::number),
 				Codec.STRING.optionalFieldOf("name", "").forGetter(LogLine::name),
 				ShiftWorkerRecord.Death.CODEC.optionalFieldOf("death").forGetter(LogLine::death),
-				Renumbering.CODEC.optionalFieldOf("renumbered").forGetter(LogLine::renumbering)
+				Renumbering.CODEC.optionalFieldOf("renumbered").forGetter(LogLine::renumbering),
+				BuildingRestored.CODEC.optionalFieldOf("building").forGetter(LogLine::building),
+				Note.CODEC.optionalFieldOf("note").forGetter(LogLine::note)
 		).apply(instance, LogLine::new));
+	}
+
+	/**
+	 * A note of the town (MOD-859): a sentence by its translation key, and when it was written.
+	 *
+	 * @param key      the translation key of the sentence
+	 * @param gameTime the game time of the note; the day is {@code gameTime / 24000}
+	 */
+	public record Note(String key, long gameTime) {
+
+		public static final Codec<Note> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+				Codec.STRING.fieldOf("key").forGetter(Note::key),
+				Codec.LONG.fieldOf("game_time").forGetter(Note::gameTime)
+		).apply(instance, Note::new));
+	}
+
+	/**
+	 * A building of the town restored (R86, MOD-857): matching its intact template to the definition's share, every key
+	 * point in place.
+	 *
+	 * @param template the building's ruin template — its address in the town
+	 * @param name     the translation key of its name
+	 * @param gameTime the game time of the restoration; the day is {@code gameTime / 24000}
+	 */
+	public record BuildingRestored(String template, String name, long gameTime) {
+
+		public static final Codec<BuildingRestored> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+				Codec.STRING.fieldOf("template").forGetter(BuildingRestored::template),
+				Codec.STRING.optionalFieldOf("name", "").forGetter(BuildingRestored::name),
+				Codec.LONG.fieldOf("game_time").forGetter(BuildingRestored::gameTime)
+		).apply(instance, BuildingRestored::new));
 	}
 
 	/**

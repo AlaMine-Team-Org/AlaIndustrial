@@ -5,8 +5,11 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.SettlementCoreBlockEntity;
 import dev.alaindustrial.client.render.SettlementBorderOverlay;
 import dev.alaindustrial.client.screen.shiftworker.ShiftWorkerCardClient;
+import dev.alaindustrial.client.screen.shiftworker.ShiftWorkerFace;
 import dev.alaindustrial.client.screen.tabs.SideTabStrip;
 import dev.alaindustrial.client.screen.tabs.TabPage;
+import dev.alaindustrial.client.screen.works.ConstructionTab;
+import dev.alaindustrial.client.screen.works.TownWorksClient;
 import dev.alaindustrial.menu.SettlementCoreMenu;
 import dev.alaindustrial.network.ShiftWorkerRosterPayload;
 import dev.alaindustrial.registry.ModContent;
@@ -47,6 +50,9 @@ import org.jspecify.annotations.Nullable;
  * again every two seconds while it stays open; a row clicked asks for that worker's card. A request names no core:
  * the server answers for the menu the player has open, which is this core's. The roster kept from before this screen
  * opened is dropped, so the tab reads «loading» until this core's arrives.
+ *
+ * <p><b>Construction tab (MOD-857).</b> The fourth tab draws the rows of the town's buildings and work queue the server
+ * words ({@link ConstructionTab}); the town's owner gets small controls on them (R95).
  */
 public class SettlementCoreScreen extends MachineScreen<SettlementCoreMenu> {
 
@@ -62,18 +68,24 @@ public class SettlementCoreScreen extends MachineScreen<SettlementCoreMenu> {
 	public static final int TAB_CORE = 0;
 	public static final int TAB_WORKERS = 1;
 	public static final int TAB_CLOSED = 2;
+	/** The «Construction» tab (MOD-857): the town's buildings and work queue. */
+	public static final int TAB_WORKS = 3;
 	private static final int ROSTER_REFRESH_TICKS = 40;
 
 	private static final List<CoreTab> TABS = List.of(
 			new CoreTab(SettlementCoreLayout.TAB_CORE, () -> new ItemStack(ModContent.SETTLEMENT_CORE_ITEM.get())),
 			new CoreTab(SettlementCoreLayout.TAB_WORKERS,
 					() -> new ItemStack(ModContent.RECEPTION_CAPSULE_ITEM.get())),
-			new CoreTab(SettlementCoreLayout.TAB_CLOSED, () -> new ItemStack(Items.BOOK)));
+			new CoreTab(SettlementCoreLayout.TAB_CLOSED, () -> new ItemStack(Items.BOOK)),
+			new CoreTab(SettlementCoreLayout.TAB_WORKS, () -> new ItemStack(Items.BRICKS)));
 
 	/** The owner's name as the title brought it, or null when the town had no owner when the screen opened. */
 	@Nullable
 	private final String ownerName;
 	private final SideTabStrip strip = new SideTabStrip(0);
+	private final ConstructionTab works = new ConstructionTab();
+	/** The roster rows' faces, dressed once per worker while this screen lives. */
+	private final ShiftWorkerFace faces = new ShiftWorkerFace();
 	private int selected = TAB_CORE;
 	private int rosterScroll;
 	private int rosterTicks;
@@ -82,6 +94,7 @@ public class SettlementCoreScreen extends MachineScreen<SettlementCoreMenu> {
 		super(menu, inventory, title, SettlementCoreLayout.IMAGE_WIDTH, SettlementCoreLayout.IMAGE_HEIGHT);
 		this.ownerName = ownerNameOf(title);
 		ShiftWorkerCardClient.forgetRoster();
+		TownWorksClient.forget();
 	}
 
 	/** The name argument of a claimed core's title ({@link SettlementCoreBlockEntity#OWNED_TITLE_KEY}), or null. */
@@ -110,11 +123,15 @@ public class SettlementCoreScreen extends MachineScreen<SettlementCoreMenu> {
 		selected = index;
 		rosterScroll = 0;
 		rosterTicks = 0;
-		requestRoster();
+		if (selected == TAB_WORKS) {
+			works.opened();
+		} else {
+			requestRoster();
+		}
 	}
 
 	private void requestRoster() {
-		if (selected != TAB_CORE) {
+		if (selected == TAB_WORKERS || selected == TAB_CLOSED) {
 			ShiftWorkerCardClient.requestRoster();
 		}
 	}
@@ -122,7 +139,9 @@ public class SettlementCoreScreen extends MachineScreen<SettlementCoreMenu> {
 	@Override
 	protected void containerTick() {
 		super.containerTick();
-		if (selected != TAB_CORE && ++rosterTicks % ROSTER_REFRESH_TICKS == 0) {
+		if (selected == TAB_WORKS) {
+			works.tick();
+		} else if (selected != TAB_CORE && ++rosterTicks % ROSTER_REFRESH_TICKS == 0) {
 			requestRoster();
 		}
 	}
@@ -134,7 +153,7 @@ public class SettlementCoreScreen extends MachineScreen<SettlementCoreMenu> {
 	@Nullable
 	private List<ShiftWorkerRosterPayload.Row> rosterRows() {
 		ShiftWorkerRosterPayload roster = ShiftWorkerCardClient.latestRoster();
-		if (selected == TAB_CORE || roster == null) {
+		if ((selected != TAB_WORKERS && selected != TAB_CLOSED) || roster == null) {
 			return null;
 		}
 		return selected == TAB_CLOSED ? roster.closed() : roster.active();
@@ -170,6 +189,13 @@ public class SettlementCoreScreen extends MachineScreen<SettlementCoreMenu> {
 	protected void drawMachineFrame(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
 		blitStaticFrame(graphics);
 		strip.draw(graphics, this.leftPos, this.topPos, TABS, selected);
+		if (selected == TAB_WORKS) {
+			drawPanel(graphics);
+			works.draw(graphics, this.font, this.leftPos + SettlementCoreLayout.ROSTER_LEFT,
+					this.topPos + SettlementCoreLayout.ROSTER_TOP, this.leftPos + SettlementCoreLayout.ROSTER_RIGHT,
+					this.menu.isUnbound(), mouseX, mouseY);
+			return;
+		}
 		if (selected != TAB_CORE) {
 			drawRoster(graphics, mouseX, mouseY);
 			return;
@@ -203,14 +229,15 @@ public class SettlementCoreScreen extends MachineScreen<SettlementCoreMenu> {
 		int left = this.leftPos + SettlementCoreLayout.ROSTER_LEFT;
 		int right = this.leftPos + SettlementCoreLayout.ROSTER_RIGHT;
 		int top = this.topPos + SettlementCoreLayout.ROSTER_TOP;
-		graphics.fill(left, top - 2, right, this.topPos + SettlementCoreLayout.IMAGE_HEIGHT
-				- SettlementCoreLayout.BORDER - 1, GuiStyle.PANEL);
+		drawPanel(graphics);
 		List<ShiftWorkerRosterPayload.Row> rows = rosterRows();
 		Component empty = emptyRosterLine(rows);
 		if (rows == null || empty != null) {
 			block(graphics, empty, left + 2, top + 2, right - left - 4, 3, GuiStyle.TEXT_DIM);
 			return;
 		}
+		ShiftWorkerRosterPayload roster = ShiftWorkerCardClient.latestRoster();
+		int settlement = roster != null ? roster.settlement() : 0;
 		int hovered = rosterRowAt(mouseX, mouseY);
 		int shown = Math.min(SettlementCoreLayout.ROSTER_ROWS, rows.size() - rosterScroll);
 		for (int i = 0; i < shown; i++) {
@@ -219,8 +246,16 @@ public class SettlementCoreScreen extends MachineScreen<SettlementCoreMenu> {
 			if (rosterScroll + i == hovered) {
 				graphics.fill(left, y - 1, right, y + SettlementCoreLayout.ROSTER_ROW - 1, GuiStyle.HOVER_WASH);
 			}
-			drawRosterRow(graphics, row, left, right, y);
+			drawRosterRow(graphics, row, settlement, left, right, y);
 		}
+	}
+
+	/** The light panel the list tabs draw on. */
+	private void drawPanel(GuiGraphicsExtractor graphics) {
+		graphics.fill(this.leftPos + SettlementCoreLayout.ROSTER_LEFT,
+				this.topPos + SettlementCoreLayout.ROSTER_TOP - 2,
+				this.leftPos + SettlementCoreLayout.ROSTER_RIGHT,
+				this.topPos + SettlementCoreLayout.IMAGE_HEIGHT - SettlementCoreLayout.BORDER - 1, GuiStyle.PANEL);
 	}
 
 	/** What an empty or absent roster says: no town here, still asking, or no workers in this list. */
@@ -237,9 +272,11 @@ public class SettlementCoreScreen extends MachineScreen<SettlementCoreMenu> {
 		return null;
 	}
 
-	private void drawRosterRow(GuiGraphicsExtractor graphics, ShiftWorkerRosterPayload.Row row, int left, int right,
-			int y) {
+	private void drawRosterRow(GuiGraphicsExtractor graphics, ShiftWorkerRosterPayload.Row row, int settlement,
+			int left, int right, int y) {
 		int colour = row.alive() ? GuiStyle.TEXT : GuiStyle.TEXT_DIM;
+		faces.drawFramed(graphics, row.number(), row.look(), row.slim(), settlement, row.alive(),
+				left + SettlementCoreLayout.COL_FACE, y - 1, SettlementCoreLayout.FACE_SIZE);
 		cell(graphics, Component.literal(row.number()), left + SettlementCoreLayout.COL_NUMBER, y,
 				SettlementCoreLayout.COL_NAME - SettlementCoreLayout.COL_NUMBER - 2, colour);
 		cell(graphics, Component.literal(row.name()), left + SettlementCoreLayout.COL_NAME, y,
@@ -286,7 +323,11 @@ public class SettlementCoreScreen extends MachineScreen<SettlementCoreMenu> {
 			graphics.setTooltipForNextFrame(this.font, TABS.get(tab).title(), mouseX, mouseY);
 			return;
 		}
-		if (selected == TAB_CORE) {
+		if (selected == TAB_WORKS) {
+			works.tooltip(this.leftPos + SettlementCoreLayout.ROSTER_LEFT,
+					this.topPos + SettlementCoreLayout.ROSTER_TOP,
+					mouseX, mouseY).ifPresent(text -> graphics.setTooltipForNextFrame(this.font, text, mouseX, mouseY));
+		} else if (selected == TAB_CORE) {
 			BORDERS.tooltip(graphics, this.font, this.leftPos, this.topPos, mouseX, mouseY);
 		} else if (rosterRowAt(mouseX, mouseY) >= 0) {
 			graphics.setTooltipForNextFrame(this.font, Component.translatable(SettlementCoreLayout.ROSTER_OPEN),
@@ -305,6 +346,10 @@ public class SettlementCoreScreen extends MachineScreen<SettlementCoreMenu> {
 				selectTab(tab);
 				return true;
 			}
+			if (selected == TAB_WORKS) {
+				return works.clicked(this.leftPos + SettlementCoreLayout.ROSTER_LEFT,
+						this.topPos + SettlementCoreLayout.ROSTER_TOP, event.x(), event.y());
+			}
 			int row = rosterRowAt(event.x(), event.y());
 			List<ShiftWorkerRosterPayload.Row> rows = rosterRows();
 			if (row >= 0 && rows != null) {
@@ -319,6 +364,9 @@ public class SettlementCoreScreen extends MachineScreen<SettlementCoreMenu> {
 	/** The wheel scrolls a roster longer than the panel. */
 	@Override
 	protected boolean controlScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+		if (selected == TAB_WORKS) {
+			return works.scrolled(scrollY);
+		}
 		List<ShiftWorkerRosterPayload.Row> rows = rosterRows();
 		if (rows == null || scrollY == 0.0) {
 			return false;

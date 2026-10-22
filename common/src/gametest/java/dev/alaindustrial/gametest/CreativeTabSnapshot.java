@@ -154,6 +154,8 @@ final class CreativeTabSnapshot {
 			"main alaindustrial:upgrade_table",
 			"main alaindustrial:settlement_core",
 			"main alaindustrial:reception_capsule",
+			"main alaindustrial:town_dispatcher",
+			"main alaindustrial:drone_nest",
 			"main alaindustrial:enriched_uranium_torch",
 			"main alaindustrial:cable_breaker",
 			"main alaindustrial:vacuum_capsule",
@@ -327,6 +329,15 @@ final class CreativeTabSnapshot {
 			"main alaindustrial:cotton_seeds",
 			"main alaindustrial:kok_sagyz_root",
 			"main alaindustrial:inulin",
+			"main alaindustrial:construction_drone",
+			"main alaindustrial:town_hall_plan_sheet [style=plains, sheet=1]",
+			"main alaindustrial:town_hall_plan_sheet [style=plains, sheet=2]",
+			"main alaindustrial:town_hall_plan_sheet [style=plains, sheet=3]",
+			"main alaindustrial:restoration_plan [style=plains, template=ala_town/plains/intact/town_hall]",
+			"main alaindustrial:town_hall_plan_sheet [style=desert, sheet=1]",
+			"main alaindustrial:town_hall_plan_sheet [style=desert, sheet=2]",
+			"main alaindustrial:town_hall_plan_sheet [style=desert, sheet=3]",
+			"main alaindustrial:restoration_plan [style=desert, template=ala_town/desert/intact/town_hall]",
 			"main alaindustrial:tempered_iron_pickaxe",
 			"main alaindustrial:tempered_iron_axe",
 			"main alaindustrial:tempered_iron_shovel",
@@ -804,5 +815,7 @@ final class CreativeTabSnapshot {
 			"functional_blocks alaindustrial:workstation",
 			"functional_blocks alaindustrial:upgrade_table",
 			"functional_blocks alaindustrial:settlement_core",
-			"functional_blocks alaindustrial:reception_capsule");
+			"functional_blocks alaindustrial:reception_capsule",
+			"functional_blocks alaindustrial:town_dispatcher",
+			"functional_blocks alaindustrial:drone_nest");
 }

@@ -1,0 +1,45 @@
+{
+  "template": "alaindustrial:ala_town/plains/town_hall",
+  "intact": "alaindustrial:ala_town/plains/intact/town_hall",
+  "name": "settlement.alaindustrial.building.town_hall",
+  "restored_at": 0.9,
+  "key_points": [
+    {
+      "name": "settlement.alaindustrial.building.key.core",
+      "blocks": [
+        "alaindustrial:settlement_core"
+      ]
+    },
+    {
+      "name": "settlement.alaindustrial.building.key.capsule",
+      "blocks": [
+        "alaindustrial:reception_capsule"
+      ]
+    },
+    {
+      "name": "settlement.alaindustrial.building.key.roof",
+      "from": [
+        0,
+        9,
+        0
+      ],
+      "to": [
+        12,
+        9,
+        10
+      ]
+    },
+    {
+      "name": "settlement.alaindustrial.building.key.door",
+      "blocks": [
+        "#minecraft:doors"
+      ]
+    },
+    {
+      "name": "settlement.alaindustrial.building.key.drone_pad",
+      "blocks": [
+        "minecraft:yellow_carpet"
+      ]
+    }
+  ]
+}

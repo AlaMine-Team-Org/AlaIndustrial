@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"key": {
+		"P": "alaindustrial:copper_plate",
+		"W": "alaindustrial:copper_cable",
+		"E": "alaindustrial:electronic_circuit",
+		"M": "alaindustrial:machine_casing",
+		"B": "alaindustrial:battery"
+	},
+	"pattern": [
+		"PWP",
+		"EME",
+		"PBP"
+	],
+	"result": {
+		"id": "alaindustrial:town_dispatcher"
+	}
+}

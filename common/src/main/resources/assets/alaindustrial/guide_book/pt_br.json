@@ -3831,7 +3831,7 @@
             {
               "type": "text",
               "title": "Cápsula de recepção",
-              "text": "Traz de volta os trabalhadores de turno de um assentamento um de cada vez em troca de EU e materiais — só enquanto o núcleo do assentamento está aceso, a vila tem dono e o limite de trabalhadores não foi atingido; cada trabalhador novo recebe um número próprio, único no mundo."
+              "text": "Traz de volta os trabalhadores de turno de um assentamento um de cada vez em troca de EU e materiais — só enquanto o núcleo do assentamento está aceso, a vila tem restaurador e o limite de trabalhadores não foi atingido; cada trabalhador novo recebe um número próprio, único no mundo."
             },
             {
               "type": "stats",
@@ -4294,7 +4294,7 @@
             {
               "type": "text",
               "title": "Núcleo do assentamento",
-              "text": "O coração de uma vila operária, na prefeitura dela — enquanto a rede lhe fornece EU, mantém o território do assentamento, define quantas casas e trabalhadores de turno a vila pode ter e lembra do seu dono; sem energia, ele se apaga e a vila dorme."
+              "text": "O coração de uma vila operária, na prefeitura dela — enquanto a rede lhe fornece EU, mantém o território do assentamento, define quantas casas e trabalhadores de turno a vila pode ter e lembra do seu restaurador; sem energia, ele se apaga e a vila dorme."
             },
             {
               "type": "stats",

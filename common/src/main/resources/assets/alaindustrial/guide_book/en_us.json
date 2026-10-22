@@ -3831,7 +3831,7 @@
             {
               "type": "text",
               "title": "Reception Capsule",
-              "text": "Brings a settlement's shift workers back one at a time for EU and materials — only while the settlement core is lit, the town has an owner and its worker limit is not reached; every new worker gets a number of their own, unique in the world."
+              "text": "Brings a settlement's shift workers back one at a time for EU and materials — only while the settlement core is lit, the town has a restorer and its worker limit is not reached; every new worker gets a number of their own, unique in the world."
             },
             {
               "type": "stats",
@@ -4294,7 +4294,7 @@
             {
               "type": "text",
               "title": "Settlement Core",
-              "text": "The heart of a work town, standing in its town hall — while the grid feeds it EU it holds the settlement's territory, sets how many houses and shift workers the town may have and remembers its owner; without power it goes dark and the town sleeps."
+              "text": "The heart of a work town, standing in its town hall — while the grid feeds it EU it holds the settlement's territory, sets how many houses and shift workers the town may have and remembers its restorer; without power it goes dark and the town sleeps."
             },
             {
               "type": "stats",

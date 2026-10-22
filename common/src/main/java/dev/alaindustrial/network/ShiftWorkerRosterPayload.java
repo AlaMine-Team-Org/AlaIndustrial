@@ -9,6 +9,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.Identifier;
 
 /**
  * S2C: the shift workers of one town for the «Workers» and «Closed» tabs of its core's screen (MOD-854) — sent to ONE
@@ -41,8 +42,11 @@ public record ShiftWorkerRosterPayload(BlockPos core, int settlement, List<Row> 
 	 * @param level  the level
 	 * @param status the record's status
 	 * @param alive  whether it is alive ({@code status == ALIVE})
+	 * @param look   the id of the worker's look, for the face at the row's start (owner request 7, stage 6 round 4)
+	 * @param slim   the slim body, as on the card
 	 */
-	public record Row(String number, String name, int level, ShiftWorkerRecord.Status status, boolean alive) {
+	public record Row(String number, String name, int level, ShiftWorkerRecord.Status status, boolean alive,
+			Identifier look, boolean slim) {
 	}
 
 	private static final StreamCodec<ByteBuf, Row> ROW = StreamCodec.composite(
@@ -51,6 +55,8 @@ public record ShiftWorkerRosterPayload(BlockPos core, int settlement, List<Row> 
 			ByteBufCodecs.VAR_INT, Row::level,
 			ShiftWorkerCardPayload.STATUS, Row::status,
 			ByteBufCodecs.BOOL, Row::alive,
+			Identifier.STREAM_CODEC, Row::look,
+			ByteBufCodecs.BOOL, Row::slim,
 			Row::new);
 
 	public static final StreamCodec<RegistryFriendlyByteBuf, ShiftWorkerRosterPayload> CODEC = StreamCodec.composite(

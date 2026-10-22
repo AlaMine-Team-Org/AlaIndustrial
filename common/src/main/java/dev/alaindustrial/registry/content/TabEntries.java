@@ -6,6 +6,7 @@ import dev.alaindustrial.registry.CreativeTabContent.Sink;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import org.jspecify.annotations.Nullable;
 
@@ -44,6 +45,27 @@ final class TabEntries {
 	}
 
 	/**
+	 * Show one stack of {@code handle}'s item with data components (a plan sheet of one style and number, MOD-859
+	 * round 2), guarded as {@link #show} is: a stack that cannot be made is one icon fewer. The handle names the entry
+	 * for the text gates that read the tab's sections ({@code creative_tab_shape_check}, {@code registry_check}).
+	 */
+	static void showStack(Sink out, Supplier<? extends ItemLike> handle, Supplier<ItemStack> stack) {
+		if (resolve(handle) == null) {
+			return;
+		}
+		ItemStack made;
+		try {
+			made = stack.get();
+		} catch (RuntimeException e) {
+			warnOnce(e);
+			return;
+		}
+		if (!made.isEmpty()) {
+			out.accept(made);
+		}
+	}
+
+	/**
 	 * Place {@code entries} after a VANILLA anchor. Unresolvable entries are skipped one by one, the same
 	 * way {@link #show} skips them — a tab is a display, and it must degrade to one icon fewer.
 	 */
@@ -74,13 +96,17 @@ final class TabEntries {
 		try {
 			return handle.get();
 		} catch (RuntimeException e) {
-			if (!warnedAboutMissingEntry) {
-				warnedAboutMissingEntry = true;
-				Industrialization.LOGGER.error(
-						"[creative] an entry could not be resolved and was skipped; the rest of the tab is"
-								+ " unaffected. Further occurrences this run are not logged.", e);
-			}
+			warnOnce(e);
 			return null;
+		}
+	}
+
+	private static void warnOnce(RuntimeException e) {
+		if (!warnedAboutMissingEntry) {
+			warnedAboutMissingEntry = true;
+			Industrialization.LOGGER.error(
+					"[creative] an entry could not be resolved and was skipped; the rest of the tab is"
+							+ " unaffected. Further occurrences this run are not logged.", e);
 		}
 	}
 

@@ -116,6 +116,7 @@ public final class MenuScreenManifest {
 			screen(() -> ModContent.SETTLEMENT_CORE_MENU.get(), SettlementCoreScreen::new),
 			// MOD-833: the reception capsule - material slots, the town's workers and the restoration.
 			screen(() -> ModContent.RECEPTION_CAPSULE_MENU.get(), ReceptionCapsuleScreen::new),
+			screen(() -> ModContent.TOWN_DISPATCHER_MENU.get(), TownDispatcherScreen::new),
 			screen(() -> ModContent.ASSEMBLER_MENU.get(), AssemblerScreen::new),
 			screen(() -> ModContent.INCUBATOR_MENU.get(), IncubatorScreen::new),
 			screen(() -> ModContent.POLYMERIZER_MENU.get(), PolymerizerScreen::new),

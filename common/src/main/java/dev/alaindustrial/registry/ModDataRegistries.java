@@ -5,6 +5,7 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.settlement.SettlementStyle;
 import dev.alaindustrial.settlement.shift.ShiftWorkerBiographyFragment;
 import dev.alaindustrial.settlement.shift.ShiftWorkerLook;
+import dev.alaindustrial.settlement.works.TownBuildingDef;
 import java.util.List;
 import java.util.Objects;
 import net.minecraft.core.Registry;
@@ -53,11 +54,19 @@ public final class ModDataRegistries {
 	public static final ResourceKey<Registry<ShiftWorkerBiographyFragment>> SHIFT_WORKER_BIOGRAPHY =
 			ResourceKey.createRegistryKey(Industrialization.id("shift_worker_biography"));
 
+	/**
+	 * {@code alaindustrial:town_building} — the buildings of the ALA towns (MOD-857, ADR-050 §4): which structure
+	 * template is a building, the template it is restored to and what «restored» means for it; server only.
+	 */
+	public static final ResourceKey<Registry<TownBuildingDef>> TOWN_BUILDING =
+			ResourceKey.createRegistryKey(Industrialization.id("town_building"));
+
 	/** Every datapack registry of the mod, in the order the loaders add them. */
 	public static final List<DataRegistry<?>> REGISTRIES = List.of(
 			new DataRegistry<>(SETTLEMENT_STYLE, SettlementStyle.CODEC, null),
 			new DataRegistry<>(SHIFT_WORKER_LOOK, ShiftWorkerLook.CODEC, ShiftWorkerLook.NETWORK_CODEC),
-			new DataRegistry<>(SHIFT_WORKER_BIOGRAPHY, ShiftWorkerBiographyFragment.CODEC, null));
+			new DataRegistry<>(SHIFT_WORKER_BIOGRAPHY, ShiftWorkerBiographyFragment.CODEC, null),
+			new DataRegistry<>(TOWN_BUILDING, TownBuildingDef.CODEC, null));
 
 	private ModDataRegistries() {
 	}

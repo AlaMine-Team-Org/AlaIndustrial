@@ -2,6 +2,7 @@ package dev.alaindustrial.lifecycle;
 
 import dev.alaindustrial.block.CableDyeing;
 import dev.alaindustrial.block.OilLiquidBlock;
+import dev.alaindustrial.block.entity.TownDispatcherBlockEntity;
 import dev.alaindustrial.block.entity.reactor.ReactorCraterWaves;
 import dev.alaindustrial.chat.WelcomeMessage;
 import dev.alaindustrial.command.demo.DemoStandDropSweeper;
@@ -15,6 +16,7 @@ import dev.alaindustrial.core.monitor.MonitorNetworkManager;
 import dev.alaindustrial.core.net.LevelStateRegistry;
 import dev.alaindustrial.core.radiation.GeigerTicker;
 import dev.alaindustrial.core.radiation.RadiationTicker;
+import dev.alaindustrial.entity.ShiftWorkerHunters;
 import dev.alaindustrial.entity.SoulVesselKills;
 import dev.alaindustrial.item.energy.LowChargeWarning;
 import dev.alaindustrial.item.fluid.VanillaBucketDeposit;
@@ -35,6 +37,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -42,7 +45,8 @@ import net.minecraft.world.phys.BlockHitResult;
 
 /**
  * Every server-side hook of the mod, per event and in order, declared once for both loaders (MOD-706,
- * CORE-7): what runs on the end of a server tick, when a player joins or leaves, is hurt or dies, when a
+ * CORE-7): what runs on the end of a server tick, when a player joins or leaves, is hurt or dies, when an
+ * entity joins a level, when a
  * level unloads and when the server starts or stops — and the early block-use chain, which runs on
  * both logical sides of a right-click.
  *
@@ -116,6 +120,15 @@ public final class ServerHookRoster {
 			// MOD-278: a hostile mob killed by a player banks one soul into their vessel.
 			SoulVesselKills::onDeath);
 
+	/**
+	 * An entity joined a server level — spawned, or loaded with its chunk (Fabric {@code ServerEntityEvents
+	 * .ENTITY_LOAD}, NeoForge {@code EntityJoinLevelEvent}, server side only). Goals are not saved, so what a hook
+	 * adds to a mob here it adds again on every join.
+	 */
+	public static final List<BiConsumer<Entity, ServerLevel>> ENTITY_JOIN = List.of(
+			// MOD-824: hostile mobs hunt shift workers as they hunt players (owner decision 2026-10-22).
+			ShiftWorkerHunters::onEntityJoin);
+
 	/** A player left the server — while still online, so their state can still be written. */
 	public static final List<Consumer<ServerPlayer>> PLAYER_LEAVE = List.of(
 			// MOD-133: flush this player's pending stats now; the next tick's flush runs after they left.
@@ -151,7 +164,9 @@ public final class ServerHookRoster {
 	 * into the village pools now — a pool memoizes its size on first use.
 	 */
 	public static final List<Consumer<MinecraftServer>> SERVER_STARTING = List.of(
-			VillagePoolInjector::inject);
+			VillagePoolInjector::inject,
+			// MOD-858: the town's material source for the stages of MOD-860 is its dispatcher's buffer.
+			TownDispatcherBlockEntity::installMaterialSource);
 
 	/** The server is stopping, before the world and the players are saved. */
 	public static final List<Consumer<MinecraftServer>> SERVER_STOPPING = List.of(
@@ -216,6 +231,15 @@ public final class ServerHookRoster {
 	public static void onLivingDeath(LivingEntity entity, DamageSource source) {
 		for (BiConsumer<LivingEntity, DamageSource> hook : LIVING_DEATH) {
 			hook.accept(entity, source);
+		}
+	}
+
+	/** {@code entity} joined {@code level}; the hooks run for a server level only (NeoForge fires on both sides). */
+	public static void onEntityJoin(Entity entity, Level level) {
+		if (level instanceof ServerLevel serverLevel) {
+			for (BiConsumer<Entity, ServerLevel> hook : ENTITY_JOIN) {
+				hook.accept(entity, serverLevel);
+			}
 		}
 	}
 

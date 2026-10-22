@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "alaindustrial:settlement_core",
+    "alaindustrial:reception_capsule",
+    "alaindustrial:town_dispatcher",
+    "alaindustrial:drone_nest",
+    "minecraft:bedrock"
+  ]
+}

@@ -21,7 +21,8 @@ public final class ModCreativeTabNeoForge {
 			() -> CreativeModeTab.builder()
 					.title(Component.translatable("itemGroup.alaindustrial"))
 					.icon(() -> new ItemStack(ModItemsNeoForge.MACERATOR_ITEM.get()))
-					.displayItems((params, output) -> CreativeTabContent.main(output::accept))
+					.displayItems((params, output) -> CreativeTabContent.main(
+							CreativeTabContent.Sink.of(output::accept, output::accept)))
 					.build());
 
 	private ModCreativeTabNeoForge() {

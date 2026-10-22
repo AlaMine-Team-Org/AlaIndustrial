@@ -43,6 +43,8 @@ public class ReceptionCapsuleMenu extends MachineMenu {
 	/** Server side: the capsule the choice button turns; null on the client. */
 	@Nullable
 	private final ReceptionCapsuleBlockEntity capsule;
+	/** The player looking at the menu: the slots ask whether they may put here (R98). */
+	private final Player viewer;
 
 	/** Server side. */
 	public ReceptionCapsuleMenu(int syncId, Inventory playerInventory, ReceptionCapsuleBlockEntity be,
@@ -50,6 +52,7 @@ public class ReceptionCapsuleMenu extends MachineMenu {
 		super(ModContent.RECEPTION_CAPSULE_MENU.get(), syncId, playerInventory, be, be.getDataAccess(), access,
 				ModContent.RECEPTION_CAPSULE.get());
 		this.capsule = be;
+		this.viewer = playerInventory.player;
 	}
 
 	/** Client side: the three material slots and no upgrade block. */
@@ -58,6 +61,7 @@ public class ReceptionCapsuleMenu extends MachineMenu {
 				clientStub(ReceptionCapsuleBlockEntity.SLOT_COUNT, ReceptionCapsuleBlockEntity.DATA_COUNT),
 				ModContent.RECEPTION_CAPSULE.get());
 		this.capsule = null;
+		this.viewer = playerInventory.player;
 	}
 
 	/** The choice button: the capsule moves to the next choice of whom to restore (R39). */
@@ -66,8 +70,16 @@ public class ReceptionCapsuleMenu extends MachineMenu {
 		if (buttonId != BUTTON_NEXT_CHOICE || capsule == null || !(player instanceof ServerPlayer)) {
 			return super.clickMenuButton(player, buttonId);
 		}
-		capsule.nextChoice();
+		if (capsule.mayControl(player)) {
+			capsule.nextChoice();
+		}
 		return true;
+	}
+
+	/** Closes the screen of a stranger to the capsule's town (R98); see {@code SettlementCoreMenu#stillValid}. */
+	@Override
+	public boolean stillValid(Player player) {
+		return super.stillValid(player) && (capsule == null || capsule.admits(player));
 	}
 
 	/**
@@ -82,7 +94,13 @@ public class ReceptionCapsuleMenu extends MachineMenu {
 			addSlot(new Slot(container, slot, SLOTS_X, SLOTS_Y + slot * SLOT_STEP) {
 				@Override
 				public boolean mayPlace(ItemStack stack) {
-					return stack.is(ReceptionCapsuleBlockEntity.itemOf(material));
+					return stack.is(ReceptionCapsuleBlockEntity.itemOf(material))
+							&& (capsule == null || capsule.mayControl(viewer));
+				}
+
+				@Override
+				public boolean mayPickup(Player who) {
+					return capsule == null || capsule.mayControl(who);
 				}
 			});
 		}

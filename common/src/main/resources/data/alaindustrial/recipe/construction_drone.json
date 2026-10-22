@@ -1,0 +1,18 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"key": {
+		"P": "alaindustrial:copper_plate",
+		"E": "alaindustrial:electronic_circuit",
+		"B": "alaindustrial:battery",
+		"C": "alaindustrial:copper_coil"
+	},
+	"pattern": [
+		"P P",
+		"EBE",
+		"PCP"
+	],
+	"result": {
+		"id": "alaindustrial:construction_drone"
+	}
+}

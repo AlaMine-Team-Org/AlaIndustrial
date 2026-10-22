@@ -346,6 +346,8 @@ public class IndustrializationFabric implements ModInitializer {
 		net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.JOIN.register(
 				(handler, sender, server) -> ServerHookRoster.onPlayerJoin(handler.player));
 		ServerLevelEvents.UNLOAD.register((server, level) -> ServerHookRoster.onLevelUnload(level));
+		net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents.ENTITY_LOAD.register(
+				ServerHookRoster::onEntityJoin);
 		ServerLifecycleEvents.SERVER_STARTING.register(ServerHookRoster::onServerStarting);
 		ServerLifecycleEvents.SERVER_STOPPING.register(ServerHookRoster::onServerStopping);
 		ServerLifecycleEvents.SERVER_STOPPED.register(ServerHookRoster::onServerStopped);

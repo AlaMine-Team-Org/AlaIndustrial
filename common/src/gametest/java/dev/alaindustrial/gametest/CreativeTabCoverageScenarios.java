@@ -78,7 +78,9 @@ public final class CreativeTabCoverageScenarios {
 					shown.add(id);
 				}
 			} else {
-				shown.add(entry);
+				// A stack with data components carries them after its id (CreativeTabSnapshotScenarios.capture).
+				int components = entry.indexOf(' ');
+				shown.add(components < 0 ? entry : entry.substring(0, components));
 			}
 		}
 		return shown;

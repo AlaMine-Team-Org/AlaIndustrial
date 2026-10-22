@@ -2,6 +2,7 @@ package dev.alaindustrial.command.demo;
 
 import dev.alaindustrial.block.FluidTapBlock;
 import dev.alaindustrial.block.ReceptionCapsuleBlock;
+import dev.alaindustrial.block.TownDispatcherBlock;
 import dev.alaindustrial.block.entity.FluidTapBlockEntity;
 import dev.alaindustrial.block.entity.FluidTankBlockEntity;
 import dev.alaindustrial.block.entity.KokSagyzRootBlockEntity;
@@ -219,6 +220,17 @@ final class MiscZone implements DemoZone {
 	private static void settlementCore(StandWriter w) {
 		w.set(70, 1, 24, ModContent.SETTLEMENT_CORE.get());
 		receptionCapsule(w);
+		townConstruction(w);
+	}
+
+	/**
+	 * The town dispatcher and a drone nest (MOD-858) east of the capsule, the dispatcher's screen to the north. Outside
+	 * any town hall, both say so: the dispatcher on its status row, the nest over the hotbar on a click.
+	 */
+	private static void townConstruction(StandWriter w) {
+		w.place(w.origin().offset(74, 1, 24), ModContent.TOWN_DISPATCHER.get().defaultBlockState()
+				.setValue(TownDispatcherBlock.FACING, Direction.NORTH));
+		w.set(73, 1, 24, ModContent.DRONE_NEST.get());
 	}
 
 	/**

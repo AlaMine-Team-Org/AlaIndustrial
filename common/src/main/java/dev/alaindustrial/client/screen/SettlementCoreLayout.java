@@ -78,6 +78,10 @@ public final class SettlementCoreLayout {
 	public static final String TAB_CORE = "settlement.alaindustrial.core.tab.core";
 	public static final String TAB_WORKERS = "settlement.alaindustrial.core.tab.workers";
 	public static final String TAB_CLOSED = "settlement.alaindustrial.core.tab.closed";
+	/** The «Construction» tab (MOD-857): the town's buildings and its work queue, rows the server words. */
+	public static final String TAB_WORKS = "settlement.alaindustrial.core.tab.works";
+	/** The line under the rows for a viewer who is not the town's owner (R95). */
+	public static final String WORKS_READ_ONLY = "settlement.alaindustrial.works.read_only";
 	public static final String ROSTER_EMPTY = "settlement.alaindustrial.core.roster.empty";
 	public static final String ROSTER_CLOSED_EMPTY = "settlement.alaindustrial.core.roster.closed_empty";
 	public static final String ROSTER_LOADING = "settlement.alaindustrial.core.roster.loading";
@@ -90,11 +94,36 @@ public final class SettlementCoreLayout {
 	public static final int ROSTER_TOP = 19;
 	public static final int ROSTER_ROW = 11;
 	public static final int ROSTER_ROWS = 10;
+	/** The worker's face at a row's start: a square left of the number, one pixel above the text line. */
+	public static final int COL_FACE = 1;
+	public static final int FACE_SIZE = 10;
 	/** Column starts inside a row: number, name, level, status. */
-	public static final int COL_NUMBER = 2;
-	public static final int COL_NAME = 36;
+	public static final int COL_NUMBER = 13;
+	public static final int COL_NAME = 46;
 	public static final int COL_LEVEL = 94;
 	public static final int COL_STATUS = 122;
+	/** Column starts inside a «Construction» row: status, percent, the owner's controls; and a second line's indent. */
+	public static final int WORKS_COL_STATUS = 76;
+	public static final int WORKS_COL_PERCENT = 124;
+	public static final int WORKS_COL_ACTIONS = 143;
+	public static final int WORKS_ACTION_SIZE = 9;
+	public static final int WORKS_DETAIL_INDENT = 8;
+	/**
+	 * The words a «Construction» row puts in its status column — the buildings' states and the jobs' statuses — and
+	 * the names in its main column; the L1 test fits each into its column in every language (the server words the rows,
+	 * {@code ConstructionRows}).
+	 */
+	public static final List<String> WORKS_STATUS_WORDS = List.of(
+			"settlement.alaindustrial.works.state.ruin", "settlement.alaindustrial.works.state.clearing",
+			"settlement.alaindustrial.works.state.repair", "settlement.alaindustrial.works.state.intact",
+			"settlement.alaindustrial.works.state.upgraded", "settlement.alaindustrial.works.status.queued",
+			"settlement.alaindustrial.works.status.taken", "settlement.alaindustrial.works.status.blocked",
+			"settlement.alaindustrial.works.status.done", "settlement.alaindustrial.works.status.cancelled");
+	public static final List<String> WORKS_NAMES = List.of(
+			"settlement.alaindustrial.building.town_hall", "settlement.alaindustrial.building.capsule_house",
+			"settlement.alaindustrial.building.workshop", "settlement.alaindustrial.building.pump_station",
+			"settlement.alaindustrial.building.warehouse", "settlement.alaindustrial.building.guard_post",
+			"settlement.alaindustrial.building.unnamed");
 
 	private SettlementCoreLayout() {
 	}

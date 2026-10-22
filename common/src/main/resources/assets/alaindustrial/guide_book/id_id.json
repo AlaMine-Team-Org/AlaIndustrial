@@ -3831,7 +3831,7 @@
             {
               "type": "text",
               "title": "Kapsul Penerimaan",
-              "text": "Mengembalikan pekerja sif sebuah permukiman satu per satu dengan EU dan bahan — hanya selama inti permukiman menyala, kota punya pemilik, dan batas pekerjanya belum tercapai; setiap pekerja baru mendapat nomornya sendiri yang unik di seluruh dunia."
+              "text": "Mengembalikan pekerja sif sebuah permukiman satu per satu dengan EU dan bahan — hanya selama inti permukiman menyala, kota punya pemulih, dan batas pekerjanya belum tercapai; setiap pekerja baru mendapat nomornya sendiri yang unik di seluruh dunia."
             },
             {
               "type": "stats",
@@ -4294,7 +4294,7 @@
             {
               "type": "text",
               "title": "Inti Permukiman",
-              "text": "Jantung sebuah kota pekerja yang berdiri di balai kotanya — selama jaringan memberinya EU, inti ini menjaga wilayah permukiman, menentukan berapa banyak rumah dan pekerja sif yang boleh dimiliki kota itu, dan mengingat pemiliknya; tanpa daya ia padam dan kota tertidur."
+              "text": "Jantung sebuah kota pekerja yang berdiri di balai kotanya — selama jaringan memberinya EU, inti ini menjaga wilayah permukiman, menentukan berapa banyak rumah dan pekerja sif yang boleh dimiliki kota itu, dan mengingat pemulihnya; tanpa daya ia padam dan kota tertidur."
             },
             {
               "type": "stats",

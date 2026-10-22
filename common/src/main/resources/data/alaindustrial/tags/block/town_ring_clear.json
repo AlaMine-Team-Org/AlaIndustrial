@@ -1,0 +1,26 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:sand",
+    "#minecraft:dirt",
+    "minecraft:grass_block",
+    "minecraft:podzol",
+    "minecraft:mycelium",
+    "minecraft:mud",
+    "minecraft:moss_block",
+    "#minecraft:base_stone_overworld",
+    "#minecraft:snow",
+    "#minecraft:small_flowers",
+    "#minecraft:saplings",
+    "minecraft:sandstone",
+    "minecraft:red_sandstone",
+    "minecraft:gravel",
+    "minecraft:clay",
+    "minecraft:cobblestone",
+    "minecraft:mossy_cobblestone",
+    "minecraft:cactus",
+    "minecraft:sugar_cane",
+    "minecraft:sweet_berry_bush",
+    "minecraft:ice"
+  ]
+}

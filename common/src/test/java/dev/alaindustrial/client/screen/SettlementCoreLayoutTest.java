@@ -61,6 +61,14 @@ class SettlementCoreLayoutTest {
 			}
 			check(failures, code, SettlementCoreLayout.HINT, text(lang, SettlementCoreLayout.HINT),
 					SettlementCoreLayout.hintWidth(), SettlementCoreLayout.HINT_MAX_LINES);
+			// MOD-857: the «Construction» tab's status words and building names, one line each in their column.
+			for (String key : SettlementCoreLayout.WORKS_STATUS_WORDS) {
+				check(failures, code, key, text(lang, key),
+						SettlementCoreLayout.WORKS_COL_PERCENT - SettlementCoreLayout.WORKS_COL_STATUS - 2, 1);
+			}
+			for (String key : SettlementCoreLayout.WORKS_NAMES) {
+				check(failures, code, key, text(lang, key), SettlementCoreLayout.WORKS_COL_STATUS - 4, 1);
+			}
 			String heading = text(lang, "block.alaindustrial.settlement_core");
 			if (width(heading) > SettlementCoreLayout.IMAGE_WIDTH - 2 * (SettlementCoreLayout.BORDER + 2)) {
 				failures.add(code + " heading: " + width(heading) + " px");

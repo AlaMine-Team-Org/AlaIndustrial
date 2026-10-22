@@ -3831,7 +3831,7 @@
             {
               "type": "text",
               "title": "Khoang tiếp nhận",
-              "text": "Đưa công nhân ca của khu định cư trở lại từng người một để đổi lấy EU và vật liệu — chỉ khi lõi khu định cư đang sáng, thị trấn có chủ và chưa đạt giới hạn công nhân; mỗi công nhân mới nhận một số hiệu riêng, là duy nhất trong cả thế giới."
+              "text": "Đưa công nhân ca của khu định cư trở lại từng người một để đổi lấy EU và vật liệu — chỉ khi lõi khu định cư đang sáng, thị trấn có người phục hồi và chưa đạt giới hạn công nhân; mỗi công nhân mới nhận một số hiệu riêng, là duy nhất trong cả thế giới."
             },
             {
               "type": "stats",
@@ -4294,7 +4294,7 @@
             {
               "type": "text",
               "title": "Lõi khu định cư",
-              "text": "Trái tim của một thị trấn công nhân, đặt trong tòa thị chính — chừng nào lưới điện còn cấp EU, lõi giữ lãnh thổ của khu định cư, quyết định thị trấn được có bao nhiêu nhà và công nhân ca, và ghi nhớ chủ của nó; không có điện, lõi tắt và thị trấn ngủ."
+              "text": "Trái tim của một thị trấn công nhân, đặt trong tòa thị chính — chừng nào lưới điện còn cấp EU, lõi giữ lãnh thổ của khu định cư, quyết định thị trấn được có bao nhiêu nhà và công nhân ca, và ghi nhớ người phục hồi của nó; không có điện, lõi tắt và thị trấn ngủ."
             },
             {
               "type": "stats",
