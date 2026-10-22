@@ -2,6 +2,7 @@ package dev.alaindustrial.block.entity;
 
 import dev.alaindustrial.Config;
 import dev.alaindustrial.block.KokSagyzBlock;
+import dev.alaindustrial.block.entity.machine.DroneFlight;
 import dev.alaindustrial.block.entity.machine.SyncChannels;
 import dev.alaindustrial.compat.Bonemeal;
 import dev.alaindustrial.compat.LineSounds;
@@ -136,29 +137,14 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 	/** Ticks until the cache is rebuilt from scratch; also set to 0 whenever it is invalidated. */
 	private int rescanCountdown;
 
-	/** The tile the drone is currently flying to, or {@code null} when it is parked. Synced for the BER. */
-	@Nullable
-	private BlockPos droneTarget;
-	/** The action waiting to land when the drone arrives; meaningless while {@link #droneTarget} is null. */
+	/**
+	 * The drone's flight — target, ticks left of the leg, whether it is heading home — in the component the town's
+	 * builder drone shares (MOD-858, ADR-042). Synced for the BER through the update tag, once per leg.
+	 */
+	private final DroneFlight flight = new DroneFlight();
+	/** The action waiting to land when the drone arrives; meaningless while the flight is parked. */
 	@Nullable
 	private GardenDroneAction droneJob;
-	/**
-	 * Ticks left on the current leg. This — not the world clock — is what decides when the action
-	 * lands: a block entity that timed itself off {@code getGameTime()} would stall the moment its tick
-	 * is driven without the world advancing (every gametest does exactly that) and would also lurch if
-	 * a player ran {@code /time set}. The counter is the authority.
-	 */
-	private int flightRemaining;
-	/**
-	 * World time the current leg started, kept <b>only</b> so the renderer can interpolate. The client
-	 * gets the leg once and works out where the drone is from its own clock, which is what keeps the
-	 * flight smooth with no per-tick packets. Server logic never reads this.
-	 */
-	private long flightStart;
-	/** Length of the current leg in ticks. */
-	private int flightTotal;
-	/** True while the drone is on its way home after the action landed. */
-	private boolean returning;
 
 	/** Whether harvesting and weeding wait for room in the output (MOD-782); the rules are in the class. */
 	private final GardenDroneOutputBlock outputBlock = new GardenDroneOutputBlock();
@@ -222,12 +208,13 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 		// A leg already in the air: the action lands only when the drone actually arrives, and after it
 		// the drone flies home. Without both legs the station tends a farm in a couple of ticks and the
 		// drone appears welded to its dock.
-		if (droneTarget != null) {
-			if (flightRemaining > 0) {
-				flightRemaining--;
+		if (flight.flying()) {
+			DroneFlight.Phase phase = flight.tick();
+			if (phase == DroneFlight.Phase.FLYING) {
 				return 0; // still flying
 			}
-			if (returning) {
+			BlockPos droneTarget = flight.target();
+			if (phase == DroneFlight.Phase.HOME) {
 				clearJob();
 			} else {
 				// Arrived. The world may have changed during the flight (the player harvested it by hand,
@@ -245,10 +232,8 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 				// persist or sync. The countdown carries the pause as well as the leg, so a chunk that
 				// unloads mid-pause resumes it on load rather than landing the action a second time —
 				// which a separate, unsaved timer would have done (MOD-317).
-				returning = true;
 				droneJob = null;
-				flightRemaining = flightTotal + LANDING_PAUSE_TICKS;
-				flightStart = level.getGameTime() + LANDING_PAUSE_TICKS;
+				flight.turnBack(level.getGameTime(), LANDING_PAUSE_TICKS);
 			}
 			setChangedQuietly();
 			syncBlockEntityToClient();
@@ -314,27 +299,20 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 	/** Sends the drone out: records the job and how long the flight takes at the configured speed. */
 	private void startJob(ServerLevel level, GardenDroneAction action, BlockPos target, BlockPos stationPos) {
 		droneJob = action;
-		droneTarget = target;
-		returning = false;
 		double distance = Math.sqrt(target.distSqr(stationPos));
 		// The floor matters as much as the rate: an adjacent tile is a fraction of a block away, and
 		// without a minimum the drone would blink there and back before the eye caught it.
-		flightTotal = Math.max(MIN_FLIGHT_TICKS,
+		int flightTotal = Math.max(MIN_FLIGHT_TICKS,
 				// MOD-483 Swift Drone: one tick less per block of flight.
 				(int) Math.round(distance * SkillMachine.droneFlightTicks(
 						Config.gardenDroneFlightTicksPerBlock, level, getOwner())));
-		flightRemaining = flightTotal;
-		flightStart = level.getGameTime();
+		flight.launch(target, flightTotal, level.getGameTime());
 	}
 
 	/** Parks the drone: no job, no target, nothing for the renderer to fly. */
 	private void clearJob() {
 		droneJob = null;
-		droneTarget = null;
-		returning = false;
-		flightRemaining = 0;
-		flightTotal = 0;
-		flightStart = 0L;
+		flight.park();
 	}
 
 	/**
@@ -812,7 +790,7 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 	/** The tile the drone is flying to, or {@code null} when parked. Client-visible via the update tag. */
 	@Nullable
 	public BlockPos droneTarget() {
-		return droneTarget;
+		return flight.target();
 	}
 
 	/**
@@ -821,15 +799,12 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 	 * where the drone is from the clock.
 	 */
 	public float flightProgress(float gameTimeWithPartials) {
-		if (flightTotal <= 0) {
-			return 0.0f;
-		}
-		return Math.clamp((gameTimeWithPartials - flightStart) / flightTotal, 0.0f, 1.0f);
+		return flight.progress(gameTimeWithPartials);
 	}
 
 	/** True while the drone is heading back to the dock (the action has already landed). */
 	public boolean isReturning() {
-		return returning;
+		return flight.returning();
 	}
 
 	/**
@@ -846,8 +821,7 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 	 * from the thing making it (MOD-329).
 	 */
 	public static float accelerate(float rawProgress) {
-		float c = Math.clamp(rawProgress, 0.0f, 1.0f);
-		return c * c * c * (c * (c * 6.0f - 15.0f) + 10.0f);
+		return DroneFlight.accelerate(rawProgress);
 	}
 
 	// ---------------------------------------------------------------- container
@@ -913,12 +887,8 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 		output.putInt("Status", status.ordinal());
 		// The drone's target rides the block entity rather than a per-tick packet: it changes once per
 		// job, and getUpdateTag carries it to the renderer, which interpolates the flight itself.
-		output.storeNullable("DroneTarget", BlockPos.CODEC, droneTarget);
+		flight.save(output);
 		output.putInt("DroneJob", droneJob == null ? -1 : droneJob.ordinal());
-		output.putInt("FlightRemaining", flightRemaining);
-		output.putLong("FlightStart", flightStart);
-		output.putInt("FlightTotal", flightTotal);
-		output.putBoolean("Returning", returning);
 		output.putInt("OutputBlockedAt", outputBlock.saved());
 	}
 
@@ -926,14 +896,10 @@ public final class GardenDroneStationBlockEntity extends MachineBlockEntity impl
 	protected void loadMachineData(ValueInput input) {
 		super.loadMachineData(input);
 		status = GardenDroneStatus.byOrdinal(input.getIntOr("Status", 0));
-		droneTarget = input.read("DroneTarget", BlockPos.CODEC).orElse(null);
+		flight.load(input);
 		int job = input.getIntOr("DroneJob", -1);
 		droneJob = job >= 0 && job < GardenDroneAction.PRIORITY_ORDER.length
 				? GardenDroneAction.values()[job] : null;
-		flightRemaining = input.getIntOr("FlightRemaining", 0);
-		flightStart = input.getLongOr("FlightStart", 0L);
-		flightTotal = input.getIntOr("FlightTotal", 0);
-		returning = input.getBooleanOr("Returning", false);
 		// MOD-782: a world saved before the key existed loads as not blocked; the first refused harvest
 		// blocks it again.
 		outputBlock.restore(input.getIntOr("OutputBlockedAt", GardenDroneOutputBlock.NOT_BLOCKED));

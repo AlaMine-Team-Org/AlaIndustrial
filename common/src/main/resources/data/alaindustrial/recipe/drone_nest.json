@@ -1,0 +1,18 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"key": {
+		"P": "alaindustrial:copper_plate",
+		"E": "alaindustrial:electronic_circuit",
+		"I": "alaindustrial:iron_plate",
+		"W": "alaindustrial:copper_cable"
+	},
+	"pattern": [
+		"PEP",
+		"IWI",
+		"I I"
+	],
+	"result": {
+		"id": "alaindustrial:drone_nest"
+	}
+}

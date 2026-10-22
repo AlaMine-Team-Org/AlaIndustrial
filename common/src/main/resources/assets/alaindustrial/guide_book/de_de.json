@@ -3831,7 +3831,7 @@
             {
               "type": "text",
               "title": "Empfangskapsel",
-              "text": "Holt die Schichtarbeiter einer Siedlung einen nach dem anderen gegen EU und Material zurück — nur solange der Siedlungskern leuchtet, die Siedlung einen Besitzer hat und ihr Arbeiterlimit nicht erreicht ist; jeder neue Arbeiter bekommt eine eigene Nummer, die es in der Welt nur einmal gibt."
+              "text": "Holt die Schichtarbeiter einer Siedlung einen nach dem anderen gegen EU und Material zurück — nur solange der Siedlungskern leuchtet, die Siedlung einen Restaurator hat und ihr Arbeiterlimit nicht erreicht ist; jeder neue Arbeiter bekommt eine eigene Nummer, die es in der Welt nur einmal gibt."
             },
             {
               "type": "stats",
@@ -4294,7 +4294,7 @@
             {
               "type": "text",
               "title": "Siedlungskern",
-              "text": "Das Herz einer Arbeitersiedlung, das in ihrem Rathaus steht — solange das Netz ihn mit EU versorgt, hält er das Gebiet der Siedlung, legt fest, wie viele Häuser und Schichtarbeiter die Siedlung haben darf, und merkt sich seinen Besitzer; ohne Strom erlischt er, und die Siedlung schläft."
+              "text": "Das Herz einer Arbeitersiedlung, das in ihrem Rathaus steht — solange das Netz ihn mit EU versorgt, hält er das Gebiet der Siedlung, legt fest, wie viele Häuser und Schichtarbeiter die Siedlung haben darf, und merkt sich seinen Restaurator; ohne Strom erlischt er, und die Siedlung schläft."
             },
             {
               "type": "stats",

@@ -6,9 +6,11 @@ import static dev.alaindustrial.registry.content.ContentDeclarations.blockEntity
 import static dev.alaindustrial.registry.content.ContentDeclarations.blockItem;
 import static dev.alaindustrial.registry.content.ContentDeclarations.endBlocks;
 import static dev.alaindustrial.registry.content.ContentDeclarations.hiddenFromPlayers;
+import static dev.alaindustrial.registry.content.ContentDeclarations.item;
 import static dev.alaindustrial.registry.content.ContentDeclarations.machine;
 import static dev.alaindustrial.registry.content.ContentDeclarations.menu;
 import static dev.alaindustrial.registry.content.TabEntries.show;
+import static dev.alaindustrial.registry.content.TabEntries.showStack;
 
 import dev.alaindustrial.block.AlloySmelterBlock;
 import dev.alaindustrial.block.AssemblerBlock;
@@ -25,7 +27,9 @@ import dev.alaindustrial.block.IndustrialWorkbenchBlock;
 import dev.alaindustrial.block.IronFurnaceBlock;
 import dev.alaindustrial.block.MaceratorBlock;
 import dev.alaindustrial.block.PolymerizerBlock;
+import dev.alaindustrial.block.DroneNestBlock;
 import dev.alaindustrial.block.ReceptionCapsuleBlock;
+import dev.alaindustrial.block.TownDispatcherBlock;
 import dev.alaindustrial.block.RecyclerBlock;
 import dev.alaindustrial.block.SawmillBlock;
 import dev.alaindustrial.block.SettlementCoreBlock;
@@ -49,7 +53,9 @@ import dev.alaindustrial.block.entity.IndustrialWorkbenchBlockEntity;
 import dev.alaindustrial.block.entity.IronFurnaceBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
 import dev.alaindustrial.block.entity.PolymerizerBlockEntity;
+import dev.alaindustrial.block.entity.DroneNestBlockEntity;
 import dev.alaindustrial.block.entity.ReceptionCapsuleBlockEntity;
+import dev.alaindustrial.block.entity.TownDispatcherBlockEntity;
 import dev.alaindustrial.block.entity.RecyclerBlockEntity;
 import dev.alaindustrial.block.entity.SawmillBlockEntity;
 import dev.alaindustrial.block.entity.SettlementCoreBlockEntity;
@@ -59,6 +65,10 @@ import dev.alaindustrial.block.entity.UpgradeTableBlockEntity;
 import dev.alaindustrial.block.entity.VulcanizerBlockEntity;
 import dev.alaindustrial.block.entity.WorkstationBlockEntity;
 import dev.alaindustrial.compat.LineBlockProps;
+import dev.alaindustrial.item.misc.ConstructionDroneItem;
+import dev.alaindustrial.item.misc.RestorationPlan;
+import dev.alaindustrial.item.misc.RestorationPlanItem;
+import dev.alaindustrial.item.misc.TownHallPlanSheetItem;
 import dev.alaindustrial.menu.AdvancedIndustrialWorkbenchMenu;
 import dev.alaindustrial.menu.AlloySmelterMenu;
 import dev.alaindustrial.menu.AssemblerMenu;
@@ -73,6 +83,7 @@ import dev.alaindustrial.menu.GalvanicBathMenu;
 import dev.alaindustrial.menu.MaceratorMenu;
 import dev.alaindustrial.menu.PolymerizerMenu;
 import dev.alaindustrial.menu.ReceptionCapsuleMenu;
+import dev.alaindustrial.menu.TownDispatcherMenu;
 import dev.alaindustrial.menu.RecyclerMenu;
 import dev.alaindustrial.menu.SawmillMenu;
 import dev.alaindustrial.menu.SettlementCoreMenu;
@@ -88,7 +99,9 @@ import dev.alaindustrial.registry.ContentManifest.MenuDef;
 import dev.alaindustrial.registry.CreativeTabContent.Sink;
 import dev.alaindustrial.registry.ModBlockProperties;
 import dev.alaindustrial.registry.ModContent;
+import dev.alaindustrial.settlement.plan.PlanSheetRules;
 import java.util.List;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.MapColor;
 
@@ -228,6 +241,17 @@ public final class ProcessingContent {
 			block("reception_capsule", ReceptionCapsuleBlock::new,
 					machine(p -> p.strength(-1.0f, 3_600_000.0f).sound(SoundType.METAL).noOcclusion()),
 					s -> ModContent.RECEPTION_CAPSULE = s);
+	// MOD-858 - the town dispatcher in the town hall: the restoration plan and the drones' material buffer. A machine
+	// casing (pickaxe, 3/6); in a town with an owner only the owner breaks it (TownDispatcherBlock).
+	public static final BlockDef<TownDispatcherBlock> TOWN_DISPATCHER =
+			block("town_dispatcher", TownDispatcherBlock::new,
+					machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)),
+					s -> ModContent.TOWN_DISPATCHER = s);
+	// MOD-858 - a builder drone's nest on the town hall's roof: a grate on legs, not a full block.
+	public static final BlockDef<DroneNestBlock> DRONE_NEST =
+			block("drone_nest", DroneNestBlock::new,
+					machine(p -> p.strength(2.0f, 6.0f).sound(SoundType.METAL).noOcclusion()),
+					s -> ModContent.DRONE_NEST = s);
 
 	private static final List<BlockDef<?>> BLOCKS = endBlocks();
 
@@ -262,7 +286,27 @@ public final class ProcessingContent {
 			// MOD-831 - appended at the very tail; the order of this list is the registration order.
 			blockItem("settlement_core", s -> ModContent.SETTLEMENT_CORE_ITEM = s),
 			// MOD-833 - appended at the very tail; the order of this list is the registration order.
-			blockItem("reception_capsule", s -> ModContent.RECEPTION_CAPSULE_ITEM = s));
+			blockItem("reception_capsule", s -> ModContent.RECEPTION_CAPSULE_ITEM = s),
+			// MOD-859 - the town hall plan sheets, found in the towns, and the restoration plan three of them make.
+			item("town_hall_plan_sheet",
+					p -> new TownHallPlanSheetItem(p.stacksTo(TownHallPlanSheetItem.STACK_SIZE)),
+					s -> ModContent.TOWN_HALL_PLAN_SHEET = s),
+			item("restoration_plan", p -> new RestorationPlanItem(p.stacksTo(1)),
+					s -> ModContent.RESTORATION_PLAN = s),
+			// MOD-858 - appended at the very tail; the order of this list is the registration order.
+			blockItem("town_dispatcher", s -> ModContent.TOWN_DISPATCHER_ITEM = s),
+			blockItem("drone_nest", s -> ModContent.DRONE_NEST_ITEM = s),
+			// MOD-858 round 1 - the builder drone as its own item, put into an empty nest; appended at the tail.
+			item("construction_drone", p -> new ConstructionDroneItem(p.stacksTo(1)),
+					s -> ModContent.CONSTRUCTION_DRONE = s));
+
+	// MOD-858 - constants, because the capability roster names them (no energy: BlockCapabilityRoster).
+	public static final BlockEntityDef<TownDispatcherBlockEntity> TOWN_DISPATCHER_BE =
+			blockEntity("town_dispatcher", TownDispatcherBlockEntity.class, TownDispatcherBlockEntity::new,
+					s -> ModContent.TOWN_DISPATCHER_BE = s, TOWN_DISPATCHER);
+	public static final BlockEntityDef<DroneNestBlockEntity> DRONE_NEST_BE =
+			blockEntity("drone_nest", DroneNestBlockEntity.class, DroneNestBlockEntity::new,
+					s -> ModContent.DRONE_NEST_BE = s, DRONE_NEST);
 
 	private static final List<BlockEntityDef<?>> BLOCK_ENTITIES = List.of(
 			blockEntity("macerator", MaceratorBlockEntity.class, MaceratorBlockEntity::new,
@@ -323,7 +367,9 @@ public final class ProcessingContent {
 					s -> ModContent.SETTLEMENT_CORE_BE = s, SETTLEMENT_CORE),
 			// MOD-833: the capsule's lower cell; the flask above it has no block entity.
 			blockEntity("reception_capsule", ReceptionCapsuleBlockEntity.class, ReceptionCapsuleBlockEntity::new,
-					s -> ModContent.RECEPTION_CAPSULE_BE = s, RECEPTION_CAPSULE));
+					s -> ModContent.RECEPTION_CAPSULE_BE = s, RECEPTION_CAPSULE),
+			// MOD-858: the dispatcher's plan slots and buffer; the nest, whose state is the drone.
+			TOWN_DISPATCHER_BE, DRONE_NEST_BE);
 
 	private static final List<MenuDef<?>> MENUS = List.of(
 			menu("macerator", MaceratorMenu::new, s -> ModContent.MACERATOR_MENU = s),
@@ -356,7 +402,9 @@ public final class ProcessingContent {
 			// MOD-831 - the settlement core: a slotless readout with the claim button.
 			menu("settlement_core", SettlementCoreMenu::new, s -> ModContent.SETTLEMENT_CORE_MENU = s),
 			// MOD-833 - the reception capsule: three material slots and the restoration's readout.
-			menu("reception_capsule", ReceptionCapsuleMenu::new, s -> ModContent.RECEPTION_CAPSULE_MENU = s));
+			menu("reception_capsule", ReceptionCapsuleMenu::new, s -> ModContent.RECEPTION_CAPSULE_MENU = s),
+			// MOD-858 - the dispatcher: plan sheets, the restoration plan, the buffer and the tabs.
+			menu("town_dispatcher", TownDispatcherMenu::new, s -> ModContent.TOWN_DISPATCHER_MENU = s));
 
 	/** Everything this domain declares; {@link dev.alaindustrial.registry.ContentManifest#DOMAINS} joins it in. */
 	public static final Domain DOMAIN = new Domain("Processing", BLOCKS, ITEMS, BLOCK_ENTITIES, MENUS);
@@ -411,5 +459,27 @@ public final class ProcessingContent {
 	public static void settlement(Sink out) {
 		show(out, ModContent.SETTLEMENT_CORE_ITEM);
 		show(out, ModContent.RECEPTION_CAPSULE_ITEM);
+		// MOD-858 - the dispatcher and the drone nest: built, unlike the two above, but only of use in a town hall.
+		show(out, ModContent.TOWN_DISPATCHER_ITEM);
+		show(out, ModContent.DRONE_NEST_ITEM);
+	}
+
+	/**
+	 * MOD-859 - the town hall plan sheets and the restoration plan, shown in the mod's own tab only, after the
+	 * settlement blocks. Owner's round 2: for every built-in style its three marked sheets and its plan, never the
+	 * blank stack (a blank makes no plan and only misled). MOD-858 round 1 - the builder drone item ahead of them: an
+	 * item, not a block, so not in Functional Blocks.
+	 */
+	public static void settlementPlans(Sink out) {
+		show(out, ModContent.CONSTRUCTION_DRONE);
+		for (String id : PlanSheetRules.BUILT_IN_STYLES) {
+			Identifier style = Identifier.parse(id);
+			for (int sheet = 1; sheet <= PlanSheetRules.SHEETS; sheet++) {
+				int number = sheet;
+				showStack(out, ModContent.TOWN_HALL_PLAN_SHEET, () -> TownHallPlanSheetItem.of(style, number));
+			}
+			showStack(out, ModContent.RESTORATION_PLAN, () -> RestorationPlanItem.of(RestorationPlan.of(
+					new PlanSheetRules.Plan(id, PlanSheetRules.intactTemplate(id, PlanSheetRules.TOWN_HALL)))));
+		}
 	}
 }

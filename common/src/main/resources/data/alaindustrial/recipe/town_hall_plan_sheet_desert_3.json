@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "town_hall_plan_sheet_3",
+  "pattern": [
+    "PLP",
+    "XSX",
+    "LYL"
+  ],
+  "key": {
+    "P": "minecraft:paper",
+    "L": "#c:gems/lapis",
+    "X": "#c:dusts/redstone",
+    "S": "#alaindustrial:plan_sheet_desert_marker",
+    "Y": "alaindustrial:electronic_circuit"
+  },
+  "result": {
+    "id": "alaindustrial:town_hall_plan_sheet",
+    "count": 1,
+    "components": {
+      "alaindustrial:plan_sheet": {
+        "style": "alaindustrial:desert",
+        "sheet": 3
+      }
+    }
+  }
+}

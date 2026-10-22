@@ -36,6 +36,7 @@ import dev.alaindustrial.menu.MaceratorMenu;
 import dev.alaindustrial.menu.MoonlitSolarPanelMenu;
 import dev.alaindustrial.menu.PolymerizerMenu;
 import dev.alaindustrial.menu.GardenDroneStationMenu;
+import dev.alaindustrial.menu.TownDispatcherMenu;
 import dev.alaindustrial.menu.PumpMenu;
 import dev.alaindustrial.menu.IncubatorMenu;
 import dev.alaindustrial.menu.SawmillMenu;
@@ -392,6 +393,10 @@ public final class ModContent {
 	public static Supplier<Block> SETTLEMENT_CORE = unbound("SETTLEMENT_CORE");
 	/** MOD-833 - the reception capsule: restores the town's shift workers for EU and materials. */
 	public static Supplier<Block> RECEPTION_CAPSULE = unbound("RECEPTION_CAPSULE");
+	/** MOD-858 - the town's construction desk: the restoration plan and the drones' material buffer. */
+	public static Supplier<Block> TOWN_DISPATCHER = unbound("TOWN_DISPATCHER");
+	/** MOD-858 - a builder drone's nest on the town hall's roof; the drone is the nest's own state. */
+	public static Supplier<Block> DRONE_NEST = unbound("DRONE_NEST");
 	// Enriched Uranium Torch (MOD-085) — a vanilla-behaviour torch (light 15, green flame) in two
 	// blocks: standing + wall. The wall variant has NO block item; it drops/names from the standing
 	// torch via overrideLootTable/overrideDescription, exactly as vanilla WALL_TORCH mirrors TORCH.
@@ -1075,6 +1080,13 @@ public final class ModContent {
 	// MOD-831
 	public static Supplier<BlockItem> SETTLEMENT_CORE_ITEM = unbound("SETTLEMENT_CORE_ITEM");
 	public static Supplier<BlockItem> RECEPTION_CAPSULE_ITEM = unbound("RECEPTION_CAPSULE_ITEM");
+	// MOD-859 - the town hall plan sheets and the restoration plan they make.
+	public static Supplier<Item> TOWN_HALL_PLAN_SHEET = unbound("TOWN_HALL_PLAN_SHEET");
+	public static Supplier<Item> RESTORATION_PLAN = unbound("RESTORATION_PLAN");
+	public static Supplier<Item> CONSTRUCTION_DRONE = unbound("CONSTRUCTION_DRONE");
+	// MOD-858
+	public static Supplier<BlockItem> TOWN_DISPATCHER_ITEM = unbound("TOWN_DISPATCHER_ITEM");
+	public static Supplier<BlockItem> DRONE_NEST_ITEM = unbound("DRONE_NEST_ITEM");
 	// Enriched Uranium Torch (MOD-085) — only the STANDING torch has a block item; the wall variant
 	// drops this item via its overrideLootTable, so it needs no item of its own.
 	public static Supplier<BlockItem> ENRICHED_URANIUM_TORCH_ITEM = unbound("ENRICHED_URANIUM_TORCH_ITEM");
@@ -1143,6 +1155,9 @@ public final class ModContent {
 	// MOD-831
 	public static Supplier<BlockEntityType<?>> SETTLEMENT_CORE_BE = unbound("SETTLEMENT_CORE_BE");
 	public static Supplier<BlockEntityType<?>> RECEPTION_CAPSULE_BE = unbound("RECEPTION_CAPSULE_BE");
+	// MOD-858
+	public static Supplier<BlockEntityType<?>> TOWN_DISPATCHER_BE = unbound("TOWN_DISPATCHER_BE");
+	public static Supplier<BlockEntityType<?>> DRONE_NEST_BE = unbound("DRONE_NEST_BE");
 	public static Supplier<BlockEntityType<?>> ELECTRIC_HEATER_BE = unbound("ELECTRIC_HEATER_BE");
 	public static Supplier<BlockEntityType<?>> CHARGE_PAD_BE = unbound("CHARGE_PAD_BE");
 	public static Supplier<BlockEntityType<?>> VACUUM_COLLECTOR_BE = unbound("VACUUM_COLLECTOR_BE");
@@ -1195,6 +1210,8 @@ public final class ModContent {
 	/** MOD-833 - the reception capsule's material slots and readout. */
 	public static Supplier<MenuType<ReceptionCapsuleMenu>> RECEPTION_CAPSULE_MENU =
 			unbound("RECEPTION_CAPSULE_MENU");
+	/** MOD-858 - the dispatcher: plan sheets, the restoration plan and the material buffer. */
+	public static Supplier<MenuType<TownDispatcherMenu>> TOWN_DISPATCHER_MENU = unbound("TOWN_DISPATCHER_MENU");
 	public static Supplier<MenuType<CanningMachineMenu>> CANNING_MACHINE_MENU = unbound("CANNING_MACHINE_MENU");
 	public static Supplier<MenuType<SawmillMenu>> SAWMILL_MENU = unbound("SAWMILL_MENU");
 	public static Supplier<MenuType<AssemblerMenu>> ASSEMBLER_MENU = unbound("ASSEMBLER_MENU");

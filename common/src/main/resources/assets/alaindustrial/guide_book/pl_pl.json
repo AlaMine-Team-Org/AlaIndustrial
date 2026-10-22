@@ -3831,7 +3831,7 @@
             {
               "type": "text",
               "title": "Kapsuła przyjęć",
-              "text": "Przywraca zmienników osady jednego po drugim za EU i materiały — tylko dopóki rdzeń osady świeci, osada ma właściciela, a limit zmienników nie jest osiągnięty; każdy nowy zmiennik dostaje własny numer, jedyny na całym świecie."
+              "text": "Przywraca zmienników osady jednego po drugim za EU i materiały — tylko dopóki rdzeń osady świeci, osada ma odnowiciela, a limit zmienników nie jest osiągnięty; każdy nowy zmiennik dostaje własny numer, jedyny na całym świecie."
             },
             {
               "type": "stats",
@@ -4294,7 +4294,7 @@
             {
               "type": "text",
               "title": "Rdzeń osady",
-              "text": "Serce osiedla robotniczego, stojące w jego ratuszu — dopóki sieć dostarcza mu EU, utrzymuje teren osady, wyznacza, ile domów i zmienników może mieć osiedle, i pamięta swojego właściciela; bez zasilania gaśnie, a osiedle zasypia."
+              "text": "Serce osiedla robotniczego, stojące w jego ratuszu — dopóki sieć dostarcza mu EU, utrzymuje teren osady, wyznacza, ile domów i zmienników może mieć osiedle, i pamięta swojego odnowiciela; bez zasilania gaśnie, a osiedle zasypia."
             },
             {
               "type": "stats",

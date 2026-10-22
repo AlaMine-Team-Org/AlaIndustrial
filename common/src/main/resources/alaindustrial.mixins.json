@@ -8,7 +8,10 @@
     "PistonQuenchPressMixin",
     "LivingEntityModFluidTravelMixin",
     "ItemStackLavaCapsuleHealMixin",
-    "ExperienceOrbAccessor"
+    "ExperienceOrbAccessor",
+    "MobTargetSelectorAccessor",
+    "NearestAttackableTargetGoalAccessor",
+    "TargetGoalAccessor"
   ],
   "client": [
     "client.RootInspectionStateMixin",

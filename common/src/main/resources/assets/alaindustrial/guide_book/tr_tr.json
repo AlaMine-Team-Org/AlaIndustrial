@@ -3831,7 +3831,7 @@
             {
               "type": "text",
               "title": "Karşılama Kapsülü",
-              "text": "Bir yerleşimin vardiya işçilerini EU ve malzeme karşılığında birer birer geri getirir — yalnızca yerleşim çekirdeği yanarken, kasabanın bir sahibi varken ve işçi sınırına ulaşılmamışken; her yeni işçi dünyada tek olan kendi numarasını alır."
+              "text": "Bir yerleşimin vardiya işçilerini EU ve malzeme karşılığında birer birer geri getirir — yalnızca yerleşim çekirdeği yanarken, kasabanın bir onarıcısı varken ve işçi sınırına ulaşılmamışken; her yeni işçi dünyada tek olan kendi numarasını alır."
             },
             {
               "type": "stats",
@@ -4294,7 +4294,7 @@
             {
               "type": "text",
               "title": "Yerleşim Çekirdeği",
-              "text": "Belediye binasında duran işçi kasabasının kalbi — şebeke ona EU verdiği sürece yerleşimin bölgesini korur, kasabada kaç ev ve vardiya işçisi olabileceğini belirler ve sahibini hatırlar; enerji yoksa söner ve kasaba uykuya dalar."
+              "text": "Belediye binasında duran işçi kasabasının kalbi — şebeke ona EU verdiği sürece yerleşimin bölgesini korur, kasabada kaç ev ve vardiya işçisi olabileceğini belirler ve onarıcısını hatırlar; enerji yoksa söner ve kasaba uykuya dalar."
             },
             {
               "type": "stats",

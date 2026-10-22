@@ -7,6 +7,7 @@ import dev.alaindustrial.registry.ModMobs;
 import dev.alaindustrial.settlement.Settlement;
 import dev.alaindustrial.settlement.SettlementConfig;
 import dev.alaindustrial.settlement.SettlementRegistry;
+import dev.alaindustrial.settlement.SettlementTerritory;
 import dev.alaindustrial.settlement.ShiftWorkerHost;
 import dev.alaindustrial.settlement.record.RecordNumber;
 import dev.alaindustrial.settlement.record.RecordNumberLedger;
@@ -337,9 +338,28 @@ public final class ShiftWorkers {
 		return town.map(settlement -> Math.max(1, Math.min(knob, settlement.territoryReach()))).orElse(knob);
 	}
 
+	/**
+	 * The territory of {@code worker}'s town, when it has a town in the worker's own level: the box a fleeing worker
+	 * keeps to (MOD-824, {@code ShiftWorkerFleeGoal}). Empty for a worker of no town, of a town that is gone, or one
+	 * standing in another dimension than its town.
+	 */
+	public static Optional<SettlementTerritory.Area> territory(ServerLevel level, ShiftWorker worker) {
+		return town(level.getServer(), worker.settlement())
+				.filter(settlement -> settlement.dimension().equals(level.dimension()))
+				.map(Settlement::territory);
+	}
+
 	/** Asks the worker's town for one new path on this tick (ADR-050 point 11). */
 	public static boolean tryPlanPath(ServerLevel level, ShiftWorker worker) {
-		return book(level.getServer()).paths(worker.settlement())
+		return tryPlanPath(level, worker.settlement());
+	}
+
+	/**
+	 * Asks town {@code settlement} for one new path on this tick (ADR-050 point 11): the one entry point for a worker's
+	 * walk and a builder drone's route alike (MOD-858), so one town plans at most the knob's paths a tick.
+	 */
+	public static boolean tryPlanPath(ServerLevel level, int settlement) {
+		return book(level.getServer()).paths(settlement)
 				.tryAcquire(level.getGameTime(), SettlementConfig.shiftWorkerPathsPerTick);
 	}
 

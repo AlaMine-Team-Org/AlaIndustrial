@@ -34,11 +34,24 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
  * structure void first: the structure block skips structure voids when it saves, so a cell the template did not
  * have (the terrain under a ground piece, natural ground in a building's floor) is again left out, instead of being
  * saved as air that would cut into the terrain of every town.
+ *
+ * <p>The intact bench ({@link #planIntact}) is the same workbench for the building the drone restores a ruin to: the
+ * intact template {@code alaindustrial:ala_town/<style>/intact/<piece>} ({@link #intact}), saved by its structure
+ * block into {@code generated/alaindustrial/structure/ala_town/<style>/intact/<piece>.nbt} and taken into the mod by
+ * {@code tools/import_town_templates.py --intact}. It starts from the ruin, or from the intact building saved so far,
+ * and its box is as wide and long as the ruin with {@link #INTACT_HEADROOM} blocks more height for the lost roof. The
+ * ruin itself is never saved over, and no town pool names an intact template, so world generation never places one.
  */
 public final class TownEditBench {
 
 	/** Folder of the mod's town templates under the {@code structure} data folder. */
 	static final String TOWN = "ala_town/";
+
+	/** Folder of a style's intact buildings: {@code ala_town/<style>/intact/<piece>}. */
+	static final String INTACT = "intact";
+
+	/** Blocks the intact bench's box rises above the ruin's: room for the roof the ruin lost. */
+	static final int INTACT_HEADROOM = 8;
 
 	/** Empty blocks between two pieces: the structure block sits one cell off a piece's north-west corner. */
 	static final int GAP = 4;
@@ -59,12 +72,26 @@ public final class TownEditBench {
 	private TownEditBench() {
 	}
 
-	/** One piece laid out on the bench: its template, its corner relative to the bench origin and its size. */
-	public record Slot(Identifier template, BlockPos offset, Vec3i size) {
+	/**
+	 * One piece laid out on the bench: the template placed, the name its structure block saves under, its corner
+	 * relative to the bench origin, the size of its box and the structure block's mode (SAVE for a piece to edit, LOAD
+	 * for a reference that pressing must not save over).
+	 */
+	public record Slot(Identifier template, Identifier saveAs, BlockPos offset, Vec3i size, StructureMode mode) {
 		/** The piece's name in its style, {@code town_hall}. */
 		public String piece() {
-			return template.getPath().substring(template.getPath().lastIndexOf('/') + 1);
+			return saveAs.getPath().substring(saveAs.getPath().lastIndexOf('/') + 1);
 		}
+	}
+
+	/** The ruin template of {@code piece}: {@code alaindustrial:ala_town/<style>/<piece>}. */
+	public static Identifier ruin(String style, String piece) {
+		return Industrialization.id(TOWN + style + "/" + piece);
+	}
+
+	/** The intact building of {@code piece}: {@code alaindustrial:ala_town/<style>/intact/<piece>}. */
+	public static Identifier intact(String style, String piece) {
+		return Industrialization.id(TOWN + style + "/" + INTACT + "/" + piece);
 	}
 
 	/** Styles that have templates: the folders under {@code alaindustrial:ala_town/}. */
@@ -79,7 +106,7 @@ public final class TownEditBench {
 		return List.copyOf(styles);
 	}
 
-	/** Pieces of {@code style}, by name. */
+	/** Pieces of {@code style}, by name; the intact buildings under {@code <style>/intact/} are not pieces. */
 	public static List<String> pieces(StructureTemplateManager templates, String style) {
 		String prefix = TOWN + style + "/";
 		TreeSet<String> pieces = new TreeSet<>();
@@ -99,7 +126,7 @@ public final class TownEditBench {
 		int z = 0;
 		int rowDepth = 0;
 		for (String piece : pieces) {
-			Identifier id = Industrialization.id(TOWN + style + "/" + piece);
+			Identifier id = ruin(style, piece);
 			Optional<StructureTemplate> template = templates.get(id);
 			if (template.isEmpty()) {
 				continue;
@@ -110,7 +137,7 @@ public final class TownEditBench {
 				z += rowDepth + GAP;
 				rowDepth = 0;
 			}
-			slots.add(new Slot(id, new BlockPos(x, 0, z), size));
+			slots.add(new Slot(id, id, new BlockPos(x, 0, z), size, StructureMode.SAVE));
 			x += size.getX() + GAP;
 			rowDepth = Math.max(rowDepth, size.getZ());
 		}
@@ -118,13 +145,43 @@ public final class TownEditBench {
 	}
 
 	/**
-	 * Places {@code slot} with its corner at {@code origin + slot.offset()} and its structure block in SAVE mode next
-	 * to it; returns the structure block's position.
+	 * The intact bench of {@code piece}: the intact building saved so far (the world's save first, then the mod's) or,
+	 * before there is one, the ruin as the starting point; its structure block saves under {@link #intact}. The box is
+	 * as wide and long as the ruin and {@link #INTACT_HEADROOM} blocks taller, never lower than the saved intact
+	 * building and never over the structure block's limit. With {@code withRuin} the ruin stands first, to the west, as
+	 * a reference whose structure block is in LOAD mode. Empty when the ruin does not load.
+	 */
+	public static List<Slot> planIntact(StructureTemplateManager templates, String style, String piece,
+			boolean withRuin) {
+		Identifier ruinId = ruin(style, piece);
+		Optional<StructureTemplate> ruinTemplate = templates.get(ruinId);
+		if (ruinTemplate.isEmpty()) {
+			return List.of();
+		}
+		Vec3i size = ruinTemplate.get().getSize();
+		Identifier intactId = intact(style, piece);
+		Optional<StructureTemplate> saved = templates.get(intactId);
+		int height = Math.min(StructureBlockEntity.MAX_SIZE_PER_AXIS,
+				Math.max(size.getY() + INTACT_HEADROOM, saved.map(t -> t.getSize().getY()).orElse(0)));
+		List<Slot> slots = new ArrayList<>();
+		int x = 0;
+		if (withRuin) {
+			slots.add(new Slot(ruinId, ruinId, BlockPos.ZERO, size, StructureMode.LOAD));
+			x = size.getX() + GAP;
+		}
+		slots.add(new Slot(saved.isPresent() ? intactId : ruinId, intactId, new BlockPos(x, 0, 0),
+				new Vec3i(size.getX(), height, size.getZ()), StructureMode.SAVE));
+		return slots;
+	}
+
+	/**
+	 * Places {@code slot} with its corner at {@code origin + slot.offset()}, its box filled with structure voids first,
+	 * and its structure block in the slot's mode next to it; returns the structure block's position.
 	 */
 	public static BlockPos place(ServerLevel level, BlockPos origin, Slot slot) {
 		StructureTemplate template = LineStructures.templates(level).getOrCreate(slot.template());
 		BlockPos corner = origin.offset(slot.offset());
-		Vec3i size = template.getSize();
+		Vec3i size = slot.size();
 		BlockState voidState = Blocks.STRUCTURE_VOID.defaultBlockState();
 		for (BlockPos pos : BlockPos.betweenClosed(corner, corner.offset(size.getX() - 1, size.getY() - 1,
 				size.getZ() - 1))) {
@@ -136,13 +193,13 @@ public final class TownEditBench {
 				level.getRandom(), QUIET);
 
 		BlockPos at = corner.offset(STRUCTURE_BLOCK_OFFSET);
-		BlockState state = Blocks.STRUCTURE_BLOCK.defaultBlockState().setValue(StructureBlock.MODE, StructureMode.SAVE);
+		BlockState state = Blocks.STRUCTURE_BLOCK.defaultBlockState().setValue(StructureBlock.MODE, slot.mode());
 		level.setBlock(at, state, Block.UPDATE_ALL);
 		if (level.getBlockEntity(at) instanceof StructureBlockEntity block) {
-			block.setStructureName(slot.template());
+			block.setStructureName(slot.saveAs());
 			block.setStructurePos(BlockPos.ZERO.subtract(STRUCTURE_BLOCK_OFFSET));
 			block.setStructureSize(size);
-			block.setMode(StructureMode.SAVE);
+			block.setMode(slot.mode());
 			block.setIgnoreEntities(true);
 			block.setShowBoundingBox(true);
 			block.setChanged();

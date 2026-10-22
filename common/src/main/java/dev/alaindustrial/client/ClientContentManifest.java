@@ -12,12 +12,14 @@ import dev.alaindustrial.block.entity.MobWheelBlockEntity;
 import dev.alaindustrial.block.entity.RadiantSolarPanelBlockEntity;
 import dev.alaindustrial.block.entity.FluidTankBlockEntity;
 import dev.alaindustrial.block.entity.FluidTapBlockEntity;
+import dev.alaindustrial.block.entity.DroneNestBlockEntity;
 import dev.alaindustrial.block.entity.GardenDroneStationBlockEntity;
 import dev.alaindustrial.block.entity.GoldChestBlockEntity;
 import dev.alaindustrial.block.entity.HighAltitudeWindMillBlockEntity;
 import dev.alaindustrial.block.entity.IncubatorBlockEntity;
 import dev.alaindustrial.block.entity.IronChestBlockEntity;
 import dev.alaindustrial.block.entity.ReactorDoorBlockEntity;
+import dev.alaindustrial.block.entity.SettlementCoreBlockEntity;
 import dev.alaindustrial.block.entity.ShieldingChestBlockEntity;
 import dev.alaindustrial.block.entity.SilverChestBlockEntity;
 import dev.alaindustrial.block.entity.StormWindMillBlockEntity;
@@ -42,6 +44,8 @@ import dev.alaindustrial.client.render.CableSleeveTint;
 import dev.alaindustrial.client.render.FluidPipeTint;
 import dev.alaindustrial.client.render.FluidTankBlockEntityRenderer;
 import dev.alaindustrial.client.render.FluidTapBlockEntityRenderer;
+import dev.alaindustrial.client.render.ConstructionDroneRenderer;
+import dev.alaindustrial.client.render.HallSchematicRenderer;
 import dev.alaindustrial.client.render.GardenDroneBlockEntityRenderer;
 import dev.alaindustrial.client.render.IncubatorBlockEntityRenderer;
 import dev.alaindustrial.client.render.IncubatorDomeTint;
@@ -276,6 +280,13 @@ public final class ClientContentManifest {
 			// not an entity.
 			renderer(ContentManifest.blockEntity("garden_drone_station", GardenDroneStationBlockEntity.class),
 					GardenDroneBlockEntityRenderer::new),
+			// MOD-858: the builder drone docked on its nest and in flight.
+			renderer(ContentManifest.blockEntity("drone_nest", DroneNestBlockEntity.class),
+					ConstructionDroneRenderer::new),
+			// MOD-857 (owner's round 3): the town hall's schematic — the missing blocks as translucent models, drawn
+			// from the settlement core because only a block entity renderer gets a textured model into the frame.
+			renderer(ContentManifest.blockEntity("settlement_core", SettlementCoreBlockEntity.class),
+					HallSchematicRenderer::new),
 			renderer(ContentManifest.blockEntity("wind_mill", WindMillBlockEntity.class),
 					WindMillRotorBlockEntityRenderer::new),
 			renderer(ContentManifest.blockEntity("high_altitude_wind_mill", HighAltitudeWindMillBlockEntity.class),

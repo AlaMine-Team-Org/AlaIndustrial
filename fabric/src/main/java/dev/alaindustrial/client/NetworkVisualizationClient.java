@@ -43,5 +43,8 @@ public final class NetworkVisualizationClient {
 		// MOD-843: a settlement's border, for the player who pressed "show borders" in its core's screen.
 		dev.alaindustrial.client.render.SettlementBorderOverlay.submitFrame(context.submitNodeCollector(),
 				context.levelState().cameraRenderState);
+		// MOD-857 (round 2): the town hall's schematic, for the player who turned it on in its core's screen.
+		dev.alaindustrial.client.render.HallSchematicOverlay.submitFrame(context.submitNodeCollector(),
+				context.levelState().cameraRenderState);
 	}
 }

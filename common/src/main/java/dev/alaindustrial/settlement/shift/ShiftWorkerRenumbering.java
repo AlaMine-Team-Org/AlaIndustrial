@@ -109,8 +109,8 @@ public final class ShiftWorkerRenumbering {
 	 * line about a death. What the town hall's log will show (its screen comes with the profile, stage 4).
 	 */
 	public static Optional<Component> logLineText(ShiftWorkerBook.LogLine line) {
-		return line.renumbering().map(to -> Component.translatable(LOG_LINE_KEY, line.number().toString(),
-				to.number().toString()));
+		return line.renumbering().map(to -> Component.translatable(LOG_LINE_KEY,
+				line.number().map(RecordNumber::toString).orElse(""), to.number().toString()));
 	}
 
 	/** Moves the worker of {@code record} to its new number; {@code body}, if any, shows it. The moved record. */

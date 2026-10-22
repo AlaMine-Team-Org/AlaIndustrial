@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_plan_sheet": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:town_hall_plan_sheet"
+          }
+        ]
+      }
+    },
+    "has_dispatcher": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:town_dispatcher"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipes": "alaindustrial:town_hall_plan_sheet_desert_3"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_plan_sheet",
+      "has_dispatcher"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "alaindustrial:town_hall_plan_sheet_desert_3"
+    ]
+  }
+}

@@ -148,6 +148,10 @@ public final class ModPayloads {
 			clientbound(ShiftWorkerCardPayload.TYPE, ShiftWorkerCardPayload.CODEC),
 			// MOD-854: a town's workers for its core's «Workers» and «Closed» tabs.
 			clientbound(ShiftWorkerRosterPayload.TYPE, ShiftWorkerRosterPayload.CODEC),
+			// MOD-857: a town's buildings and work queue for its core's «Construction» tab.
+			clientbound(TownWorksPayload.TYPE, TownWorksPayload.CODEC),
+			// MOD-857 (round 2): the town hall's cells still to build, for the schematic one player turned on.
+			clientbound(HallSchematicPayload.TYPE, HallSchematicPayload.CODEC),
 			// MOD-093: renaming a teleport point — the one string that needs a payload of its own.
 			serverbound(TeleportRenamePayload.TYPE, TeleportRenamePayload.CODEC, TeleportRenamePayload::handle),
 			// MOD-592: a recipe-viewer drop onto a magnet filter cell.
@@ -166,5 +170,11 @@ public final class ModPayloads {
 					ShiftWorkerRequestPayload::handle),
 			// MOD-854: the owner's changes from a worker's card — invest, respec, rename.
 			serverbound(ShiftWorkerActionPayload.TYPE, ShiftWorkerActionPayload.CODEC,
-					ShiftWorkerActionPayload::handle));
+					ShiftWorkerActionPayload::handle),
+			// MOD-857: the «Construction» tab asks for its rows, or the town's owner presses a control.
+			serverbound(TownWorksRequestPayload.TYPE, TownWorksRequestPayload.CODEC,
+					TownWorksRequestPayload::handle),
+			// MOD-857 (round 2): a shown town hall schematic asks for its cells — on the press, then on a slow timer.
+			serverbound(HallSchematicRequestPayload.TYPE, HallSchematicRequestPayload.CODEC,
+					HallSchematicRequestPayload::handle));
 }

@@ -30,6 +30,18 @@ public final class GuiStyle {
 	public static final int LABEL = 0xFF404040;
 	/** A blocking status caption — dark red, the colour of {@code ChatFormatting.DARK_RED}. */
 	public static final int STATUS_BLOCKING = 0xFFAA0000;
+	/**
+	 * A finished, good status caption (MOD-857) — «intact», a done step, a covered material. A calm ink green that
+	 * reads on the light-grey panel and card (owner's round 4 of stage 6: the bright
+	 * {@code ChatFormatting.DARK_GREEN} it was hurt the eyes); the same ink as the reactor's and the teleporter's good
+	 * lines.
+	 */
+	public static final int STATUS_GOOD = 0xFF2F6B33;
+	/**
+	 * The tint that turns the vanilla green tick sprite ({@code container/beacon/confirm}, pure green, brightest 184)
+	 * into {@link #STATUS_GOOD}'s green: 0x6B / 184 of full. Only the green channel matters, the sprite has no other.
+	 */
+	public static final int STATUS_GOOD_TICK = 0xFF2F9433;
 	/** Face of an unselected mode button (the sawmill's mode row). */
 	public static final int BUTTON = 0xFF2B2B2B;
 	/** Face of the selected mode button. */

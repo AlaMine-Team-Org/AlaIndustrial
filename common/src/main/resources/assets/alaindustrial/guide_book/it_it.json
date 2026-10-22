@@ -3831,7 +3831,7 @@
             {
               "type": "text",
               "title": "Capsula di accoglienza",
-              "text": "Riporta indietro gli operai di turno di un insediamento uno alla volta in cambio di EU e materiali, solo finché il nucleo dell'insediamento è acceso, il villaggio ha un proprietario e il limite di operai non è raggiunto; ogni nuovo operaio riceve un numero tutto suo, unico nel mondo."
+              "text": "Riporta indietro gli operai di turno di un insediamento uno alla volta in cambio di EU e materiali, solo finché il nucleo dell'insediamento è acceso, il villaggio ha un restauratore e il limite di operai non è raggiunto; ogni nuovo operaio riceve un numero tutto suo, unico nel mondo."
             },
             {
               "type": "stats",
@@ -4294,7 +4294,7 @@
             {
               "type": "text",
               "title": "Nucleo dell'insediamento",
-              "text": "Il cuore di un villaggio operaio, nel suo municipio: finché la rete gli fornisce EU, mantiene il territorio dell'insediamento, stabilisce quante case e quanti operai di turno può avere il villaggio e ricorda il suo proprietario; senza energia si spegne e il villaggio dorme."
+              "text": "Il cuore di un villaggio operaio, nel suo municipio: finché la rete gli fornisce EU, mantiene il territorio dell'insediamento, stabilisce quante case e quanti operai di turno può avere il villaggio e ricorda il suo restauratore; senza energia si spegne e il villaggio dorme."
             },
             {
               "type": "stats",

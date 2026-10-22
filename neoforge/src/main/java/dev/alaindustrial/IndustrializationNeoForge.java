@@ -308,6 +308,8 @@ public final class IndustrializationNeoForge {
 						ServerHookRoster.onPlayerJoin(player);
 					}
 				});
+		NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.entity.EntityJoinLevelEvent event) ->
+				ServerHookRoster.onEntityJoin(event.getEntity(), event.getLevel()));
 		NeoForge.EVENT_BUS.addListener((LevelEvent.Unload event) -> {
 			if (event.getLevel() instanceof ServerLevel level) {
 				ServerHookRoster.onLevelUnload(level);

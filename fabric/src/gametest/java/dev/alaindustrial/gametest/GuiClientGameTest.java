@@ -126,6 +126,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
                 NetworkOverlayStand.check(context, singleplayer);                // MOD-665 analyzer trace reaches the frame
                 TeleporterCapsuleStand.checkGlassFromInside(context, singleplayer); // MOD-632 door glass from inside
                 ShiftWorkerStand.check(context, singleplayer);                   // MOD-832 shift workers
+                HallSchematicStand.check(context, singleplayer);                 // MOD-857 town hall schematic
                 StorageModuleStands.checkStorageModuleSeams(context, singleplayer); // MOD-287 connected textures
                 // R-PHY-10: mc.debugHitboxes removed in MC 26.2; re-enable when API is found.
             }

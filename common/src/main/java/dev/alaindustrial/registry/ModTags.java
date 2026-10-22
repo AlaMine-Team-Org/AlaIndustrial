@@ -110,6 +110,37 @@ public final class ModTags {
 		 * empty the tag instead of turning the whole feature off.
 		 */
 		public static final TagKey<Block> FALLOUT_REPLACEABLE = key("fallout_replaceable");
+		/**
+		 * The rubble a town's builder drone takes away while it clears a building (MOD-858, epic decision R93): the
+		 * debris palette of the town hall ruins (MOD-856) less what a player builds with on purpose. The ruin's own
+		 * block where the intact building wants another is taken away whether it is on this list or not.
+		 */
+		public static final TagKey<Block> TOWN_DEBRIS = key("town_debris");
+		/**
+		 * What a builder drone never touches and never puts (MOD-858, R93): the town's machines — the core, the
+		 * capsule, the dispatcher, the nests. Any block with a block entity is protected besides this list.
+		 */
+		public static final TagKey<Block> TOWN_DRONE_PROTECTED = key("town_drone_protected");
+		/**
+		 * The terrain a clearing takes out of the ring around a town building (owner's round 4 of stage 6): sand,
+		 * sandstone, earth, stone, gravel, snow, plants — so the walls stand free. Rubble ({@link #TOWN_DEBRIS}) and
+		 * anything placing replaces go too; a block with a block entity or on {@link #TOWN_DRONE_PROTECTED} never does.
+		 */
+		public static final TagKey<Block> TOWN_RING_CLEAR = key("town_ring_clear");
+
+		/**
+		 * Blocks a town building puts in its «windows and doors» stage (MOD-860): doors, trapdoors, gates,
+		 * glass. A tag so a datapack's own buildings and blocks sort the same way (R28).
+		 */
+		public static final TagKey<Block> TOWN_BUILD_OPENINGS = key("town_build/openings");
+		/** Blocks a town building puts in its last, «fittings» stage (MOD-860): lights, carpets, chests. */
+		public static final TagKey<Block> TOWN_BUILD_INTERIOR = key("town_build/interior");
+		/**
+		 * Blocks of a building's plan that no builder places and no material list counts (MOD-860, R93): the
+		 * town's core and capsule — they stand already, and a drone never touches them. The dispatcher and the
+		 * nests (MOD-858) belong here too.
+		 */
+		public static final TagKey<Block> TOWN_BUILD_NOT_BUILT = key("town_build/not_built");
 
 		private static TagKey<Block> key(String path) {
 			return TagKey.create(Registries.BLOCK, Industrialization.id(path));

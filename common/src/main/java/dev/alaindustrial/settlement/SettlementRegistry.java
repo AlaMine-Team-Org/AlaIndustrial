@@ -4,7 +4,9 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.settlement.drone.TownDroneRoster;
 import dev.alaindustrial.settlement.shift.ShiftWorkerBook;
+import dev.alaindustrial.settlement.works.SettlementWorks;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -28,7 +30,8 @@ import net.minecraft.world.level.saveddata.SavedDataType;
  * ({@code SettlementCoreBlockEntity}); everything else lives here, so a screen, a shift worker or a command reads a
  * town without loading the chunk its core stands in. The shift workers' records and the town halls' log are its
  * {@link ShiftWorkerBook} (MOD-832), saved in the optional field {@code shift_workers}: a save written before the
- * workers reads as one without any.
+ * workers reads as one without any. The towns' buildings and work queues are its {@link SettlementWorks} (MOD-857), in
+ * the optional field {@code works}.
  *
  * <p><b>Who writes.</b> The core, about its own town: it takes its place when a player places it ({@link #adopt}) and
  * on every tick ({@link #place}), reports when it lights or goes dark ({@link #setActive}) and passes a claim on
@@ -115,7 +118,10 @@ public final class SettlementRegistry extends SavedData {
 			SETTLEMENT_CODEC.listOf().optionalFieldOf("settlements", List.of()).forGetter(SettlementRegistry::rows),
 			Codec.INT.optionalFieldOf("next_id", 1).forGetter(registry -> registry.nextId),
 			ShiftWorkerBook.CODEC.optionalFieldOf("shift_workers").forGetter(registry -> registry.workers.isEmpty()
-					? Optional.empty() : Optional.of(registry.workers))
+					? Optional.empty() : Optional.of(registry.workers)),
+			// MOD-857: absent from a save written before towns knew their buildings; each town learns them again.
+			SettlementWorks.CODEC.optionalFieldOf("works").forGetter(registry -> registry.works.isEmpty()
+					? Optional.empty() : Optional.of(registry.works))
 	).apply(instance, SettlementRegistry::new));
 
 	// DataFixTypes.LEVEL for the reason TeleporterRegistry gives: the tag has no legacy schema, and the fixer never
@@ -129,14 +135,21 @@ public final class SettlementRegistry extends SavedData {
 	private int nextId = 1;
 	/** The shift workers of every town and the halls' log (MOD-832). */
 	private final ShiftWorkerBook workers;
+	/** The buildings and work queues of every town (MOD-857). */
+	private final SettlementWorks works;
+	/** Who works in each town's construction, for this run of the server (MOD-858); never saved. */
+	private final TownDroneRoster drones = new TownDroneRoster();
 
 	public SettlementRegistry() {
-		this(List.of(), 1, Optional.empty());
+		this(List.of(), 1, Optional.empty(), Optional.empty());
 	}
 
-	private SettlementRegistry(List<Settlement> rows, int nextId, Optional<ShiftWorkerBook> workers) {
+	private SettlementRegistry(List<Settlement> rows, int nextId, Optional<ShiftWorkerBook> workers,
+			Optional<SettlementWorks> works) {
 		this.workers = workers.orElseGet(ShiftWorkerBook::new);
 		this.workers.onChange(this::setDirty);
+		this.works = works.orElseGet(SettlementWorks::new);
+		this.works.onChange(this::setDirty);
 		for (Settlement row : rows) {
 			if (row.id() > 0) {
 				byId.putIfAbsent(row.id(), row);
@@ -281,6 +294,16 @@ public final class SettlementRegistry extends SavedData {
 	/** The shift workers of every town and the town halls' log (MOD-832). */
 	public ShiftWorkerBook workers() {
 		return workers;
+	}
+
+	/** The buildings and work queues of every town (MOD-857): what the core's «Construction» tab shows. */
+	public SettlementWorks works() {
+		return works;
+	}
+
+	/** The dispatchers, drone nests and busy cells of every town, for this run of the server (MOD-858). */
+	public TownDroneRoster drones() {
+		return drones;
 	}
 
 	/** The town numbered {@code id}. */

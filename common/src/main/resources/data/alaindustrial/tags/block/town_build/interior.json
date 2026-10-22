@@ -1,0 +1,27 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:wool_carpets",
+    "#minecraft:beds",
+    "#minecraft:flower_pots",
+    "#minecraft:buttons",
+    "#minecraft:candles",
+    "#minecraft:banners",
+    "#minecraft:all_signs",
+    "#minecraft:lanterns",
+    "#minecraft:copper_chests",
+    "minecraft:torch",
+    "minecraft:wall_torch",
+    "minecraft:soul_torch",
+    "minecraft:soul_wall_torch",
+    "minecraft:redstone_torch",
+    "minecraft:redstone_wall_torch",
+    "minecraft:copper_torch",
+    "minecraft:copper_wall_torch",
+    "minecraft:chest",
+    "minecraft:trapped_chest",
+    "minecraft:barrel",
+    "minecraft:crafting_table",
+    "minecraft:lever"
+  ]
+}

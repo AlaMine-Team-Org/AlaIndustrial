@@ -41,7 +41,9 @@ import org.jspecify.annotations.Nullable;
  * the synced data below.
  *
  * <p><b>What it does.</b> Asks the shift planner every 20 ticks, offset by its id ({@link ShiftWorkers#think}), and
- * walks within its home radius through the town's path dispatcher ({@link ShiftWorkerWalkGoal}). It looks at a
+ * walks within its home radius through the town's path dispatcher ({@link ShiftWorkerWalkGoal}). Hostile mobs hunt
+ * it as they hunt players ({@link ShiftWorkerHunters}), and it runs from them without leaving its town's territory
+ * ({@link ShiftWorkerFleeGoal}, MOD-824). It looks at a
  * player near it, never at one in creative or spectator mode ({@link ShiftWorkerLookGoal}, MOD-847). It does not
  * despawn, does not use portals, cannot be leashed, and has no voice (R4).
  *
@@ -78,6 +80,11 @@ public class ShiftWorker extends PathfinderMob {
 	private double drainCarry;
 	/** Server only: game time of the last wound, -1 — none; one fight is one service mark. */
 	private long lastHurtAt = -1L;
+	/**
+	 * Server only: the run from hostile mobs (MOD-824). Set by {@link #registerGoals}, which the mob's constructor
+	 * calls before this class's fields are initialised — so the field has no initialiser of its own.
+	 */
+	private @Nullable ShiftWorkerFleeGoal fleeGoal;
 
 	public ShiftWorker(EntityType<? extends ShiftWorker> type, Level level) {
 		super(type, level);
@@ -122,6 +129,8 @@ public class ShiftWorker extends PathfinderMob {
 	@Override
 	protected void registerGoals() {
 		goalSelector.addGoal(0, new FloatGoal(this));
+		fleeGoal = new ShiftWorkerFleeGoal(this);
+		goalSelector.addGoal(1, fleeGoal);
 		goalSelector.addGoal(5, new ShiftWorkerWalkGoal(this));
 		goalSelector.addGoal(8, new ShiftWorkerLookGoal(this));
 		goalSelector.addGoal(9, new RandomLookAroundGoal(this));
@@ -164,6 +173,11 @@ public class ShiftWorker extends PathfinderMob {
 	/** The slim body — a woman (R3g). */
 	public boolean slim() {
 		return entityData.get(DATA_SLIM);
+	}
+
+	/** Whether the worker is running from a hostile mob now (server side, MOD-824). */
+	public boolean isFleeing() {
+		return fleeGoal != null && fleeGoal.running();
 	}
 
 	/** The mode the planner gave last (server side). */

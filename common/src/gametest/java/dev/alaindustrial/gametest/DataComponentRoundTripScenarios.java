@@ -1,11 +1,14 @@
 package dev.alaindustrial.gametest;
 
 import com.mojang.serialization.Codec;
+import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.core.teleport.RemoteLog;
 import dev.alaindustrial.item.assembler.BlueprintPattern;
 import dev.alaindustrial.item.energy.PouchContents;
 import dev.alaindustrial.item.fluid.DistillationColumnContents;
 import dev.alaindustrial.item.fluid.FluidTankContents;
+import dev.alaindustrial.item.misc.PlanSheet;
+import dev.alaindustrial.item.misc.RestorationPlan;
 import dev.alaindustrial.item.module.ItemModules;
 import dev.alaindustrial.item.teleport.TeleportPoint;
 import dev.alaindustrial.item.teleport.TeleportPoints;
@@ -128,6 +131,11 @@ public final class DataComponentRoundTripScenarios {
 				new MagnetFilter.Cell("minecraft:iron_ingot", "c:ingots")), true, MagnetFilter.Match.TAG));
 		// MOD-831: a town number past one byte, so the VAR_INT network codec writes more than one.
 		s.put(ModDataComponents.SETTLEMENT_ID_ID, 300);
+		// MOD-859: a sheet of a style from a datapack namespace (not only the mod's), and the plan it makes.
+		s.put(ModDataComponents.PLAN_SHEET_ID,
+				new PlanSheet(Identifier.fromNamespaceAndPath("ala_town_test", "ruin"), 3));
+		s.put(ModDataComponents.RESTORATION_PLAN_ID, new RestorationPlan(Industrialization.id("desert"),
+				Industrialization.id("ala_town/desert/intact/town_hall")));
 		return s;
 	}
 

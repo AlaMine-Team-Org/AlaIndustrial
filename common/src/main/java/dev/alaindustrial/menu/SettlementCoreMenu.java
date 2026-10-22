@@ -54,6 +54,16 @@ public class SettlementCoreMenu extends MachineMenu {
 		return true;
 	}
 
+	/**
+	 * Closes the screen of a player who is a stranger to the core's town (R98): the server answers no click or button
+	 * of a menu that is not valid, and closes it on the next tick. Client side the core is unknown and the base
+	 * decides.
+	 */
+	@Override
+	public boolean stillValid(Player player) {
+		return super.stillValid(player) && (core == null || core.admits(player));
+	}
+
 	/** None — see the class doc. */
 	@Override
 	protected void addMachineSlots() {

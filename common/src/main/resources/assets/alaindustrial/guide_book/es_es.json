@@ -3831,7 +3831,7 @@
             {
               "type": "text",
               "title": "Cápsula de recepción",
-              "text": "Trae de vuelta a los trabajadores de turno de un asentamiento de uno en uno a cambio de EU y materiales, solo mientras el núcleo del asentamiento está encendido, el poblado tiene propietario y no se ha alcanzado su límite de trabajadores; cada trabajador nuevo recibe un número propio, único en el mundo."
+              "text": "Trae de vuelta a los trabajadores de turno de un asentamiento de uno en uno a cambio de EU y materiales, solo mientras el núcleo del asentamiento está encendido, el poblado tiene restaurador y no se ha alcanzado su límite de trabajadores; cada trabajador nuevo recibe un número propio, único en el mundo."
             },
             {
               "type": "stats",
@@ -4294,7 +4294,7 @@
             {
               "type": "text",
               "title": "Núcleo del asentamiento",
-              "text": "El corazón de un poblado obrero, en su ayuntamiento: mientras la red le da EU, mantiene el territorio del asentamiento, fija cuántas casas y trabajadores de turno puede tener el poblado y recuerda a su propietario; sin energía se apaga y el poblado duerme."
+              "text": "El corazón de un poblado obrero, en su ayuntamiento: mientras la red le da EU, mantiene el territorio del asentamiento, fija cuántas casas y trabajadores de turno puede tener el poblado y recuerda a su restaurador; sin energía se apaga y el poblado duerme."
             },
             {
               "type": "stats",

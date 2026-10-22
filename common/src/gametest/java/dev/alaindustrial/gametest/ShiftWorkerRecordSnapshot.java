@@ -22,10 +22,15 @@ final class ShiftWorkerRecordSnapshot {
 
 	static final List<String> LINES = List.of(
 			"data_version=1",
+			"hall_log[].building.game_time: long",
+			"hall_log[].building.name: string",
+			"hall_log[].building.template: string",
 			"hall_log[].death.cause: string",
 			"hall_log[].death.game_time: long",
 			"hall_log[].death.killer: string",
 			"hall_log[].name: string",
+			"hall_log[].note.game_time: long",
+			"hall_log[].note.key: string",
 			"hall_log[].number: string",
 			"hall_log[].renumbered.game_time: long",
 			"hall_log[].renumbered.to: string",

@@ -56,6 +56,12 @@ public final class ShotFamilies {
     private static final List<Object[]> TABLE = List.of(
             new Object[] {"network_overlay_", new Family(ShotGroup.WORLD, List.of("R-VIS-04"),
                     "Network analyzer trace: tubes, joint cubes and sparks follow the scanned cable line")},
+            new Object[] {"hall_schematic_", new Family(ShotGroup.WORLD, List.of("R-VIS-04"),
+                    "Town hall schematic (MOD-857): in hall_schematic_on every gap of the half-built wall holds the "
+                            + "block that belongs there as its own textured model, translucent and slightly blue "
+                            + "(stone bricks, glass, oak stairs facing the camera along the top), and in front of the "
+                            + "wall a moss carpet, a spruce door of two cells and a chest; the real blocks between "
+                            + "them unchanged and not hidden; the _off frames are the same view without the ghosts")},
             new Object[] {"root_inspect_", new Family(ShotGroup.WORLD, List.of("R-VIS-04"),
                     "One and two root segments appear through original soil only while crouching")},
             // ── Screens ──────────────────────────────────────────────────────────────────────
@@ -108,6 +114,17 @@ public final class ShotFamilies {
                     "Settlement core, «Shift workers» tab (MOD-854): the three tabs down the panel's left edge with "
                             + "the second one merged into the frame, the tab's name as the heading, one row per worker "
                             + "- number, name, level, status - each column inside its width, no energy bar")},
+            new Object[] {"gui_settlement_core_works", new Family(ShotGroup.GUI, List.of("R-GUI-03"),
+                    "Settlement core, «Construction» tab (MOD-857): the four tabs down the panel's left edge with the "
+                            + "fourth one merged into the frame, the tab's name as the heading, a heading over the "
+                            + "buildings and over the queue, each row's name, state and percent inside their columns, "
+                            + "a blocked job in red with its reason on the line below, the owner's small controls at "
+                            + "the right edge inside the frame, no energy bar")},
+            new Object[] {"gui_settlement_core_works_sheets", new Family(ShotGroup.GUI, List.of("R-GUI-03"),
+                    "Settlement core, «Construction» tab, plan sheets (MOD-859): a heading over the three sheets of "
+                            + "the town hall plan, each row naming where to look, a found sheet in green and a missing "
+                            + "one in red with its status word at the right inside the frame, no control on a sheet "
+                            + "row, no energy bar")},
             new Object[] {"gui_shift_worker_card_", new Family(ShotGroup.GUI, List.of("R-GUI-03"),
                     "Shift worker card (MOD-854): the dark header with the number and name, the three tab buttons "
                             + "and close at the right, the open tab greyed; the worker in its frame on the left with "
@@ -121,6 +138,15 @@ public final class ShotFamilies {
                             + "needed' count right-aligned in red - with the energy bar beside the rows, the "
                             + "player's inventory below, and a bare capsule with no core saying in red on its status "
                             + "row why it waits, the text inside the frame")},
+            new Object[] {"gui_town_dispatcher_", new Family(ShotGroup.GUI, List.of("R-GUI-03"),
+                    "Town dispatcher (MOD-858, owner's rounds 1 and 2): a 256 wide window, the side tab strip "
+                            + "down the left edge; the title and the status row on lines of their own, never "
+                            + "overlapping; on «Task» the plan row (three sheet slots with faded hints, the vanilla "
+                            + "«assemble» button, the plan slot, «Start» drawn disabled while anything is missing) "
+                            + "and, in a framed card above the inventory, the four-step checklist with a tick or a "
+                            + "cross and a wrapped hint each, clipped to the card; on «Buffer» the 27 slots; on "
+                            + "«Materials» item icons with «have/need»; on «Journal» wrapped lines; all text inside "
+                            + "the frame; the player's inventory below and no light line under the hotbar")},
             new Object[] {"gui_skill_tree_", new Family(ShotGroup.GUI, List.of("R-GUI-03"),
                     "Skill wheel (MOD-483): the four branch captions stay pinned in their corners with "
                             + "their icons, no label crosses a node or the profile column, the board is "

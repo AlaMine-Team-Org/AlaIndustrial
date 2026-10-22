@@ -667,6 +667,10 @@ public final class ServerBalance {
 		return current.intValue("settlementCoreEuPerTickLv", SettlementConfig.settlementCoreEuPerTickLv);
 	}
 
+	public static int settlementDroneBattery() {
+		return current.intValue("settlementDroneBattery", SettlementConfig.settlementDroneBattery);
+	}
+
 	public static int settlementRadiusLv() {
 		return current.intValue("settlementRadiusLv", SettlementConfig.settlementRadiusLv);
 	}

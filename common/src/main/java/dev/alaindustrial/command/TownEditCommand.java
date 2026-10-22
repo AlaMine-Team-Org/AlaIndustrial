@@ -2,6 +2,7 @@ package dev.alaindustrial.command;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.context.CommandContext;
 import dev.alaindustrial.compat.LineStructures;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -11,6 +12,7 @@ import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.state.properties.StructureMode;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 
 /**
@@ -19,6 +21,11 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
  * the owner edits a building in a test world, presses "Save" and takes the file into the mod with
  * {@code python tools/import_town_templates.py}. Registered only with the dev tree ({@link AlaCommandCommon}),
  * op-only; feedback is a plain English literal by the demo tree's convention.
+ *
+ * <p>{@code /ala town edit <style> <piece> intact} sets out the intact bench of one piece instead: the building the
+ * drone restores the ruin to, saved as {@code alaindustrial:ala_town/<style>/intact/<piece>} and taken into the mod
+ * with {@code python tools/import_town_templates.py --intact}; {@code ... compare} puts the ruin beside it as a
+ * reference ({@link TownEditBench#planIntact}).
  */
 final class TownEditCommand {
 
@@ -43,7 +50,9 @@ final class TownEditCommand {
 														StringArgumentType.getString(ctx, "style")), builder))
 										.executes(ctx -> run(ctx.getSource(),
 												StringArgumentType.getString(ctx, "style"),
-												StringArgumentType.getString(ctx, "piece"))))));
+												StringArgumentType.getString(ctx, "piece")))
+										.then(Commands.literal("intact").executes(ctx -> runIntact(ctx, false)))
+										.then(Commands.literal("compare").executes(ctx -> runIntact(ctx, true))))));
 	}
 
 	private static StructureTemplateManager templates(CommandSourceStack source) {
@@ -51,21 +60,14 @@ final class TownEditCommand {
 	}
 
 	private static int run(CommandSourceStack source, String style, String piece) {
-		ServerLevel level = source.getLevel();
+		if (!known(source, style, piece)) {
+			return 0;
+		}
 		List<String> all = TownEditBench.pieces(templates(source), style);
-		if (all.isEmpty()) {
-			source.sendFailure(Component.literal("No ALA town style '" + style + "'. Styles: "
-					+ String.join(", ", TownEditBench.styles(templates(source))) + "."));
-			return 0;
-		}
-		if (piece != null && !all.contains(piece)) {
-			source.sendFailure(Component.literal("Style '" + style + "' has no piece '" + piece + "'. Pieces: "
-					+ String.join(", ", all) + "."));
-			return 0;
-		}
 		BlockPos origin = BlockPos.containing(source.getPosition()).offset(AWAY, 0, AWAY);
 		List<TownEditBench.Slot> slots = TownEditBench.plan(templates(source), style,
 				piece == null ? all : List.of(piece));
+		ServerLevel level = source.getLevel();
 		for (TownEditBench.Slot slot : slots) {
 			BlockPos at = TownEditBench.place(level, origin, slot);
 			source.sendSuccess(() -> Component.literal("  " + slot.piece() + ": structure block at " + at.getX()
@@ -76,5 +78,54 @@ final class TownEditCommand {
 				+ "'. Edit a piece, press SAVE in its structure block (north-west corner), then run "
 				+ "python tools/import_town_templates.py.").withStyle(ChatFormatting.AQUA), false);
 		return count;
+	}
+
+	/** The intact bench of one piece, with the ruin beside it as a reference when {@code withRuin}. */
+	private static int runIntact(CommandContext<CommandSourceStack> ctx, boolean withRuin) {
+		CommandSourceStack source = ctx.getSource();
+		String style = StringArgumentType.getString(ctx, "style");
+		String piece = StringArgumentType.getString(ctx, "piece");
+		if (!known(source, style, piece)) {
+			return 0;
+		}
+		List<TownEditBench.Slot> slots = TownEditBench.planIntact(templates(source), style, piece, withRuin);
+		if (slots.isEmpty()) {
+			source.sendFailure(Component.literal("The ruin of '" + style + "/" + piece + "' does not load."));
+			return 0;
+		}
+		BlockPos origin = BlockPos.containing(source.getPosition()).offset(AWAY, 0, AWAY);
+		ServerLevel level = source.getLevel();
+		for (TownEditBench.Slot slot : slots) {
+			BlockPos at = TownEditBench.place(level, origin, slot);
+			String what = slot.mode() == StructureMode.LOAD ? "ruin (reference, LOAD mode)" : "intact";
+			source.sendSuccess(() -> Component.literal("  " + slot.piece() + " " + what + ": structure block at "
+					+ at.getX() + " " + at.getY() + " " + at.getZ()).withStyle(ChatFormatting.GRAY), false);
+		}
+		TownEditBench.Slot bench = slots.getLast();
+		boolean continued = bench.template().equals(bench.saveAs());
+		source.sendSuccess(() -> Component.literal("Placed the intact bench of '" + style + "/" + piece
+				+ "', starting from " + (continued ? "the intact building saved so far" : "the ruin")
+				+ ". Its frame is " + bench.size().getY() + " blocks high. Build the intact building in the frame, "
+				+ "keep the jigsaw blocks, the core, the capsule and the hatch marker where they are, press SAVE in "
+				+ "its structure block (north-west corner), then run python tools/import_town_templates.py --intact."
+				+ (withRuin ? " The ruin to the west is a reference: its structure block is in LOAD mode, leave it."
+						: "")).withStyle(ChatFormatting.AQUA), false);
+		return slots.size();
+	}
+
+	/** Whether {@code style} has pieces and {@code piece} (when given) is one of them; tells the player if not. */
+	private static boolean known(CommandSourceStack source, String style, String piece) {
+		List<String> all = TownEditBench.pieces(templates(source), style);
+		if (all.isEmpty()) {
+			source.sendFailure(Component.literal("No ALA town style '" + style + "'. Styles: "
+					+ String.join(", ", TownEditBench.styles(templates(source))) + "."));
+			return false;
+		}
+		if (piece != null && !all.contains(piece)) {
+			source.sendFailure(Component.literal("Style '" + style + "' has no piece '" + piece + "'. Pieces: "
+					+ String.join(", ", all) + "."));
+			return false;
+		}
+		return true;
 	}
 }

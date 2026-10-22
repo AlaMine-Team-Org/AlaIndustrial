@@ -170,6 +170,14 @@ loom {
             if (System.getenv("CI") != null && name.toLowerCase().contains("gametest")) {
                 vmArg("-Dfabric.client.gametest.disableNetworkSynchronizer=true")
             }
+            // MOD-858 — the server game-test world gets an explicit heap. Without it the JVM takes a
+            // quarter of the runner slice: 1300 MiB on ci-alasolar, and CI run 39704558583 died there of
+            // OutOfMemoryError while unloading chunks in batch 34 (stage 6 town-hall rigs on top of the
+            // rest). NeoForge passed the same 1773 scenarios in that run. 2 GiB beside Gradle's own 2 GiB
+            // stays inside the slice's 5200 MiB; the lanes run one after the other.
+            if (name.toLowerCase().contains("gametest") && !name.toLowerCase().contains("client")) {
+                vmArg("-Xmx2g")
+            }
         }
     }
 }

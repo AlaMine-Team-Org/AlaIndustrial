@@ -361,6 +361,15 @@ final class EnergyRoleForFaceSnapshot {
 			"reception_capsule[facing=east,part=lower] DUNSWE=IIIIIN",
 			"reception_capsule[facing=east,part=middle] DUNSWE=NNNNNN",
 			"reception_capsule[facing=east,part=upper] DUNSWE=NNNNNN",
+			"town_dispatcher[facing=north,lit=true] DUNSWE=NNNNNN",
+			"town_dispatcher[facing=north,lit=false] DUNSWE=NNNNNN",
+			"town_dispatcher[facing=south,lit=true] DUNSWE=NNNNNN",
+			"town_dispatcher[facing=south,lit=false] DUNSWE=NNNNNN",
+			"town_dispatcher[facing=west,lit=true] DUNSWE=NNNNNN",
+			"town_dispatcher[facing=west,lit=false] DUNSWE=NNNNNN",
+			"town_dispatcher[facing=east,lit=true] DUNSWE=NNNNNN",
+			"town_dispatcher[facing=east,lit=false] DUNSWE=NNNNNN",
+			"drone_nest[] DUNSWE=NNNNNN",
 			"fluid_pipe[down_mode=disabled,east_mode=disabled,filled=false,north_mode=disabled,south_mo"
 					+ "de=disabled,up_mode=disabled,west_mode=disabled] DUNSWE=NNNNNN",
 			"fluid_pipe@fluid_pipe_advanced[down_mode=disabled,east_mode=disabled,filled=false,north_mo"

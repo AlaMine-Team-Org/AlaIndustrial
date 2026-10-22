@@ -85,10 +85,11 @@ public final class BlockCapabilityParityScenarios {
 	 *
 	 * <p>The pipes carry energy scaffolding they never use; the sprinkler (MOD-525) is paid in
 	 * nutrient solution, so an energy capability there would offer the network an endpoint that can
-	 * neither take nor give.
+	 * neither take nor give. The town dispatcher takes no EU at all, and the drone nest's buffer is its
+	 * drone's battery, charged by the settlement core and never by a cable (MOD-858).
 	 */
 	private static final List<String> BLOCKS_NEVER_ENERGY =
-			List.of("item_pipe", "fluid_pipe", "sprinkler");
+			List.of("item_pipe", "fluid_pipe", "sprinkler", "town_dispatcher", "drone_nest");
 
 	/**
 	 * For every manifest block entity and every face: energy capability present ⇔ the block entity is

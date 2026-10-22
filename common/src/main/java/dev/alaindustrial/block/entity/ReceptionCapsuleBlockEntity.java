@@ -11,6 +11,7 @@ import dev.alaindustrial.settlement.ReceptionCapsuleRules;
 import dev.alaindustrial.settlement.ReceptionCapsuleRules.Material;
 import dev.alaindustrial.settlement.ReceptionCapsuleRules.Verdict;
 import dev.alaindustrial.settlement.Settlement;
+import dev.alaindustrial.settlement.SettlementGate;
 import dev.alaindustrial.settlement.SettlementRegistry;
 import dev.alaindustrial.settlement.ShiftWorkerHost;
 import dev.alaindustrial.settlement.record.RecordNumber;
@@ -360,6 +361,16 @@ public final class ReceptionCapsuleBlockEntity extends MachineBlockEntity implem
 		return false;
 	}
 
+	/** Whether {@code player} may open and read the capsule (R98): not a stranger to its town. Server side. */
+	public boolean admits(Player player) {
+		return SettlementGate.admits(settlement(), player);
+	}
+
+	/** Whether {@code player} may put, take and choose here (R98): a member of its town, or anybody before then. */
+	public boolean mayControl(Player player) {
+		return SettlementGate.controls(settlement(), player);
+	}
+
 	/**
 	 * Whether {@code player} breaks this capsule when they mine it (R36): only the owner of its town, and only with
 	 * a tool that mines it — any pickaxe. The server reads the owner from the registry, a client from the update tag.
@@ -467,8 +478,14 @@ public final class ReceptionCapsuleBlockEntity extends MachineBlockEntity implem
 		return Math.max(0, Math.min(Short.MAX_VALUE, value));
 	}
 
+	/** Opens the screen for a member of the capsule's town (anybody before it is woken); a stranger is told (R98). */
 	@Override
+	@Nullable
 	public AbstractContainerMenu createMenu(int syncId, Inventory inventory, Player player) {
+		Optional<Settlement> town = level instanceof ServerLevel serverLevel ? town(serverLevel) : Optional.empty();
+		if (!SettlementGate.admitOrTell(town, player)) {
+			return null;
+		}
 		return new ReceptionCapsuleMenu(syncId, inventory, this,
 				ContainerLevelAccess.create(getLevel(), getBlockPos()));
 	}

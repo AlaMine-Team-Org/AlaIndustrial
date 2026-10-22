@@ -97,6 +97,14 @@ final class TownPlaques {
 		return numbers;
 	}
 
+	/**
+	 * Whether {@code piece} carries a plaque of a former resident: the mark of a house (R40, R58 — only houses carry
+	 * plaques), which the plan sheets read to find the town's houses (MOD-859).
+	 */
+	static boolean hasPlaque(StructureTemplateManager templates, PoolElementStructurePiece piece) {
+		return !plates(templates, piece).isEmpty();
+	}
+
 	/** The plaque plates of {@code piece}'s template as placed, or none for a piece that is not a rigid template. */
 	private static Map<BlockPos, BlockState> plates(StructureTemplateManager templates,
 			PoolElementStructurePiece piece) {

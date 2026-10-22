@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "town_hall_plan_sheet_2",
+  "pattern": [
+    "PLP",
+    "XSX",
+    "LYL"
+  ],
+  "key": {
+    "P": "minecraft:paper",
+    "L": "#c:gems/lapis",
+    "X": "#minecraft:wooden_doors",
+    "S": "minecraft:grass_block",
+    "Y": "#minecraft:beds"
+  },
+  "result": {
+    "id": "alaindustrial:town_hall_plan_sheet",
+    "count": 1,
+    "components": {
+      "alaindustrial:plan_sheet": {
+        "style": "alaindustrial:plains",
+        "sheet": 2
+      }
+    }
+  }
+}

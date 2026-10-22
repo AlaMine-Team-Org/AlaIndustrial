@@ -145,6 +145,15 @@ public final class AlaTownLabPiece extends StructurePiece {
 		return labBox;
 	}
 
+	/** The cells where the lab's template puts {@code block}, as placed, in the template's order (MOD-859). */
+	public List<BlockPos> cellsOf(Block block) {
+		List<BlockPos> cells = new ArrayList<>();
+		for (StructureTemplate.StructureBlockInfo info : template.filterBlocks(templateOrigin, settings(), block)) {
+			cells.add(info.pos());
+		}
+		return cells;
+	}
+
 	/** What was drawn for this lab, for a golden layout line: which lab, its turn, depth and lost letter. */
 	public String describe() {
 		return "lab=" + lab + " rot=" + rotation.name() + " depth=" + depth + " letter=" + letter;

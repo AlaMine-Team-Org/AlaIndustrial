@@ -4,6 +4,7 @@ import dev.alaindustrial.core.energy.EnergyPortHost;
 import dev.alaindustrial.core.fluid.FluidPortHost;
 import dev.alaindustrial.registry.content.AgricultureContent;
 import dev.alaindustrial.registry.content.FluidContent;
+import dev.alaindustrial.registry.content.ProcessingContent;
 import dev.alaindustrial.registry.content.StorageContent;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +66,8 @@ public final class BlockCapabilityRoster {
 	 * for why these, and why the list is closed by a gametest rather than by convention.
 	 */
 	public static final Set<ContentManifest.BlockEntityDef<?>> NO_ENERGY_CAPABILITY = Set.of(
-			StorageContent.ITEM_PIPE_BE, FluidContent.FLUID_PIPE_BE, AgricultureContent.SPRINKLER_BE);
+			StorageContent.ITEM_PIPE_BE, FluidContent.FLUID_PIPE_BE, AgricultureContent.SPRINKLER_BE,
+			ProcessingContent.TOWN_DISPATCHER_BE, ProcessingContent.DRONE_NEST_BE);
 
 	/** Every manifest entry whose block entity is an {@link EnergyPortHost}, minus {@link #NO_ENERGY_CAPABILITY}. */
 	public static List<ContentManifest.BlockEntityDef<?>> energyHosts() {

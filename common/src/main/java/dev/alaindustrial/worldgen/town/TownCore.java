@@ -4,6 +4,7 @@ import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.settlement.SettlementRegistry;
 import dev.alaindustrial.settlement.SettlementStyle;
 import dev.alaindustrial.settlement.SettlementTerritory;
+import java.util.List;
 import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
@@ -29,7 +30,8 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
  * the two — this task or the core's first tick — runs first creates it, and the other one finds it.
  *
  * <p>The same task gives the settlement the footprint of the whole town ({@link TownFootprint}, MOD-848): its territory
- * covers every piece of it, not only the square of its tier around the core (epic decision R59).
+ * covers every piece of it, not only the square of its tier around the core (epic decision R59); and the town's
+ * buildings ({@link TownBuildings}, MOD-857), which its core's «Construction» tab lists and its drones restore.
  */
 final class TownCore {
 
@@ -37,11 +39,13 @@ final class TownCore {
 	}
 
 	/**
-	 * Registers the settlement of the core of {@code piece} that falls into {@code chunkBox}, with {@code style} and
-	 * the town's {@code footprint}.
+	 * Registers the settlement of the core of {@code piece} that falls into {@code chunkBox}, with {@code style}, the
+	 * town's {@code footprint} and its buildings among {@code pieces} (MOD-857), resolved on the server thread against
+	 * the {@code town_building} definitions ({@link TownBuildings}).
 	 */
 	static void register(WorldGenLevel level, StructureTemplateManager templates, PoolElementStructurePiece piece,
-			BoundingBox chunkBox, ResourceKey<SettlementStyle> style, Optional<SettlementTerritory.Area> footprint) {
+			BoundingBox chunkBox, ResourceKey<SettlementStyle> style, Optional<SettlementTerritory.Area> footprint,
+			List<TownBuildings.PieceRef> pieces) {
 		MinecraftServer server = level.getServer();
 		if (server == null || !(piece.getElement() instanceof SinglePoolElement single)) {
 			return;
@@ -59,6 +63,7 @@ final class TownCore {
 					int id = registry.place(dimension, pos, 0).settlementId();
 					registry.setStyle(id, styleId);
 					footprint.ifPresent(area -> registry.setFootprint(id, area));
+					registry.works().town(id).learnBuildings(TownBuildings.resolve(pieces, server.registryAccess()));
 				});
 			}
 		}
