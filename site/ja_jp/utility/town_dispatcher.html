@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="ja_jp" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>町のディスパッチャー — Ala Industrial — ガイド</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="メニューを開く" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  </div>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../../assets/item/guide_book_3d.png" alt="">すべてのコンテンツ</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/ky7cFDF8JD" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../../assets/platform/discord.svg" alt="Discord"></a>
+    </div>
+    <search class="site-search"><input type="search" data-wiki-search placeholder="ウィキを検索…" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-label="ガイドを検索" autocomplete="off" spellcheck="false" data-index="../search-index.json" data-root="../" data-l10n="{&quot;list&quot;:&quot;検索結果&quot;,&quot;one&quot;:&quot;ページ&quot;,&quot;few&quot;:&quot;ページ&quot;,&quot;many&quot;:&quot;ページ&quot;,&quot;loading&quot;:&quot;検索インデックスを読み込み中…&quot;,&quot;nothing&quot;:&quot;見つかりません&quot;}"></search>
+    <details class="language-menu"><summary aria-label="Language">日本語</summary><div class="language-popover"><span>日本語</span><a href="../../en/utility/town_dispatcher.html">EN</a><a href="../../ru/utility/town_dispatcher.html">RU</a><a href="../../uk/utility/town_dispatcher.html">UA</a><a href="../../zh_cn/utility/town_dispatcher.html">中文</a><a href="../../es_es/utility/town_dispatcher.html">ES</a></div></details>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">ブラウズ</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../../assets/item/tempered_iron_pickaxe.png" alt=""><span>はじめに</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
+<div class="group-title">エネルギー</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="14 ページ">14</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="8 ページ">8</span></a>
+<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>原子力</span><span class="cat-count" aria-label="15 ページ">15</span></a>
+<div class="group-title">加工</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>マシン</span><span class="cat-count" aria-label="17 ページ">17</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>液体マシン</span><span class="cat-count" aria-label="3 ページ">3</span></a>
+<div class="group-title">物流</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>アイテム輸送</span><span class="cat-count" aria-label="3 ページ">3</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>液体輸送</span><span class="cat-count" aria-label="5 ページ">5</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>液体貯蔵</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<div class="group-title">世界と自動化</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>素材</span><span class="cat-count" aria-label="26 ページ">26</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>農業</span><span class="cat-count" aria-label="6 ページ">6</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>高度なマシン</span><span class="cat-count" aria-label="1 ページ">1</span></a>
+<div class="group-title">その他</div>
+<a class="cat-link" href="../construction/index.html"><img class="nav-icon" src="../../assets/item/engraved_plate_0_3d.png" alt=""><span>建築ブロック</span><span class="cat-count" aria-label="3 ページ">3</span></a>
+<a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="27 ページ">27</span></a>
+<div class="group-title">アイテム</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="32 ページ">32</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="32 ページ">32</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">ホーム</a><span class="sep">/</span><a href="../utility/index.html">ユーティリティ</a><span class="sep">/</span><span>町のディスパッチャー</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../../assets/item/town_dispatcher_3d.png" alt="町のディスパッチャー" width="64" height="64">
+    <div class="info">
+      <h1>町のディスパッチャー</h1>
+      <div class="block-id">alaindustrial:town_dispatcher</div>
+      <div class="tags"><span class="tag cat" style="background:#14b8a6">ユーティリティ</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">実装済み</span><span class="tag">tier-lv</span><span class="tag">utility</span><span class="tag">settlement</span><span class="tag">construction</span></div>
+    </div>
+  </div>
+</div>
+<h2 id="概要">概要</h2>
+
+<p><strong>町のディスパッチャー</strong>は、集落が自分の建物を復元するための操作盤です。ここで 3 枚の<a href="../components/town_hall_plan_sheet.html">断片</a>から<a href="../components/restoration_plan.html">修復設計図</a>を組み立て、バッファーに資材を置きます。<a href="drone_nest.html">建設ドローン</a>がブロックを取るのはここからだけです。こうして最初に復元される建物は町役場です。</p>
+
+<blockquote><strong>ミニ例:</strong> 町役場のコアが点灯し、集落はあなたのものです。町役場の中にディスパッチャーを置き、役場設計図の断片 3 枚を入れて「設計図を組み立てる」を押します。設計図はディスパッチャーに残ります。町役場の上にドローンの巣を置いて建設ドローンを入れ、工程のブロックをバッファーに入れて、「タスク」タブの「開始」を押します。</blockquote>
+
+<h2 id="仕組み">仕組み</h2>
+
+<ol><li><strong>自分の集落。</strong> ディスパッチャーは、自分が立っている領地の集落を自分で見つけます（2 つの集落の領地が重なっている場合は、コアが近いほう）。その後、集落は変わりません。</li><li><strong>町役場の中だけ。</strong> ディスパッチャーが動くのは、自分の集落の町役場の中、その範囲内に置かれているときだけです。外では「町役場の中にない」と表示されます。</li><li><strong>集落に 1 台。</strong> 同じ集落の 2 台目のディスパッチャーは動かず、「町にはすでにディスパッチャーがある」と表示されます。動くのは先に動き始めたほうです。</li><li><strong>設計図。</strong> 役場設計図の断片（k/3）3 枚を 3 つの断片スロットに入れます。「設計図を組み立てる」ボタンは各スロットから断片を 1 枚ずつ取り、設計図スロットに「修復設計図」を置きます。断片は同じ様式、つまりこの集落の様式でなければなりません。何か合わないと、ボタンの下に理由が表示されます（断片がない、同じ断片が重なっている、断片の様式がばらばら、別の様式）。完成した設計図をそのまま設計図スロットに入れることもできます。組み立てた設計図は設計図スロットに残ります。これが有効な設計図なので、取り出す必要はありません。設計図を取り出す（またはディスパッチャーを壊す）とドローンは止まり、設計図を戻すまで作業は「修復計画がありません」という理由で停止します。断片も設計図もバッファーには入りません。</li><li><strong>資材のバッファー。</strong> 27 スロット。ドローンはここから、ここからだけブロックを取ります。集落のチェストは開けません。アイテムが引かれるのは<strong>ドローンがブロックを置いた瞬間</strong>で、飛び立つときではありません。</li><li><strong>状態。</strong> ディスパッチャーの正面にはレーダーが映ります。待機中は静かな画面で、集落のドローンが作業している間は通信の輪が中心から広がります。</li></ol>
+
+<h3 id="管理する人">管理する人</h3>
+
+<p>設計図、資材、建設の開始は集落の復元者だけのものです。集落の一員でないプレイヤーにはディスパッチャーはまったく開かず、チャットに「コアはあなたを認識しません: あなたはこの集落の一員ではありません。」と表示されます。クリエイティブモードのオペレーターはウィンドウを開いてすべてを見られますが、アイテムを入れることも取ることも、設計図を組み立てることも、建設を開始することもできません。まだ誰も集落を目覚めさせていない間は、誰でも操作できます。復元者は「タスク」タブの「開始」ボタン（コアのキューに町役場の撤去と建設を入れます）か、集落コアのウィンドウの「建設」タブから建設を開始します。</p>
+
+<h2 id="インターフェース">インターフェース</h2>
+
+<p>普通より幅の広いウィンドウ（256 ピクセル）で、タブは集落コアと同じように左端にアイコンで並びます。文字はすべて次の行に折り返し、インベントリにはかかりません。</p>
+
+<ul><li>上にはブロックの名前（ほかのタブではタブの名前）、その下の別の行に状態が表示されます。「近くに町がない」「町役場の中にない」「町にはすでにディスパッチャーがある」「作業待ち」「ドローン作業中」、または設計図が組み立てられなかった理由です。</li><li>「タスク」（最初に開くタブ）— 設計図の行です。断片スロット 3 つ、「設計図を組み立てる」ボタン、設計図スロット、「開始」ボタン。その下、インベントリの上の枠の中に、ディスパッチャーを初めて見る人のための 4 つの手順の一覧があります。一覧は枠からはみ出しません。高さが足りなければマウスホイールでスクロールでき、右にスクロールバーが出ます。各手順にはチェックかバツが付き、終わっていない手順には次にすることが 1 行で書かれます。<ol><li>「修復計画」— 断片を 3 枚入れて「設計図を組み立てる」を押す。組み立て済みなら「計画はここに置いたままでいい」。別の町役場（別の様式）の設計図ならバツと「この設計図は別の庁舎用です」。</li><li>「ドローンのいる巣: N / M」— 町役場の上にあって動いているドローン入りの巣の数と、コアのティアが許す数。</li><li>「段階の資材がバッファにある」— 現在の工程に必要なものがすべてバッファーにある。</li><li>「建設」— 「「開始」を押す」。ボタンがまだ使えない間は「設計図とドローンがそろうと「開始」できます」。作業がキューにある間はその状態と停止の理由。復元後は「町役場は無傷、ドローンが自分で見守っています」、修理中は修理の作業。</li></ol></li><li>「開始」ボタンは、何かが足りない間は押せません。ボタンのツールチップに、何が足りないかが並びます。必須なのは、集落の復元者、復元できてまだ作業のない町役場、設計図スロットにある<strong>この</strong>町役場の設計図、町役場の上のドローン入りの巣が少なくとも 1 つ、です。<strong>資材は必須ではありません</strong>。最初は撤去で、撤去にはブロックが要らないので、資材不足はツールチップの警告だけです（「資材不足: ドローンは撤去から始めます」）。押したときにサーバーが同じことをもう一度確認します。町役場が復元されると、ボタンはずっと押せなくなります（「町役場は修復済み、ドローンが自分で見守っています」）。損傷した町役場はドローンが自分で直し、修理はボタンなしで依頼されます。</li><li>「バッファ」— 9 スロット × 3 列と、ドローンがブロックを取るのはここからだけだというヒント。</li><li>「資材」— 町役場の現在の工程と、その工程のアイテムのアイコンをスロットと同じように並べたグリッド。アイコンの下には「所持/必要」が、足りない間は赤で、足りれば緑のチェック付きで表示されます。建設のウィンドウの「完了」を示す緑はどれも同じ落ち着いた濃い色で、明るい灰色の上でも読めます。アイコンにカーソルを合わせると普通のアイテムのツールチップが出ます。長い一覧はマウスホイールでスクロールします。</li><li>「記録」— ドローンがしたこと。新しいものが上で、各行にゲーム内の時刻が付きます。マウスホイールでスクロールします。完了した工程と町役場の復元は別の行で示されます。</li><li><strong>チャットのメッセージ。</strong> 町役場の工程が完了すると、集落を復元している人のチャットに [Ala Industrial] タグ付きの行が届きます。集落の番号とコアの座標、どの工程が完了したか、次はどれか、その資材がディスパッチャーにあるかどうか、です（「第3号集落（コア 120, 64, -340）：工程「壁」完了。次は「内装」：資材をディスパッチャーに入れてください。」）。町役場の最初の復元には専用の行があります（「町役場が復旧しました」）。以前に復元された町役場の最後の工程では、完全に建ったと書かれます。復元済みの町役場の修理は工程として数えません。修理が依頼されたときに 1 行（「第3号集落（コア 120, 64, -340）：町役場が損傷しました。ドローンが修理しています。」）、元どおりになったときに 1 行（「…：町役場の修理が終わりました。」）。同じ 2 行が「記録」にも入ります。メッセージはプレイヤーがオンラインの間に届きます。</li><li>その下にプレイヤーのインベントリがあります。</li></ul>
+
+<h2 id="インベントリ">インベントリ</h2>
+
+<table><thead><tr><th>スロット</th><th>受け付けるもの</th><th>入れる人</th></tr></thead><tbody><tr><td>1–3</td><td>役場設計図の断片（k/3）</td><td>集落の復元者</td></tr><tr><td>4</td><td>修復設計図</td><td>「設計図を組み立てる」ボタンまたは復元者</td></tr><tr><td>5–31</td><td>建設資材（断片と設計図以外）</td><td>集落の復元者。ホッパーとパイプも入れられます</td></tr></tbody></table>
+
+<h2 id="エネルギー">エネルギー</h2>
+
+<p>ディスパッチャーはエネルギーを取りません。ドローンは自分の巣を通して集落コアから充電されます。</p>
+
+<h2 id="ブロック属性">ブロック属性</h2>
+
+<table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>形状</td><td>LV 機械の筐体 — 16³ のフルブロック。上面の奥の角にアンテナ（1 px の支柱、リング、銅の先端）があり、ブロックの上 6 px まで伸びます。クリック判定は立方体とアンテナ、当たり判定は立方体</td></tr><tr><td>設置</td><td>プレイヤーのほうを向きます</td></tr><tr><td>硬さと道具</td><td>機械と同じ。ツルハシ、硬さ 3、爆発耐性 6。目覚めた集落では復元者だけが壊せます</td></tr><tr><td>ドロップ</td><td>ディスパッチャーと、そのスロットの中身すべて</td></tr></tbody></table>
+
+<h2 id="レシピ">レシピ</h2>
+
+<p>作業台: <a href="../components/machine_casing.html">マシンケース</a>、<a href="../components/electronic_circuit.html">電子回路</a> 2 個、<a href="../components/battery.html">電池</a>、銅ケーブル（アンテナ）、銅板 4 枚。</p>
+
+<table><thead><tr><th>列</th><th>スロット</th></tr></thead><tbody><tr><td>1</td><td>銅板 · 銅ケーブル · 銅板</td></tr><tr><td>2</td><td>電子回路 · マシンケース · 電子回路</td></tr><tr><td>3</td><td>銅板 · 電池 · 銅板</td></tr></tbody></table>
+
+<h2 id="進行">進行</h2>
+
+<ul><li>自分の集落の<a href="settlement_core.html">集落コア</a>と、断片 3 枚から組み立てた修復設計図が必要です。</li><li>町役場の屋上の<a href="drone_nest.html">ドローンの巣</a>に仕事を与えます。</li></ul>
+
+<h2 id="関連項目">関連項目</h2>
+
+<ul><li><a href="drone_nest.html">ドローンの巣</a> — ドローンはディスパッチャーのバッファーから資材を取ります。</li><li><a href="settlement_core.html">集落コア</a> — 作業キューと「建設」タブ。</li></ul>
+
+<h2>クラフト</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="町のディスパッチャー alaindustrial:town_dispatcher" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">定型クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="銅板"><img src="../../assets/item/copper_plate_3d.png" alt="銅板" width="32" height="32"></div> <div class="cell" title="銅ケーブル"><img src="../../assets/item/copper_cable_3d.png" alt="銅ケーブル" width="32" height="32"></div> <div class="cell" title="銅板"><img src="../../assets/item/copper_plate_3d.png" alt="銅板" width="32" height="32"></div> <div class="cell" title="電子回路"><img src="../../assets/item/electronic_circuit_3d.png" alt="電子回路" width="32" height="32"></div> <div class="cell" title="マシンケース"><img src="../../assets/item/machine_casing_3d.png" alt="マシンケース" width="32" height="32"></div> <div class="cell" title="電子回路"><img src="../../assets/item/electronic_circuit_3d.png" alt="電子回路" width="32" height="32"></div> <div class="cell" title="銅板"><img src="../../assets/item/copper_plate_3d.png" alt="銅板" width="32" height="32"></div> <div class="cell" title="電池"><img src="../../assets/item/battery_3d.png" alt="電池" width="32" height="32"></div> <div class="cell" title="銅板"><img src="../../assets/item/copper_plate_3d.png" alt="銅板" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="町のディスパッチャー"><img src="../../assets/item/town_dispatcher_3d.png" alt="町のディスパッチャー" width="32" height="32"></div><div class="result-name">町のディスパッチャー</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>

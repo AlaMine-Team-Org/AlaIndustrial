@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh_cn" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>城镇调度台 — Ala Industrial — 指南</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="打开菜单" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  </div>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../../assets/item/guide_book_3d.png" alt="">全部内容</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/ky7cFDF8JD" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../../assets/platform/discord.svg" alt="Discord"></a>
+    </div>
+    <search class="site-search"><input type="search" data-wiki-search placeholder="搜索维基…" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-label="搜索指南" autocomplete="off" spellcheck="false" data-index="../search-index.json" data-root="../" data-l10n="{&quot;list&quot;:&quot;搜索结果&quot;,&quot;one&quot;:&quot;个页面&quot;,&quot;few&quot;:&quot;个页面&quot;,&quot;many&quot;:&quot;个页面&quot;,&quot;loading&quot;:&quot;正在加载搜索索引…&quot;,&quot;nothing&quot;:&quot;未找到结果&quot;}"></search>
+    <details class="language-menu"><summary aria-label="Language">中文</summary><div class="language-popover"><span>中文</span><a href="../../en/utility/town_dispatcher.html">EN</a><a href="../../ru/utility/town_dispatcher.html">RU</a><a href="../../uk/utility/town_dispatcher.html">UA</a><a href="../../ja_jp/utility/town_dispatcher.html">日本語</a><a href="../../es_es/utility/town_dispatcher.html">ES</a></div></details>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">浏览</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../../assets/item/tempered_iron_pickaxe.png" alt=""><span>新手入门</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
+<div class="group-title">能源</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="14 个页面">14</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
+<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>核能设施</span><span class="cat-count" aria-label="15 个页面">15</span></a>
+<div class="group-title">加工</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>机器</span><span class="cat-count" aria-label="17 个页面">17</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>流体机器</span><span class="cat-count" aria-label="3 个页面">3</span></a>
+<div class="group-title">物流</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>物品物流</span><span class="cat-count" aria-label="3 个页面">3</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>流体物流</span><span class="cat-count" aria-label="5 个页面">5</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>流体储存</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<div class="group-title">世界与自动化</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="26 个页面">26</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>农业</span><span class="cat-count" aria-label="6 个页面">6</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>高级机器</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<div class="group-title">其他</div>
+<a class="cat-link" href="../construction/index.html"><img class="nav-icon" src="../../assets/item/engraved_plate_0_3d.png" alt=""><span>建筑方块</span><span class="cat-count" aria-label="3 个页面">3</span></a>
+<a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="27 个页面">27</span></a>
+<div class="group-title">物品</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="32 个页面">32</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="32 个页面">32</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">首页</a><span class="sep">/</span><a href="../utility/index.html">实用方块</a><span class="sep">/</span><span>城镇调度台</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../../assets/item/town_dispatcher_3d.png" alt="城镇调度台" width="64" height="64">
+    <div class="info">
+      <h1>城镇调度台</h1>
+      <div class="block-id">alaindustrial:town_dispatcher</div>
+      <div class="tags"><span class="tag cat" style="background:#14b8a6">实用方块</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">已实现</span><span class="tag">tier-lv</span><span class="tag">utility</span><span class="tag">settlement</span><span class="tag">construction</span></div>
+    </div>
+  </div>
+</div>
+<h2 id="概览">概览</h2>
+
+<p><strong>城镇调度台</strong>是定居点修复自身建筑的控制台。<a href="../components/restoration_plan.html">修复图纸</a>在这里由三张<a href="../components/town_hall_plan_sheet.html">残页</a>拼成，它的缓存里放着材料，而<a href="drone_nest.html">建筑无人机</a>只从这里取方块。第一座这样修复的建筑是市政厅。</p>
+
+<blockquote><strong>小例子：</strong> 市政厅的核心亮着，定居点归你了。把调度台放在市政厅里面，放入三张市政厅图纸残页，按「组装蓝图」——图纸留在调度台里。在市政厅上方放一个无人机巢并放入建筑无人机，把本阶段的方块放进缓存，然后在「任务」标签页上按「开始」。</blockquote>
+
+<h2 id="工作方式">工作方式</h2>
+
+<ol><li><strong>自己的定居点。</strong> 调度台会自己找到它所在领地的定居点（如果两个定居点的领地重叠，就选核心更近的那个），之后不再改变。</li><li><strong>只在市政厅里。</strong> 调度台只有放在自己定居点的市政厅内部——在它的范围内——才会工作。放在外面时，它会显示「不在市政厅内」。</li><li><strong>一个定居点一台。</strong> 同一定居点的第二台调度台不会工作，并显示「城镇已有调度台」。工作的是先开始工作的那一台。</li><li><strong>图纸。</strong> 三张市政厅图纸残页（k/3）放进三个残页槽。「组装蓝图」按钮从每个槽各取一张残页，把「修复图纸」放进图纸槽。残页必须同一风格——这个定居点的风格；如果哪里不对，按钮下方会写明原因（缺少残页、残页重复、残页风格不一、风格不对）。也可以直接把做好的图纸放进图纸槽。拼好的图纸留在图纸槽里——这就是生效的图纸，不需要取出：取出图纸（或拆掉调度台）会让无人机停下，工作会带着原因「没有修复计划」停住，直到图纸放回。残页和图纸都不能放进缓存。</li><li><strong>材料缓存。</strong> 27 个槽位。无人机从这里取方块，而且只从这里取：它不会打开定居点的箱子。物品在<strong>无人机放下方块的那一刻</strong>才被扣除——而不是在起飞时。</li><li><strong>状态。</strong> 调度台的正面显示一个雷达：空闲时是安静的屏幕，定居点的无人机工作时，通信波纹从中心扩散开来。</li></ol>
+
+<h3 id="谁来管理">谁来管理</h3>
+
+<p>图纸、材料和开工只归定居点的修复者管。不属于定居点的玩家根本打不开调度台：聊天里会出现「核心不认识你：你不是这个聚落的一员。」创造模式下的管理员可以打开窗口、看到一切，但不能放入或取出物品，也不能拼合图纸或开工。在没人唤醒定居点之前，任何人都可以管理。修复者用「任务」标签页上的「开始」按钮开工（它会把市政厅的清理和建造排进核心的队列），也可以在定居点核心窗口的「建设」标签页开工。</p>
+
+<h2 id="界面">界面</h2>
+
+<p>窗口比普通的宽（256 像素），标签页以图标形式排在左边，和定居点核心一样。所有文字都会换行，不会盖住物品栏。</p>
+
+<ul><li>顶部是方块名称（在其他标签页上是标签页名称），下方单独一行是状态：「附近没有城镇」「不在市政厅内」「城镇已有调度台」「等待工作」「无人机工作中」，或图纸没拼成的原因。</li><li>「任务」（首先打开）——一排图纸区：三个残页槽、「组装蓝图」按钮、图纸槽、「开始」按钮；下方在物品栏上方的框里，是给第一次见到调度台的人看的四个步骤。列表不会超出框：如果太长，可以用鼠标滚轮滚动，右侧会出现滚动条。每一步都有对勾或叉号，未完成的一步有一行提示下一步做什么：<ol><li>「修复蓝图」——放入三张残页并按「组装蓝图」；拼好后是「把蓝图留在这里，不用取出」；另一座市政厅（另一种风格）的图纸——叉号和「这份图纸属于另一座市政厅」；</li><li>「有无人机的巢：N / M」——市政厅上方有多少个装有无人机并在工作的巢，以及核心等级允许多少个；</li><li>「本阶段材料在缓存中」——当前阶段需要的一切都在缓存里；</li><li>「建造」——「按「开始」」，按钮还没准备好时是「有了图纸和无人机后即可“开始”」；工作在队列中时显示它们的状态和停下的原因；修复之后是「市政厅完好，无人机会自行照看」，修理期间显示修理工作。</li></ol></li><li>缺少什么时，「开始」按钮不可用；按钮上的提示会列出具体缺少什么。必需条件有：定居点的修复者、一座可以修复且还没有相关工作的市政厅、图纸槽里放着<strong>这座</strong>市政厅的图纸，以及市政厅上方至少一个装有无人机的巢。<strong>材料不是必需的</strong>：先进行的是清理，清理不需要方块，所以材料不足只是提示里的一条警告（「材料不足：无人机先进行清理」）。按下按钮时，服务器会再检查一遍同样的条件。市政厅修复之后，按钮就永远不可用（「市政厅已修复，无人机会自行照看」）：受损的市政厅由无人机自行修理，修理不用按钮就会安排。</li><li>「缓存」——三排、每排九个槽位，以及无人机只从这里取方块的提示。</li><li>「材料」——市政厅的当前阶段，以及本阶段物品的图标网格，和槽位一样。图标下方是「已有/需要」：不足时为红色，足够时带绿色对勾。建设窗口里所有「完成」用的都是同一种绿色，沉稳的深色，在浅灰底上清晰可读。悬停会显示普通的物品提示；鼠标滚轮可以滚动长列表。</li><li>「日志」——无人机做了什么，最新的在上面，每行都有游戏时间；鼠标滚轮可以滚动。完成的阶段和市政厅的修复单独成行标出。</li><li><strong>聊天消息。</strong> 市政厅的某个阶段完成时，修复定居点的玩家会在聊天里收到一行带 [Ala Industrial] 标签的消息：定居点编号和核心坐标、哪个阶段完成、下一阶段是什么，以及它的材料是否已在调度台里（「第3号定居点（核心 120, 64, -340）：「墙体」阶段完成。下一阶段「陈设」：请把材料放进调度台。」）。市政厅第一次修复有单独的一行（「市政厅已修复」）；之前修复过的市政厅完成最后一个阶段时，会写它已完整重建。修理已修复的市政厅不算阶段：安排修理时一行（「第3号定居点（核心 120, 64, -340）：市政厅受损，无人机正在修理。」），恢复完好时一行（「…：市政厅已修好。」）；同样的两行也会写进「日志」。只在玩家在线时发送。</li><li>下方是玩家物品栏。</li></ul>
+
+<h2 id="物品栏">物品栏</h2>
+
+<table><thead><tr><th>槽位</th><th>接受</th><th>谁来放</th></tr></thead><tbody><tr><td>1–3</td><td>市政厅图纸残页（k/3）</td><td>定居点的修复者</td></tr><tr><td>4</td><td>修复图纸</td><td>「组装蓝图」按钮或修复者</td></tr><tr><td>5–31</td><td>建设材料（不能是残页或图纸）</td><td>定居点的修复者；漏斗和管道也可以</td></tr></tbody></table>
+
+<h2 id="能量">能量</h2>
+
+<p>调度台不消耗能量：无人机通过自己的巢从定居点核心充电。</p>
+
+<h2 id="方块属性">方块属性</h2>
+
+<table><thead><tr><th>字段</th><th>数值</th></tr></thead><tbody><tr><td>形状</td><td>LV 机器外壳——完整的 16³ 立方体；顶部靠后角有一根天线（1 px 的支杆、圆环和铜质尖端），最高高出方块 6 px。点击形状为立方体加天线，碰撞箱为立方体</td></tr><tr><td>放置</td><td>面朝玩家</td></tr><tr><td>硬度与工具</td><td>和机器一样：镐，硬度 3，爆炸抗性 6。在已唤醒的定居点里，只有修复者能破坏</td></tr><tr><td>掉落物</td><td>调度台及其槽位里的所有物品</td></tr></tbody></table>
+
+<h2 id="配方">配方</h2>
+
+<p>工作台：<a href="../components/machine_casing.html">机器外壳</a>、两个<a href="../components/electronic_circuit.html">电子电路</a>、<a href="../components/battery.html">电池</a>、铜缆（天线）和四块铜板。</p>
+
+<table><thead><tr><th>行</th><th>槽位</th></tr></thead><tbody><tr><td>1</td><td>铜板 · 铜缆 · 铜板</td></tr><tr><td>2</td><td>电子电路 · 机器外壳 · 电子电路</td></tr><tr><td>3</td><td>铜板 · 电池 · 铜板</td></tr></tbody></table>
+
+<h2 id="进阶">进阶</h2>
+
+<ul><li>需要所属定居点的<a href="settlement_core.html">定居点核心</a>，以及由三张残页拼成的修复图纸。</li><li>为市政厅屋顶上的<a href="drone_nest.html">无人机巢</a>提供工作。</li></ul>
+
+<h2 id="相关内容">相关内容</h2>
+
+<ul><li><a href="drone_nest.html">无人机巢</a>——无人机从调度台的缓存里取材料。</li><li><a href="settlement_core.html">定居点核心</a>——工作队列和「建设」标签页。</li></ul>
+
+<h2>合成</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="城镇调度台 alaindustrial:town_dispatcher" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="铜板"><img src="../../assets/item/copper_plate_3d.png" alt="铜板" width="32" height="32"></div> <div class="cell" title="铜缆"><img src="../../assets/item/copper_cable_3d.png" alt="铜缆" width="32" height="32"></div> <div class="cell" title="铜板"><img src="../../assets/item/copper_plate_3d.png" alt="铜板" width="32" height="32"></div> <div class="cell" title="电子电路"><img src="../../assets/item/electronic_circuit_3d.png" alt="电子电路" width="32" height="32"></div> <div class="cell" title="机器外壳"><img src="../../assets/item/machine_casing_3d.png" alt="机器外壳" width="32" height="32"></div> <div class="cell" title="电子电路"><img src="../../assets/item/electronic_circuit_3d.png" alt="电子电路" width="32" height="32"></div> <div class="cell" title="铜板"><img src="../../assets/item/copper_plate_3d.png" alt="铜板" width="32" height="32"></div> <div class="cell" title="电池"><img src="../../assets/item/battery_3d.png" alt="电池" width="32" height="32"></div> <div class="cell" title="铜板"><img src="../../assets/item/copper_plate_3d.png" alt="铜板" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="城镇调度台"><img src="../../assets/item/town_dispatcher_3d.png" alt="城镇调度台" width="32" height="32"></div><div class="result-name">城镇调度台</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>
