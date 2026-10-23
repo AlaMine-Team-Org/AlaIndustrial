@@ -198,6 +198,8 @@ pitest {
                      'dev.alaindustrial.client.blueprint.ComponentBlueprints',
                      'dev.alaindustrial.client.blueprint.NuclearBioBlueprints',
                      'dev.alaindustrial.client.blueprint.MiscBlueprints',
+                     // MOD-882: the shift worker's movement formulas, Minecraft-free for ShiftWorkerMotionTest.
+                     'dev.alaindustrial.client.render.entity.ShiftWorkerMotion',
                      'dev.alaindustrial.client.blueprint.EnergyBlueprints',
                      'dev.alaindustrial.client.blueprint.MachineBlueprints',
                      'dev.alaindustrial.client.blueprint.LogisticsBlueprints',
@@ -506,6 +508,9 @@ pitest {
                      // Owner's round 3: who may use a town's machines (R98), Minecraft-free for
                      // SettlementAccessTest.
                      'dev.alaindustrial.settlement.SettlementAccess*',
+                     // MOD-876: the house's power contract, an interface the beds of MOD-862 draw through; no code
+                     // of its own to mutate, listed so the target set stays complete.
+                     'dev.alaindustrial.settlement.HousePowerSource',
                      // MOD-859: the town hall plan sheets' assembly rules and the hint keys — Minecraft-free,
                      // listed WITH their L1 suite (PlanSheetRulesTest); the glob reaches the nested Sheet, Plan,
                      // Result and Reason.
@@ -554,6 +559,9 @@ pitest {
                      // them carry Codec and Minecraft types and stay out.
                      'dev.alaindustrial.settlement.works.WorkQueue*',
                      'dev.alaindustrial.settlement.works.WorkJob*',
+                     // Round 2 of 0.1.219 (Q1-Q3): the town's orders and the one button of a building's row.
+                     'dev.alaindustrial.settlement.works.WorkOrders',
+                     'dev.alaindustrial.settlement.works.OrderButton',
                      'dev.alaindustrial.settlement.works.BlockReason',
                      'dev.alaindustrial.settlement.works.BuildingState*',
                      'dev.alaindustrial.settlement.works.ConstructionRow',
@@ -571,7 +579,15 @@ pitest {
                      'dev.alaindustrial.settlement.works.SchematicSelection',
                      // MOD-859: the «Plan sheets» rows of the «Construction» tab — Minecraft-free, L1 suite
                      // PlanSheetRowsTest.
-                     'dev.alaindustrial.settlement.works.PlanSheetRows'
+                     'dev.alaindustrial.settlement.works.PlanSheetRows',
+                     'dev.alaindustrial.settlement.works.BuildingTile',
+                     'dev.alaindustrial.settlement.works.BuildingTile$*',
+                     // MOD-861: the course of a town road round the buildings — Minecraft-free on purpose, L1
+                     // suite TownRoadTraceTest. The glob reaches the nested Column, Blocked and Box.
+                     'dev.alaindustrial.settlement.works.TownRoadTrace*',
+                     // Round 2 of 0.1.219 (R2-7): the town's road network as one tree — Minecraft-free, L1 suite
+                     // TownRoadPlanTest.
+                     'dev.alaindustrial.settlement.works.TownRoadPlan*'
             ]
     // The MC-coupled classes are excluded from MUTATION (the bytecode PIT rewrites). But PIT's
     // JUnit discovery also walks every class under `targetTests` via reflection to find @Test
@@ -585,6 +601,11 @@ pitest {
     // (HudSmootherTest, LevelMathTest, GuidePaginatorTest, TemperedGearRollTest) invisible to PIT.
     targetTests = ['dev.alaindustrial.*Test']
     excludedClasses = [
+            // MOD-862: which buildings are houses, which count against the limit, and which building the
+            // dispatcher is about. They import no Minecraft type themselves, but they read TownBuilding,
+            // whose BlockPos and Identifier the L1 classpath cannot load, so no L1 suite reaches them.
+            // Covered by the L2 house scenarios (TownHouseScenarios).
+            'dev.alaindustrial.settlement.works.TownHouses',
             // MOD-226: `client.tooltip.TooltipKeysClientHook` used to be listed here, and is not any
             // more. It had become "Minecraft-free" by the target gate's reckoning purely as a side
             // effect of the 26.3 input port — dropping the window argument dropped its last
@@ -923,6 +944,11 @@ pitest {
             // held by the town_build_materials game tests.
             'dev.alaindustrial.settlement.works.WorkJournalCodec',
             'dev.alaindustrial.settlement.works.StageRows',
+            // Round 3 of 0.1.219 (R3-3, R3-6): the cards' data and the next-step hint read a town's works, its staged
+            // plans and its dispatcher (ServerLevel) — none loads on common/'s test classpath. Held by the town_works
+            // game tests and the L3 frames of the «Construction» tab.
+            'dev.alaindustrial.settlement.works.BuildingTiles',
+            'dev.alaindustrial.settlement.works.NextStepHint',
             // MOD-858: the dispatcher's tab lines with their DataFixerUpper Codec, for the update tag only; worded by
             // DispatcherViews (a ServerLevel) and held by the town_drone game tests.
             'dev.alaindustrial.settlement.drone.DispatcherView',

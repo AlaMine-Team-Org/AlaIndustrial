@@ -3,6 +3,8 @@ package dev.alaindustrial.settlement.works;
 import dev.alaindustrial.compat.LineStructures;
 import dev.alaindustrial.registry.ModTags;
 import dev.alaindustrial.settlement.SettlementRegistry;
+import dev.alaindustrial.settlement.drone.DroneCellRules;
+import dev.alaindustrial.settlement.drone.DroneCellSurvey;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -40,7 +42,12 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
  *
  * <p><b>The item of a block</b> is the item that places it ({@link #itemOf}); how many it takes is {@link #countOf}: a
  * door, a bed, a tall plant counted once on one half, a double slab twice, three candles three times. A block the game
- * hands out no item for costs nothing and is noted ({@link BuildStageRules.StageProgress#withoutItem()}).
+ * hands out no item for costs nothing.
+ *
+ * <p><b>A cell is missing while a building job has something to do on it</b> ({@link StagedPlan#standing}), the
+ * drone's own answer ({@link DroneCellRules}): a block to put, or a block in the way, which stops the job naming it
+ * (owner's round 5 of 0.1.219). A cell whose plan block no drone puts — no item builds it, or it lies on the lab's
+ * shaft — never holds a stage back.
  *
  * <p><b>The stage of a cell</b>, first rule that answers:
  * <ol>
@@ -304,11 +311,45 @@ public final class BuildMaterials {
 				return Optional.empty();
 			}
 			return Optional.of(new BuildStageRules.Cell(stages[index], items[index], counts[index],
-					plan.matches(index, world)));
+					standing(index, world)));
+		}
+
+		/**
+		 * Whether a building job has nothing left to do on plan cell {@code index}, the world holding {@code world}
+		 * there: its block stands, or the plan's block is one no drone puts ({@link DroneCellRules}). A block in the
+		 * way — one with data, say — leaves the cell missing, and the job stops naming it. The stages and the drone
+		 * read one answer (round 5 of 0.1.219): when they read two, a stage waited for a cell the drone never looked
+		 * at, and its building job came to an end with the building half built.
+		 */
+		public boolean standing(int index, BlockState world) {
+			return plan.matches(index, world) || DroneCellRules.decide(DroneCellRules.Job.BUILD,
+					DroneCellSurvey.survey(plan, index, world)) == DroneCellRules.Action.NONE;
+		}
+
+		/**
+		 * The first counted cell of {@code stage} still missing, by plan index, or -1; a cell in an unloaded chunk is
+		 * not looked at. What a building job that found nothing to do in its stage names (round 5 of 0.1.219).
+		 */
+		public int firstMissing(Level level, BuildStage stage) {
+			for (int i = 0; i < stages.length; i++) {
+				BlockPos pos = plan.pos(i);
+				if (stages[i] == stage && level.isLoaded(pos) && !standing(i, level.getBlockState(pos))) {
+					return i;
+				}
+			}
+			return -1;
 		}
 
 		/** Every counted cell, as the world holds them now; empty when a cell lies in a chunk nobody keeps loaded. */
 		public Optional<List<BuildStageRules.Cell>> cells(Level level) {
+			return cells(level, Set.of());
+		}
+
+		/**
+		 * Every counted cell as {@link #cells(Level)}, the cells at {@code lifted} (packed) counted as standing: a
+		 * drone lifted their blocks out of its way for a while and puts them back (owner's round 5 of 0.1.219).
+		 */
+		public Optional<List<BuildStageRules.Cell>> cells(Level level, Set<Long> lifted) {
 			List<BuildStageRules.Cell> out = new ArrayList<>();
 			for (int i = 0; i < stages.length; i++) {
 				if (stages[i] == null) {
@@ -319,7 +360,7 @@ public final class BuildMaterials {
 					return Optional.empty();
 				}
 				out.add(new BuildStageRules.Cell(stages[i], items[i], counts[i],
-						plan.matches(i, level.getBlockState(pos))));
+						lifted.contains(pos.asLong()) || standing(i, level.getBlockState(pos))));
 			}
 			return Optional.of(out);
 		}
@@ -327,6 +368,11 @@ public final class BuildMaterials {
 		/** Where the building stands, stage by stage; empty when a cell lies in an unloaded chunk. */
 		public Optional<BuildStageRules.Progress> progress(Level level) {
 			return cells(level).map(BuildStageRules::progress);
+		}
+
+		/** {@link #progress(Level)}, the cells at {@code lifted} counted as standing ({@link #cells(Level, Set)}). */
+		public Optional<BuildStageRules.Progress> progress(Level level, Set<Long> lifted) {
+			return cells(level, lifted).map(BuildStageRules::progress);
 		}
 
 		/** The whole material list — every counted cell as if nothing stood yet: the intact template's bill. */

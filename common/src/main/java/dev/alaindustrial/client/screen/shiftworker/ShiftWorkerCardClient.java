@@ -90,6 +90,11 @@ public final class ShiftWorkerCardClient {
 		NetworkDispatcher.get().sendToServer(ShiftWorkerRequestPayload.roster());
 	}
 
+	/** «Find» on a roster row (R4-13): the worker is outlined for a few seconds. */
+	public static void locate(String number) {
+		NetworkDispatcher.get().sendToServer(ShiftWorkerActionPayload.locate(number));
+	}
+
 	/** «+» on a stat. */
 	public static void invest(String number, ShiftWorkerProfile.Stat stat) {
 		NetworkDispatcher.get().sendToServer(ShiftWorkerActionPayload.invest(number, stat));
@@ -103,5 +108,10 @@ public final class ShiftWorkerCardClient {
 	/** A new name. */
 	public static void rename(String number, String name) {
 		NetworkDispatcher.get().sendToServer(ShiftWorkerActionPayload.rename(number, name));
+	}
+
+	/** Into free house {@code house} of the worker's town (MOD-862). */
+	public static void relocate(String number, int house) {
+		NetworkDispatcher.get().sendToServer(ShiftWorkerActionPayload.relocate(number, house));
 	}
 }

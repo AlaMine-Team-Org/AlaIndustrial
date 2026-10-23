@@ -102,4 +102,10 @@ public class TownDispatcherBlock extends LitMachineBlock implements HasMachineTo
 						MachineTooltipSpec.Tone.GRAY)),
 				List.of());
 	}
+
+	/** Its lines are whole sentences: broken to the width of a vanilla description (R4-3). */
+	@Override
+	public boolean wrapsTooltipLines() {
+		return true;
+	}
 }

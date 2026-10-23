@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
@@ -36,7 +37,11 @@ public final class TownEditScenarios {
 				RosterEntry.of(TownEditScenarios::benchHoldsEveryPieceApart, "town_edit_bench_holds_every_piece_apart")
 						.ticks(20, 100),
 				RosterEntry.of(TownEditScenarios::placedPieceSavesBackToItsTemplate,
-						"town_edit_placed_piece_saves_back_to_its_template").ticks(40, 100));
+						"town_edit_placed_piece_saves_back_to_its_template").ticks(40, 100),
+				RosterEntry.of(TownEditScenarios::candidateBenchSavesAsIntact,
+						"town_edit_candidate_bench_saves_as_intact").ticks(20, 100),
+				RosterEntry.of(TownEditScenarios::intactBenchSavesBackToItsTemplate,
+						"town_edit_intact_bench_saves_back_to_its_template").ticks(40, 100));
 
 		private Roster() {}
 	}
@@ -145,6 +150,109 @@ public final class TownEditScenarios {
 				if (!want.equals(got)) {
 					helper.fail(kind + ": the template has " + want.size() + " cells, the saved piece " + got.size()
 							+ "; first differing: " + firstDifference(want, got));
+					return;
+				}
+			}
+		} finally {
+			templates.remove(copy);
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * @implements MOD-824-CANDIDATE — {@code /ala town edit <style> <piece> intact candidate <variant>} names the
+	 *     candidate {@code ala_town_candidates/<style>/<piece>_v<N>} (a bare number means {@code vN}), lays the ruin
+	 *     out as a LOAD reference and the candidate in a box as wide and long as the ruin that saves under the piece's
+	 *     intact name; a candidate that does not load gives no bench at all. The mod ships no candidate, so the intact
+	 *     town hall stands in for one.
+	 */
+	public static void candidateBenchSavesAsIntact(GameTestHelper helper) {
+		StructureTemplateManager templates = LineStructures.templates(helper.getLevel());
+		Identifier named = TownEditBench.candidate("plains", "capsule_house_2", "3");
+		if (!named.equals(Industrialization.id("ala_town_candidates/plains/capsule_house_2_v3"))
+				|| !TownEditBench.candidate("plains", "town_hall", "inlet")
+						.equals(Industrialization.id("ala_town_candidates/plains/town_hall_inlet"))) {
+			helper.fail("candidate ids: " + named + ", " + TownEditBench.candidate("plains", "town_hall", "inlet"));
+			return;
+		}
+		if (!TownEditBench.planCandidate(templates, "plains", "capsule_house_1",
+				Industrialization.id("ala_town_candidates/plains/capsule_house_1_v9")).isEmpty()) {
+			helper.fail("a candidate that does not load still gave a bench");
+			return;
+		}
+		Identifier stand = TownEditBench.intact("plains", "town_hall");
+		List<TownEditBench.Slot> slots = TownEditBench.planCandidate(templates, "plains", "town_hall", stand);
+		StructureTemplate ruin = templates.getOrCreate(TownEditBench.ruin("plains", "town_hall"));
+		if (slots.size() != 2) {
+			helper.fail("the candidate bench has " + slots.size() + " slots, not the ruin and the candidate");
+			return;
+		}
+		TownEditBench.Slot reference = slots.getFirst();
+		TownEditBench.Slot bench = slots.getLast();
+		if (reference.mode() != StructureMode.LOAD || !reference.template().equals(reference.saveAs())
+				|| bench.mode() != StructureMode.SAVE || !bench.template().equals(stand)
+				|| !bench.saveAs().equals(TownEditBench.intact("plains", "town_hall"))
+				|| bench.size().getX() != ruin.getSize().getX() || bench.size().getZ() != ruin.getSize().getZ()
+				|| bench.size().getY() < ruin.getSize().getY() + TownEditBench.INTACT_HEADROOM
+				|| bench.offset().getX() < reference.size().getX()) {
+			helper.fail("the candidate bench is " + slots);
+			return;
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * @implements MOD-856-INTACT-BENCH — {@code /ala town edit <style> <piece> intact} lays the intact building out
+	 *     with a structure block in SAVE mode named after the intact template, as wide and long as the ruin and
+	 *     {@link TownEditBench#INTACT_HEADROOM} blocks taller; saving it as the structure block saves gives back the
+	 *     intact template's every block at the same cell, jigsaw links included.
+	 */
+	public static void intactBenchSavesBackToItsTemplate(GameTestHelper helper) {
+		ServerLevel level = helper.getLevel();
+		StructureTemplateManager templates = LineStructures.templates(level);
+		Identifier intact = TownEditBench.intact("plains", "town_hall");
+		List<TownEditBench.Slot> slots = TownEditBench.planIntact(templates, "plains", "town_hall", false);
+		StructureTemplate ruin = templates.getOrCreate(TownEditBench.ruin("plains", "town_hall"));
+		if (slots.size() != 1 || !slots.getFirst().template().equals(intact)
+				|| !slots.getFirst().saveAs().equals(intact) || slots.getFirst().mode() != StructureMode.SAVE) {
+			helper.fail("the intact bench is " + slots + ", not one SAVE slot of " + intact);
+			return;
+		}
+		TownEditBench.Slot slot = slots.getFirst();
+		BlockPos origin = new BlockPos(5204 * 16, 100, 5200 * 16);
+		BlockPos at = TownEditBench.place(level, origin, slot);
+		if (!(level.getBlockEntity(at) instanceof StructureBlockEntity block)
+				|| block.getMode() != StructureMode.SAVE || !block.getStructureName().equals(intact.toString())) {
+			helper.fail("no structure block saving under " + intact + " at " + at + ": " + level.getBlockState(at));
+			return;
+		}
+		BlockPos corner = at.offset(block.getStructurePos());
+		Vec3i size = block.getStructureSize();
+		if (!corner.equals(origin) || size.getX() != ruin.getSize().getX() || size.getZ() != ruin.getSize().getZ()
+				|| size.getY() < ruin.getSize().getY() + TownEditBench.INTACT_HEADROOM) {
+			helper.fail("the intact box is " + size + " at " + corner + ", the ruin " + ruin.getSize() + " at "
+					+ origin);
+			return;
+		}
+		Identifier copy = Identifier.fromNamespaceAndPath("alaindustrial_gametest", "town_edit_intact_round_trip");
+		try {
+			StructureBlockEntity.saveStructure(level, copy, corner, size, true, "gametest", false, List.of());
+			StructureTemplate original = templates.getOrCreate(intact);
+			StructureTemplate saved = templates.getOrCreate(copy);
+			Set<Block> kinds = new HashSet<>();
+			BlockPos.betweenClosed(corner, corner.offset(size).offset(-1, -1, -1))
+					.forEach(pos -> kinds.add(level.getBlockState(pos).getBlock()));
+			kinds.remove(Blocks.STRUCTURE_VOID);
+			if (!kinds.contains(Blocks.JIGSAW)) {
+				helper.fail("the placed intact hall has no jigsaw block: the town links were lost on the bench");
+				return;
+			}
+			for (Block kind : kinds) {
+				Set<String> want = cells(original, kind);
+				Set<String> got = cells(saved, kind);
+				if (!want.equals(got)) {
+					helper.fail(kind + ": the intact template has " + want.size() + " cells, the saved piece "
+							+ got.size() + "; first differing: " + firstDifference(want, got));
 					return;
 				}
 			}

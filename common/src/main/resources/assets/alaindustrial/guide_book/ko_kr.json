@@ -707,6 +707,44 @@
           ]
         },
         {
+          "id": "town_road",
+          "title": "정착지 도로",
+          "icon": "alaindustrial:town_road",
+          "pages": [
+            {
+              "type": "text",
+              "title": "정착지 도로",
+              "text": "지면과 같은 높이의 완전한 블록입니다. 어두운 강화 철 격자 안에 절연 구리선이 들어 있으며, 정착지 코어의 전력을 교대 근무자의 집으로 보내는 에너지망 구간입니다. 마을의 도로망은 건설 드론이 깝니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 12 EU/t",
+                "버퍼: 12 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:tempered_iron_bars",
+                "alaindustrial:tempered_iron_bars",
+                "alaindustrial:tempered_iron_bars",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:insulated_copper_cable",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone"
+              ],
+              "result_id": "alaindustrial:town_road",
+              "result_count": 3
+            }
+          ]
+        },
+        {
           "id": "gold_cable",
           "title": "금 케이블",
           "icon": "alaindustrial:gold_cable",
@@ -3321,7 +3359,7 @@
             {
               "type": "text",
               "title": "각인된 석판 0",
-              "text": "숫자나 글자 조각이 새겨진 장식용 점판암 석판입니다. 버려진 연구소의 이전 기록 명판이 이것으로 만들어져 있습니다. 제작법 없음."
+              "text": "숫자, 글자 또는 글자 조각이 새겨진 장식용 점판암 석판입니다. 버려진 연구소의 이전 기록 명판과 노동자 마을 주택의 번호판이 이것으로 만들어져 있습니다. 제작법 없음."
             }
           ]
         },
@@ -3764,6 +3802,44 @@
           ]
         },
         {
+          "id": "house_inlet",
+          "title": "주택 인입구",
+          "icon": "alaindustrial:house_inlet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "주택 인입구",
+              "text": "케이블이 교대 근무자의 집으로 들어가는 벽 블록입니다. 바깥면으로만 EU를 받고 집의 충전 침대를 위한 예비 전력을 저장합니다. 마을에서 집의 기준점이며, 새 집의 터도 여기서 잡습니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 2 000 EU",
+                "버퍼: 2000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:house_inlet",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "industrial_workbench",
           "title": "산업 작업대",
           "icon": "alaindustrial:industrial_workbench",
@@ -3789,6 +3865,80 @@
                 "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:industrial_workbench",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "drone_nest",
+          "title": "드론 둥지",
+          "icon": "alaindustrial:drone_nest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "드론 둥지",
+              "text": "시청 위에 있는 건설 드론의 착륙장입니다. 아이템 형태의 드론을 넣으면 드론이 마을 주문 대기열에서 건물 하나를 맡아 잔해를 치우고, 도로를 깔고, 기초를 채운 뒤 온전한 모습이 될 때까지 블록을 하나하나 다시 짓습니다. 할 일이 없으면 집의 번호판을 새깁니다. 충전은 정착지 코어로만 되며, 코어의 등급이 몇 개의 둥지가 작동할지 정합니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 블록 1개당 20 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:copper_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_cable",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:drone_nest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "town_dispatcher",
+          "title": "마을 관제소",
+          "icon": "alaindustrial:town_dispatcher",
+          "pages": [
+            {
+              "type": "text",
+              "title": "마을 관제소",
+              "text": "노동자 마을의 시청에 있는 건설 데스크입니다. 설계도 조각 세 장으로 복원 설계도를 맞추고, 건물 주문 대기열을 관리하며, 건설 드론이 블록을 가져가는 자재 버퍼를 보관하고, 드론이 작업 중인지 보여 줍니다. 마을마다 하나뿐입니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "용량: 27칸"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:copper_plate",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_plate",
+                "alaindustrial:battery",
+                "alaindustrial:copper_plate"
+              ],
+              "result_id": "alaindustrial:town_dispatcher",
               "result_count": 1
             }
           ]
@@ -3831,7 +3981,7 @@
             {
               "type": "text",
               "title": "수용 캡슐",
-              "text": "EU와 재료를 받고 정착지의 교대 근무자를 한 명씩 되돌려 놓습니다. 정착지 코어가 켜져 있고, 마을에 복원자가 있으며, 근무자 한도에 이르지 않았을 때만 작동합니다. 새 근무자는 저마다 세계에서 하나뿐인 번호를 받습니다."
+              "text": "EU와 재료를 받고 정착지의 교대 근무자를 한 명씩 되돌려 놓습니다. 정착지 코어가 켜져 있고, 마을에 복원자가 있으며, 근무자 한도에 이르지 않았고, 새 근무자가 살 수 있는 빈 집이 있을 때만 작동합니다. 새 근무자는 저마다 세계에서 하나뿐인 번호를 받습니다."
             },
             {
               "type": "stats",
@@ -3919,6 +4069,36 @@
               "lines": [
                 "에너지: 기계 작업 1 000 EU = 숙련도 점수 1"
               ]
+            }
+          ]
+        },
+        {
+          "id": "charging_bed",
+          "title": "충전 침대",
+          "icon": "alaindustrial:charging_bed",
+          "pages": [
+            {
+              "type": "text",
+              "title": "충전 침대",
+              "text": "교대 근무자의 집에 있는 두 칸짜리 침대로, 일반 침대와 같습니다. 배터리가 떨어진 근무자가 누워서 충전합니다. 자체 에너지는 없으며 집의 인입구에서 전력을 받습니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:copper_plate",
+                "alaindustrial:battery",
+                "alaindustrial:copper_plate",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:charging_bed",
+              "result_count": 1
             }
           ]
         },
@@ -4639,6 +4819,134 @@
           ]
         },
         {
+          "id": "town_hall_plan_sheet",
+          "title": "시청 설계도 조각",
+          "icon": "alaindustrial:town_hall_plan_sheet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "시청 설계도 조각",
+              "text": "노동자 마을 시청 복원 설계도를 이루는 세 장의 조각 중 하나입니다. 같은 양식의 모든 마을에서 정해진 자리에 놓여 있으며, 잃어버리면 제작할 수 있습니다. 같은 양식의 조각 세 장을 관제소에서 합치면 복원 설계도가 됩니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "minecraft:paper",
+                "minecraft:lapis_lazuli",
+                "minecraft:paper",
+                "minecraft:iron_ingot",
+                "minecraft:sandstone",
+                "minecraft:iron_ingot",
+                "minecraft:lapis_lazuli",
+                "minecraft:bricks",
+                "minecraft:lapis_lazuli"
+              ],
+              "result_id": "alaindustrial:town_hall_plan_sheet",
+              "result_count": 1,
+              "variants": [
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:iron_ingot",
+                    "minecraft:sandstone",
+                    "minecraft:iron_ingot",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:bricks",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "정형 제작",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:sandstone",
+                    "minecraft:oak_door",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:white_bed",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "정형 제작",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:redstone",
+                    "minecraft:sandstone",
+                    "minecraft:redstone",
+                    "minecraft:lapis_lazuli",
+                    "alaindustrial:electronic_circuit",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "정형 제작",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:iron_ingot",
+                    "minecraft:grass_block",
+                    "minecraft:iron_ingot",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:bricks",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "정형 제작",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:grass_block",
+                    "minecraft:oak_door",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:white_bed",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "정형 제작",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:redstone",
+                    "minecraft:grass_block",
+                    "minecraft:redstone",
+                    "minecraft:lapis_lazuli",
+                    "alaindustrial:electronic_circuit",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "정형 제작",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
           "id": "machine_casing",
           "title": "기계 케이스",
           "icon": "alaindustrial:machine_casing",
@@ -4785,6 +5093,178 @@
               ],
               "result_id": "alaindustrial:mutation_chip_duplicate",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "house_plan",
+          "title": "주택 설계도",
+          "icon": "alaindustrial:house_plan",
+          "pages": [
+            {
+              "type": "text",
+              "title": "주택 설계도",
+              "text": "노동자 마을의 캡슐 주택 네 유형 중 하나의 설계도입니다. 마을은 한 번 익히면 영구히 알게 되며, 이후 드론이 그 유형의 집을 복원하고 짓습니다. 해당 집의 폐허에서 찾거나 제작할 수 있습니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "minecraft:paper",
+                "minecraft:oak_door",
+                "minecraft:paper",
+                "minecraft:lapis_lazuli",
+                "minecraft:sandstone",
+                "minecraft:lapis_lazuli",
+                "minecraft:paper",
+                "minecraft:lantern",
+                "minecraft:paper"
+              ],
+              "result_id": "alaindustrial:house_plan",
+              "result_count": 1,
+              "variants": [
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:sandstone",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:lantern",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "정형 제작",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:sandstone",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:barrel",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "정형 제작",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:sandstone",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:chest",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "정형 제작",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:sandstone",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:flower_pot",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "정형 제작",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:grass_block",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:lantern",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "정형 제작",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:grass_block",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:barrel",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "정형 제작",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:grass_block",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:chest",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "정형 제작",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:grass_block",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:flower_pot",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "정형 제작",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "restoration_plan",
+          "title": "복원 설계도",
+          "icon": "alaindustrial:restoration_plan",
+          "pages": [
+            {
+              "type": "text",
+              "title": "복원 설계도",
+              "text": "건설 드론이 노동자 마을의 건물을 복원할 때 따르는 설계도입니다. 그 양식 건물의 온전한 템플릿을 가리키는 참조만 담고 있습니다. 관제소에서 설계도 조각 세 장으로 맞춥니다."
             }
           ]
         },

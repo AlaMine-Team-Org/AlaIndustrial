@@ -1,0 +1,30 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:replaceable_by_trees",
+    "#minecraft:flowers",
+    "#minecraft:saplings",
+    "#minecraft:cave_vines",
+    "minecraft:snow",
+    "minecraft:brown_mushroom",
+    "minecraft:red_mushroom",
+    "minecraft:crimson_fungus",
+    "minecraft:warped_fungus",
+    "minecraft:sweet_berry_bush",
+    "minecraft:sugar_cane",
+    "minecraft:cactus",
+    "minecraft:bamboo_sapling",
+    "minecraft:moss_carpet",
+    "minecraft:pale_hanging_moss",
+    "minecraft:cobweb",
+    "minecraft:weeping_vines",
+    "minecraft:weeping_vines_plant",
+    "minecraft:twisting_vines",
+    "minecraft:twisting_vines_plant",
+    "minecraft:small_dripleaf",
+    "minecraft:big_dripleaf",
+    "minecraft:big_dripleaf_stem",
+    "minecraft:lily_pad",
+    "alaindustrial:soot_layer"
+  ]
+}

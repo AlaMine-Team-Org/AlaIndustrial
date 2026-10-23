@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "alaindustrial:block/house_inlet"
+    },
+    "facing=east": {
+      "model": "alaindustrial:block/house_inlet",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "alaindustrial:block/house_inlet",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "alaindustrial:block/house_inlet",
+      "y": 270
+    }
+  }
+}

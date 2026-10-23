@@ -28,6 +28,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.jspecify.annotations.Nullable;
 
+// size-justified: one screen of four tabs that share the frame, the strip and the panel (core, two worker lists,
+// construction); the construction tab already lives in its own class, the rest are short method groups.
 /**
  * Screen of the settlement core (MOD-831): the energy bar on the left and the town's readout beside it — whether
  * the core holds its territory, its radius, limits and upkeep, and who owns the town. No slots and no
@@ -53,6 +55,9 @@ import org.jspecify.annotations.Nullable;
  *
  * <p><b>Construction tab (MOD-857).</b> The fourth tab draws the rows of the town's buildings and work queue the server
  * words ({@link ConstructionTab}); the town's owner gets small controls on them (R95).
+ *
+ * <p><b>«Find» (R4-13).</b> A living worker's row in «Shift workers» ends in a small spyglass button: pressed, the
+ * server outlines that worker for a few seconds ({@code ShiftWorkerLocator}).
  */
 public class SettlementCoreScreen extends MachineScreen<SettlementCoreMenu> {
 
@@ -164,10 +169,14 @@ public class SettlementCoreScreen extends MachineScreen<SettlementCoreMenu> {
 		return TEXTURE;
 	}
 
+	/** The usual left bar, its fill sprite under the panel: a panel 256 wide leaves no room to its right (R2-2). */
+	private static final EnergyBarSpec BAR = new EnergyBarSpec(EnergyBarSpec.LEFT.barX(),
+			EnergyBarSpec.LEFT.barBottom(), SettlementCoreLayout.ENERGY_SPRITE_U, SettlementCoreLayout.ENERGY_SPRITE_V);
+
 	/** The energy bar and its tooltip, drawn by the base (MOD-716) — on the core's own tab only. */
 	@Override
 	protected EnergyBarSpec energyBar() {
-		return selected == TAB_CORE ? EnergyBarSpec.LEFT : null;
+		return selected == TAB_CORE ? BAR : null;
 	}
 
 	/** No statistics tab: the core has no upgrade panel, so the chip that feeds it can never be fitted. */
@@ -191,9 +200,7 @@ public class SettlementCoreScreen extends MachineScreen<SettlementCoreMenu> {
 		strip.draw(graphics, this.leftPos, this.topPos, TABS, selected);
 		if (selected == TAB_WORKS) {
 			drawPanel(graphics);
-			works.draw(graphics, this.font, this.leftPos + SettlementCoreLayout.ROSTER_LEFT,
-					this.topPos + SettlementCoreLayout.ROSTER_TOP, this.leftPos + SettlementCoreLayout.ROSTER_RIGHT,
-					this.menu.isUnbound(), mouseX, mouseY);
+			works.draw(graphics, this.font, this.leftPos, this.topPos, this.menu.isUnbound(), mouseX, mouseY);
 			return;
 		}
 		if (selected != TAB_CORE) {
@@ -247,7 +254,39 @@ public class SettlementCoreScreen extends MachineScreen<SettlementCoreMenu> {
 				graphics.fill(left, y - 1, right, y + SettlementCoreLayout.ROSTER_ROW - 1, GuiStyle.HOVER_WASH);
 			}
 			drawRosterRow(graphics, row, settlement, left, right, y);
+			if (locatable(row)) {
+				drawLocateButton(graphics, right, y, locateAt(mouseX, mouseY) == rosterScroll + i);
+			}
 		}
+	}
+
+	/** Whether a row gets the «Find» button (R4-13): a living worker in the «Workers» list. */
+	private boolean locatable(ShiftWorkerRosterPayload.Row row) {
+		return selected == TAB_WORKERS && row.alive();
+	}
+
+	/** The «Find» button at the right end of the row at {@code y}: a spyglass, the works tab's small button. */
+	private static void drawLocateButton(GuiGraphicsExtractor graphics, int right, int y, boolean hovered) {
+		int size = SettlementCoreLayout.LOCATE_BUTTON;
+		int bx = right - size - 1;
+		graphics.fill(bx, y - 1, bx + size, y - 1 + size, hovered ? GuiStyle.BUTTON_ACTIVE : GuiStyle.BUTTON);
+		graphics.pose().pushMatrix();
+		graphics.pose().translate(bx + 1, y);
+		graphics.pose().scale(0.5f, 0.5f);
+		graphics.item(new ItemStack(Items.SPYGLASS), 0, 0);
+		graphics.pose().popMatrix();
+	}
+
+	/** The index into the open roster of the row whose «Find» button is under the mouse, or -1. */
+	private int locateAt(double mouseX, double mouseY) {
+		int row = rosterRowAt(mouseX, mouseY);
+		List<ShiftWorkerRosterPayload.Row> rows = rosterRows();
+		if (row < 0 || rows == null || !locatable(rows.get(row))) {
+			return -1;
+		}
+		int right = this.leftPos + SettlementCoreLayout.ROSTER_RIGHT;
+		int bx = right - SettlementCoreLayout.LOCATE_BUTTON - 1;
+		return mouseX >= bx && mouseX < bx + SettlementCoreLayout.LOCATE_BUTTON ? row : -1;
 	}
 
 	/** The light panel the list tabs draw on. */
@@ -284,8 +323,9 @@ public class SettlementCoreScreen extends MachineScreen<SettlementCoreMenu> {
 		cell(graphics, Component.translatable("gui.alaindustrial.dashboard.level", row.level()),
 				left + SettlementCoreLayout.COL_LEVEL, y,
 				SettlementCoreLayout.COL_STATUS - SettlementCoreLayout.COL_LEVEL - 2, colour);
+		int button = locatable(row) ? SettlementCoreLayout.LOCATE_BUTTON + 2 : 0;
 		cell(graphics, Component.translatable(SettlementCoreLayout.ROSTER_STATUS + row.status().getSerializedName()),
-				left + SettlementCoreLayout.COL_STATUS, y, right - left - SettlementCoreLayout.COL_STATUS - 2,
+				left + SettlementCoreLayout.COL_STATUS, y, right - left - SettlementCoreLayout.COL_STATUS - 2 - button,
 				row.alive() ? GuiStyle.TEXT : GuiStyle.STATUS_BLOCKING);
 	}
 
@@ -324,11 +364,13 @@ public class SettlementCoreScreen extends MachineScreen<SettlementCoreMenu> {
 			return;
 		}
 		if (selected == TAB_WORKS) {
-			works.tooltip(this.leftPos + SettlementCoreLayout.ROSTER_LEFT,
-					this.topPos + SettlementCoreLayout.ROSTER_TOP,
-					mouseX, mouseY).ifPresent(text -> graphics.setTooltipForNextFrame(this.font, text, mouseX, mouseY));
+			works.tooltip(this.leftPos, this.topPos, mouseX, mouseY)
+					.ifPresent(text -> graphics.setTooltipForNextFrame(this.font, text, mouseX, mouseY));
 		} else if (selected == TAB_CORE) {
 			BORDERS.tooltip(graphics, this.font, this.leftPos, this.topPos, mouseX, mouseY);
+		} else if (locateAt(mouseX, mouseY) >= 0) {
+			graphics.setTooltipForNextFrame(this.font, Component.translatable(SettlementCoreLayout.ROSTER_LOCATE),
+					mouseX, mouseY);
 		} else if (rosterRowAt(mouseX, mouseY) >= 0) {
 			graphics.setTooltipForNextFrame(this.font, Component.translatable(SettlementCoreLayout.ROSTER_OPEN),
 					mouseX, mouseY);
@@ -347,11 +389,15 @@ public class SettlementCoreScreen extends MachineScreen<SettlementCoreMenu> {
 				return true;
 			}
 			if (selected == TAB_WORKS) {
-				return works.clicked(this.leftPos + SettlementCoreLayout.ROSTER_LEFT,
-						this.topPos + SettlementCoreLayout.ROSTER_TOP, event.x(), event.y());
+				return works.clicked(this.leftPos, this.topPos, event.x(), event.y());
 			}
 			int row = rosterRowAt(event.x(), event.y());
 			List<ShiftWorkerRosterPayload.Row> rows = rosterRows();
+			if (locateAt(event.x(), event.y()) >= 0 && rows != null) {
+				this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+				ShiftWorkerCardClient.locate(rows.get(row).number());
+				return true;
+			}
 			if (row >= 0 && rows != null) {
 				ShiftWorkerCardClient.requestCard(rows.get(row).number());
 				return true;

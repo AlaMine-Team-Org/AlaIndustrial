@@ -707,6 +707,44 @@
           ]
         },
         {
+          "id": "town_road",
+          "title": "集落の道路",
+          "icon": "alaindustrial:town_road",
+          "pages": [
+            {
+              "type": "text",
+              "title": "集落の道路",
+              "text": "地面と同じ高さの完全なブロックです。暗い焼き入れ鉄の格子の中に絶縁銅線が通っており、集落コアの電力を交代要員の家へ運ぶエネルギーネットワークの一区間になります。集落の道路網は建設ドローンが敷きます。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: 12 EU/t",
+                "バッファ: 12 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "alaindustrial:tempered_iron_bars",
+                "alaindustrial:tempered_iron_bars",
+                "alaindustrial:tempered_iron_bars",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:insulated_copper_cable",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone"
+              ],
+              "result_id": "alaindustrial:town_road",
+              "result_count": 3
+            }
+          ]
+        },
+        {
           "id": "gold_cable",
           "title": "金ケーブル",
           "icon": "alaindustrial:gold_cable",
@@ -3321,7 +3359,7 @@
             {
               "type": "text",
               "title": "刻印石板 0",
-              "text": "数字や文字の欠片が刻まれた装飾用のスレート板。廃研究所にある以前の記録の銘板はこれで組まれている。レシピなし。"
+              "text": "数字や文字、文字の欠片が刻まれた装飾用のスレート板。廃研究所にある以前の記録の銘板と、労働者の町の家にある番号の表札はこれで組まれている。レシピなし。"
             }
           ]
         },
@@ -3764,6 +3802,44 @@
           ]
         },
         {
+          "id": "house_inlet",
+          "title": "住宅の引込口",
+          "icon": "alaindustrial:house_inlet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "住宅の引込口",
+              "text": "交代要員の家にケーブルを引き込む壁ブロックです。EU は外側の面でだけ受け取り、家の充電ベッド用に蓄えておきます。町における家の基点で、新しい家はここから着工します。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: 2 000 EU",
+                "バッファ: 2000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:house_inlet",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "industrial_workbench",
           "title": "工業作業台",
           "icon": "alaindustrial:industrial_workbench",
@@ -3789,6 +3865,80 @@
                 "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:industrial_workbench",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "drone_nest",
+          "title": "ドローンの巣",
+          "icon": "alaindustrial:drone_nest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ドローンの巣",
+              "text": "役場の上にある建設ドローンの発着台です。アイテムのドローンを入れると、ドローンは町の発注キューから建物を 1 つ受け取り、がれきを片付け、道路を敷き、基礎を埋めて、元の姿に戻るまでブロックを 1 つずつ建て直します。仕事がないときは家の表札を刻みます。充電できるのは集落コアだけで、コアのティアによって稼働する巣の数が決まります。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "エネルギー: ブロック1個につき20 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "alaindustrial:copper_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_cable",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:drone_nest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "town_dispatcher",
+          "title": "町のディスパッチャー",
+          "icon": "alaindustrial:town_dispatcher",
+          "pages": [
+            {
+              "type": "text",
+              "title": "町のディスパッチャー",
+              "text": "労働者の町の建設デスクで、役場に置かれています。3 枚の断片から修復設計図を組み立て、建物の発注キューを管理し、建設ドローンがブロックを取り出す資材バッファーを持ち、ドローンが作業中かどうかを表示します。町に 1 台だけです。"
+            },
+            {
+              "type": "stats",
+              "title": "ステータス",
+              "lines": [
+                "容量: 27スロット"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "alaindustrial:copper_plate",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_plate",
+                "alaindustrial:battery",
+                "alaindustrial:copper_plate"
+              ],
+              "result_id": "alaindustrial:town_dispatcher",
               "result_count": 1
             }
           ]
@@ -3831,7 +3981,7 @@
             {
               "type": "text",
               "title": "受け入れカプセル",
-              "text": "EU と素材と引き換えに、集落の交代要員を 1 人ずつ呼び戻します。集落コアが点灯していて、町に復元者がいて、交代要員の上限に達していないときだけ動きます。新しい交代要員はそれぞれ、ワールドで 1 つだけの自分の番号を受け取ります。"
+              "text": "EU と素材と引き換えに、集落の交代要員を 1 人ずつ呼び戻します。集落コアが点灯していて、町に復元者がいて、交代要員の上限に達しておらず、新しい交代要員が住める空き家があるときだけ動きます。新しい交代要員はそれぞれ、ワールドで 1 つだけの自分の番号を受け取ります。"
             },
             {
               "type": "stats",
@@ -3919,6 +4069,36 @@
               "lines": [
                 "エネルギー: 機械の稼働 1 000 EU = 熟練ポイント 1"
               ]
+            }
+          ]
+        },
+        {
+          "id": "charging_bed",
+          "title": "充電ベッド",
+          "icon": "alaindustrial:charging_bed",
+          "pages": [
+            {
+              "type": "text",
+              "title": "充電ベッド",
+              "text": "交代要員の家にある 2 マスのベッドで、通常のベッドと同じ形です。バッテリーが減った交代要員がここに横になって充電します。自分ではエネルギーを蓄えず、家の引込口から受け取ります。"
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:copper_plate",
+                "alaindustrial:battery",
+                "alaindustrial:copper_plate",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:charging_bed",
+              "result_count": 1
             }
           ]
         },
@@ -4639,6 +4819,134 @@
           ]
         },
         {
+          "id": "town_hall_plan_sheet",
+          "title": "役場設計図の断片",
+          "icon": "alaindustrial:town_hall_plan_sheet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "役場設計図の断片",
+              "text": "労働者の町の役場の修復設計図を構成する 3 枚の断片の 1 枚です。同じ様式のすべての町の決まった場所にあり、なくしてもクラフトで作れます。同じ様式の断片 3 枚をディスパッチャーで組み合わせると修復設計図になります。"
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "minecraft:paper",
+                "minecraft:lapis_lazuli",
+                "minecraft:paper",
+                "minecraft:iron_ingot",
+                "minecraft:sandstone",
+                "minecraft:iron_ingot",
+                "minecraft:lapis_lazuli",
+                "minecraft:bricks",
+                "minecraft:lapis_lazuli"
+              ],
+              "result_id": "alaindustrial:town_hall_plan_sheet",
+              "result_count": 1,
+              "variants": [
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:iron_ingot",
+                    "minecraft:sandstone",
+                    "minecraft:iron_ingot",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:bricks",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "定形クラフト",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:sandstone",
+                    "minecraft:oak_door",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:white_bed",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "定形クラフト",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:redstone",
+                    "minecraft:sandstone",
+                    "minecraft:redstone",
+                    "minecraft:lapis_lazuli",
+                    "alaindustrial:electronic_circuit",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "定形クラフト",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:iron_ingot",
+                    "minecraft:grass_block",
+                    "minecraft:iron_ingot",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:bricks",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "定形クラフト",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:grass_block",
+                    "minecraft:oak_door",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:white_bed",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "定形クラフト",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:redstone",
+                    "minecraft:grass_block",
+                    "minecraft:redstone",
+                    "minecraft:lapis_lazuli",
+                    "alaindustrial:electronic_circuit",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "定形クラフト",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
           "id": "machine_casing",
           "title": "マシンケース",
           "icon": "alaindustrial:machine_casing",
@@ -4785,6 +5093,178 @@
               ],
               "result_id": "alaindustrial:mutation_chip_duplicate",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "house_plan",
+          "title": "住宅設計図",
+          "icon": "alaindustrial:house_plan",
+          "pages": [
+            {
+              "type": "text",
+              "title": "住宅設計図",
+              "text": "労働者の町にある 4 種類のカプセルハウスのうち 1 種類の設計図です。町は一度習得すればずっと覚えており、以後ドローンがその種類の家を修復・建設します。その家の廃墟で見つかるほか、クラフトもできます。"
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "定形クラフト",
+              "grid": [
+                "minecraft:paper",
+                "minecraft:oak_door",
+                "minecraft:paper",
+                "minecraft:lapis_lazuli",
+                "minecraft:sandstone",
+                "minecraft:lapis_lazuli",
+                "minecraft:paper",
+                "minecraft:lantern",
+                "minecraft:paper"
+              ],
+              "result_id": "alaindustrial:house_plan",
+              "result_count": 1,
+              "variants": [
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:sandstone",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:lantern",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "定形クラフト",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:sandstone",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:barrel",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "定形クラフト",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:sandstone",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:chest",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "定形クラフト",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:sandstone",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:flower_pot",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "定形クラフト",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:grass_block",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:lantern",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "定形クラフト",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:grass_block",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:barrel",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "定形クラフト",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:grass_block",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:chest",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "定形クラフト",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:grass_block",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:flower_pot",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "定形クラフト",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "restoration_plan",
+          "title": "修復設計図",
+          "icon": "alaindustrial:restoration_plan",
+          "pages": [
+            {
+              "type": "text",
+              "title": "修復設計図",
+              "text": "建設ドローンが労働者の町の建物を修復するときに従う設計図です。中身は、その様式の建物の無傷のテンプレートへの参照だけです。ディスパッチャーで設計図の断片 3 枚から組み立てます。"
             }
           ]
         },

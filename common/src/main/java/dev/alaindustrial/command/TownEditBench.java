@@ -50,8 +50,15 @@ public final class TownEditBench {
 	/** Folder of a style's intact buildings: {@code ala_town/<style>/intact/<piece>}. */
 	static final String INTACT = "intact";
 
+	/**
+	 * Folder of the intact-building candidates in the world's templates, beside {@link #TOWN} rather than in it so a
+	 * candidate is never taken for a piece: {@code ala_town_candidates/<style>/<piece>_<variant>}, written into the
+	 * world's {@code generated} folder by {@code tools/gen_town_house_candidates.py}.
+	 */
+	static final String CANDIDATES = "ala_town_candidates/";
+
 	/** Blocks the intact bench's box rises above the ruin's: room for the roof the ruin lost. */
-	static final int INTACT_HEADROOM = 8;
+	public static final int INTACT_HEADROOM = 8;
 
 	/** Empty blocks between two pieces: the structure block sits one cell off a piece's north-west corner. */
 	static final int GAP = 4;
@@ -92,6 +99,27 @@ public final class TownEditBench {
 	/** The intact building of {@code piece}: {@code alaindustrial:ala_town/<style>/intact/<piece>}. */
 	public static Identifier intact(String style, String piece) {
 		return Industrialization.id(TOWN + style + "/" + INTACT + "/" + piece);
+	}
+
+	/**
+	 * The intact-building candidate {@code variant} of {@code piece}:
+	 * {@code alaindustrial:ala_town_candidates/<style>/<piece>_<variant>}; a bare number {@code 2} means {@code v2}.
+	 */
+	public static Identifier candidate(String style, String piece, String variant) {
+		String suffix = !variant.isEmpty() && variant.chars().allMatch(Character::isDigit) ? "v" + variant : variant;
+		return Industrialization.id(CANDIDATES + style + "/" + piece + "_" + suffix);
+	}
+
+	/** Variants of {@code piece} that have a candidate, a leading {@code v} dropped: {@code 1}, {@code inlet}. */
+	public static List<String> candidates(StructureTemplateManager templates, String style, String piece) {
+		String prefix = CANDIDATES + style + "/" + piece + "_";
+		TreeSet<String> variants = new TreeSet<>();
+		templates.listTemplates()
+				.filter(id -> id.getNamespace().equals(Industrialization.MOD_ID) && id.getPath().startsWith(prefix))
+				.map(id -> id.getPath().substring(prefix.length()))
+				.filter(rest -> !rest.isEmpty() && rest.indexOf('/') < 0)
+				.forEach(rest -> variants.add(rest.matches("v[0-9]+") ? rest.substring(1) : rest));
+		return List.copyOf(variants);
 	}
 
 	/** Styles that have templates: the folders under {@code alaindustrial:ala_town/}. */
@@ -172,6 +200,28 @@ public final class TownEditBench {
 		slots.add(new Slot(saved.isPresent() ? intactId : ruinId, intactId, new BlockPos(x, 0, 0),
 				new Vec3i(size.getX(), height, size.getZ()), StructureMode.SAVE));
 		return slots;
+	}
+
+	/**
+	 * The intact bench of {@code piece} started from a candidate instead of the ruin: the ruin to the west as a
+	 * reference in LOAD mode, and the candidate in a SAVE box that saves under {@link #intact}, as wide and long as the
+	 * ruin and {@link #INTACT_HEADROOM} blocks taller (never lower than the candidate). Empty when the ruin or the
+	 * candidate does not load.
+	 */
+	public static List<Slot> planCandidate(StructureTemplateManager templates, String style, String piece,
+			Identifier candidateId) {
+		Identifier ruinId = ruin(style, piece);
+		Optional<StructureTemplate> ruinTemplate = templates.get(ruinId);
+		Optional<StructureTemplate> candidate = templates.get(candidateId);
+		if (ruinTemplate.isEmpty() || candidate.isEmpty()) {
+			return List.of();
+		}
+		Vec3i size = ruinTemplate.get().getSize();
+		int height = Math.min(StructureBlockEntity.MAX_SIZE_PER_AXIS,
+				Math.max(size.getY() + INTACT_HEADROOM, candidate.get().getSize().getY()));
+		return List.of(new Slot(ruinId, ruinId, BlockPos.ZERO, size, StructureMode.LOAD),
+				new Slot(candidateId, intact(style, piece), new BlockPos(size.getX() + GAP, 0, 0),
+						new Vec3i(size.getX(), height, size.getZ()), StructureMode.SAVE));
 	}
 
 	/**

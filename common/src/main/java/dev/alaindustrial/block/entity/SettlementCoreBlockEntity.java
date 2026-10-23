@@ -3,10 +3,12 @@ package dev.alaindustrial.block.entity;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.block.entity.machine.SyncChannels;
 import dev.alaindustrial.chat.ModChat;
+import dev.alaindustrial.core.energy.EnergyPort;
 import dev.alaindustrial.core.energy.EnergyTier;
 import dev.alaindustrial.menu.SettlementCoreMenu;
 import dev.alaindustrial.network.SettlementBorderPayload;
 import dev.alaindustrial.registry.ModContent;
+import dev.alaindustrial.settlement.TownChatStyle;
 import dev.alaindustrial.settlement.Settlement;
 import dev.alaindustrial.settlement.SettlementConfig;
 import dev.alaindustrial.settlement.SettlementCoreUpkeep;
@@ -17,6 +19,8 @@ import dev.alaindustrial.settlement.shift.ShiftWorkerBattery;
 import dev.alaindustrial.settlement.shift.ShiftWorkers;
 import dev.alaindustrial.settlement.SettlementTier;
 import dev.alaindustrial.settlement.works.PlanSheetNews;
+import dev.alaindustrial.settlement.drone.TownRoadNetwork;
+import dev.alaindustrial.settlement.works.TownHousing;
 import dev.alaindustrial.settlement.works.TownWorksScanner;
 import dev.alaindustrial.worldgen.town.TownBuildings;
 import dev.alaindustrial.worldgen.town.TownFootprint;
@@ -142,8 +146,11 @@ public final class SettlementCoreBlockEntity extends MachineBlockEntity implemen
 		// No machine slots; input on every face (no front: the core has no FACING), no output. An LV core taking the
 		// packets of the tier above (R44). The buffer's intake is fixed when the block entity is built, and every core
 		// is built at the first tier: when cores move up a tier (an open question of the epic), the intake follows.
+		// The buffer may give out one packet a call, but only through the town's port (MOD-861, townPort): every face
+		// of the core stays an intake (MachineBlockEntity's IN role), so nothing draws it through a face.
 		super(ModContent.SETTLEMENT_CORE_BE.get(), pos, state, EnergyTier.LV, 0,
-				SettlementConfig.settlementCoreBuffer, SettlementTier.FIRST.intakeTier().maxVoltage(), 0L);
+				SettlementConfig.settlementCoreBuffer, SettlementTier.FIRST.intakeTier().maxVoltage(),
+				SettlementTier.FIRST.intakeTier().maxVoltage());
 	}
 
 	/** The core's town number, or 0 before it first took its place. */
@@ -239,6 +246,8 @@ public final class SettlementCoreBlockEntity extends MachineBlockEntity implemen
 		if (active) {
 			rechargeWorkers(serverLevel);
 			TownWorksScanner.tick(serverLevel, settlementId); // MOD-857: a lit town compares its buildings
+			TownHousing.tick(serverLevel, settlementId); // MOD-862: the homeless move into free houses
+			TownRoadNetwork.tick(serverLevel, settlementId); // R129: the town's road network
 		}
 		recordEuRate(active ? (int) Math.min(Integer.MAX_VALUE, drain) : 0);
 		if (active != wasActive) {
@@ -320,8 +329,13 @@ public final class SettlementCoreBlockEntity extends MachineBlockEntity implemen
 	/** The chat line telling {@code player} that {@code town} already has its core, and where it stands (R43). */
 	public static void tellCoreStands(ServerPlayer player, Settlement town) {
 		BlockPos core = town.corePos();
-		player.sendSystemMessage(ModChat.line(Component.translatable(
-				MISPLACED_MESSAGE_KEY, core.getX(), core.getY(), core.getZ())), false);
+		player.sendSystemMessage(ModChat.line(Component.translatable(MISPLACED_MESSAGE_KEY,
+				coordinate(core.getX()), coordinate(core.getY()), coordinate(core.getZ()))), false);
+	}
+
+	/** One coordinate of a chat line, in the town lines' grey (R4-7). */
+	private static Component coordinate(int value) {
+		return Component.literal(String.valueOf(value)).withStyle(TownChatStyle.COORDINATES);
 	}
 
 	/** {@code player} claims this core's town — see {@link SettlementRegistry#claim}. */
@@ -535,6 +549,58 @@ public final class SettlementCoreBlockEntity extends MachineBlockEntity implemen
 	}
 
 	/**
+	 * The town's port (MOD-861; epic decisions R106, R111): what the town hall's inlet offers the line in front of it.
+	 * Energy goes in as into the core; it comes out of the core's buffer — the core gives energy to the town's roads —
+	 * but never below {@link #upkeepReserve} and never while the core is dark or not its town's, the rule the
+	 * drones' share keeps too ({@link #giveToDrones}).
+	 */
+	public EnergyPort townPort() {
+		return new TownPort();
+	}
+
+	/** What the core keeps for itself: {@code settlementCoreGraceTicks} ticks of upkeep. */
+	private long upkeepReserve() {
+		return (long) Math.max(1, tier.euPerTick()) * Math.max(1, SettlementConfig.settlementCoreGraceTicks);
+	}
+
+	/** The core's buffer as the hall inlet shows it to the line; see {@link #townPort}. */
+	private final class TownPort implements EnergyPort {
+		@Override
+		public long insert(long maxAmount, Txn txn) {
+			return energy.insert(maxAmount, txn);
+		}
+
+		@Override
+		public long extract(long maxAmount, Txn txn) {
+			if (!upkeep.active() || misplaced || unbound) {
+				return 0L;
+			}
+			long above = Math.max(0L, energy.getAmount() - upkeepReserve());
+			return energy.extract(Math.min(maxAmount, above), txn);
+		}
+
+		@Override
+		public long getAmount() {
+			return energy.getAmount();
+		}
+
+		@Override
+		public long getCapacity() {
+			return energy.getCapacity();
+		}
+
+		@Override
+		public boolean supportsInsertion() {
+			return true;
+		}
+
+		@Override
+		public boolean supportsExtraction() {
+			return true;
+		}
+	}
+
+	/**
 	 * EU the core hands the town's builder drones (MOD-858, epic decision R94): a nest's charge, or the price of a
 	 * block a drone placed or took away — never more than the buffer holds above {@code settlementCoreGraceTicks}
 	 * ticks of upkeep, so the drones never eat the reserve that keeps the town lit, and nothing while the core is
@@ -544,8 +610,7 @@ public final class SettlementCoreBlockEntity extends MachineBlockEntity implemen
 		if (wanted <= 0 || !upkeep.active() || misplaced || unbound) {
 			return 0L;
 		}
-		long reserve = (long) Math.max(1, tier.euPerTick()) * Math.max(1, SettlementConfig.settlementCoreGraceTicks);
-		long given = Math.min(wanted, Math.max(0L, energy.getAmount() - reserve));
+		long given = Math.min(wanted, Math.max(0L, energy.getAmount() - upkeepReserve()));
 		if (given > 0) {
 			energy.drainInternal(given);
 			setChanged();

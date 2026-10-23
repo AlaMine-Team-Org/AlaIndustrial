@@ -166,6 +166,7 @@ public final class ModContent {
 	public static Supplier<Block> INSULATED_TIN_CABLE = unbound("INSULATED_TIN_CABLE");
 	public static Supplier<Block> INSULATED_GOLD_CABLE = unbound("INSULATED_GOLD_CABLE");
 	public static Supplier<Block> INSULATED_ELECTRUM_CABLE = unbound("INSULATED_ELECTRUM_CABLE");
+	public static Supplier<Block> TOWN_ROAD = unbound("TOWN_ROAD");
 	public static Supplier<Block> ITEM_PIPE = unbound("ITEM_PIPE");
 	public static Supplier<Block> ITEM_PIPE_ADVANCED = unbound("ITEM_PIPE_ADVANCED");
 	public static Supplier<Block> FLUID_PIPE = unbound("FLUID_PIPE");
@@ -196,6 +197,7 @@ public final class ModContent {
 	public static Supplier<Block> BROKEN_ENGRAVED_PLATE_D = unbound("BROKEN_ENGRAVED_PLATE_D");
 	public static Supplier<Block> BROKEN_ENGRAVED_PLATE_R = unbound("BROKEN_ENGRAVED_PLATE_R");
 	public static Supplier<Block> BROKEN_ENGRAVED_PLATE_M = unbound("BROKEN_ENGRAVED_PLATE_M");
+	public static Supplier<Block> ENGRAVED_LETTER_PLATE = unbound("ENGRAVED_LETTER_PLATE");
 	public static Supplier<Block> MACERATOR = unbound("MACERATOR");
 	public static Supplier<Block> BATTERY_BOX = unbound("BATTERY_BOX");
 	/** MV Reinforced Energy Storage (MOD-351) — second step of the storage line. */
@@ -397,6 +399,10 @@ public final class ModContent {
 	public static Supplier<Block> TOWN_DISPATCHER = unbound("TOWN_DISPATCHER");
 	/** MOD-858 - a builder drone's nest on the town hall's roof; the drone is the nest's own state. */
 	public static Supplier<Block> DRONE_NEST = unbound("DRONE_NEST");
+	/** MOD-876 - the wall block a cable enters a shift worker's house through. */
+	public static Supplier<Block> HOUSE_INLET = unbound("HOUSE_INLET");
+	/** MOD-876 - where a shift worker sleeps and charges. */
+	public static Supplier<Block> CHARGING_BED = unbound("CHARGING_BED");
 	// Enriched Uranium Torch (MOD-085) — a vanilla-behaviour torch (light 15, green flame) in two
 	// blocks: standing + wall. The wall variant has NO block item; it drops/names from the standing
 	// torch via overrideLootTable/overrideDescription, exactly as vanilla WALL_TORCH mirrors TORCH.
@@ -897,6 +903,7 @@ public final class ModContent {
 	public static Supplier<BlockItem> INSULATED_TIN_CABLE_ITEM = unbound("INSULATED_TIN_CABLE_ITEM");
 	public static Supplier<BlockItem> INSULATED_GOLD_CABLE_ITEM = unbound("INSULATED_GOLD_CABLE_ITEM");
 	public static Supplier<BlockItem> INSULATED_ELECTRUM_CABLE_ITEM = unbound("INSULATED_ELECTRUM_CABLE_ITEM");
+	public static Supplier<BlockItem> TOWN_ROAD_ITEM = unbound("TOWN_ROAD_ITEM");
 	public static Supplier<BlockItem> ITEM_PIPE_ITEM = unbound("ITEM_PIPE_ITEM");
 	public static Supplier<BlockItem> ITEM_PIPE_ADVANCED_ITEM = unbound("ITEM_PIPE_ADVANCED_ITEM");
 	public static Supplier<BlockItem> FLUID_PIPE_ITEM = unbound("FLUID_PIPE_ITEM");
@@ -924,6 +931,7 @@ public final class ModContent {
 	public static Supplier<BlockItem> BROKEN_ENGRAVED_PLATE_D_ITEM = unbound("BROKEN_ENGRAVED_PLATE_D_ITEM");
 	public static Supplier<BlockItem> BROKEN_ENGRAVED_PLATE_R_ITEM = unbound("BROKEN_ENGRAVED_PLATE_R_ITEM");
 	public static Supplier<BlockItem> BROKEN_ENGRAVED_PLATE_M_ITEM = unbound("BROKEN_ENGRAVED_PLATE_M_ITEM");
+	public static Supplier<BlockItem> ENGRAVED_LETTER_PLATE_ITEM = unbound("ENGRAVED_LETTER_PLATE_ITEM");
 	public static Supplier<BlockItem> MACERATOR_ITEM = unbound("MACERATOR_ITEM");
 	public static Supplier<BlockItem> BATTERY_BOX_ITEM = unbound("BATTERY_BOX_ITEM");
 	public static Supplier<BlockItem> CESU_ITEM = unbound("CESU_ITEM");
@@ -1083,10 +1091,15 @@ public final class ModContent {
 	// MOD-859 - the town hall plan sheets and the restoration plan they make.
 	public static Supplier<Item> TOWN_HALL_PLAN_SHEET = unbound("TOWN_HALL_PLAN_SHEET");
 	public static Supplier<Item> RESTORATION_PLAN = unbound("RESTORATION_PLAN");
+	// MOD-862 - the house plans, one item for the four capsule house types.
+	public static Supplier<Item> HOUSE_PLAN = unbound("HOUSE_PLAN");
 	public static Supplier<Item> CONSTRUCTION_DRONE = unbound("CONSTRUCTION_DRONE");
 	// MOD-858
 	public static Supplier<BlockItem> TOWN_DISPATCHER_ITEM = unbound("TOWN_DISPATCHER_ITEM");
 	public static Supplier<BlockItem> DRONE_NEST_ITEM = unbound("DRONE_NEST_ITEM");
+	// MOD-876
+	public static Supplier<BlockItem> HOUSE_INLET_ITEM = unbound("HOUSE_INLET_ITEM");
+	public static Supplier<BlockItem> CHARGING_BED_ITEM = unbound("CHARGING_BED_ITEM");
 	// Enriched Uranium Torch (MOD-085) — only the STANDING torch has a block item; the wall variant
 	// drops this item via its overrideLootTable, so it needs no item of its own.
 	public static Supplier<BlockItem> ENRICHED_URANIUM_TORCH_ITEM = unbound("ENRICHED_URANIUM_TORCH_ITEM");
@@ -1109,6 +1122,7 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> DAYLIGHT_SOLAR_PANEL_BE = unbound("DAYLIGHT_SOLAR_PANEL_BE");
 	public static Supplier<BlockEntityType<?>> RADIANT_SOLAR_PANEL_BE = unbound("RADIANT_SOLAR_PANEL_BE");
 	public static Supplier<BlockEntityType<?>> COPPER_CABLE_BE = unbound("COPPER_CABLE_BE");
+	public static Supplier<BlockEntityType<?>> TOWN_ROAD_BE = unbound("TOWN_ROAD_BE");
 	public static Supplier<BlockEntityType<?>> ITEM_PIPE_BE = unbound("ITEM_PIPE_BE");
 	public static Supplier<BlockEntityType<?>> FLUID_PIPE_BE = unbound("FLUID_PIPE_BE");
 	public static Supplier<BlockEntityType<?>> SMART_WIRE_BE = unbound("SMART_WIRE_BE");
@@ -1158,6 +1172,8 @@ public final class ModContent {
 	// MOD-858
 	public static Supplier<BlockEntityType<?>> TOWN_DISPATCHER_BE = unbound("TOWN_DISPATCHER_BE");
 	public static Supplier<BlockEntityType<?>> DRONE_NEST_BE = unbound("DRONE_NEST_BE");
+	// MOD-876
+	public static Supplier<BlockEntityType<?>> HOUSE_INLET_BE = unbound("HOUSE_INLET_BE");
 	public static Supplier<BlockEntityType<?>> ELECTRIC_HEATER_BE = unbound("ELECTRIC_HEATER_BE");
 	public static Supplier<BlockEntityType<?>> CHARGE_PAD_BE = unbound("CHARGE_PAD_BE");
 	public static Supplier<BlockEntityType<?>> VACUUM_COLLECTOR_BE = unbound("VACUUM_COLLECTOR_BE");

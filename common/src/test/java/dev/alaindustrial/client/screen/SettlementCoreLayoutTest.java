@@ -61,14 +61,26 @@ class SettlementCoreLayoutTest {
 			}
 			check(failures, code, SettlementCoreLayout.HINT, text(lang, SettlementCoreLayout.HINT),
 					SettlementCoreLayout.hintWidth(), SettlementCoreLayout.HINT_MAX_LINES);
-			// MOD-857: the «Construction» tab's status words and building names, one line each in their column.
-			for (String key : SettlementCoreLayout.WORKS_STATUS_WORDS) {
-				check(failures, code, key, text(lang, key),
-						SettlementCoreLayout.WORKS_COL_PERCENT - SettlementCoreLayout.WORKS_COL_STATUS - 2, 1);
-			}
+			// MOD-857, round 3 of 0.1.219 (R3-3, R3-6): the «Construction» tab's names, chips, headings and hints.
 			for (String key : SettlementCoreLayout.WORKS_NAMES) {
-				check(failures, code, key, text(lang, key), SettlementCoreLayout.WORKS_COL_STATUS - 4, 1);
+				check(failures, code, key, text(lang, key), SettlementCoreLayout.worksNameWidth(), 1);
 			}
+			for (String key : SettlementCoreLayout.WORKS_CHIPS) {
+				check(failures, code, key, text(lang, key), SettlementCoreLayout.WORKS_CHIP_MAX - 6, 1);
+			}
+			for (String key : SettlementCoreLayout.WORKS_SECTIONS) {
+				check(failures, code, key, text(lang, key), SettlementCoreLayout.worksCardWidth() - 2, 1);
+			}
+			for (String key : HINTS) {
+				// A building's name in the hints that name one; the materials hint lists two counted items.
+				check(failures, code, key, text(lang, key, "Capsule house (type 4)"),
+						SettlementCoreLayout.worksHintWidth(), SettlementCoreLayout.WORKS_HINT_MAX_LINES);
+			}
+			check(failures, code, SettlementCoreLayout.WORKS_CARD_STAGE,
+					text(lang, SettlementCoreLayout.WORKS_CARD_STAGE, "5", "5", "Windows and doors") + "  999/999",
+					SettlementCoreLayout.worksOpenWidth(), 1);
+			check(failures, code, SettlementCoreLayout.WORKS_CARD_STAGES_DONE,
+					text(lang, SettlementCoreLayout.WORKS_CARD_STAGES_DONE), SettlementCoreLayout.worksOpenWidth(), 1);
 			String heading = text(lang, "block.alaindustrial.settlement_core");
 			if (width(heading) > SettlementCoreLayout.IMAGE_WIDTH - 2 * (SettlementCoreLayout.BORDER + 2)) {
 				failures.add(code + " heading: " + width(heading) + " px");
@@ -92,6 +104,95 @@ class SettlementCoreLayoutTest {
 		assertTrue(SettlementCoreLayout.BUTTON_X + ZONE_BUTTON_SIZE <= SettlementCoreLayout.TEXT_LEFT,
 				"the button runs into the rows");
 	}
+
+	/**
+	 * A «Construction» card's parts stay inside the panel and the window inside a 1280 x 720 screen at interface scale
+	 * 3 (owner's round 2 of 0.1.219, R2-2; round 3, R3-3): the button right of the name, the scroll bar right of the
+	 * cards, the pane under the hint bar and above the bottom border.
+	 */
+	@Test
+	void everyPartOfAConstructionCardStaysInsideThePanel() {
+		assertTrue(SettlementCoreLayout.WORKS_CONTENT_RIGHT + SettlementCoreLayout.WORKS_SCROLLBAR
+				< SettlementCoreLayout.ROSTER_RIGHT, "the scroll bar runs past the panel");
+		assertTrue(SettlementCoreLayout.worksNameWidth() >= 120, "a card's name has no room");
+		assertTrue(SettlementCoreLayout.WORKS_CARD_TEXT + SettlementCoreLayout.WORKS_CHIP_MAX
+				<= SettlementCoreLayout.worksCardWidth() - SettlementCoreLayout.WORKS_BUTTON - 6,
+				"a chip runs into the button");
+		assertTrue(SettlementCoreLayout.WORKS_ICON_BOX + 2 <= SettlementCoreLayout.WORKS_CARD_TEXT,
+				"the picture runs into the name");
+		assertTrue(SettlementCoreLayout.WORKS_VIEW_TOP < SettlementCoreLayout.WORKS_VIEW_BOTTOM
+				&& SettlementCoreLayout.WORKS_VIEW_BOTTOM <= SettlementCoreLayout.IMAGE_HEIGHT
+						- SettlementCoreLayout.BORDER, "the pane runs past the frame");
+		assertTrue(SettlementCoreLayout.WORKS_PLAN_LABEL + 4 * (SettlementCoreLayout.WORKS_SLOT + 2) + 40
+				<= SettlementCoreLayout.worksCardWidth(), "the plan slots run past the card");
+		assertTrue(SettlementCoreLayout.IMAGE_WIDTH <= 426 && SettlementCoreLayout.IMAGE_HEIGHT <= 240,
+				"the window must fit 426 x 240");
+		assertTrue(SettlementCoreLayout.ENERGY_SPRITE_V >= SettlementCoreLayout.IMAGE_HEIGHT
+				&& SettlementCoreLayout.ENERGY_SPRITE_V + 44 <= 256, "the energy sprite must sit under the panel");
+	}
+
+	/**
+	 * The pictures the cards draw are the ones the icon generator lays out, in its order: a building added to one list
+	 * and not the other would draw another building's picture.
+	 */
+	@Test
+	void theBuildingPicturesMatchTheGenerator() throws IOException {
+		Path generator = repoRoot().resolve("tools/gen_town_building_icons.py");
+		String source = Files.readString(generator, StandardCharsets.UTF_8);
+		List<String> styles = quoted(between(source, "for style in (", ")"));
+		List<String> names = quoted(between(source, "for name in (", ")"));
+		List<String> expected = new ArrayList<>();
+		for (String style : styles) {
+			for (String name : names) {
+				expected.add(style + "/" + name);
+			}
+		}
+		assertEquals(expected, ICONS, "TownBuildingIcons.ICONS and tools/gen_town_building_icons.py ICONS differ");
+	}
+
+	/**
+	 * {@code TownBuildingIcons.ICONS}: that class touches Minecraft and cannot load on this lane, so its list is
+	 * repeated here and read off its source.
+	 */
+	private static final List<String> ICONS = iconsFromSource();
+
+	private static List<String> iconsFromSource() {
+		try {
+			String source = Files.readString(repoRoot().resolve(
+					"common/src/main/java/dev/alaindustrial/client/screen/works/TownBuildingIcons.java"),
+					StandardCharsets.UTF_8);
+			return quoted(between(source, "ICONS = List.of(", ");"));
+		} catch (IOException e) {
+			throw new IllegalStateException(e);
+		}
+	}
+
+	private static String between(String source, String from, String to) {
+		int start = source.indexOf(from);
+		assertTrue(start >= 0, "no " + from);
+		start += from.length();
+		return source.substring(start, source.indexOf(to, start));
+	}
+
+	private static List<String> quoted(String text) {
+		List<String> out = new ArrayList<>();
+		java.util.regex.Matcher m = java.util.regex.Pattern.compile("\"([^\"]+)\"").matcher(text);
+		while (m.find()) {
+			out.add(m.group(1));
+		}
+		return out;
+	}
+
+	/** The repository's root: the working directory of a Gradle test task is its project's, {@code common}. */
+	private static Path repoRoot() {
+		Path here = Path.of("").toAbsolutePath();
+		return Files.isDirectory(here.resolve("tools")) ? here : here.getParent();
+	}
+
+	/** {@code NextStepHint.KEYS}: that class touches Minecraft and cannot load on this lane. */
+	private static final List<String> HINTS = List.of("sheets", "dispatcher", "assemble", "nest", "order_hall",
+			"materials", "stopped", "building", "order_house", "repair", "house_plans", "limit", "done").stream()
+			.map(name -> "settlement.alaindustrial.works.next." + name).toList();
 
 	/** {@code ZonePreviewButton.SIZE}; that class touches Minecraft and cannot load on this lane. */
 	private static final int ZONE_BUTTON_SIZE = 22;

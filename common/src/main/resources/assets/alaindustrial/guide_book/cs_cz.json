@@ -707,6 +707,44 @@
           ]
         },
         {
+          "id": "town_road",
+          "title": "Cesta osady",
+          "icon": "alaindustrial:town_road",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Cesta osady",
+              "text": "Plný blok zarovnaný se zemí: mříž z tmavého kaleného železa s izolovaným měděným drátem uvnitř; úsek energetické sítě, kterým jádro osady napájí domy směnových dělníků. Cestní síť osady pokládají stavební drony."
+            },
+            {
+              "type": "stats",
+              "title": "Parametry",
+              "lines": [
+                "Energie: 12 EU/t",
+                "Zásobník: 12 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Výroba podle vzoru",
+              "grid": [
+                "alaindustrial:tempered_iron_bars",
+                "alaindustrial:tempered_iron_bars",
+                "alaindustrial:tempered_iron_bars",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:insulated_copper_cable",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone"
+              ],
+              "result_id": "alaindustrial:town_road",
+              "result_count": 3
+            }
+          ]
+        },
+        {
           "id": "gold_cable",
           "title": "Zlatý kabel",
           "icon": "alaindustrial:gold_cable",
@@ -3321,7 +3359,7 @@
             {
               "type": "text",
               "title": "Rytá deska 0",
-              "text": "Ozdobné břidlicové desky s vyrytou číslicí nebo úlomkem písmene — skládá se z nich tabulka předchozího záznamu v opuštěných laboratořích. Bez receptu."
+              "text": "Ozdobné břidlicové desky s vyrytou číslicí, písmenem nebo úlomkem písmene. Skládá se z nich tabulka předchozího záznamu v opuštěných laboratořích i štítek s číslem v domech dělnických osad. Bez receptu."
             }
           ]
         },
@@ -3764,6 +3802,44 @@
           ]
         },
         {
+          "id": "house_inlet",
+          "title": "Přípojka domu",
+          "icon": "alaindustrial:house_inlet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Přípojka domu",
+              "text": "Nástěnný blok, kterým do domu směnového dělníka vstupuje kabel. EU přijímá jen vnější stěnou a drží zásobu pro nabíjecí lůžko domu; je kotvou domu v osadě a od něj se zakládá nový dům."
+            },
+            {
+              "type": "stats",
+              "title": "Parametry",
+              "lines": [
+                "Energie: 2 000 EU",
+                "Zásobník: 2000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Výroba podle vzoru",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:house_inlet",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "industrial_workbench",
           "title": "Průmyslový pracovní stůl",
           "icon": "alaindustrial:industrial_workbench",
@@ -3789,6 +3865,80 @@
                 "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:industrial_workbench",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "drone_nest",
+          "title": "Hnízdo dronu",
+          "icon": "alaindustrial:drone_nest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Hnízdo dronu",
+              "text": "Přistávací plocha stavebního dronu nad radnicí; vkládá se do ní dron jako předmět a dron si vezme jednu budovu z fronty zakázek osady, odklidí její suť, položí k ní cestu, doplní základy a blok po bloku ji obnoví do neporušené podoby, a když nemá práci, ryje štítky domů; nabíjí ji jen jádro osady a úroveň jádra určuje, kolik hnízd pracuje."
+            },
+            {
+              "type": "stats",
+              "title": "Parametry",
+              "lines": [
+                "Energie: 20 EU za blok"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Výroba podle vzoru",
+              "grid": [
+                "alaindustrial:copper_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_cable",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:drone_nest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "town_dispatcher",
+          "title": "Dispečink osady",
+          "icon": "alaindustrial:town_dispatcher",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Dispečink osady",
+              "text": "Stavební pult dělnické osady, který stojí na její radnici: skládá plán obnovy ze tří listů, vede frontu zakázek na budovy, drží zásobník materiálu, ze kterého si stavební drony berou bloky, a ukazuje, zda drony pracují; jeden na osadu."
+            },
+            {
+              "type": "stats",
+              "title": "Parametry",
+              "lines": [
+                "Kapacita: 27 pozic"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Výroba podle vzoru",
+              "grid": [
+                "alaindustrial:copper_plate",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_plate",
+                "alaindustrial:battery",
+                "alaindustrial:copper_plate"
+              ],
+              "result_id": "alaindustrial:town_dispatcher",
               "result_count": 1
             }
           ]
@@ -3831,7 +3981,7 @@
             {
               "type": "text",
               "title": "Přijímací kapsle",
-              "text": "Vrací směnové dělníky osady jednoho po druhém za EU a materiály — jen dokud jádro osady svítí, osada má obnovitele a limit dělníků není naplněný; každý nový dělník dostane vlastní číslo, které je v celém světě jen jedno."
+              "text": "Vrací směnové dělníky osady jednoho po druhém za EU a materiály, jen dokud jádro osady svítí, osada má obnovitele, limit dělníků není naplněný a pro nového dělníka čeká volný obyvatelný dům; každý nový dělník dostane vlastní číslo, které je v celém světě jen jedno."
             },
             {
               "type": "stats",
@@ -3919,6 +4069,36 @@
               "lines": [
                 "Energie: 1 000 EU práce strojů = 1 bod mistrovství"
               ]
+            }
+          ]
+        },
+        {
+          "id": "charging_bed",
+          "title": "Nabíjecí lůžko",
+          "icon": "alaindustrial:charging_bed",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Nabíjecí lůžko",
+              "text": "Dvoublokové lůžko v domě směnového dělníka, jako postel: dělník s vybitou baterií si na něj lehne a nabíjí se; vlastní zásobu energie nemá, bere ji z přípojky svého domu."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Výroba podle vzoru",
+              "grid": [
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:copper_plate",
+                "alaindustrial:battery",
+                "alaindustrial:copper_plate",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:charging_bed",
+              "result_count": 1
             }
           ]
         },
@@ -4294,7 +4474,7 @@
             {
               "type": "text",
               "title": "Jádro osady",
-              "text": "Srdce dělnické osady, které stojí na její radnici — dokud mu síť dodává EU, drží území osady, určuje, kolik domů a směnových dělníků v osadě smí být, a pamatuje si svého obnovitele; bez energie zhasne a osada usne."
+              "text": "Srdce dělnické osady, které stojí na její radnici: dokud mu síť dodává EU, drží území osady, určuje, kolik domů a směnových dělníků v osadě smí být, a pamatuje si svého obnovitele; bez energie zhasne a osada usne."
             },
             {
               "type": "stats",
@@ -4639,6 +4819,134 @@
           ]
         },
         {
+          "id": "town_hall_plan_sheet",
+          "title": "List plánu radnice",
+          "icon": "alaindustrial:town_hall_plan_sheet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "List plánu radnice",
+              "text": "Jeden ze tří listů plánu obnovy radnice dělnické osady — leží na pevném místě každé osady svého stylu a ztracený lze vyrobit; tři listy jednoho stylu se v dispečinku složí do plánu obnovy."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Výroba podle vzoru",
+              "grid": [
+                "minecraft:paper",
+                "minecraft:lapis_lazuli",
+                "minecraft:paper",
+                "minecraft:iron_ingot",
+                "minecraft:sandstone",
+                "minecraft:iron_ingot",
+                "minecraft:lapis_lazuli",
+                "minecraft:bricks",
+                "minecraft:lapis_lazuli"
+              ],
+              "result_id": "alaindustrial:town_hall_plan_sheet",
+              "result_count": 1,
+              "variants": [
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:iron_ingot",
+                    "minecraft:sandstone",
+                    "minecraft:iron_ingot",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:bricks",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "Výroba podle vzoru",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:sandstone",
+                    "minecraft:oak_door",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:white_bed",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "Výroba podle vzoru",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:redstone",
+                    "minecraft:sandstone",
+                    "minecraft:redstone",
+                    "minecraft:lapis_lazuli",
+                    "alaindustrial:electronic_circuit",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "Výroba podle vzoru",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:iron_ingot",
+                    "minecraft:grass_block",
+                    "minecraft:iron_ingot",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:bricks",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "Výroba podle vzoru",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:grass_block",
+                    "minecraft:oak_door",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:white_bed",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "Výroba podle vzoru",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:redstone",
+                    "minecraft:grass_block",
+                    "minecraft:redstone",
+                    "minecraft:lapis_lazuli",
+                    "alaindustrial:electronic_circuit",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "Výroba podle vzoru",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
           "id": "machine_casing",
           "title": "Plášť stroje",
           "icon": "alaindustrial:machine_casing",
@@ -4785,6 +5093,178 @@
               ],
               "result_id": "alaindustrial:mutation_chip_duplicate",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "house_plan",
+          "title": "Plán domu",
+          "icon": "alaindustrial:house_plan",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Plán domu",
+              "text": "Plán jednoho ze čtyř typů kapslových domů dělnické osady. Osada se ho naučí jednou a natrvalo, pak drony obnovují a staví domy tohoto typu. Najdeš ho v ruině jeho domu, nebo ho vyrobíš."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Výroba podle vzoru",
+              "grid": [
+                "minecraft:paper",
+                "minecraft:oak_door",
+                "minecraft:paper",
+                "minecraft:lapis_lazuli",
+                "minecraft:sandstone",
+                "minecraft:lapis_lazuli",
+                "minecraft:paper",
+                "minecraft:lantern",
+                "minecraft:paper"
+              ],
+              "result_id": "alaindustrial:house_plan",
+              "result_count": 1,
+              "variants": [
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:sandstone",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:lantern",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "Výroba podle vzoru",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:sandstone",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:barrel",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "Výroba podle vzoru",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:sandstone",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:chest",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "Výroba podle vzoru",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:sandstone",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:flower_pot",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "Výroba podle vzoru",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:grass_block",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:lantern",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "Výroba podle vzoru",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:grass_block",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:barrel",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "Výroba podle vzoru",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:grass_block",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:chest",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "Výroba podle vzoru",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:grass_block",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:flower_pot",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "Výroba podle vzoru",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "restoration_plan",
+          "title": "Plán obnovy",
+          "icon": "alaindustrial:restoration_plan",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Plán obnovy",
+              "text": "Plán, podle kterého stavební dron obnovuje budovu dělnické osady; nese jen odkaz na neporušenou šablonu budovy svého stylu. Skládá se v dispečinku ze tří listů plánu."
             }
           ]
         },

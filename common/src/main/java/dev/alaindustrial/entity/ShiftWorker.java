@@ -1,13 +1,18 @@
 package dev.alaindustrial.entity;
 
+import dev.alaindustrial.block.ChargingBedBlock;
 import dev.alaindustrial.settlement.shift.ShiftMode;
 import dev.alaindustrial.settlement.shift.ShiftWorkerBattery;
 import dev.alaindustrial.settlement.SettlementConfig;
 import dev.alaindustrial.settlement.shift.ShiftWorkerProfiles;
 import dev.alaindustrial.settlement.shift.ShiftWorkerRecord;
 import dev.alaindustrial.settlement.shift.ShiftWorkers;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.OptionalLong;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -21,12 +26,17 @@ import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.vehicle.DismountHelper;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -60,6 +70,18 @@ public class ShiftWorker extends PathfinderMob {
 			SynchedEntityData.defineId(ShiftWorker.class, EntityDataSerializers.STRING);
 	private static final EntityDataAccessor<Boolean> DATA_SLIM =
 			SynchedEntityData.defineId(ShiftWorker.class, EntityDataSerializers.BOOLEAN);
+	/** The head cell of the charging bed it lies on (R4-9); synced, so the client lays the body along the bed. */
+	private static final EntityDataAccessor<Optional<BlockPos>> DATA_BED =
+			SynchedEntityData.defineId(ShiftWorker.class, EntityDataSerializers.OPTIONAL_BLOCK_POS);
+	/** Whether it watches a player now (MOD-882): the stand's look about is off meanwhile. */
+	private static final EntityDataAccessor<Boolean> DATA_WATCHING =
+			SynchedEntityData.defineId(ShiftWorker.class, EntityDataSerializers.BOOLEAN);
+	/** How many times it has greeted; each change on the client starts the wave (MOD-882). */
+	private static final EntityDataAccessor<Integer> DATA_GREETS =
+			SynchedEntityData.defineId(ShiftWorker.class, EntityDataSerializers.INT);
+
+	/** Ticks the client takes to turn its eyes to a player or away, for the stand's look about. */
+	private static final float WATCH_EASE_TICKS = 8.0F;
 
 	/** Base walking speed, a villager's. */
 	public static final double MOVEMENT_SPEED = 0.5;
@@ -78,6 +100,8 @@ public class ShiftWorker extends PathfinderMob {
 	private long batteryClock = -1L;
 	/** Server only: the fraction of an EU drained but not yet taken from the battery; not saved. */
 	private double drainCarry;
+	/** Server only: on its way to its charging bed, or lying on it (MOD-862, R101); not saved. */
+	private boolean goingToBed;
 	/** Server only: game time of the last wound, -1 — none; one fight is one service mark. */
 	private long lastHurtAt = -1L;
 	/**
@@ -85,6 +109,11 @@ public class ShiftWorker extends PathfinderMob {
 	 * calls before this class's fields are initialised — so the field has no initialiser of its own.
 	 */
 	private @Nullable ShiftWorkerFleeGoal fleeGoal;
+	/** Client only: how far it has turned to a watched player, now and a tick ago (0 to 1). */
+	private float watchBlend;
+	private float watchBlendO;
+	/** Client only: {@code tickCount} when the last greeting began, -1 — none. */
+	private int greetStartedAt = -1;
 
 	public ShiftWorker(EntityType<? extends ShiftWorker> type, Level level) {
 		super(type, level);
@@ -124,6 +153,9 @@ public class ShiftWorker extends PathfinderMob {
 		entityData.define(DATA_NUMBER, "");
 		entityData.define(DATA_LOOK, "");
 		entityData.define(DATA_SLIM, false);
+		entityData.define(DATA_BED, Optional.empty());
+		entityData.define(DATA_WATCHING, false);
+		entityData.define(DATA_GREETS, 0);
 	}
 
 	@Override
@@ -146,6 +178,45 @@ public class ShiftWorker extends PathfinderMob {
 			}
 		}
 		super.tick();
+		if (level().isClientSide()) {
+			watchBlendO = watchBlend;
+			float target = entityData.get(DATA_WATCHING) ? 1.0F : 0.0F;
+			float step = 1.0F / WATCH_EASE_TICKS;
+			watchBlend = watchBlend < target ? Math.min(target, watchBlend + step)
+					: Math.max(target, watchBlend - step);
+		}
+	}
+
+	/**
+	 * A change of the greeting count starts the wave on the client. The count that comes with the body when it is
+	 * first seen ({@code tickCount} 0) is a past greeting, not a new one.
+	 */
+	@Override
+	public void onSyncedDataUpdated(EntityDataAccessor<?> accessor) {
+		super.onSyncedDataUpdated(accessor);
+		if (DATA_GREETS.equals(accessor) && level().isClientSide() && tickCount > 0) {
+			greetStartedAt = tickCount;
+		}
+	}
+
+	/** Server side: the worker starts or stops watching a player (MOD-882, {@link ShiftWorkerLookGoal}). */
+	public void setWatching(boolean watching) {
+		entityData.set(DATA_WATCHING, watching);
+	}
+
+	/** Server side: the worker waves to a player who came up (MOD-882, {@link ShiftWorkerLookGoal}). */
+	public void greet() {
+		entityData.set(DATA_GREETS, entityData.get(DATA_GREETS) + 1);
+	}
+
+	/** Client side: how far it has turned to a watched player, 0 to 1, at {@code partialTick}. */
+	public float watching(float partialTick) {
+		return watchBlendO + (watchBlend - watchBlendO) * partialTick;
+	}
+
+	/** Client side: ticks since its greeting began, or -1 when it is not greeting. */
+	public float greetTicks(float partialTick) {
+		return greetStartedAt < 0 ? -1.0F : tickCount - greetStartedAt + partialTick;
 	}
 
 	@Override
@@ -215,6 +286,87 @@ public class ShiftWorker extends PathfinderMob {
 		this.drainCarry = carry;
 	}
 
+	/** Whether it is going to, or charging on, its house's charging bed (MOD-862). Server side. */
+	public boolean goingToBed() {
+		return goingToBed;
+	}
+
+	/** Server side, by {@code HouseCharging} only. */
+	public void setGoingToBed(boolean going) {
+		this.goingToBed = going;
+	}
+
+	/** The head cell of the charging bed the worker lies on, if it lies on one (R4-9). Both sides. */
+	public Optional<BlockPos> lyingOn() {
+		return entityData.get(DATA_BED);
+	}
+
+	/**
+	 * Lies down along the charging bed whose head is at {@code head} (owner's round 4 of 0.1.219, R4-9): the sleeping
+	 * pose, the head on the pillow, the body along the bed (the renderer turns it by {@link #getBedOrientation}). Not a
+	 * vanilla sleep: no sleeping position is set, which the game would clear at once, for the bed is not a vanilla
+	 * bed. Server side, by {@code HouseCharging} only.
+	 */
+	public void lieDown(BlockPos head) {
+		getNavigation().stop();
+		setPose(Pose.SLEEPING);
+		setPos(head.getX() + 0.5, head.getY() + ChargingBedBlock.SLEEP_HEIGHT, head.getZ() + 0.5);
+		setDeltaMovement(Vec3.ZERO);
+		entityData.set(DATA_BED, Optional.of(head));
+		// A lying worker keeps its head still: no goal may turn it while it charges (round 4 of 0.1.219).
+		goalSelector.disableControlFlag(Goal.Flag.LOOK);
+		setWatching(false);
+		setYHeadRot(getYRot());
+	}
+
+	/** Gets up from its charging bed and steps off it beside the bed. Server side, by {@code HouseCharging} only. */
+	public void getUp() {
+		Optional<BlockPos> bed = lyingOn();
+		if (bed.isEmpty()) {
+			return;
+		}
+		entityData.set(DATA_BED, Optional.empty());
+		goalSelector.enableControlFlag(Goal.Flag.LOOK);
+		setPose(Pose.STANDING);
+		Vec3 stand = standUpSpot(bed.get());
+		setPos(stand.x, stand.y, stand.z);
+	}
+
+	/** A free cell beside the bed to stand up in: round the head, then round the foot; else on the head itself. */
+	private Vec3 standUpSpot(BlockPos head) {
+		BlockState state = level().getBlockState(head);
+		List<BlockPos> cells = new ArrayList<>(List.of(head));
+		if (state.getBlock() instanceof ChargingBedBlock) {
+			cells.add(ChargingBedBlock.otherHalf(head, state));
+		}
+		for (BlockPos cell : cells) {
+			for (Direction side : Direction.Plane.HORIZONTAL) {
+				Vec3 spot = DismountHelper.findSafeDismountLocation(getType(), level(), cell.relative(side), true);
+				if (spot != null) {
+					return spot;
+				}
+			}
+		}
+		return Vec3.atBottomCenterOf(head.above());
+	}
+
+	/** Lying on a charging bed: the bed's way, from foot to head, as a vanilla bed tells a sleeper. */
+	@Override
+	public @Nullable Direction getBedOrientation() {
+		Optional<BlockPos> bed = lyingOn();
+		if (bed.isPresent()) {
+			BlockState state = level().getBlockState(bed.get());
+			return state.getBlock() instanceof ChargingBedBlock ? state.getValue(ChargingBedBlock.FACING) : null;
+		}
+		return super.getBedOrientation();
+	}
+
+	/** A worker lying on its bed is not shoved off it. */
+	@Override
+	public boolean isPushable() {
+		return lyingOn().isEmpty() && super.isPushable();
+	}
+
 	/** Game time of the last wound, -1 — none. Server side. */
 	public long lastHurtAt() {
 		return lastHurtAt;
@@ -254,6 +406,7 @@ public class ShiftWorker extends PathfinderMob {
 		}
 		boolean hurt = super.hurtServer(level, source, damage);
 		if (hurt) {
+			getUp(); // a wound wakes it, as it wakes a sleeper in a vanilla bed
 			ShiftWorkerBattery.noteWound(level, this, source);
 		}
 		return hurt;

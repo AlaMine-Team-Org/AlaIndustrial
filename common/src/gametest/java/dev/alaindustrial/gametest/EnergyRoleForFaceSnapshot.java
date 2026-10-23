@@ -107,6 +107,8 @@ final class EnergyRoleForFaceSnapshot {
 			"copper_cable@insulated_electrum_cable[breaker_open=false,down=false,east=false,east_low=fa"
 					+ "lse,north=false,north_low=false,south=false,south_low=false,up=false,west=false,west_low=f"
 					+ "alse] DUNSWE=BBBBBB",
+			"town_road[down=false,east=false,north=false,powered=false,riser=false,south=false,up=false"
+					+ ",west=false] DUNSWE=BBBBBB",
 			"macerator[facing=north,lit=true] DUNSWE=IINIII",
 			"macerator[facing=north,lit=false] DUNSWE=IINIII",
 			"macerator[facing=south,lit=true] DUNSWE=IIINII",
@@ -370,6 +372,10 @@ final class EnergyRoleForFaceSnapshot {
 			"town_dispatcher[facing=east,lit=true] DUNSWE=NNNNNN",
 			"town_dispatcher[facing=east,lit=false] DUNSWE=NNNNNN",
 			"drone_nest[] DUNSWE=NNNNNN",
+			"house_inlet[facing=north] DUNSWE=NNINNN",
+			"house_inlet[facing=south] DUNSWE=NNNINN",
+			"house_inlet[facing=west] DUNSWE=NNNNIN",
+			"house_inlet[facing=east] DUNSWE=NNNNNI",
 			"fluid_pipe[down_mode=disabled,east_mode=disabled,filled=false,north_mode=disabled,south_mo"
 					+ "de=disabled,up_mode=disabled,west_mode=disabled] DUNSWE=NNNNNN",
 			"fluid_pipe@fluid_pipe_advanced[down_mode=disabled,east_mode=disabled,filled=false,north_mo"

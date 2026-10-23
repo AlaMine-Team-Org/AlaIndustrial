@@ -61,6 +61,8 @@ public final class ShiftWorkerCardLayout {
 	public static final int STAT_COUNT = 146;
 	public static final int STAT_CAPTION = 172;
 	public static final int SMALL_BUTTON = 12;
+	/** The «Relocate» button on the home row (MOD-862); the arrow picking the house is {@link #SMALL_BUTTON} wide. */
+	public static final int RELOCATE_W = 64;
 
 	private ShiftWorkerCardLayout() {
 	}
@@ -70,9 +72,17 @@ public final class ShiftWorkerCardLayout {
 		return PANEL_W - MARGIN - RIGHT_X;
 	}
 
-	/** The record module's height: the town, the status, the assignment, and the death line of a dead worker. */
+	/**
+	 * The record module's height: the town, the status, the assignment, and the home of a living worker (MOD-862) or
+	 * the death line of a dead one.
+	 */
 	public static int recordHeight(boolean alive) {
-		return MODULE_FIRST_ROW + (alive ? 3 : 4) * ROW + 1;
+		return MODULE_FIRST_ROW + 4 * ROW + 1;
+	}
+
+	/** The top of the record module's home row, where «Relocate» stands (MOD-862). */
+	public static int homeRowY() {
+		return TOP + MODULE_FIRST_ROW + 3 * ROW;
 	}
 
 	/** The top of the «rank and level» module. */

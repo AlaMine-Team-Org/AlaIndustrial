@@ -168,10 +168,12 @@ class WorkJournalTest {
 	@Test
 	void theHallNewsLinesAreWordedInEveryLocale() throws IOException {
 		Map<String, String> placeholders = Map.of(
-				"settlement.alaindustrial.chat.stage_done.needs", "%1$s %2$s %3$s %4$s",
-				"settlement.alaindustrial.chat.stage_done.ready", "%1$s %2$s %3$s %4$s",
-				"settlement.alaindustrial.chat.stage_done.last", "%1$s %2$s %3$s",
-				"settlement.alaindustrial.chat.hall_restored", "%1$s %2$s",
+				"settlement.alaindustrial.chat.header", "%1$s %2$s",
+				"settlement.alaindustrial.chat.stage_done", "%1$s",
+				"settlement.alaindustrial.chat.next.needs", "%1$s",
+				"settlement.alaindustrial.chat.next.ready", "%1$s",
+				"settlement.alaindustrial.chat.hall_restored", "",
+				"settlement.alaindustrial.chat.hall_restored.reward", "%s",
 				Kind.RESTORED.key(), "%s");
 		Path dir = Path.of("src/main/resources/assets/alaindustrial/lang");
 		List<Path> files;

@@ -707,6 +707,44 @@
           ]
         },
         {
+          "id": "town_road",
+          "title": "Estrada da vila",
+          "icon": "alaindustrial:town_road",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Estrada da vila",
+              "text": "Um bloco inteiro rente ao chão: uma grade de ferro temperado escuro com um fio de cobre isolado por dentro; um segmento da rede de energia pelo qual o núcleo da vila alimenta as casas dos trabalhadores de turno. Os drones de construção fazem a rede de estradas da vila."
+            },
+            {
+              "type": "stats",
+              "title": "Estatísticas",
+              "lines": [
+                "Energia: 12 EU/t",
+                "Buffer: 12 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação com forma",
+              "grid": [
+                "alaindustrial:tempered_iron_bars",
+                "alaindustrial:tempered_iron_bars",
+                "alaindustrial:tempered_iron_bars",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:insulated_copper_cable",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone"
+              ],
+              "result_id": "alaindustrial:town_road",
+              "result_count": 3
+            }
+          ]
+        },
+        {
           "id": "gold_cable",
           "title": "Cabo de Ouro",
           "icon": "alaindustrial:gold_cable",
@@ -3321,7 +3359,7 @@
             {
               "type": "text",
               "title": "Placa gravada 0",
-              "text": "Placas decorativas de ardósia com um dígito gravado ou o fragmento de uma letra — delas é feita a placa do registro anterior nos laboratórios abandonados. Sem receita."
+              "text": "Placas decorativas de ardósia com um dígito, uma letra ou o fragmento de uma letra gravados. Delas são feitas a placa do registro anterior nos laboratórios abandonados e a placa com o número nas casas das vilas operárias. Sem receita."
             }
           ]
         },
@@ -3764,6 +3802,44 @@
           ]
         },
         {
+          "id": "house_inlet",
+          "title": "Entrada da Casa",
+          "icon": "alaindustrial:house_inlet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Entrada da Casa",
+              "text": "O bloco de parede por onde o cabo entra na casa de um trabalhador de turno. Recebe EU só pela face externa e guarda uma reserva para a cama de recarga da casa; é a âncora da casa na vila, e a partir dele se demarca uma nova casa."
+            },
+            {
+              "type": "stats",
+              "title": "Estatísticas",
+              "lines": [
+                "Energia: 2 000 EU",
+                "Buffer: 2000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação com forma",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:house_inlet",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "industrial_workbench",
           "title": "Bancada industrial",
           "icon": "alaindustrial:industrial_workbench",
@@ -3789,6 +3865,80 @@
                 "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:industrial_workbench",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "drone_nest",
+          "title": "Ninho de drone",
+          "icon": "alaindustrial:drone_nest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Ninho de drone",
+              "text": "A plataforma de pouso de um drone de construção sobre a prefeitura; nela se coloca um drone como item, e o drone pega um edifício da fila de pedidos da vila, limpa os escombros, faz a estrada, completa a fundação e o reconstrói bloco a bloco até a aparência intacta; sem trabalho, grava as placas das casas. Só é carregado pelo núcleo do assentamento, e o nível do núcleo define quantos ninhos funcionam."
+            },
+            {
+              "type": "stats",
+              "title": "Estatísticas",
+              "lines": [
+                "Energia: 20 EU por bloco"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação com forma",
+              "grid": [
+                "alaindustrial:copper_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_cable",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:drone_nest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "town_dispatcher",
+          "title": "Despachante da vila",
+          "icon": "alaindustrial:town_dispatcher",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Despachante da vila",
+              "text": "A mesa de obras de uma vila operária, na prefeitura dela: monta a planta de restauração a partir de três folhas, mantém a fila de pedidos de edifícios, guarda o buffer de materiais de onde os drones de construção tiram seus blocos e mostra se os drones estão trabalhando; um por vila."
+            },
+            {
+              "type": "stats",
+              "title": "Estatísticas",
+              "lines": [
+                "Capacidade: 27 espaços"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação com forma",
+              "grid": [
+                "alaindustrial:copper_plate",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_plate",
+                "alaindustrial:battery",
+                "alaindustrial:copper_plate"
+              ],
+              "result_id": "alaindustrial:town_dispatcher",
               "result_count": 1
             }
           ]
@@ -3831,7 +3981,7 @@
             {
               "type": "text",
               "title": "Cápsula de recepção",
-              "text": "Traz de volta os trabalhadores de turno de um assentamento um de cada vez em troca de EU e materiais — só enquanto o núcleo do assentamento está aceso, a vila tem restaurador e o limite de trabalhadores não foi atingido; cada trabalhador novo recebe um número próprio, único no mundo."
+              "text": "Traz de volta os trabalhadores de turno de um assentamento um de cada vez em troca de EU e materiais, só enquanto o núcleo do assentamento está aceso, a vila tem restaurador, o limite de trabalhadores não foi atingido e há uma casa livre e habitável à espera do novo trabalhador; cada trabalhador novo recebe um número próprio, único no mundo."
             },
             {
               "type": "stats",
@@ -3919,6 +4069,36 @@
               "lines": [
                 "Energia: 1 000 EU de trabalho de máquinas = 1 ponto de maestria"
               ]
+            }
+          ]
+        },
+        {
+          "id": "charging_bed",
+          "title": "Cama de Recarga",
+          "icon": "alaindustrial:charging_bed",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Cama de Recarga",
+              "text": "Uma cama de dois blocos na casa de um trabalhador de turno, como uma cama comum: o trabalhador com a bateria fraca se deita nela e recarrega; ela não guarda energia própria e a tira da entrada da sua casa."
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação com forma",
+              "grid": [
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:copper_plate",
+                "alaindustrial:battery",
+                "alaindustrial:copper_plate",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:charging_bed",
+              "result_count": 1
             }
           ]
         },
@@ -4294,7 +4474,7 @@
             {
               "type": "text",
               "title": "Núcleo do assentamento",
-              "text": "O coração de uma vila operária, na prefeitura dela — enquanto a rede lhe fornece EU, mantém o território do assentamento, define quantas casas e trabalhadores de turno a vila pode ter e lembra do seu restaurador; sem energia, ele se apaga e a vila dorme."
+              "text": "O coração de uma vila operária, na prefeitura dela: enquanto a rede lhe fornece EU, mantém o território do assentamento, define quantas casas e trabalhadores de turno a vila pode ter e lembra do seu restaurador; sem energia, ele se apaga e a vila dorme."
             },
             {
               "type": "stats",
@@ -4639,6 +4819,134 @@
           ]
         },
         {
+          "id": "town_hall_plan_sheet",
+          "title": "Folha da planta da prefeitura",
+          "icon": "alaindustrial:town_hall_plan_sheet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Folha da planta da prefeitura",
+              "text": "Uma das três folhas da planta de restauração da prefeitura de uma vila operária — fica num lugar fixo de toda vila do seu estilo, e uma perdida pode ser fabricada; três folhas do mesmo estilo são juntadas numa planta de restauração no despachante."
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação com forma",
+              "grid": [
+                "minecraft:paper",
+                "minecraft:lapis_lazuli",
+                "minecraft:paper",
+                "minecraft:iron_ingot",
+                "minecraft:sandstone",
+                "minecraft:iron_ingot",
+                "minecraft:lapis_lazuli",
+                "minecraft:bricks",
+                "minecraft:lapis_lazuli"
+              ],
+              "result_id": "alaindustrial:town_hall_plan_sheet",
+              "result_count": 1,
+              "variants": [
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:iron_ingot",
+                    "minecraft:sandstone",
+                    "minecraft:iron_ingot",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:bricks",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "Fabricação com forma",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:sandstone",
+                    "minecraft:oak_door",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:white_bed",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "Fabricação com forma",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:redstone",
+                    "minecraft:sandstone",
+                    "minecraft:redstone",
+                    "minecraft:lapis_lazuli",
+                    "alaindustrial:electronic_circuit",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "Fabricação com forma",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:iron_ingot",
+                    "minecraft:grass_block",
+                    "minecraft:iron_ingot",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:bricks",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "Fabricação com forma",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:grass_block",
+                    "minecraft:oak_door",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:white_bed",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "Fabricação com forma",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:redstone",
+                    "minecraft:grass_block",
+                    "minecraft:redstone",
+                    "minecraft:lapis_lazuli",
+                    "alaindustrial:electronic_circuit",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "Fabricação com forma",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
           "id": "machine_casing",
           "title": "Estrutura de Máquina",
           "icon": "alaindustrial:machine_casing",
@@ -4785,6 +5093,178 @@
               ],
               "result_id": "alaindustrial:mutation_chip_duplicate",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "house_plan",
+          "title": "Planta de Casa",
+          "icon": "alaindustrial:house_plan",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Planta de Casa",
+              "text": "A planta de um dos quatro tipos de casa-cápsula de uma vila operária. A vila a aprende uma vez e para sempre, e então os drones restauram e constroem casas desse tipo. Fica nas ruínas da sua casa, ou pode ser fabricada."
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação com forma",
+              "grid": [
+                "minecraft:paper",
+                "minecraft:oak_door",
+                "minecraft:paper",
+                "minecraft:lapis_lazuli",
+                "minecraft:sandstone",
+                "minecraft:lapis_lazuli",
+                "minecraft:paper",
+                "minecraft:lantern",
+                "minecraft:paper"
+              ],
+              "result_id": "alaindustrial:house_plan",
+              "result_count": 1,
+              "variants": [
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:sandstone",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:lantern",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "Fabricação com forma",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:sandstone",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:barrel",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "Fabricação com forma",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:sandstone",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:chest",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "Fabricação com forma",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:sandstone",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:flower_pot",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "Fabricação com forma",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:grass_block",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:lantern",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "Fabricação com forma",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:grass_block",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:barrel",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "Fabricação com forma",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:grass_block",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:chest",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "Fabricação com forma",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:grass_block",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:flower_pot",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "Fabricação com forma",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "restoration_plan",
+          "title": "Planta de restauração",
+          "icon": "alaindustrial:restoration_plan",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Planta de restauração",
+              "text": "A planta pela qual um drone de construção restaura um prédio de uma vila operária; ela guarda só uma referência ao modelo intacto do prédio do seu estilo. Montada no despachante a partir de três folhas da planta."
             }
           ]
         },

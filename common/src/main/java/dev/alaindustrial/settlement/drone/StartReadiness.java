@@ -31,12 +31,26 @@ public final class StartReadiness {
 		/** No plan in the plan slot, or a plan of another hall. */
 		NO_PLAN("no_plan"),
 		/** No nest with a drone stands over the hall. */
-		NO_DRONE("no_drone");
+		NO_DRONE("no_drone"),
+		/** The building is a house and the town hall is not restored yet (MOD-862, R81). */
+		HALL_FIRST("hall_first"),
+		/** The building is a house and the tier's house limit is reached (MOD-862, R5, R110). */
+		HOUSE_LIMIT("house_limit"),
+		/**
+		 * The building is not restored, yet the drones have nothing left to do on it: a block they never touch stands
+		 * where the plan wants another (round 5 of 0.1.219). The «Task» tab names it.
+		 */
+		NOTHING_LEFT("nothing_left");
 
 		private final String suffix;
 
 		Blocker(String suffix) {
 			this.suffix = suffix;
+		}
+
+		/** The suffix a checklist's {@code waitFor} names this blocker by. */
+		public String suffix() {
+			return suffix;
 		}
 
 		/** The translation key of this blocker's line. */
@@ -83,6 +97,11 @@ public final class StartReadiness {
 		}
 		if (readyNests <= 0) {
 			out.add(Blocker.NO_DRONE);
+		}
+		for (Blocker blocker : Blocker.values()) {
+			if (blocker.suffix.equals(list.waitFor())) {
+				out.add(blocker);
+			}
 		}
 		return List.copyOf(out);
 	}

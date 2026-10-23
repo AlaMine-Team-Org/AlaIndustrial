@@ -190,11 +190,18 @@ public final class AlaTownPlanSheetScenarios {
 						continue;
 					}
 					ResourceKey<LootTable> table = container.getLootTable();
-					if (table == null || !table.identifier().getNamespace().equals(Industrialization.MOD_ID)
-							|| !table.identifier().getPath().startsWith(prefix)) {
+					if (table == null || !table.identifier().getNamespace().equals(Industrialization.MOD_ID)) {
 						continue;
 					}
-					int sheet = Character.getNumericValue(table.identifier().getPath().charAt(prefix.length()));
+					String path = table.identifier().getPath();
+					// MOD-862: the sheet-2 house's own table holds its house plan and sheet 2.
+					if (path.endsWith("_and_plan_sheet_2")) {
+						path = prefix + "2";
+					}
+					if (!path.startsWith(prefix)) {
+						continue;
+					}
+					int sheet = Character.getNumericValue(path.charAt(prefix.length()));
 					out.computeIfAbsent(sheet, k -> new ArrayList<>()).add(be.getBlockPos());
 				}
 			}

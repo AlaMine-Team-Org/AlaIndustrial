@@ -1,5 +1,6 @@
 package dev.alaindustrial.command.demo;
 
+import dev.alaindustrial.block.ChargingBedBlock;
 import dev.alaindustrial.block.FluidTapBlock;
 import dev.alaindustrial.block.ReceptionCapsuleBlock;
 import dev.alaindustrial.block.TownDispatcherBlock;
@@ -13,6 +14,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.WallTorchBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraft.world.level.material.Fluids;
 
 /**
@@ -231,6 +233,22 @@ final class MiscZone implements DemoZone {
 		w.place(w.origin().offset(74, 1, 24), ModContent.TOWN_DISPATCHER.get().defaultBlockState()
 				.setValue(TownDispatcherBlock.FACING, Direction.NORTH));
 		w.set(73, 1, 24, ModContent.DRONE_NEST.get());
+		houseFittings(w);
+	}
+
+	/**
+	 * A house inlet and a charging bed (MOD-876) east of the dispatcher: the inlet's socket toward the zone's camera
+	 * (north), the bed's foot the same way. Unwired, as a player finds them in a town's ruined house.
+	 */
+	private static void houseFittings(StandWriter w) {
+		w.set(75, 1, 24, ModContent.HOUSE_INLET.get());
+		// The bed is two cells (R4-9): the foot toward the camera, the head behind it.
+		BlockState bed = ModContent.CHARGING_BED.get().defaultBlockState()
+				.setValue(ChargingBedBlock.FACING, Direction.SOUTH);
+		w.place(w.origin().offset(77, 1, 23), bed.setValue(ChargingBedBlock.PART, BedPart.FOOT));
+		w.place(w.origin().offset(77, 1, 24), bed.setValue(ChargingBedBlock.PART, BedPart.HEAD));
+		// A town road (MOD-861) in front of the inlet's socket: the first segment of the line to the town's core.
+		w.set(75, 1, 23, ModContent.TOWN_ROAD.get());
 	}
 
 	/**

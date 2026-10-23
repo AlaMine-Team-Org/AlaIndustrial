@@ -11,6 +11,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.state.properties.StructureMode;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
@@ -25,7 +26,11 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
  * <p>{@code /ala town edit <style> <piece> intact} sets out the intact bench of one piece instead: the building the
  * drone restores the ruin to, saved as {@code alaindustrial:ala_town/<style>/intact/<piece>} and taken into the mod
  * with {@code python tools/import_town_templates.py --intact}; {@code ... compare} puts the ruin beside it as a
- * reference ({@link TownEditBench#planIntact}).
+ * reference ({@link TownEditBench#planIntact}); {@code ... intact candidate <variant>} starts that bench from a
+ * candidate written into the world by {@code tools/gen_town_house_candidates.py}
+ * ({@link TownEditBench#planCandidate}).
+ *
+ * <p>{@code /ala town supplies} (0.1.219) is the branch of {@link TownSuppliesCommand}.
  */
 final class TownEditCommand {
 
@@ -38,6 +43,7 @@ final class TownEditCommand {
 	static LiteralArgumentBuilder<CommandSourceStack> tree() {
 		return Commands.literal("town")
 				.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+				.then(TownSuppliesCommand.tree())
 				.then(Commands.literal("edit")
 						.then(Commands.argument("style", StringArgumentType.word())
 								.suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
@@ -51,7 +57,12 @@ final class TownEditCommand {
 										.executes(ctx -> run(ctx.getSource(),
 												StringArgumentType.getString(ctx, "style"),
 												StringArgumentType.getString(ctx, "piece")))
-										.then(Commands.literal("intact").executes(ctx -> runIntact(ctx, false)))
+										.then(Commands.literal("intact").executes(ctx -> runIntact(ctx, false))
+													.then(Commands.literal("candidate").then(Commands
+															.argument("variant", StringArgumentType.word())
+															.suggests((ctx, builder) -> SharedSuggestionProvider
+																	.suggest(candidates(ctx), builder))
+															.executes(TownEditCommand::runCandidate))))
 										.then(Commands.literal("compare").executes(ctx -> runIntact(ctx, true))))));
 	}
 
@@ -110,6 +121,47 @@ final class TownEditCommand {
 				+ "its structure block (north-west corner), then run python tools/import_town_templates.py --intact."
 				+ (withRuin ? " The ruin to the west is a reference: its structure block is in LOAD mode, leave it."
 						: "")).withStyle(ChatFormatting.AQUA), false);
+		return slots.size();
+	}
+
+	private static List<String> candidates(CommandContext<CommandSourceStack> ctx) {
+		return TownEditBench.candidates(templates(ctx.getSource()), StringArgumentType.getString(ctx, "style"),
+				StringArgumentType.getString(ctx, "piece"));
+	}
+
+	/**
+	 * {@code ... intact candidate <variant>}: the intact bench of one piece started from a candidate written into the
+	 * world by {@code tools/gen_town_house_candidates.py}, with the ruin beside it as a reference.
+	 */
+	private static int runCandidate(CommandContext<CommandSourceStack> ctx) {
+		CommandSourceStack source = ctx.getSource();
+		String style = StringArgumentType.getString(ctx, "style");
+		String piece = StringArgumentType.getString(ctx, "piece");
+		String variant = StringArgumentType.getString(ctx, "variant");
+		if (!known(source, style, piece)) {
+			return 0;
+		}
+		Identifier candidate = TownEditBench.candidate(style, piece, variant);
+		List<TownEditBench.Slot> slots = TownEditBench.planCandidate(templates(source), style, piece, candidate);
+		if (slots.isEmpty()) {
+			source.sendFailure(Component.literal("No candidate " + candidate + " in this world. Write the candidates "
+					+ "with python tools/gen_town_house_candidates.py --world <world folder>. Candidates of '" + style
+					+ "/" + piece + "': " + String.join(", ", candidates(ctx)) + "."));
+			return 0;
+		}
+		BlockPos origin = BlockPos.containing(source.getPosition()).offset(AWAY, 0, AWAY);
+		ServerLevel level = source.getLevel();
+		for (TownEditBench.Slot slot : slots) {
+			BlockPos at = TownEditBench.place(level, origin, slot);
+			String what = slot.mode() == StructureMode.LOAD ? "ruin (reference, LOAD mode)" : "candidate " + variant;
+			source.sendSuccess(() -> Component.literal("  " + slot.piece() + " " + what + ": structure block at "
+					+ at.getX() + " " + at.getY() + " " + at.getZ()).withStyle(ChatFormatting.GRAY), false);
+		}
+		source.sendSuccess(() -> Component.literal("Placed the intact bench of '" + style + "/" + piece
+				+ "', starting from " + candidate + ". Finish the building in the frame, press SAVE in its structure "
+				+ "block (north-west corner) to save it as " + TownEditBench.intact(style, piece)
+				+ ", then run python tools/import_town_templates.py --intact. The ruin to the west is a reference: its "
+				+ "structure block is in LOAD mode, leave it.").withStyle(ChatFormatting.AQUA), false);
 		return slots.size();
 	}
 

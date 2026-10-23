@@ -5,14 +5,23 @@ import dev.alaindustrial.chat.ModChat;
 import dev.alaindustrial.client.ServerBalance;
 import dev.alaindustrial.core.tooltip.HasMachineTooltip;
 import dev.alaindustrial.core.tooltip.MachineTooltipSpec;
+import dev.alaindustrial.item.misc.HousePlanItem;
+import dev.alaindustrial.item.misc.RestorationPlan;
+import dev.alaindustrial.item.misc.RestorationPlanItem;
 import dev.alaindustrial.settlement.Settlement;
 import dev.alaindustrial.settlement.SettlementRegistry;
+import dev.alaindustrial.settlement.drone.HallBuildNews;
+import dev.alaindustrial.settlement.drone.TownHall;
+import dev.alaindustrial.settlement.works.HousePlans;
+import dev.alaindustrial.settlement.works.TownWorks;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -27,6 +36,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.phys.BlockHitResult;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -112,6 +122,45 @@ public class SettlementCoreBlock extends AbstractMachineBlock implements HasMach
 		return super.getStateForPlacement(context);
 	}
 
+	/** The overlay line of a house plan the town knows already (round 2 of 0.1.219, Q4). */
+	public static final String PLAN_ALREADY_KNOWN = "settlement.alaindustrial.house_plan.already_known";
+	/** The overlay line of a house plan right-clicked onto the core by anybody but the restorer. */
+	public static final String PLAN_NOT_RESTORER = "settlement.alaindustrial.house_plan.not_restorer";
+
+	/**
+	 * A house plan of the town's style right-clicked onto the core is learned by the town and used up (round 2 of
+	 * 0.1.219, Q4) — by the town's restorer only; a plan the town knows stays in the hand. Any other item: as a
+	 * machine.
+	 */
+	@Override
+	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
+			Player player, InteractionHand hand, BlockHitResult hit) {
+		if (!(stack.getItem() instanceof HousePlanItem)) {
+			return super.useItemOn(stack, state, level, pos, player, hand, hit);
+		}
+		RestorationPlan plan = RestorationPlanItem.planOf(stack);
+		if (!(level instanceof ServerLevel server) || !(player instanceof ServerPlayer serverPlayer)
+				|| !(level.getBlockEntity(pos) instanceof SettlementCoreBlockEntity core) || plan == null) {
+			return InteractionResult.SUCCESS;
+		}
+		Optional<Settlement> town = core.settlement();
+		if (town.isEmpty() || !town.get().isOwnedBy(player.getUUID())) {
+			serverPlayer.sendOverlayMessage(Component.translatable(PLAN_NOT_RESTORER));
+			return InteractionResult.SUCCESS;
+		}
+		if (!town.get().style().isEmpty() && !town.get().style().equals(plan.style().toString())) {
+			return super.useItemOn(stack, state, level, pos, player, hand, hit);
+		}
+		TownWorks works = SettlementRegistry.get(server.getServer()).works().town(town.get().id());
+		if (HousePlans.knows(works, TownHall.index(works), plan.template())) {
+			serverPlayer.sendOverlayMessage(Component.translatable(PLAN_ALREADY_KNOWN));
+			return InteractionResult.SUCCESS;
+		}
+		HallBuildNews.housePlanLearned(server, town.get().id(), plan.template());
+		stack.consume(1, player);
+		return InteractionResult.SUCCESS;
+	}
+
 	/** A core placed from an item takes its place in a town at once (R43). */
 	@Override
 	public void setPlacedBy(Level level, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
@@ -166,5 +215,11 @@ public class SettlementCoreBlock extends AbstractMachineBlock implements HasMach
 				List.of(MachineTooltipSpec.stat("energy_input", ServerBalance::settlementCoreEuPerTickLv)),
 				List.of(MachineTooltipSpec.stat("buffer", ServerBalance::settlementCoreBuffer),
 						MachineTooltipSpec.plain("range", ServerBalance::settlementRadiusLv)));
+	}
+
+	/** Its lines are whole sentences: broken to the width of a vanilla description (R4-3). */
+	@Override
+	public boolean wrapsTooltipLines() {
+		return true;
 	}
 }

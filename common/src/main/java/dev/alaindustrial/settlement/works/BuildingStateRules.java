@@ -75,6 +75,25 @@ public final class BuildingStateRules {
 	public record Verdict(BuildingState state, boolean everRestored, int allowedMissing, boolean justRestored) {
 	}
 
+	/**
+	 * The share a building shows in whole percent (owner's round 4 of 0.1.219, R4-1): a restored building — the rule
+	 * of R86 met — reads exactly 100, any other at most 99, so «done» and «100 %» never disagree. Below that it is the
+	 * share of its cells in place, rounded down; -1 for a building never measured.
+	 *
+	 * @param state   the building's state
+	 * @param matched cells that matched on the last full pass
+	 * @param total   cells the comparison counts; 0 — never measured
+	 */
+	public static int shownPercent(BuildingState state, int matched, int total) {
+		if (total <= 0) {
+			return -1;
+		}
+		if (state == BuildingState.INTACT || state == BuildingState.UPGRADED) {
+			return 100;
+		}
+		return (int) Math.min(99, (long) matched * 100 / total);
+	}
+
 	/** Whether {@code measure} meets the restoration rule at {@code restoredAt} (a share, 0..1). */
 	public static boolean meetsRestoration(Measure measure, double restoredAt) {
 		if (measure.total() == 0 || !measure.missingKeys().isEmpty()) {

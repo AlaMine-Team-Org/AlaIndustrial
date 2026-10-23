@@ -9,6 +9,7 @@ import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.settlement.Settlement;
 import dev.alaindustrial.settlement.SettlementRegistry;
 import dev.alaindustrial.settlement.drone.ConstructionDroneWork;
+import dev.alaindustrial.settlement.drone.DroneDoorways;
 import dev.alaindustrial.settlement.drone.DroneNestRules;
 import dev.alaindustrial.settlement.drone.DroneNestRules.Status;
 import dev.alaindustrial.settlement.drone.TownDroneRoster;
@@ -54,6 +55,8 @@ public final class DroneNestBlockEntity extends MachineBlockEntity {
 	private final TownBinding binding = new TownBinding();
 	private final DroneFlight flight = new DroneFlight();
 	private final ConstructionDroneWork work = new ConstructionDroneWork();
+	/** The doors, trapdoors and gates the drone opened on its route and shuts behind it (MOD-872). */
+	private final DroneDoorways doorways = new DroneDoorways();
 	private Status status = Status.NO_DRONE;
 	/** Whether a builder drone is docked in the nest (owner's round 1: the drone is its own item). Saved. */
 	private boolean hasDrone;
@@ -229,6 +232,9 @@ public final class DroneNestBlockEntity extends MachineBlockEntity {
 			long now) {
 		town.ifPresent(t -> roster(level).nestCheckIn(t.id(), worldPosition.asLong(), now, true));
 		DroneFlight.Phase phase = flight.tick();
+		if (phase != DroneFlight.Phase.HOME) {
+			doorways.tick(level, flight);
+		}
 		if (phase == DroneFlight.Phase.FLYING) {
 			return;
 		}
@@ -236,6 +242,7 @@ public final class DroneNestBlockEntity extends MachineBlockEntity {
 			ctx.ifPresent(c -> work.arrive(c, energy::drainInternal));
 			flight.turnBack(now, DroneNestRules.LANDING_PAUSE_TICKS);
 		} else {
+			doorways.shutAll(level);
 			flight.park();
 			roster(level).release(taker());
 			docked = DroneNestRules.DOCK_TICKS;
@@ -363,6 +370,9 @@ public final class DroneNestBlockEntity extends MachineBlockEntity {
 	public void preRemoveSideEffects(BlockPos pos, BlockState state) {
 		super.preRemoveSideEffects(pos, state);
 		leaveTown();
+		if (level instanceof ServerLevel serverLevel) {
+			doorways.shutAll(serverLevel);
+		}
 		if (hasDrone && level != null && !level.isClientSide()) {
 			Block.popResource(level, pos, ConstructionDroneItem.withCharge(energy.getAmount()));
 			hasDrone = false;
@@ -412,6 +422,7 @@ public final class DroneNestBlockEntity extends MachineBlockEntity {
 		binding.save(output);
 		flight.save(output);
 		work.save(output);
+		doorways.save(output);
 		output.putInt("Status", status.ordinal());
 		output.putInt("Docked", docked);
 		output.putBoolean("HasDrone", hasDrone);
@@ -423,6 +434,7 @@ public final class DroneNestBlockEntity extends MachineBlockEntity {
 		binding.load(input);
 		flight.load(input);
 		work.load(input);
+		doorways.load(input);
 		status = Status.byOrdinal(input.getIntOr("Status", 0));
 		docked = Math.max(0, input.getIntOr("Docked", 0));
 		hasDrone = input.getBooleanOr("HasDrone", false);

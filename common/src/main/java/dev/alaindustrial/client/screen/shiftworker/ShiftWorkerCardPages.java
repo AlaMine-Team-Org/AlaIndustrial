@@ -106,6 +106,13 @@ final class ShiftWorkerCardPages {
 				alive ? GuiStyle.TEXT : GuiStyle.STATUS_BLOCKING);
 		row += ROW;
 		line(ShiftWorkerCardText.assignment(card), inX, row, inW, GuiStyle.TEXT);
+		if (alive) {
+			row += ROW;
+			// Room on the right for the «Relocate» buttons when the owner can move the worker.
+			boolean movable = !card.freeHouses().isEmpty() && card.viewerIsOwner();
+			int homeW = movable ? inW - RELOCATE_W - SMALL_BUTTON - 4 : inW;
+			line(ShiftWorkerCardText.home(card), inX, row, homeW, GuiStyle.TEXT);
+		}
 		if (!alive) {
 			row += ROW;
 			Component deathLine = ShiftWorkerCardText.death(card).orElse(Component.empty());

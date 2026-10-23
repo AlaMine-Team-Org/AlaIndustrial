@@ -707,6 +707,44 @@
           ]
         },
         {
+          "id": "town_road",
+          "title": "Camino del poblado",
+          "icon": "alaindustrial:town_road",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Camino del poblado",
+              "text": "Un bloque completo al ras del suelo: una rejilla de hierro templado oscuro con un cable de cobre aislado dentro; un segmento de la red eléctrica por el que el núcleo del poblado alimenta las casas de los trabajadores de turno. Los drones de construcción tienden la red de caminos del poblado."
+            },
+            {
+              "type": "stats",
+              "title": "Estadísticas",
+              "lines": [
+                "Energía: 12 EU/t",
+                "Búfer: 12 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "alaindustrial:tempered_iron_bars",
+                "alaindustrial:tempered_iron_bars",
+                "alaindustrial:tempered_iron_bars",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:insulated_copper_cable",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone"
+              ],
+              "result_id": "alaindustrial:town_road",
+              "result_count": 3
+            }
+          ]
+        },
+        {
           "id": "gold_cable",
           "title": "Cable de oro",
           "icon": "alaindustrial:gold_cable",
@@ -3321,7 +3359,7 @@
             {
               "type": "text",
               "title": "Placa grabada 0",
-              "text": "Placas decorativas de pizarra con un dígito grabado o un fragmento de letra: con ellas se arma la placa del registro anterior en los laboratorios abandonados. Sin receta."
+              "text": "Placas decorativas de pizarra con un dígito, una letra o un fragmento de letra grabados. Con ellas se arman la placa del registro anterior en los laboratorios abandonados y la placa con número en las casas de los poblados obreros. Sin receta."
             }
           ]
         },
@@ -3764,6 +3802,44 @@
           ]
         },
         {
+          "id": "house_inlet",
+          "title": "Toma de la casa",
+          "icon": "alaindustrial:house_inlet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Toma de la casa",
+              "text": "El bloque de pared por el que un cable entra en la casa de un trabajador de turno. Solo recibe EU por su cara exterior y guarda una reserva para la cama de carga de la casa; es el ancla de la casa en el poblado y desde él se traza una casa nueva."
+            },
+            {
+              "type": "stats",
+              "title": "Estadísticas",
+              "lines": [
+                "Energía: 2 000 EU",
+                "Búfer: 2000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:house_inlet",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "industrial_workbench",
           "title": "Mesa de trabajo industrial",
           "icon": "alaindustrial:industrial_workbench",
@@ -3789,6 +3865,80 @@
                 "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:industrial_workbench",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "drone_nest",
+          "title": "Nido de dron",
+          "icon": "alaindustrial:drone_nest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Nido de dron",
+              "text": "La plataforma de aterrizaje de un dron de construcción sobre el ayuntamiento; en ella se coloca un dron como objeto y el dron toma un edificio de la cola de pedidos del poblado, retira sus escombros, tiende su camino, rellena sus cimientos y lo reconstruye bloque a bloque hasta su aspecto intacto, y sin trabajo graba las placas de las casas; solo lo carga el núcleo del poblado, y el nivel del núcleo fija cuántos nidos funcionan."
+            },
+            {
+              "type": "stats",
+              "title": "Estadísticas",
+              "lines": [
+                "Energía: 20 EU por bloque"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "alaindustrial:copper_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_cable",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:drone_nest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "town_dispatcher",
+          "title": "Despachador del pueblo",
+          "icon": "alaindustrial:town_dispatcher",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Despachador del pueblo",
+              "text": "La mesa de obras de un poblado obrero, en su ayuntamiento: arma el plano de restauración a partir de tres hojas, lleva la cola de pedidos de edificios, guarda el búfer de materiales del que los drones de construcción toman sus bloques y muestra si los drones están trabajando; uno por poblado."
+            },
+            {
+              "type": "stats",
+              "title": "Estadísticas",
+              "lines": [
+                "Capacidad: 27 ranuras"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "alaindustrial:copper_plate",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_plate",
+                "alaindustrial:battery",
+                "alaindustrial:copper_plate"
+              ],
+              "result_id": "alaindustrial:town_dispatcher",
               "result_count": 1
             }
           ]
@@ -3831,7 +3981,7 @@
             {
               "type": "text",
               "title": "Cápsula de recepción",
-              "text": "Trae de regreso a los trabajadores de turno de un asentamiento uno por uno a cambio de EU y materiales, solo mientras el núcleo del asentamiento está encendido, el poblado tiene restaurador y no se ha alcanzado su límite de trabajadores; cada trabajador nuevo recibe un número propio, único en el mundo."
+              "text": "Trae de regreso a los trabajadores de turno de un poblado uno por uno a cambio de EU y materiales, solo mientras el núcleo del poblado está encendido, el poblado tiene restaurador, no se ha alcanzado su límite de trabajadores y hay una casa libre habitable para el nuevo trabajador; cada trabajador nuevo recibe un número propio, único en el mundo."
             },
             {
               "type": "stats",
@@ -3919,6 +4069,36 @@
               "lines": [
                 "Energía: 1 000 EU de trabajo de máquinas = 1 punto de maestría"
               ]
+            }
+          ]
+        },
+        {
+          "id": "charging_bed",
+          "title": "Cama de carga",
+          "icon": "alaindustrial:charging_bed",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Cama de carga",
+              "text": "Una cama de dos bloques en la casa de un trabajador de turno, como una cama normal: un trabajador con la batería baja se acuesta en ella y se carga; no guarda energía propia y la saca de la toma de su casa."
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:copper_plate",
+                "alaindustrial:battery",
+                "alaindustrial:copper_plate",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:charging_bed",
+              "result_count": 1
             }
           ]
         },
@@ -4294,7 +4474,7 @@
             {
               "type": "text",
               "title": "Núcleo del asentamiento",
-              "text": "El corazón de un poblado obrero, en su ayuntamiento: mientras la red le da EU, mantiene el territorio del asentamiento, fija cuántas casas y trabajadores de turno puede tener el poblado y recuerda a su restaurador; sin energía se apaga y el poblado duerme."
+              "text": "El corazón de un poblado obrero, en su ayuntamiento: mientras la red le da EU, mantiene el territorio del poblado, fija cuántas casas y trabajadores de turno puede tener el poblado y recuerda a su restaurador; sin energía se apaga y el poblado duerme."
             },
             {
               "type": "stats",
@@ -4639,6 +4819,134 @@
           ]
         },
         {
+          "id": "town_hall_plan_sheet",
+          "title": "Hoja del plano del ayuntamiento",
+          "icon": "alaindustrial:town_hall_plan_sheet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Hoja del plano del ayuntamiento",
+              "text": "Una de las tres hojas del plano de restauración del ayuntamiento de un poblado obrero: está en un lugar fijo de cada poblado de su estilo, y una perdida se puede fabricar; tres hojas de un mismo estilo se juntan en el despachador para formar un plano de restauración."
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "minecraft:paper",
+                "minecraft:lapis_lazuli",
+                "minecraft:paper",
+                "minecraft:iron_ingot",
+                "minecraft:sandstone",
+                "minecraft:iron_ingot",
+                "minecraft:lapis_lazuli",
+                "minecraft:bricks",
+                "minecraft:lapis_lazuli"
+              ],
+              "result_id": "alaindustrial:town_hall_plan_sheet",
+              "result_count": 1,
+              "variants": [
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:iron_ingot",
+                    "minecraft:sandstone",
+                    "minecraft:iron_ingot",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:bricks",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "Fabricación con forma",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:sandstone",
+                    "minecraft:oak_door",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:white_bed",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "Fabricación con forma",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:redstone",
+                    "minecraft:sandstone",
+                    "minecraft:redstone",
+                    "minecraft:lapis_lazuli",
+                    "alaindustrial:electronic_circuit",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "Fabricación con forma",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:iron_ingot",
+                    "minecraft:grass_block",
+                    "minecraft:iron_ingot",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:bricks",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "Fabricación con forma",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:grass_block",
+                    "minecraft:oak_door",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:white_bed",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "Fabricación con forma",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:redstone",
+                    "minecraft:grass_block",
+                    "minecraft:redstone",
+                    "minecraft:lapis_lazuli",
+                    "alaindustrial:electronic_circuit",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "Fabricación con forma",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
           "id": "machine_casing",
           "title": "Carcasa de máquina",
           "icon": "alaindustrial:machine_casing",
@@ -4785,6 +5093,178 @@
               ],
               "result_id": "alaindustrial:mutation_chip_duplicate",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "house_plan",
+          "title": "Plano de casa",
+          "icon": "alaindustrial:house_plan",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Plano de casa",
+              "text": "El plano de uno de los cuatro tipos de casa cápsula de un poblado obrero. El poblado lo aprende una vez y para siempre, y luego los drones restauran y construyen casas de ese tipo. Se encuentra en las ruinas de su casa, o se fabrica."
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "minecraft:paper",
+                "minecraft:oak_door",
+                "minecraft:paper",
+                "minecraft:lapis_lazuli",
+                "minecraft:sandstone",
+                "minecraft:lapis_lazuli",
+                "minecraft:paper",
+                "minecraft:lantern",
+                "minecraft:paper"
+              ],
+              "result_id": "alaindustrial:house_plan",
+              "result_count": 1,
+              "variants": [
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:sandstone",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:lantern",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "Fabricación con forma",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:sandstone",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:barrel",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "Fabricación con forma",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:sandstone",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:chest",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "Fabricación con forma",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:sandstone",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:flower_pot",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "Fabricación con forma",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:grass_block",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:lantern",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "Fabricación con forma",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:grass_block",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:barrel",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "Fabricación con forma",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:grass_block",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:chest",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "Fabricación con forma",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:grass_block",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:flower_pot",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "Fabricación con forma",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "restoration_plan",
+          "title": "Plano de restauración",
+          "icon": "alaindustrial:restoration_plan",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Plano de restauración",
+              "text": "El plano según el cual un dron de construcción restaura un edificio de un poblado obrero; solo lleva una referencia a la plantilla intacta del edificio de su estilo. Se arma en el despachador a partir de tres hojas del plano."
             }
           ]
         },

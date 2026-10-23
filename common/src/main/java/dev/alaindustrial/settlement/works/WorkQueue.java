@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.IntUnaryOperator;
 import java.util.function.UnaryOperator;
 
 /**
@@ -158,16 +159,34 @@ public final class WorkQueue {
 	 * or the job it already holds, whatever its type. Empty when there is none.
 	 */
 	public Optional<WorkJob> takeNext(String taker, Set<WorkJobType> types) {
+		return takeNext(taker, types, building -> 0);
+	}
+
+	/**
+	 * Hands out as {@link #takeNext(String, Set)} does, but in the town owner's order (round 2 of 0.1.219, Q3): the
+	 * job whose building ranks first by {@code rank} — lower first — and within one building the oldest.
+	 */
+	public Optional<WorkJob> takeNext(String taker, Set<WorkJobType> types, IntUnaryOperator rank) {
 		Optional<WorkJob> held = heldBy(taker);
 		if (held.isPresent()) {
 			return held;
 		}
-		for (WorkJob job : jobs) {
+		for (WorkJob job : ranked(rank)) {
 			if (job.status() == WorkJobStatus.QUEUED && types.contains(job.type()) && free(job, taker)) {
 				return Optional.of(store(job.with(WorkJobStatus.TAKEN, taker, job.progress(), Optional.empty())));
 			}
 		}
 		return Optional.empty();
+	}
+
+	/** The jobs by {@code rank} of their building, then by number. */
+	private List<WorkJob> ranked(IntUnaryOperator rank) {
+		List<WorkJob> out = new ArrayList<>(jobs);
+		out.sort((a, b) -> {
+			int byRank = Integer.compare(rank.applyAsInt(a.building()), rank.applyAsInt(b.building()));
+			return byRank != 0 ? byRank : Integer.compare(a.id(), b.id());
+		});
+		return out;
 	}
 
 	/**
@@ -177,10 +196,15 @@ public final class WorkQueue {
 	 * may have lost track of it while a clearing of the same building went first (owner's round 3).
 	 */
 	public Optional<WorkJob> takeBlocked(String taker, Set<WorkJobType> types) {
+		return takeBlocked(taker, types, building -> 0);
+	}
+
+	/** Hands out as {@link #takeBlocked(String, Set)} does, in the owner's order of the buildings ({@code rank}). */
+	public Optional<WorkJob> takeBlocked(String taker, Set<WorkJobType> types, IntUnaryOperator rank) {
 		if (heldBy(taker).isPresent()) {
 			return Optional.empty();
 		}
-		for (WorkJob job : jobs) {
+		for (WorkJob job : ranked(rank)) {
 			if (job.status() == WorkJobStatus.BLOCKED && types.contains(job.type()) && free(job, taker)) {
 				return Optional.of(store(job.with(WorkJobStatus.TAKEN, taker, job.progress(), Optional.empty())));
 			}
@@ -284,6 +308,10 @@ public final class WorkQueue {
 				return false;
 			}
 			if (job.type() == WorkJobType.BUILD && other.type() == WorkJobType.CLEAR && other.status().open()) {
+				return false;
+			}
+			// The road before the house (MOD-861, R108): a building job waits while the building's road job is open.
+			if (job.type() == WorkJobType.BUILD && other.type() == WorkJobType.ROAD && other.status().open()) {
 				return false;
 			}
 		}

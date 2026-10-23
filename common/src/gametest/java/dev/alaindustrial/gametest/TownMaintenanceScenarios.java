@@ -12,6 +12,7 @@ import dev.alaindustrial.settlement.works.BuildingState;
 import dev.alaindustrial.settlement.works.ConstructionRow;
 import dev.alaindustrial.settlement.works.ConstructionRows;
 import dev.alaindustrial.settlement.works.TownBuilding;
+import dev.alaindustrial.settlement.works.TownOrders;
 import dev.alaindustrial.settlement.works.TownWorks;
 import dev.alaindustrial.settlement.works.TownWorksScanner;
 import dev.alaindustrial.settlement.works.WorkJob;
@@ -48,6 +49,8 @@ public final class TownMaintenanceScenarios {
 						"town_maintenance_damaged_hall_is_mended_by_itself").ticks(2400),
 				RosterEntry.of(TownMaintenanceScenarios::clearingFreesARingAroundTheHall,
 						"town_maintenance_clearing_frees_a_ring_around_the_hall").ticks(2400),
+				RosterEntry.of(TownMaintenanceScenarios::clearingLeavesNoBlockHanging,
+						"town_maintenance_clearing_leaves_no_block_hanging").ticks(2400),
 				RosterEntry.of(TownMaintenanceScenarios::tabOffersOnlyTheWorkThereIs,
 						"town_maintenance_tab_offers_only_the_work_there_is").ticks(40));
 
@@ -160,8 +163,58 @@ public final class TownMaintenanceScenarios {
 	}
 
 	/**
-	 * @implements MOD-857-BUTTONS — the core's «Construction» tab offers «Build» on a hall with a hole in its roof
-	 *     and no «Clear» while nothing is in the way; a cobweb in the hall's debris brings «Clear».
+	 * @implements MOD-858-NO-HANGING — a clearing leaves no falling block hanging (owner's round 1 of 0.1.219): sand on
+	 *     the rubble it takes comes off first, top down, and a dragon egg it may not take falls onto the ground once
+	 *     the cobblestone under it is gone, as it would for a player.
+	 */
+	public static void clearingLeavesNoBlockHanging(GameTestHelper helper) {
+		Rig rig = TownDroneScenarios.rig(helper, 1);
+		ServerLevel level = rig.level();
+		BuildingPlan plan = TownWorksScanner.plan(level, rig.town(), 0).orElseThrow();
+		BlockPos low = againstTheWall(level, plan);
+		helper.assertTrue(low != null, "control: no ring cell at ground level against a wall");
+		BlockPos egg = low.above();
+		BlockPos sand = egg.above();
+		Set<BlockPos> ring = ringCells(plan);
+		helper.assertTrue(ring.contains(egg) && ring.contains(sand), "control: the cells over the cobblestone are "
+				+ "not in the ring");
+		level.setBlock(low.below(), Blocks.STONE.defaultBlockState(), Block.UPDATE_CLIENTS);
+		level.setBlock(low, Blocks.COBBLESTONE.defaultBlockState(), Block.UPDATE_CLIENTS);
+		// Placed with no placement tick and no shape updates, so the only tick the egg can have is the clearing's.
+		int quiet = Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_SKIP_ON_PLACE;
+		level.setBlock(egg, Blocks.DRAGON_EGG.defaultBlockState(), quiet);
+		level.setBlock(sand, Blocks.SAND.defaultBlockState(), quiet);
+		helper.assertTrue(!level.getBlockTicks().hasScheduledTick(egg, Blocks.DRAGON_EGG),
+				"control: the egg must have no tick before the clearing");
+		WorkJob job = rig.works().queue().raise(WorkJobType.CLEAR, 0).orElseThrow();
+		helper.onEachTick(rig::tick);
+		helper.succeedWhen(() -> {
+			WorkJob now = rig.works().queue().job(job.id()).orElseThrow();
+			helper.assertTrue(now.status() == WorkJobStatus.DONE, "the clearing is " + now + ", nest "
+					+ rig.nest(0).status());
+			helper.assertTrue(level.getBlockState(sand).isAir(), "the sand must go: " + level.getBlockState(sand));
+			helper.assertTrue(level.getBlockState(low).isAir(), "the cobblestone must go: " + level.getBlockState(low));
+			// The rig's chunks are loaded, not simulated: the egg's fall waits in its scheduled tick, which the game
+			// would run at once near a player. The case checks the tick is there, then runs it.
+			helper.assertTrue(level.getBlockState(egg).is(Blocks.DRAGON_EGG)
+					&& level.getBlockTicks().hasScheduledTick(egg, Blocks.DRAGON_EGG),
+					"the egg left in place must be woken to fall, not left hanging: " + level.getBlockState(egg));
+			level.getBlockState(egg).tick(level, egg, level.getRandom());
+			helper.assertTrue(level.getBlockState(egg).isAir(), "the woken egg must fall: " + level.getBlockState(egg));
+			List<String> cleared = rig.dispatcher().journal().entries().stream()
+					.filter(e -> e.kind() == WorkJournal.Kind.CLEARED).map(WorkJournal.Entry::subject).toList();
+			int sandAt = cleared.indexOf(Blocks.SAND.getDescriptionId());
+			int cobbleAt = cleared.indexOf(Blocks.COBBLESTONE.getDescriptionId());
+			helper.assertTrue(sandAt >= 0 && cobbleAt > sandAt, "the sand must come off before the cobblestone: "
+					+ cleared);
+			rig.release();
+		});
+	}
+
+	/**
+	 * @implements MOD-857-BUTTONS — the core's «Construction» tab offers one order button on a ruined hall; the order
+	 *     raises the building job and no clearing while nothing is in the way, and a cobweb in the hall's debris
+	 *     brings the clearing (round 2 of 0.1.219, Q1).
 	 */
 	public static void tabOffersOnlyTheWorkThereIs(GameTestHelper helper) {
 		Rig rig = TownDroneScenarios.rig(helper, 0);
@@ -187,13 +240,25 @@ public final class TownMaintenanceScenarios {
 		helper.assertTrue(works.buildings().getFirst().state() == BuildingState.RUIN,
 				"control: the roofless hall never restored must read as a ruin: " + works.buildings().getFirst());
 		ConstructionRow row = hallRow(level, registry, rig.town(), works);
-		helper.assertTrue(row.allows(ConstructionRow.Action.RAISE_BUILD)
-				&& !row.allows(ConstructionRow.Action.RAISE_CLEAR),
-				"a hole in the roof and nothing in the way: «Build» only, the row offers " + row.actions());
+		helper.assertTrue(row.allows(ConstructionRow.Action.ORDER_RESTORE),
+				"a ruin never restored offers «Restore», the row offers " + row.actions());
+		Settlement town = registry.find(rig.town()).orElseThrow();
+		// One order, the jobs it needs (round 2 of 0.1.219, Q1): a hole in the roof and nothing in the way —
+		// no clearing.
+		TownOrders.place(level, town, 0, "test");
+		helper.assertTrue(works.queue().open(WorkJobType.BUILD, 0).isPresent()
+				&& works.queue().open(WorkJobType.CLEAR, 0).isEmpty(),
+				"the order must raise the building job only: " + works.queue().jobs());
+		helper.assertTrue(hallRow(level, registry, rig.town(), works).allows(ConstructionRow.Action.ORDER_CANCEL),
+				"an order under way offers «Cancel»");
+		TownOrders.cancel(works, 0);
 		BlockPos web = rig.plan().pos(rig.debris().getFirst());
 		level.setBlock(web, Blocks.COBWEB.defaultBlockState(), Block.UPDATE_CLIENTS);
 		row = hallRow(level, registry, rig.town(), works);
-		helper.assertTrue(row.allows(ConstructionRow.Action.RAISE_CLEAR), "a cobweb in the debris must bring «Clear»");
+		helper.assertTrue(row.allows(ConstructionRow.Action.ORDER_RESUME), "a called-off order offers «Resume»");
+		TownOrders.place(level, town, 0, "test");
+		helper.assertTrue(works.queue().open(WorkJobType.CLEAR, 0).isPresent(),
+				"a cobweb in the debris must bring the clearing: " + works.queue().jobs());
 		rig.release();
 		helper.succeed();
 	}

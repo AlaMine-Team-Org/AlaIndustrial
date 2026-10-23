@@ -155,6 +155,11 @@ public class ReceptionCapsuleMenu extends MachineMenu {
 		return channel(Channel.LIMIT);
 	}
 
+	/** How many workers the town's homes hold, at most the tier's limit (owner's round 1 of 0.1.219). */
+	public int getHousedLimit() {
+		return channel(Channel.HOUSED_LIMIT);
+	}
+
 	/** How many of {@code material} the next worker costs. */
 	public int getNeed(Material material) {
 		return channel(switch (material) {

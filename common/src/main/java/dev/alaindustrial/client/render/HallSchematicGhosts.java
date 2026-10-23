@@ -3,12 +3,15 @@ package dev.alaindustrial.client.render;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.QuadInstance;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import dev.alaindustrial.compat.client.SpecialModelCapture;
 import dev.alaindustrial.network.HallSchematicPayload;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.color.block.BlockTintSource;
@@ -47,7 +50,10 @@ import org.jspecify.annotations.Nullable;
  * either, and a wall of ghosts then reads as one wall, not a stack of glass boxes.
  *
  * <p><b>A block with no model of its own</b> (a chest: its block-entity renderer draws it, the block model is empty)
- * becomes a box of the block's shape, textured with its particle sprite.
+ * is drawn with the model that renderer draws, from its own texture (MOD-824, R1-3: a chest used to read as a box of
+ * oak planks), through {@link SpecialModelCapture}: one more buffer per texture, {@link #specialTextures()}, which
+ * {@link HallSchematicRenderer} fills with {@link #emitSpecial}. Only a block that facade cannot redraw still becomes
+ * a box of the block's shape, textured with its particle sprite.
  *
  * <p>The quads of a state are cached per block state and dropped when the client reloads its models, when the
  * {@link BlockStateModelSet} instance changes.
@@ -69,22 +75,28 @@ public final class HallSchematicGhosts {
 	@Nullable
 	private static BlockStateModelSet cachedFor;
 	private static final Map<BlockState, StateQuads> CACHE = new IdentityHashMap<>();
+	private static final Map<BlockState, List<SpecialModelCapture.Part>> SPECIAL_CACHE = new IdentityHashMap<>();
+	private static final SpecialModelCapture.Part[] NO_PARTS = new SpecialModelCapture.Part[0];
 
-	private static final HallSchematicGhosts EMPTY = new HallSchematicGhosts(BlockPos.ZERO, new Cell[0], null, 0);
+	private static final HallSchematicGhosts EMPTY = new HallSchematicGhosts(BlockPos.ZERO, new Cell[0], null, 0,
+			List.of());
 
 	private final BlockPos core;
 	private final Cell[] cells;
 	@Nullable
 	private final AABB bounds;
 	private final int quadCount;
+	private final List<Identifier> specialTextures;
 	private final PoseStack.Pose scratch = new PoseStack.Pose();
 	private final QuadInstance instance = new QuadInstance();
 
-	private HallSchematicGhosts(BlockPos core, Cell[] cells, @Nullable AABB bounds, int quadCount) {
+	private HallSchematicGhosts(BlockPos core, Cell[] cells, @Nullable AABB bounds, int quadCount,
+			List<Identifier> specialTextures) {
 		this.core = core;
 		this.cells = cells;
 		this.bounds = bounds;
 		this.quadCount = quadCount;
+		this.specialTextures = specialTextures;
 	}
 
 	/** No ghost to draw. */
@@ -107,9 +119,20 @@ public final class HallSchematicGhosts {
 		return cells.length;
 	}
 
-	/** How many quads one frame writes with every ghost in range — the cost of the schematic. */
+	/**
+	 * How many quads one frame writes with every ghost in range — the cost of the schematic. A block drawn with its
+	 * block-entity model counts six per model part, the faces of a box: the cubes of a part are not counted.
+	 */
 	public int quadCount() {
 		return quadCount;
+	}
+
+	/**
+	 * The textures of the block-entity models among the ghosts, each drawn in a buffer of its own by
+	 * {@link #emitSpecial}.
+	 */
+	public List<Identifier> specialTextures() {
+		return specialTextures;
 	}
 
 	/** The world box every ghost lies in, or {@code null} when there is none. */
@@ -128,6 +151,7 @@ public final class HallSchematicGhosts {
 		BlockStateModelSet models = minecraft.getModelManager().getBlockStateModelSet();
 		if (models != cachedFor) {
 			CACHE.clear();
+			SPECIAL_CACHE.clear();
 			cachedFor = models;
 		}
 		BlockColors colors = minecraft.getBlockColors();
@@ -138,6 +162,7 @@ public final class HallSchematicGhosts {
 		List<Cell> cells = new ArrayList<>(ghosts.size());
 		AABB bounds = null;
 		int quadCount = 0;
+		Set<Identifier> specialTextures = new LinkedHashSet<>();
 		for (HallSchematicPayload.Ghost ghost : ghosts) {
 			BlockState state = ghost.state();
 			if (state.isAir()) {
@@ -145,18 +170,21 @@ public final class HallSchematicGhosts {
 			}
 			BlockPos pos = BlockPos.of(ghost.pos());
 			StateQuads model = CACHE.computeIfAbsent(state, s -> StateQuads.of(models, s));
-			Cell cell = model.isEmpty() ? boxCell(core, pos, state, models)
+			Cell cell = model.isEmpty() ? specialOrBoxCell(core, pos, state, models)
 					: modelCell(core, pos, state, model, wanted, level, colors);
 			if (cell == null) {
 				continue;
 			}
 			cells.add(cell);
 			quadCount += cell.quadCount();
+			for (SpecialModelCapture.Part part : cell.special()) {
+				specialTextures.add(part.texture());
+			}
 			AABB box = new AABB(pos);
 			bounds = bounds == null ? box : bounds.minmax(box);
 		}
 		return new HallSchematicGhosts(core.immutable(), cells.toArray(Cell[]::new),
-				bounds == null ? null : bounds.inflate(INFLATE), quadCount);
+				bounds == null ? null : bounds.inflate(INFLATE), quadCount, List.copyOf(specialTextures));
 	}
 
 	/**
@@ -168,16 +196,10 @@ public final class HallSchematicGhosts {
 		instance.setOverlayCoords(OverlayTexture.NO_OVERLAY);
 		double radius2 = DRAW_RADIUS * DRAW_RADIUS;
 		for (Cell cell : cells) {
-			double dx = core.getX() + cell.dx + 0.5 - eye.x;
-			double dy = core.getY() + cell.dy + 0.5 - eye.y;
-			double dz = core.getZ() + cell.dz + 0.5 - eye.z;
-			if (dx * dx + dy * dy + dz * dz > radius2) {
+			if (cell.special.length > 0 || !inRange(cell, eye, radius2)) {
 				continue;
 			}
-			scratch.set(pose);
-			scratch.translate(cell.dx + 0.5F, cell.dy + 0.5F, cell.dz + 0.5F);
-			scratch.scale(1.0F + 2.0F * INFLATE, 1.0F + 2.0F * INFLATE, 1.0F + 2.0F * INFLATE);
-			scratch.translate(-0.5F, -0.5F, -0.5F);
+			placeAt(pose, cell);
 			if (cell.box != null) {
 				emitBox(scratch, consumer, cell.box, cell.sprite, cell.colours[0]);
 				continue;
@@ -187,6 +209,41 @@ public final class HallSchematicGhosts {
 				consumer.putBakedQuad(scratch, cell.quads[i], instance);
 			}
 		}
+	}
+
+	/**
+	 * Writes the block-entity models of every ghost within {@link #DRAW_RADIUS} of {@code eye} whose texture is
+	 * {@code texture}, into {@code consumer}, a buffer of a type that samples it. {@code pose} as in {@link #emit}.
+	 */
+	void emitSpecial(Identifier texture, PoseStack.Pose pose, VertexConsumer consumer, Vec3 eye) {
+		double radius2 = DRAW_RADIUS * DRAW_RADIUS;
+		for (Cell cell : cells) {
+			if (cell.special.length == 0 || !inRange(cell, eye, radius2)) {
+				continue;
+			}
+			placeAt(pose, cell);
+			for (SpecialModelCapture.Part part : cell.special) {
+				if (part.texture().equals(texture)) {
+					part.draw(scratch, consumer, LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY,
+							cell.colours[0]);
+				}
+			}
+		}
+	}
+
+	private boolean inRange(Cell cell, Vec3 eye, double radius2) {
+		double dx = core.getX() + cell.dx + 0.5 - eye.x;
+		double dy = core.getY() + cell.dy + 0.5 - eye.y;
+		double dz = core.getZ() + cell.dz + 0.5 - eye.z;
+		return dx * dx + dy * dy + dz * dz <= radius2;
+	}
+
+	/** {@link #scratch} becomes the cell's corner, the cell grown by {@link #INFLATE} about its centre. */
+	private void placeAt(PoseStack.Pose pose, Cell cell) {
+		scratch.set(pose);
+		scratch.translate(cell.dx + 0.5F, cell.dy + 0.5F, cell.dz + 0.5F);
+		scratch.scale(1.0F + 2.0F * INFLATE, 1.0F + 2.0F * INFLATE, 1.0F + 2.0F * INFLATE);
+		scratch.translate(-0.5F, -0.5F, -0.5F);
 	}
 
 	private static @Nullable Cell modelCell(BlockPos core, BlockPos pos, BlockState state, StateQuads model,
@@ -220,7 +277,22 @@ public final class HallSchematicGhosts {
 			packed[i] = colours.get(i);
 		}
 		return new Cell(pos.getX() - core.getX(), pos.getY() - core.getY(), pos.getZ() - core.getZ(),
-				quads.toArray(BakedQuad[]::new), packed, null, null);
+				quads.toArray(BakedQuad[]::new), packed, null, null, NO_PARTS);
+	}
+
+	/**
+	 * A block whose model is empty: the model its block-entity renderer draws, when {@link SpecialModelCapture} can
+	 * redraw it, else {@link #boxCell}.
+	 */
+	private static @Nullable Cell specialOrBoxCell(BlockPos core, BlockPos pos, BlockState state,
+			BlockStateModelSet models) {
+		List<SpecialModelCapture.Part> parts = SPECIAL_CACHE.computeIfAbsent(state, SpecialModelCapture::capture);
+		if (parts.isEmpty()) {
+			return boxCell(core, pos, state, models);
+		}
+		return new Cell(pos.getX() - core.getX(), pos.getY() - core.getY(), pos.getZ() - core.getZ(),
+				new BakedQuad[0], new int[] {colour(0xFFFFFF)}, null, null,
+				parts.toArray(SpecialModelCapture.Part[]::new));
 	}
 
 	/** A block whose model is empty: its shape's box with its particle sprite, or nothing when it has no shape. */
@@ -237,7 +309,7 @@ public final class HallSchematicGhosts {
 		float[] bounds = {(float) box.minX, (float) box.minY, (float) box.minZ, (float) box.maxX, (float) box.maxY,
 				(float) box.maxZ};
 		return new Cell(pos.getX() - core.getX(), pos.getY() - core.getY(), pos.getZ() - core.getZ(),
-				new BakedQuad[0], new int[] {colour(0xFFFFFF)}, bounds, sprite);
+				new BakedQuad[0], new int[] {colour(0xFFFFFF)}, bounds, sprite, NO_PARTS);
 	}
 
 	/**
@@ -299,13 +371,14 @@ public final class HallSchematicGhosts {
 	}
 
 	/**
-	 * One ghost: its offset from the core, and either its model's quads with a colour each, or a box with a sprite.
+	 * One ghost: its offset from the core, and either its model's quads with a colour each, a box with a sprite, or
+	 * the parts of its block-entity model (drawn in the one colour of {@code colours}).
 	 */
 	private record Cell(int dx, int dy, int dz, BakedQuad[] quads, int[] colours, float @Nullable [] box,
-			@Nullable TextureAtlasSprite sprite) {
+			@Nullable TextureAtlasSprite sprite, SpecialModelCapture.Part[] special) {
 
 		int quadCount() {
-			return box != null ? 6 : quads.length;
+			return box != null ? 6 : special.length > 0 ? 6 * special.length : quads.length;
 		}
 	}
 

@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:chest",
+  "random_sequence": "alaindustrial:chests/ala_town/desert/house_plan_4_and_plan_sheet_2",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "alaindustrial:house_plan",
+          "modifier": [
+            {
+              "type": "minecraft:set_components",
+              "components": {
+                "alaindustrial:restoration_plan": {
+                  "style": "alaindustrial:desert",
+                  "template": "alaindustrial:ala_town/desert/intact/capsule_house_4"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rolls": 1.0,
+      "entries": [
+        {
+          "type": "minecraft:loot_table",
+          "value": "alaindustrial:chests/ala_town/desert/plan_sheet_2"
+        }
+      ]
+    }
+  ]
+}

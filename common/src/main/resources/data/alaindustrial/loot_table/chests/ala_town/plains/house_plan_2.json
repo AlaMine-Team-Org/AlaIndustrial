@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:chest",
+  "random_sequence": "alaindustrial:chests/ala_town/plains/house_plan_2",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "alaindustrial:house_plan",
+          "modifier": [
+            {
+              "type": "minecraft:set_components",
+              "components": {
+                "alaindustrial:restoration_plan": {
+                  "style": "alaindustrial:plains",
+                  "template": "alaindustrial:ala_town/plains/intact/capsule_house_2"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

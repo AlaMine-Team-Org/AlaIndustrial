@@ -323,4 +323,10 @@ public class ReceptionCapsuleBlock extends HorizontalMachineBlock implements Has
 				List.of(MachineTooltipSpec.statValue("buffer", () -> 2L * ServerBalance.capsuleEuPerWorker()),
 						MachineTooltipSpec.plain("duration_ticks", ServerBalance::capsuleRestoreTicks)));
 	}
+
+	/** Its lines are whole sentences: broken to the width of a vanilla description (R4-3). */
+	@Override
+	public boolean wrapsTooltipLines() {
+		return true;
+	}
 }

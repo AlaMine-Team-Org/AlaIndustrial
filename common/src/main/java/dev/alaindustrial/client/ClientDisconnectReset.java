@@ -3,6 +3,7 @@ package dev.alaindustrial.client;
 import dev.alaindustrial.client.guide.ArchiveRecordClient;
 import dev.alaindustrial.client.hud.TeleportFadeHud;
 import dev.alaindustrial.client.render.HallSchematicOverlay;
+import dev.alaindustrial.client.render.HousePlacementPreview;
 import dev.alaindustrial.client.render.NetworkOverlayRenderer;
 import dev.alaindustrial.client.render.SettlementBorderOverlay;
 import dev.alaindustrial.client.screen.shiftworker.ShiftWorkerCardClient;
@@ -30,5 +31,6 @@ public final class ClientDisconnectReset {
 		SettlementBorderOverlay.clear(); // MOD-843
 		ShiftWorkerCardClient.clear(); // MOD-854
 		HallSchematicOverlay.clear(); // MOD-857, round 2
+		HousePlacementPreview.clear(); // MOD-877
 	}
 }

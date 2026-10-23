@@ -707,6 +707,44 @@
           ]
         },
         {
+          "id": "town_road",
+          "title": "Route du hameau",
+          "icon": "alaindustrial:town_road",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Route du hameau",
+              "text": "Un bloc plein au ras du sol : une grille en fer trempé sombre avec un fil de cuivre isolé à l'intérieur ; un segment du réseau d'énergie qui porte l'énergie du noyau de la cité jusqu'aux maisons des ouvriers de relève. Les drones de construction posent le réseau routier de la cité."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiques",
+              "lines": [
+                "Énergie : 12 EU/t",
+                "Tampon : 12 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "alaindustrial:tempered_iron_bars",
+                "alaindustrial:tempered_iron_bars",
+                "alaindustrial:tempered_iron_bars",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:insulated_copper_cable",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone"
+              ],
+              "result_id": "alaindustrial:town_road",
+              "result_count": 3
+            }
+          ]
+        },
+        {
           "id": "gold_cable",
           "title": "Câble en or",
           "icon": "alaindustrial:gold_cable",
@@ -3321,7 +3359,7 @@
             {
               "type": "text",
               "title": "Plaque gravée 0",
-              "text": "Plaques décoratives en ardoise gravées d’un chiffre ou d’un fragment de lettre — elles composent la plaque de l’ancien relevé dans les laboratoires abandonnés. Sans recette."
+              "text": "Plaques décoratives en ardoise gravées d'un chiffre, d'une lettre ou d'un fragment de lettre. Elles composent la plaque de l'ancien relevé dans les laboratoires abandonnés et la plaque numérotée des maisons des cités ouvrières. Sans recette."
             }
           ]
         },
@@ -3764,6 +3802,44 @@
           ]
         },
         {
+          "id": "house_inlet",
+          "title": "Branchement de maison",
+          "icon": "alaindustrial:house_inlet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Branchement de maison",
+              "text": "Le bloc mural par lequel un câble entre dans la maison d'un ouvrier de relève. Il ne reçoit l'EU que par sa face extérieure et garde une réserve pour le lit de recharge de la maison ; c'est l'ancre de la maison dans la cité, et c'est à partir de lui qu'on pose une nouvelle maison."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiques",
+              "lines": [
+                "Énergie : 2 000 EU",
+                "Tampon : 2000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:house_inlet",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "industrial_workbench",
           "title": "Établi industriel",
           "icon": "alaindustrial:industrial_workbench",
@@ -3789,6 +3865,80 @@
                 "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:industrial_workbench",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "drone_nest",
+          "title": "Nid de drone",
+          "icon": "alaindustrial:drone_nest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Nid de drone",
+              "text": "L'aire d'atterrissage d'un drone de construction au-dessus de l'hôtel de ville ; on y place un drone sous forme d'objet, et le drone prend un bâtiment dans la file de commandes de la cité, déblaie ses gravats, trace sa route, comble ses fondations et le reconstruit bloc par bloc jusqu'à son aspect intact ; sans travail, il grave les plaques des maisons. Il n'est chargé que par le noyau de colonie, dont le niveau fixe combien de nids fonctionnent."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiques",
+              "lines": [
+                "Énergie : 20 EU par bloc"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "alaindustrial:copper_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_cable",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:drone_nest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "town_dispatcher",
+          "title": "Répartiteur du village",
+          "icon": "alaindustrial:town_dispatcher",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Répartiteur du village",
+              "text": "Le bureau des travaux d'une cité ouvrière, installé dans son hôtel de ville : il assemble le plan de restauration à partir de trois feuilles, tient la file des commandes de bâtiments, garde la réserve de matériaux où les drones de construction prennent leurs blocs et montre si les drones travaillent ; un seul par cité."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiques",
+              "lines": [
+                "Capacité : 27 emplacements"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "alaindustrial:copper_plate",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_plate",
+                "alaindustrial:battery",
+                "alaindustrial:copper_plate"
+              ],
+              "result_id": "alaindustrial:town_dispatcher",
               "result_count": 1
             }
           ]
@@ -3831,7 +3981,7 @@
             {
               "type": "text",
               "title": "Capsule d'accueil",
-              "text": "Ramène les ouvriers de relève d'une colonie un par un contre des EU et des matériaux — seulement tant que le noyau de colonie est allumé, que la cité a un restaurateur et que sa limite d'ouvriers n'est pas atteinte ; chaque nouvel ouvrier reçoit son propre numéro, unique dans le monde."
+              "text": "Ramène les ouvriers de relève d'une colonie un par un contre des EU et des matériaux, seulement tant que le noyau de colonie est allumé, que la cité a un restaurateur, que sa limite d'ouvriers n'est pas atteinte et qu'une maison libre habitable attend le nouvel ouvrier ; chaque nouvel ouvrier reçoit son propre numéro, unique dans le monde."
             },
             {
               "type": "stats",
@@ -3919,6 +4069,36 @@
               "lines": [
                 "Énergie : 1 000 EU de travail des machines = 1 point de maîtrise"
               ]
+            }
+          ]
+        },
+        {
+          "id": "charging_bed",
+          "title": "Lit de recharge",
+          "icon": "alaindustrial:charging_bed",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Lit de recharge",
+              "text": "Un lit de deux cases dans la maison d'un ouvrier de relève, comme un lit ordinaire : un ouvrier à la batterie faible s'y allonge et se recharge ; le lit n'a pas de réserve propre et puise l'énergie dans le branchement de sa maison."
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:copper_plate",
+                "alaindustrial:battery",
+                "alaindustrial:copper_plate",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:charging_bed",
+              "result_count": 1
             }
           ]
         },
@@ -4294,7 +4474,7 @@
             {
               "type": "text",
               "title": "Noyau de colonie",
-              "text": "Le cœur d'une cité ouvrière, installé dans son hôtel de ville — tant que le réseau lui fournit des EU, il maintient le territoire de la colonie, fixe combien de maisons et d'ouvriers de relève la cité peut avoir et se souvient de son restaurateur ; sans énergie, il s'éteint et la cité s'endort."
+              "text": "Le cœur d'une cité ouvrière, installé dans son hôtel de ville : tant que le réseau lui fournit des EU, il maintient le territoire de la colonie, fixe combien de maisons et d'ouvriers de relève la cité peut avoir et se souvient de son restaurateur ; sans énergie, il s'éteint et la cité s'endort."
             },
             {
               "type": "stats",
@@ -4639,6 +4819,134 @@
           ]
         },
         {
+          "id": "town_hall_plan_sheet",
+          "title": "Feuille du plan de l'hôtel de ville",
+          "icon": "alaindustrial:town_hall_plan_sheet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Feuille du plan de l'hôtel de ville",
+              "text": "L'une des trois feuilles du plan de restauration de l'hôtel de ville d'une cité ouvrière — elle se trouve à un endroit fixe de chaque cité de son style, et une feuille perdue peut être fabriquée ; trois feuilles d'un même style s'assemblent en plan de restauration au répartiteur."
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "minecraft:paper",
+                "minecraft:lapis_lazuli",
+                "minecraft:paper",
+                "minecraft:iron_ingot",
+                "minecraft:sandstone",
+                "minecraft:iron_ingot",
+                "minecraft:lapis_lazuli",
+                "minecraft:bricks",
+                "minecraft:lapis_lazuli"
+              ],
+              "result_id": "alaindustrial:town_hall_plan_sheet",
+              "result_count": 1,
+              "variants": [
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:iron_ingot",
+                    "minecraft:sandstone",
+                    "minecraft:iron_ingot",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:bricks",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "Fabrication façonnée",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:sandstone",
+                    "minecraft:oak_door",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:white_bed",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "Fabrication façonnée",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:redstone",
+                    "minecraft:sandstone",
+                    "minecraft:redstone",
+                    "minecraft:lapis_lazuli",
+                    "alaindustrial:electronic_circuit",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "Fabrication façonnée",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:iron_ingot",
+                    "minecraft:grass_block",
+                    "minecraft:iron_ingot",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:bricks",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "Fabrication façonnée",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:grass_block",
+                    "minecraft:oak_door",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:white_bed",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "Fabrication façonnée",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:redstone",
+                    "minecraft:grass_block",
+                    "minecraft:redstone",
+                    "minecraft:lapis_lazuli",
+                    "alaindustrial:electronic_circuit",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "Fabrication façonnée",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
           "id": "machine_casing",
           "title": "Châssis de machine",
           "icon": "alaindustrial:machine_casing",
@@ -4785,6 +5093,178 @@
               ],
               "result_id": "alaindustrial:mutation_chip_duplicate",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "house_plan",
+          "title": "Plan de maison",
+          "icon": "alaindustrial:house_plan",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Plan de maison",
+              "text": "Le plan de l'un des quatre types de maisons-capsules d'une cité ouvrière. La cité l'apprend une fois pour toutes, puis les drones restaurent et construisent des maisons de ce type. Se trouve dans la ruine de sa maison, ou se fabrique."
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "minecraft:paper",
+                "minecraft:oak_door",
+                "minecraft:paper",
+                "minecraft:lapis_lazuli",
+                "minecraft:sandstone",
+                "minecraft:lapis_lazuli",
+                "minecraft:paper",
+                "minecraft:lantern",
+                "minecraft:paper"
+              ],
+              "result_id": "alaindustrial:house_plan",
+              "result_count": 1,
+              "variants": [
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:sandstone",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:lantern",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "Fabrication façonnée",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:sandstone",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:barrel",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "Fabrication façonnée",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:sandstone",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:chest",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "Fabrication façonnée",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:sandstone",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:flower_pot",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "Fabrication façonnée",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:grass_block",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:lantern",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "Fabrication façonnée",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:grass_block",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:barrel",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "Fabrication façonnée",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:grass_block",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:chest",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "Fabrication façonnée",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:grass_block",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:flower_pot",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "Fabrication façonnée",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "restoration_plan",
+          "title": "Plan de restauration",
+          "icon": "alaindustrial:restoration_plan",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Plan de restauration",
+              "text": "Le plan d'après lequel un drone de construction restaure un bâtiment d'une cité ouvrière ; il ne porte qu'une référence au modèle intact du bâtiment de son style. S'assemble au répartiteur à partir de trois feuilles de plan."
             }
           ]
         },

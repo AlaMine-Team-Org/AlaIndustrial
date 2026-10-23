@@ -1,4 +1,58 @@
 {
   "template": "alaindustrial:ala_town/desert/capsule_house_2",
-  "name": "settlement.alaindustrial.building.capsule_house"
+  "intact": "alaindustrial:ala_town/desert/intact/capsule_house_2",
+  "name": "settlement.alaindustrial.building.capsule_house",
+  "restored_at": 0.9,
+  "clear_ring": 3,
+  "key_points": [
+    {
+      "name": "settlement.alaindustrial.building.key.door",
+      "blocks": [
+        "#minecraft:doors"
+      ]
+    },
+    {
+      "name": "settlement.alaindustrial.building.key.house_roof",
+      "from": [
+        0,
+        5,
+        0
+      ],
+      "to": [
+        5,
+        5,
+        5
+      ]
+    },
+    {
+      "name": "settlement.alaindustrial.building.key.light",
+      "blocks": [
+        "#minecraft:lanterns",
+        "minecraft:lantern",
+        "minecraft:waxed_weathered_copper_lantern",
+        "minecraft:torch",
+        "minecraft:wall_torch",
+        "minecraft:copper_torch",
+        "minecraft:copper_wall_torch"
+      ]
+    },
+    {
+      "name": "settlement.alaindustrial.building.key.plaque",
+      "blocks": [
+        "#alaindustrial:town_plaque_plates"
+      ]
+    },
+    {
+      "name": "settlement.alaindustrial.building.key.bed",
+      "blocks": [
+        "alaindustrial:charging_bed"
+      ]
+    },
+    {
+      "name": "settlement.alaindustrial.building.key.inlet",
+      "blocks": [
+        "alaindustrial:house_inlet"
+      ]
+    }
+  ]
 }

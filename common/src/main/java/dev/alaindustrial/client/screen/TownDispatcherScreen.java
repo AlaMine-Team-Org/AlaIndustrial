@@ -13,8 +13,11 @@ import dev.alaindustrial.menu.TownDispatcherMenu;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.settlement.drone.DispatcherStatus;
 import dev.alaindustrial.settlement.drone.DispatcherView;
+import dev.alaindustrial.settlement.drone.DispatcherViews;
 import dev.alaindustrial.settlement.drone.StartReadiness;
+import dev.alaindustrial.settlement.plan.PlanSheetHints;
 import dev.alaindustrial.settlement.plan.PlanSheetRules;
+import dev.alaindustrial.settlement.works.ConstructionRow;
 import dev.alaindustrial.settlement.works.WorkJournal;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +58,8 @@ import org.jspecify.annotations.Nullable;
  *       it, and its tooltip lists what is missing; short materials are a warning there, not a blocker.
  *   <li>«Buffer» — the 27 material slots.
  *   <li>«Materials» — the current stage's bill as item icons with «have / need», red while short, a tick when covered;
- *       hovering an icon shows the item's own tooltip; the wheel scrolls a longer bill.
+ *       hovering an icon shows the item's own tooltip; the wheel scrolls a longer bill; a shift-click in the
+ *       inventory puts into the buffer only what the stage still asks for (R2-1).
  *   <li>«Journal» — what the drones did, newest first, wrapped, each line with its game time.
  * </ul>
  *
@@ -76,6 +80,7 @@ public class TownDispatcherScreen extends MachineScreen<TownDispatcherMenu> {
 	/** The tabs down the left edge, in their order. */
 	public enum Tab {
 		TASK(() -> new ItemStack(ModContent.RESTORATION_PLAN.get())),
+		ORDERS(() -> new ItemStack(ModContent.HOUSE_PLAN.get())),
 		BUFFER(() -> new ItemStack(Items.CHEST)),
 		MATERIALS(() -> new ItemStack(Items.BRICKS)),
 		JOURNAL(() -> new ItemStack(Items.WRITABLE_BOOK));
@@ -131,8 +136,16 @@ public class TownDispatcherScreen extends MachineScreen<TownDispatcherMenu> {
 	/** How far from the player the screen looks for its block when it does not know it. */
 	private static final int REACH = 8;
 
-	private static final List<TabPage> PAGES = List.of(new Page(Tab.TASK), new Page(Tab.BUFFER),
+	private static final List<TabPage> PAGES = List.of(new Page(Tab.TASK), new Page(Tab.ORDERS), new Page(Tab.BUFFER),
 			new Page(Tab.MATERIALS), new Page(Tab.JOURNAL));
+	/** The «Orders» tab: one order a row of two lines, its buttons at the right. */
+	public static final int ORDER_ROW_H = 22;
+	public static final int ORDER_BUTTON = 12;
+	private static final int ORDER_ROWS = (PANEL_BOTTOM - PANEL_TOP - 4) / ORDER_ROW_H;
+	private static final String[] ORDER_GLYPHS = {"\u25B2", "\u25BC", "\u2715"};
+	private static final TownDispatcherBlockEntity.OrderPress[] ORDER_BUTTONS = {
+		TownDispatcherBlockEntity.OrderPress.UP, TownDispatcherBlockEntity.OrderPress.DOWN,
+		TownDispatcherBlockEntity.OrderPress.CANCEL};
 
 	private final SideTabStrip strip = new SideTabStrip(0);
 	private Tab tab = Tab.TASK;
@@ -156,6 +169,7 @@ public class TownDispatcherScreen extends MachineScreen<TownDispatcherMenu> {
 				&& hit.getType() == HitResult.Type.BLOCK) {
 			target = hit.getBlockPos();
 		}
+		this.menu.billSource(() -> view().bill());
 		openTab(tab);
 	}
 
@@ -181,6 +195,11 @@ public class TownDispatcherScreen extends MachineScreen<TownDispatcherMenu> {
 		this.tab = next;
 		this.scroll = 0;
 		this.menu.showSlots(next == Tab.TASK, next == Tab.BUFFER);
+		this.menu.showMaterials(next == Tab.MATERIALS);
+		if (this.minecraft != null && this.minecraft.gameMode != null) {
+			this.minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId, next == Tab.MATERIALS
+					? TownDispatcherMenu.BUTTON_MATERIALS_SHOWN : TownDispatcherMenu.BUTTON_MATERIALS_HIDDEN);
+		}
 	}
 
 	/** The block's name over the «Task» tab, the tab's name over the others; the inventory label as usual. */
@@ -203,7 +222,7 @@ public class TownDispatcherScreen extends MachineScreen<TownDispatcherMenu> {
 						this.topPos + slot.y - 1, WELL_U, 0, 18, 18, ATLAS_W, ATLAS_H);
 			}
 		}
-		if (tab == Tab.MATERIALS || tab == Tab.JOURNAL) {
+		if (tab == Tab.MATERIALS || tab == Tab.JOURNAL || tab == Tab.ORDERS) {
 			card(graphics, PANEL_TOP);
 		}
 		if (tab == Tab.TASK) {
@@ -229,6 +248,7 @@ public class TownDispatcherScreen extends MachineScreen<TownDispatcherMenu> {
 			case BUFFER -> paragraph(graphics, Component.translatable(key("buffer.hint")), INNER_LEFT + 4,
 					TownDispatcherMenu.BUFFER_Y + 3 * 18 + 4, INNER_RIGHT - INNER_LEFT - 8, 1.0f,
 					GuiStyle.TEXT_DIM, 4);
+			case ORDERS -> drawOrders(graphics, view, mouseX, mouseY);
 			case MATERIALS -> drawMaterials(graphics, view);
 			case JOURNAL -> drawJournal(graphics);
 		}
@@ -236,6 +256,8 @@ public class TownDispatcherScreen extends MachineScreen<TownDispatcherMenu> {
 
 	// --- «Task»: the checklist ---
 
+	// size-justified: four steps drawn one after the other in one scissored, scrolled area; splitting them would only
+	// pass the running y and the scroll around.
 	/**
 	 * The four steps of a first restoration; an open step says what to do next. Drawn inside the framed area only
 	 * (scissor), shifted up by the scroll; a taller list gets a scroll bar and the wheel.
@@ -249,10 +271,13 @@ public class TownDispatcherScreen extends MachineScreen<TownDispatcherMenu> {
 		int first = STEPS_TOP - scroll;
 		int y = first;
 		String planTemplate = planTemplate();
-		boolean plan = planTemplate != null && (list.fits(planTemplate) || !list.town());
+		// A house of a type the town has learned needs nothing in the slot (round 2 of 0.1.219, Q4).
+		boolean plan = list.planKnown() || planTemplate != null && (list.fits(planTemplate) || !list.town());
 		String planNote = plan ? "step.plan.done" : planTemplate != null ? "step.plan.wrong" : "step.plan.todo";
-		y = step(graphics, y, plan, Component.translatable(key("step.plan")),
-				List.of(Component.translatable(key(planNote))));
+		// The server's own note, when it knows which plan the building needs (R2-6).
+		Component planLine = view.planNote().isEmpty() ? Component.translatable(key(planNote))
+				: ConstructionTab.component(view.planNote().getFirst());
+		y = step(graphics, y, plan, Component.translatable(key("step.plan")), List.of(planLine));
 		int ready = this.menu.getReadyNests();
 		boolean nests = ready > 0;
 		y = step(graphics, y, nests, Component.translatable(key("step.nests"), ready, this.menu.getNestLimit()),
@@ -262,16 +287,39 @@ public class TownDispatcherScreen extends MachineScreen<TownDispatcherMenu> {
 				materials ? List.of() : List.of(Component.translatable(key("step.materials.todo"))));
 		List<Component> notes = new ArrayList<>();
 		if (list.jobs()) {
-			view.task().forEach(text -> notes.add(ConstructionTab.component(text)));
+			// Owner's round 1 of 0.1.219 (R1-5): the work runs, so «Start» has nothing to start; a stop says why and
+			// what to do, in red.
+			notes.add(Component.translatable(key("step.build.started")));
+			for (ConstructionRow.Text text : view.task()) {
+				Component line = ConstructionTab.component(text);
+				notes.add(text.key().startsWith(REASON_PREFIX)
+						? line.copy().withColor(GuiStyle.STATUS_BLOCKING & 0xFFFFFF) : line);
+			}
 		} else if (list.restored()) {
 			notes.add(Component.translatable(key("step.build.restored")));
+			view.task().forEach(text -> notes.add(ConstructionTab.component(text))); // R2-6: «type N restored»
 		} else if (!owner) {
 			notes.add(Component.translatable(key("step.build.owner")));
 		} else {
 			notes.add(Component.translatable(key(startBlockers(view).isEmpty() ? "step.build.todo"
 					: "step.build.wait")));
+			// A called-off order, and why a start would raise nothing — the block in the way, in red (round 5 of
+			// 0.1.219).
+			for (ConstructionRow.Text text : view.task()) {
+				if (text.key().startsWith(REASON_PREFIX)) {
+					notes.add(ConstructionTab.component(text).copy().withColor(GuiStyle.STATUS_BLOCKING & 0xFFFFFF));
+				} else if (text.key().equals(DispatcherViews.ORDER_CALLED_OFF)) {
+					notes.add(ConstructionTab.component(text));
+				}
+			}
 		}
-		y = step(graphics, y, list.jobs() || list.restored(), Component.translatable(key("step.build")), notes);
+		Component title = Component.translatable(key("step.build"));
+		for (DispatcherView.OrderLine order : view.orders()) {
+			if (order.selected()) {
+				title = title.copy().append(": ").append(ConstructionTab.component(order.name()));
+			}
+		}
+		y = step(graphics, y, list.restored() || list.jobs() && !list.stalled(), title, notes);
 		graphics.disableScissor();
 		int area = PANEL_BOTTOM - STEPS_TOP - 2;
 		int content = y - first;
@@ -308,6 +356,9 @@ public class TownDispatcherScreen extends MachineScreen<TownDispatcherMenu> {
 		}
 		return at + 4;
 	}
+
+	/** The keys of a job's stop and its hint: drawn in red under the «Construction» step (R1-5). */
+	private static final String REASON_PREFIX = "settlement.alaindustrial.works.reason.";
 
 	/** The intact template the plan in the plan slot names, or null for an empty slot. */
 	private @Nullable String planTemplate() {
@@ -350,6 +401,88 @@ public class TownDispatcherScreen extends MachineScreen<TownDispatcherMenu> {
 		int y0 = this.topPos + top;
 		graphics.fill(x0, y0, this.leftPos + INNER_RIGHT, this.topPos + PANEL_BOTTOM, GuiStyle.SLOT_EDGE);
 		graphics.fill(x0 + 1, y0 + 1, this.leftPos + INNER_RIGHT - 1, this.topPos + PANEL_BOTTOM - 1, GuiStyle.CARD);
+	}
+
+	// --- «Orders» (round 2 of 0.1.219, Q3) ---
+
+	/**
+	 * The orders, first first: the building's name — highlighted for the one the «Task» and «Materials» tabs show —
+	 * and under it where its work stands, red while it stands still; the owner's buttons «earlier», «later» and
+	 * «cancel» at the right. A click on a row shows that order on the other tabs.
+	 */
+	private void drawOrders(GuiGraphicsExtractor graphics, DispatcherView view, int mouseX, int mouseY) {
+		List<DispatcherView.OrderLine> orders = view.orders();
+		if (orders.isEmpty()) {
+			paragraph(graphics, Component.translatable(key("no_orders")), INNER_LEFT + 4, PANEL_TOP + 4,
+					INNER_RIGHT - INNER_LEFT - 8, 1.0f, GuiStyle.TEXT_DIM, 4);
+			return;
+		}
+		scroll = Math.max(0, Math.min(scroll, Math.max(0, orders.size() - ORDER_ROWS)));
+		for (int row = 0; row < ORDER_ROWS && scroll + row < orders.size(); row++) {
+			DispatcherView.OrderLine order = orders.get(scroll + row);
+			int y = PANEL_TOP + 3 + row * ORDER_ROW_H;
+			// Every order on a light card, the shown one framed (owner's round 3 of 0.1.219, R3-1): dark and red ink
+			// read on it, as they did not on the brown highlight.
+			int left = this.leftPos + INNER_LEFT + 2;
+			int top = this.topPos + y - 1;
+			int right = this.leftPos + INNER_RIGHT - 2;
+			int bottom = this.topPos + y + ORDER_ROW_H - 2;
+			graphics.fill(left, top, right, bottom, order.selected() ? GuiStyle.BUTTON_ACTIVE : GuiStyle.PANEL_LO);
+			graphics.fill(left + 1, top + 1, right - 1, bottom - 1, GuiStyle.PANEL_HI);
+			int textRight = orderButtonsLeft() - 4;
+			Component name = Component.literal((scroll + row + 1) + ". ")
+					.append(ConstructionTab.component(order.name()));
+			drawFittedStatus(graphics, name, y + 1, INNER_LEFT + 4, textRight,
+					order.taken() ? GuiStyle.STATUS_GOOD : GuiStyle.TEXT);
+			paragraph(graphics, ConstructionTab.component(order.step()), INNER_LEFT + 10, y + 11,
+					textRight - INNER_LEFT - 10, HINT_SCALE,
+					order.blocked() ? GuiStyle.STATUS_BLOCKING : GuiStyle.TEXT_DIM, 1);
+			if (this.menu.viewerControls()) {
+				for (int b = 0; b < ORDER_BUTTONS.length; b++) {
+					int x = orderButtonsLeft() + b * (ORDER_BUTTON + 2);
+					boolean hovered = isHovering(x, y + 3, ORDER_BUTTON, ORDER_BUTTON, mouseX, mouseY);
+					graphics.fill(this.leftPos + x, this.topPos + y + 3, this.leftPos + x + ORDER_BUTTON,
+							this.topPos + y + 3 + ORDER_BUTTON, hovered ? GuiStyle.BUTTON_ACTIVE : GuiStyle.BUTTON);
+					String glyph = ORDER_GLYPHS[b];
+					graphics.text(this.font, glyph,
+							this.leftPos + x + (ORDER_BUTTON - this.font.width(glyph) + 1) / 2,
+							this.topPos + y + 5, GuiStyle.HEADER_TEXT, false);
+				}
+			}
+		}
+	}
+
+	private static int orderButtonsLeft() {
+		return INNER_RIGHT - 4 - ORDER_BUTTONS.length * (ORDER_BUTTON + 2);
+	}
+
+	/** The order row under the mouse on the «Orders» tab, as an index into the view's orders, or -1. */
+	private int orderRowAt(double mouseX, double mouseY) {
+		if (tab != Tab.ORDERS || mouseX < this.leftPos + INNER_LEFT || mouseX >= this.leftPos + INNER_RIGHT) {
+			return -1;
+		}
+		double dy = mouseY - (this.topPos + PANEL_TOP + 2);
+		if (dy < 0) {
+			return -1;
+		}
+		int row = (int) (dy / ORDER_ROW_H);
+		int index = scroll + row;
+		return row < ORDER_ROWS && index < view().orders().size() ? index : -1;
+	}
+
+	/** The owner's button under the mouse in order row {@code index}, or null. */
+	private TownDispatcherBlockEntity.@Nullable OrderPress orderButtonAt(int index, double mouseX, double mouseY) {
+		if (index < 0 || !this.menu.viewerControls()) {
+			return null;
+		}
+		int y = PANEL_TOP + 3 + (index - scroll) * ORDER_ROW_H;
+		for (int b = 0; b < ORDER_BUTTONS.length; b++) {
+			int x = orderButtonsLeft() + b * (ORDER_BUTTON + 2);
+			if (isHovering(x, y + 3, ORDER_BUTTON, ORDER_BUTTON, mouseX, mouseY)) {
+				return ORDER_BUTTONS[b];
+			}
+		}
+		return null;
 	}
 
 	// --- «Materials»: the bill as a grid ---
@@ -565,6 +698,15 @@ public class TownDispatcherScreen extends MachineScreen<TownDispatcherMenu> {
 			}
 			return true;
 		}
+		int row = orderRowAt(event.x(), event.y());
+		if (row >= 0 && this.minecraft.gameMode != null) {
+			TownDispatcherBlockEntity.OrderPress press = orderButtonAt(row, event.x(), event.y());
+			DispatcherView.OrderLine order = view().orders().get(row);
+			this.minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId, TownDispatcherMenu.orderButton(
+					order.building(), press == null ? TownDispatcherBlockEntity.OrderPress.SELECT : press));
+			AbstractWidget.playButtonClickSound(this.minecraft.getSoundManager());
+			return true;
+		}
 		int button = overAssemble(event.x(), event.y()) ? TownDispatcherMenu.BUTTON_ASSEMBLE
 				: overStart(event.x(), event.y()) && startBlockers(view()).isEmpty() ? TownDispatcherMenu.BUTTON_START
 				: -1;
@@ -601,6 +743,19 @@ public class TownDispatcherScreen extends MachineScreen<TownDispatcherMenu> {
 					: "settlement.alaindustrial.dispatcher.owner_only"), mouseX, mouseY);
 		} else if (overStart(mouseX, mouseY)) {
 			graphics.setTooltipForNextFrame(this.font, startTooltip(), mouseX, mouseY);
+		} else if (orderRowAt(mouseX, mouseY) >= 0) {
+			int row = orderRowAt(mouseX, mouseY);
+			TownDispatcherBlockEntity.OrderPress press = orderButtonAt(row, mouseX, mouseY);
+			DispatcherView.OrderLine order = view().orders().get(row);
+			Component text = press != null
+					? Component.translatable(key("order." + press.name().toLowerCase(Locale.ROOT)))
+					: ConstructionTab.component(order.name()).copy().append(": ")
+							.append(ConstructionTab.component(order.step()));
+			List<FormattedCharSequence> lines = this.font.split(text, PageText.wrapWidth(text, TOOLTIP_W));
+			graphics.setTooltipForNextFrame(this.font, lines, mouseX, mouseY);
+		} else if (emptySheetSlot() > 0) {
+			graphics.setTooltipForNextFrame(this.font,
+					Component.translatable(PlanSheetHints.hintKey(emptySheetSlot())), mouseX, mouseY);
 		} else if (tab == Tab.MATERIALS) {
 			DispatcherView.BillLine line = billAt(mouseX, mouseY);
 			if (line != null) {
@@ -612,14 +767,37 @@ public class TownDispatcherScreen extends MachineScreen<TownDispatcherMenu> {
 		}
 	}
 
-	/** The empty sheet slots show a sheet, the plan slot a plan. */
+	/**
+	 * The empty sheet slots show a sheet with the slot's number over it — sheet N goes into slot N only, so the
+	 * player sees which sheet is still to be found (owner's round 1 of 0.1.219) — the plan slot a plan.
+	 */
 	@Override
 	protected void drawGhostHints(GuiGraphicsExtractor graphics) {
 		for (int i = 0; i < TownDispatcherBlockEntity.SHEET_SLOTS; i++) {
-			ghostHint(graphics, TownDispatcherBlockEntity.SHEET_SLOT_FIRST + i,
-					new ItemStack(ModContent.TOWN_HALL_PLAN_SHEET.get()));
+			int containerSlot = TownDispatcherBlockEntity.SHEET_SLOT_FIRST + i;
+			ghostHint(graphics, containerSlot, new ItemStack(ModContent.TOWN_HALL_PLAN_SHEET.get()));
+			Slot slot = this.menu.machineSlot(containerSlot);
+			if (slot != null && slot.isActive() && !slot.hasItem()) {
+				String number = Integer.toString(i + 1);
+				graphics.text(this.font, number, this.leftPos + slot.x + (16 - this.font.width(number)) / 2,
+						this.topPos + slot.y + 4, GuiStyle.LABEL, false);
+			}
 		}
 		ghostHint(graphics, TownDispatcherBlockEntity.PLAN_SLOT, new ItemStack(ModContent.RESTORATION_PLAN.get()));
+	}
+
+	/** The number of the empty sheet slot under the mouse, or 0: its tooltip says where that sheet lies. */
+	private int emptySheetSlot() {
+		Slot slot = this.hoveredSlot;
+		if (slot == null || slot.hasItem() || !slot.isActive()) {
+			return 0;
+		}
+		for (int i = 0; i < TownDispatcherBlockEntity.SHEET_SLOTS; i++) {
+			if (slot == this.menu.machineSlot(TownDispatcherBlockEntity.SHEET_SLOT_FIRST + i)) {
+				return i + 1;
+			}
+		}
+		return 0;
 	}
 
 	/** The strip sticks out to the left of the frame, where JEI and REI park their bookmarks. */

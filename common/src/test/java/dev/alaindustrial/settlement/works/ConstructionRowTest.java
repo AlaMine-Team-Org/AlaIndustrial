@@ -25,8 +25,8 @@ class ConstructionRowTest {
 		ConstructionRow row = row(-1, Action.CANCEL.bit() | Action.START.bit());
 		assertTrue(row.allows(Action.CANCEL));
 		assertTrue(row.allows(Action.START));
-		assertFalse(row.allows(Action.RAISE_CLEAR));
-		assertFalse(row.allows(Action.RAISE_BUILD));
+		assertFalse(row.allows(Action.ORDER_RESTORE));
+		assertFalse(row.allows(Action.ORDER_BUILD));
 		assertFalse(row(-1, 0).allows(Action.CANCEL));
 	}
 
@@ -39,7 +39,7 @@ class ConstructionRowTest {
 			assertEquals(Optional.of(action), Action.byOrdinal(action.ordinal()));
 			assertTrue(action.key().startsWith("settlement.alaindustrial.works.action."), action.key());
 		}
-		assertEquals("settlement.alaindustrial.works.action.raise_clear", Action.RAISE_CLEAR.key());
+		assertEquals("settlement.alaindustrial.works.action.order_restore", Action.ORDER_RESTORE.key());
 		assertTrue(Action.byOrdinal(-1).isEmpty());
 		assertTrue(Action.byOrdinal(Action.values().length).isEmpty());
 	}
@@ -58,8 +58,9 @@ class ConstructionRowTest {
 		assertEquals(BlockReason.NO_MATERIALS, text.key());
 		assertEquals(List.of("12", "block.minecraft.bricks"), text.args());
 		assertTrue(text.joined());
-		BlockReason obstructed = BlockReason.obstructed("block.minecraft.chest");
-		assertEquals(new ConstructionRow.Text(BlockReason.OBSTRUCTED, List.of("block.minecraft.chest"), false),
+		BlockReason obstructed = BlockReason.obstructed("block.minecraft.chest", 1, 64, -5);
+		assertEquals(new ConstructionRow.Text(BlockReason.OBSTRUCTED_AT, List.of("block.minecraft.chest", "1 64 -5"),
+				false),
 				ConstructionRow.Text.of(obstructed));
 		assertTrue(BlockReason.KEYS.contains(BlockReason.NO_ENERGY));
 	}

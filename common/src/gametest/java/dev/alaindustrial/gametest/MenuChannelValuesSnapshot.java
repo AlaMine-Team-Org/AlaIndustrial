@@ -205,15 +205,15 @@ final class MenuChannelValuesSnapshot {
 					+ " getTerritoryWidth=65 getUpkeep=8 getWorkerLimit=4",
 			"settlement_core charged menu[6]: isActive=false isMisplaced=false isUnbound=false",
 			"reception_capsule placed [0]: 0 3392 0 1000 0 6 1696 3 0 0 0 1",
-			"reception_capsule placed [12]: 8 4 0 0 0",
+			"reception_capsule placed [12]: 8 4 0 0 0 0",
 			"reception_capsule placed getters: energy=0 capacity=200000 progress=0/1000",
 			"reception_capsule placed menu[0]: getAwaiting=0 getEuMissing=100000 getEuPrice=100000"
-					+ " getLimit=0 getLiving=0",
+					+ " getHousedLimit=0 getLimit=0 getLiving=0",
 			"reception_capsule charged [0]: 1696 3392 0 1000 3 6 1696 3 0 0 0 1",
-			"reception_capsule charged [12]: 8 4 0 0 0",
+			"reception_capsule charged [12]: 8 4 0 0 0 0",
 			"reception_capsule charged getters: energy=100000 capacity=200000 progress=0/1000",
 			"reception_capsule charged menu[0]: getAwaiting=0 getEuMissing=0 getEuPrice=100000"
-					+ " getLimit=0 getLiving=0",
+					+ " getHousedLimit=0 getLimit=0 getLiving=0",
 			"town_dispatcher placed [0]: 0 0 0 0 0 0 0 0 0 1 0",
 			"town_dispatcher placed getters: energy=0 capacity=0 progress=0/0",
 			"town_dispatcher placed menu[0]: getBusyNests=0 getMissing=0 getNestLimit=0 getReadyNests=0"

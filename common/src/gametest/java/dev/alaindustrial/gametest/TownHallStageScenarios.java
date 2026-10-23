@@ -2,6 +2,14 @@ package dev.alaindustrial.gametest;
 
 import dev.alaindustrial.gametest.TownDroneScenarios.Rig;
 import dev.alaindustrial.settlement.SettlementRegistry;
+import dev.alaindustrial.settlement.Settlement;
+import dev.alaindustrial.settlement.drone.DispatcherView;
+import dev.alaindustrial.settlement.drone.DispatcherViews;
+import dev.alaindustrial.settlement.drone.StalledOrders;
+import dev.alaindustrial.settlement.drone.StartReadiness;
+import dev.alaindustrial.settlement.works.ConstructionRow;
+import dev.alaindustrial.settlement.works.ConstructionRows;
+import dev.alaindustrial.settlement.works.TownOrders;
 import dev.alaindustrial.settlement.drone.HallBuildNews;
 import dev.alaindustrial.settlement.works.BlockReason;
 import dev.alaindustrial.settlement.works.BuildMaterials;
@@ -41,7 +49,13 @@ public final class TownHallStageScenarios {
 				RosterEntry.of(TownHallStageScenarios::interiorResumesAfterAClearingRaisedMeanwhile,
 						"town_hall_stage_interior_resumes_after_a_clearing_raised_meanwhile").ticks(3000),
 				RosterEntry.of(TownHallStageScenarios::hallNewsTellsStagesAndTheRestoration,
-						"town_hall_stage_news_tells_stages_and_the_restoration").ticks(4000));
+						"town_hall_stage_news_tells_stages_and_the_restoration").ticks(4000),
+				RosterEntry.of(TownHallStageScenarios::aBlockWithDataStopsTheJobNamingItself,
+						"town_hall_stage_a_block_with_data_stops_the_job_naming_itself").ticks(3000),
+				RosterEntry.of(TownHallStageScenarios::anOrderThatEndedUnfinishedIsPlacedAgain,
+						"town_hall_stage_an_order_that_ended_unfinished_is_placed_again").ticks(3000),
+				RosterEntry.of(TownHallStageScenarios::aCalledOffOrderWaitsForStart,
+						"town_hall_stage_a_called_off_order_waits_for_start").ticks(3000));
 
 		private Roster() {}
 	}
@@ -113,8 +127,11 @@ public final class TownHallStageScenarios {
 
 	/**
 	 * @implements MOD-860-RESUME — the same fittings, and a wall brick, with the buffer stocked before the job starts.
-	 * @implements MOD-860-NEWS — on a hall restored before, the walls line says the next stage is stocked and the
-	 *     fittings line says the hall stands whole.
+	 * @implements MOD-860-NEWS — a hall that met its restoration share before its fittings were in (the rig measured it
+	 *     restored; its first building job is still open): the walls line says the next stage is stocked; the hall's
+	 *     order stays in the dispatcher's list and nothing says «restored» while the drones are at it; when the job is
+	 *     done the order is gone and one line says the hall is restored and the house plan it teaches (owner's round 3
+	 *     of 0.1.219, R3-1, R3-2).
 	 */
 	public static void interiorBuildsOnAStockedBuffer(GameTestHelper helper) {
 		Rig rig = TownDroneScenarios.rig(helper, 1);
@@ -122,26 +139,39 @@ public final class TownHallStageScenarios {
 		List<BlockPos> cells = takeOutFittings(helper, rig);
 		rig.dispatcher().buffer().insert(new ItemStack(Blocks.BRICKS, 1));
 		fill(rig);
-		List<TranslatableContents> heard = new ArrayList<>();
+		List<Component> lines = new ArrayList<>();
 		Runnable deaf = HallBuildNews.listen((town, line) -> {
-			if (town == rig.town() && line.getSiblings().getLast().getContents() instanceof TranslatableContents t) {
-				heard.add(t);
+			if (town == rig.town()) {
+				lines.add(line.getSiblings().getLast());
 			}
 		});
 		WorkJob job = rig.works().queue().raise(WorkJobType.BUILD, 0).orElseThrow();
-		helper.onEachTick(rig::tick);
+		List<String> early = new ArrayList<>();
+		helper.onEachTick(() -> {
+			rig.tick();
+			boolean open = rig.works().queue().job(job.id()).orElseThrow().status().open();
+			if (open && !rig.works().orders().contains(0)) {
+				early.add("the hall's order left the list while its job was open");
+			}
+			if (open && keys(contents(lines)).contains(HallBuildNews.HALL_RESTORED)) {
+				early.add("«restored» was said while the job was open");
+			}
+		});
 		helper.succeedWhen(() -> {
 			assertBuilt(helper, rig, job, cells);
 			deaf.run();
-			// The hall was restored before (the rig measured it whole): the walls say the fittings are stocked, the
-			// fittings say the hall stands whole.
-			TranslatableContents ready = only(helper, heard, HallBuildNews.STAGE_READY);
-			helper.assertTrue(key(ready, 2).equals(BuildStage.WALLS.key()) && key(ready, 3)
-					.equals(BuildStage.INTERIOR.key()), "the walls line must name the fittings next: " + args(ready));
-			TranslatableContents last = only(helper, heard, HallBuildNews.STAGE_LAST);
-			helper.assertTrue(key(last, 2).equals(BuildStage.INTERIOR.key()), "the last line must name the fittings: "
-					+ args(last));
-			helper.assertTrue(heard.size() == 2, "two lines expected, heard " + keys(heard));
+			helper.assertTrue(early.isEmpty(), String.valueOf(early));
+			helper.assertTrue(rig.works().orders().isEmpty(), "a finished hall keeps no order: "
+					+ rig.works().orders());
+			List<TranslatableContents> heard = contents(lines);
+			TranslatableContents done = only(helper, heard, HallBuildNews.STAGE_DONE);
+			TranslatableContents ready = only(helper, heard, HallBuildNews.NEXT_READY);
+			helper.assertTrue(key(done, 0).equals(BuildStage.WALLS.key()) && key(ready, 0)
+					.equals(BuildStage.INTERIOR.key()), "the walls line must name the fittings next: " + args(done)
+					+ " " + args(ready));
+			only(helper, heard, HallBuildNews.HALL_RESTORED);
+			assertRewardSaid(helper, lines);
+			helper.assertTrue(lines.size() == 2, "two lines expected, heard " + keys(heard));
 		});
 	}
 
@@ -162,10 +192,13 @@ public final class TownHallStageScenarios {
 		registry.works().forget(rig.town());
 		registry.works().town(rig.town()).learnBuildings(List.of(TownBuilding.found(hall.template(), hall.intact(),
 				hall.name(), hall.origin(), hall.rotation())));
-		List<TranslatableContents> heard = new ArrayList<>();
+		List<Component> lines = new ArrayList<>();
+		List<Component> headings = new ArrayList<>();
 		Runnable deaf = HallBuildNews.listen((town, line) -> {
-			if (town == rig.town() && line.getSiblings().getLast().getContents() instanceof TranslatableContents t) {
-				heard.add(t);
+			if (town == rig.town()) {
+				lines.add(line.getSiblings().getLast());
+				line.getSiblings().stream().filter(part -> part.getContents() instanceof TranslatableContents t
+						&& t.getKey().equals(HallBuildNews.HEADER)).forEach(headings::add);
 			}
 		});
 		rig.dispatcher().buffer().insert(new ItemStack(Blocks.BRICKS, 1));
@@ -173,25 +206,33 @@ public final class TownHallStageScenarios {
 		boolean[] filled = {false};
 		helper.onEachTick(() -> {
 			rig.tick();
-			if (!filled[0] && heard.stream().anyMatch(t -> t.getKey().equals(HallBuildNews.STAGE_NEEDS))) {
+			if (!filled[0] && keys(contents(lines)).contains(HallBuildNews.NEXT_NEEDS)) {
 				fill(rig);
 				filled[0] = true;
 			}
 		});
 		helper.succeedWhen(() -> {
+			List<TranslatableContents> heard = contents(lines);
 			helper.assertTrue(rig.works().queue().job(job.id()).orElseThrow().status() == WorkJobStatus.DONE,
 					"the building job must be done, heard " + keys(heard));
 			deaf.run();
 			String core = rig.core().getBlockPos().getX() + ", " + rig.core().getBlockPos().getY() + ", "
 					+ rig.core().getBlockPos().getZ();
-			TranslatableContents needs = only(helper, heard, HallBuildNews.STAGE_NEEDS);
-			helper.assertTrue(text(needs, 0).equals(String.valueOf(rig.town())) && text(needs, 1).equals(core)
-					&& key(needs, 2).equals(BuildStage.WALLS.key()) && key(needs, 3).equals(BuildStage.INTERIOR.key()),
-					"the walls line must name the settlement, its core and the fittings next: " + args(needs));
+			TranslatableContents done = only(helper, heard, HallBuildNews.STAGE_DONE);
+			TranslatableContents needs = only(helper, heard, HallBuildNews.NEXT_NEEDS);
+			TranslatableContents heading = contents(headings).getFirst();
+			helper.assertTrue(headings.size() == lines.size() && text(heading, 0).equals(String.valueOf(rig.town()))
+					&& text(heading, 1).equals(core) && key(done, 0).equals(BuildStage.WALLS.key())
+					&& key(needs, 0).equals(BuildStage.INTERIOR.key()),
+					"the walls line must name the settlement, its core and the fittings next: " + args(heading) + " "
+							+ args(done) + " " + args(needs));
 			only(helper, heard, HallBuildNews.HALL_RESTORED);
+			// The restored hall teaches the plainest house of its style (round 2 of 0.1.219, Q5): said in the same
+			// line (R3-2).
+			assertRewardSaid(helper, lines);
 			// The drone pad's carpet is a key point: the hall is restored with the fittings' last block, and that
-			// one line says it. No «stands whole» line beside it, no «ready» line: the fittings waited.
-			helper.assertTrue(heard.size() == 2, "two lines expected, heard " + keys(heard));
+			// one line says it. No «ready» line: the fittings waited.
+			helper.assertTrue(lines.size() == 2, "two lines expected, heard " + keys(heard));
 			List<WorkJournal.Kind> journal = rig.dispatcher().journal().entries().stream().map(WorkJournal.Entry::kind)
 					.toList();
 			helper.assertTrue(journal.contains(WorkJournal.Kind.RESTORED)
@@ -202,6 +243,177 @@ public final class TownHallStageScenarios {
 			}
 			rig.release();
 		});
+	}
+
+	/**
+	 * @implements MOD-860-RESUME — the owner's round 5 dead end: a block with data (a chest here; a creative energy
+	 *     source in the owner's world) stands in the walls where the plan wants iron bars, iron bars lie in the buffer.
+	 *     The building job never ends with the hall half built and never passes the block silently: it stops «in the
+	 *     way: chest at x y z», the restorer hears it in chat once; the chest taken away, the job goes on by itself,
+	 *     puts the iron bars and the fittings, and is done. Before the fix the job ended at once, fittings unbuilt.
+	 */
+	public static void aBlockWithDataStopsTheJobNamingItself(GameTestHelper helper) {
+		Rig rig = TownDroneScenarios.rig(helper, 1);
+		BuildMaterials.StagedPlan staged = BuildMaterials.forBuilding(rig.level(), rig.town(), 0).orElseThrow();
+		int bars = -1;
+		for (int i = 0; i < rig.plan().size() && bars < 0; i++) {
+			if (staged.stage(i).equals(Optional.of(BuildStage.WALLS)) && staged.item(i).equals("minecraft:iron_bars")
+					&& rig.level().getBlockState(rig.plan().pos(i)).is(Blocks.IRON_BARS)) {
+				bars = i;
+			}
+		}
+		helper.assertTrue(bars >= 0, "control: no iron bars in the walls of the intact hall");
+		BlockPos chest = rig.plan().pos(bars);
+		rig.level().setBlock(chest, Blocks.CHEST.defaultBlockState(), Block.UPDATE_CLIENTS);
+		List<BlockPos> cells = takeOutFittings(helper, rig);
+		rig.dispatcher().buffer().insert(new ItemStack(Blocks.IRON_BARS, 8));
+		fill(rig);
+		List<String> told = new ArrayList<>();
+		Runnable deaf = HallBuildNews.listen((town, line) -> {
+			if (town == rig.town()) {
+				told.addAll(keys(contents(List.of(line.getSiblings().getLast()))));
+			}
+		});
+		WorkJob job = rig.works().queue().raise(WorkJobType.BUILD, 0).orElseThrow();
+		BlockReason expected = BlockReason.obstructed(Blocks.CHEST.getDescriptionId(), chest.getX(), chest.getY(),
+				chest.getZ());
+		int[] stoppedTicks = {0};
+		helper.onEachTick(() -> {
+			rig.tick();
+			WorkJob now = rig.works().queue().job(job.id()).orElseThrow();
+			helper.assertTrue(stoppedTicks[0] > 0 || now.status() != WorkJobStatus.DONE,
+					"the job must not end while the chest stands in the walls");
+			if (rig.level().getBlockState(chest).is(Blocks.CHEST) && now.status() == WorkJobStatus.BLOCKED
+					&& now.reason().equals(Optional.of(expected)) && ++stoppedTicks[0] >= 300) {
+				// Long enough for several retries: the stop is told once, then the player takes the chest away.
+				rig.level().setBlock(chest, Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
+			}
+		});
+		helper.succeedWhen(() -> {
+			helper.assertTrue(stoppedTicks[0] >= 300, "control: the job never stopped " + expected + ": "
+					+ rig.works().queue().job(job.id()));
+			helper.assertTrue(rig.level().getBlockState(chest).is(Blocks.IRON_BARS), "the iron bars must be back");
+			assertBuilt(helper, rig, job, cells);
+			deaf.run();
+			helper.assertTrue(told.stream().filter(HallBuildNews.JOB_STOPPED::equals).count() == 1,
+					"the stop must be told once, heard " + told);
+		});
+	}
+
+	/**
+	 * @implements MOD-860-RESUME — no «all ticked, nothing happens» (owner's round 5): the hall's order ended — its
+	 *     building job done — while a door of the hall is still missing, and no job is open. The town places the order
+	 *     again by itself and the drone puts the door back.
+	 */
+	public static void anOrderThatEndedUnfinishedIsPlacedAgain(GameTestHelper helper) {
+		Rig rig = TownDroneScenarios.rig(helper, 1);
+		freshHall(rig); // a hall never restored: its order is the first restoration's, not a repair
+		List<BlockPos> door = takeOutADoor(helper, rig);
+		rig.dispatcher().buffer().insert(new ItemStack(Blocks.DARK_OAK_DOOR, 4));
+		WorkJob ended = rig.works().queue().raise(WorkJobType.BUILD, 0).orElseThrow();
+		rig.works().queue().take(ended.id(), "ended");
+		rig.works().queue().complete(ended.id(), "ended");
+		helper.onEachTick(rig::tick);
+		helper.succeedWhen(() -> {
+			List<WorkJob> again = rig.works().queue().jobs().stream()
+					.filter(j -> j.building() == 0 && j.id() > ended.id() && j.type() == WorkJobType.BUILD).toList();
+			helper.assertTrue(!again.isEmpty() && again.getLast().status() == WorkJobStatus.DONE,
+					"the hall's order must be placed again and done: " + rig.works().queue().jobs());
+			for (BlockPos pos : door) {
+				helper.assertTrue(rig.level().getBlockState(pos).is(Blocks.DARK_OAK_DOOR), "the door at " + pos
+						+ " must be back, the world holds " + rig.level().getBlockState(pos));
+			}
+			rig.release();
+		});
+	}
+
+	/**
+	 * @implements MOD-860-RESUME — an order the owner called off is the player's intent (round 5 of 0.1.219): the
+	 *     town never places it again by itself, the «Task» tab says it was called off and «Start» may be pressed, the
+	 *     building's card says so with «Resume»; placed again, it is built.
+	 */
+	public static void aCalledOffOrderWaitsForStart(GameTestHelper helper) {
+		Rig rig = TownDroneScenarios.rig(helper, 1);
+		freshHall(rig);
+		List<BlockPos> door = takeOutADoor(helper, rig);
+		rig.dispatcher().buffer().insert(new ItemStack(Blocks.DARK_OAK_DOOR, 4));
+		Settlement town = SettlementRegistry.get(rig.level().getServer()).find(rig.town()).orElseThrow();
+		helper.assertTrue(TownOrders.place(rig.level(), town, 0, "test").isEmpty(), "control: the order is placed");
+		TownOrders.cancel(rig.works(), 0);
+		int[] ticks = {0};
+		helper.onEachTick(() -> {
+			rig.tick();
+			if (++ticks[0] == StalledOrders.RESTORE_AFTER * 2) {
+				helper.assertTrue(rig.works().queue().jobs().stream().noneMatch(j -> j.status().open()),
+						"a called-off order must not be placed again: " + rig.works().queue().jobs());
+				DispatcherView view = rig.dispatcher().view();
+				helper.assertTrue(view.task().stream().anyMatch(t -> t.key().equals(DispatcherViews.ORDER_CALLED_OFF)),
+						"the Task tab must say the order was called off: " + view.task());
+				helper.assertTrue(StartReadiness.blockers(true, view.checklist(), view.checklist().hall(), 1).isEmpty(),
+						"Start must be free: " + view.checklist());
+				helper.assertTrue(ConstructionRows.stop(rig.works(), 0, TownOrders.button(rig.works(), 0))
+						.map(ConstructionRow.Text::key).equals(Optional.of(ConstructionRows.CALLED_OFF)),
+						"the card must say the order was called off");
+				TownOrders.place(rig.level(), town, 0, "test");
+			}
+		});
+		helper.succeedWhen(() -> {
+			helper.assertTrue(ticks[0] > StalledOrders.RESTORE_AFTER * 2, "control: the order was not placed again");
+			for (BlockPos pos : door) {
+				helper.assertTrue(rig.level().getBlockState(pos).is(Blocks.DARK_OAK_DOOR), "the door at " + pos
+						+ " must be back, the world holds " + rig.level().getBlockState(pos));
+			}
+			rig.release();
+		});
+	}
+
+	/** The town forgets its hall was ever restored: a never restored hall, whose order is no repair. */
+	private static void freshHall(Rig rig) {
+		TownBuilding hall = rig.works().buildings().getFirst();
+		SettlementRegistry registry = SettlementRegistry.get(rig.level().getServer());
+		registry.works().forget(rig.town());
+		registry.works().town(rig.town()).learnBuildings(List.of(TownBuilding.found(hall.template(), hall.intact(),
+				hall.name(), hall.origin(), hall.rotation())));
+	}
+
+	/** Takes both halves of one dark oak door of the hall out, and returns where they were. */
+	private static List<BlockPos> takeOutADoor(GameTestHelper helper, Rig rig) {
+		for (int i = 0; i < rig.plan().size(); i++) {
+			BlockPos pos = rig.plan().pos(i);
+			if (rig.plan().expected(i).is(Blocks.DARK_OAK_DOOR)
+					&& rig.level().getBlockState(pos).is(Blocks.DARK_OAK_DOOR)
+					&& rig.level().getBlockState(pos.above()).is(Blocks.DARK_OAK_DOOR)) {
+				rig.level().setBlock(pos.above(), Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
+				rig.level().setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
+				return List.of(pos, pos.above());
+			}
+		}
+		throw helper.assertionException("control: no dark oak door in the intact hall");
+	}
+
+	/** The restored line carries the house plan the hall teaches after its body, in the same message (R3-2). */
+	private static void assertRewardSaid(GameTestHelper helper, List<Component> lines) {
+		Component restored = lines.stream().filter(line -> line.getContents() instanceof TranslatableContents t
+				&& t.getKey().equals(HallBuildNews.HALL_RESTORED)).findFirst().orElseThrow();
+		boolean reward = restored.getSiblings().stream().anyMatch(part -> part.getContents()
+				instanceof TranslatableContents t && t.getKey().equals(HallBuildNews.HALL_REWARD));
+		helper.assertTrue(reward, "the restored line must name the house plan the hall teaches: " + restored);
+	}
+
+	/** The sentences of {@code lines} and the parts said after each in the same message (R4-7). */
+	private static List<TranslatableContents> contents(List<Component> lines) {
+		List<TranslatableContents> out = new ArrayList<>();
+		for (Component line : List.copyOf(lines)) {
+			if (line.getContents() instanceof TranslatableContents t) {
+				out.add(t);
+			}
+			for (Component part : line.getSiblings()) {
+				if (part.getContents() instanceof TranslatableContents t) {
+					out.add(t);
+				}
+			}
+		}
+		return out;
 	}
 
 	private static TranslatableContents only(GameTestHelper helper, List<TranslatableContents> heard, String key) {

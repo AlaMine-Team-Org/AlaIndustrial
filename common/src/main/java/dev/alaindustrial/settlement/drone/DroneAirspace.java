@@ -1,16 +1,15 @@
 package dev.alaindustrial.settlement.drone;
 
+import dev.alaindustrial.core.drone.DroneDetour;
 import dev.alaindustrial.core.drone.DroneRoute;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Predicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.DoorBlock;
-import net.minecraft.world.level.block.FenceGateBlock;
-import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
@@ -22,9 +21,11 @@ import org.jspecify.annotations.Nullable;
  * is open to it, and the route from its nest to the cell next to the block it works ({@link DroneRoute}).
  *
  * <p><b>Open</b> is a cell with no collision, or one so low the drone hovers over it (a carpet, a nest: at most
- * {@link #LOW_TOP} high), or a doorway — a door, a trapdoor, a fence gate, open or shut: the drone slips through the
- * hall's door as a player would walk through it. Never lava, never a cell whose chunk is not loaded (a drone never
- * loads a chunk for its own sake), and never a cell the {@code loaded} probe of a game test says is gone.
+ * {@link #LOW_TOP} high), or a doorway a hand opens — a door, a trapdoor, a fence gate, open or shut: the drone opens
+ * a shut one in front of it and shuts it behind it, as a player walks through a door ({@link DroneDoorways}, MOD-872).
+ * An iron door or trapdoor is open only while redstone holds it open. Never lava, never a cell whose chunk is not
+ * loaded (a drone never loads a chunk for its own sake), and never a cell the {@code loaded} probe of a game test says
+ * is gone.
  *
  * <p><b>The cost is bounded</b>: the search box is the nest and the target with {@link #MARGIN} blocks around and
  * {@link #HEADROOM} over the higher of them, the search stops after {@link #MAX_NODES} cells, and a nest spreads it
@@ -44,6 +45,8 @@ public final class DroneAirspace {
 	public static final int MAX_NODES = 6000;
 	/** Cells a route search expands in one tick: a longer search goes on next tick. */
 	public static final int NODES_PER_TICK = 800;
+	/** Blocks a drone lifts out of its way at most to reach a walled-up cell (owner's round 5 of 0.1.219). */
+	public static final int MAX_LIFTS = 2;
 	/** The highest collision top a cell may have and still be flown over, in blocks: a nest's plate, a carpet. */
 	public static final double LOW_TOP = 3.0 / 16.0 + 1.0E-3;
 
@@ -63,9 +66,8 @@ public final class DroneAirspace {
 		if (state.getFluidState().is(FluidTags.LAVA)) {
 			return false;
 		}
-		Block block = state.getBlock();
-		if (block instanceof DoorBlock || block instanceof TrapDoorBlock || block instanceof FenceGateBlock) {
-			return true;
+		if (DroneDoorways.doorway(state)) {
+			return DroneDoorways.passable(state);
 		}
 		VoxelShape shape = state.getCollisionShape(level, pos);
 		return shape.isEmpty() || shape.max(Direction.Axis.Y) <= LOW_TOP;
@@ -95,6 +97,48 @@ public final class DroneAirspace {
 	 */
 	public static DroneRoute.Planner plan(ServerLevel level, BlockPos nest, BlockPos target,
 			@Nullable Predicate<BlockPos> probe, @Nullable BoundingBox building) {
+		int[] b = box(level, nest, target, building);
+		BlockPos.MutableBlockPos at = new BlockPos.MutableBlockPos();
+		DroneRoute.Cells cells = probe == null ? chunkCells(level, b[0], b[2], b[3], b[5])
+				: (x, y, z) -> open(level, at.set(x, y, z), probe);
+		return DroneRoute.plan(nest.getX(), nest.getY(), nest.getZ(), target.getX(), target.getY(), target.getZ(),
+				cells, b[0], b[1], b[2], b[3], b[4], b[5], MAX_NODES);
+	}
+
+	/**
+	 * The blocks to lift out of the way for a while so the drone reaches {@code target}, which no route reaches
+	 * (owner's round 5 of 0.1.219): at most {@link #MAX_LIFTS}, each one {@code liftable} allows, dock side first —
+	 * searched in the same box as the route ({@link DroneDetour}). Null when there is no such way in.
+	 */
+	public static @Nullable List<BlockPos> lifts(ServerLevel level, BlockPos nest, BlockPos target,
+			@Nullable Predicate<BlockPos> probe, @Nullable BoundingBox building, Predicate<BlockPos> liftable) {
+		int[] b = box(level, nest, target, building);
+		Predicate<BlockPos> loaded = probe != null ? probe : level::isLoaded;
+		BlockPos.MutableBlockPos at = new BlockPos.MutableBlockPos();
+		DroneDetour.Cells cells = (x, y, z) -> {
+			at.set(x, y, z);
+			if (!loaded.test(at)) {
+				return DroneDetour.Kind.CLOSED;
+			}
+			if (open(level, at, level.getBlockState(at))) {
+				return DroneDetour.Kind.OPEN;
+			}
+			return liftable.test(at.immutable()) ? DroneDetour.Kind.LIFT : DroneDetour.Kind.CLOSED;
+		};
+		int[] found = DroneDetour.find(nest.getX(), nest.getY(), nest.getZ(), target.getX(), target.getY(),
+				target.getZ(), cells, b[0], b[1], b[2], b[3], b[4], b[5], MAX_LIFTS, MAX_NODES * 3);
+		if (found == null) {
+			return null;
+		}
+		List<BlockPos> out = new ArrayList<>();
+		for (int i = 0; i < found.length; i += 3) {
+			out.add(new BlockPos(found[i], found[i + 1], found[i + 2]));
+		}
+		return out;
+	}
+
+	/** The search box, {minX, minY, minZ, maxX, maxY, maxZ}: the nest and the target with room, and the building. */
+	private static int[] box(ServerLevel level, BlockPos nest, BlockPos target, @Nullable BoundingBox building) {
 		int minX = Math.min(nest.getX(), target.getX()) - MARGIN;
 		int minZ = Math.min(nest.getZ(), target.getZ()) - MARGIN;
 		int maxX = Math.max(nest.getX(), target.getX()) + MARGIN;
@@ -109,13 +153,7 @@ public final class DroneAirspace {
 			low = Math.min(low, building.minY());
 			high = Math.max(high, building.maxY() + AROUND_BUILDING);
 		}
-		int minY = Math.max(level.getMinY(), low);
-		int maxY = Math.min(level.getMaxY(), high);
-		BlockPos.MutableBlockPos at = new BlockPos.MutableBlockPos();
-		DroneRoute.Cells cells = probe == null ? chunkCells(level, minX, minZ, maxX, maxZ)
-				: (x, y, z) -> open(level, at.set(x, y, z), probe);
-		return DroneRoute.plan(nest.getX(), nest.getY(), nest.getZ(), target.getX(), target.getY(), target.getZ(),
-				cells, minX, minY, minZ, maxX, maxY, maxZ, MAX_NODES);
+		return new int[] {minX, Math.max(level.getMinY(), low), minZ, maxX, Math.min(level.getMaxY(), high), maxZ};
 	}
 
 	/**

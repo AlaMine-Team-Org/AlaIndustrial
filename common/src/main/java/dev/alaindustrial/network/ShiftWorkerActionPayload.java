@@ -2,6 +2,7 @@ package dev.alaindustrial.network;
 
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.settlement.record.RecordNumber;
+import dev.alaindustrial.settlement.shift.ShiftWorkerLocator;
 import dev.alaindustrial.settlement.shift.ShiftWorkerProfile;
 import dev.alaindustrial.settlement.shift.ShiftWorkerProfiles;
 import io.netty.buffer.ByteBuf;
@@ -14,16 +15,19 @@ import net.minecraft.server.level.ServerPlayer;
 
 /**
  * C2S: a change the owner makes from a shift worker's card (MOD-854): one point into a stat, all points back at a
- * capsule, or a name. Nothing here is trusted — {@link ShiftWorkerProfiles} checks owner (R74: others only view),
- * a living record, the viewing distance and the action's own conditions, and replies with a refreshed card.
+ * capsule, a name, another house (MOD-862), or an outline to find it by ({@link ShiftWorkerLocator}, R4-13).
+ * Nothing here is trusted — {@link ShiftWorkerProfiles} checks owner
+ * (R74: others only view), a living record, the viewing distance and the action's own conditions, and replies with
+ * a refreshed card.
  *
  * @param number the record number
  * @param action what to do
  * @param stat   the stat, for {@link Action#INVEST}; empty otherwise
  * @param name   the new name, for {@link Action#RENAME}; empty otherwise (the server sanitises and cuts it)
+ * @param house  the house to move into, for {@link Action#RELOCATE} (its index in the town, MOD-862); -1 otherwise
  */
 public record ShiftWorkerActionPayload(String number, Action action, Optional<ShiftWorkerProfile.Stat> stat,
-		String name) implements CustomPacketPayload {
+		String name, int house) implements CustomPacketPayload {
 
 	public static final Type<ShiftWorkerActionPayload> TYPE = new Type<>(Industrialization.id("shift_worker_action"));
 
@@ -37,7 +41,11 @@ public record ShiftWorkerActionPayload(String number, Action action, Optional<Sh
 		/** Every invested point back, paid at a capsule of the worker's town (R69). */
 		RESPEC,
 		/** A new name; an empty one clears it. */
-		RENAME
+		RENAME,
+		/** Into another free house of its town (MOD-862, R102). */
+		RELOCATE,
+		/** Outline it for a few seconds, seen through walls, so it can be found (R4-13). */
+		LOCATE
 	}
 
 	private static final Action[] ACTIONS = Action.values();
@@ -54,21 +62,32 @@ public record ShiftWorkerActionPayload(String number, Action action, Optional<Sh
 			ACTION, ShiftWorkerActionPayload::action,
 			ByteBufCodecs.optional(STAT), ShiftWorkerActionPayload::stat,
 			ByteBufCodecs.stringUtf8(ShiftWorkerCardPayload.TEXT_LIMIT), ShiftWorkerActionPayload::name,
+			ByteBufCodecs.VAR_INT, ShiftWorkerActionPayload::house,
 			ShiftWorkerActionPayload::new);
 
 	/** One point into {@code stat}. */
 	public static ShiftWorkerActionPayload invest(String number, ShiftWorkerProfile.Stat stat) {
-		return new ShiftWorkerActionPayload(number, Action.INVEST, Optional.of(stat), "");
+		return new ShiftWorkerActionPayload(number, Action.INVEST, Optional.of(stat), "", -1);
 	}
 
 	/** Every point back at a capsule. */
 	public static ShiftWorkerActionPayload respec(String number) {
-		return new ShiftWorkerActionPayload(number, Action.RESPEC, Optional.empty(), "");
+		return new ShiftWorkerActionPayload(number, Action.RESPEC, Optional.empty(), "", -1);
 	}
 
 	/** A new name. */
 	public static ShiftWorkerActionPayload rename(String number, String name) {
-		return new ShiftWorkerActionPayload(number, Action.RENAME, Optional.empty(), name);
+		return new ShiftWorkerActionPayload(number, Action.RENAME, Optional.empty(), name, -1);
+	}
+
+	/** Into free house {@code house} of the worker's town. */
+	public static ShiftWorkerActionPayload relocate(String number, int house) {
+		return new ShiftWorkerActionPayload(number, Action.RELOCATE, Optional.empty(), "", house);
+	}
+
+	/** Outline the worker for a few seconds. */
+	public static ShiftWorkerActionPayload locate(String number) {
+		return new ShiftWorkerActionPayload(number, Action.LOCATE, Optional.empty(), "", -1);
 	}
 
 	/** Server side: hands the action to the profile service, which validates, applies and refreshes the card. */
@@ -81,6 +100,8 @@ public record ShiftWorkerActionPayload(String number, Action action, Optional<Sh
 			case INVEST -> payload.stat().ifPresent(stat -> ShiftWorkerProfiles.invest(player, number.get(), stat));
 			case RESPEC -> ShiftWorkerProfiles.respec(player, number.get());
 			case RENAME -> ShiftWorkerProfiles.rename(player, number.get(), payload.name());
+			case RELOCATE -> ShiftWorkerProfiles.relocate(player, number.get(), payload.house());
+			case LOCATE -> ShiftWorkerLocator.locate(player, number.get());
 		}
 	}
 

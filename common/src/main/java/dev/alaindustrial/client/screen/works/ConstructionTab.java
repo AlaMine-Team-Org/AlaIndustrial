@@ -4,7 +4,13 @@ import dev.alaindustrial.client.render.HallSchematicOverlay;
 import dev.alaindustrial.client.screen.GuiStyle;
 import dev.alaindustrial.client.screen.SettlementCoreLayout;
 import dev.alaindustrial.client.screen.TextFit;
+import dev.alaindustrial.client.screen.works.WorksModel.Card;
+import dev.alaindustrial.client.screen.works.WorksModel.Control;
+import dev.alaindustrial.client.screen.works.WorksModel.Line;
+import dev.alaindustrial.client.screen.works.WorksModel.Model;
+import dev.alaindustrial.client.screen.works.WorksModel.Section;
 import dev.alaindustrial.network.TownWorksPayload;
+import dev.alaindustrial.settlement.works.BuildingTile;
 import dev.alaindustrial.settlement.works.ConstructionRow;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,41 +25,40 @@ import net.minecraft.world.item.Items;
 import org.jspecify.annotations.Nullable;
 
 /**
- * The «Construction» tab of the settlement core's screen (MOD-857, epic decision R88): the rows the server sent
- * ({@link TownWorksPayload}) — a heading wherever the section changes, each row's line with its status and percent at
- * the right, its second line under it — and, for the town's owner, the small controls at the right of a row (R95).
- * Everybody else sees the same rows without controls, and a line saying so at the end — all but the town hall's
- * schematic switch, which is visual and personal and goes to everyone ({@link HallSchematicOverlay}).
+ * The «Construction» tab of the settlement core's screen (MOD-857; owner's round 3 of 0.1.219, R3-3 and R3-6): at the
+ * top a dark bar that says what to do next, under it a pane that scrolls — the town hall, the houses, the other
+ * buildings, each a card with its picture, name, status chip, share restored and the one button of its next step; the
+ * road network; the plans the town has found. A click on a card opens it: the stage the building is on, what the stage
+ * still lacks, why the building waits, who lives in it, the open jobs of its order and the schematic switch.
  *
- * <p>The tab knows no building or job: it draws rows. A later task's section (the plan sheets of MOD-859, the material
- * stages of MOD-860) appears here by itself once the server adds its rows.
+ * <p>The server words every line ({@link TownWorksPayload}): the rows of {@code ConstructionRows}, the card data of
+ * {@link BuildingTile} and the hint. This tab only lays them out: a stage row and the job rows find their card by
+ * their target. The town's owner gets the buttons (R95); anybody gets the schematic switch, which is visual and
+ * personal ({@link HallSchematicOverlay}).
  *
  * <p>Asked for when the tab opens and every two seconds while it stays open, like the shift workers' roster.
  */
 public final class ConstructionTab {
 
 	private static final int REFRESH_TICKS = 40;
-	/** Most panel lines one row's second line wraps onto before it shrinks. */
-	private static final int DETAIL_MAX_LINES = 4;
+	private static final int SCROLL_STEP = 15;
+	private static final int LINE = 10;
 
-	/** What a control shows. */
-	private static ItemStack icon(ConstructionRow.Action action) {
-		return switch (action) {
-			case RAISE_CLEAR -> new ItemStack(Items.IRON_SHOVEL);
-			case RAISE_BUILD -> new ItemStack(Items.BRICKS);
-			case CANCEL -> new ItemStack(Items.BARRIER);
-			case START -> new ItemStack(Items.LEVER);
-			case SCHEMATIC -> new ItemStack(Items.MAP);
-		};
+	/** One laid-out block of the pane, at {@code y} from the pane's content top. */
+	private record Block(Kind kind, int y, int height, @Nullable Card card, @Nullable Component text,
+			List<Line> lines) {
+		enum Kind { HEADING, CARD, NETWORK, SHEETS, HOUSE_PLANS, NOTE }
 	}
 
-	/** One line of the panel: a heading, a row's main line, its second line, or the read-only note. */
-	private record Line(Kind kind, @Nullable ConstructionRow row, Component text) {
-		enum Kind { HEADING, MAIN, DETAIL, NOTE }
+	/** A control on screen and what it does. */
+	private record Hit(ConstructionRow.Action action, int target) {
 	}
 
 	private int scroll;
 	private int ticks;
+	/** The building whose card is open, or -1; {@link #chosen} once the player clicked one. */
+	private int open = -1;
+	private boolean chosen;
 
 	/** The tab opened: asks for its rows and starts at the top. */
 	public void opened() {
@@ -69,181 +74,372 @@ public final class ConstructionTab {
 		}
 	}
 
-	/** Draws the tab into the panel at ({@code left}, {@code top}); {@code unbound} — a core of no town. */
-	public void draw(GuiGraphicsExtractor graphics, Font font, int left, int top, int right, boolean unbound,
-			int mouseX, int mouseY) {
-		List<Line> lines = lines();
-		if (lines == null) {
+	// --- layout ----------------------------------------------------------------------------------------------------
+
+	private List<Block> layout(Model model, boolean manage) {
+		if (!chosen) {
+			open = WorksModel.autoOpen(model);
+		}
+		List<Block> blocks = new ArrayList<>();
+		int y = 0;
+		if (model.empty() != null) {
+			blocks.add(new Block(Block.Kind.NOTE, y, LINE + 2, null, model.empty(), List.of()));
+			y += LINE + 2;
+		}
+		for (Section section : model.sections()) {
+			blocks.add(new Block(Block.Kind.HEADING, y, SettlementCoreLayout.WORKS_HEADING, null,
+					Component.translatable(section.key()), List.of()));
+			y += SettlementCoreLayout.WORKS_HEADING;
+			for (Card card : section.cards()) {
+				List<Line> lines = card.row().target() == open ? WorksModel.openLines(card) : List.of();
+				int height = SettlementCoreLayout.WORKS_CARD + (lines.isEmpty() ? 0 : lines.size() * LINE + 6)
+						+ (lines.stream().anyMatch(line -> line.barPercent() >= 0) ? 3 : 0);
+				blocks.add(new Block(Block.Kind.CARD, y, height, card, null, lines));
+				y += height + SettlementCoreLayout.WORKS_CARD_GAP;
+			}
+		}
+		if (model.network() != null) {
+			blocks.add(new Block(Block.Kind.HEADING, y, SettlementCoreLayout.WORKS_HEADING, null,
+					Component.translatable(BuildingTile.SECTION_ROADS), List.of()));
+			y += SettlementCoreLayout.WORKS_HEADING;
+			blocks.add(new Block(Block.Kind.NETWORK, y, 24, null, component(model.network().text()), List.of()));
+			y += 24 + SettlementCoreLayout.WORKS_CARD_GAP;
+		}
+		if (!model.sheets().isEmpty() || !model.housePlans().isEmpty()) {
+			blocks.add(new Block(Block.Kind.HEADING, y, SettlementCoreLayout.WORKS_HEADING, null,
+					Component.translatable(BuildingTile.SECTION_PLANS), List.of()));
+			y += SettlementCoreLayout.WORKS_HEADING;
+			if (!model.sheets().isEmpty()) {
+				blocks.add(new Block(Block.Kind.SHEETS, y, SettlementCoreLayout.WORKS_PLAN_ROW, null, null,
+						List.of()));
+				y += SettlementCoreLayout.WORKS_PLAN_ROW;
+			}
+			if (!model.housePlans().isEmpty()) {
+				blocks.add(new Block(Block.Kind.HOUSE_PLANS, y, SettlementCoreLayout.WORKS_PLAN_ROW, null, null,
+						List.of()));
+				y += SettlementCoreLayout.WORKS_PLAN_ROW;
+			}
+		}
+		if (!manage && !model.sections().isEmpty()) {
+			blocks.add(new Block(Block.Kind.NOTE, y + 2, LINE * 2 + 2, null,
+					Component.translatable(SettlementCoreLayout.WORKS_READ_ONLY), List.of()));
+		}
+		return blocks;
+	}
+
+	// --- drawing ---------------------------------------------------------------------------------------------------
+
+	/**
+	 * Draws the tab into the image whose top-left is ({@code x0}, {@code y0}); {@code unbound} — a core of no town.
+	 */
+	public void draw(GuiGraphicsExtractor graphics, Font font, int x0, int y0, boolean unbound, int mouseX,
+			int mouseY) {
+		TownWorksPayload payload = TownWorksClient.latest();
+		Model model = WorksModel.model();
+		if (payload == null || model == null) {
 			Component waiting = Component.translatable(unbound ? SettlementCoreLayout.STATUS_UNBOUND
 					: SettlementCoreLayout.ROSTER_LOADING);
-			cell(graphics, font, waiting, left + 2, top + 2, right - left - 4, GuiStyle.TEXT_DIM);
+			WorksPaint.cell(graphics, font, waiting, x0 + SettlementCoreLayout.ROSTER_LEFT + 2,
+					y0 + SettlementCoreLayout.ROSTER_TOP + 2, 200, GuiStyle.TEXT_DIM);
 			return;
 		}
-		scroll = Math.min(scroll, SettlementCoreLayout.maxRosterScroll(lines.size()));
-		int shown = Math.min(SettlementCoreLayout.ROSTER_ROWS, lines.size() - scroll);
-		for (int i = 0; i < shown; i++) {
-			Line line = lines.get(scroll + i);
-			int y = top + i * SettlementCoreLayout.ROSTER_ROW;
-			drawLine(graphics, font, line, left, right, y, mouseX, mouseY);
-		}
-	}
-
-	private void drawLine(GuiGraphicsExtractor graphics, Font font, Line line, int left, int right, int y,
-			int mouseX, int mouseY) {
-		switch (line.kind()) {
-			case HEADING -> {
-				cell(graphics, font, line.text(), left + 2, y, right - left - 4, GuiStyle.LABEL);
-				graphics.fill(left + 2, y + 9, right - 2, y + 10, GuiStyle.PANEL_LO);
+		WorksPaint.drawHint(graphics, font, payload.hint(), x0, y0);
+		List<Block> blocks = layout(model, payload.manage());
+		int viewTop = y0 + SettlementCoreLayout.WORKS_VIEW_TOP;
+		int viewBottom = y0 + SettlementCoreLayout.WORKS_VIEW_BOTTOM;
+		int total = contentHeight(blocks);
+		scroll = Math.max(0, Math.min(scroll, Math.max(0, total - (viewBottom - viewTop))));
+		graphics.enableScissor(x0 + SettlementCoreLayout.ROSTER_LEFT, viewTop, x0 + SettlementCoreLayout.ROSTER_RIGHT,
+				viewBottom);
+		int left = x0 + SettlementCoreLayout.WORKS_CONTENT_LEFT;
+		int right = x0 + SettlementCoreLayout.WORKS_CONTENT_RIGHT;
+		for (Block block : blocks) {
+			int y = viewTop + block.y() - scroll;
+			if (y > viewBottom || y + block.height() < viewTop) {
+				continue;
 			}
-			case DETAIL -> cell(graphics, font, line.text(), left + SettlementCoreLayout.WORKS_DETAIL_INDENT, y,
-					right - left - SettlementCoreLayout.WORKS_DETAIL_INDENT - 2,
-					line.row() != null && line.row().tone() == ConstructionRow.Tone.BAD
-							? GuiStyle.STATUS_BLOCKING : GuiStyle.TEXT_DIM);
-			case NOTE -> cell(graphics, font, line.text(), left + 2, y, right - left - 4, GuiStyle.TEXT_DIM);
-			case MAIN -> drawMain(graphics, font, line.row(), line.text(), left, y, mouseX, mouseY);
+			boolean inside = mouseY >= viewTop && mouseY < viewBottom;
+			drawBlock(graphics, font, model, block, left, right, y, inside ? mouseX : -1, inside ? mouseY : -1);
 		}
+		graphics.disableScissor();
+		drawScrollBar(graphics, x0, viewTop, viewBottom, total);
 	}
 
-	private void drawMain(GuiGraphicsExtractor graphics, Font font, ConstructionRow row, Component text, int left,
+	private static int contentHeight(List<Block> blocks) {
+		int bottom = 0;
+		for (Block block : blocks) {
+			bottom = Math.max(bottom, block.y() + block.height());
+		}
+		return bottom + 2;
+	}
+
+	private void drawScrollBar(GuiGraphicsExtractor graphics, int x0, int top, int bottom, int total) {
+		int view = bottom - top;
+		if (total <= view) {
+			return;
+		}
+		int x = x0 + SettlementCoreLayout.ROSTER_RIGHT - SettlementCoreLayout.WORKS_SCROLLBAR - 1;
+		graphics.fill(x, top, x + SettlementCoreLayout.WORKS_SCROLLBAR, bottom, GuiStyle.LEVEL_TRACK);
+		int thumb = Math.max(12, view * view / total);
+		int at = top + (view - thumb) * scroll / Math.max(1, total - view);
+		graphics.fill(x, at, x + SettlementCoreLayout.WORKS_SCROLLBAR, at + thumb, GuiStyle.COPPER);
+	}
+
+	private void drawBlock(GuiGraphicsExtractor graphics, Font font, Model model, Block block, int left, int right,
 			int y, int mouseX, int mouseY) {
-		int colour = colour(row.tone());
-		cell(graphics, font, text, left + 2, y, SettlementCoreLayout.WORKS_COL_STATUS - 4, colour);
-		row.status().ifPresent(status -> cell(graphics, font, component(status),
-				left + SettlementCoreLayout.WORKS_COL_STATUS, y,
-				SettlementCoreLayout.WORKS_COL_PERCENT - SettlementCoreLayout.WORKS_COL_STATUS - 2, colour));
-		if (row.percent() >= 0) {
-			cell(graphics, font, Component.literal(row.percent() + "%"), left + SettlementCoreLayout.WORKS_COL_PERCENT,
-					y, SettlementCoreLayout.WORKS_COL_ACTIONS - SettlementCoreLayout.WORKS_COL_PERCENT - 1, colour);
-		}
-		int x = left + SettlementCoreLayout.WORKS_COL_ACTIONS;
-		for (ConstructionRow.Action action : ConstructionRow.Action.values()) {
-			if (!row.allows(action)) {
-				continue;
+		switch (block.kind()) {
+			case HEADING -> {
+				WorksPaint.cell(graphics, font, block.text(), left + 1, y + 3, right - left - 2, GuiStyle.LABEL);
+				graphics.fill(left, y + 12, right, y + 13, GuiStyle.COPPER);
 			}
-			int size = SettlementCoreLayout.WORKS_ACTION_SIZE;
-			boolean hovered = mouseX >= x && mouseX < x + size && mouseY >= y - 1 && mouseY < y - 1 + size;
-			boolean on = action == ConstructionRow.Action.SCHEMATIC && schematicShown();
-			graphics.fill(x, y - 1, x + size, y - 1 + size,
-					hovered || on ? GuiStyle.BUTTON_ACTIVE : GuiStyle.BUTTON);
-			graphics.pose().pushMatrix();
-			graphics.pose().translate(x + 0.5f, y - 0.5f);
-			graphics.pose().scale(0.5f, 0.5f);
-			graphics.item(icon(action), 0, 0);
-			graphics.pose().popMatrix();
-			x += size + 1;
+			case NOTE -> {
+				TextFit.Fit fit = TextFit.fit(block.text().getString(), right - left - 4, 2, font::width);
+				for (int i = 0; i < fit.lines().size(); i++) {
+					WorksPaint.scaled(graphics, font, fit.lines().get(i), left + 2, y + i * LINE, fit.scale(),
+							GuiStyle.TEXT_DIM);
+				}
+			}
+			case CARD -> drawCard(graphics, font, block, left, right, y, mouseX, mouseY);
+			case NETWORK -> WorksPaint.drawNetwork(graphics, font, model.network(), block.text(), left, right, y,
+					mouseX, mouseY);
+			case SHEETS -> WorksPaint.drawSheets(graphics, font, model.sheets(), left, y);
+			case HOUSE_PLANS -> WorksPaint.drawHousePlans(graphics, font, model.housePlans(), left, y);
 		}
 	}
 
-	/** The control under the mouse: the row's target and the action, or empty. */
-	private Optional<Hit> hit(int left, int top, double mouseX, double mouseY) {
-		List<Line> lines = lines();
-		if (lines == null || mouseY < top - 1) {
+	private void drawCard(GuiGraphicsExtractor graphics, Font font, Block block, int left, int right, int y,
+			int mouseX, int mouseY) {
+		Card card = block.card();
+		ConstructionRow row = card.row();
+		boolean isOpen = row.target() == open;
+		boolean top = mouseX >= left && mouseX < right && mouseY >= y && mouseY < y + SettlementCoreLayout.WORKS_CARD;
+		Optional<ConstructionRow.Action> main = WorksModel.mainAction(row);
+		int buttonX = right - SettlementCoreLayout.WORKS_BUTTON - 3;
+		int buttonY = y + (SettlementCoreLayout.WORKS_CARD - SettlementCoreLayout.WORKS_BUTTON) / 2;
+		int size = SettlementCoreLayout.WORKS_BUTTON;
+		boolean onButton = main.isPresent() && WorksPaint.inside(mouseX, mouseY, buttonX, buttonY, size, size);
+		WorksPaint.cardFace(graphics, left, right, y, block.height(), isOpen, top && !onButton);
+		// The picture on a dark backdrop, as the shift worker's card shows its model.
+		int box = SettlementCoreLayout.WORKS_ICON_BOX;
+		graphics.fill(left + 2, y + 2, left + 2 + box, y + 2 + box, GuiStyle.MODEL_BACK_TOP);
+		graphics.fill(left + 2, y + 2 + box / 2, left + 2 + box, y + 2 + box, GuiStyle.MODEL_BACK_BOTTOM);
+		BuildingTile tile = card.tile();
+		if (tile != null && TownBuildingIcons.has(tile.icon())) {
+			TownBuildingIcons.draw(graphics, tile.icon(), left + 3, y + 3, SettlementCoreLayout.WORKS_ICON);
+		} else {
+			graphics.item(new ItemStack(Items.BRICKS), left + 7, y + 7);
+		}
+		int text = left + SettlementCoreLayout.WORKS_CARD_TEXT;
+		int textRight = main.isPresent() ? buttonX - 3 : right - 4;
+		WorksPaint.cell(graphics, font, component(row.text()), text, y + 3, textRight - text, GuiStyle.TEXT);
+		BuildingTile.Chip chip = tile == null ? BuildingTile.Chip.RUIN : tile.chip();
+		int chipRight = WorksPaint.drawChip(graphics, font, chip, text, y + 13);
+		String percent = row.percent() >= 0 ? row.percent() + "%" : "";
+		int percentX = textRight - font.width(percent);
+		if (!percent.isEmpty()) {
+			graphics.text(font, percent, percentX, y + 14, GuiStyle.TEXT, false);
+		}
+		if (tile != null && tile.resident().isPresent() && percentX - chipRight > 20) {
+			WorksPaint.cell(graphics, font, component(tile.resident().get()), chipRight + 4, y + 14,
+					percentX - chipRight - 8, GuiStyle.TEXT_DIM);
+		}
+		WorksPaint.bar(graphics, text, y + 25, textRight, Math.max(0, row.percent()), WorksPaint.barColour(chip));
+		if (main.isPresent()) {
+			WorksPaint.button(graphics, WorksPaint.icon(main.get()), buttonX, buttonY, size, onButton, false);
+		}
+		WorksPaint.drawOpenLines(graphics, font, block.lines(), left, right, y + SettlementCoreLayout.WORKS_CARD + 1,
+				mouseX, mouseY);
+	}
+
+	// --- input -----------------------------------------------------------------------------------------------------
+
+	/** What is under the mouse: a control, a card's top, a plan slot — with the words its tooltip shows. */
+	private record Target(@Nullable Hit hit, int toggle, @Nullable Component tooltip) {
+	}
+
+	private Optional<Target> target(int x0, int y0, double mouseX, double mouseY) {
+		TownWorksPayload payload = TownWorksClient.latest();
+		Model model = WorksModel.model();
+		int viewTop = y0 + SettlementCoreLayout.WORKS_VIEW_TOP;
+		int viewBottom = y0 + SettlementCoreLayout.WORKS_VIEW_BOTTOM;
+		if (payload == null || model == null) {
 			return Optional.empty();
 		}
-		int index = (int) ((mouseY - (top - 1)) / SettlementCoreLayout.ROSTER_ROW);
-		if (index >= SettlementCoreLayout.ROSTER_ROWS || scroll + index >= lines.size()) {
+		int hintTop = y0 + SettlementCoreLayout.WORKS_HINT_TOP;
+		if (mouseY >= hintTop && mouseY < hintTop + SettlementCoreLayout.WORKS_HINT_HEIGHT
+				&& payload.hint().isPresent() && hintCut(payload.hint().get())) {
+			return Optional.of(new Target(null, -1, component(payload.hint().get())));
+		}
+		if (mouseY < viewTop || mouseY >= viewBottom) {
 			return Optional.empty();
 		}
-		Line line = lines.get(scroll + index);
-		if (line.kind() != Line.Kind.MAIN || line.row() == null) {
-			return Optional.empty();
-		}
-		int x = left + SettlementCoreLayout.WORKS_COL_ACTIONS;
-		int y = top + index * SettlementCoreLayout.ROSTER_ROW - 1;
-		for (ConstructionRow.Action action : ConstructionRow.Action.values()) {
-			if (!line.row().allows(action)) {
+		int left = x0 + SettlementCoreLayout.WORKS_CONTENT_LEFT;
+		int right = x0 + SettlementCoreLayout.WORKS_CONTENT_RIGHT;
+		Font font = Minecraft.getInstance().font;
+		for (Block block : layout(model, payload.manage())) {
+			int y = viewTop + block.y() - scroll;
+			if (mouseY < y || mouseY >= y + block.height() || mouseX < left || mouseX >= right) {
 				continue;
 			}
-			int size = SettlementCoreLayout.WORKS_ACTION_SIZE;
-			if (mouseX >= x && mouseX < x + size && mouseY >= y && mouseY < y + size) {
-				return Optional.of(new Hit(action, line.row().target()));
+			switch (block.kind()) {
+				case CARD -> {
+					return cardTarget(font, block, left, right, y, mouseX, mouseY);
+				}
+				case NETWORK -> {
+					int bx = right - 18 - 3;
+					if (model.network().allows(ConstructionRow.Action.SCHEMATIC)
+							&& WorksPaint.inside(mouseX, mouseY, bx, y + 3, 18, 18)) {
+						return Optional.of(control(new Hit(ConstructionRow.Action.SCHEMATIC,
+								model.network().target())));
+					}
+				}
+				case SHEETS -> {
+					int index = slotAt(left, mouseX);
+					if (index >= 0 && index < model.sheets().size()) {
+						ConstructionRow sheet = model.sheets().get(index);
+						return Optional.of(new Target(null, -1, joined(component(sheet.text()),
+								sheet.status().map(ConstructionTab::component).orElse(Component.empty()))));
+					}
+				}
+				case HOUSE_PLANS -> {
+					int index = slotAt(left, mouseX);
+					if (index >= 0 && index < model.housePlans().size()) {
+						ConstructionRow plan = model.housePlans().get(index);
+						return Optional.of(new Target(null, -1, joined(component(plan.text()),
+								plan.status().map(ConstructionTab::component).orElse(Component.empty()))));
+					}
+				}
+				default -> {
+				}
 			}
-			x += size + 1;
+			return Optional.empty();
 		}
 		return Optional.empty();
 	}
 
-	private record Hit(ConstructionRow.Action action, int target) {
+	private static int slotAt(int left, double mouseX) {
+		double at = mouseX - (left + SettlementCoreLayout.WORKS_PLAN_LABEL);
+		if (at < 0) {
+			return -1;
+		}
+		int step = SettlementCoreLayout.WORKS_SLOT + 2;
+		return at % step < SettlementCoreLayout.WORKS_SLOT ? (int) (at / step) : -1;
 	}
 
-	/** The tooltip of the control under the mouse, if any. */
-	public Optional<Component> tooltip(int left, int top, double mouseX, double mouseY) {
-		return hit(left, top, mouseX, mouseY).map(hit -> Component.translatable(
-				hit.action() == ConstructionRow.Action.SCHEMATIC && schematicShown()
-						? HallSchematicOverlay.HIDE_KEY : hit.action().key()));
-	}
-
-	/** A click: presses the control under the mouse. Whether it hit one. */
-	public boolean clicked(int left, int top, double mouseX, double mouseY) {
-		Optional<Hit> hit = hit(left, top, mouseX, mouseY);
-		hit.ifPresent(h -> {
-			TownWorksPayload payload = TownWorksClient.latest();
-			if (h.action() == ConstructionRow.Action.SCHEMATIC) {
-				if (payload != null) {
-					HallSchematicOverlay.toggle(payload.core()); // visual and personal: asked for on its own
-				}
-			} else {
-				TownWorksClient.press(h.action(), h.target());
+	private Optional<Target> cardTarget(Font font, Block block, int left, int right, int y, double mouseX,
+			double mouseY) {
+		Card card = block.card();
+		ConstructionRow row = card.row();
+		if (mouseY < y + SettlementCoreLayout.WORKS_CARD) {
+			Optional<ConstructionRow.Action> main = WorksModel.mainAction(row);
+			int buttonX = right - SettlementCoreLayout.WORKS_BUTTON - 3;
+			int buttonY = y + (SettlementCoreLayout.WORKS_CARD - SettlementCoreLayout.WORKS_BUTTON) / 2;
+			int size = SettlementCoreLayout.WORKS_BUTTON;
+			if (main.isPresent() && WorksPaint.inside(mouseX, mouseY, buttonX, buttonY, size, size)) {
+				return Optional.of(control(new Hit(main.get(), row.target())));
 			}
-		});
-		return hit.isPresent();
+			Component name = component(row.text());
+			Component tip = Component.translatable(row.target() == open ? SettlementCoreLayout.WORKS_CARD_CLOSE
+					: SettlementCoreLayout.WORKS_CARD_OPEN);
+			int textRight = main.isPresent() ? buttonX - 3 : right - 4;
+			boolean cut = !WorksPaint.fits(font, name, textRight - left - SettlementCoreLayout.WORKS_CARD_TEXT);
+			return Optional.of(new Target(null, row.target(), cut ? joined(name, tip) : tip));
+		}
+		int x = left + SettlementCoreLayout.WORKS_OPEN_INDENT;
+		int width = right - left - 2 * SettlementCoreLayout.WORKS_OPEN_INDENT;
+		int at = y + SettlementCoreLayout.WORKS_CARD + 1 + 3;
+		int small = SettlementCoreLayout.WORKS_SMALL_BUTTON;
+		for (Line line : block.lines()) {
+			Control control = line.control();
+			if (control != null) {
+				if (control.action() == ConstructionRow.Action.SCHEMATIC) {
+					boolean shown = schematicShown(control.target());
+					Component words = Component.translatable(shown ? HallSchematicOverlay.HIDE_KEY
+							: ConstructionRow.Action.SCHEMATIC.key());
+					int w = Math.min(width, font.width(words) + SettlementCoreLayout.WORKS_SMALL_BUTTON + 6);
+					if (WorksPaint.inside(mouseX, mouseY, x, at - 1, w, SettlementCoreLayout.WORKS_SMALL_BUTTON)) {
+						return Optional.of(new Target(new Hit(control.action(), control.target()), -1, null));
+					}
+				} else if (WorksPaint.inside(mouseX, mouseY, x + width - small, at - 1, small, small)) {
+					return Optional.of(control(new Hit(control.action(), control.target())));
+				}
+			}
+			int height = LINE + (line.barPercent() >= 0 ? 3 : 0);
+			if (mouseY >= at - 1 && mouseY < at - 1 + height && control == null
+					&& !WorksPaint.fits(font, line.text(), width)) {
+				return Optional.of(new Target(null, -1, line.text()));
+			}
+			at += height;
+		}
+		return Optional.empty();
 	}
 
-	/** Whether the schematic of the hall of the town whose tab this is is shown. */
-	private static boolean schematicShown() {
-		TownWorksPayload payload = TownWorksClient.latest();
-		return payload != null && HallSchematicOverlay.isShown(payload.core());
+	private static Target control(Hit hit) {
+		Component words = Component.translatable(hit.action() == ConstructionRow.Action.SCHEMATIC
+				&& schematicShown(hit.target()) ? HallSchematicOverlay.HIDE_KEY : hit.action().key());
+		return new Target(hit, -1, words);
 	}
 
-	/** The wheel scrolls a longer list. Whether it did. */
-	public boolean scrolled(double scrollY) {
-		List<Line> lines = lines();
-		if (lines == null || scrollY == 0.0) {
+	private static Component joined(Component first, Component second) {
+		return Component.empty().append(first).append(": ").append(second);
+	}
+
+	/** Whether the hint bar had to cut the hint. */
+	private static boolean hintCut(ConstructionRow.Text hint) {
+		Font font = Minecraft.getInstance().font;
+		return !TextFit.fit(component(hint).getString(), SettlementCoreLayout.worksHintWidth(),
+				SettlementCoreLayout.WORKS_HINT_MAX_LINES, font::width).fits();
+	}
+
+	/** The tooltip of what is under the mouse, if any. */
+	public Optional<Component> tooltip(int x0, int y0, double mouseX, double mouseY) {
+		return target(x0, y0, mouseX, mouseY).map(Target::tooltip);
+	}
+
+	/** A click: presses a control or opens and closes a card. Whether it hit anything. */
+	public boolean clicked(int x0, int y0, double mouseX, double mouseY) {
+		Optional<Target> target = target(x0, y0, mouseX, mouseY);
+		if (target.isEmpty()) {
 			return false;
 		}
-		int max = SettlementCoreLayout.maxRosterScroll(lines.size());
-		scroll = Math.max(0, Math.min(max, scroll - (int) Math.signum(scrollY)));
+		Hit hit = target.get().hit();
+		if (hit != null) {
+			TownWorksPayload payload = TownWorksClient.latest();
+			if (hit.action() == ConstructionRow.Action.SCHEMATIC) {
+				if (payload != null) {
+					// Visual and personal: asked for on its own.
+					HallSchematicOverlay.toggle(payload.core(), hit.target());
+				}
+			} else {
+				TownWorksClient.press(hit.action(), hit.target());
+			}
+			return true;
+		}
+		if (target.get().toggle() >= 0) {
+			int card = target.get().toggle();
+			open = open == card ? -1 : card;
+			chosen = true;
+			return true;
+		}
+		return false;
+	}
+
+	/** Whether the schematic of building {@code target} of the town whose tab this is is shown (Q6: one at a time). */
+	static boolean schematicShown(int target) {
+		TownWorksPayload payload = TownWorksClient.latest();
+		return payload != null && HallSchematicOverlay.isShown(payload.core(), target);
+	}
+
+	/** The wheel scrolls the pane. Whether it did. */
+	public boolean scrolled(double scrollY) {
+		if (TownWorksClient.latest() == null || scrollY == 0.0) {
+			return false;
+		}
+		scroll = Math.max(0, scroll - (int) Math.signum(scrollY) * SCROLL_STEP);
 		return true;
 	}
 
-	/** The panel's lines from the latest rows, or null before any arrived. */
-	@Nullable
-	private static List<Line> lines() {
-		TownWorksPayload payload = TownWorksClient.latest();
-		if (payload == null) {
-			return null;
-		}
-		List<Line> lines = new ArrayList<>();
-		String section = null;
-		for (ConstructionRow row : payload.rows()) {
-			if (!row.section().equals(section)) {
-				section = row.section();
-				lines.add(new Line(Line.Kind.HEADING, null, Component.translatable(section)));
-			}
-			lines.add(new Line(Line.Kind.MAIN, row, component(row.text())));
-			row.detail().ifPresent(detail -> {
-				for (String part : wrapped(component(detail).getString())) {
-					lines.add(new Line(Line.Kind.DETAIL, row, Component.literal(part)));
-				}
-			});
-		}
-		if (!payload.manage() && !payload.rows().isEmpty()) {
-			lines.add(new Line(Line.Kind.NOTE, null, Component.translatable(SettlementCoreLayout.WORKS_READ_ONLY)));
-		}
-		return lines;
-	}
-
-	/**
-	 * A row's second line broken into as many panel lines as it takes at full size (owner's round 1: «missing: the roof
-	 * over the hall, the door, the…» was cut at the panel's edge). Each part is a line of its own, so the click and
-	 * tooltip arithmetic by line index holds.
-	 */
-	private static List<String> wrapped(String text) {
-		Font font = Minecraft.getInstance().font;
-		int width = SettlementCoreLayout.ROSTER_RIGHT - SettlementCoreLayout.ROSTER_LEFT
-				- SettlementCoreLayout.WORKS_DETAIL_INDENT - 2;
-		return TextFit.fit(text, width, DETAIL_MAX_LINES, font::width).lines();
-	}
+	// --- words -----------------------------------------------------------------------------------------------------
 
 	/**
 	 * A row's sentence: every argument shown as a translation, a joined list in the key's one placeholder. Public so
@@ -275,26 +471,4 @@ public final class ConstructionTab {
 				.orElseGet(() -> Component.translatable(argument));
 	}
 
-	private static int colour(ConstructionRow.Tone tone) {
-		return switch (tone) {
-			case DIM -> GuiStyle.TEXT_DIM;
-			case GOOD -> GuiStyle.STATUS_GOOD;
-			case BAD -> GuiStyle.STATUS_BLOCKING;
-			case NORMAL -> GuiStyle.TEXT;
-		};
-	}
-
-	/** One line in {@code width}, scaled down or cut when it must. */
-	private static void cell(GuiGraphicsExtractor graphics, Font font, Component text, int x, int y, int width,
-			int colour) {
-		String plain = text.getString();
-		TextFit.Fit fit = TextFit.fit(plain, width, 1, font::width);
-		float scale = fit.fits() ? fit.scale() : TextFit.MIN_SCALE;
-		String shown = fit.fits() ? plain : font.plainSubstrByWidth(plain, (int) (width / scale));
-		graphics.pose().pushMatrix();
-		graphics.pose().translate(x, y + (1.0f - scale) * 4.0f);
-		graphics.pose().scale(scale, scale);
-		graphics.text(font, shown, 0, 0, colour, false);
-		graphics.pose().popMatrix();
-	}
 }

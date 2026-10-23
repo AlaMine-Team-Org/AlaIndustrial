@@ -7,8 +7,9 @@ import dev.alaindustrial.client.screen.SettlementCoreLayout;
 import org.junit.jupiter.api.Test;
 
 /**
- * L1: the shift worker's card (MOD-854) keeps its modules inside the panel — the record module grows by a row for a
- * dead worker, and the stats module under it still ends above the panel's bottom margin — and the screen's «+»
+ * L1: the shift worker's card (MOD-854) keeps its modules inside the panel — the record module has four rows,
+ * the home of a living worker or the death of a dead one (MOD-862), and the stats module under it still ends above
+ * the panel's bottom margin — and the screen's «+»
  * buttons land on the rows the page draws, because both read {@link ShiftWorkerCardLayout}.
  */
 class ShiftWorkerCardLayoutTest {
@@ -16,10 +17,10 @@ class ShiftWorkerCardLayoutTest {
 	private static final int STATS = 4;
 
 	@Test
-	void aDeadWorkerHasOneRecordRowMore() {
-		assertEquals(ShiftWorkerCardLayout.ROW, ShiftWorkerCardLayout.recordHeight(false)
-				- ShiftWorkerCardLayout.recordHeight(true));
-		assertEquals(51, ShiftWorkerCardLayout.recordHeight(true));
+	void theRecordHasFourRowsAliveOrDead() {
+		// MOD-862: a living worker's home row takes the place of a dead one's death line.
+		assertEquals(ShiftWorkerCardLayout.recordHeight(false), ShiftWorkerCardLayout.recordHeight(true));
+		assertEquals(62, ShiftWorkerCardLayout.recordHeight(true));
 	}
 
 	@Test

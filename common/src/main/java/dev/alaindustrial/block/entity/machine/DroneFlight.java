@@ -149,6 +149,19 @@ public final class DroneFlight {
 	}
 
 	/**
+	 * How far along its route the drone is now, 0 (dock) to 1 (goal), by the counter rather than the clock (the
+	 * counter is the authority): eased as a client draws it, run backwards on the way home, and held on the goal
+	 * through the landing pause. 0 while parked.
+	 */
+	public float travel() {
+		if (target == null || total <= 0) {
+			return 0.0F;
+		}
+		float eased = accelerate((float) (total - remaining) / total);
+		return returning ? 1.0F - eased : eased;
+	}
+
+	/**
 	 * The speed curve: slow off the pad, fast across the middle, braking onto the target. Smootherstep — its
 	 * derivative is zero at both ends, so a drone leaves and meets the ground with zero speed (MOD-317). Here, on the
 	 * flight model, so a renderer and a flight-loop sound follow the same curve (MOD-329).

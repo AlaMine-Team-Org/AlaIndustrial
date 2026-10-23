@@ -187,4 +187,20 @@ class ReceptionCapsuleRulesTest {
 		assertFalse(Verdict.READY.blocking());
 		assertTrue(Verdict.ARCHIVE_SILENT.blocking());
 	}
+
+	/**
+	 * The workers are shown against the town's homes, never more than the tier allows (owner's round 1 of 0.1.219):
+	 * no house — «no homes», not «0 / 4»; a town of no tier is not «no homes».
+	 */
+	@Test
+	void workersAreCountedAgainstHomes() {
+		assertEquals(0, ReceptionCapsuleRules.housedLimit(4, 0));
+		assertEquals(2, ReceptionCapsuleRules.housedLimit(4, 2));
+		assertEquals(4, ReceptionCapsuleRules.housedLimit(4, 7));
+		assertEquals(4, ReceptionCapsuleRules.housedLimit(4, Integer.MAX_VALUE));
+		assertEquals(0, ReceptionCapsuleRules.housedLimit(-1, 3));
+		assertTrue(ReceptionCapsuleRules.noHomes(4, 0));
+		assertFalse(ReceptionCapsuleRules.noHomes(4, 1));
+		assertFalse(ReceptionCapsuleRules.noHomes(0, 0));
+	}
 }

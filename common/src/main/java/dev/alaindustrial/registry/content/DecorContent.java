@@ -11,6 +11,7 @@ import static dev.alaindustrial.registry.content.ContentDeclarations.registeredB
 import static dev.alaindustrial.registry.content.TabEntries.show;
 
 import dev.alaindustrial.block.ElectricMobTrapBlock;
+import dev.alaindustrial.block.EngravedLetterPlateBlock;
 import dev.alaindustrial.block.EngravedPlateBlock;
 import dev.alaindustrial.block.EnrichedUraniumTorchBlock;
 import dev.alaindustrial.block.EnrichedUraniumWallTorchBlock;
@@ -388,6 +389,12 @@ public final class DecorContent {
 			block("broken_engraved_plate_m", EngravedPlateBlock::new,
 					machine(MapColor.COLOR_GRAY, p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE)),
 					s -> ModContent.BROKEN_ENGRAVED_PLATE_M = s);
+	// Owner's round 4 of 0.1.219, R4-12 — the letter plate of a town house's plaque: any record letter, whole or
+	// broken, engraved by the town's drones.
+	public static final BlockDef<EngravedLetterPlateBlock> ENGRAVED_LETTER_PLATE =
+			block("engraved_letter_plate", EngravedLetterPlateBlock::new,
+					machine(MapColor.COLOR_GRAY, p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE)),
+					s -> ModContent.ENGRAVED_LETTER_PLATE = s);
 
 	/** This domain's blocks, in declaration order — collected since {@code beginBlocks()} above. */
 	private static final List<BlockDef<?>> BLOCKS = endBlocks();
@@ -485,6 +492,7 @@ public final class DecorContent {
 			blockItem("broken_engraved_plate_d", s -> ModContent.BROKEN_ENGRAVED_PLATE_D_ITEM = s),
 			blockItem("broken_engraved_plate_r", s -> ModContent.BROKEN_ENGRAVED_PLATE_R_ITEM = s),
 			blockItem("broken_engraved_plate_m", s -> ModContent.BROKEN_ENGRAVED_PLATE_M_ITEM = s),
+			blockItem("engraved_letter_plate", s -> ModContent.ENGRAVED_LETTER_PLATE_ITEM = s),
 			// MOD-818 — the Electric Mob Trap.
 			blockItem("electric_mob_trap", s -> ModContent.ELECTRIC_MOB_TRAP_ITEM = s),
 			// MOD-837 — the Tap.
@@ -660,5 +668,6 @@ public final class DecorContent {
 		show(out, ModContent.BROKEN_ENGRAVED_PLATE_D_ITEM);
 		show(out, ModContent.BROKEN_ENGRAVED_PLATE_R_ITEM);
 		show(out, ModContent.BROKEN_ENGRAVED_PLATE_M_ITEM);
+		show(out, ModContent.ENGRAVED_LETTER_PLATE_ITEM);
 	}
 }

@@ -5,6 +5,7 @@ import dev.alaindustrial.block.entity.machine.SyncChannels;
 import dev.alaindustrial.block.entity.machine.TownBinding;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.item.misc.HousePlanItem;
 import dev.alaindustrial.item.misc.PlanSheet;
 import dev.alaindustrial.item.misc.RestorationPlan;
 import dev.alaindustrial.item.misc.RestorationPlanItem;
@@ -19,16 +20,19 @@ import dev.alaindustrial.settlement.drone.DispatcherStatus;
 import dev.alaindustrial.settlement.drone.DispatcherView;
 import dev.alaindustrial.settlement.drone.DispatcherViews;
 import dev.alaindustrial.settlement.drone.DroneNestRules;
+import dev.alaindustrial.settlement.drone.HallBuildNews;
+import dev.alaindustrial.settlement.drone.StalledOrders;
 import dev.alaindustrial.settlement.drone.StartReadiness;
 import dev.alaindustrial.settlement.drone.TownDroneRoster;
 import dev.alaindustrial.settlement.drone.TownHall;
 import dev.alaindustrial.settlement.plan.PlanSheetRules;
 import dev.alaindustrial.settlement.works.BuildMaterials;
 import dev.alaindustrial.settlement.works.MaterialSource;
+import dev.alaindustrial.settlement.works.TownOrders;
 import dev.alaindustrial.settlement.works.TownWorks;
+import dev.alaindustrial.settlement.works.TownWorksScanner;
 import dev.alaindustrial.settlement.works.WorkJournal;
 import dev.alaindustrial.settlement.works.WorkJournalCodec;
-import dev.alaindustrial.settlement.works.WorkJobType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -54,6 +58,8 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jspecify.annotations.Nullable;
 
+// size-justified: the construction desk of a town — its slots, the plan assembly, the start, the orders'
+// presses and the house plans it teaches; the rules live in DispatcherViews, TownOrders and PlanSheetRules.
 /**
  * The town dispatcher (MOD-858; epic MOD-824, decisions R84, R91, R92, R95): the construction desk of an ALA town,
  * standing in its town hall. It puts the restoration plan together from three sheets (MOD-859), holds the material
@@ -110,6 +116,13 @@ public final class TownDispatcherBlockEntity extends MachineBlockEntity implemen
 	private WorkJournal journal = new WorkJournal();
 	/** The «Task» and «Materials» tabs, worked out on every look; carried in the update tag only. */
 	private DispatcherView view = DispatcherView.EMPTY;
+	/**
+	 * The order the «Task» and «Materials» tabs show (round 2 of 0.1.219, Q1), by building index, or -1 — the first
+	 * order. Picked on the «Orders» tab; not saved: a reload shows the first order again.
+	 */
+	private int selected = -1;
+	/** The watch over orders that ended with their building unfinished (round 5 of 0.1.219). Not saved. */
+	private final StalledOrders stalledOrders = new StalledOrders();
 
 	public TownDispatcherBlockEntity(BlockPos pos, BlockState state) {
 		super(ModContent.TOWN_DISPATCHER_BE.get(), pos, state, EnergyTier.LV, SLOT_COUNT, 0L, 0L, 0L);
@@ -152,6 +165,11 @@ public final class TownDispatcherBlockEntity extends MachineBlockEntity implemen
 	/** The «Task» and «Materials» tabs as the last look worked them out (on a client: as the update tag brought). */
 	public DispatcherView view() {
 		return view;
+	}
+
+	/** The order the «Task» and «Materials» tabs show, by building index, or -1 — the first order. */
+	public int selected() {
+		return selected;
 	}
 
 	/** The material buffer the builder drones take their blocks from (R84). */
@@ -224,6 +242,8 @@ public final class TownDispatcherBlockEntity extends MachineBlockEntity implemen
 		updateLit(status == DispatcherStatus.WORKING);
 		if (status.serves() && town.isPresent()) {
 			recordFoundSheets(serverLevel, town.get());
+			learnHousePlan(serverLevel, town.get());
+			stalledOrders.check(serverLevel, town.get(), serverLevel.getGameTime());
 		}
 		DispatcherView next = DispatcherViews.of(serverLevel, this, town);
 		if (!next.equals(view) || status != before) {
@@ -257,6 +277,21 @@ public final class TownDispatcherBlockEntity extends MachineBlockEntity implemen
 		if (mask != 0) {
 			SettlementRegistry.get(level.getServer()).works().town(town.id()).markSheetsFound(mask);
 		}
+	}
+
+	/**
+	 * A house plan of the town's style put into the plan slot is learned by the town and used up (round 2 of 0.1.219,
+	 * Q4): the slot is the town hall's, a house plan only passes through it. A plan of another style stays where it is.
+	 */
+	private void learnHousePlan(ServerLevel level, Settlement town) {
+		ItemStack stack = getItem(PLAN_SLOT);
+		RestorationPlan plan = stack.getItem() instanceof HousePlanItem ? RestorationPlanItem.planOf(stack) : null;
+		if (plan == null || PlanSheetRules.houseType(plan.building()) == 0
+				|| !town.style().isEmpty() && !town.style().equals(plan.style().toString())) {
+			return;
+		}
+		removeItem(PLAN_SLOT, 1);
+		HallBuildNews.housePlanLearned(level, town.id(), plan.template());
 	}
 
 	/** How many nests the core's tier lets work, as of the last look. */
@@ -358,16 +393,57 @@ public final class TownDispatcherBlockEntity extends MachineBlockEntity implemen
 		int id = binding.id();
 		TownWorks works = SettlementRegistry.get(serverLevel.getServer()).works().town(id);
 		OptionalInt hall = TownHall.index(works);
-		if (hall.isEmpty() || works.buildings().get(hall.getAsInt()).intact().isEmpty()) {
+		Optional<Settlement> town = binding.find(serverLevel);
+		if (hall.isEmpty() || town.isEmpty() || works.buildings().get(hall.getAsInt()).intact().isEmpty()) {
 			return;
 		}
-		int index = hall.getAsInt();
-		for (WorkJobType type : List.of(WorkJobType.CLEAR, WorkJobType.BUILD)) {
-			if (works.queue().open(type, index).isEmpty()) {
-				works.queue().raise(type, index).ifPresent(job -> Industrialization.LOGGER.info(
-						"[ala-towns] settlement {}: {} raised {} job {} on the town hall from the dispatcher", id,
-						player.getName().getString(), type.serializedName(), job.id()));
-			}
+		// The hall's order (round 2 of 0.1.219, Q1): its clearing and building, first in the list.
+		Optional<String> refused = TownOrders.place(serverLevel, town.get(), hall.getAsInt(),
+				player.getName().getString());
+		if (refused.isPresent()) {
+			// Nothing raised (round 5 of 0.1.219): the hall's state may lag behind the world — measure it now, so the
+			// screen shows what is true rather than a «Start» that did nothing.
+			TownWorksScanner.measureNow(serverLevel, id, hall.getAsInt());
+			Industrialization.LOGGER.info("[ala-towns] settlement {}: {} pressed Start, nothing was raised: {}", id,
+					player.getName().getString(), refused.get());
+		}
+		works.moveOrder(hall.getAsInt(), -works.orders().size());
+		selected = hall.getAsInt();
+		view = DispatcherViews.of(serverLevel, this, town);
+		syncBlockEntityToClient();
+	}
+
+	/** What a press on one order of the «Orders» tab does (round 2 of 0.1.219, Q3). */
+	public enum OrderPress {
+		/** Show this order on the «Task» and «Materials» tabs. Anybody who may read the dispatcher. */
+		SELECT,
+		/** One place earlier. The town's owner only. */
+		UP,
+		/** One place later. The town's owner only. */
+		DOWN,
+		/** Call the order off. The town's owner only. */
+		CANCEL
+	}
+
+	/** {@code player} pressed {@code press} on the order of building {@code building}. */
+	public void pressOrder(Player player, int building, OrderPress press) {
+		if (!(level instanceof ServerLevel serverLevel) || !status.serves() || !admits(player)) {
+			return;
+		}
+		TownWorks works = SettlementRegistry.get(serverLevel.getServer()).works().town(binding.id());
+		if (!works.orders().contains(building)) {
+			return;
+		}
+		if (press == OrderPress.SELECT) {
+			selected = building;
+		} else if (!mayControl(player)) {
+			return;
+		} else if (press == OrderPress.CANCEL) {
+			TownOrders.cancel(works, building);
+			Industrialization.LOGGER.info("[ala-towns] settlement {}: {} called off the order of building {}",
+					binding.id(), player.getName().getString(), building);
+		} else {
+			works.moveOrder(building, press == OrderPress.UP ? -1 : 1);
 		}
 		view = DispatcherViews.of(serverLevel, this, binding.find(serverLevel));
 		syncBlockEntityToClient();
@@ -383,22 +459,25 @@ public final class TownDispatcherBlockEntity extends MachineBlockEntity implemen
 	}
 
 	/**
-	 * Whether {@code stack} belongs in slot {@code slot} by hand: a sheet, the plan, or any material. A sheet or the
+	 * Whether {@code stack} belongs in slot {@code slot} by hand: sheet N in sheet slot N only (owner's round 1 of
+	 * 0.1.219: an empty slot shows the number still missing; a blank sheet fits none), the plan, or any material. A
+	 * sheet or the
 	 * plan never goes into the buffer (owner's round 1: a plan moved there looked put away, while the drones read it
 	 * only from the plan slot).
 	 */
 	public static boolean fitsByHand(int slot, ItemStack stack) {
 		if (slot >= SHEET_SLOT_FIRST && slot < PLAN_SLOT) {
-			return stack.is(ModContent.TOWN_HALL_PLAN_SHEET.get());
+			return TownHallPlanSheetItem.fitsSheetSlot(stack, slot - SHEET_SLOT_FIRST);
 		}
 		if (slot == PLAN_SLOT) {
-			return stack.is(ModContent.RESTORATION_PLAN.get());
+			return stack.is(ModContent.RESTORATION_PLAN.get()) || stack.is(ModContent.HOUSE_PLAN.get());
 		}
 		return slot >= BUFFER_FIRST && slot < SLOT_COUNT && !isPlanPaper(stack);
 	}
 
 	private static boolean isPlanPaper(ItemStack stack) {
-		return stack.is(ModContent.TOWN_HALL_PLAN_SHEET.get()) || stack.is(ModContent.RESTORATION_PLAN.get());
+		return stack.is(ModContent.TOWN_HALL_PLAN_SHEET.get()) || stack.is(ModContent.RESTORATION_PLAN.get())
+				|| stack.is(ModContent.HOUSE_PLAN.get());
 	}
 
 	// --- persistence ---
@@ -419,6 +498,8 @@ public final class TownDispatcherBlockEntity extends MachineBlockEntity implemen
 		journal = input.read(KEY_JOURNAL, WorkJournalCodec.CODEC).orElseGet(WorkJournal::new);
 		journal.onChange(this::setChanged);
 		view = input.read(KEY_VIEW, DispatcherView.CODEC).orElse(DispatcherView.EMPTY);
+		// A save from before sheet N went into slot N only: every sheet back into its own slot, nothing dropped.
+		TownHallPlanSheetItem.sortIntoOwnSlots(items, SHEET_SLOT_FIRST);
 	}
 
 	@Override

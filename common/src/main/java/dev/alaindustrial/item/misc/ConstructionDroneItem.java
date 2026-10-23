@@ -1,6 +1,7 @@
 package dev.alaindustrial.item.misc;
 
 import dev.alaindustrial.client.ServerBalance;
+import dev.alaindustrial.client.tooltip.TooltipWrap;
 import dev.alaindustrial.registry.ModDataComponents;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.settlement.drone.DroneNestRules;
@@ -93,11 +94,11 @@ public class ConstructionDroneItem extends Item {
 	@Override
 	public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
 			Consumer<Component> adder, TooltipFlag flag) {
-		adder.accept(Component.translatable("tooltip.alaindustrial.construction_drone.charge",
+		TooltipWrap.add(adder, Component.translatable("tooltip.alaindustrial.construction_drone.charge",
 				percent(shownCharge(stack), shownCapacity())).withStyle(ChatFormatting.AQUA));
-		adder.accept(Component.translatable("tooltip.alaindustrial.construction_drone.use")
+		TooltipWrap.add(adder, Component.translatable("tooltip.alaindustrial.construction_drone.use")
 				.withStyle(ChatFormatting.GRAY));
-		adder.accept(Component.translatable("tooltip.alaindustrial.construction_drone.charges")
+		TooltipWrap.add(adder, Component.translatable("tooltip.alaindustrial.construction_drone.charges")
 				.withStyle(ChatFormatting.GRAY));
 	}
 }

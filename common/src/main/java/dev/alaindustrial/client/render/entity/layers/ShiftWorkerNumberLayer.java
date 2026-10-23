@@ -57,6 +57,9 @@ public class ShiftWorkerNumberLayer extends RenderLayer<ShiftWorkerRenderState, 
 		poseStack.pushPose();
 		getParentModel().root().translateAndRotate(poseStack);
 		getParentModel().body.translateAndRotate(poseStack);
+		// The balloon swings about its hinge on the back (MOD-882); its geometry stays in the body's pixels.
+		getParentModel().pack().translateAndRotate(poseStack);
+		poseStack.translate(0.0F, 0.0F, -ShiftWorkerModel.PACK_Z / 16.0F);
 		poseStack.translate(PLATE_X / 16.0F, PLATE_Y / 16.0F, PLATE_Z / 16.0F);
 		poseStack.scale(-scale, scale, scale);
 		float lineHeight = font.lineHeight;

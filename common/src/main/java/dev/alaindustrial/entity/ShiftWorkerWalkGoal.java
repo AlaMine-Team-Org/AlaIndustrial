@@ -40,7 +40,7 @@ final class ShiftWorkerWalkGoal extends Goal {
 	@Override
 	public boolean canUse() {
 		if (!(worker.level() instanceof ServerLevel level) || worker.isPassenger()
-				|| worker.mode() == ShiftMode.HIBERNATE) {
+				|| worker.mode() == ShiftMode.HIBERNATE || worker.lyingOn().isPresent()) {
 			return false;
 		}
 		long now = level.getGameTime();
@@ -75,7 +75,8 @@ final class ShiftWorkerWalkGoal extends Goal {
 
 	@Override
 	public boolean canContinueToUse() {
-		return !worker.getNavigation().isDone() && worker.mode() != ShiftMode.HIBERNATE;
+		return !worker.getNavigation().isDone() && worker.mode() != ShiftMode.HIBERNATE
+				&& worker.lyingOn().isEmpty();
 	}
 
 	@Override

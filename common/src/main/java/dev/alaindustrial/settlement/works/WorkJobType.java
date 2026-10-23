@@ -15,9 +15,14 @@ public enum WorkJobType {
 	/** Take the debris out of a building (R85, R93): only blocks on the debris list, liquids where air belongs. */
 	CLEAR,
 	/** Put the building's intact template back, block by block. */
-	BUILD;
+	BUILD,
+	/**
+	 * Lay the road from the town hall's inlet to the building's inlet (MOD-861, R114), before the building is built: a
+	 * building job waits while its road job is open.
+	 */
+	ROAD;
 
-	/** The name in saves and in translation keys: {@code clear}, {@code build}. */
+	/** The name in saves and in translation keys: {@code clear}, {@code build}, {@code road}. */
 	public String serializedName() {
 		return name().toLowerCase(Locale.ROOT);
 	}

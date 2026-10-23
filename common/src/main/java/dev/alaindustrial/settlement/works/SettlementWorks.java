@@ -46,9 +46,50 @@ public final class SettlementWorks {
 			Codec.BOOL.optionalFieldOf("repair", false).forGetter(SavedJob::repair)
 	).apply(i, SavedJob::new));
 
+	/**
+	 * One cell of a town's road network (round 2 of 0.1.219, R129): where its road block stands, the column of the
+	 * next cell towards the hall (none for the hall's own), and whether it is laid. The kept per-building courses of
+	 * the dev builds before it ({@code roads}) are not read: the network is grown again (R2-7).
+	 */
+	private record SavedRoadCell(int x, int y, int z, Optional<List<Integer>> parent, boolean built) {
+
+		static SavedRoadCell of(TownRoadPlan.Node node) {
+			Optional<List<Integer>> parent = node.parent() == null ? Optional.empty()
+					: Optional.of(List.of(node.parent().x(), node.parent().z()));
+			return new SavedRoadCell(node.cell().x(), node.cell().y(), node.cell().z(), parent, node.built());
+		}
+
+		Optional<TownRoadPlan.Node> node() {
+			if (parent.isPresent() && parent.get().size() != 2) {
+				return Optional.empty();
+			}
+			return Optional.of(new TownRoadPlan.Node(new TownRoadTrace.Cell(x, y, z),
+					parent.map(p -> new TownRoadTrace.Column(p.get(0), p.get(1))).orElse(null), built));
+		}
+	}
+
+	private static final Codec<SavedRoadCell> ROAD_CELL_CODEC = RecordCodecBuilder.create(i -> i.group(
+			Codec.INT.fieldOf("x").forGetter(SavedRoadCell::x),
+			Codec.INT.fieldOf("y").forGetter(SavedRoadCell::y),
+			Codec.INT.fieldOf("z").forGetter(SavedRoadCell::z),
+			Codec.INT.listOf().optionalFieldOf("parent").forGetter(SavedRoadCell::parent),
+			Codec.BOOL.optionalFieldOf("built", false).forGetter(SavedRoadCell::built)
+	).apply(i, SavedRoadCell::new));
+
+	/** Where a building's inlet joins the road network: the column of the cell in front of it. */
+	private record SavedRoadFront(int building, int x, int z) {
+	}
+
+	private static final Codec<SavedRoadFront> ROAD_FRONT_CODEC = RecordCodecBuilder.create(i -> i.group(
+			Codec.INT.fieldOf("building").forGetter(SavedRoadFront::building),
+			Codec.INT.fieldOf("x").forGetter(SavedRoadFront::x),
+			Codec.INT.fieldOf("z").forGetter(SavedRoadFront::z)
+	).apply(i, SavedRoadFront::new));
+
 	/** One town's part of the file. */
 	private record SavedTown(int settlement, boolean known, List<TownBuilding> buildings, List<SavedJob> jobs,
-			int nextJob, int planSheets) {
+			int nextJob, int planSheets, List<SavedRoadCell> roadCells, List<SavedRoadFront> roadFronts,
+			List<Integer> orders, List<String> housePlans) {
 	}
 
 	private static final Codec<SavedTown> TOWN_CODEC = RecordCodecBuilder.create(i -> i.group(
@@ -57,7 +98,11 @@ public final class SettlementWorks {
 			TownBuilding.CODEC.listOf().optionalFieldOf("buildings", List.of()).forGetter(SavedTown::buildings),
 			JOB_CODEC.listOf().optionalFieldOf("jobs", List.of()).forGetter(SavedTown::jobs),
 			Codec.INT.optionalFieldOf("next_job", 1).forGetter(SavedTown::nextJob),
-			Codec.INT.optionalFieldOf("plan_sheets", 0).forGetter(SavedTown::planSheets)
+			Codec.INT.optionalFieldOf("plan_sheets", 0).forGetter(SavedTown::planSheets),
+			ROAD_CELL_CODEC.listOf().optionalFieldOf("road_cells", List.of()).forGetter(SavedTown::roadCells),
+			ROAD_FRONT_CODEC.listOf().optionalFieldOf("road_fronts", List.of()).forGetter(SavedTown::roadFronts),
+			Codec.INT.listOf().optionalFieldOf("orders", List.of()).forGetter(SavedTown::orders),
+			Codec.STRING.listOf().optionalFieldOf("house_plans", List.of()).forGetter(SavedTown::housePlans)
 	).apply(i, SavedTown::new));
 
 	public static final Codec<SettlementWorks> CODEC = TOWN_CODEC.listOf()
@@ -92,8 +137,14 @@ public final class SettlementWorks {
 				jobs.add(new WorkJob(job.id(), type.get(), job.building(), status, job.taker(), job.progress(),
 						job.reason(), job.repair()));
 			}
+			List<TownRoadPlan.Node> cells = new ArrayList<>();
+			town.roadCells().forEach(cell -> cell.node().ifPresent(cells::add));
+			Map<Integer, TownRoadTrace.Column> fronts = new TreeMap<>();
+			town.roadFronts().forEach(front -> fronts.put(front.building(),
+					new TownRoadTrace.Column(front.x(), front.z())));
+			TownRoadPlan roads = new TownRoadPlan(cells, fronts);
 			TownWorks works = new TownWorks(town.buildings(), town.known(), new WorkQueue(jobs, town.nextJob()),
-					town.planSheets());
+					town.planSheets(), roads, town.orders(), town.housePlans());
 			install(town.settlement(), works);
 		}
 	}
@@ -110,8 +161,13 @@ public final class SettlementWorks {
 				jobs.add(new SavedJob(job.id(), job.type().serializedName(), job.building(),
 						job.status().serializedName(), job.taker(), job.progress(), job.reason(), job.repair()));
 			}
+			List<SavedRoadCell> cells = works.roadPlan().nodes().stream().map(SavedRoadCell::of).toList();
+			List<SavedRoadFront> fronts = new ArrayList<>();
+			works.roadPlan().fronts().forEach((building, column) -> fronts.add(
+					new SavedRoadFront(building, column.x(), column.z())));
 			out.add(new SavedTown(entry.getKey(), works.buildingsKnown(), works.buildings(), jobs,
-					works.queue().nextId(), works.foundSheets()));
+					works.queue().nextId(), works.foundSheets(), cells, fronts, works.orderList(),
+					List.copyOf(works.learnedHousePlans())));
 		}
 		return out;
 	}

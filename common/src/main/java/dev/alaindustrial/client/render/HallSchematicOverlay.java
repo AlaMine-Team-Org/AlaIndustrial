@@ -45,6 +45,11 @@ public final class HallSchematicOverlay {
 
 	@Nullable
 	private static BlockPos shownCore;
+	/**
+	 * The building shown (round 2 of 0.1.219, Q6): its index in the town, {@link #NETWORK} for the town's road network,
+	 * or {@link #DEFAULT} — the order the dispatcher shows.
+	 */
+	private static int shownBuilding = HallSchematicRequestPayload.DEFAULT;
 	@Nullable
 	private static ResourceKey<Level> dimension;
 	private static long lastRequest;
@@ -59,6 +64,11 @@ public final class HallSchematicOverlay {
 		return core.equals(shownCore);
 	}
 
+	/** Whether the schematic of building {@code building} of the town whose core stands at {@code core} is shown. */
+	public static boolean isShown(BlockPos core, int building) {
+		return core.equals(shownCore) && shownBuilding == building;
+	}
+
 	/** The baked ghosts of the schematic of the core at {@code core}, empty when that schematic is not shown. */
 	public static HallSchematicGhosts ghostsAt(BlockPos core) {
 		return core.equals(shownCore) ? ghosts : HallSchematicGhosts.empty();
@@ -66,7 +76,16 @@ public final class HallSchematicOverlay {
 
 	/** The switch: shows the schematic of the town whose core stands at {@code core}, or hides it if shown. */
 	public static void toggle(BlockPos core) {
-		if (core.equals(shownCore)) {
+		toggle(core, HallSchematicRequestPayload.DEFAULT);
+	}
+
+	/**
+	 * The switch of one building (round 2 of 0.1.219, Q6): shows building {@code building} of the town whose core
+	 * stands at {@code core} with its road — {@link HallSchematicRequestPayload#NETWORK}: the town's road network —
+	 * hiding whatever was shown before, or hides it if it is the one shown. One at a time, as a radio button.
+	 */
+	public static void toggle(BlockPos core, int building) {
+		if (core.equals(shownCore) && shownBuilding == building) {
 			clear();
 			return;
 		}
@@ -76,6 +95,7 @@ public final class HallSchematicOverlay {
 		}
 		clear();
 		shownCore = core.immutable();
+		shownBuilding = building;
 		dimension = level.dimension();
 		awaitingFirst = true;
 		request(level);
@@ -101,6 +121,7 @@ public final class HallSchematicOverlay {
 	/** Drops the schematic (switch off, dimension change, leaving the world). */
 	public static void clear() {
 		shownCore = null;
+		shownBuilding = HallSchematicRequestPayload.DEFAULT;
 		dimension = null;
 		awaitingFirst = false;
 		ghosts = HallSchematicGhosts.empty();
@@ -134,7 +155,7 @@ public final class HallSchematicOverlay {
 	private static void request(ClientLevel level) {
 		lastRequest = level.getGameTime();
 		if (shownCore != null) {
-			NetworkDispatcher.get().sendToServer(new HallSchematicRequestPayload(shownCore));
+			NetworkDispatcher.get().sendToServer(new HallSchematicRequestPayload(shownCore, shownBuilding));
 		}
 	}
 }

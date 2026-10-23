@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:stone_bricks",
+    "minecraft:cracked_stone_bricks",
+    "minecraft:mossy_stone_bricks",
+    "minecraft:polished_andesite",
+    "minecraft:gravel",
+    "minecraft:dirt_path",
+    "minecraft:cobblestone",
+    "minecraft:mossy_cobblestone",
+    "minecraft:smooth_sandstone",
+    "minecraft:cut_sandstone"
+  ]
+}

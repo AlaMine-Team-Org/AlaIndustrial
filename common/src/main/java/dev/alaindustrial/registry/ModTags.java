@@ -122,11 +122,37 @@ public final class ModTags {
 		 */
 		public static final TagKey<Block> TOWN_DRONE_PROTECTED = key("town_drone_protected");
 		/**
+		 * The loose growth and litter a builder drone takes out of its way by itself (owner's round 4 of 0.1.219,
+		 * R4-5): grass, flowers, ferns, bushes, saplings, leaves, vines, mushrooms, a snow layer, cobwebs — what grows
+		 * or lies on the ground on its own. In a building's footprint, its ring and on a road's course it never names
+		 * one as «in the way». A block with a block entity, a protected block or a liquid is never litter.
+		 */
+		public static final TagKey<Block> TOWN_DRONE_LITTER = key("town_drone_litter");
+		/**
 		 * The terrain a clearing takes out of the ring around a town building (owner's round 4 of stage 6): sand,
-		 * sandstone, earth, stone, gravel, snow, plants — so the walls stand free. Rubble ({@link #TOWN_DEBRIS}) and
-		 * anything placing replaces go too; a block with a block entity or on {@link #TOWN_DRONE_PROTECTED} never does.
+		 * sandstone, earth, stone, gravel, snow, plants — so the walls stand free — and the rubble a town's ground
+		 * pieces scatter: chains, slabs, soot (owner's round 1 of 0.1.219). Rubble ({@link #TOWN_DEBRIS}), the ruin's
+		 * own rubble palette and anything placing replaces go too; a block with a block entity or on
+		 * {@link #TOWN_DRONE_PROTECTED} never does.
 		 */
 		public static final TagKey<Block> TOWN_RING_CLEAR = key("town_ring_clear");
+		/**
+		 * The nature a clearing takes off the site of a new house a player laid (MOD-877, R109): the ring's terrain
+		 * plus leaves and flowers — what grows or lies there by itself. The drones put it into the dispatcher's buffer.
+		 * A player's block, a machine or a chest on the site is not on it: the site check names it instead.
+		 */
+		public static final TagKey<Block> TOWN_SITE_CLEAR = key("town_site_clear");
+		/**
+		 * The paving of a town's old streets (round 2 of 0.1.219, R2-7, R130): stone bricks, andesite, gravel, paths,
+		 * smooth sandstone. A town road follows them before the grass, and its road block takes the paving's place.
+		 */
+		public static final TagKey<Block> TOWN_PAVING = key("town_paving");
+		/**
+		 * The plates of a house's number plaque (MOD-862, R40): the engraved digits and the broken letters. A house
+		 * plaque shows its resident's digits, not the intact template's, so one plate stands for any other when a house
+		 * is compared with its template.
+		 */
+		public static final TagKey<Block> TOWN_PLAQUE_PLATES = key("town_plaque_plates");
 
 		/**
 		 * Blocks a town building puts in its «windows and doors» stage (MOD-860): doors, trapdoors, gates,
@@ -307,6 +333,12 @@ public final class ModTags {
 		 * mods to read, and nothing of ours accepts it as an input.
 		 */
 		public static final TagKey<Item> VULCANIZABLE_RUBBERS = key("vulcanizable_rubbers");
+
+		/**
+		 * What a builder drone fills a pit under a new house with (MOD-877, R109): earth and stone from the
+		 * dispatcher's buffer — mostly what the drones dug off the site.
+		 */
+		public static final TagKey<Item> TOWN_SITE_FILL = key("town_site_fill");
 
 		private static TagKey<Item> key(String path) {
 			return TagKey.create(Registries.ITEM, Industrialization.id(path));

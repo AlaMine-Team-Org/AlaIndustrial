@@ -16,4 +16,12 @@ public interface HasMachineTooltip {
 
 	/** This block's tooltip; built per call — the lines read their numbers live anyway. */
 	MachineTooltipSpec machineTooltip();
+
+	/**
+	 * Whether a long line of this tooltip is broken into several ({@code TooltipWrap}; owner's round 4 of 0.1.219,
+	 * R4-3). On for the blocks of the ALA towns, whose lines are whole sentences; the other machines keep theirs.
+	 */
+	default boolean wrapsTooltipLines() {
+		return false;
+	}
 }

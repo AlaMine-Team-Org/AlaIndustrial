@@ -21,6 +21,11 @@
     "minecraft:cactus",
     "minecraft:sugar_cane",
     "minecraft:sweet_berry_bush",
-    "minecraft:ice"
+    "minecraft:ice",
+    "#minecraft:chains",
+    "minecraft:spruce_slab",
+    "minecraft:cobblestone_slab",
+    "minecraft:sandstone_slab",
+    "alaindustrial:soot_layer"
   ]
 }

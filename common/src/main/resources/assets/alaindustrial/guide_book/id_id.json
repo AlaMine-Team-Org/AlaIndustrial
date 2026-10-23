@@ -707,6 +707,44 @@
           ]
         },
         {
+          "id": "town_road",
+          "title": "Jalan Permukiman",
+          "icon": "alaindustrial:town_road",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Jalan Permukiman",
+              "text": "Blok penuh yang rata dengan tanah: kisi besi tempa gelap dengan kawat tembaga berisolasi di dalamnya; segmen jaringan energi yang menyalurkan daya inti permukiman ke rumah-rumah pekerja sif. Jaringan jalan permukiman dipasang oleh drone konstruksi."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Energi: 12 EU/t",
+                "Bufer: 12 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "alaindustrial:tempered_iron_bars",
+                "alaindustrial:tempered_iron_bars",
+                "alaindustrial:tempered_iron_bars",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:insulated_copper_cable",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone"
+              ],
+              "result_id": "alaindustrial:town_road",
+              "result_count": 3
+            }
+          ]
+        },
+        {
           "id": "gold_cable",
           "title": "Kabel Emas",
           "icon": "alaindustrial:gold_cable",
@@ -3321,7 +3359,7 @@
             {
               "type": "text",
               "title": "Lempeng Berukir 0",
-              "text": "Lempeng batu sabak dekoratif dengan angka atau potongan huruf yang diukir — papan catatan sebelumnya di laboratorium terbengkalai tersusun darinya. Tanpa resep."
+              "text": "Lempeng batu sabak dekoratif dengan angka, huruf, atau potongan huruf yang diukir. Papan catatan sebelumnya di laboratorium terbengkalai dan plakat nomor di rumah-rumah kota pekerja tersusun darinya. Tanpa resep."
             }
           ]
         },
@@ -3764,6 +3802,44 @@
           ]
         },
         {
+          "id": "house_inlet",
+          "title": "Saluran Masuk Rumah",
+          "icon": "alaindustrial:house_inlet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Saluran Masuk Rumah",
+              "text": "Blok dinding tempat kabel masuk ke rumah pekerja sif. Menerima EU hanya lewat sisi luarnya dan menyimpan cadangan untuk ranjang pengisi daya rumah itu; jangkar rumah di permukiman, dan dari sinilah rumah baru ditetapkan."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Energi: 2 000 EU",
+                "Bufer: 2000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:house_inlet",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "industrial_workbench",
           "title": "Meja Kerja Industri",
           "icon": "alaindustrial:industrial_workbench",
@@ -3789,6 +3865,80 @@
                 "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:industrial_workbench",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "drone_nest",
+          "title": "Sarang Drone",
+          "icon": "alaindustrial:drone_nest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Sarang Drone",
+              "text": "Landasan pendaratan drone konstruksi di atas balai kota; ke dalamnya dimasukkan drone dalam bentuk item, lalu drone mengambil satu bangunan dari antrean pesanan permukiman, membersihkan puingnya, membuat jalannya, menimbun fondasinya, dan membangunnya kembali blok demi blok ke wujud utuhnya, dan saat tidak ada pekerjaan mengukir plakat rumah; hanya diisi daya oleh inti permukiman, dan tier inti menentukan berapa sarang yang bekerja."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Energi: 20 EU per blok"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "alaindustrial:copper_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_cable",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:drone_nest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "town_dispatcher",
+          "title": "Dispatcher Kota",
+          "icon": "alaindustrial:town_dispatcher",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Dispatcher Kota",
+              "text": "Meja konstruksi sebuah kota pekerja yang berdiri di balai kotanya: menyusun denah restorasi dari tiga lembar, mengelola antrean pesanan bangunan, menyimpan penyangga bahan tempat drone konstruksi mengambil blok, dan menunjukkan apakah drone sedang bekerja; satu per kota."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Kapasitas: 27 slot"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "alaindustrial:copper_plate",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_plate",
+                "alaindustrial:battery",
+                "alaindustrial:copper_plate"
+              ],
+              "result_id": "alaindustrial:town_dispatcher",
               "result_count": 1
             }
           ]
@@ -3831,7 +3981,7 @@
             {
               "type": "text",
               "title": "Kapsul Penerimaan",
-              "text": "Mengembalikan pekerja sif sebuah permukiman satu per satu dengan EU dan bahan — hanya selama inti permukiman menyala, kota punya pemulih, dan batas pekerjanya belum tercapai; setiap pekerja baru mendapat nomornya sendiri yang unik di seluruh dunia."
+              "text": "Mengembalikan pekerja sif sebuah permukiman satu per satu dengan EU dan bahan, hanya selama inti permukiman menyala, kota punya pemulih, batas pekerjanya belum tercapai, dan ada rumah kosong yang layak huni untuk pekerja baru; setiap pekerja baru mendapat nomornya sendiri yang unik di seluruh dunia."
             },
             {
               "type": "stats",
@@ -3919,6 +4069,36 @@
               "lines": [
                 "Energi: 1 000 EU kerja mesin = 1 poin keahlian"
               ]
+            }
+          ]
+        },
+        {
+          "id": "charging_bed",
+          "title": "Ranjang Pengisi Daya",
+          "icon": "alaindustrial:charging_bed",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Ranjang Pengisi Daya",
+              "text": "Ranjang dua blok di rumah pekerja sif, seperti kasur vanila: pekerja dengan baterai lemah berbaring di atasnya dan mengisi daya; ranjang ini tidak menyimpan energi sendiri dan mengambilnya dari saluran masuk rumahnya."
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:copper_plate",
+                "alaindustrial:battery",
+                "alaindustrial:copper_plate",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:charging_bed",
+              "result_count": 1
             }
           ]
         },
@@ -4294,7 +4474,7 @@
             {
               "type": "text",
               "title": "Inti Permukiman",
-              "text": "Jantung sebuah kota pekerja yang berdiri di balai kotanya — selama jaringan memberinya EU, inti ini menjaga wilayah permukiman, menentukan berapa banyak rumah dan pekerja sif yang boleh dimiliki kota itu, dan mengingat pemulihnya; tanpa daya ia padam dan kota tertidur."
+              "text": "Jantung sebuah kota pekerja yang berdiri di balai kotanya: selama jaringan memberinya EU, inti ini menjaga wilayah permukiman, menentukan berapa banyak rumah dan pekerja sif yang boleh dimiliki kota itu, dan mengingat pemulihnya; tanpa daya ia padam dan kota tertidur."
             },
             {
               "type": "stats",
@@ -4639,6 +4819,134 @@
           ]
         },
         {
+          "id": "town_hall_plan_sheet",
+          "title": "Lembar denah balai kota",
+          "icon": "alaindustrial:town_hall_plan_sheet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Lembar denah balai kota",
+              "text": "Salah satu dari tiga lembar denah restorasi balai kota sebuah kota pekerja — terletak di tempat tetap di setiap kota dengan gayanya, dan lembar yang hilang bisa dibuat; tiga lembar dari satu gaya disusun menjadi denah restorasi di dispatcher."
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "minecraft:paper",
+                "minecraft:lapis_lazuli",
+                "minecraft:paper",
+                "minecraft:iron_ingot",
+                "minecraft:sandstone",
+                "minecraft:iron_ingot",
+                "minecraft:lapis_lazuli",
+                "minecraft:bricks",
+                "minecraft:lapis_lazuli"
+              ],
+              "result_id": "alaindustrial:town_hall_plan_sheet",
+              "result_count": 1,
+              "variants": [
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:iron_ingot",
+                    "minecraft:sandstone",
+                    "minecraft:iron_ingot",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:bricks",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "Pembuatan Berpola",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:sandstone",
+                    "minecraft:oak_door",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:white_bed",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "Pembuatan Berpola",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:redstone",
+                    "minecraft:sandstone",
+                    "minecraft:redstone",
+                    "minecraft:lapis_lazuli",
+                    "alaindustrial:electronic_circuit",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "Pembuatan Berpola",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:iron_ingot",
+                    "minecraft:grass_block",
+                    "minecraft:iron_ingot",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:bricks",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "Pembuatan Berpola",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:grass_block",
+                    "minecraft:oak_door",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:white_bed",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "Pembuatan Berpola",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:redstone",
+                    "minecraft:grass_block",
+                    "minecraft:redstone",
+                    "minecraft:lapis_lazuli",
+                    "alaindustrial:electronic_circuit",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "Pembuatan Berpola",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
           "id": "machine_casing",
           "title": "Rangka Mesin",
           "icon": "alaindustrial:machine_casing",
@@ -4785,6 +5093,178 @@
               ],
               "result_id": "alaindustrial:mutation_chip_duplicate",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "house_plan",
+          "title": "Denah Rumah",
+          "icon": "alaindustrial:house_plan",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Denah Rumah",
+              "text": "Denah salah satu dari empat tipe rumah kapsul kota pekerja. Permukiman mempelajarinya sekali untuk selamanya, lalu drone memulihkan dan membangun rumah tipe itu. Ditemukan di reruntuhan rumahnya, atau bisa dibuat."
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "minecraft:paper",
+                "minecraft:oak_door",
+                "minecraft:paper",
+                "minecraft:lapis_lazuli",
+                "minecraft:sandstone",
+                "minecraft:lapis_lazuli",
+                "minecraft:paper",
+                "minecraft:lantern",
+                "minecraft:paper"
+              ],
+              "result_id": "alaindustrial:house_plan",
+              "result_count": 1,
+              "variants": [
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:sandstone",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:lantern",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "Pembuatan Berpola",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:sandstone",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:barrel",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "Pembuatan Berpola",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:sandstone",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:chest",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "Pembuatan Berpola",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:sandstone",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:flower_pot",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "Pembuatan Berpola",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:grass_block",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:lantern",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "Pembuatan Berpola",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:grass_block",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:barrel",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "Pembuatan Berpola",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:grass_block",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:chest",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "Pembuatan Berpola",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:grass_block",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:flower_pot",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "Pembuatan Berpola",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "restoration_plan",
+          "title": "Denah restorasi",
+          "icon": "alaindustrial:restoration_plan",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Denah restorasi",
+              "text": "Denah yang dipakai drone konstruksi untuk merestorasi bangunan kota pekerja; denah ini hanya membawa rujukan ke templat utuh bangunan dengan gayanya. Disusun di dispatcher dari tiga lembar denah."
             }
           ]
         },
