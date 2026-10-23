@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"key": {
+		"T": "alaindustrial:tempered_iron_plate",
+		"C": "alaindustrial:copper_plate",
+		"W": "alaindustrial:insulated_copper_cable"
+	},
+	"pattern": [
+		"TCT",
+		"TWT",
+		"TCT"
+	],
+	"result": {
+		"id": "alaindustrial:house_inlet"
+	}
+}

@@ -5,6 +5,8 @@ import dev.alaindustrial.client.hud.TeleportFadeHud;
 import dev.alaindustrial.client.hud.TeleportNotice;
 import dev.alaindustrial.client.render.NetworkOverlayRenderer;
 import dev.alaindustrial.client.render.HallSchematicOverlay;
+import dev.alaindustrial.client.screen.works.BuildingCardClient;
+import dev.alaindustrial.client.screen.works.HousePlacementClient;
 import dev.alaindustrial.client.render.SettlementBorderOverlay;
 import dev.alaindustrial.client.render.ZonePreviewRenderer;
 import dev.alaindustrial.client.screen.shiftworker.ShiftWorkerCardClient;
@@ -15,7 +17,9 @@ import dev.alaindustrial.network.MachineStatsPayload;
 import dev.alaindustrial.network.NetworkAnalyzerPayload;
 import dev.alaindustrial.network.ReactorLogPayload;
 import dev.alaindustrial.network.ReactorZonePayload;
+import dev.alaindustrial.network.BuildingCardPayload;
 import dev.alaindustrial.network.HallSchematicPayload;
+import dev.alaindustrial.network.HousePlacementPayload;
 import dev.alaindustrial.network.SettlementBorderPayload;
 import dev.alaindustrial.network.ShiftWorkerCardPayload;
 import dev.alaindustrial.network.ShiftWorkerRosterPayload;
@@ -137,7 +141,11 @@ public final class ClientPayloadManifest {
 			// MOD-857: a town's «Construction» tab for its core's screen.
 			queued(TownWorksPayload.TYPE, TownWorksClient::receive),
 			// MOD-857 (round 2): the town hall's cells still to build, for the shown schematic.
-			queued(HallSchematicPayload.TYPE, HallSchematicOverlay::receive));
+			queued(HallSchematicPayload.TYPE, HallSchematicOverlay::receive),
+			// MOD-877: the house laying window of a house inlet, and the house's ghosts.
+			queued(HousePlacementPayload.TYPE, HousePlacementClient::receive),
+			// Round 2 of 0.1.219 (Q2): the card of one town building.
+			queued(BuildingCardPayload.TYPE, BuildingCardClient::receive));
 
 	private static final Map<CustomPacketPayload.Type<?>, ClientHandlerDef<?>> BY_TYPE = index();
 

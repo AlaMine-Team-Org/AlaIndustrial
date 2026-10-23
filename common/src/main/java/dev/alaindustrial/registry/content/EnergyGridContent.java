@@ -10,7 +10,9 @@ import static dev.alaindustrial.registry.content.ContentDeclarations.machine;
 import static dev.alaindustrial.registry.content.TabEntries.show;
 
 import dev.alaindustrial.block.CableBlock;
+import dev.alaindustrial.block.TownRoadBlock;
 import dev.alaindustrial.block.entity.CableBlockEntity;
+import dev.alaindustrial.block.entity.TownRoadBlockEntity;
 import dev.alaindustrial.core.energy.CableType;
 import dev.alaindustrial.registry.ContentManifest.BlockDef;
 import dev.alaindustrial.registry.ContentManifest.BlockEntityDef;
@@ -25,7 +27,8 @@ import net.minecraft.world.level.material.MapColor;
 
 /**
  * The EnergyGrid domain of the content manifest (MOD-711; coding.md §1, owner decision D5). Energy transfer: the
- * cable ladder, each conductor with its insulated form, and the breaker that is installed on a line.
+ * cable ladder, each conductor with its insulated form, the breaker that is installed on a line, and the town
+ * road with a wire under its grate (MOD-861).
  *
  * <p>Declared here and registered through {@link dev.alaindustrial.registry.ContentManifest}, which joins the
  * ten domains in the fixed order of {@code ContentManifest.DOMAINS}; both loaders replay the joined lists. A new
@@ -74,6 +77,11 @@ public final class EnergyGridContent {
 			block("insulated_electrum_cable", p -> new CableBlock(CableType.INSULATED_ELECTRUM, p),
 					machine(MapColor.COLOR_BLACK, p -> p.strength(0.2f, 0.5f).sound(SoundType.WOOL).noOcclusion()),
 					s -> ModContent.INSULATED_ELECTRUM_CABLE = s);
+	// Town road (MOD-861): a full block with an insulated copper wire under its grate, one more segment of the line.
+	public static final BlockDef<TownRoadBlock> TOWN_ROAD = block("town_road", TownRoadBlock::new,
+			machine(MapColor.METAL, p -> p.strength(2.0f, 6.0f).sound(SoundType.METAL)
+					.lightLevel(TownRoadBlock::lightOf)),
+			s -> ModContent.TOWN_ROAD = s);
 
 	/** This domain's blocks, in declaration order — collected since {@code beginBlocks()} above. */
 	private static final List<BlockDef<?>> BLOCKS = endBlocks();
@@ -91,12 +99,15 @@ public final class EnergyGridContent {
 			blockItem("insulated_copper_cable", s -> ModContent.INSULATED_COPPER_CABLE_ITEM = s),
 			blockItem("insulated_tin_cable", s -> ModContent.INSULATED_TIN_CABLE_ITEM = s),
 			blockItem("insulated_gold_cable", s -> ModContent.INSULATED_GOLD_CABLE_ITEM = s),
-			blockItem("insulated_electrum_cable", s -> ModContent.INSULATED_ELECTRUM_CABLE_ITEM = s));
+			blockItem("insulated_electrum_cable", s -> ModContent.INSULATED_ELECTRUM_CABLE_ITEM = s),
+			blockItem("town_road", s -> ModContent.TOWN_ROAD_ITEM = s));
 
 	private static final List<BlockEntityDef<?>> BLOCK_ENTITIES = List.of(
 			blockEntity("copper_cable", CableBlockEntity.class, CableBlockEntity::new,
 					s -> ModContent.COPPER_CABLE_BE = s, COPPER_CABLE, TIN_CABLE, GOLD_CABLE, ELECTRUM_CABLE,
-					INSULATED_COPPER_CABLE, INSULATED_TIN_CABLE, INSULATED_GOLD_CABLE, INSULATED_ELECTRUM_CABLE));
+					INSULATED_COPPER_CABLE, INSULATED_TIN_CABLE, INSULATED_GOLD_CABLE, INSULATED_ELECTRUM_CABLE),
+			blockEntity("town_road", TownRoadBlockEntity.class, TownRoadBlockEntity::new,
+					s -> ModContent.TOWN_ROAD_BE = s, TOWN_ROAD));
 
 	private static final List<MenuDef<?>> MENUS = List.of();
 
@@ -117,6 +128,7 @@ public final class EnergyGridContent {
 		show(out, ModContent.INSULATED_GOLD_CABLE_ITEM);
 		show(out, ModContent.ELECTRUM_CABLE_ITEM);
 		show(out, ModContent.INSULATED_ELECTRUM_CABLE_ITEM);
+		show(out, ModContent.TOWN_ROAD_ITEM);
 	}
 
 	/**

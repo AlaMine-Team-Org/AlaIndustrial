@@ -66,6 +66,9 @@ public class ShiftWorkerRenderer extends MobRenderer<ShiftWorker, ShiftWorkerRen
 		super.extractRenderState(worker, state, partialTicks);
 		HumanoidMobRenderer.extractHumanoidRenderState(worker, state, partialTicks, itemModelResolver);
 		state.number = worker.number();
+		state.hibernating = worker.isNoAi();
+		state.watching = worker.watching(partialTicks);
+		state.greetTicks = worker.greetTicks(partialTicks);
 		ShiftWorkerLook look = look(worker);
 		if (look != null) {
 			state.texture = look.textureLocation();

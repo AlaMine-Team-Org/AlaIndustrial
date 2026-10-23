@@ -707,6 +707,44 @@
           ]
         },
         {
+          "id": "town_road",
+          "title": "বসতির রাস্তা",
+          "icon": "alaindustrial:town_road",
+          "pages": [
+            {
+              "type": "text",
+              "title": "বসতির রাস্তা",
+              "text": "মাটির সমান একটি পূর্ণ ব্লক: গাঢ় টেম্পার্ড লোহার জালি, ভেতরে অন্তরিত তামার তার; শক্তি নেটওয়ার্কের একটি অংশ, যা শহরের কোরের শক্তি পালাবদলের কর্মীদের বাড়িতে পৌঁছে দেয়। শহরের রাস্তার নেটওয়ার্ক নির্মাণ ড্রোনেরা বিছায়।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "শক্তি: 12 EU/t",
+                "বাফার: 12 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:tempered_iron_bars",
+                "alaindustrial:tempered_iron_bars",
+                "alaindustrial:tempered_iron_bars",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:insulated_copper_cable",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone"
+              ],
+              "result_id": "alaindustrial:town_road",
+              "result_count": 3
+            }
+          ]
+        },
+        {
           "id": "gold_cable",
           "title": "সোনার কেবল",
           "icon": "alaindustrial:gold_cable",
@@ -3321,7 +3359,7 @@
             {
               "type": "text",
               "title": "খোদাই করা ফলক 0",
-              "text": "খোদাই করা অঙ্ক বা অক্ষরের টুকরো সহ সাজসজ্জার স্লেট ফলক — পরিত্যক্ত গবেষণাগারে আগের রেকর্ডের ফলক এগুলো দিয়েই তৈরি। কোনো রেসিপি নেই।"
+              "text": "খোদাই করা অঙ্ক, অক্ষর বা অক্ষরের টুকরো সহ সাজসজ্জার স্লেট ফলক। পরিত্যক্ত গবেষণাগারে আগের রেকর্ডের ফলক আর শ্রমিক শহরের বাড়িগুলোর নম্বর ফলক এগুলো দিয়েই তৈরি। কোনো রেসিপি নেই।"
             }
           ]
         },
@@ -3764,6 +3802,44 @@
           ]
         },
         {
+          "id": "house_inlet",
+          "title": "বাড়ির সংযোগমুখ",
+          "icon": "alaindustrial:house_inlet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "বাড়ির সংযোগমুখ",
+              "text": "দেয়ালের সেই ব্লক, যার মধ্য দিয়ে কেবল পালাবদলের কর্মীর বাড়িতে ঢোকে। এটি শুধু বাইরের দিক দিয়ে EU নেয় এবং বাড়ির চার্জিং বিছানার জন্য মজুত রাখে; শহরে বাড়ির নোঙর, আর এখান থেকেই নতুন বাড়ির ভিত্তি দেওয়া হয়।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "শক্তি: 2 000 EU",
+                "বাফার: 2000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:house_inlet",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "industrial_workbench",
           "title": "শিল্প কর্মটেবিল",
           "icon": "alaindustrial:industrial_workbench",
@@ -3789,6 +3865,80 @@
                 "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:industrial_workbench",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "drone_nest",
+          "title": "ড্রোনের বাসা",
+          "icon": "alaindustrial:drone_nest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ড্রোনের বাসা",
+              "text": "টাউন হলের ওপরে নির্মাণ ড্রোনের অবতরণ প্যাড; এতে আইটেম হিসেবে একটি ড্রোন রাখা হয়, আর ড্রোন শহরের অর্ডারের সারি থেকে একটি ভবন নেয়, ধ্বংসস্তূপ সরায়, রাস্তা বিছায়, ভিত ভরাট করে এবং ব্লক ধরে ধরে সেটিকে অক্ষত চেহারায় আবার গড়ে তোলে, আর কাজ না থাকলে বাড়ির ফলক খোদাই করে; এটি শুধু বসতির কোর থেকে চার্জ পায়, আর কোরের স্তর ঠিক করে কতগুলো বাসা কাজ করবে।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "শক্তি: প্রতি ব্লকে 20 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:copper_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_cable",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:drone_nest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "town_dispatcher",
+          "title": "শহরের ডিসপ্যাচার",
+          "icon": "alaindustrial:town_dispatcher",
+          "pages": [
+            {
+              "type": "text",
+              "title": "শহরের ডিসপ্যাচার",
+              "text": "শ্রমিক শহরের নির্মাণ ডেস্ক, যা টাউন হলে থাকে: এটি তিনটি পাতা থেকে পুনর্নির্মাণ নকশা জোড়া দেয়, ভবনের অর্ডারের সারি চালায়, উপকরণের সেই বাফার রাখে যেখান থেকে নির্মাণ ড্রোন ব্লক নেয়, আর দেখায় ড্রোনগুলো কাজ করছে কি না; প্রতি শহরে একটি।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "ধারণক্ষমতা: 27 স্লট"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:copper_plate",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_plate",
+                "alaindustrial:battery",
+                "alaindustrial:copper_plate"
+              ],
+              "result_id": "alaindustrial:town_dispatcher",
               "result_count": 1
             }
           ]
@@ -3831,7 +3981,7 @@
             {
               "type": "text",
               "title": "অভ্যর্থনা ক্যাপসুল",
-              "text": "EU আর উপকরণের বিনিময়ে বসতির পালাবদলের কর্মীদের একজন একজন করে ফিরিয়ে আনে — শুধু যখন বসতির কোর জ্বলছে, শহরের একজন সংস্কারক আছে এবং কর্মীর সীমা পূর্ণ হয়নি; প্রত্যেক নতুন কর্মী নিজের একটি নম্বর পায়, যা পুরো বিশ্বে একটাই।"
+              "text": "EU আর উপকরণের বিনিময়ে বসতির পালাবদলের কর্মীদের একজন একজন করে ফিরিয়ে আনে, শুধু যখন বসতির কোর জ্বলছে, শহরের একজন সংস্কারক আছে, কর্মীর সীমা পূর্ণ হয়নি এবং নতুন কর্মীর জন্য বসবাসযোগ্য একটি খালি বাড়ি আছে; প্রত্যেক নতুন কর্মী নিজের একটি নম্বর পায়, যা পুরো বিশ্বে একটাই।"
             },
             {
               "type": "stats",
@@ -3919,6 +4069,36 @@
               "lines": [
                 "শক্তি: 1 000 EU যন্ত্রের কাজ = 1 দক্ষতা পয়েন্ট"
               ]
+            }
+          ]
+        },
+        {
+          "id": "charging_bed",
+          "title": "চার্জিং বিছানা",
+          "icon": "alaindustrial:charging_bed",
+          "pages": [
+            {
+              "type": "text",
+              "title": "চার্জিং বিছানা",
+              "text": "পালাবদলের কর্মীর বাড়িতে দুই ঘরের একটি বিছানা, সাধারণ বিছানার মতো: ব্যাটারি কমে গেলে কর্মী এতে শুয়ে চার্জ নেয়; এর নিজের কোনো শক্তি মজুত নেই, এটি বাড়ির সংযোগমুখ থেকে শক্তি নেয়।"
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:copper_plate",
+                "alaindustrial:battery",
+                "alaindustrial:copper_plate",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:charging_bed",
+              "result_count": 1
             }
           ]
         },
@@ -4294,7 +4474,7 @@
             {
               "type": "text",
               "title": "বসতির কোর",
-              "text": "শ্রমিক শহরের হৃদয়, যা টাউন হলে থাকে — গ্রিড যতক্ষণ EU দেয়, ততক্ষণ এটি বসতির এলাকা ধরে রাখে, শহরে কতগুলো বাড়ি ও পালাবদলের কর্মী থাকতে পারে তা ঠিক করে এবং সংস্কারককে মনে রাখে; শক্তি না থাকলে এটি নিভে যায় আর শহর ঘুমিয়ে পড়ে।"
+              "text": "শ্রমিক শহরের হৃদয়, যা টাউন হলে থাকে: গ্রিড যতক্ষণ EU দেয়, ততক্ষণ এটি বসতির এলাকা ধরে রাখে, শহরে কতগুলো বাড়ি ও পালাবদলের কর্মী থাকতে পারে তা ঠিক করে এবং সংস্কারককে মনে রাখে; শক্তি না থাকলে এটি নিভে যায় আর শহর ঘুমিয়ে পড়ে।"
             },
             {
               "type": "stats",
@@ -4639,6 +4819,134 @@
           ]
         },
         {
+          "id": "town_hall_plan_sheet",
+          "title": "টাউন হলের নকশার পাতা",
+          "icon": "alaindustrial:town_hall_plan_sheet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "টাউন হলের নকশার পাতা",
+              "text": "শ্রমিক শহরের টাউন হলের পুনর্নির্মাণ নকশার তিনটি পাতার একটি — নিজের ধরনের প্রতিটি শহরে এটি একটি নির্দিষ্ট জায়গায় থাকে, আর হারালে বানিয়ে নেওয়া যায়; একই ধরনের তিনটি পাতা ডিসপ্যাচারে জুড়ে পুনর্নির্মাণ নকশা বানানো হয়।"
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "minecraft:paper",
+                "minecraft:lapis_lazuli",
+                "minecraft:paper",
+                "minecraft:iron_ingot",
+                "minecraft:sandstone",
+                "minecraft:iron_ingot",
+                "minecraft:lapis_lazuli",
+                "minecraft:bricks",
+                "minecraft:lapis_lazuli"
+              ],
+              "result_id": "alaindustrial:town_hall_plan_sheet",
+              "result_count": 1,
+              "variants": [
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:iron_ingot",
+                    "minecraft:sandstone",
+                    "minecraft:iron_ingot",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:bricks",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:sandstone",
+                    "minecraft:oak_door",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:white_bed",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:redstone",
+                    "minecraft:sandstone",
+                    "minecraft:redstone",
+                    "minecraft:lapis_lazuli",
+                    "alaindustrial:electronic_circuit",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:iron_ingot",
+                    "minecraft:grass_block",
+                    "minecraft:iron_ingot",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:bricks",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:grass_block",
+                    "minecraft:oak_door",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:white_bed",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:redstone",
+                    "minecraft:grass_block",
+                    "minecraft:redstone",
+                    "minecraft:lapis_lazuli",
+                    "alaindustrial:electronic_circuit",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
           "id": "machine_casing",
           "title": "মেশিন কেসিং",
           "icon": "alaindustrial:machine_casing",
@@ -4785,6 +5093,178 @@
               ],
               "result_id": "alaindustrial:mutation_chip_duplicate",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "house_plan",
+          "title": "বাড়ির নকশা",
+          "icon": "alaindustrial:house_plan",
+          "pages": [
+            {
+              "type": "text",
+              "title": "বাড়ির নকশা",
+              "text": "শ্রমিক শহরের চার ধরনের ক্যাপসুল বাড়ির একটির নকশা। শহর এটি একবারই চিরকালের জন্য শেখে, তারপর ড্রোন সেই ধরনের বাড়ি পুনরুদ্ধার ও তৈরি করে। নিজের বাড়ির ধ্বংসাবশেষে পাওয়া যায়, অথবা বানানো যায়।"
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "minecraft:paper",
+                "minecraft:oak_door",
+                "minecraft:paper",
+                "minecraft:lapis_lazuli",
+                "minecraft:sandstone",
+                "minecraft:lapis_lazuli",
+                "minecraft:paper",
+                "minecraft:lantern",
+                "minecraft:paper"
+              ],
+              "result_id": "alaindustrial:house_plan",
+              "result_count": 1,
+              "variants": [
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:sandstone",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:lantern",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:sandstone",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:barrel",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:sandstone",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:chest",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:sandstone",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:flower_pot",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:grass_block",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:lantern",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:grass_block",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:barrel",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:grass_block",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:chest",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:grass_block",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:flower_pot",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "restoration_plan",
+          "title": "পুনর্নির্মাণ নকশা",
+          "icon": "alaindustrial:restoration_plan",
+          "pages": [
+            {
+              "type": "text",
+              "title": "পুনর্নির্মাণ নকশা",
+              "text": "যে নকশা ধরে নির্মাণ ড্রোন শ্রমিক শহরের কোনো ভবন পুনর্নির্মাণ করে; এতে শুধু নিজের ধরনের ভবনের অক্ষত টেমপ্লেটের একটি রেফারেন্স থাকে। ডিসপ্যাচারে নকশার তিনটি পাতা থেকে জোড়া দেওয়া হয়।"
             }
           ]
         },

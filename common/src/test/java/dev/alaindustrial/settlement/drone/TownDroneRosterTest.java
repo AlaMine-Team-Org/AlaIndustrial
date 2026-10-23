@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import dev.alaindustrial.settlement.works.BlockReason;
 import java.util.OptionalLong;
 import org.junit.jupiter.api.Test;
 
@@ -54,6 +55,24 @@ class TownDroneRosterTest {
 		roster.release("nest:a");
 		assertNull(roster.holder(7L));
 		assertTrue(roster.reserve(7L, "nest:b"));
+	}
+
+	/** A stop is told once per building, whichever drone and job stop for it, till its cell is worked or done. */
+	@Test
+	void aStopIsToldOncePerBuildingTillItsCellIsWorked() {
+		TownDroneRoster roster = new TownDroneRoster();
+		BlockReason far = BlockReason.noRoute(1, 2, 3);
+		assertTrue(roster.firstStop(1, 0, far));
+		assertFalse(roster.firstStop(1, 0, BlockReason.noRoute(1, 2, 3)), "the same stop again is no news");
+		assertTrue(roster.firstStop(1, 1, far), "another building's stop is its own");
+		assertTrue(roster.firstStop(1, 0, BlockReason.noRoute(4, 5, 6)));
+		assertFalse(roster.firstStop(1, 0, far), "a second reason does not make the first one news again");
+		roster.stopResolved(1, 0, "9 9 9");
+		assertFalse(roster.firstStop(1, 0, far), "work on another cell leaves the stop told");
+		roster.stopResolved(1, 0, BlockReason.at(1, 2, 3));
+		assertTrue(roster.firstStop(1, 0, far), "once its cell was worked, the stop is news again");
+		roster.forgetStops(1, 0);
+		assertTrue(roster.firstStop(1, 0, BlockReason.noRoute(4, 5, 6)), "a done job forgets its stops");
 	}
 
 	@Test

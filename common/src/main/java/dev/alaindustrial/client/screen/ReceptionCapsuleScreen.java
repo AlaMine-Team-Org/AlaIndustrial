@@ -111,8 +111,10 @@ public class ReceptionCapsuleScreen extends MachineScreen<ReceptionCapsuleMenu> 
 	protected void drawMachineFrame(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
 		blitStaticFrame(graphics);
 		drawWorkerHead(graphics);
-		row(graphics, WORKERS_Y, Component.translatable("settlement.alaindustrial.capsule.workers",
-				this.menu.getLiving(), this.menu.getLimit()), GuiStyle.TEXT);
+		row(graphics, WORKERS_Y, noHomes()
+				? Component.translatable(ReceptionCapsuleRules.WORKERS_NO_HOMES_KEY, this.menu.getLiving())
+				: Component.translatable(ReceptionCapsuleRules.WORKERS_KEY, this.menu.getLiving(),
+						this.menu.getHousedLimit()), noHomes() ? GuiStyle.STATUS_BLOCKING : GuiStyle.TEXT);
 		long missing = this.menu.getEuMissing();
 		row(graphics, EU_Y, missing > 0
 						? Component.translatable("settlement.alaindustrial.capsule.eu_missing", missing)
@@ -236,7 +238,8 @@ public class ReceptionCapsuleScreen extends MachineScreen<ReceptionCapsuleMenu> 
 	protected void drawFrameText(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		Verdict verdict = this.menu.getVerdict();
 		Component status = verdict.blocking()
-				? Component.translatable(statusKey(verdict))
+				? Component.translatable(verdict == Verdict.NO_HOUSING && noHomes()
+						? ReceptionCapsuleRules.NO_HOMES_STATUS_KEY : statusKey(verdict))
 				: Component.translatable("settlement.alaindustrial.capsule.restoring", percent());
 		int colour = verdict.blocking() ? GuiStyle.STATUS_BLOCKING : GuiStyle.TEXT;
 		int band = INNER_RIGHT - INNER_LEFT;
@@ -266,6 +269,11 @@ public class ReceptionCapsuleScreen extends MachineScreen<ReceptionCapsuleMenu> 
 			ghostHint(graphics, ReceptionCapsuleBlockEntity.slotOf(material),
 					new ItemStack(ReceptionCapsuleBlockEntity.itemOf(material)));
 		}
+	}
+
+	/** Whether the town may hold workers but has no house fit to live in (owner's round 1 of 0.1.219). */
+	private boolean noHomes() {
+		return ReceptionCapsuleRules.noHomes(this.menu.getLimit(), this.menu.getHousedLimit());
 	}
 
 	/** The translation key of a refusal. */

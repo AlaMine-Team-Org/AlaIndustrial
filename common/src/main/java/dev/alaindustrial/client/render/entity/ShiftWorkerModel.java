@@ -17,6 +17,7 @@ import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.client.model.player.PlayerModel;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.core.Direction;
+import net.minecraft.world.entity.Pose;
 
 /**
  * The body of a shift worker (MOD-832): a player's model — the classic or the slim one, as the look says — drawn from
@@ -38,16 +39,25 @@ import net.minecraft.core.Direction;
  * <p><b>The hair stops above the number plate.</b> The ponytail and the braid hang from the helmet's edge to y = 3 of
  * the head (the body's y = 3 while the head is level), where the plate on the balloon begins; the bob and the curls
  * stay around the head, inside the open band of the helmet.
+ *
+ * <p><b>Movement</b> (MOD-882) is a humanoid's with {@link ShiftWorkerMotion} on top: the heavy suit's walk, a
+ * breathing stand, a wave for a player who came up. The balloon hangs from an empty part {@code pack} on the body's
+ * back (z = 2, the balloon's top front edge); the gear and the number layers draw through it, so they swing with it.
+ * A hibernating worker — its goals off — and a sleeping, riding, swimming or crouching one keep the humanoid's pose.
  */
 public class ShiftWorkerModel extends HumanoidModel<ShiftWorkerRenderState> {
 
 	/** Texture size of a look's skin. */
 	public static final int TEXTURE_SIZE = 64;
+	/** Where the balloon hangs from: the body's back face, in the body's pixels. */
+	public static final float PACK_Z = 2.0F;
 
 	private final ModelPart tail;
 	private final ModelPart braid;
 	private final ModelPart bob;
 	private final ModelPart curls;
+	private final ModelPart pack;
+	private final ShiftWorkerMotion motion = new ShiftWorkerMotion();
 
 	public ShiftWorkerModel(ModelPart root) {
 		super(root);
@@ -55,6 +65,12 @@ public class ShiftWorkerModel extends HumanoidModel<ShiftWorkerRenderState> {
 		this.braid = head.getChild("braid");
 		this.bob = head.getChild("bob");
 		this.curls = head.getChild("curls");
+		this.pack = body.getChild("pack");
+	}
+
+	/** The balloon's hinge on the back: the gear and the number layers draw after its pose. */
+	public ModelPart pack() {
+		return pack;
 	}
 
 	/** The geometry of a worker with the {@code slim} or the classic body. */
@@ -67,6 +83,8 @@ public class ShiftWorkerModel extends HumanoidModel<ShiftWorkerRenderState> {
 		root.getChild("right_arm").addOrReplaceChild("right_sleeve", CubeListBuilder.create(), PartPose.ZERO);
 		root.getChild("left_leg").addOrReplaceChild("left_pants", CubeListBuilder.create(), PartPose.ZERO);
 		root.getChild("right_leg").addOrReplaceChild("right_pants", CubeListBuilder.create(), PartPose.ZERO);
+		// The balloon's hinge: an empty part at the top of the back, which the gear layer draws after.
+		root.getChild("body").addOrReplaceChild("pack", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, PACK_Z));
 		if (slim) {
 			// The chest piece: on the body's front (z = -2), one pixel out, over its rows 2 to 5.
 			root.getChild("body").addOrReplaceChild("chest", CubeListBuilder.create().texOffs(42, 32)
@@ -137,5 +155,33 @@ public class ShiftWorkerModel extends HumanoidModel<ShiftWorkerRenderState> {
 		braid.visible = open && state.hair == ShiftWorkerLook.Hair.BRAID;
 		bob.visible = open && state.hair == ShiftWorkerLook.Hair.BOB;
 		curls.visible = open && state.hair == ShiftWorkerLook.Hair.CURLS;
+		if (state.hibernating || state.isPassenger || state.isCrouching || state.isVisuallySwimming
+				|| state.isFallFlying || state.hasPose(Pose.SLEEPING)) {
+			return;
+		}
+		motion.compute(state.walkAnimationPos, state.walkAnimationSpeed, state.ageInTicks, state.greetTicks,
+				state.watching);
+		head.xRot += motion.headX;
+		head.yRot += motion.headY;
+		head.zRot += motion.headZ;
+		body.yRot += motion.bodyY;
+		body.zRot += motion.bodyZ;
+		rightArm.xRot += motion.rightArmX;
+		rightArm.zRot += motion.rightArmZ;
+		leftArm.xRot += motion.leftArmX;
+		leftArm.zRot += motion.leftArmZ;
+		rightLeg.xRot += motion.rightLegX;
+		leftLeg.xRot += motion.leftLegX;
+		if (motion.greet > 0.0F) {
+			rightArm.xRot += (motion.greetArmX - rightArm.xRot) * motion.greet;
+			rightArm.yRot -= rightArm.yRot * motion.greet;
+			rightArm.zRot += (motion.greetArmZ - rightArm.zRot) * motion.greet;
+		}
+		head.y += motion.lift;
+		body.y += motion.lift;
+		rightArm.y += motion.lift;
+		leftArm.y += motion.lift;
+		pack.xRot = motion.packX;
+		pack.zRot = motion.packZ;
 	}
 }

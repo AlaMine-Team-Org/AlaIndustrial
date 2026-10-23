@@ -405,7 +405,8 @@ public final class TownDroneScenarios {
 		helper.succeedWhen(() -> {
 			WorkJob now = rig.works().queue().job(job.id()).orElseThrow();
 			helper.assertTrue(now.status() == WorkJobStatus.BLOCKED && now.reason().equals(Optional.of(
-					BlockReason.obstructed(Blocks.DIAMOND_BLOCK.getDescriptionId()))), "the job must stop "
+					BlockReason.obstructed(Blocks.DIAMOND_BLOCK.getDescriptionId(), cell.getX(), cell.getY(),
+							cell.getZ()))), "the job must stop "
 					+ "«obstructed by diamond block», it is " + now);
 			helper.assertTrue(rig.level().getBlockState(cell).is(Blocks.DIAMOND_BLOCK), "the diamond block must stand");
 			rig.release();

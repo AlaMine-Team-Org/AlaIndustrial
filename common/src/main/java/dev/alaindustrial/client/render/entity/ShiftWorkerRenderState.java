@@ -13,4 +13,10 @@ public class ShiftWorkerRenderState extends HumanoidRenderState {
 	public boolean slim;
 	public ShiftWorkerLook.Helmet helmet = ShiftWorkerLook.Helmet.OPEN;
 	public ShiftWorkerLook.Hair hair = ShiftWorkerLook.Hair.NONE;
+	/** Its goals are off — the town's core is dark (R10): no breath, no look, no wave. */
+	public boolean hibernating;
+	/** 0 — it watches no one, 1 — it watches a player; eased on the client (MOD-882). */
+	public float watching;
+	/** Ticks since its greeting began, or -1 — none (MOD-882). */
+	public float greetTicks = -1.0F;
 }

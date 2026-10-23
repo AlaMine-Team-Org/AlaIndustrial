@@ -123,7 +123,8 @@ public final class ShiftWorkerBattery {
 	}
 
 	/**
-	 * Recharges the living workers of town {@code settlement} from {@code available} EU of its core's buffer, in the
+	 * Recharges the living homeless workers of town {@code settlement} (a resident charges at home, MOD-862) from
+	 * {@code available} EU of its core's buffer, in the
 	 * book's order, each up to its capacity. Returns the EU used, which the core drains on top of its upkeep. A worker
 	 * whose battery reads full writes nothing.
 	 */
@@ -134,7 +135,9 @@ public final class ShiftWorkerBattery {
 		ShiftWorkerBook book = ShiftWorkers.book(server);
 		long used = 0L;
 		for (ShiftWorkerRecord record : List.copyOf(book.all())) {
-			if (record.settlement() != settlement || record.status() != ShiftWorkerRecord.Status.ALIVE) {
+			// A resident charges on its house's bed (MOD-862, R101); the core charges the homeless.
+			if (record.settlement() != settlement || record.status() != ShiftWorkerRecord.Status.ALIVE
+					|| record.housed()) {
 				continue;
 			}
 			ShiftWorkerProfile profile = record.profile();

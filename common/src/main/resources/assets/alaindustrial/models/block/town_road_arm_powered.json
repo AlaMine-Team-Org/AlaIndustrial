@@ -1,0 +1,7 @@
+{
+  "parent": "alaindustrial:block/town_road_arm",
+  "textures": {
+    "wire": "alaindustrial:block/town_road_wire_powered",
+    "copper": "alaindustrial:block/town_road_copper_powered"
+  }
+}

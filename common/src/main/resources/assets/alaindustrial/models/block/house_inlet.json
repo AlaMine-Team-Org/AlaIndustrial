@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "alaindustrial:block/house_inlet_side",
+    "north": "alaindustrial:block/house_inlet_front",
+    "south": "alaindustrial:block/house_inlet_back",
+    "east": "alaindustrial:block/house_inlet_side",
+    "west": "alaindustrial:block/house_inlet_side",
+    "up": "alaindustrial:block/house_inlet_top",
+    "down": "alaindustrial:block/house_inlet_bottom"
+  }
+}

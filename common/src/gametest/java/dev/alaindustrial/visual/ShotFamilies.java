@@ -60,7 +60,8 @@ public final class ShotFamilies {
                     "Town hall schematic (MOD-857): in hall_schematic_on every gap of the half-built wall holds the "
                             + "block that belongs there as its own textured model, translucent and slightly blue "
                             + "(stone bricks, glass, oak stairs facing the camera along the top), and in front of the "
-                            + "wall a moss carpet, a spruce door of two cells and a chest; the real blocks between "
+                            + "wall a moss carpet, a spruce door of two cells, a chest and a double chest drawn as "
+                            + "chests with lids and latches, not as boxes of planks; the real blocks between "
                             + "them unchanged and not hidden; the _off frames are the same view without the ghosts")},
             new Object[] {"root_inspect_", new Family(ShotGroup.WORLD, List.of("R-VIS-04"),
                     "One and two root segments appear through original soil only while crouching")},

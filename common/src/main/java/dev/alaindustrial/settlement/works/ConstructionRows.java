@@ -1,12 +1,18 @@
 package dev.alaindustrial.settlement.works;
 
 import dev.alaindustrial.settlement.Settlement;
+import dev.alaindustrial.settlement.TownPowerLinks;
+import dev.alaindustrial.settlement.drone.RoadWork;
 import dev.alaindustrial.settlement.drone.TownHall;
-import dev.alaindustrial.settlement.drone.TownMaintenance;
+import dev.alaindustrial.settlement.drone.TownRoadNetwork;
+import dev.alaindustrial.settlement.plan.PlanSheetRules;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 
 /**
@@ -31,10 +37,28 @@ public final class ConstructionRows {
 	public static final String JOB_LINE = "settlement.alaindustrial.works.job_line";
 	/** A building's missing key points, joined into the one placeholder. */
 	public static final String MISSING_KEYS = "settlement.alaindustrial.works.missing_keys";
+	/** Why a house may not be started yet (MOD-862): the dispatcher's own «Start» lines, by blocker suffix. */
+	public static final String WAIT_PREFIX = "settlement.alaindustrial.dispatcher.start.";
 	/** The town knows no building yet. */
 	public static final String NO_BUILDINGS = "settlement.alaindustrial.works.no_buildings";
 	/** The queue holds no job. */
 	public static final String NO_JOBS = "settlement.alaindustrial.works.no_jobs";
+	/** «Order called off. Press Resume to go on» — a building card's line (round 5 of 0.1.219). */
+	public static final String CALLED_OFF = "settlement.alaindustrial.works.called_off";
+	/** «The town's road network» — the row whose schematic switch shows every road the town knows (Q6). */
+	public static final String ROAD_NETWORK = "settlement.alaindustrial.works.road_network";
+	/** «No house plan of type %s yet: look for the sheet in this house's ruin» — a house the town cannot order (Q4). */
+	public static final String NO_HOUSE_PLAN = "settlement.alaindustrial.works.wait.no_house_plan";
+	/** «No link to the core: the road is broken at (%1$s, %2$s)» (R132). */
+	public static final String NETWORK_GAP = "settlement.alaindustrial.works.network_gap";
+	/** The target of the road network's row: no building. */
+	public static final int NETWORK_TARGET = -1;
+	/** The house plans section (Q4): the four types and whether the town knows each. */
+	public static final String SECTION_HOUSE_PLANS = "settlement.alaindustrial.works.section.house_plans";
+	/** A house plan's status words. */
+	public static final String PLAN_KNOWN = "settlement.alaindustrial.works.house_plan.known";
+	public static final String PLAN_UNKNOWN = "settlement.alaindustrial.works.house_plan.unknown";
+
 	/** The name of a building whose definition names none. */
 	public static final String UNNAMED = "settlement.alaindustrial.building.unnamed";
 
@@ -59,8 +83,8 @@ public final class ConstructionRows {
 	}
 
 	/** The sections of the tab, top to bottom. A later task appends its own. */
-	public static final List<Source> SOURCES = List.of(ConstructionRows::buildings, PlanSheetRows::add,
-			StageRows::add, ConstructionRows::queue);
+	public static final List<Source> SOURCES = List.of(ConstructionRows::buildings, ConstructionRows::housePlans,
+			PlanSheetRows::add, StageRows::add, ConstructionRows::queue);
 
 	private ConstructionRows() {
 	}
@@ -75,8 +99,9 @@ public final class ConstructionRows {
 	}
 
 	/**
-	 * The town's buildings: name, state, matching share, missing key points; the owner may raise jobs on them, and
-	 * anybody may show the unfinished town hall's schematic.
+	 * The town's buildings: name, state, matching share, missing key points; the owner gets one button by the
+	 * building's state — restore, build, resume, repair or cancel its order (round 2 of 0.1.219, Q1, Q2) — and anybody
+	 * may show one building's schematic with its road (Q6). Last, the road network's row with its own schematic switch.
 	 */
 	static void buildings(Context context, List<ConstructionRow> rows) {
 		TownWorks works = context.works();
@@ -84,36 +109,105 @@ public final class ConstructionRows {
 			rows.add(line(SECTION_BUILDINGS, ConstructionRow.Text.of(NO_BUILDINGS)));
 			return;
 		}
-		int hall = TownHall.index(works).orElse(-1);
 		for (int i = 0; i < works.buildings().size(); i++) {
 			TownBuilding building = works.buildings().get(i);
-			boolean restorable = building.intact().isPresent();
-			boolean intact = building.state() == BuildingState.INTACT || building.state() == BuildingState.UPGRADED;
-			int actions = 0;
-			if (context.manage() && restorable && !intact) {
-				// A button only for work there is (owner's round 4): nothing to clear, no «Clear»; nothing to build, no
-				// «Build».
-				Optional<BuildingPlan> plan = TownWorksScanner.plan(context.level(), context.town().id(), i);
-				if (works.queue().open(WorkJobType.CLEAR, i).isEmpty()
-						&& plan.map(p -> TownMaintenance.needsClearing(context.level(), p)).orElse(false)) {
-					actions |= ConstructionRow.Action.RAISE_CLEAR.bit();
-				}
-				if (works.queue().open(WorkJobType.BUILD, i).isEmpty()
-						&& plan.map(p -> TownMaintenance.needsBuilding(context.level(), p)).orElse(false)) {
-					actions |= ConstructionRow.Action.RAISE_BUILD.bit();
-				}
+			if (building.withdrawn()) {
+				continue; // a laid house called off (MOD-877)
 			}
-			if (i == hall && restorable && !intact) {
-				actions |= ConstructionRow.Action.SCHEMATIC.bit(); // visual only: every viewer (round 2, point 7)
+			rows.add(buildingRow(context, i));
+		}
+		rows.add(new ConstructionRow(SECTION_BUILDINGS, ConstructionRow.Text.of(ROAD_NETWORK), Optional.empty(), -1,
+				ConstructionRow.Tone.NORMAL, Optional.empty(), NETWORK_TARGET, ConstructionRow.Action.SCHEMATIC.bit()));
+	}
+
+	/** The row of building {@code i}: the same the building's card shows (Q2). */
+	public static ConstructionRow buildingRow(Context context, int i) {
+		TownWorks works = context.works();
+		TownBuilding building = works.buildings().get(i);
+		boolean restorable = building.intact().isPresent();
+		boolean intact = building.state() == BuildingState.INTACT || building.state() == BuildingState.UPGRADED;
+		int actions = 0;
+		Optional<OrderButton> button = TownOrders.button(works, i);
+		Optional<String> wait = button.isPresent() && button.get() != OrderButton.CANCEL
+				? TownOrders.blocker(context.town(), works, i) : Optional.empty();
+		if (context.manage() && button.isPresent() && wait.isEmpty()) {
+			actions |= ConstructionRow.Action.of(button.get()).bit();
+		}
+		if (restorable && (!intact || TownOrders.ordered(works, i))) {
+			actions |= ConstructionRow.Action.SCHEMATIC.bit(); // visual only: every viewer (round 2, point 7)
+		}
+		Optional<ConstructionRow.Text> gap = networkGap(context, i).or(() -> stop(works, i, button));
+		Optional<ConstructionRow.Text> detail = gap.isPresent() ? gap : wait.isPresent()
+				? wait.map(suffix -> TownOrders.NO_PLAN.equals(suffix)
+						? ConstructionRow.Text.of(NO_HOUSE_PLAN, String.valueOf(TownHouses.type(building)))
+						: ConstructionRow.Text.of(WAIT_PREFIX + suffix))
+				: !intact && !building.missingKeys().isEmpty()
+						? Optional.of(new ConstructionRow.Text(MISSING_KEYS, building.missingKeys(), true))
+						: Optional.empty();
+		ConstructionRow.Tone tone = intact ? ConstructionRow.Tone.GOOD
+				: restorable ? ConstructionRow.Tone.NORMAL : ConstructionRow.Tone.DIM;
+		return new ConstructionRow(SECTION_BUILDINGS, ConstructionRow.Text.of(TownHouses.displayName(building)),
+				Optional.of(ConstructionRow.Text.of(STATE + building.state().serializedName())),
+				building.percent(), tone, detail, i, actions);
+	}
+
+	/**
+	 * Why building {@code i}'s work stands, for its card (round 5 of 0.1.219): the reason of its stopped job — what is
+	 * in the way and where — or, for an order the owner called off, that «Resume» takes it up again.
+	 */
+	public static Optional<ConstructionRow.Text> stop(TownWorks works, int i, Optional<OrderButton> button) {
+		for (WorkJob job : works.queue().jobs()) {
+			if (job.building() == i && job.status() == WorkJobStatus.BLOCKED && job.reason().isPresent()) {
+				return Optional.of(ConstructionRow.Text.of(job.reason().get()));
 			}
-			Optional<ConstructionRow.Text> detail = !intact && !building.missingKeys().isEmpty()
-					? Optional.of(new ConstructionRow.Text(MISSING_KEYS, building.missingKeys(), true))
-					: Optional.empty();
-			ConstructionRow.Tone tone = intact ? ConstructionRow.Tone.GOOD
-					: restorable ? ConstructionRow.Tone.NORMAL : ConstructionRow.Tone.DIM;
-			rows.add(new ConstructionRow(SECTION_BUILDINGS, ConstructionRow.Text.of(name(building)),
-					Optional.of(ConstructionRow.Text.of(STATE + building.state().serializedName())),
-					building.percent(), tone, detail, i, actions));
+		}
+		return button.equals(Optional.of(OrderButton.RESUME)) ? Optional.of(ConstructionRow.Text.of(CALLED_OFF))
+				: Optional.empty();
+	}
+
+	/**
+	 * Where building {@code i}'s link to the core is broken (round 2 of 0.1.219, R132): a building restored once whose
+	 * inlet is cut off names the first cell of its way to the hall that holds neither road nor cable. Empty for a
+	 * building linked, never restored, or whose way is not known or not loaded.
+	 */
+	static Optional<ConstructionRow.Text> networkGap(Context context, int i) {
+		TownBuilding building = context.works().buildings().get(i);
+		if (!building.everRestored() || !building.missingKeys().contains(TownPowerLinks.NOT_CONNECTED_KEY)) {
+			return Optional.empty();
+		}
+		ServerLevel level = context.level();
+		for (BlockPos pos : TownRoadNetwork.course(level, context.town().id(), i).orElse(List.of())) {
+			if (!level.isLoaded(pos)) {
+				return Optional.empty();
+			}
+			if (!RoadWork.done(level, pos, level.getBlockState(pos))) {
+				return Optional.of(ConstructionRow.Text.of(NETWORK_GAP, String.valueOf(pos.getX()),
+						String.valueOf(pos.getZ())));
+			}
+		}
+		return Optional.empty();
+	}
+
+	/** The town's library of house plans (round 2 of 0.1.219, Q4): each house type of its style, known or not. */
+	static void housePlans(Context context, List<ConstructionRow> rows) {
+		TownWorks works = context.works();
+		Set<String> known = HousePlans.known(works, TownHall.index(works));
+		Set<Integer> types = new TreeSet<>();
+		for (TownBuilding building : works.buildings()) {
+			if (TownHouses.isHouse(building)) {
+				types.add(TownHouses.type(building));
+			}
+		}
+		for (String id : known) {
+			types.add(PlanSheetRules.houseType(id.substring(id.lastIndexOf('/') + 1)));
+		}
+		types.remove(0);
+		for (int type : types) {
+			boolean has = known.stream().anyMatch(id -> id.endsWith("/" + PlanSheetRules.house(type)));
+			rows.add(new ConstructionRow(SECTION_HOUSE_PLANS,
+					ConstructionRow.Text.of("item.alaindustrial.house_plan.typed", String.valueOf(type)),
+					Optional.of(ConstructionRow.Text.of(has ? PLAN_KNOWN : PLAN_UNKNOWN)), -1,
+					has ? ConstructionRow.Tone.GOOD : ConstructionRow.Tone.DIM, Optional.empty(), 0, 0));
 		}
 	}
 

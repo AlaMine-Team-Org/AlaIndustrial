@@ -17,6 +17,7 @@ import dev.alaindustrial.settlement.record.RecordNumber;
 import dev.alaindustrial.settlement.record.RecordNumberLedger;
 import dev.alaindustrial.settlement.shift.ShiftWorkerRecord;
 import dev.alaindustrial.settlement.shift.ShiftWorkers;
+import dev.alaindustrial.settlement.works.TownHousing;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -131,6 +132,7 @@ public final class ReceptionCapsuleScenarios {
 			chargeCore(core, core.getEnergyStorage().getCapacity());
 		}
 		AlaGameTestHelper.drive(core, helper, 1);
+		TownHousing.exemptFromHousing(core.settlementId()); // these cases predate the houses (MOD-862)
 		if (claimed && core.claim(OWNER, "Owner") != SettlementRegistry.ClaimResult.CLAIMED) {
 			helper.fail("control: the lit core could not be claimed");
 		}

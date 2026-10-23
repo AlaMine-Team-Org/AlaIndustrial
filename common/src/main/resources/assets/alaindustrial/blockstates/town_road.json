@@ -1,0 +1,250 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "riser": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/town_road_frame"
+      }
+    },
+    {
+      "when": {
+        "riser": "false",
+        "down": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/town_road_floor"
+      }
+    },
+    {
+      "when": {
+        "riser": "false",
+        "up": "false",
+        "north": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/town_road_grille"
+      }
+    },
+    {
+      "when": {
+        "riser": "false",
+        "up": "false",
+        "north": "false",
+        "south": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/town_road_grille"
+      }
+    },
+    {
+      "when": {
+        "riser": "false",
+        "up": "false",
+        "north": "false",
+        "south": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/town_road_grille",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "riser": "false",
+        "up": "true",
+        "north": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/town_road_grille_open"
+      }
+    },
+    {
+      "when": {
+        "riser": "false",
+        "up": "true",
+        "north": "false",
+        "south": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/town_road_grille_open"
+      }
+    },
+    {
+      "when": {
+        "riser": "false",
+        "up": "true",
+        "north": "false",
+        "south": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/town_road_grille_open",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "riser": "false",
+        "down": "true",
+        "north": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/town_road_grille_bottom"
+      }
+    },
+    {
+      "when": {
+        "riser": "false",
+        "down": "true",
+        "north": "false",
+        "south": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/town_road_grille_bottom"
+      }
+    },
+    {
+      "when": {
+        "riser": "false",
+        "down": "true",
+        "north": "false",
+        "south": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/town_road_grille_bottom",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "powered": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/town_road_hub"
+      }
+    },
+    {
+      "when": {
+        "north": "true",
+        "powered": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/town_road_arm"
+      }
+    },
+    {
+      "when": {
+        "east": "true",
+        "powered": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/town_road_arm",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "south": "true",
+        "powered": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/town_road_arm",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "west": "true",
+        "powered": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/town_road_arm",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "powered": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/town_road_arm_up"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "powered": "false"
+      },
+      "apply": {
+        "model": "alaindustrial:block/town_road_arm_down"
+      }
+    },
+    {
+      "when": {
+        "powered": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/town_road_hub_powered"
+      }
+    },
+    {
+      "when": {
+        "north": "true",
+        "powered": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/town_road_arm_powered"
+      }
+    },
+    {
+      "when": {
+        "east": "true",
+        "powered": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/town_road_arm_powered",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "south": "true",
+        "powered": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/town_road_arm_powered",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "west": "true",
+        "powered": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/town_road_arm_powered",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "up": "true",
+        "powered": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/town_road_arm_up_powered"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "powered": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/town_road_arm_down_powered"
+      }
+    }
+  ]
+}

@@ -48,7 +48,8 @@ public record HallSchematicPayload(ResourceKey<Level> dimension, BlockPos core, 
 	public record Ghost(long pos, BlockState state) {
 	}
 
-	private static final StreamCodec<RegistryFriendlyByteBuf, Ghost> GHOST = StreamCodec.composite(
+	/** One ghost cell, as the house laying window (MOD-877) carries its house too. */
+	public static final StreamCodec<RegistryFriendlyByteBuf, Ghost> GHOST = StreamCodec.composite(
 			ByteBufCodecs.LONG, Ghost::pos,
 			ByteBufCodecs.idMapper(Block.BLOCK_STATE_REGISTRY), Ghost::state,
 			Ghost::new);

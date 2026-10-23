@@ -8,8 +8,8 @@ import net.minecraft.world.level.block.Block;
 /**
  * Zone <b>lab plaque</b> (MOD-513, row z=34, x 74..83): the seventeen engraved plates the plaque of
  * an abandoned lab is built from — the ten digits in one row on the floor, the seven broken prefix
- * letters one level up. Purely decorative. They keep their default FACING=NORTH, so the engraving
- * faces the cameras like every machine front on the stand.
+ * letters one level up, and the house number plate beside them. Purely decorative. They keep their
+ * default FACING=NORTH, so the engraving faces the cameras like every machine front on the stand.
  *
  * <p>Row z=34 sits east of the cable rows, and east of the monitoring wall too: the wall's front (x 66..70)
  * is left free, because the plaque used to stand right across it and hide the panels a visitor is
@@ -35,5 +35,8 @@ final class LabPlaqueZone implements DemoZone {
 		for (int i = 0; i < letters.size(); i++) {
 			w.set(76 + i, 2, 34, letters.get(i).get());
 		}
+		// The house number plate (round 4 of 0.1.219): one plate in its default state, a whole letter A,
+		// just left of the broken lab letters; the drone engraves the other letters into it in a town.
+		w.set(75, 2, 34, ModContent.ENGRAVED_LETTER_PLATE.get());
 	}
 }

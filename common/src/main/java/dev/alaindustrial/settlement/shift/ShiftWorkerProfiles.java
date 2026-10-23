@@ -15,6 +15,7 @@ import dev.alaindustrial.settlement.SettlementConfig;
 import dev.alaindustrial.settlement.SettlementGate;
 import dev.alaindustrial.settlement.SettlementRegistry;
 import dev.alaindustrial.settlement.record.RecordNumber;
+import dev.alaindustrial.settlement.works.TownHousing;
 import dev.alaindustrial.stats.LevelMath;
 import dev.alaindustrial.worldgen.town.TownBiographyFacts;
 import java.util.ArrayList;
@@ -176,6 +177,20 @@ public final class ShiftWorkerProfiles {
 		sendCard(player, record, false);
 	}
 
+	/**
+	 * The owner moves the worker into free house {@code house} of its town (MOD-862, R102: «Relocate»). Only a living
+	 * worker, only into a free house fit to live in; the card is sent again either way.
+	 */
+	public static void relocate(ServerPlayer player, RecordNumber number, int house) {
+		Optional<ShiftWorkerRecord> found = changeable(player, number);
+		if (found.isEmpty()) {
+			return;
+		}
+		TownHousing.relocate(player.level(), found.get(), house);
+		ShiftWorkers.book(player.level().getServer()).byNumber(number)
+				.ifPresent(record -> sendCard(player, record, false));
+	}
+
 	/** A requested name as it is stored: no formatting codes or control characters, trimmed, at most 16 chars. */
 	public static String sanitizeName(String requested) {
 		String clean = StringUtil.filterText(requested == null ? "" : requested).strip();
@@ -283,7 +298,17 @@ public final class ShiftWorkerProfiles {
 				ShiftWorkerLevels.rankIndex(workerLevel), profile.freePoints(), SettlementConfig.shiftWorkerStatCap,
 				profile.counts(), active, biography(level, record), profile.marks(), profile.issuedGameTime(),
 				formerNumbers(server, record), record.death(), returnPrice,
-				capsule.isPresent(), canRespec, SettlementConfig.shiftWorkerRespecCost);
+				capsule.isPresent(), canRespec, SettlementConfig.shiftWorkerRespecCost,
+				record.housed() ? Optional.of(house(level, record.settlement(), record.home())) : Optional.empty(),
+				owner && alive ? TownHousing.freeHomes(level, record.settlement()).stream()
+						.filter(index -> index != record.home())
+						.map(index -> house(level, record.settlement(), index)).toList() : List.of());
+	}
+
+	/** House {@code index} of town {@code town} for the card: where its charging bed stands. */
+	private static ShiftWorkerCardPayload.House house(ServerLevel level, int town, int index) {
+		BlockPos at = TownHousing.bed(level, town, index).orElse(BlockPos.ZERO);
+		return new ShiftWorkerCardPayload.House(index, at.getX(), at.getY(), at.getZ());
 	}
 
 	/** The roster of {@code town}: living and waiting workers, then the closed records, each in number order. */

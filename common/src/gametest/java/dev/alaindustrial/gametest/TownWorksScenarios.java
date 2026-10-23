@@ -297,7 +297,8 @@ public final class TownWorksScenarios {
 				return "building " + i + " is " + known + ", the piece is " + template + " at " + piece.getPosition()
 						+ " turned " + piece.getRotation();
 			}
-			boolean hall = template.getPath().endsWith("/town_hall");
+			// The town hall and, since MOD-862, the capsule houses have an intact template.
+			boolean hall = template.getPath().endsWith("/town_hall") || template.getPath().contains("/capsule_house_");
 			if (known.intact().isPresent() != hall || known.name().isEmpty()) {
 				return "building " + template + " has intact " + known.intact() + " and name '" + known.name() + "'";
 			}
@@ -321,7 +322,8 @@ public final class TownWorksScenarios {
 				&& row.allows(ConstructionRow.Action.SCHEMATIC)),
 				"the unfinished hall's schematic switch is visual and must reach a visitor too: " + visitor);
 		boolean buildOffered = owner.stream().anyMatch(row -> row.section().equals(ConstructionRows.SECTION_BUILDINGS)
-				&& row.allows(ConstructionRow.Action.RAISE_BUILD));
+				&& (row.allows(ConstructionRow.Action.ORDER_RESTORE)
+						|| row.allows(ConstructionRow.Action.ORDER_CANCEL)));
 		boolean cancelOffered = owner.stream().anyMatch(row -> row.section().equals(ConstructionRows.SECTION_QUEUE)
 				&& row.allows(ConstructionRow.Action.CANCEL));
 		helper.assertTrue(buildOffered && cancelOffered, "the owner must be offered to raise and to cancel: " + owner);

@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "house_plan_2",
+  "pattern": [
+    "PDP",
+    "LSL",
+    "PTP"
+  ],
+  "key": {
+    "P": "minecraft:paper",
+    "D": "#minecraft:wooden_doors",
+    "L": "#c:gems/lapis",
+    "S": "#alaindustrial:plan_sheet_desert_marker",
+    "T": "minecraft:barrel"
+  },
+  "result": {
+    "id": "alaindustrial:house_plan",
+    "count": 1,
+    "components": {
+      "alaindustrial:restoration_plan": {
+        "style": "alaindustrial:desert",
+        "template": "alaindustrial:ala_town/desert/intact/capsule_house_2"
+      }
+    }
+  }
+}

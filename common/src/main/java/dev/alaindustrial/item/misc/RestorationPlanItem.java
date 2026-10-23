@@ -1,7 +1,9 @@
 package dev.alaindustrial.item.misc;
 
+import dev.alaindustrial.client.tooltip.TooltipWrap;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModDataComponents;
+import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -41,20 +43,25 @@ public class RestorationPlanItem extends Item {
 			Consumer<Component> adder, TooltipFlag flag) {
 		RestorationPlan plan = planOf(stack);
 		if (plan == null) {
-			adder.accept(Component.translatable("tooltip.alaindustrial.restoration_plan.empty")
+			TooltipWrap.add(adder, Component.translatable("tooltip.alaindustrial.restoration_plan.empty")
 					.withStyle(ChatFormatting.GRAY));
-			adder.accept(Component.translatable("tooltip.alaindustrial.restoration_plan.empty_hint")
+			TooltipWrap.add(adder, Component.translatable("tooltip.alaindustrial.restoration_plan.empty_hint")
 					.withStyle(ChatFormatting.DARK_GRAY));
 			return;
 		}
-		adder.accept(Component.translatableWithFallback(
+		TooltipWrap.add(adder, Component.translatableWithFallback(
 				"tooltip.alaindustrial.restoration_plan.building." + plan.building(), plan.building())
 				.withStyle(ChatFormatting.AQUA));
-		adder.accept(Component.translatable("tooltip.alaindustrial.plan.style",
+		TooltipWrap.add(adder, Component.translatable("tooltip.alaindustrial.plan.style",
 				TownHallPlanSheetItem.shortStyleName(plan.style())).withStyle(ChatFormatting.GRAY));
-		adder.accept(Component.translatable("tooltip.alaindustrial.restoration_plan.use")
-				.withStyle(ChatFormatting.DARK_GRAY));
-		adder.accept(Component.translatable("tooltip.alaindustrial.restoration_plan.use_where")
-				.withStyle(ChatFormatting.DARK_GRAY));
+		for (String key : useKeys()) {
+			TooltipWrap.add(adder, Component.translatable(key).withStyle(ChatFormatting.DARK_GRAY));
+		}
+	}
+
+	/** The tooltip's lines on what to do with the plan. */
+	protected List<String> useKeys() {
+		return List.of("tooltip.alaindustrial.restoration_plan.use",
+				"tooltip.alaindustrial.restoration_plan.use_where");
 	}
 }

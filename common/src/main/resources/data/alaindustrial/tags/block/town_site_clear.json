@@ -1,0 +1,18 @@
+{
+  "replace": false,
+  "values": [
+    "#alaindustrial:town_ring_clear",
+    "#minecraft:leaves",
+    "#minecraft:logs",
+    "#minecraft:flowers",
+    "minecraft:short_grass",
+    "minecraft:tall_grass",
+    "minecraft:fern",
+    "minecraft:large_fern",
+    "minecraft:dead_bush",
+    "minecraft:coarse_dirt",
+    "minecraft:rooted_dirt",
+    "minecraft:red_sand",
+    "minecraft:terracotta"
+  ]
+}

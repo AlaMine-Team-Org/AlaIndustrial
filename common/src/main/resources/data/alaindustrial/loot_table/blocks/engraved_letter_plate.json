@@ -1,0 +1,29 @@
+{
+	"type": "minecraft:block",
+	"pools": [
+		{
+			"rolls": 1.0,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "alaindustrial:engraved_letter_plate",
+					"functions": [
+						{
+							"function": "minecraft:copy_state",
+							"block": "alaindustrial:engraved_letter_plate",
+							"properties": [
+								"letter",
+								"broken"
+							]
+						}
+					]
+				}
+			],
+			"conditions": [
+				{
+					"condition": "minecraft:survives_explosion"
+				}
+			]
+		}
+	]
+}

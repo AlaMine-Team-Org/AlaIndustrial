@@ -152,6 +152,10 @@ public final class ModPayloads {
 			clientbound(TownWorksPayload.TYPE, TownWorksPayload.CODEC),
 			// MOD-857 (round 2): the town hall's cells still to build, for the schematic one player turned on.
 			clientbound(HallSchematicPayload.TYPE, HallSchematicPayload.CODEC),
+			// MOD-877: the house laying window of a house inlet — the plans, the problems and the house as ghosts.
+			clientbound(HousePlacementPayload.TYPE, HousePlacementPayload.CODEC),
+			// Round 2 of 0.1.219 (Q2): the card of one town building — its row, share and resident.
+			clientbound(BuildingCardPayload.TYPE, BuildingCardPayload.CODEC),
 			// MOD-093: renaming a teleport point — the one string that needs a payload of its own.
 			serverbound(TeleportRenamePayload.TYPE, TeleportRenamePayload.CODEC, TeleportRenamePayload::handle),
 			// MOD-592: a recipe-viewer drop onto a magnet filter cell.
@@ -176,5 +180,11 @@ public final class ModPayloads {
 					TownWorksRequestPayload::handle),
 			// MOD-857 (round 2): a shown town hall schematic asks for its cells — on the press, then on a slow timer.
 			serverbound(HallSchematicRequestPayload.TYPE, HallSchematicRequestPayload.CODEC,
-					HallSchematicRequestPayload::handle));
+					HallSchematicRequestPayload::handle),
+			// MOD-877: a press in the house laying window; the server checks, surveys again and replies.
+			serverbound(HousePlacementRequestPayload.TYPE, HousePlacementRequestPayload.CODEC,
+					HousePlacementRequestPayload::handle),
+			// Round 2 of 0.1.219 (Q2): a press on a town building's card; the server checks and replies.
+			serverbound(BuildingCardRequestPayload.TYPE, BuildingCardRequestPayload.CODEC,
+					BuildingCardRequestPayload::handle));
 }

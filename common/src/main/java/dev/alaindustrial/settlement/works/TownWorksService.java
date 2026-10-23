@@ -7,7 +7,6 @@ import dev.alaindustrial.network.NetworkDispatcher;
 import dev.alaindustrial.network.TownWorksPayload;
 import dev.alaindustrial.settlement.Settlement;
 import dev.alaindustrial.settlement.SettlementRegistry;
-import dev.alaindustrial.settlement.drone.TownMaintenance;
 import dev.alaindustrial.settlement.shift.ShiftWorkerBook;
 import java.util.Optional;
 import net.minecraft.core.BlockPos;
@@ -56,26 +55,25 @@ public final class TownWorksService {
 		boolean manage = town.get().isOwnedBy(viewer.getUUID());
 		TownWorks works = SettlementRegistry.get(level.getServer()).works().town(town.get().id());
 		if (action.isPresent() && manage) {
-			press(works, action.get(), target, town.get().id(), viewer);
+			press(town.get(), works, action.get(), target, viewer);
 		}
-		send(viewer, new TownWorksPayload(pos, town.get().id(), manage,
-				ConstructionRows.collect(new ConstructionRows.Context(level, town.get(), works, manage))));
+		ConstructionRows.Context context = new ConstructionRows.Context(level, town.get(), works, manage);
+		send(viewer, new TownWorksPayload(pos, town.get().id(), manage, NextStepHint.of(context),
+				BuildingTiles.collect(context), ConstructionRows.collect(context)));
 	}
 
 	/** Carries out one control of the town's owner; a press the rows did not offer does nothing. */
-	static void press(TownWorks works, ConstructionRow.Action action, int target, int settlementId,
+	public static void press(Settlement town, TownWorks works, ConstructionRow.Action action, int target,
 			ServerPlayer owner) {
 		switch (action) {
-			case RAISE_CLEAR, RAISE_BUILD -> {
-				Optional<TownBuilding> building = works.building(target);
-				if (building.isEmpty() || building.get().intact().isEmpty()) {
-					return;
-				}
-				WorkJobType type = action == ConstructionRow.Action.RAISE_CLEAR ? WorkJobType.CLEAR : WorkJobType.BUILD;
-				TownMaintenance.raiseByOwner(owner.level(), settlementId, target, type).ifPresent(job ->
-						Industrialization.LOGGER.info(
-						"[ala-towns] settlement {}: {} raised {} job {} on {}", settlementId,
-						owner.getGameProfile().name(), type.serializedName(), job.id(), building.get().template()));
+			case ORDER_RESTORE, ORDER_BUILD, ORDER_RESUME, ORDER_REPAIR ->
+					// The hall first, houses under the tier's limit and of a known type (MOD-862; Q4):
+					// TownOrders checks.
+					TownOrders.place(owner.level(), town, target, owner.getGameProfile().name());
+			case ORDER_CANCEL -> {
+				TownOrders.cancel(works, target);
+				Industrialization.LOGGER.info("[ala-towns] settlement {}: {} called off the order of building {}",
+						town.id(), owner.getGameProfile().name(), target);
 			}
 			case CANCEL -> works.queue().cancel(target);
 			case START -> works.queue().unblock(target);

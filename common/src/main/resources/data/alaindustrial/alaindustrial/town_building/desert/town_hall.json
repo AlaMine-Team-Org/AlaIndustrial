@@ -3,6 +3,7 @@
   "intact": "alaindustrial:ala_town/desert/intact/town_hall",
   "name": "settlement.alaindustrial.building.town_hall",
   "restored_at": 0.9,
+  "clear_ring": 3,
   "key_points": [
     {
       "name": "settlement.alaindustrial.building.key.core",

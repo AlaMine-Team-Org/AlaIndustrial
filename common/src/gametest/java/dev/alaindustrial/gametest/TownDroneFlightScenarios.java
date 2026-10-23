@@ -6,12 +6,14 @@ import dev.alaindustrial.block.entity.TownDispatcherBlockEntity;
 import dev.alaindustrial.core.drone.DroneFlightPath;
 import dev.alaindustrial.core.drone.DroneRoute;
 import dev.alaindustrial.settlement.drone.DroneAirspace;
+import dev.alaindustrial.settlement.drone.DroneDoorways;
 import dev.alaindustrial.settlement.drone.DroneNestRules;
 import dev.alaindustrial.settlement.drone.DroneNestRules.Status;
 import dev.alaindustrial.settlement.works.BlockReason;
 import dev.alaindustrial.settlement.works.WorkJob;
 import dev.alaindustrial.settlement.works.WorkJobStatus;
 import dev.alaindustrial.settlement.works.WorkJobType;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +26,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -48,7 +52,9 @@ public final class TownDroneFlightScenarios {
 				RosterEntry.of(TownDroneFlightScenarios::noPlanStopsTheDronesTillItIsBack,
 						"town_drone_no_plan_stops_the_drones").ticks(1600),
 				RosterEntry.of(TownDroneFlightScenarios::noDispatcherStopsTheDrones,
-						"town_drone_no_dispatcher_stops_the_drones").ticks(800));
+						"town_drone_no_dispatcher_stops_the_drones").ticks(800),
+				RosterEntry.of(TownDroneFlightScenarios::droneShutsTheDoorBehindIt,
+						"town_drone_shuts_the_door_behind_it").ticks(800));
 	}
 
 	private TownDroneFlightScenarios() {
@@ -177,6 +183,56 @@ public final class TownDroneFlightScenarios {
 			helper.assertTrue(now.status() == WorkJobStatus.BLOCKED && now.reason().map(BlockReason::key)
 					.equals(Optional.of(BlockReason.NO_PLAN)) && drone.status() == Status.NO_DISPATCHER,
 					"the job must stand «no plan»: " + now + ", nest " + drone.status());
+			rig.release();
+		});
+	}
+
+	/**
+	 * @implements MOD-872-DOORWAYS — every door and trapdoor of the hall shut, a cell on its ground floor to clear: the
+	 *     drone opens the doorways on its route as it gets there, clears the cell, and once it is home every doorway
+	 *     of the hall is shut again. An iron door or trapdoor, shut, is a closed cell to the route.
+	 */
+	public static void droneShutsTheDoorBehindIt(GameTestHelper helper) {
+		helper.assertTrue(!DroneDoorways.passable(Blocks.IRON_DOOR.defaultBlockState())
+				&& !DroneDoorways.passable(Blocks.IRON_TRAPDOOR.defaultBlockState()),
+				"a shut iron door or trapdoor must be closed to the drone");
+		helper.assertTrue(DroneDoorways.passable(Blocks.DARK_OAK_DOOR.defaultBlockState())
+				&& DroneDoorways.passable(Blocks.SPRUCE_TRAPDOOR.defaultBlockState())
+				&& DroneDoorways.passable(Blocks.OAK_FENCE_GATE.defaultBlockState()),
+				"a shut wooden door, trapdoor or gate must be open to the drone");
+		TownDroneScenarios.Rig rig = TownDroneScenarios.rig(helper, 1);
+		List<BlockPos> doorways = new ArrayList<>();
+		BoundingBox box = rig.plan().box().orElseThrow(() -> helper.assertionException("the hall has no box"));
+		for (BlockPos pos : BlockPos.betweenClosed(box.minX(), box.minY(), box.minZ(), box.maxX(), box.maxY(),
+				box.maxZ())) {
+			BlockState state = rig.level().getBlockState(pos);
+			if (DroneDoorways.doorway(state)) {
+				rig.level().setBlock(pos, state.setValue(BlockStateProperties.OPEN, false), Block.UPDATE_CLIENTS);
+				doorways.add(pos.immutable());
+			}
+		}
+		helper.assertTrue(doorways.stream().anyMatch(pos -> rig.level().getBlockState(pos).getBlock()
+				instanceof DoorBlock), "control: the intact hall must have a door");
+		BlockPos cell = groundFloorDebris(helper, rig);
+		rig.level().setBlock(cell, Blocks.COBWEB.defaultBlockState(), Block.UPDATE_CLIENTS);
+		WorkJob job = rig.works().queue().raise(WorkJobType.CLEAR, 0).orElseThrow();
+		boolean[] opened = {false};
+		helper.onEachTick(() -> {
+			rig.tick();
+			if (rig.nest(0).flight().flying() && doorways.stream().anyMatch(pos -> rig.level().getBlockState(pos)
+					.getValue(BlockStateProperties.OPEN))) {
+				opened[0] = true;
+			}
+		});
+		helper.succeedWhen(() -> {
+			helper.assertTrue(rig.works().queue().job(job.id()).orElseThrow().status() == WorkJobStatus.DONE,
+					"the clearing must be done");
+			helper.assertTrue(!rig.nest(0).flight().flying(), "the drone must be home");
+			helper.assertTrue(opened[0], "the drone must open a doorway on its way to the ground floor");
+			for (BlockPos pos : doorways) {
+				helper.assertTrue(!rig.level().getBlockState(pos).getValue(BlockStateProperties.OPEN),
+						"the drone must shut the doorway at " + pos + " behind it");
+			}
 			rig.release();
 		});
 	}

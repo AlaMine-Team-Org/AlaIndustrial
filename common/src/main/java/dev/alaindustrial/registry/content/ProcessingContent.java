@@ -27,7 +27,9 @@ import dev.alaindustrial.block.IndustrialWorkbenchBlock;
 import dev.alaindustrial.block.IronFurnaceBlock;
 import dev.alaindustrial.block.MaceratorBlock;
 import dev.alaindustrial.block.PolymerizerBlock;
+import dev.alaindustrial.block.ChargingBedBlock;
 import dev.alaindustrial.block.DroneNestBlock;
+import dev.alaindustrial.block.HouseInletBlock;
 import dev.alaindustrial.block.ReceptionCapsuleBlock;
 import dev.alaindustrial.block.TownDispatcherBlock;
 import dev.alaindustrial.block.RecyclerBlock;
@@ -54,6 +56,7 @@ import dev.alaindustrial.block.entity.IronFurnaceBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
 import dev.alaindustrial.block.entity.PolymerizerBlockEntity;
 import dev.alaindustrial.block.entity.DroneNestBlockEntity;
+import dev.alaindustrial.block.entity.HouseInletBlockEntity;
 import dev.alaindustrial.block.entity.ReceptionCapsuleBlockEntity;
 import dev.alaindustrial.block.entity.TownDispatcherBlockEntity;
 import dev.alaindustrial.block.entity.RecyclerBlockEntity;
@@ -67,6 +70,7 @@ import dev.alaindustrial.block.entity.WorkstationBlockEntity;
 import dev.alaindustrial.compat.LineBlockProps;
 import dev.alaindustrial.item.misc.ConstructionDroneItem;
 import dev.alaindustrial.item.misc.RestorationPlan;
+import dev.alaindustrial.item.misc.HousePlanItem;
 import dev.alaindustrial.item.misc.RestorationPlanItem;
 import dev.alaindustrial.item.misc.TownHallPlanSheetItem;
 import dev.alaindustrial.menu.AdvancedIndustrialWorkbenchMenu;
@@ -105,6 +109,8 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.MapColor;
 
+// size-justified: a declarative table under the §10 norm of 600 lines per domain (MOD-711); the ALA towns' items
+// (plan sheets, plans, the house plans of MOD-862) close it.
 /**
  * The Processing domain of the content manifest (MOD-711; coding.md §1, owner decision D5). Machines that spend
  * EU to turn one item into another, and their workbenches: the furnaces, the macerator up to the assembler, the
@@ -252,6 +258,12 @@ public final class ProcessingContent {
 			block("drone_nest", DroneNestBlock::new,
 					machine(p -> p.strength(2.0f, 6.0f).sound(SoundType.METAL).noOcclusion()),
 					s -> ModContent.DRONE_NEST = s);
+	// MOD-876 - a house's wall inlet (EU in on its outer face only) and its charging bed (one low cell, not a cube).
+	public static final BlockDef<HouseInletBlock> HOUSE_INLET = block("house_inlet", HouseInletBlock::new,
+			machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)), s -> ModContent.HOUSE_INLET = s);
+	public static final BlockDef<ChargingBedBlock> CHARGING_BED = block("charging_bed", ChargingBedBlock::new,
+			machine(p -> p.strength(2.0f, 6.0f).sound(SoundType.METAL).noOcclusion()),
+			s -> ModContent.CHARGING_BED = s);
 
 	private static final List<BlockDef<?>> BLOCKS = endBlocks();
 
@@ -298,7 +310,11 @@ public final class ProcessingContent {
 			blockItem("drone_nest", s -> ModContent.DRONE_NEST_ITEM = s),
 			// MOD-858 round 1 - the builder drone as its own item, put into an empty nest; appended at the tail.
 			item("construction_drone", p -> new ConstructionDroneItem(p.stacksTo(1)),
-					s -> ModContent.CONSTRUCTION_DRONE = s));
+					s -> ModContent.CONSTRUCTION_DRONE = s),
+			blockItem("house_inlet", s -> ModContent.HOUSE_INLET_ITEM = s),
+			blockItem("charging_bed", s -> ModContent.CHARGING_BED_ITEM = s),
+			// MOD-862 - the house plans, one per capsule house type; appended at the very tail.
+			item("house_plan", p -> new HousePlanItem(p.stacksTo(1)), s -> ModContent.HOUSE_PLAN = s));
 
 	// MOD-858 - constants, because the capability roster names them (no energy: BlockCapabilityRoster).
 	public static final BlockEntityDef<TownDispatcherBlockEntity> TOWN_DISPATCHER_BE =
@@ -369,7 +385,9 @@ public final class ProcessingContent {
 			blockEntity("reception_capsule", ReceptionCapsuleBlockEntity.class, ReceptionCapsuleBlockEntity::new,
 					s -> ModContent.RECEPTION_CAPSULE_BE = s, RECEPTION_CAPSULE),
 			// MOD-858: the dispatcher's plan slots and buffer; the nest, whose state is the drone.
-			TOWN_DISPATCHER_BE, DRONE_NEST_BE);
+			TOWN_DISPATCHER_BE, DRONE_NEST_BE, // and MOD-876's house inlet, an EnergyPortHost:
+			blockEntity("house_inlet", HouseInletBlockEntity.class, HouseInletBlockEntity::new,
+					s -> ModContent.HOUSE_INLET_BE = s, HOUSE_INLET));
 
 	private static final List<MenuDef<?>> MENUS = List.of(
 			menu("macerator", MaceratorMenu::new, s -> ModContent.MACERATOR_MENU = s),
@@ -458,10 +476,12 @@ public final class ProcessingContent {
 	 */
 	public static void settlement(Sink out) {
 		show(out, ModContent.SETTLEMENT_CORE_ITEM);
+		show(out, ModContent.HOUSE_INLET_ITEM);
 		show(out, ModContent.RECEPTION_CAPSULE_ITEM);
-		// MOD-858 - the dispatcher and the drone nest: built, unlike the two above, but only of use in a town hall.
+		// MOD-858's dispatcher and nest, MOD-876's inlet and bed: built, unlike the core and the capsule.
 		show(out, ModContent.TOWN_DISPATCHER_ITEM);
 		show(out, ModContent.DRONE_NEST_ITEM);
+		show(out, ModContent.CHARGING_BED_ITEM);
 	}
 
 	/**
@@ -480,6 +500,12 @@ public final class ProcessingContent {
 			}
 			showStack(out, ModContent.RESTORATION_PLAN, () -> RestorationPlanItem.of(RestorationPlan.of(
 					new PlanSheetRules.Plan(id, PlanSheetRules.intactTemplate(id, PlanSheetRules.TOWN_HALL)))));
+			// MOD-862 - the four house plans of the style, after its hall plan.
+			for (int type = 1; type <= PlanSheetRules.HOUSE_TYPES; type++) {
+				String house = PlanSheetRules.house(type);
+				showStack(out, ModContent.HOUSE_PLAN, () -> HousePlanItem.of(RestorationPlan.of(
+						new PlanSheetRules.Plan(id, PlanSheetRules.intactTemplate(id, house)))));
+			}
 		}
 	}
 }

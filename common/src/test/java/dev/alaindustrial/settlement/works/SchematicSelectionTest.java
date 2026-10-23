@@ -53,10 +53,11 @@ class SchematicSelectionTest {
 
 	@Test
 	void theSchematicSwitchIsTheLastAction() {
-		// The tab's request packet carries an action's ordinal: a new control goes last, so the old ones keep theirs.
+		// The tab's request packet carries an action's ordinal; the order controls of round 2 of 0.1.219 replaced the
+		// two «raise» ones, so client and server must be one build.
 		ConstructionRow.Action[] all = ConstructionRow.Action.values();
 		assertEquals(ConstructionRow.Action.SCHEMATIC, all[all.length - 1]);
-		assertEquals(3, ConstructionRow.Action.START.ordinal());
+		assertEquals(6, ConstructionRow.Action.START.ordinal());
 		assertEquals("settlement.alaindustrial.works.action.schematic", ConstructionRow.Action.SCHEMATIC.key());
 	}
 }

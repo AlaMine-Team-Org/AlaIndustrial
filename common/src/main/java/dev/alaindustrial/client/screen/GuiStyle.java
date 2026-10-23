@@ -67,6 +67,20 @@ public final class GuiStyle {
 	/** Laid over the model of a closed record, so it reads as a photograph in a file. */
 	public static final int CLOSED_WASH = 0xB0707070;
 
+	// The town core's «Construction» tab (owner's round 3 of 0.1.219, R3-3): building cards and their status chips.
+	/** A ruin never restored: rust brown. */
+	public static final int CHIP_RUIN = 0xFF7A4A2A;
+	/** Restored once and damaged since: burnt orange. */
+	public static final int CHIP_DAMAGED = 0xFFA4561E;
+	/** Not to be ordered yet — no plan, or the hall first: slate. */
+	public static final int CHIP_MUTED = 0xFF5A6068;
+	/** An order under way: the steel blue of a level bar's ink. */
+	public static final int CHIP_WORKING = 0xFF2B6596;
+	/** The words on a chip and on the dark hint bar's badge. */
+	public static final int CHIP_TEXT = 0xFFFFFFFF;
+	/** The frame of the card that is open. */
+	public static final int CARD_OPEN_EDGE = 0xFF8A5A24;
+
 	/** Panel face with bevel border and a copper accent strip under the header. */
 	public static void panel(GuiGraphicsExtractor g, int x, int y, int w, int h) {
 		g.fill(x, y, x + w, y + h, PANEL);

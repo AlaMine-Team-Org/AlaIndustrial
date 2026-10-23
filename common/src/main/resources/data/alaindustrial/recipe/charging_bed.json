@@ -1,0 +1,16 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"key": {
+		"R": "alaindustrial:rubber",
+		"C": "alaindustrial:copper_plate",
+		"B": "alaindustrial:battery"
+	},
+	"pattern": [
+		"RRR",
+		"CBC"
+	],
+	"result": {
+		"id": "alaindustrial:charging_bed"
+	}
+}

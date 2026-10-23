@@ -128,7 +128,11 @@ public final class MachineTooltips {
 		if (stack.getItem() instanceof BlockItem blockItem
 				&& blockItem.getBlock() instanceof HasMachineTooltip owner) {
 			for (MachineTooltipSpec.Line line : owner.machineTooltip().lines(detailed, AlaClientConfig.showEuNumbers)) {
-				lines.add(render(line));
+				if (owner.wrapsTooltipLines()) {
+					lines.addAll(TooltipWrap.wrap(render(line)));
+				} else {
+					lines.add(render(line));
+				}
 			}
 		}
 	}

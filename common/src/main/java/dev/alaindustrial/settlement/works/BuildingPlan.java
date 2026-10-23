@@ -3,6 +3,7 @@ package dev.alaindustrial.settlement.works;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.registry.ModContent;
+import dev.alaindustrial.registry.ModTags;
 import dev.alaindustrial.worldgen.town.AlaTownStructure;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.function.Predicate;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
@@ -20,6 +22,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
@@ -27,6 +30,8 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlac
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 
+// size-justified: one numbering an executor walks — a building's cells, the ring round it and a house's foundation —
+// read from its two templates at once; splitting it would hand the same cell arrays to three classes.
 /**
  * What one building of a town should look like, cell by cell, in the world (MOD-857): the cells its comparison
  * counts, the block each should hold, and the key points each belongs to. Built once per building and load from its
@@ -65,10 +70,28 @@ public final class BuildingPlan {
 	private final long[] hatches;
 	/** The ring around the footprint a clearing frees of terrain, packed, top layer first ({@link #ringPos}). */
 	private final long[] ring;
+	/** Whether the building is a house a player laid on free ground (MOD-877): it has no ruin, its site is nature. */
+	private final boolean laid;
+	/**
+	 * The foundation under a house (MOD-877, R109; owner's round 3 of 0.1.219, R3-5), packed, lowest first: up to
+	 * {@link #FOUNDATION_DEPTH} cells under the lowest block of every column the house stands on. Empty for a building
+	 * that is no house.
+	 */
+	private final long[] fill;
+	/** The height of the lowest block of each foundation cell's column: the floor it holds up. */
+	private final int[] fillFloor;
+	/** How deep a foundation goes under a house's floor, in blocks: a deeper drop is no pit, it is left as it is. */
+	public static final int FOUNDATION_DEPTH = 4;
+	/**
+	 * The ruin's rubble palette (owner's round 1 of 0.1.219): every block the ruin holds where the intact building is
+	 * empty, less the openings, the fittings and the town's machines. A clearing takes these out of the ring too.
+	 */
+	private final Set<Block> rubble = new HashSet<>();
 
 	private BuildingPlan(List<Cell> list, List<String> keyNames, double restoredAt, long[] hatches, int ringWidth,
-			Predicate<BlockPos> foreign) {
+			Predicate<BlockPos> foreign, boolean laid, boolean house) {
 		this.hatches = hatches;
+		this.laid = laid;
 		int size = list.size();
 		this.cells = new long[size];
 		this.expected = new BlockState[size];
@@ -82,6 +105,9 @@ public final class BuildingPlan {
 			ruin[i] = cell.ruin;
 			debris[i] = cell.debris;
 			keyMask[i] = cell.keys;
+			if (cell.debris && isRubble(cell.ruin)) {
+				rubble.add(cell.ruin.getBlock());
+			}
 			int[] xyz = {BlockPos.getX(cell.pos), BlockPos.getY(cell.pos), BlockPos.getZ(cell.pos)};
 			for (int axis = 0; axis < 3; axis++) {
 				bounds[axis] = Math.min(bounds[axis], xyz[axis]);
@@ -91,6 +117,89 @@ public final class BuildingPlan {
 		this.keyNames = List.copyOf(keyNames);
 		this.restoredAt = restoredAt;
 		this.ring = ring(ringWidth, foreign);
+		List<long[]> foundation = house ? foundation() : List.of();
+		this.fill = foundation.stream().mapToLong(cell -> cell[0]).toArray();
+		this.fillFloor = foundation.stream().mapToInt(cell -> (int) cell[1]).toArray();
+	}
+
+	/** Whether the ruin's block {@code ruin} in a debris cell is rubble: no air, opening, fitting or machine. */
+	private static boolean isRubble(BlockState ruin) {
+		return !ruin.isAir() && !ruin.hasBlockEntity() && !ruin.is(ModTags.Blocks.TOWN_BUILD_OPENINGS)
+				&& !ruin.is(ModTags.Blocks.TOWN_BUILD_INTERIOR) && !ruin.is(ModTags.Blocks.TOWN_BUILD_NOT_BUILT)
+				&& !ruin.is(ModTags.Blocks.TOWN_DRONE_PROTECTED);
+	}
+
+	/**
+	 * Whether {@code state} is on the ruin's rubble palette: a block the ruin left lying where the intact building is
+	 * empty (owner's round 1 of 0.1.219). The ring around the building is cleared of it too.
+	 */
+	public boolean ruinRubble(BlockState state) {
+		return rubble.contains(state.getBlock());
+	}
+
+	/**
+	 * The foundation: under every column of the house, from its lowest block (debris left out) down
+	 * {@link #FOUNDATION_DEPTH} cells, lowest first so earth goes in from the bottom up; the columns of a lab hatch's
+	 * shaft are left open. Each entry is {packed position, floor height}.
+	 */
+	private List<long[]> foundation() {
+		Map<Long, Integer> floor = new TreeMap<>();
+		for (int i = 0; i < cells.length; i++) {
+			if (expected[i].isAir() || debris[i]) {
+				continue;
+			}
+			long column = BlockPos.asLong(BlockPos.getX(cells[i]), 0, BlockPos.getZ(cells[i]));
+			floor.merge(column, BlockPos.getY(cells[i]), Math::min);
+		}
+		List<long[]> out = new ArrayList<>();
+		for (int depth = FOUNDATION_DEPTH; depth >= 1; depth--) {
+			for (Map.Entry<Long, Integer> column : floor.entrySet()) {
+				int x = BlockPos.getX(column.getKey());
+				int z = BlockPos.getZ(column.getKey());
+				if (onHatchColumn(x, z)) {
+					continue;
+				}
+				out.add(new long[] {BlockPos.asLong(x, column.getValue() - depth, z), column.getValue()});
+			}
+		}
+		return out;
+	}
+
+	private boolean onHatchColumn(int x, int z) {
+		for (long hatch : hatches) {
+			if (BlockPos.getX(hatch) == x && BlockPos.getZ(hatch) == z) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/** Whether the building is a house a player laid on free ground (MOD-877): its site is cleared of nature. */
+	public boolean laid() {
+		return laid;
+	}
+
+	/**
+	 * How many cells the foundation under a house holds (MOD-877, R109; R3-5): a pit under the floor gets earth and
+	 * stone from the dispatcher's buffer — by a laid house's clearing, once its ring is clear, and by every house's
+	 * building job before its blocks. Zero for a building that is no house.
+	 */
+	public int fillSize() {
+		return fill.length;
+	}
+
+	/** Where foundation cell {@code index} is in the world, {@code 0 <= index < }{@link #fillSize()}. */
+	public BlockPos fillPos(int index) {
+		return BlockPos.of(fill[index]);
+	}
+
+	/**
+	 * The height of the floor foundation cell {@code index} holds up: the cell wants earth only while it and every
+	 * cell between it and that floor are open ({@code DroneCellSurvey.needsFoundation}) — a hole under solid ground is
+	 * the ground's, not the house's.
+	 */
+	public int fillFloor(int index) {
+		return fillFloor[index];
 	}
 
 	/**
@@ -154,7 +263,11 @@ public final class BuildingPlan {
 	 * one numbering for a clearing's whole walk.
 	 */
 	public BlockPos target(int index) {
-		return index < cells.length ? pos(index) : ringPos(index - cells.length);
+		if (index < cells.length) {
+			return pos(index);
+		}
+		int ringIndex = index - cells.length;
+		return ringIndex < ring.length ? ringPos(ringIndex) : fillPos(ringIndex - ring.length);
 	}
 
 	private record Cell(long pos, BlockState state, BlockState ruin, boolean debris, int keys) {
@@ -196,10 +309,14 @@ public final class BuildingPlan {
 	 * R93) — a floor block put there would seal the way down to the lab.
 	 */
 	public boolean onLabShaft(int index) {
-		long cell = cells[index];
+		return onLabShaft(BlockPos.of(cells[index]));
+	}
+
+	/** Whether {@code pos} — a cell of the plan or not — lies on the shaft of the lab under the building. */
+	public boolean onLabShaft(BlockPos pos) {
 		for (long hatch : hatches) {
-			if (BlockPos.getX(hatch) == BlockPos.getX(cell) && BlockPos.getZ(hatch) == BlockPos.getZ(cell)
-					&& BlockPos.getY(cell) <= BlockPos.getY(hatch)) {
+			if (BlockPos.getX(hatch) == pos.getX() && BlockPos.getZ(hatch) == pos.getZ()
+					&& pos.getY() <= BlockPos.getY(hatch)) {
 				return true;
 			}
 		}
@@ -214,6 +331,21 @@ public final class BuildingPlan {
 	/** Where cell {@code index} is in the world. */
 	public BlockPos pos(int index) {
 		return BlockPos.of(cells[index]);
+	}
+
+	/** The cell index of each packed position, built on the first {@link #indexOf} call. */
+	private Map<Long, Integer> byPos;
+
+	/** The index of the cell at {@code pos}, or -1 when the plan has no cell there. */
+	public int indexOf(BlockPos pos) {
+		if (byPos == null) {
+			Map<Long, Integer> built = new HashMap<>();
+			for (int i = 0; i < cells.length; i++) {
+				built.put(cells[i], i);
+			}
+			byPos = built;
+		}
+		return byPos.getOrDefault(pos.asLong(), -1);
 	}
 
 	/** The world position of cell {@code index}, packed ({@link BlockPos#asLong()}). */
@@ -243,7 +375,8 @@ public final class BuildingPlan {
 	/**
 	 * Whether {@code world} at cell {@code index} matches the plan: the same block, or air where air belongs. A drone
 	 * nest standing where the plan wants a yellow carpet matches too: the carpets mark the drone pad's nest spots,
-	 * and a nest is put on one in their place (MOD-858, owner decision 2026-10-21).
+	 * and a nest is put on one in their place (MOD-858, owner decision 2026-10-21). Any plaque plate matches any other:
+	 * a house's plaque shows the number of whoever lives there (MOD-862, R40).
 	 */
 	public boolean matches(int index, BlockState world) {
 		BlockState want = expected[index];
@@ -252,7 +385,8 @@ public final class BuildingPlan {
 		}
 		return world.is(want.getBlock())
 				|| world.is(ModContent.DRONE_NEST.get())
-				&& BuiltInRegistries.BLOCK.getKey(want.getBlock()).equals(NEST_SPOT);
+				&& BuiltInRegistries.BLOCK.getKey(want.getBlock()).equals(NEST_SPOT)
+				|| want.is(ModTags.Blocks.TOWN_PLAQUE_PLATES) && world.is(ModTags.Blocks.TOWN_PLAQUE_PLATES);
 	}
 
 	/** The key points of cell {@code index}, one bit per index into {@link #keyNames()}. */
@@ -289,7 +423,10 @@ public final class BuildingPlan {
 			return Optional.empty();
 		}
 		Optional<Map<BlockPos, BlockState>> intact = cellsOf(templates, building.intact().get());
-		Optional<Map<BlockPos, BlockState>> ruin = cellsOf(templates, building.template());
+		// A laid house has no ruin (MOD-877): every cell its intact template keeps empty must be emptied of nature.
+		boolean laid = building.isLaid();
+		Optional<Map<BlockPos, BlockState>> ruin = laid ? Optional.of(Map.of())
+				: cellsOf(templates, building.template());
 		if (intact.isEmpty() || ruin.isEmpty()) {
 			return Optional.empty();
 		}
@@ -300,7 +437,7 @@ public final class BuildingPlan {
 			BlockPos local = entry.getKey();
 			BlockState want = entry.getValue();
 			BlockState was = ruin.get().getOrDefault(local, Blocks.AIR.defaultBlockState());
-			boolean isDebris = want.isAir() && !was.isAir();
+			boolean isDebris = want.isAir() && (laid || !was.isAir());
 			if (want.isAir() && !isDebris) {
 				continue;
 			}
@@ -321,8 +458,9 @@ public final class BuildingPlan {
 		});
 		List<String> names = new ArrayList<>();
 		keys.forEach(key -> names.add(key.name()));
-		return Optional.of(new BuildingPlan(list, names, definition.restoredAt(),
-				hatches(templates, building.template(), building.origin(), settings), definition.clearRing(), foreign));
+		long[] hatches = laid ? new long[0] : hatches(templates, building.template(), building.origin(), settings);
+		return Optional.of(new BuildingPlan(list, names, definition.restoredAt(), hatches, definition.clearRing(),
+				foreign, laid, TownHouses.isHouse(building)));
 	}
 
 	/**

@@ -67,6 +67,18 @@ public final class ShiftWorkerCardText {
 				: Component.translatable(UI + "assigned", card.settlement());
 	}
 
+	/** "Home: house at x, y, z", or "Homeless" (MOD-862). */
+	public static Component home(ShiftWorkerCardPayload card) {
+		return card.home().map(ShiftWorkerCardText::house)
+				.map(house -> (Component) Component.translatable(UI + "home", house))
+				.orElseGet(() -> Component.translatable(UI + "homeless"));
+	}
+
+	/** A house of the worker's town by where its bed stands: "house at x, y, z". */
+	public static Component house(ShiftWorkerCardPayload.House house) {
+		return Component.translatable(UI + "house", house.x(), house.y(), house.z());
+	}
+
 	/** "Died: day N, <who>", or empty for a living record. */
 	public static Optional<Component> death(ShiftWorkerCardPayload card) {
 		return card.death().map(death -> Component.translatable(UI + "death", day(death.gameTime()),

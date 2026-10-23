@@ -129,4 +129,13 @@ class BuildingStateRulesTest {
 		assertEquals(52, measure.percent());
 		assertThrows(IllegalArgumentException.class, () -> new Measure(5, 4, NONE));
 	}
+
+	@Test
+	void aRestoredBuildingShowsExactlyAHundredAndNothingElseDoes() {
+		assertEquals(100, BuildingStateRules.shownPercent(BuildingState.INTACT, 870, 878));
+		assertEquals(100, BuildingStateRules.shownPercent(BuildingState.UPGRADED, 870, 878));
+		assertEquals(99, BuildingStateRules.shownPercent(BuildingState.REPAIR, 878, 878));
+		assertEquals(52, BuildingStateRules.shownPercent(BuildingState.RUIN, 458, 878));
+		assertEquals(-1, BuildingStateRules.shownPercent(BuildingState.INTACT, 0, 0));
+	}
 }

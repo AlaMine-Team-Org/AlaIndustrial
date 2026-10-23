@@ -67,6 +67,8 @@ public final class ReceptionCapsuleRules {
 		UNCLAIMED,
 		/** The town holds as many workers as its tier allows. */
 		AT_LIMIT,
+		/** No free house fit to live in for a new worker (MOD-862, R103): «no housing». */
+		NO_HOUSING,
 		/** A material of the price is missing from its slot. */
 		NEED_MATERIALS,
 		/** The capsule's buffer does not hold the price yet. */
@@ -103,9 +105,19 @@ public final class ReceptionCapsuleRules {
 	 * @param have           the count of each {@link Material} in its slot, in material order
 	 * @param need           the count of each {@link Material} the next worker costs, in material order
 	 * @param archiveAnswers the archive can issue a worker at all
+	 * @param housing        the worker to restore has a home: a free house fit to live in for a new one, or its own
+	 *                       house for a returning one (MOD-862, R103)
 	 */
 	public record Situation(boolean hasTown, boolean corePlaced, boolean inside, boolean lit, boolean claimed,
-			int living, int limit, long euStored, long euPrice, int[] have, int[] need, boolean archiveAnswers) {
+			int living, int limit, long euStored, long euPrice, int[] have, int[] need, boolean archiveAnswers,
+			boolean housing) {
+
+		/** A situation where housing is not in question. */
+		public Situation(boolean hasTown, boolean corePlaced, boolean inside, boolean lit, boolean claimed,
+				int living, int limit, long euStored, long euPrice, int[] have, int[] need, boolean archiveAnswers) {
+			this(hasTown, corePlaced, inside, lit, claimed, living, limit, euStored, euPrice, have, need,
+					archiveAnswers, true);
+		}
 
 		public Situation {
 			if (have.length != Material.values().length || need.length != Material.values().length) {
@@ -137,6 +149,9 @@ public final class ReceptionCapsuleRules {
 		if (situation.living() >= situation.limit()) {
 			return Verdict.AT_LIMIT;
 		}
+		if (!situation.housing()) {
+			return Verdict.NO_HOUSING;
+		}
 		if (!hasMaterials(situation.have(), situation.need())) {
 			return Verdict.NEED_MATERIALS;
 		}
@@ -144,6 +159,32 @@ public final class ReceptionCapsuleRules {
 			return Verdict.NEED_ENERGY;
 		}
 		return situation.archiveAnswers() ? Verdict.READY : Verdict.ARCHIVE_SILENT;
+	}
+
+	/** The workers line of the capsule's screen: «Shift workers: X / Y». */
+	public static final String WORKERS_KEY = "settlement.alaindustrial.capsule.workers";
+	/** The workers line when the town may hold workers but has no house fit to live in: «X, no homes». */
+	public static final String WORKERS_NO_HOMES_KEY = "settlement.alaindustrial.capsule.workers_no_homes";
+	/** The «no housing» status when the town has no home at all: restore or build a house. */
+	public static final String NO_HOMES_STATUS_KEY = "settlement.alaindustrial.capsule.status.no_homes";
+
+	/**
+	 * How many workers the town has room for (owner's round 1 of 0.1.219): its homes ({@code homes}, MOD-862), never
+	 * more than its tier allows ({@code tierLimit}), never negative. The capsule shows its workers against this, not
+	 * against the tier's bare limit: «0 / 4» with no house at all promised four workers nobody could restore. A town
+	 * of an old world may count more living workers than homes; the screen shows both numbers as they are.
+	 */
+	public static int housedLimit(int tierLimit, int homes) {
+		return Math.max(0, Math.min(tierLimit, homes));
+	}
+
+	/**
+	 * Whether the capsule's town may hold workers ({@code tierLimit > 0}) but has no home for any ({@code housedLimit
+	 * == 0}): the workers line then says «no homes» and the «no housing» status asks for a house to be restored or
+	 * built, instead of «0 / 0».
+	 */
+	public static boolean noHomes(int tierLimit, int housedLimit) {
+		return tierLimit > 0 && housedLimit <= 0;
 	}
 
 	/** EU of the price the buffer does not hold yet, never negative. */

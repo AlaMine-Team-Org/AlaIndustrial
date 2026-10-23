@@ -39,6 +39,8 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
  *   <li>sheet 2 — the barrel or chest of one house: a house is a piece with a former resident's plaque, and the one
  *       is picked by {@link PlanSheetRules#houseIndex} from the world seed and the hall's place, so every chunk of the
  *       town picks the same house;</li>
+ *   <li>the house plans (MOD-862, R99) — every house's barrel or chest holds the plan of its own type, the sheet-2
+ *       house's both;</li>
  *   <li>sheet 3 — the lab's first barrel (every built-in lab has one, so its trapped chest keeps its own
  *       loot).</li>
  * </ul>
@@ -62,6 +64,7 @@ final class TownPlanSheets {
 		BlockPos anchor = null;
 		List<BlockPos> houseContainers = new ArrayList<>();
 		List<BlockPos> houseOrigins = new ArrayList<>();
+		List<Integer> houseTypes = new ArrayList<>();
 		AlaTownLabPiece lab = null;
 		for (StructurePiece piece : pieces) {
 			if (piece instanceof AlaTownLabPiece labPiece) {
@@ -78,6 +81,7 @@ final class TownPlanSheets {
 					container(template, pool).ifPresent(cell -> {
 						houseContainers.add(cell);
 						houseOrigins.add(pool.getPosition());
+						houseTypes.add(houseType(pool));
 					});
 				}
 			}
@@ -92,8 +96,18 @@ final class TownPlanSheets {
 			report(styleId, "sheet 1", "the town hall has no chest");
 		}
 		if (!houseContainers.isEmpty()) {
-			give(level, chunkBox, pickHouse(level.getSeed(), anchor, houseContainers, houseOrigins),
-					PlanSheetRules.lootTable(styleId, 2), random);
+			BlockPos sheet2 = pickHouse(level.getSeed(), anchor, houseContainers, houseOrigins);
+			for (int i = 0; i < houseContainers.size(); i++) {
+				BlockPos cell = houseContainers.get(i);
+				int type = houseTypes.get(i);
+				boolean withSheet2 = cell.equals(sheet2);
+				// MOD-862, R99: each house holds the plan of its own type; the one picked holds sheet 2 as well.
+				String table = type > 0 ? PlanSheetRules.housePlanTable(styleId, type, withSheet2)
+						: withSheet2 ? PlanSheetRules.lootTable(styleId, 2) : null;
+				if (table != null) {
+					give(level, chunkBox, cell, table, random);
+				}
+			}
 		} else {
 			report(styleId, "sheet 2", "no house with a plaque holds a barrel or a chest");
 		}
@@ -125,6 +139,15 @@ final class TownPlanSheets {
 			return;
 		}
 		give(level, chunkBox, barrels.getFirst(), PlanSheetRules.lootTable(styleId, 3), random);
+	}
+
+	/** The capsule house type {@code pool}'s template is (MOD-862), or 0 for another building. */
+	private static int houseType(PoolElementStructurePiece pool) {
+		if (!(pool.getElement() instanceof SinglePoolElement single)) {
+			return 0;
+		}
+		String path = single.getTemplateLocation().getPath();
+		return PlanSheetRules.houseType(path.substring(path.lastIndexOf('/') + 1));
 	}
 
 	/** The template of a rigid single-template pool piece, or {@code null}. */

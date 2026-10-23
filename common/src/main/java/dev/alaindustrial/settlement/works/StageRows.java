@@ -17,9 +17,9 @@ public final class StageRows {
 	/** The section heading. */
 	public static final String SECTION = "settlement.alaindustrial.works.section.stages";
 	/** «%1$s: stage %2$s of %3$s, %4$s» — the building, N, M and the stage's name. */
-	static final String LINE = "settlement.alaindustrial.works.stage_line";
+	public static final String LINE = "settlement.alaindustrial.works.stage_line";
 	/** «%1$s: every stage stands». */
-	static final String LINE_DONE = "settlement.alaindustrial.works.stage_line_done";
+	public static final String LINE_DONE = "settlement.alaindustrial.works.stage_line_done";
 	/** «%1$s/%2$s» — cells of the stage standing and in all. */
 	static final String COUNT = "settlement.alaindustrial.works.stage_count";
 	/** «Still takes: %s» — the stage's needs, joined. */

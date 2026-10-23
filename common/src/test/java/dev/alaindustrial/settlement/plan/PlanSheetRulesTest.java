@@ -1,5 +1,6 @@
 package dev.alaindustrial.settlement.plan;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -167,5 +168,28 @@ class PlanSheetRulesTest {
 					.forEach(name -> shipped.add("alaindustrial:" + name.substring(0, name.length() - 5)));
 		}
 		assertEquals(shipped, new HashSet<>(PlanSheetRules.BUILT_IN_STYLES));
+	}
+
+	/** Sheet N fits sheet slot N only; a blank fits none (owner's round 1 of 0.1.219). */
+	@Test
+	void sheetFitsOnlyItsOwnSlot() {
+		for (int slot = 0; slot < PlanSheetRules.SHEETS; slot++) {
+			for (int number = 0; number <= PlanSheetRules.SHEETS + 1; number++) {
+				assertEquals(number == slot + 1, PlanSheetRules.fitsSlot(slot, number), "slot " + slot + ", sheet "
+						+ number);
+			}
+		}
+	}
+
+	/** An old save's sheets go to their own slots; what has none stays in a free slot, nothing is dropped. */
+	@Test
+	void oldSaveSheetsMoveHomeAndNothingIsLost() {
+		assertArrayEquals(new int[] {2, 0, 1}, PlanSheetRules.homeSlots(new int[] {3, 1, 2}));
+		assertArrayEquals(new int[] {0, 1, 2}, PlanSheetRules.homeSlots(new int[] {1, 2, 3}));
+		assertArrayEquals(new int[] {1, -1, 2}, PlanSheetRules.homeSlots(new int[] {2, -1, 0}));
+		// Two stacks of sheet 2 (two styles): the one already home stays, the other keeps its own free slot.
+		assertArrayEquals(new int[] {0, 1, -1}, PlanSheetRules.homeSlots(new int[] {2, 2, -1}));
+		assertArrayEquals(new int[] {-1, 0, 2}, PlanSheetRules.homeSlots(new int[] {-1, 1, 1}));
+		assertThrows(IllegalArgumentException.class, () -> PlanSheetRules.homeSlots(new int[] {1, 2}));
 	}
 }

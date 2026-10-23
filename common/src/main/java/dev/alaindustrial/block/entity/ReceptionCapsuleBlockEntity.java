@@ -16,6 +16,7 @@ import dev.alaindustrial.settlement.SettlementRegistry;
 import dev.alaindustrial.settlement.ShiftWorkerHost;
 import dev.alaindustrial.settlement.record.RecordNumber;
 import dev.alaindustrial.settlement.shift.ShiftWorkers;
+import dev.alaindustrial.settlement.works.TownHousing;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -103,6 +104,7 @@ public final class ReceptionCapsuleBlockEntity extends MachineBlockEntity implem
 	/** The town's living workers, its tier's limit and its dead who wait to come back, as of the last tick. */
 	private int living;
 	private int limit;
+	private int housedLimit; // by the town's homes, at most the tier's limit: what the screen shows (round 1, 0.1.219)
 	private int awaiting;
 	/** Ticks left of "the archive does not answer" after a worker could not be put into the world. */
 	private int silentTicks;
@@ -264,6 +266,8 @@ public final class ReceptionCapsuleBlockEntity extends MachineBlockEntity implem
 	private ReceptionCapsuleRules.Situation situation(ServerLevel level, Optional<Settlement> town) {
 		living = town.map(t -> host.livingWorkers(level.getServer(), t.id())).orElse(0);
 		limit = town.map(t -> t.tier().workerLimit()).orElse(0);
+		housedLimit = ReceptionCapsuleRules.housedLimit(limit,
+				town.map(t -> TownHousing.homeCount(level, t.id())).orElse(0));
 		List<RecordNumber> waiting = town.map(t -> host.awaitingReturn(level.getServer(), t.id())).orElse(List.of());
 		awaiting = waiting.size();
 		if (returning != null && !waiting.contains(returning)) {
@@ -280,7 +284,8 @@ public final class ReceptionCapsuleBlockEntity extends MachineBlockEntity implem
 				living, limit,
 				energy.getAmount(), ReceptionCapsuleRules.euPrice(back),
 				materialCounts(), ReceptionCapsuleRules.materialPrice(back),
-				silentTicks == 0);
+				silentTicks == 0,
+				back || town.map(t -> TownHousing.roomForNewWorker(level, t.id())).orElse(false));
 	}
 
 	/** The count of each material in its slot, in material order. */
@@ -327,6 +332,7 @@ public final class ReceptionCapsuleBlockEntity extends MachineBlockEntity implem
 		}
 		returning = null;
 		living++;
+		TownHousing.settle(level, town.id()); // MOD-862: the new worker moves into the free house at once
 		completeOperation(level, price);
 		Industrialization.LOGGER.info("[ala-towns] worker released {} ({}) by the reception capsule at {} of "
 				+ "settlement {}", released.get(), back ? "brought back" : "new", pos, town.id());
@@ -419,12 +425,13 @@ public final class ReceptionCapsuleBlockEntity extends MachineBlockEntity implem
 	 * halves the same way: a channel syncs a short, and an operator may set a price whose buffer passes 32 767 (the
 	 * menu joins the halves back). Then why the capsule stands still, the town's workers and limit, how many of each
 	 * material the next worker costs, how many of the town's dead wait to come back, and the one chosen — its letter
-	 * (0: a new worker) and its three digits. All computed here, so a server that retuned the price shows its own
+	 * (0: a new worker) and its three digits; last, the limit by the town's homes the screen shows the workers
+	 * against (owner's round 1 of 0.1.219). All computed here, so a server that retuned the price shows its own
 	 * numbers.
 	 */
 	public enum Channel {
 		ENERGY, CAPACITY, PROGRESS, MAX_PROGRESS, ENERGY_HI, CAPACITY_HI, PRICE_LO, PRICE_HI, VERDICT, LIVING, LIMIT,
-		NEED_CIRCUITS, NEED_RUBBER, NEED_COPPER_PLATES, AWAITING, CHOICE_LETTER, CHOICE_DIGITS
+		NEED_CIRCUITS, NEED_RUBBER, NEED_COPPER_PLATES, AWAITING, CHOICE_LETTER, CHOICE_DIGITS, HOUSED_LIMIT
 	}
 
 	/** Width of the channels, which the menu's client stub sizes itself from (MOD-235). */
@@ -451,6 +458,7 @@ public final class ReceptionCapsuleBlockEntity extends MachineBlockEntity implem
 				.read(Channel.AWAITING, () -> shortValue(awaiting))
 				.read(Channel.CHOICE_LETTER, () -> returning == null ? 0 : returning.index() / 1000 + 1)
 				.read(Channel.CHOICE_DIGITS, () -> returning == null ? 0 : returning.digits())
+				.read(Channel.HOUSED_LIMIT, () -> shortValue(housedLimit))
 				.build();
 	}
 

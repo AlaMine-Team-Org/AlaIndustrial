@@ -121,10 +121,20 @@ public record ConstructionRow(String section, Text text, Optional<Text> status, 
 
 	/** The controls of the tab. */
 	public enum Action {
-		/** Raise a clearing job on the row's building. */
-		RAISE_CLEAR,
-		/** Raise a building job on the row's building. */
-		RAISE_BUILD,
+		/**
+		 * Order the row's building restored (round 2 of 0.1.219, Q1): its clearing, its road and its building, as it
+		 * needs them ({@link TownOrders}). The four «order» actions do the same; each words the one button the row
+		 * shows by the building's state.
+		 */
+		ORDER_RESTORE,
+		/** Order a house a player laid built. */
+		ORDER_BUILD,
+		/** Order a building whose order was called off to go on from where it stopped. */
+		ORDER_RESUME,
+		/** Order a building restored once and damaged since mended. */
+		ORDER_REPAIR,
+		/** Call off the row's building's order: every open job on it. */
+		ORDER_CANCEL,
 		/** Call off the row's job. */
 		CANCEL,
 		/** Put the row's blocked job back in the queue. */
@@ -144,6 +154,22 @@ public record ConstructionRow(String section, Text text, Optional<Text> status, 
 		/** The translation key of its tooltip. */
 		public String key() {
 			return "settlement.alaindustrial.works.action." + name().toLowerCase(Locale.ROOT);
+		}
+
+		/** Whether it places an order (round 2 of 0.1.219, Q1). */
+		public boolean places() {
+			return this == ORDER_RESTORE || this == ORDER_BUILD || this == ORDER_RESUME || this == ORDER_REPAIR;
+		}
+
+		/** The action that words {@code button}. */
+		public static Action of(OrderButton button) {
+			return switch (button) {
+				case RESTORE -> ORDER_RESTORE;
+				case BUILD -> ORDER_BUILD;
+				case RESUME -> ORDER_RESUME;
+				case REPAIR -> ORDER_REPAIR;
+				case CANCEL -> ORDER_CANCEL;
+			};
 		}
 
 		/** The action with this ordinal, if any — what the request packet carries. */

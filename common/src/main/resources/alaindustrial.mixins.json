@@ -10,7 +10,9 @@
     "ExperienceOrbAccessor",
     "MobTargetSelectorAccessor",
     "NearestAttackableTargetGoalAccessor",
-    "TargetGoalAccessor"
+    "TargetGoalAccessor",
+    "TrapDoorBlockAccessor",
+    "FenceGateBlockAccessor"
   ],
   "client": [
     "client.RootInspectionStateMixin",

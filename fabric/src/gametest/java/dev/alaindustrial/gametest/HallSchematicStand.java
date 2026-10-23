@@ -24,6 +24,7 @@ import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,8 +35,9 @@ import org.slf4j.LoggerFactory;
  * the server would send it (the core is an unbound one, of no town, so the server answers no request). Frames for a
  * human to review (shot family {@code hall_schematic_}): the real blocks that belong in the wall's gaps, translucent
  * and a little blue — stone bricks, glass, stairs turned to the camera along the top — and in front of the wall a
- * carpet, a two-cell door and a chest (a block with no model of its own, drawn as its box); the real blocks untouched
- * and not hidden (owner's round 3, point 6).
+ * carpet, a two-cell door, a chest and a double chest (blocks with no model of their own, drawn with the model their
+ * block-entity renderer draws — MOD-824, R1-3: they used to be boxes of oak planks); the real blocks untouched and not
+ * hidden (owner's round 3, point 6).
  *
  * <p>What the stand asserts on its own: every ghost was baked, and the ghosts are drawn at all — the frame with them
  * differs from the frame without them by far more than two frames without them differ from each other.
@@ -97,7 +99,8 @@ public final class HallSchematicStand {
 				}
 			}
 		}
-		// In front of the wall: states a box could not show — a carpet, both halves of a door, and a chest.
+		// In front of the wall: states a box could not show — a carpet, both halves of a door, a chest and, a row
+		// closer, a double chest: its two halves are two block-entity models of the chest sheet.
 		BlockPos front = new BlockPos(WALL_X, WALL_Y, WALL_Z + 2);
 		ghosts.add(new HallSchematicPayload.Ghost(front.west(2).asLong(), Blocks.MOSS_CARPET.defaultBlockState()));
 		BlockState door = Blocks.SPRUCE_DOOR.defaultBlockState().setValue(DoorBlock.FACING, Direction.SOUTH);
@@ -106,6 +109,12 @@ public final class HallSchematicStand {
 				door.setValue(DoorBlock.HALF, DoubleBlockHalf.UPPER)));
 		ghosts.add(new HallSchematicPayload.Ghost(front.east(2).asLong(),
 				Blocks.CHEST.defaultBlockState().setValue(ChestBlock.FACING, Direction.SOUTH)));
+		BlockState left = Blocks.CHEST.defaultBlockState().setValue(ChestBlock.FACING, Direction.SOUTH)
+				.setValue(ChestBlock.TYPE, ChestType.LEFT);
+		BlockPos leftPos = front.south().west(2);
+		ghosts.add(new HallSchematicPayload.Ghost(leftPos.asLong(), left));
+		ghosts.add(new HallSchematicPayload.Ghost(leftPos.relative(ChestBlock.getConnectedDirection(left)).asLong(),
+				left.setValue(ChestBlock.TYPE, ChestType.RIGHT)));
 		server.runCommand("tp @p " + (WALL_X + 0.5) + " " + (WALL_Y + 2.5) + " " + (WALL_Z + 7.5) + " 180 12");
 		VisualWorld.awaitNoScreen(context);
 		L3Chunks.waitRender(singleplayer);

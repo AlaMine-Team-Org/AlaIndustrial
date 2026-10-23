@@ -1,20 +1,26 @@
 # Changelog
 
-## 0.1.218
+## 0.1.219
 
-<p><img alt="Ala Industrial Minecraft mod: what&#39;s new, the town dispatcher and drone nest that restore a ruined town hall" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.218-mc26.2/release-media/v0.1.218-mc26.2/changelog.webp" width="720"></p>
+<p><img alt="Ala Industrial Minecraft mod: a shift worker walks into a restored house, waves and lies down on the charging bed" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.219-mc26.2/release-media/v0.1.219-mc26.2/changelog.webp" width="720"></p>
 
-Ruined town halls in ALA towns can now be rebuilt: gather the three plan sheets, set up a Town Dispatcher and Drone Nests, and construction drones restore the hall stage by stage.
+Homes and roads for the ALA work towns: drones restore the ruined houses and build new ones by plan, a town road network carries power to every house, and shift workers get a home with a charging bed.
 
 ### New
 
-- Hostile mobs now hunt shift workers as they hunt players. A worker runs away from them but stays inside its settlement's territory.
-- The Settlement Core has a new Construction tab with the town's buildings, their state and the work queue. A "Show the schematic" button draws the missing town hall blocks in the world.
-- **Town hall restoration.** Make a Restoration Plan from three sheets in a Town Dispatcher, put a Drone Nest with a Construction Drone over the hall, and drones clear and rebuild it stage by stage.
-- Every ALA town holds three Town Hall Plan Sheets: in the town hall, a house and the lab, and the core's Construction tab shows which you have found. A lost sheet can be crafted.
-- The Town Dispatcher shows the materials of each stage and keeps a work journal. A chat message tells you when a stage is done, and drones later mend a damaged town hall by themselves.
+- Town Road, a walkable grate block with an insulated wire inside that carries power. Drones lay the town's road network from the town hall, and a building counts once its inlet shares a network with the core.
+- Shift workers now live in capsule houses. The first homeless worker moves into a restored house and charges on its bed, and the Reception Capsule only brings a worker back when a free house waits.
+- New house blocks: the House Inlet, which takes power only on its outer face, and the two-block Charging Bed a shift worker lies down on to charge.
+- Lay a new house anywhere in a town's territory: place a House Inlet, pick a plan and a turn. The site is checked, then drones clear it, lay its road and build it.
+- House Plans: a town learns each of the four house types once, from a sheet put into the dispatcher or used on the core. Sheets lie in house ruins or are crafted, and the town hall gives one.
 
 ### Improved
 
-- Only the restorer of a woken settlement can use its core, Reception Capsule, Town Dispatcher and Drone Nests. Other players get a chat message instead.
-- Each row of the shift worker lists in the Settlement Core now starts with the worker's face.
+- The Settlement Core's Construction tab shows building cards with progress bars and a hint for the next step. A Find button outlines a shift worker through walls, and town chat lines are coloured.
+- Builder drones open wooden doors, trapdoors and gates on their way and shut them behind, place doors and beds whole and clear grass and flowers themselves.
+- The Town Dispatcher keeps a queue of orders for chosen buildings that you can reorder or cancel. When a job stops, the reason is shown in the window and said once in chat.
+- Shift workers move like people in heavy suits: a weighty walk, breathing while they stand and a wave to greet you.
+
+### Bug Fixes
+
+- The Town Dispatcher window now fits on a 1280x720 screen at GUI scale 3.

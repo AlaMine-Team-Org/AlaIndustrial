@@ -7,6 +7,7 @@ import dev.alaindustrial.settlement.drone.DroneCellRules.Job;
 import dev.alaindustrial.settlement.works.BuildingPlan;
 import dev.alaindustrial.settlement.works.BuildingStateRules;
 import dev.alaindustrial.settlement.works.TownBuilding;
+import dev.alaindustrial.settlement.works.TownHouses;
 import dev.alaindustrial.settlement.works.TownWorks;
 import dev.alaindustrial.settlement.works.TownWorksScanner;
 import dev.alaindustrial.settlement.works.WorkJob;
@@ -51,7 +52,8 @@ public final class TownMaintenance {
 		int previousMissing = before.measured() ? before.total() - before.matched() : before.allowedMissing();
 		if (BuildingStateRules.newlyDamaged(before.before(), previousMissing, verdict, measure)
 				&& works.queue().open(WorkJobType.CLEAR, index).isEmpty()
-				&& works.queue().open(WorkJobType.BUILD, index).isEmpty()) {
+				&& works.queue().open(WorkJobType.BUILD, index).isEmpty()
+				&& !houseOffTheCount(works, index)) {
 			raiseRepair(level, town, index);
 		} else if (BuildingStateRules.mended(before.before(), before.state(), verdict)) {
 			// Only a repair that was announced is announced done: damage the first restoration's own job put right
@@ -68,6 +70,14 @@ public final class TownMaintenance {
 				HallBuildNews.hallMended(level, town, index);
 			}
 		}
+	}
+
+	/**
+	 * Whether building {@code index} is a house whose inlet was broken (MOD-862, R110): it is off the town's count, and
+	 * the drones leave it alone until the town's restorer starts it again.
+	 */
+	private static boolean houseOffTheCount(TownWorks works, int index) {
+		return works.building(index).map(b -> TownHouses.isHouse(b) && TownHouses.inletMissing(b)).orElse(false);
 	}
 
 	/**
@@ -133,7 +143,14 @@ public final class TownMaintenance {
 		}
 		for (int r = 0; r < plan.ringSize(); r++) {
 			BlockPos pos = plan.ringPos(r);
-			if (level.isLoaded(pos) && DroneCellSurvey.ringClearable(level.getBlockState(pos))) {
+			// The same ring cells the clearing walks (round 5 of 0.1.219): one carrying the town's line stays.
+			if (level.isLoaded(pos) && DroneCellSurvey.ringClearable(level.getBlockState(pos), plan)
+					&& !RoadWork.carriesLine(level, pos)) {
+				return true;
+			}
+		}
+		for (int f = 0; plan.laid() && f < plan.fillSize(); f++) {
+			if (level.isLoaded(plan.fillPos(f)) && DroneCellSurvey.needsFoundation(level, plan, f)) {
 				return true;
 			}
 		}
@@ -142,9 +159,14 @@ public final class TownMaintenance {
 
 	/**
 	 * Whether a building job on {@code plan} has anything to do: a cell to fill, to empty, or stopped by something in
-	 * the way. Cells in unloaded chunks are not looked at.
+	 * the way, or a pit under a house's floor (R3-5). Cells in unloaded chunks are not looked at.
 	 */
 	public static boolean needsBuilding(ServerLevel level, BuildingPlan plan) {
+		for (int f = 0; f < plan.fillSize(); f++) {
+			if (level.isLoaded(plan.fillPos(f)) && DroneCellSurvey.needsFoundation(level, plan, f)) {
+				return true;
+			}
+		}
 		for (int i = 0; i < plan.size(); i++) {
 			BlockPos pos = plan.pos(i);
 			if (level.isLoaded(pos) && DroneCellRules.decide(Job.BUILD,

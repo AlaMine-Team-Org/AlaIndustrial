@@ -1,10 +1,13 @@
 package dev.alaindustrial.settlement.drone;
 
+import dev.alaindustrial.settlement.works.BlockReason;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.OptionalLong;
+import java.util.Set;
 
 /**
  * Who works in a town's construction, for this run of the server (MOD-858; epic decisions R91, R93): which dispatcher
@@ -42,6 +45,8 @@ public final class TownDroneRoster {
 	private final Map<Integer, LinkedHashMap<Long, Entry>> dispatchers = new HashMap<>();
 	private final Map<Integer, LinkedHashMap<Long, Entry>> nests = new HashMap<>();
 	private final Map<Long, String> cells = new HashMap<>();
+	/** The stops already told the restorer, by town and building (owner's round 5 of 0.1.219). */
+	private final Map<Long, Set<BlockReason>> told = new HashMap<>();
 
 	/**
 	 * Dispatcher at {@code pos} of town {@code town} reports at {@code gameTime}; returns whether it is the town's
@@ -135,6 +140,32 @@ public final class TownDroneRoster {
 	/** {@code taker} gives back every cell it holds. */
 	public void release(String taker) {
 		cells.values().removeIf(taker::equals);
+	}
+
+	/**
+	 * Whether a job of building {@code building} of town {@code town} stopping for {@code reason} is news: the first
+	 * stop for that reason, whichever drone stopped it and whatever job (owner's round 5 of 0.1.219). Told once, it is
+	 * news again only once {@link #stopResolved} or {@link #forgetStops} let it go.
+	 */
+	public boolean firstStop(int town, int building, BlockReason reason) {
+		return told.computeIfAbsent(key(town, building), ignored -> new HashSet<>()).add(reason);
+	}
+
+	/** A drone worked the cell at {@code where} («x y z») of the building: a stop naming it is gone. */
+	public void stopResolved(int town, int building, String where) {
+		Set<BlockReason> reasons = told.get(key(town, building));
+		if (reasons != null) {
+			reasons.removeIf(reason -> reason.args().contains(where));
+		}
+	}
+
+	/** The building's job is done: every stop told for it is forgotten. */
+	public void forgetStops(int town, int building) {
+		told.remove(key(town, building));
+	}
+
+	private static long key(int town, int building) {
+		return (long) town << 32 | building & 0xFFFFFFFFL;
 	}
 
 	private static LinkedHashMap<Long, Entry> report(Map<Integer, LinkedHashMap<Long, Entry>> byTown, int town,

@@ -707,6 +707,44 @@
           ]
         },
         {
+          "id": "town_road",
+          "title": "बस्ती की सड़क",
+          "icon": "alaindustrial:town_road",
+          "pages": [
+            {
+              "type": "text",
+              "title": "बस्ती की सड़क",
+              "text": "ज़मीन के बराबर एक पूरा ब्लॉक: गहरे टेम्पर्ड लोहे की जाली, जिसके अंदर रोधित तांबे का तार है; ऊर्जा नेटवर्क का एक हिस्सा, जिससे बस्ती का कोर पाली कर्मियों के घरों को बिजली देता है। बस्ती का सड़क नेटवर्क निर्माण ड्रोन बिछाते हैं।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 12 EU/t",
+                "बफ़र: 12 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:tempered_iron_bars",
+                "alaindustrial:tempered_iron_bars",
+                "alaindustrial:tempered_iron_bars",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:insulated_copper_cable",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone",
+                "minecraft:smooth_stone"
+              ],
+              "result_id": "alaindustrial:town_road",
+              "result_count": 3
+            }
+          ]
+        },
+        {
           "id": "gold_cable",
           "title": "सोने की केबल",
           "icon": "alaindustrial:gold_cable",
@@ -3321,7 +3359,7 @@
             {
               "type": "text",
               "title": "उत्कीर्ण पट्टिका 0",
-              "text": "उकेरे गए अंक या अक्षर के टुकड़े वाली सजावटी स्लेट पट्टिकाएँ — परित्यक्त प्रयोगशालाओं में पिछले रिकॉर्ड की तख़्ती इन्हीं से बनी है। कोई नुस्खा नहीं।"
+              "text": "उकेरे गए अंक, अक्षर या अक्षर के टुकड़े वाली सजावटी स्लेट पट्टिकाएँ। परित्यक्त प्रयोगशालाओं में पिछले रिकॉर्ड की तख़्ती और मज़दूर बस्तियों के घरों में नंबर वाली तख़्ती इन्हीं से बनी है। कोई नुस्खा नहीं।"
             }
           ]
         },
@@ -3764,6 +3802,44 @@
           ]
         },
         {
+          "id": "house_inlet",
+          "title": "घर का बिजली प्रवेश",
+          "icon": "alaindustrial:house_inlet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "घर का बिजली प्रवेश",
+              "text": "दीवार का वह ब्लॉक, जिससे केबल पाली कर्मी के घर में आती है। यह केवल बाहरी सतह से EU लेता है और घर के चार्जिंग बिस्तर के लिए भंडार रखता है; बस्ती में घर का आधार, और यहीं से नए घर की नींव रखी जाती है।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 2 000 EU",
+                "बफ़र: 2000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:insulated_copper_cable",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:copper_plate",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:house_inlet",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "industrial_workbench",
           "title": "औद्योगिक कार्यमेज़",
           "icon": "alaindustrial:industrial_workbench",
@@ -3789,6 +3865,80 @@
                 "minecraft:oak_planks"
               ],
               "result_id": "alaindustrial:industrial_workbench",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "drone_nest",
+          "title": "ड्रोन का घोंसला",
+          "icon": "alaindustrial:drone_nest",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ड्रोन का घोंसला",
+              "text": "टाउन हॉल के ऊपर निर्माण ड्रोन का लैंडिंग पैड; इसमें आइटम के रूप में एक ड्रोन रखा जाता है, और ड्रोन बस्ती की ऑर्डर कतार से एक इमारत लेता है, उसका मलबा साफ़ करता है, सड़क बिछाता है, नींव भरता है और उसे ब्लॉक-दर-ब्लॉक उसके सही-सलामत रूप में दोबारा बनाता है, और खाली होने पर घरों की तख़्तियाँ उकेरता है; इसे सिर्फ़ बस्ती कोर चार्ज करता है, और कोर का स्तर तय करता है कि कितने घोंसले काम करेंगे।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: प्रति ब्लॉक 20 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:copper_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_plate",
+                "alaindustrial:iron_plate",
+                "alaindustrial:copper_cable",
+                "alaindustrial:iron_plate",
+                "alaindustrial:iron_plate",
+                "",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:drone_nest",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "town_dispatcher",
+          "title": "कस्बे का डिस्पैचर",
+          "icon": "alaindustrial:town_dispatcher",
+          "pages": [
+            {
+              "type": "text",
+              "title": "कस्बे का डिस्पैचर",
+              "text": "मज़दूर बस्ती की निर्माण डेस्क, जो उसके टाउन हॉल में रहती है: यह तीन पन्नों से पुनर्निर्माण योजना जोड़ती है, इमारतों के ऑर्डर की कतार चलाती है, सामग्री का वह बफ़र रखती है जिससे निर्माण ड्रोन अपने ब्लॉक लेते हैं, और दिखाती है कि ड्रोन काम कर रहे हैं या नहीं; हर बस्ती में एक।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "क्षमता: 27 स्लॉट"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:copper_plate",
+                "alaindustrial:copper_cable",
+                "alaindustrial:copper_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:machine_casing",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:copper_plate",
+                "alaindustrial:battery",
+                "alaindustrial:copper_plate"
+              ],
+              "result_id": "alaindustrial:town_dispatcher",
               "result_count": 1
             }
           ]
@@ -3831,7 +3981,7 @@
             {
               "type": "text",
               "title": "स्वागत कैप्सूल",
-              "text": "EU और सामग्री के बदले बस्ती के पाली कर्मियों को एक-एक करके वापस लाता है — सिर्फ़ तब, जब बस्ती कोर जल रहा हो, बस्ती का कोई पुनर्स्थापक हो और कर्मियों की सीमा पूरी न हुई हो; हर नए कर्मी को अपना एक नंबर मिलता है, जो पूरी दुनिया में एक ही होता है।"
+              "text": "EU और सामग्री के बदले बस्ती के पाली कर्मियों को एक-एक करके वापस लाता है, सिर्फ़ तब, जब बस्ती कोर जल रहा हो, बस्ती का कोई पुनर्स्थापक हो, कर्मियों की सीमा पूरी न हुई हो और नए कर्मी के लिए रहने लायक कोई खाली घर हो; हर नए कर्मी को अपना एक नंबर मिलता है, जो पूरी दुनिया में एक ही होता है।"
             },
             {
               "type": "stats",
@@ -3919,6 +4069,36 @@
               "lines": [
                 "ऊर्जा: 1 000 EU मशीन कार्य = 1 महारत अंक"
               ]
+            }
+          ]
+        },
+        {
+          "id": "charging_bed",
+          "title": "चार्जिंग बिस्तर",
+          "icon": "alaindustrial:charging_bed",
+          "pages": [
+            {
+              "type": "text",
+              "title": "चार्जिंग बिस्तर",
+              "text": "पाली कर्मी के घर में दो खानों वाला बिस्तर, सामान्य बिस्तर जैसा: कम बैटरी वाला कर्मी इस पर लेटकर चार्ज होता है; इसका अपना कोई भंडार नहीं, यह अपने घर के बिजली प्रवेश से ऊर्जा लेता है।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:rubber",
+                "alaindustrial:copper_plate",
+                "alaindustrial:battery",
+                "alaindustrial:copper_plate",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:charging_bed",
+              "result_count": 1
             }
           ]
         },
@@ -4294,7 +4474,7 @@
             {
               "type": "text",
               "title": "बस्ती कोर",
-              "text": "मज़दूर बस्ती का दिल, जो उसके टाउन हॉल में रहता है — जब तक ग्रिड इसे EU देता है, यह बस्ती का क्षेत्र बनाए रखता है, तय करता है कि बस्ती में कितने घर और पाली कर्मी हो सकते हैं, और अपने पुनर्स्थापक को याद रखता है; बिजली न हो तो यह बुझ जाता है और बस्ती सो जाती है।"
+              "text": "मज़दूर बस्ती का दिल, जो उसके टाउन हॉल में रहता है: जब तक ग्रिड इसे EU देता है, यह बस्ती का क्षेत्र बनाए रखता है, तय करता है कि बस्ती में कितने घर और पाली कर्मी हो सकते हैं, और अपने पुनर्स्थापक को याद रखता है; बिजली न हो तो यह बुझ जाता है और बस्ती सो जाती है।"
             },
             {
               "type": "stats",
@@ -4639,6 +4819,134 @@
           ]
         },
         {
+          "id": "town_hall_plan_sheet",
+          "title": "टाउन हॉल योजना का पन्ना",
+          "icon": "alaindustrial:town_hall_plan_sheet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "टाउन हॉल योजना का पन्ना",
+              "text": "मज़दूर बस्ती के टाउन हॉल की पुनर्निर्माण योजना के तीन पन्नों में से एक — यह अपनी शैली की हर बस्ती में एक तय जगह पर पड़ा रहता है, और खो जाए तो बनाया जा सकता है; एक ही शैली के तीन पन्ने डिस्पैचर पर जोड़कर पुनर्निर्माण योजना बनाई जाती है।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "minecraft:paper",
+                "minecraft:lapis_lazuli",
+                "minecraft:paper",
+                "minecraft:iron_ingot",
+                "minecraft:sandstone",
+                "minecraft:iron_ingot",
+                "minecraft:lapis_lazuli",
+                "minecraft:bricks",
+                "minecraft:lapis_lazuli"
+              ],
+              "result_id": "alaindustrial:town_hall_plan_sheet",
+              "result_count": 1,
+              "variants": [
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:iron_ingot",
+                    "minecraft:sandstone",
+                    "minecraft:iron_ingot",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:bricks",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "आकारित क्राफ्टिंग",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:sandstone",
+                    "minecraft:oak_door",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:white_bed",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "आकारित क्राफ्टिंग",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:redstone",
+                    "minecraft:sandstone",
+                    "minecraft:redstone",
+                    "minecraft:lapis_lazuli",
+                    "alaindustrial:electronic_circuit",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "आकारित क्राफ्टिंग",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:iron_ingot",
+                    "minecraft:grass_block",
+                    "minecraft:iron_ingot",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:bricks",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "आकारित क्राफ्टिंग",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:grass_block",
+                    "minecraft:oak_door",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:white_bed",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "आकारित क्राफ्टिंग",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:redstone",
+                    "minecraft:grass_block",
+                    "minecraft:redstone",
+                    "minecraft:lapis_lazuli",
+                    "alaindustrial:electronic_circuit",
+                    "minecraft:lapis_lazuli"
+                  ],
+                  "recipe_type": "आकारित क्राफ्टिंग",
+                  "result_id": "alaindustrial:town_hall_plan_sheet",
+                  "result_count": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
           "id": "machine_casing",
           "title": "मशीन केसिंग",
           "icon": "alaindustrial:machine_casing",
@@ -4785,6 +5093,178 @@
               ],
               "result_id": "alaindustrial:mutation_chip_duplicate",
               "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "house_plan",
+          "title": "घर की योजना",
+          "icon": "alaindustrial:house_plan",
+          "pages": [
+            {
+              "type": "text",
+              "title": "घर की योजना",
+              "text": "मज़दूर बस्ती के चार प्रकार के कैप्सूल घरों में से एक की योजना। बस्ती इसे एक बार और हमेशा के लिए सीखती है, फिर ड्रोन उस प्रकार के घर बहाल करते और बनाते हैं। अपने घर के खंडहर में मिलती है, या बनाई जा सकती है।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "minecraft:paper",
+                "minecraft:oak_door",
+                "minecraft:paper",
+                "minecraft:lapis_lazuli",
+                "minecraft:sandstone",
+                "minecraft:lapis_lazuli",
+                "minecraft:paper",
+                "minecraft:lantern",
+                "minecraft:paper"
+              ],
+              "result_id": "alaindustrial:house_plan",
+              "result_count": 1,
+              "variants": [
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:sandstone",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:lantern",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "आकारित क्राफ्टिंग",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:sandstone",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:barrel",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "आकारित क्राफ्टिंग",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:sandstone",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:chest",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "आकारित क्राफ्टिंग",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:sandstone",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:flower_pot",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "आकारित क्राफ्टिंग",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:grass_block",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:lantern",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "आकारित क्राफ्टिंग",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:grass_block",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:barrel",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "आकारित क्राफ्टिंग",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:grass_block",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:chest",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "आकारित क्राफ्टिंग",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                },
+                {
+                  "grid": [
+                    "minecraft:paper",
+                    "minecraft:oak_door",
+                    "minecraft:paper",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:grass_block",
+                    "minecraft:lapis_lazuli",
+                    "minecraft:paper",
+                    "minecraft:flower_pot",
+                    "minecraft:paper"
+                  ],
+                  "recipe_type": "आकारित क्राफ्टिंग",
+                  "result_id": "alaindustrial:house_plan",
+                  "result_count": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "restoration_plan",
+          "title": "पुनर्निर्माण योजना",
+          "icon": "alaindustrial:restoration_plan",
+          "pages": [
+            {
+              "type": "text",
+              "title": "पुनर्निर्माण योजना",
+              "text": "वह योजना जिसके अनुसार निर्माण ड्रोन मज़दूर बस्ती की किसी इमारत को बहाल करता है; इसमें केवल अपनी शैली की इमारत के सही-सलामत टेम्पलेट का संदर्भ होता है। डिस्पैचर पर योजना के तीन पन्नों से जोड़ी जाती है।"
             }
           ]
         },

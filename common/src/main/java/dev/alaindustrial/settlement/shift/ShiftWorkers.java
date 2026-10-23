@@ -283,16 +283,18 @@ public final class ShiftWorkers {
 		ShiftSchedule.TownState state = townState(town(level.getServer(), worker.settlement()),
 				ShiftWorkerBattery.charged(level.getServer(), worker));
 		ShiftMode mode = ShiftSchedule.modeAt(level.getOverworldClockTime(), false, state);
-		if (mode == worker.mode()) {
-			return;
+		if (mode != worker.mode()) {
+			worker.setMode(mode);
+			if (mode == ShiftMode.HIBERNATE) {
+				worker.getNavigation().stop();
+				worker.setNoAi(true);
+				return;
+			}
+			worker.setHomeTo(worker.getHomePosition(), ShiftSchedule.strollRadius(mode, worker.wanderRadius()));
 		}
-		worker.setMode(mode);
-		if (mode == ShiftMode.HIBERNATE) {
-			worker.getNavigation().stop();
-			worker.setNoAi(true);
-			return;
+		if (mode != ShiftMode.HIBERNATE) {
+			HouseCharging.think(level, worker); // MOD-862: a resident charges on its house's bed
 		}
-		worker.setHomeTo(worker.getHomePosition(), ShiftSchedule.strollRadius(mode, worker.wanderRadius()));
 	}
 
 	/**

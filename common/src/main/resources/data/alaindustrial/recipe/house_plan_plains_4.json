@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "house_plan_4",
+  "pattern": [
+    "PDP",
+    "LSL",
+    "PTP"
+  ],
+  "key": {
+    "P": "minecraft:paper",
+    "D": "#minecraft:wooden_doors",
+    "L": "#c:gems/lapis",
+    "S": "minecraft:grass_block",
+    "T": "minecraft:flower_pot"
+  },
+  "result": {
+    "id": "alaindustrial:house_plan",
+    "count": 1,
+    "components": {
+      "alaindustrial:restoration_plan": {
+        "style": "alaindustrial:plains",
+        "template": "alaindustrial:ala_town/plains/intact/capsule_house_4"
+      }
+    }
+  }
+}

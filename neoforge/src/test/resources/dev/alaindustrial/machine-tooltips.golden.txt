@@ -272,6 +272,15 @@ tooltip.alaindustrial.energy_output(128) {gray}
 tooltip.alaindustrial.hold_shift {dark_gray}
 -- shift no-eu
 tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:charging_bed plain
+-- plain eu
+tooltip.alaindustrial.charging_bed.purpose {gray}
+-- shift eu
+tooltip.alaindustrial.charging_bed.purpose {gray}
+-- plain no-eu
+tooltip.alaindustrial.charging_bed.purpose {gray}
+-- shift no-eu
+tooltip.alaindustrial.charging_bed.purpose {gray}
 == alaindustrial:cherry_diamond_chest_boat plain : none
 == alaindustrial:cherry_electrum_chest_boat plain : none
 == alaindustrial:cherry_gold_chest_boat plain : none
@@ -464,16 +473,20 @@ tooltip.alaindustrial.drill_row_module.fitting {gray}
 tooltip.alaindustrial.drill_row_module.toggle {gray}
 == alaindustrial:drone_nest plain
 -- plain eu
-tooltip.alaindustrial.drone_nest.purpose {gray}
+"Pad for a construction" {gray}
+"drone over the town hall" {gray}
 tooltip.alaindustrial.hold_shift {dark_gray}
 -- shift eu
-tooltip.alaindustrial.drone_nest.purpose {gray}
+"Pad for a construction" {gray}
+"drone over the town hall" {gray}
 tooltip.alaindustrial.tier_lv {green}
 -- plain no-eu
-tooltip.alaindustrial.drone_nest.purpose {gray}
+"Pad for a construction" {gray}
+"drone over the town hall" {gray}
 tooltip.alaindustrial.hold_shift {dark_gray}
 -- shift no-eu
-tooltip.alaindustrial.drone_nest.purpose {gray}
+"Pad for a construction" {gray}
+"drone over the town hall" {gray}
 tooltip.alaindustrial.tier_lv {green}
 == alaindustrial:electric_bow plain
 -- plain eu
@@ -1272,6 +1285,7 @@ tooltip.alaindustrial.energy_pack.charge(20000, 20000) {gold}
 tooltip.alaindustrial.energy_pack.usage {gray}
 tooltip.alaindustrial.energy_pack.usage_charges {gray}
 tooltip.alaindustrial.energy_pack.charge(20000, 20000) {gold}
+== alaindustrial:engraved_letter_plate plain : none
 == alaindustrial:engraved_plate_0 plain : none
 == alaindustrial:engraved_plate_1 plain : none
 == alaindustrial:engraved_plate_2 plain : none
@@ -1464,6 +1478,27 @@ tooltip.alaindustrial.storage_slots_double(108) {dark_gray}
 == alaindustrial:gold_plate plain : none
 == alaindustrial:guide_book plain : none
 == alaindustrial:high_altitude_wind_mill plain : none
+== alaindustrial:house_inlet plain
+-- plain eu
+"Wall socket of a shift worker's" {gray}
+"house: the cable enters here" {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+"Wall socket of a shift worker's" {gray}
+"house: the cable enters here" {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.house_inlet.outer_face {gray}
+tooltip.alaindustrial.buffer(2000) {gray}
+-- plain no-eu
+"Wall socket of a shift worker's" {gray}
+"house: the cable enters here" {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+"Wall socket of a shift worker's" {gray}
+"house: the cable enters here" {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.house_inlet.outer_face {gray}
+== alaindustrial:house_plan plain : none
 == alaindustrial:incubator plain
 -- plain eu
 tooltip.alaindustrial.energy_input(8) {gray}
@@ -2381,18 +2416,43 @@ tooltip.alaindustrial.cable_shock_warning {red}
 == alaindustrial:tin_wall plain : none
 == alaindustrial:town_dispatcher plain
 -- plain eu
-tooltip.alaindustrial.town_dispatcher.purpose {gray}
+"Town hall construction" {gray}
+"desk: plan and materials" {gray}
 tooltip.alaindustrial.hold_shift {dark_gray}
 -- shift eu
-tooltip.alaindustrial.town_dispatcher.purpose {gray}
+"Town hall construction" {gray}
+"desk: plan and materials" {gray}
 tooltip.alaindustrial.tier_lv {green}
 -- plain no-eu
-tooltip.alaindustrial.town_dispatcher.purpose {gray}
+"Town hall construction" {gray}
+"desk: plan and materials" {gray}
 tooltip.alaindustrial.hold_shift {dark_gray}
 -- shift no-eu
-tooltip.alaindustrial.town_dispatcher.purpose {gray}
+"Town hall construction" {gray}
+"desk: plan and materials" {gray}
 tooltip.alaindustrial.tier_lv {green}
 == alaindustrial:town_hall_plan_sheet plain : none
+== alaindustrial:town_road plain
+-- plain eu
+"A road of an ALA town: walk on" {gray}
+"it, a wire runs under the grate" {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+"A road of an ALA town: walk on" {gray}
+"it, a wire runs under the grate" {gray}
+tooltip.alaindustrial.tier_lv {green}
+"Insulated copper wire inside:" {gray}
+"joins cables like a cable" {gray}
+-- plain no-eu
+"A road of an ALA town: walk on" {gray}
+"it, a wire runs under the grate" {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+"A road of an ALA town: walk on" {gray}
+"it, a wire runs under the grate" {gray}
+tooltip.alaindustrial.tier_lv {green}
+"Insulated copper wire inside:" {gray}
+"joins cables like a cable" {gray}
 == alaindustrial:trellis plain : none
 == alaindustrial:unstable_isotope plain : none
 == alaindustrial:upgrade_table plain

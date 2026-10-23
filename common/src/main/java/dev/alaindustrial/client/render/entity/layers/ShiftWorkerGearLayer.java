@@ -43,6 +43,9 @@ public class ShiftWorkerGearLayer extends RenderLayer<ShiftWorkerRenderState, Sh
 		poseStack.pushPose();
 		getParentModel().root().translateAndRotate(poseStack);
 		getParentModel().body.translateAndRotate(poseStack);
+		// The balloon swings about its hinge on the back (MOD-882); its geometry stays in the body's pixels.
+		getParentModel().pack().translateAndRotate(poseStack);
+		poseStack.translate(0.0F, 0.0F, -ShiftWorkerModel.PACK_Z / 16.0F);
 		ModelSubmit.typed(collector, gear, Unit.INSTANCE, poseStack, RenderTypes.entityCutoutCull(TEXTURE),
 				lightCoords, LivingEntityRenderer.getOverlayCoords(state, 0.0F), state.outlineColor);
 		poseStack.popPose();

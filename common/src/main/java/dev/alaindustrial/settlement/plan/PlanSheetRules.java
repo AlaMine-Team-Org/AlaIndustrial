@@ -1,6 +1,7 @@
 package dev.alaindustrial.settlement.plan;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.TreeSet;
@@ -145,6 +146,60 @@ public final class PlanSheetRules {
 		return Result.of(new Plan(style, intactTemplate(style, TOWN_HALL)));
 	}
 
+	/**
+	 * Whether sheet {@code number} belongs in the dispatcher's sheet slot {@code slot}, 0-based (owner's round 1 of
+	 * 0.1.219): sheet N goes into slot N only, so an empty slot shows which sheet is still missing. A blank sheet
+	 * (number 0) fits no slot.
+	 */
+	public static boolean fitsSlot(int slot, int number) {
+		return number >= 1 && number <= SHEETS && number == slot + 1;
+	}
+
+	/**
+	 * Where the stacks of the sheet slots belong, for a save written before {@link #fitsSlot}: {@code numbers[i]} is
+	 * the sheet number of slot i's stack, 0 for a blank, -1 for an empty slot; entry i of the answer is the slot that
+	 * stack moves to, -1 for an empty slot. A sheet takes its own slot; a stack that cannot — a blank, a second stack
+	 * of the same number — keeps its slot when that is free, or takes the first free one, so nothing is lost: the
+	 * player takes it out by hand. A stack already in its own slot never moves.
+	 *
+	 * @throws IllegalArgumentException for an array that is not one entry per sheet slot
+	 */
+	public static int[] homeSlots(int[] numbers) {
+		if (numbers.length != SHEETS) {
+			throw new IllegalArgumentException("one number per sheet slot: " + numbers.length);
+		}
+		int[] target = new int[SHEETS];
+		boolean[] claimed = new boolean[SHEETS];
+		Arrays.fill(target, -1);
+		for (int i = 0; i < SHEETS; i++) {
+			if (fitsSlot(i, numbers[i])) {
+				target[i] = i;
+				claimed[i] = true;
+			}
+		}
+		for (int i = 0; i < SHEETS; i++) {
+			int home = numbers[i] - 1;
+			if (target[i] < 0 && numbers[i] >= 1 && numbers[i] <= SHEETS && !claimed[home]) {
+				target[i] = home;
+				claimed[home] = true;
+			}
+		}
+		for (int i = 0; i < SHEETS; i++) {
+			if (target[i] >= 0 || numbers[i] < 0) {
+				continue;
+			}
+			int free = claimed[i] ? -1 : i;
+			for (int s = 0; free < 0 && s < SHEETS; s++) {
+				if (!claimed[s]) {
+					free = s;
+				}
+			}
+			target[i] = free;
+			claimed[free] = true;
+		}
+		return target;
+	}
+
 	/** Every sheet found: one bit per sheet number, bit 0 for sheet 1. */
 	public static final int ALL_FOUND = (1 << SHEETS) - 1;
 
@@ -189,6 +244,37 @@ public final class PlanSheetRules {
 	public static String lootTable(String style, int sheet) {
 		String[] id = split(style);
 		return id[0] + ":chests/ala_town/" + id[1] + "/plan_sheet_" + sheet;
+	}
+
+	/** The capsule house types a town has, {@code capsule_house_1} … (MOD-862, R99): each has a plan of its own. */
+	public static final int HOUSE_TYPES = 4;
+
+	/** The building a house plan of type {@code type} restores: {@code capsule_house_<type>}. */
+	public static String house(int type) {
+		return "capsule_house_" + type;
+	}
+
+	/**
+	 * The type of the capsule house {@code building} names ({@code capsule_house_3} → 3), or 0 for any other
+	 * building.
+	 */
+	public static int houseType(String building) {
+		for (int type = 1; type <= HOUSE_TYPES; type++) {
+			if (house(type).equals(building)) {
+				return type;
+			}
+		}
+		return 0;
+	}
+
+	/**
+	 * The loot table of the house plan of type {@code type} in {@code style} (MOD-862, R99):
+	 * {@code ns:chests/ala_town/<path>/house_plan_<type>}, which the house's own barrel or chest is given; with
+	 * {@code withSheet2} the one that also holds the town hall's sheet 2, for the house that holds that sheet too.
+	 */
+	public static String housePlanTable(String style, int type, boolean withSheet2) {
+		String[] id = split(style);
+		return id[0] + ":chests/ala_town/" + id[1] + "/house_plan_" + type + (withSheet2 ? "_and_plan_sheet_2" : "");
 	}
 
 	/**

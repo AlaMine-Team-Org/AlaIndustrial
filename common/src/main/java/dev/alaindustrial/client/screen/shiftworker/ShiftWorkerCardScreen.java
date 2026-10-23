@@ -72,6 +72,8 @@ public final class ShiftWorkerCardScreen extends Screen {
 	private int panelX;
 	private int panelY;
 	private int panelH;
+	/** Which free house «Relocate» moves the worker into, as an index into the card's list (MOD-862). */
+	private int relocateChoice;
 	private @Nullable ShiftWorker dressedBody;
 	private String dressedFor = "";
 
@@ -148,7 +150,8 @@ public final class ShiftWorkerCardScreen extends Screen {
 
 	/** The state the controls depend on; when it changes they are built again. */
 	private String controlsKey() {
-		StringBuilder key = new StringBuilder().append(tab).append(editing).append(canEdit()).append(card.canRespec());
+		StringBuilder key = new StringBuilder().append(tab).append(editing).append(canEdit()).append(card.canRespec())
+				.append(card.freeHouses()).append(relocateChoice);
 		for (ShiftWorkerProfile.Stat stat : ShiftWorkerProfile.Stat.values()) {
 			key.append(canInvest(stat) ? '+' : '-');
 		}
@@ -238,6 +241,7 @@ public final class ShiftWorkerCardScreen extends Screen {
 						.build());
 			}
 		}
+		initRelocateControls(x, rightEdge);
 		if (card.canRespec()) {
 			Component label = Component.translatable(ShiftWorkerCardText.UI + "respec",
 					ShiftWorkerCardText.amount(card.respecCost()));
@@ -253,6 +257,29 @@ public final class ShiftWorkerCardScreen extends Screen {
 					.tooltip(Tooltip.create(Component.translatable(ShiftWorkerCardText.UI + "respec.tooltip")))
 					.build());
 		}
+	}
+
+	/** «Relocate» and the arrow that picks the house, on the home row (MOD-862, R102). */
+	private void initRelocateControls(int x, int rightEdge) {
+		if (!canEdit() || card.freeHouses().isEmpty()) {
+			return;
+		}
+		ShiftWorkerCardPayload.House target = card.freeHouses().get(Math.floorMod(relocateChoice,
+				card.freeHouses().size()));
+		int y = panelY + homeRowY() - 2;
+		addRenderableWidget(Button.builder(Component.translatable(ShiftWorkerCardText.UI + "relocate"),
+				b -> ShiftWorkerCardClient.relocate(card.number(), target.index()))
+				.bounds(rightEdge - SMALL_BUTTON - 2 - RELOCATE_W, y, RELOCATE_W, SMALL_BUTTON)
+				.tooltip(Tooltip.create(Component.translatable(ShiftWorkerCardText.UI + "relocate.tooltip",
+						ShiftWorkerCardText.house(target))))
+				.build());
+		Button next = addRenderableWidget(Button.builder(Component.literal(">"), b -> {
+			relocateChoice++;
+			refreshControls();
+		}).bounds(rightEdge - SMALL_BUTTON, y, SMALL_BUTTON, SMALL_BUTTON)
+				.tooltip(Tooltip.create(Component.translatable(ShiftWorkerCardText.UI + "relocate.next")))
+				.build());
+		next.active = card.freeHouses().size() > 1;
 	}
 
 	private void startEditing() {

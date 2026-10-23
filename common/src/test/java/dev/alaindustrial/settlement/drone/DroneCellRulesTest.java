@@ -53,14 +53,18 @@ class DroneCellRulesTest {
 		assertEquals(Action.OBSTRUCTED, DroneCellRules.decide(Job.BUILD, STRANGER_WHERE_AIR));
 	}
 
-	/** R93: a protected block is passed by in both jobs, never touched and never a stop. */
+	/**
+	 * R93: a protected block is never touched; where air belongs it is passed by, where the plan wants a block the
+	 * building job stops naming it (owner's round 5 of 0.1.219: never a silent pass).
+	 */
 	@Test
 	void protectedBlocksAreNeverTouched() {
 		for (Job job : Job.values()) {
 			assertEquals(Action.NONE, DroneCellRules.decide(job, CHEST_WHERE_AIR), job.name());
-			assertEquals(Action.NONE, DroneCellRules.decide(job, CHEST_WHERE_BLOCK), job.name());
 			assertEquals(Action.NONE, DroneCellRules.decide(job, AIR_WHERE_CORE), job.name());
 		}
+		assertEquals(Action.NONE, DroneCellRules.decide(Job.CLEAR, CHEST_WHERE_BLOCK));
+		assertEquals(Action.OBSTRUCTED, DroneCellRules.decide(Job.BUILD, CHEST_WHERE_BLOCK));
 	}
 
 	@Test

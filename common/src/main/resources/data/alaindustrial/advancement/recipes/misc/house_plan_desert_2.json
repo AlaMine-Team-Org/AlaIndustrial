@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_house_plan": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:house_plan"
+          }
+        ]
+      }
+    },
+    "has_dispatcher": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:town_dispatcher"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "alaindustrial:house_plan_desert_2"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_house_plan",
+      "has_dispatcher"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "alaindustrial:house_plan_desert_2"
+    ]
+  }
+}

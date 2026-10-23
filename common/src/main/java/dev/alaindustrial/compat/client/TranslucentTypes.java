@@ -4,6 +4,8 @@ import com.mojang.blaze3d.pipeline.BlendFunction;
 import com.mojang.blaze3d.pipeline.ColorTargetState;
 import com.mojang.blaze3d.pipeline.DepthStencilState;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
+import java.util.HashMap;
+import java.util.Map;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.mixin.client.RenderTypeInvoker;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -11,6 +13,7 @@ import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.rendertype.OutputTarget;
 import net.minecraft.client.renderer.rendertype.RenderSetup;
 import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.resources.Identifier;
 
 /**
  * Translucent render types the mod builds itself — a version facade (MOD-777, ADR-036): every Minecraft
@@ -55,7 +58,12 @@ public final class TranslucentTypes {
 	 */
 	private static final float SOLID_TEXEL_CUTOUT = 0.9f;
 
-	private static final RenderType BLOCK_SHEET_NO_DEPTH_WRITE = blockSheetType();
+	private static final RenderPipeline NO_DEPTH_WRITE_PIPELINE = noDepthWritePipeline();
+	// The block atlas, as the block sprite mapper names it — the same expression as the 26.3 twin.
+	private static final RenderType BLOCK_SHEET_NO_DEPTH_WRITE = noDepthWriteType(Sheets.BLOCKS_MAPPER.sheet(),
+			"alaindustrial_item_translucent_no_depth_write");
+	/** {@link #sheetNoDepthWrite} types by texture; built on the render thread, read there only. */
+	private static final Map<Identifier, RenderType> SHEET_NO_DEPTH_WRITE = new HashMap<>();
 	private static final RenderType BLOCK_SHEET_SOLID_TEXELS = solidTexelsType();
 
 	private TranslucentTypes() {
@@ -70,6 +78,20 @@ public final class TranslucentTypes {
 	}
 
 	/**
+	 * {@link #blockSheetNoDepthWrite()} sampling {@code texture} instead of the block atlas — another atlas, such as
+	 * the chest sheet, or a plain image (MOD-824, R1-3: a chest in the town hall's schematic is drawn from the chest
+	 * sheet). The block atlas answers the very type {@link #blockSheetNoDepthWrite()} returns; every other texture
+	 * gets its own type, built once.
+	 */
+	public static RenderType sheetNoDepthWrite(Identifier texture) {
+		if (texture.equals(Sheets.BLOCKS_MAPPER.sheet())) {
+			return BLOCK_SHEET_NO_DEPTH_WRITE;
+		}
+		return SHEET_NO_DEPTH_WRITE.computeIfAbsent(texture, t -> noDepthWriteType(t,
+				"alaindustrial_translucent_no_depth_write_" + t.toDebugFileName()));
+	}
+
+	/**
 	 * An opaque, lit, overlay-aware type for quads in the {@code ENTITY} vertex format textured from the
 	 * block atlas, which draws only the texels at least {@value #SOLID_TEXEL_CUTOUT} opaque and writes their
 	 * depth — the first pass of a surface that mixes solid and translucent texels (see the class doc).
@@ -78,7 +100,7 @@ public final class TranslucentTypes {
 		return BLOCK_SHEET_SOLID_TEXELS;
 	}
 
-	private static RenderType blockSheetType() {
+	private static RenderPipeline noDepthWritePipeline() {
 		RenderPipeline source = RenderPipelines.ITEM_TRANSLUCENT;
 		var builder = RenderPipeline.builder()
 				.withLocation(Industrialization.id("pipeline/item_translucent_no_depth_write"))
@@ -92,16 +114,19 @@ public final class TranslucentTypes {
 				.withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
 				.withDepthStencilState(new DepthStencilState(source.getDepthStencilState().depthTest(), false));
 		source.getBindGroupLayouts().forEach(builder::withBindGroupLayout);
-		RenderSetup setup = RenderSetup.builder(builder.build())
-				// The block atlas, as the block sprite mapper names it — the same expression as the 26.3 twin.
-				.withTexture("Sampler0", Sheets.BLOCKS_MAPPER.sheet())
+		return builder.build();
+	}
+
+	private static RenderType noDepthWriteType(Identifier texture, String name) {
+		RenderSetup setup = RenderSetup.builder(NO_DEPTH_WRITE_PIPELINE)
+				.withTexture("Sampler0", texture)
 				.setOutputTarget(OutputTarget.ITEM_ENTITY_TARGET)
 				.useLightmap()
 				.useOverlay()
 				.affectsCrumbling()
 				.sortOnUpload()
 				.createRenderSetup();
-		return RenderTypeInvoker.alaindustrial$create("alaindustrial_item_translucent_no_depth_write", setup);
+		return RenderTypeInvoker.alaindustrial$create(name, setup);
 	}
 
 	/**

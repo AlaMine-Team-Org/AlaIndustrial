@@ -3,7 +3,9 @@ package dev.alaindustrial.settlement.works;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.compat.LineStructures;
 import dev.alaindustrial.settlement.SettlementRegistry;
+import dev.alaindustrial.settlement.TownPowerLinks;
 import dev.alaindustrial.settlement.drone.HallBuildNews;
+import dev.alaindustrial.settlement.drone.TownHall;
 import dev.alaindustrial.settlement.drone.TownMaintenance;
 import dev.alaindustrial.settlement.shift.ShiftWorkerBook;
 import java.util.ArrayList;
@@ -136,7 +138,7 @@ public final class TownWorksScanner {
 			return cached.get();
 		}
 		Optional<BuildingPlan> built = Optional.empty();
-		Optional<TownBuilding> building = works.building(index);
+		Optional<TownBuilding> building = works.building(index).filter(b -> !b.withdrawn());
 		if (building.isPresent()) {
 			Map<Identifier, TownBuildingDef> defs = TownBuildingDef.byTemplate(level.registryAccess());
 			TownBuildingDef def = defs.get(building.get().template());
@@ -164,7 +166,10 @@ public final class TownWorksScanner {
 				continue;
 			}
 			TownBuilding other = works.buildings().get(i);
-			templates.get(other.template()).ifPresent(template -> boxes.add(template.getBoundingBox(
+			if (other.withdrawn()) {
+				continue;
+			}
+			templates.get(other.shapeTemplate()).ifPresent(template -> boxes.add(template.getBoundingBox(
 					new StructurePlaceSettings().setRotation(other.rotation()), other.origin())));
 		}
 		return pos -> boxes.stream().anyMatch(box -> box.isInside(pos));
@@ -178,6 +183,9 @@ public final class TownWorksScanner {
 				missing.add(cells.keyNames().get(k));
 			}
 		}
+		// R112: a building counts only while its inlet shares one energy network with the core (MOD-861).
+		boolean hall = TownHall.index(works).orElse(-1) == index;
+		TownPowerLinks.missingLink(level, settlementId, hall, cells).ifPresent(missing::add);
 		BuildingStateRules.Measure measure = new BuildingStateRules.Measure(matched, cells.size(), missing);
 		Optional<TownBuilding> before = works.building(index);
 		Optional<BuildingStateRules.Verdict> verdict = works.applyPass(index, measure, cells.restoredAt());

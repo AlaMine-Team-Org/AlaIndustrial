@@ -16,16 +16,26 @@ import java.util.List;
  */
 public final class SettlementCoreLayout {
 
-	/** Panel size; must match {@code tools/gen_settlement_core_gui.py}. */
-	public static final int IMAGE_WIDTH = 176;
-	public static final int IMAGE_HEIGHT = 134;
+	/**
+	 * Panel size; must match {@code tools/gen_settlement_core_gui.py}. Owner's round 2 of 0.1.219 (R2-2): wider and
+	 * taller, so a «Construction» row's controls fit beside its words and the long translations get room; still inside
+	 * 426 x 240, the screen of 1280 x 720 at interface scale 3 (MOD-873).
+	 */
+	public static final int IMAGE_WIDTH = 256;
+	public static final int IMAGE_HEIGHT = 204;
+	/**
+	 * Where the energy fill sprite sits in the atlas: under the panel, at the left, because a panel 256 wide leaves no
+	 * service area to its right.
+	 */
+	public static final int ENERGY_SPRITE_U = 0;
+	public static final int ENERGY_SPRITE_V = 210;
 	/** The frame's border: three pixels on every side ({@code tools/gen_reactor_controller_gui.py}). */
 	public static final int BORDER = 3;
 
 	public static final int TITLE_Y = 6;
 	/** The text column: right of the energy bar to the frame's inner border, less a margin. */
 	public static final int TEXT_LEFT = 34;
-	public static final int TEXT_RIGHT = 168;
+	public static final int TEXT_RIGHT = IMAGE_WIDTH - 8;
 	public static final int ROW_TOP = 20;
 	/** From one row to the next. */
 	public static final int ROW_STEP = 11;
@@ -86,44 +96,118 @@ public final class SettlementCoreLayout {
 	public static final String ROSTER_CLOSED_EMPTY = "settlement.alaindustrial.core.roster.closed_empty";
 	public static final String ROSTER_LOADING = "settlement.alaindustrial.core.roster.loading";
 	public static final String ROSTER_OPEN = "settlement.alaindustrial.core.roster.open";
+	/** The «Find» button's tooltip at a living worker's row (R4-13). */
+	public static final String ROSTER_LOCATE = "settlement.alaindustrial.core.roster.locate";
 	/** A row's status word, by {@code ShiftWorkerRecord.Status} serialized name. */
 	public static final String ROSTER_STATUS = "settlement.alaindustrial.core.roster.status.";
 
 	public static final int ROSTER_LEFT = 7;
-	public static final int ROSTER_RIGHT = 169;
+	public static final int ROSTER_RIGHT = IMAGE_WIDTH - 7;
 	public static final int ROSTER_TOP = 19;
 	public static final int ROSTER_ROW = 11;
-	public static final int ROSTER_ROWS = 10;
+	/** As many rows as the panel holds above its bottom border. */
+	public static final int ROSTER_ROWS = (IMAGE_HEIGHT - BORDER - 1 - ROSTER_TOP) / ROSTER_ROW;
 	/** The worker's face at a row's start: a square left of the number, one pixel above the text line. */
 	public static final int COL_FACE = 1;
 	public static final int FACE_SIZE = 10;
 	/** Column starts inside a row: number, name, level, status. */
 	public static final int COL_NUMBER = 13;
 	public static final int COL_NAME = 46;
-	public static final int COL_LEVEL = 94;
-	public static final int COL_STATUS = 122;
-	/** Column starts inside a «Construction» row: status, percent, the owner's controls; and a second line's indent. */
-	public static final int WORKS_COL_STATUS = 76;
-	public static final int WORKS_COL_PERCENT = 124;
-	public static final int WORKS_COL_ACTIONS = 143;
-	public static final int WORKS_ACTION_SIZE = 9;
-	public static final int WORKS_DETAIL_INDENT = 8;
+	public static final int COL_LEVEL = 138;
+	public static final int COL_STATUS = 170;
 	/**
-	 * The words a «Construction» row puts in its status column — the buildings' states and the jobs' statuses — and
-	 * the names in its main column; the L1 test fits each into its column in every language (the server words the rows,
-	 * {@code ConstructionRows}).
+	 * The «Find» button at the right end of a living worker's row (R4-13), square; the status column ends left of
+	 * it, so a long status word in any language still has about fifty pixels.
 	 */
-	public static final List<String> WORKS_STATUS_WORDS = List.of(
-			"settlement.alaindustrial.works.state.ruin", "settlement.alaindustrial.works.state.clearing",
-			"settlement.alaindustrial.works.state.repair", "settlement.alaindustrial.works.state.intact",
-			"settlement.alaindustrial.works.state.upgraded", "settlement.alaindustrial.works.status.queued",
-			"settlement.alaindustrial.works.status.taken", "settlement.alaindustrial.works.status.blocked",
-			"settlement.alaindustrial.works.status.done", "settlement.alaindustrial.works.status.cancelled");
+	public static final int LOCATE_BUTTON = 11;
+	/**
+	 * The names a «Construction» card prints in its name line; the L1 test fits each into
+	 * {@link #worksNameWidth()} in every language (the server words the rows, {@code ConstructionRows}).
+	 */
 	public static final List<String> WORKS_NAMES = List.of(
 			"settlement.alaindustrial.building.town_hall", "settlement.alaindustrial.building.capsule_house",
 			"settlement.alaindustrial.building.workshop", "settlement.alaindustrial.building.pump_station",
 			"settlement.alaindustrial.building.warehouse", "settlement.alaindustrial.building.guard_post",
-			"settlement.alaindustrial.building.unnamed");
+			"settlement.alaindustrial.building.unnamed", "settlement.alaindustrial.building.capsule_house.type_1",
+			"settlement.alaindustrial.building.capsule_house.type_2",
+			"settlement.alaindustrial.building.capsule_house.type_3",
+			"settlement.alaindustrial.building.capsule_house.type_4");
+
+	/*
+	 * The «Construction» tab as cards (owner's round 3 of 0.1.219, R3-3, R3-6): the hint bar at the top, then a pane
+	 * that scrolls by pixels — section headings, building cards, the road network, the plans. Offsets from the image's
+	 * top-left; a card's parts from the card's top-left.
+	 */
+	/** The hint bar: what to do next, two lines at most. */
+	public static final int WORKS_HINT_TOP = 19;
+	public static final int WORKS_HINT_HEIGHT = 22;
+	/** Where the hint's words start after the badge, and how wide they may run. */
+	public static final int WORKS_HINT_TEXT = 21;
+	public static final int WORKS_HINT_MAX_LINES = 2;
+	/** The scrolling pane under the hint bar. */
+	public static final int WORKS_VIEW_TOP = WORKS_HINT_TOP + WORKS_HINT_HEIGHT + 3;
+	public static final int WORKS_VIEW_BOTTOM = IMAGE_HEIGHT - BORDER - 1;
+	/** The scroll bar at the pane's right, and the cards left of it. */
+	public static final int WORKS_SCROLLBAR = 3;
+	public static final int WORKS_CONTENT_LEFT = ROSTER_LEFT + 1;
+	public static final int WORKS_CONTENT_RIGHT = ROSTER_RIGHT - WORKS_SCROLLBAR - 3;
+	/** A section heading's height and the gap above it. */
+	public static final int WORKS_HEADING = 14;
+	/** A closed card: the picture in its box at the left, the name, the chip and the share, one button at the right. */
+	public static final int WORKS_CARD = 30;
+	public static final int WORKS_CARD_GAP = 3;
+	public static final int WORKS_ICON_BOX = 26;
+	public static final int WORKS_ICON = 24;
+	public static final int WORKS_CARD_TEXT = 32;
+	public static final int WORKS_BUTTON = 20;
+	/** The widest a chip may be; its word is scaled down to fit. */
+	public static final int WORKS_CHIP_MAX = 84;
+	/** The open part of a card: its lines indented under the picture. */
+	public static final int WORKS_OPEN_INDENT = 6;
+	public static final int WORKS_OPEN_MAX_LINES = 3;
+	/** A small button inside the open part: a job's cancel and restart, the schematic switch. */
+	public static final int WORKS_SMALL_BUTTON = 11;
+	/** One row of the plans: its label's width, then slots of {@link #WORKS_SLOT} pixels. */
+	public static final int WORKS_PLAN_ROW = 22;
+	public static final int WORKS_PLAN_LABEL = 62;
+	public static final int WORKS_SLOT = 18;
+
+	/** The section headings, chip words and hint lines of the tab; the L1 test fits each into its box. */
+	public static final List<String> WORKS_SECTIONS = List.of("settlement.alaindustrial.works.section.hall",
+			"settlement.alaindustrial.works.section.house", "settlement.alaindustrial.works.section.other",
+			"settlement.alaindustrial.works.section.roads", "settlement.alaindustrial.works.section.plans");
+	public static final List<String> WORKS_CHIPS = List.of("settlement.alaindustrial.works.chip.ruin",
+			"settlement.alaindustrial.works.chip.damaged", "settlement.alaindustrial.works.chip.no_plan",
+			"settlement.alaindustrial.works.chip.locked", "settlement.alaindustrial.works.chip.working",
+			"settlement.alaindustrial.works.chip.waiting", "settlement.alaindustrial.works.chip.done");
+	/** «Stage %1$s of %2$s: %3$s» inside an open card, and «Every stage stands». */
+	public static final String WORKS_CARD_STAGE = "settlement.alaindustrial.works.card.stage";
+	public static final String WORKS_CARD_STAGES_DONE = "settlement.alaindustrial.works.card.stages_done";
+	/** The tooltip of a card's top: opens and closes it. */
+	public static final String WORKS_CARD_OPEN = "settlement.alaindustrial.works.card.open";
+	public static final String WORKS_CARD_CLOSE = "settlement.alaindustrial.works.card.close";
+	/** «%1$s of %2$s» — plan sheets found. */
+	public static final String WORKS_SHEETS_COUNT = "settlement.alaindustrial.works.plans.sheets_count";
+
+	/** The width the hint's words may take. */
+	public static int worksHintWidth() {
+		return ROSTER_RIGHT - ROSTER_LEFT - WORKS_HINT_TEXT - 3;
+	}
+
+	/** The width of a card. */
+	public static int worksCardWidth() {
+		return WORKS_CONTENT_RIGHT - WORKS_CONTENT_LEFT;
+	}
+
+	/** The width of a closed card's name: from its text column to its button. */
+	public static int worksNameWidth() {
+		return worksCardWidth() - WORKS_CARD_TEXT - WORKS_BUTTON - 6;
+	}
+
+	/** The width of an open card's lines. */
+	public static int worksOpenWidth() {
+		return worksCardWidth() - 2 * WORKS_OPEN_INDENT;
+	}
 
 	private SettlementCoreLayout() {
 	}

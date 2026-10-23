@@ -201,7 +201,12 @@ public final class AlaCommonScenarios {
 			if (block instanceof net.minecraft.world.level.block.LiquidBlock) {
 				continue;
 			}
-			helper.setBlock(PROBE, block);
+			// The charging bed (round 4 of 0.1.219) is two cells like a vanilla bed, and only the head half
+			// carries the loot: probing the default foot would read a half that drops nothing by design.
+			helper.setBlock(PROBE, block instanceof dev.alaindustrial.block.ChargingBedBlock
+					? block.defaultBlockState().setValue(dev.alaindustrial.block.ChargingBedBlock.PART,
+							net.minecraft.world.level.block.state.properties.BedPart.HEAD)
+					: block.defaultBlockState());
 			List<ItemStack> drops = Block.getDrops(level.getBlockState(abs), level, abs,
 					level.getBlockEntity(abs), miner, pickaxe);
 			long self = drops.stream().filter(s -> s.getItem() == block.asItem()).mapToLong(ItemStack::getCount).sum();
