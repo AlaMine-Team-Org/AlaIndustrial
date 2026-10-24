@@ -3,6 +3,7 @@ package dev.alaindustrial.client.screen;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -133,11 +134,13 @@ class SettlementCoreLayoutTest {
 
 	/**
 	 * The pictures the cards draw are the ones the icon generator lays out, in its order: a building added to one list
-	 * and not the other would draw another building's picture.
+	 * and not the other would draw another building's picture. The generator lives in {@code tools/}, which the public
+	 * mirror does not carry, so there the check is skipped.
 	 */
 	@Test
 	void theBuildingPicturesMatchTheGenerator() throws IOException {
 		Path generator = repoRoot().resolve("tools/gen_town_building_icons.py");
+		assumeTrue(Files.isRegularFile(generator), "no tools/ in this tree (the public mirror)");
 		String source = Files.readString(generator, StandardCharsets.UTF_8);
 		List<String> styles = quoted(between(source, "for style in (", ")"));
 		List<String> names = quoted(between(source, "for name in (", ")"));
