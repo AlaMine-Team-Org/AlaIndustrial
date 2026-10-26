@@ -54,6 +54,8 @@ import net.minecraft.resources.Identifier;
  * @param respecCost     the price of that
  * @param home           the house the worker lives in (MOD-862), or empty: homeless
  * @param freeHouses     the free houses fit to live in of its town, where the owner may move it (R102)
+ * @param profession     its trade's serialized name (MOD-888), empty — none
+ * @param work           {@link #WORK_NONE}, {@link #WORK_EMPLOYED} or {@link #WORK_OFF}: taken off work by the restorer
  */
 public record ShiftWorkerCardPayload(boolean open, int entityId, String number, String name, boolean slim,
 		Identifier look, ShiftWorkerRecord.Status status, int settlement, Component settlementName,
@@ -62,7 +64,14 @@ public record ShiftWorkerCardPayload(boolean open, int entityId, String number, 
 		boolean[] statActive, List<Component> biography, List<ShiftWorkerProfile.ServiceMark> marks,
 		long issuedGameTime, List<FormerNumber> formerNumbers, Optional<ShiftWorkerRecord.Death> death,
 		long returnPrice, boolean atCapsule, boolean canRespec, long respecCost, Optional<House> home,
-		List<House> freeHouses) implements CustomPacketPayload {
+		List<House> freeHouses, String profession, int work) implements CustomPacketPayload {
+
+	/** {@link #work}: no work, the worker lives by the routine (R150). */
+	public static final int WORK_NONE = 0;
+	/** {@link #work}: it works in a workplace of its town (MOD-888). */
+	public static final int WORK_EMPLOYED = 1;
+	/** {@link #work}: the restorer took it off work; the town gives it no place until it is sent back. */
+	public static final int WORK_OFF = 2;
 
 	public static final Type<ShiftWorkerCardPayload> TYPE = new Type<>(Industrialization.id("shift_worker_card"));
 
@@ -97,7 +106,27 @@ public record ShiftWorkerCardPayload(boolean open, int entityId, String number, 
 		this(open, entityId, number, name, slim, look, status, settlement, settlementName, viewerIsOwner, charge,
 				capacity, health, maxHealth, euDrained, level, xpIntoLevel, xpForNext, rankIndex, freePoints, statCap,
 				statCounts, statActive, biography, marks, issuedGameTime, formerNumbers, death, returnPrice, atCapsule,
-				canRespec, respecCost, Optional.empty(), List.of());
+				canRespec, respecCost, Optional.empty(), List.of(), "", WORK_NONE);
+	}
+
+	/** A card with no trade on it (MOD-888): a worker without work. */
+	public ShiftWorkerCardPayload(boolean open, int entityId, String number, String name, boolean slim,
+			Identifier look, ShiftWorkerRecord.Status status, int settlement, Component settlementName,
+			boolean viewerIsOwner, long charge, long capacity, float health, float maxHealth, long euDrained, int level,
+			long xpIntoLevel, long xpForNext, int rankIndex, int freePoints, int statCap, int[] statCounts,
+			boolean[] statActive, List<Component> biography, List<ShiftWorkerProfile.ServiceMark> marks,
+			long issuedGameTime, List<FormerNumber> formerNumbers, Optional<ShiftWorkerRecord.Death> death,
+			long returnPrice, boolean atCapsule, boolean canRespec, long respecCost, Optional<House> home,
+			List<House> freeHouses) {
+		this(open, entityId, number, name, slim, look, status, settlement, settlementName, viewerIsOwner, charge,
+				capacity, health, maxHealth, euDrained, level, xpIntoLevel, xpForNext, rankIndex, freePoints, statCap,
+				statCounts, statActive, biography, marks, issuedGameTime, formerNumbers, death, returnPrice, atCapsule,
+				canRespec, respecCost, home, freeHouses, "", WORK_NONE);
+	}
+
+	/** Whether the worker works in a workplace now (MOD-888). */
+	public boolean employed() {
+		return work == WORK_EMPLOYED && !profession.isEmpty();
 	}
 
 	/** Most free houses that decode. */
@@ -210,6 +239,8 @@ public record ShiftWorkerCardPayload(boolean open, int entityId, String number, 
 		buf.writeVarLong(respecCost);
 		ByteBufCodecs.optional(HOUSE).encode(buf, home);
 		HOUSES.encode(buf, freeHouses);
+		TEXT.encode(buf, profession);
+		buf.writeVarInt(work);
 	}
 
 	private static ShiftWorkerCardPayload read(RegistryFriendlyByteBuf buf) {
@@ -251,10 +282,13 @@ public record ShiftWorkerCardPayload(boolean open, int entityId, String number, 
 		long respecCost = buf.readVarLong();
 		Optional<House> home = ByteBufCodecs.optional(HOUSE).decode(buf);
 		List<House> freeHouses = HOUSES.decode(buf);
+		String profession = TEXT.decode(buf);
+		int work = buf.readVarInt();
 		return new ShiftWorkerCardPayload(open, entityId, number, name, slim, look, status, settlement, settlementName,
 				viewerIsOwner, charge, capacity, health, maxHealth, euDrained, level, xpIntoLevel, xpForNext,
 				rankIndex, freePoints, statCap, statCounts, statActive, biography, marks, issuedGameTime,
-				formerNumbers, death, returnPrice, atCapsule, canRespec, respecCost, home, freeHouses);
+				formerNumbers, death, returnPrice, atCapsule, canRespec, respecCost, home, freeHouses, profession,
+				work);
 	}
 
 	/** The count of points in {@code stat}. */

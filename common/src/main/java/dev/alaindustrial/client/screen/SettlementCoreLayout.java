@@ -90,6 +90,47 @@ public final class SettlementCoreLayout {
 	public static final String TAB_CLOSED = "settlement.alaindustrial.core.tab.closed";
 	/** The «Construction» tab (MOD-857): the town's buildings and its work queue, rows the server words. */
 	public static final String TAB_WORKS = "settlement.alaindustrial.core.tab.works";
+	/**
+	 * The «Chronicle» tab (MOD-886): the town hall's log, newest line first — the day, the worker, the sentence — one
+	 * row of up to {@link #CHRONICLE_TEXT_LINES} lines per line of the log, the wheel scrolling a longer one.
+	 */
+	public static final String TAB_CHRONICLE = "settlement.alaindustrial.core.tab.chronicle";
+	/** Where a chronicle row's sentence starts, right of its day. */
+	public static final int CHRONICLE_TEXT = 48;
+	/** How many lines a chronicle row's sentence wraps onto at full size; past that it is scaled down. */
+	public static final int CHRONICLE_TEXT_LINES = 2;
+	/**
+	 * The most lines a chronicle row shows (MOD-890): a sentence too long for two lines even scaled down takes a third,
+	 * cut with an ellipsis; the tooltip shows it whole. A row is as tall as its lines ({@link ChronicleRows}).
+	 */
+	public static final int CHRONICLE_MAX_LINES = 3;
+	/** The gap under a chronicle row. */
+	public static final int CHRONICLE_GAP = 2;
+	/** The height the chronicle's rows share: from the roster's top to the frame's bottom border. */
+	public static final int CHRONICLE_VIEW = IMAGE_HEIGHT - BORDER - 1 - SettlementCoreLayout.ROSTER_TOP;
+	/**
+	 * The widest a tooltip of the core's screen runs (MOD-890): on a wide screen a long line is wrapped like vanilla's,
+	 * not stretched across the screen.
+	 */
+	public static final int TOOLTIP_MAX_WIDTH = 200;
+	/**
+	 * The town's needs on the core's tab (MOD-886, the town's pulse): one line «The town needs: …» on up to
+	 * {@link #NEEDS_TOP_MAX_LINES} lines under the rows, then the short list of up to {@link #NEEDS_LIST_ROWS} needs,
+	 * at the hint's width.
+	 */
+	public static final int NEEDS_TOP_MAX_LINES = 2;
+	public static final int NEEDS_LIST_ROWS = 6;
+	/** The gap between the rows and the needs. */
+	public static final int NEEDS_GAP = 2;
+	/** A need's row in the list starts this far right of the needs' left edge, after its picture. */
+	public static final int NEEDS_INDENT = 11;
+	/**
+	 * The pictures of the needs (MOD-890): the top need's beside its line, an item's size; each need of the list a
+	 * half-size one at the row's start.
+	 */
+	public static final int NEEDS_ICON = 16;
+	public static final int NEEDS_SMALL_ICON = 8;
+
 	/** The line under the rows for a viewer who is not the town's owner (R95). */
 	public static final String WORKS_READ_ONLY = "settlement.alaindustrial.works.read_only";
 	public static final String ROSTER_EMPTY = "settlement.alaindustrial.core.roster.empty";
@@ -119,7 +160,12 @@ public final class SettlementCoreLayout {
 	 * The «Find» button at the right end of a living worker's row (R4-13), square; the status column ends left of
 	 * it, so a long status word in any language still has about fifty pixels.
 	 */
-	public static final int LOCATE_BUTTON = 11;
+	public static final int LOCATE_BUTTON = 10;
+	/**
+	 * The picture in a small button: an item at half size. A button whose side minus this is even has it centred on
+	 * a whole pixel (MOD-890: an 11-pixel button left one pixel above and left of it and two below and right).
+	 */
+	public static final int SMALL_ICON = 8;
 	/**
 	 * The names a «Construction» card prints in its name line; the L1 test fits each into
 	 * {@link #worksNameWidth()} in every language (the server words the rows, {@code ConstructionRows}).
@@ -165,8 +211,11 @@ public final class SettlementCoreLayout {
 	/** The open part of a card: its lines indented under the picture. */
 	public static final int WORKS_OPEN_INDENT = 6;
 	public static final int WORKS_OPEN_MAX_LINES = 3;
-	/** A small button inside the open part: a job's cancel and restart, the schematic switch. */
-	public static final int WORKS_SMALL_BUTTON = 11;
+	/**
+	 * A small button inside the open part: a job's cancel and restart, «show it» at the block in the way (MOD-890), the
+	 * schematic switch.
+	 */
+	public static final int WORKS_SMALL_BUTTON = 10;
 	/** One row of the plans: its label's width, then slots of {@link #WORKS_SLOT} pixels. */
 	public static final int WORKS_PLAN_ROW = 22;
 	public static final int WORKS_PLAN_LABEL = 62;
@@ -228,6 +277,26 @@ public final class SettlementCoreLayout {
 	/** The top of the row after a status of {@code statusLines} lines. */
 	public static int firstNumberRowY(int statusLines) {
 		return ROW_TOP + (statusLines - 1) * LINE_STEP + ROW_STEP;
+	}
+
+	/** The top of the town's needs: under the last row, where a dark unclaimed core's hint would stand. */
+	public static int needsTop(int afterRowsY) {
+		return hintTop(afterRowsY) + NEEDS_GAP;
+	}
+
+	/** Where a small button of side {@code button} draws its {@link #SMALL_ICON} picture, from its left or top edge. */
+	public static int smallIconInset(int button) {
+		return (button - SMALL_ICON) / 2;
+	}
+
+	/** The width the top need's words may take, right of its picture. */
+	public static int needsTopWidth() {
+		return hintWidth() - NEEDS_ICON - 2;
+	}
+
+	/** The width a tooltip wraps at on a screen {@code screenWidth} wide: {@link #TOOLTIP_MAX_WIDTH}, or less. */
+	public static int tooltipWidth(int screenWidth) {
+		return Math.max(80, Math.min(TOOLTIP_MAX_WIDTH, screenWidth / 2 - 12));
 	}
 
 	/** The hint's top: under the last row, but never over the button. */

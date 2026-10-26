@@ -12,6 +12,7 @@ import dev.alaindustrial.settlement.record.RecordNumber;
 import dev.alaindustrial.settlement.record.RecordNumberLedger;
 import dev.alaindustrial.settlement.shift.ShiftWorkerBook;
 import dev.alaindustrial.settlement.shift.ShiftWorkerRecord;
+import dev.alaindustrial.settlement.shift.TownChronicle;
 import dev.alaindustrial.worldgen.AbandonedLabPlacer;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -206,6 +207,43 @@ public final class TownHousing {
 		return Optional.empty();
 	}
 
+	/** The hall log note of a broken inlet of a lived-in house: «…, resident %s homeless». */
+	public static final String JOURNAL_INLET_BROKEN = "settlement.alaindustrial.journal.house_inlet_broken";
+	/** The hall log note of a broken inlet of a house nobody lives in. */
+	public static final String JOURNAL_INLET_BROKEN_EMPTY =
+			"settlement.alaindustrial.journal.house_inlet_broken_empty";
+
+	/**
+	 * A pass over house {@code index} of town {@code town} has just found its inlet gone (MOD-876, MOD-884): if the
+	 * house was fit to live in before the pass ({@code before}) and its inlet stood then, writes one line to the
+	 * hall's log — the house is off the count and its resident, named by number, is homeless. The line is a note
+	 * ({@link ShiftWorkerBook.Note}) carrying the resident's number and name the way a line about a death does; the
+	 * move out itself is {@link #settle}'s. Returns whether it wrote the line.
+	 */
+	public static boolean logInletBroken(ServerLevel level, int town, int index, TownBuilding before,
+			List<String> missingNow) {
+		if (!TownHouses.fitToLive(before) || TownHouses.inletMissing(before)
+				|| !missingNow.contains(TownHouses.INLET_KEY)) {
+			return false;
+		}
+		ShiftWorkerBook book = SettlementRegistry.get(level.getServer()).workers();
+		Optional<ShiftWorkerRecord> resident = book.all().stream()
+				.filter(record -> record.settlement() == town && record.housed() && record.home() == index
+						&& record.status() != ShiftWorkerRecord.Status.DEAD)
+				.findFirst();
+		// The resident's number is also the sentence's argument, so the «Chronicle» tab (MOD-886) words it in full.
+		ShiftWorkerBook.Note note = new ShiftWorkerBook.Note(
+				resident.isPresent() ? JOURNAL_INLET_BROKEN : JOURNAL_INLET_BROKEN_EMPTY, level.getGameTime(),
+				resident.map(record -> List.of(record.number().toString())).orElse(List.of()), 1);
+		book.addToLog(new ShiftWorkerBook.LogLine(town, resident.map(ShiftWorkerRecord::number),
+				resident.map(ShiftWorkerRecord::name).orElse(""), Optional.empty(), Optional.empty(),
+				Optional.empty(), Optional.of(note)));
+		// INFO on purpose (MOD-833): the playtest protocol of the towns reads these lines from the log.
+		Industrialization.LOGGER.info("[ala-towns] settlement {}: the inlet of house {} is broken, resident {}", town,
+				index, resident.map(record -> record.number().toString()).orElse("none"));
+		return true;
+	}
+
 	private static ShiftWorkerRecord moveOut(TownWorks works, ShiftWorkerBook book, ShiftWorkerRecord record) {
 		works.addFormerResident(record.home(), record.number().toString());
 		ShiftWorkerRecord out = record.withHome(ShiftWorkerRecord.HOMELESS);
@@ -221,7 +259,10 @@ public final class TownHousing {
 		if (plan.isPresent() && works.building(index).map(b -> b.formerResidents().isEmpty()).orElse(false)) {
 			ruinNumber(level, plan.get()).ifPresent(number -> works.addFormerResident(index, number.toString()));
 		}
-		book.put(record.withHome(index));
+		ShiftWorkerRecord housed = record.withHome(index);
+		book.put(housed);
+		works.building(index).ifPresent(house -> TownChronicle.settled(level.getServer(), housed,
+				TownHouses.displayName(house), level.getGameTime())); // MOD-886: the town's chronicle
 		Industrialization.LOGGER.info("[ala-towns] settlement {}: worker {} moved into building {}", town,
 				record.number(), index);
 	}

@@ -2520,6 +2520,7 @@ tooltip.alaindustrial.energy_per_op(400) {gray}
 tooltip.alaindustrial.hold_shift {dark_gray}
 -- shift no-eu
 tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:warehouse_shelf plain : none
 == alaindustrial:water_mill plain
 -- plain eu
 tooltip.alaindustrial.energy_output_max(4) {gray}

@@ -11,6 +11,7 @@ import dev.alaindustrial.settlement.works.BuildingPlan;
 import dev.alaindustrial.settlement.works.BuildingState;
 import dev.alaindustrial.settlement.works.ConstructionRow.Text;
 import dev.alaindustrial.settlement.works.ConstructionRows;
+import dev.alaindustrial.settlement.works.HousePlans;
 import dev.alaindustrial.settlement.works.TownBuilding;
 import dev.alaindustrial.settlement.works.TownHouses;
 import dev.alaindustrial.settlement.works.TownWorksScanner;
@@ -53,6 +54,12 @@ public final class DispatcherViews {
 	public static final String HOUSE_PLAN_KNOWN = PREFIX + "step.plan.house_known";
 	/** «%1$s: the town has not learned the house plan of type %2$s yet» — the «Materials» tab of such a house. */
 	public static final String MATERIALS_NO_HOUSE_PLAN = PREFIX + "materials.no_house_plan";
+	/** «This building needs the warehouse plan» — the plan step under a warehouse the town lacks (MOD-892). */
+	public static final String NEEDS_WAREHOUSE_PLAN = PREFIX + "step.plan.warehouse";
+	/** «The settlement knows the warehouse plan» — the plan step under a warehouse the town knows (MOD-892). */
+	public static final String WAREHOUSE_PLAN_KNOWN = PREFIX + "step.plan.warehouse_known";
+	/** «%s: the settlement has not learned the warehouse plan yet» — the «Materials» tab of it (MOD-892). */
+	public static final String MATERIALS_NO_WAREHOUSE_PLAN = PREFIX + "materials.no_warehouse_plan";
 	/** «The town hall's plan is not in the plan slot» — an order on the hall without its plan. */
 	public static final String ORDER_NO_HALL_PLAN = PREFIX + "order.no_hall_plan";
 	/** «%s: a drone is at work» — an order a drone holds. */
@@ -80,8 +87,9 @@ public final class DispatcherViews {
 
 	/** Every key this class words, for the language gate's sake. */
 	public static final List<String> KEYS = List.of(NO_JOB, NO_STAGE, ROAD_STAGE, WAITS_FOR_ROAD, NO_ORDERS,
-			NEEDS_HOUSE_PLAN, HOUSE_PLAN_KNOWN, MATERIALS_NO_HOUSE_PLAN, ORDER_NO_HALL_PLAN, ORDER_TAKEN, ORDER_QUEUED,
-			ORDER_WAITS_DRONE, ORDER_NO_DRONE, ORDER_REPAIR, PASSED_BY, PASSED_BY + BlockReason.HINT, ORDER_CALLED_OFF);
+			NEEDS_HOUSE_PLAN, HOUSE_PLAN_KNOWN, MATERIALS_NO_HOUSE_PLAN, NEEDS_WAREHOUSE_PLAN, WAREHOUSE_PLAN_KNOWN,
+			MATERIALS_NO_WAREHOUSE_PLAN, ORDER_NO_HALL_PLAN, ORDER_TAKEN, ORDER_QUEUED, ORDER_WAITS_DRONE,
+			ORDER_NO_DRONE, ORDER_REPAIR, PASSED_BY, PASSED_BY + BlockReason.HINT, ORDER_CALLED_OFF);
 
 	private DispatcherViews() {
 	}
@@ -132,19 +140,17 @@ public final class DispatcherViews {
 				&& works.queue().open(WorkJobType.BUILD, index).isEmpty();
 		String template = building.intact().map(Object::toString).orElse("");
 		boolean house = TownHouses.isHouse(building);
-		boolean planKnown = house && ConstructionDroneWork.planKnown(works, index, Optional.empty());
+		boolean learned = HousePlans.needsPlan(building); // a house or the warehouse (MOD-892)
+		boolean planKnown = learned && ConstructionDroneWork.planKnown(works, index, Optional.empty());
 		String name = TownHouses.displayName(building);
 		List<Text> materials = new ArrayList<>();
 		List<DispatcherView.BillLine> bill = new ArrayList<>();
-		List<Text> planNote = new ArrayList<>();
-		if (house && !restored) {
-			planNote.add(Text.of(planKnown ? HOUSE_PLAN_KNOWN : NEEDS_HOUSE_PLAN,
-					String.valueOf(TownHouses.type(building))));
-		}
+		List<Text> planNote = restored ? new ArrayList<>() : planNote(building, planKnown);
 		if (!jobs && (restored || noOrders && !hall)) {
 			materials.add(Text.of(NO_ORDERS));
-		} else if (house && !restored && !planKnown) {
-			materials.add(Text.of(MATERIALS_NO_HOUSE_PLAN, name, String.valueOf(TownHouses.type(building))));
+		} else if (learned && !restored && !planKnown) {
+			materials.add(house ? Text.of(MATERIALS_NO_HOUSE_PLAN, name, String.valueOf(TownHouses.type(building)))
+					: Text.of(MATERIALS_NO_WAREHOUSE_PLAN, name));
 		} else {
 			if (!restored && roadPending(level, works, id, index)) {
 				roadOf(level, id, index, name, dispatcher.buffer(), materials, bill);
@@ -159,6 +165,21 @@ public final class DispatcherViews {
 				new DispatcherView.Checklist(true, restored, !bill.isEmpty(), jobs, startable, template, wait,
 						stalled, planKnown),
 				bill, planNote, orders(works, index, dispatcher));
+	}
+
+	/**
+	 * The plan step under a building not restored yet: a house names its type's plan (Q4), the warehouse its own
+	 * (MOD-892), learned or still needed; nothing for a building restored by another plan.
+	 */
+	private static List<Text> planNote(TownBuilding building, boolean planKnown) {
+		List<Text> out = new ArrayList<>();
+		if (TownHouses.isHouse(building)) {
+			out.add(Text.of(planKnown ? HOUSE_PLAN_KNOWN : NEEDS_HOUSE_PLAN,
+					String.valueOf(TownHouses.type(building))));
+		} else if (HousePlans.needsPlan(building)) {
+			out.add(Text.of(planKnown ? WAREHOUSE_PLAN_KNOWN : NEEDS_WAREHOUSE_PLAN));
+		}
+		return out;
 	}
 
 	/**
@@ -245,6 +266,7 @@ public final class DispatcherViews {
 				blocked = true;
 				step = TownHouses.isHouse(building.get())
 						? Text.of(NEEDS_HOUSE_PLAN, String.valueOf(TownHouses.type(building.get())))
+						: HousePlans.needsPlan(building.get()) ? Text.of(NEEDS_WAREHOUSE_PLAN)
 						: Text.of(ORDER_NO_HALL_PLAN);
 			} else if (job.type() == WorkJobType.BUILD && works.queue().open(WorkJobType.ROAD, index).isPresent()) {
 				step = Text.of(WAITS_FOR_ROAD);

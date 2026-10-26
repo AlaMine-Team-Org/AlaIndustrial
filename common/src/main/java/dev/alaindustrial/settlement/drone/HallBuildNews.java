@@ -2,10 +2,10 @@ package dev.alaindustrial.settlement.drone;
 
 import dev.alaindustrial.block.entity.TownDispatcherBlockEntity;
 import dev.alaindustrial.chat.ModChat;
+import dev.alaindustrial.item.misc.HousePlanItem;
 import dev.alaindustrial.settlement.Settlement;
 import dev.alaindustrial.settlement.SettlementRegistry;
 import dev.alaindustrial.settlement.TownChatStyle;
-import dev.alaindustrial.settlement.plan.PlanSheetRules;
 import dev.alaindustrial.settlement.works.BlockReason;
 import dev.alaindustrial.settlement.works.BuildStage;
 import dev.alaindustrial.settlement.works.BuildStageRules;
@@ -24,12 +24,14 @@ import java.util.OptionalInt;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.BiConsumer;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * The chat lines of a town hall's restoration (owner's round 3 of stage 6): a stage of the hall is done, and the hall
@@ -84,10 +86,16 @@ public final class HallBuildNews {
 	/** Every key this class words, for the language gate's sake. */
 	/** «Work on %1$s has stopped: %2$s» — a stop with what is in the way and where (owner's round 5 of 0.1.219). */
 	public static final String JOB_STOPPED = PREFIX + "job_stopped";
+	/** «The dispatcher here will block the hall's restoration. Planned here: %1$s.» (MOD-891, R158). */
+	public static final String DISPATCHER_IN_THE_WAY = PREFIX + "dispatcher_in_the_way";
+	/** «Its place in the hall: %1$s.» — the cell the hall keeps for the dispatcher. */
+	public static final String DISPATCHER_SPOT = DISPATCHER_IN_THE_WAY + ".spot";
+	/** «Move it to a free spot of the hall's floor.» — for a hall whose definition keeps no cell for it. */
+	public static final String DISPATCHER_FREE_FLOOR = DISPATCHER_IN_THE_WAY + ".free_floor";
 
 	public static final List<String> KEYS = List.of(HEADER, STAGE_DONE, NEXT_NEEDS, NEXT_READY, HALL_RESTORED,
 			HALL_REWARD, HOUSE_RESTORED, HALL_DAMAGED, HALL_MENDED, HOUSE_STAGE_DONE, CLEARED, HOUSE_LAID, HOUSE_BUILT,
-			HOUSE_PLAN_LEARNED, JOB_STOPPED);
+			HOUSE_PLAN_LEARNED, JOB_STOPPED, DISPATCHER_IN_THE_WAY, DISPATCHER_SPOT, DISPATCHER_FREE_FLOOR);
 
 	private static final List<BiConsumer<Integer, Component>> EARS = new CopyOnWriteArrayList<>();
 
@@ -169,11 +177,10 @@ public final class HallBuildNews {
 		}
 	}
 
-	/** The plan's name as the player reads it: «House Plan (type 3)». */
+	/** The plan's name as the player reads it: «House Plan (type 3)», «Warehouse Plan» (MOD-892). */
 	private static Component planName(Identifier template) {
 		String path = template.getPath();
-		int type = PlanSheetRules.houseType(path.substring(path.lastIndexOf('/') + 1));
-		return TownChatStyle.name(Component.translatable("item.alaindustrial.house_plan.typed", type));
+		return TownChatStyle.name(HousePlanItem.planName(path.substring(path.lastIndexOf('/') + 1)));
 	}
 
 	/**
@@ -246,6 +253,29 @@ public final class HallBuildNews {
 		Component why = Component.translatable(reason.key(), args);
 		Component hint = Component.translatable(reason.key() + BlockReason.HINT).withStyle(TownChatStyle.NEXT_STEP);
 		tell(level, town, JOB_STOPPED, TownChatStyle.TROUBLE, Optional.of(hint), name(found.get()), why);
+	}
+
+	/**
+	 * A dispatcher {@code placer} has just put on a cell of town {@code town}'s hall where the plan wants
+	 * {@code planned} (MOD-891, R158): it will stop the hall's building job «in the way», so the placer hears it at
+	 * once, with where its place is ({@code spot}) — not on the last stage. The line goes to the placer, whoever they
+	 * are, and to the test ears; the restorer's news is not this.
+	 */
+	public static void dispatcherInTheWay(ServerLevel level, int town, ServerPlayer placer, BlockState planned,
+			Optional<BlockPos> spot) {
+		MutableComponent where = spot
+				.map(at -> Component.translatable(DISPATCHER_SPOT, TownChatStyle.coordinates(at)))
+				.orElseGet(() -> Component.translatable(DISPATCHER_FREE_FLOOR));
+		Optional<Component> body = line(level, town, DISPATCHER_IN_THE_WAY, TownChatStyle.TROUBLE,
+				Optional.of(where.withStyle(TownChatStyle.NEXT_STEP)),
+				TownChatStyle.name(planned.getBlock().getName()));
+		if (body.isEmpty()) {
+			return;
+		}
+		for (BiConsumer<Integer, Component> ear : EARS) {
+			ear.accept(town, body.get());
+		}
+		placer.sendSystemMessage(body.get(), false);
 	}
 
 	/**

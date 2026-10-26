@@ -5,6 +5,7 @@ import dev.alaindustrial.settlement.record.RecordNumber;
 import dev.alaindustrial.settlement.shift.ShiftWorkerLocator;
 import dev.alaindustrial.settlement.shift.ShiftWorkerProfile;
 import dev.alaindustrial.settlement.shift.ShiftWorkerProfiles;
+import dev.alaindustrial.settlement.works.TownWorkplaces;
 import io.netty.buffer.ByteBuf;
 import java.util.Optional;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -15,7 +16,8 @@ import net.minecraft.server.level.ServerPlayer;
 
 /**
  * C2S: a change the owner makes from a shift worker's card (MOD-854): one point into a stat, all points back at a
- * capsule, a name, another house (MOD-862), or an outline to find it by ({@link ShiftWorkerLocator}, R4-13).
+ * capsule, a name, another house (MOD-862), an outline to find it by ({@link ShiftWorkerLocator}, R4-13), or off work
+ * and back (MOD-888).
  * Nothing here is trusted — {@link ShiftWorkerProfiles} checks owner
  * (R74: others only view), a living record, the viewing distance and the action's own conditions, and replies with
  * a refreshed card.
@@ -45,7 +47,9 @@ public record ShiftWorkerActionPayload(String number, Action action, Optional<Sh
 		/** Into another free house of its town (MOD-862, R102). */
 		RELOCATE,
 		/** Outline it for a few seconds, seen through walls, so it can be found (R4-13). */
-		LOCATE
+		LOCATE,
+		/** Off work, or back to work once taken off (MOD-888). */
+		TOGGLE_WORK
 	}
 
 	private static final Action[] ACTIONS = Action.values();
@@ -90,6 +94,11 @@ public record ShiftWorkerActionPayload(String number, Action action, Optional<Sh
 		return new ShiftWorkerActionPayload(number, Action.LOCATE, Optional.empty(), "", -1);
 	}
 
+	/** Off work, or back to work (MOD-888). */
+	public static ShiftWorkerActionPayload toggleWork(String number) {
+		return new ShiftWorkerActionPayload(number, Action.TOGGLE_WORK, Optional.empty(), "", -1);
+	}
+
 	/** Server side: hands the action to the profile service, which validates, applies and refreshes the card. */
 	public static void handle(ShiftWorkerActionPayload payload, ServerPlayer player) {
 		Optional<RecordNumber> number = RecordNumber.parse(payload.number());
@@ -102,6 +111,7 @@ public record ShiftWorkerActionPayload(String number, Action action, Optional<Sh
 			case RENAME -> ShiftWorkerProfiles.rename(player, number.get(), payload.name());
 			case RELOCATE -> ShiftWorkerProfiles.relocate(player, number.get(), payload.house());
 			case LOCATE -> ShiftWorkerLocator.locate(player, number.get());
+			case TOGGLE_WORK -> TownWorkplaces.toggleWork(player, number.get());
 		}
 	}
 

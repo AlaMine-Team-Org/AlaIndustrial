@@ -1,5 +1,6 @@
 package dev.alaindustrial.client.render.entity;
 
+import dev.alaindustrial.settlement.shift.Profession;
 import dev.alaindustrial.settlement.shift.ShiftWorkerLook;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.resources.Identifier;
@@ -19,4 +20,6 @@ public class ShiftWorkerRenderState extends HumanoidRenderState {
 	public float watching;
 	/** Ticks since its greeting began, or -1 — none (MOD-882). */
 	public float greetTicks = -1.0F;
+	/** Its trade, {@link Profession#NONE} — none: the patch on the shoulder (MOD-888, R151). */
+	public Profession profession = Profession.NONE;
 }

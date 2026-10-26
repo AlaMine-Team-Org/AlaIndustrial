@@ -21,6 +21,8 @@ import dev.alaindustrial.settlement.SettlementTier;
 import dev.alaindustrial.settlement.works.PlanSheetNews;
 import dev.alaindustrial.settlement.drone.TownRoadNetwork;
 import dev.alaindustrial.settlement.works.TownHousing;
+import dev.alaindustrial.settlement.works.TownWorkplaces;
+import dev.alaindustrial.settlement.works.TownPulse;
 import dev.alaindustrial.settlement.works.TownWorksScanner;
 import dev.alaindustrial.worldgen.town.TownBuildings;
 import dev.alaindustrial.worldgen.town.TownFootprint;
@@ -244,10 +246,7 @@ public final class SettlementCoreBlockEntity extends MachineBlockEntity implemen
 		}
 		boolean active = upkeep.active();
 		if (active) {
-			rechargeWorkers(serverLevel);
-			TownWorksScanner.tick(serverLevel, settlementId); // MOD-857: a lit town compares its buildings
-			TownHousing.tick(serverLevel, settlementId); // MOD-862: the homeless move into free houses
-			TownRoadNetwork.tick(serverLevel, settlementId); // R129: the town's road network
+			tickTown(serverLevel);
 		}
 		recordEuRate(active ? (int) Math.min(Integer.MAX_VALUE, drain) : 0);
 		if (active != wasActive) {
@@ -267,6 +266,16 @@ public final class SettlementCoreBlockEntity extends MachineBlockEntity implemen
 		}
 		updateLit(active);
 		return active ? 0 : IDLE_SLEEP_TICKS;
+	}
+
+	/** One lit tick of the town: its workers, buildings, houses, roads and needs. */
+	private void tickTown(ServerLevel serverLevel) {
+		rechargeWorkers(serverLevel);
+		TownWorksScanner.tick(serverLevel, settlementId); // MOD-857: a lit town compares its buildings
+		TownHousing.tick(serverLevel, settlementId); // MOD-862: the homeless move into free houses
+		TownWorkplaces.tick(serverLevel, settlementId); // MOD-888: workers without work take free places
+		TownRoadNetwork.tick(serverLevel, settlementId); // R129: the town's road network
+		TownPulse.tick(serverLevel, settlementId, energyShort()); // MOD-886: what the town needs
 	}
 
 	/**
@@ -556,6 +565,14 @@ public final class SettlementCoreBlockEntity extends MachineBlockEntity implemen
 	 */
 	public EnergyPort townPort() {
 		return new TownPort();
+	}
+
+	/**
+	 * Whether the town is short of energy (MOD-886, the town's pulse): the core owes upkeep, or holds less than the
+	 * reserve it keeps for itself.
+	 */
+	public boolean energyShort() {
+		return upkeep.debt() > 0 || energy.getAmount() < upkeepReserve();
 	}
 
 	/** What the core keeps for itself: {@code settlementCoreGraceTicks} ticks of upkeep. */

@@ -116,10 +116,10 @@ public final class ShiftWorkerScenarios {
 		return RecordNumberLedger.get(helper.getLevel().getServer());
 	}
 
-	/** The lines of the hall's log about {@code number}. */
+	/** The lines of the hall's log about {@code number}, the chronicle's events (MOD-886: arrived, settled) aside. */
 	private static long logLines(GameTestHelper helper, RecordNumber number) {
 		return ShiftWorkers.book(helper.getLevel().getServer()).log().stream()
-				.filter(line -> line.about(number)).count();
+				.filter(line -> line.about(number) && line.note().isEmpty()).count();
 	}
 
 	/**

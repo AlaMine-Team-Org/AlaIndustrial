@@ -4,6 +4,7 @@ import dev.alaindustrial.client.screen.GuiStyle;
 import dev.alaindustrial.client.screen.SettlementCoreLayout;
 import dev.alaindustrial.client.screen.TextFit;
 import dev.alaindustrial.network.TownWorksPayload;
+import dev.alaindustrial.settlement.works.BlockReason;
 import dev.alaindustrial.settlement.works.BuildingTile;
 import dev.alaindustrial.settlement.works.ConstructionRow;
 import dev.alaindustrial.settlement.works.ConstructionRows;
@@ -53,8 +54,19 @@ final class WorksModel {
 	record Section(String key, List<Card> cards) {
 	}
 
-	/** One line of an open card: words, an optional bar under them, and an optional small control at the right. */
-	record Line(Component text, int colour, int barPercent, @Nullable Control control) {
+	/**
+	 * One line of an open card: words, an optional bar under them, an optional small control at the right, and the
+	 * cell of a block in the way whose «show it» button sits at the right instead (MOD-890).
+	 */
+	record Line(Component text, int colour, int barPercent, @Nullable Control control, @Nullable Spot spot) {
+
+		Line(Component text, int colour, int barPercent, @Nullable Control control) {
+			this(text, colour, barPercent, control, null);
+		}
+	}
+
+	/** The cell an «In the way: X at x y z» line names: its «show it» button outlines it in the world (MOD-890). */
+	record Spot(int x, int y, int z) {
 	}
 
 	/** A control: an action on a target; for the schematic switch, its word sits beside the icon. */
@@ -166,11 +178,11 @@ final class WorksModel {
 				stage.status().ifPresent(status -> lines.add(new Line(ConstructionTab.component(status),
 						GuiStyle.TEXT_DIM, -1, null)));
 			}
-			stage.detail().ifPresent(detail -> wrap(font, ConstructionTab.component(detail), width, lines,
+			stage.detail().ifPresent(detail -> wrap(font, detail, width, lines,
 					stage.tone() == ConstructionRow.Tone.BAD ? GuiStyle.STATUS_BLOCKING
 							: stage.tone() == ConstructionRow.Tone.GOOD ? GuiStyle.STATUS_GOOD : GuiStyle.TEXT_DIM));
 		}
-		card.row().detail().ifPresent(detail -> wrap(font, ConstructionTab.component(detail), width, lines,
+		card.row().detail().ifPresent(detail -> wrap(font, detail, width, lines,
 				blocking(detail) ? GuiStyle.STATUS_BLOCKING : GuiStyle.TEXT_DIM));
 		for (ConstructionRow job : card.jobs()) {
 			MutableComponent words = Component.empty();
@@ -183,7 +195,7 @@ final class WorksModel {
 							? new Control(ConstructionRow.Action.CANCEL, job.target()) : null;
 			lines.add(new Line(words, job.tone() == ConstructionRow.Tone.BAD ? GuiStyle.STATUS_BLOCKING
 					: GuiStyle.TEXT, -1, control));
-			job.detail().ifPresent(reason -> wrap(font, ConstructionTab.component(reason), width, lines,
+			job.detail().ifPresent(reason -> wrap(font, reason, width, lines,
 					GuiStyle.STATUS_BLOCKING));
 		}
 		if (card.tile() != null) {
@@ -200,6 +212,23 @@ final class WorksModel {
 	/** Whether a building's second line says why it may not go on — red — rather than what it misses. */
 	static boolean blocking(ConstructionRow.Text detail) {
 		return !detail.key().equals(ConstructionRows.MISSING_KEYS);
+	}
+
+	/**
+	 * A server-worded line broken into lines of {@code width}; an «In the way» reason leaves room at the right for its
+	 * «show it» button, which its first line carries (MOD-890).
+	 */
+	static void wrap(Font font, ConstructionRow.Text text, int width, List<Line> out, int colour) {
+		Optional<int[]> cell = BlockReason.obstructedCell(text.key(), text.args());
+		if (cell.isEmpty()) {
+			wrap(font, ConstructionTab.component(text), width, out, colour);
+			return;
+		}
+		int first = out.size();
+		wrap(font, ConstructionTab.component(text), width - SettlementCoreLayout.WORKS_SMALL_BUTTON - 3, out, colour);
+		Line line = out.get(first);
+		out.set(first, new Line(line.text(), line.colour(), line.barPercent(), null,
+				new Spot(cell.get()[0], cell.get()[1], cell.get()[2])));
 	}
 
 	/** {@code text} broken into lines of {@code width}, at most {@link SettlementCoreLayout#WORKS_OPEN_MAX_LINES}. */

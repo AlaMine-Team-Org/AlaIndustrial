@@ -156,6 +156,10 @@ public final class ModPayloads {
 			clientbound(HousePlacementPayload.TYPE, HousePlacementPayload.CODEC),
 			// Round 2 of 0.1.219 (Q2): the card of one town building — its row, share and resident.
 			clientbound(BuildingCardPayload.TYPE, BuildingCardPayload.CODEC),
+			// MOD-886: what a town needs and its chronicle, for its core's town line and «Chronicle» tab.
+			clientbound(TownPulsePayload.TYPE, TownPulsePayload.CODEC),
+			// MOD-890: the block in the way of the town's work, outlined for the player who pressed «show it».
+			clientbound(TownObstructionPayload.TYPE, TownObstructionPayload.CODEC),
 			// MOD-093: renaming a teleport point — the one string that needs a payload of its own.
 			serverbound(TeleportRenamePayload.TYPE, TeleportRenamePayload.CODEC, TeleportRenamePayload::handle),
 			// MOD-592: a recipe-viewer drop onto a magnet filter cell.
@@ -186,5 +190,11 @@ public final class ModPayloads {
 					HousePlacementRequestPayload::handle),
 			// Round 2 of 0.1.219 (Q2): a press on a town building's card; the server checks and replies.
 			serverbound(BuildingCardRequestPayload.TYPE, BuildingCardRequestPayload.CODEC,
-					BuildingCardRequestPayload::handle));
+					BuildingCardRequestPayload::handle),
+			// MOD-886: the core's screen asks for its town's needs and chronicle; the server checks and replies.
+			serverbound(TownPulseRequestPayload.TYPE, TownPulseRequestPayload.CODEC,
+					TownPulseRequestPayload::handle),
+			// MOD-890: «show it» at a stopped job's «In the way» line; the server checks and replies.
+			serverbound(TownObstructionRequestPayload.TYPE, TownObstructionRequestPayload.CODEC,
+					TownObstructionRequestPayload::handle));
 }

@@ -58,7 +58,9 @@ public final class TownHouseRound2Scenarios {
 				RosterEntry.of(TownHouseRound2Scenarios::droneHangsADoorWhole,
 						"town_house_drone_hangs_a_door_whole").ticks(2400),
 				RosterEntry.of(TownHouseRound2Scenarios::droneLaysAChargingBedWhole,
-						"town_house_drone_lays_a_charging_bed_whole").ticks(2400));
+						"town_house_drone_lays_a_charging_bed_whole").ticks(2400),
+				RosterEntry.of(TownHouseRound2Scenarios::dispatcherKeepsAKnownHousePlan,
+						"town_dispatcher_keeps_a_known_house_plan").ticks(40));
 
 		private Roster() {}
 	}
@@ -236,6 +238,39 @@ public final class TownHouseRound2Scenarios {
 			hold.release();
 			rig.release();
 		});
+	}
+
+	/**
+	 * @implements Q4 — a house plan put into the dispatcher's plan slot is learned and used up only while the town does
+	 *     not know it: a plan of a known type stays in the slot, a new one is learned and taken.
+	 */
+	public static void dispatcherKeepsAKnownHousePlan(GameTestHelper helper) {
+		Rig rig = TownDroneScenarios.rig(helper, 1);
+		TownWorks works = rig.works();
+		Identifier known = Industrialization.id("ala_town/plains/intact/capsule_house_2");
+		Identifier fresh = Industrialization.id("ala_town/plains/intact/capsule_house_3");
+		works.learnHousePlan(known.toString());
+		helper.assertFalse(works.learnedHousePlans().contains(fresh.toString()),
+				"control: the town must not know house plan 3 yet: " + works.learnedHousePlans());
+		TownDispatcherBlockEntity dispatcher = rig.dispatcher();
+		dispatcher.setItem(TownDispatcherBlockEntity.PLAN_SLOT, HousePlanItem.of(new RestorationPlan(STYLE, known)));
+		for (int i = 0; i < 3; i++) {
+			rig.tickDispatcherAndNests();
+		}
+		helper.assertTrue(dispatcher.getItem(TownDispatcherBlockEntity.PLAN_SLOT).getItem() instanceof HousePlanItem,
+				"a house plan the town knows must stay in the plan slot, it holds "
+						+ dispatcher.getItem(TownDispatcherBlockEntity.PLAN_SLOT));
+		dispatcher.setItem(TownDispatcherBlockEntity.PLAN_SLOT, HousePlanItem.of(new RestorationPlan(STYLE, fresh)));
+		for (int i = 0; i < 3; i++) {
+			rig.tickDispatcherAndNests();
+		}
+		helper.assertTrue(dispatcher.getItem(TownDispatcherBlockEntity.PLAN_SLOT).isEmpty(),
+				"a new house plan must be used up, the slot holds "
+						+ dispatcher.getItem(TownDispatcherBlockEntity.PLAN_SLOT));
+		helper.assertTrue(works.learnedHousePlans().contains(fresh.toString()),
+				"the town must know house plan 3 now: " + works.learnedHousePlans());
+		rig.release();
+		helper.succeed();
 	}
 
 	private static int countOf(TownDispatcherBlockEntity dispatcher, BlockState door) {

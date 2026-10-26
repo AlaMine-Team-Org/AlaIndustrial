@@ -1147,7 +1147,9 @@
     "_comment_shiftWorkerWanderRadius": "Blocks a shift worker walks away from its town's core at most (never past the territory); it walks back once it is further.",
     "shiftWorkerWanderRadius": 12,
     "_comment_shiftWorkerXpLevelOneCost": "Experience a shift worker needs for level 2; each next level costs shiftWorkerLevelXpMultiplier times the previous one, over 40 levels.",
-    "shiftWorkerXpLevelOneCost": 15
+    "shiftWorkerXpLevelOneCost": 15,
+    "_comment_townPulseIntervalTicks": "Ticks between two looks of a lit settlement core at what its town needs; the core's screen shows the latest.",
+    "townPulseIntervalTicks": 100
   },
   "_comment_builtinDefaults": "Written by the mod - do not edit. For each knob, the mod's own default at the moment this file was last saved. On load, a knob still holding exactly that number counts as untouched, so a mod update that changes the default applies it here too (the change is logged). A knob you edited to anything else is left alone forever. NOTE: a value you deliberately set to the same number as the default cannot be told apart from one you never touched, and will follow the default when it changes. NOTE: for files created before this block existed, the reference point is the moment it was added - defaults that drifted before that are not recoverable.",
   "builtinDefaults": {
@@ -1706,6 +1708,7 @@
     "shiftWorkerRespecCost": 50000,
     "shiftWorkerStatCap": 10,
     "shiftWorkerWanderRadius": 12,
-    "shiftWorkerXpLevelOneCost": 15
+    "shiftWorkerXpLevelOneCost": 15,
+    "townPulseIntervalTicks": 100
   }
 }

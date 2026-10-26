@@ -159,6 +159,7 @@ final class CreativeTabSnapshot {
 			"main alaindustrial:town_dispatcher",
 			"main alaindustrial:drone_nest",
 			"main alaindustrial:charging_bed",
+			"main alaindustrial:warehouse_shelf",
 			"main alaindustrial:enriched_uranium_torch",
 			"main alaindustrial:cable_breaker",
 			"main alaindustrial:vacuum_capsule",
@@ -341,6 +342,7 @@ final class CreativeTabSnapshot {
 			"main alaindustrial:house_plan [style=plains, template=ala_town/plains/intact/capsule_house_2]",
 			"main alaindustrial:house_plan [style=plains, template=ala_town/plains/intact/capsule_house_3]",
 			"main alaindustrial:house_plan [style=plains, template=ala_town/plains/intact/capsule_house_4]",
+			"main alaindustrial:house_plan [style=plains, template=ala_town/plains/intact/warehouse]",
 			"main alaindustrial:town_hall_plan_sheet [style=desert, sheet=1]",
 			"main alaindustrial:town_hall_plan_sheet [style=desert, sheet=2]",
 			"main alaindustrial:town_hall_plan_sheet [style=desert, sheet=3]",
@@ -349,6 +351,7 @@ final class CreativeTabSnapshot {
 			"main alaindustrial:house_plan [style=desert, template=ala_town/desert/intact/capsule_house_2]",
 			"main alaindustrial:house_plan [style=desert, template=ala_town/desert/intact/capsule_house_3]",
 			"main alaindustrial:house_plan [style=desert, template=ala_town/desert/intact/capsule_house_4]",
+			"main alaindustrial:house_plan [style=desert, template=ala_town/desert/intact/warehouse]",
 			"main alaindustrial:tempered_iron_pickaxe",
 			"main alaindustrial:tempered_iron_axe",
 			"main alaindustrial:tempered_iron_shovel",
@@ -833,5 +836,6 @@ final class CreativeTabSnapshot {
 			"functional_blocks alaindustrial:reception_capsule",
 			"functional_blocks alaindustrial:town_dispatcher",
 			"functional_blocks alaindustrial:drone_nest",
-			"functional_blocks alaindustrial:charging_bed");
+			"functional_blocks alaindustrial:charging_bed",
+			"functional_blocks alaindustrial:warehouse_shelf");
 }

@@ -97,7 +97,9 @@ public final class TownTestCommandScenarios {
 				+ found.size());
 		// The fixed extras, the road and the earth are ten kinds; the building templates bring the rest.
 		helper.assertTrue(kinds.size() > 10, "the templates' blocks are missing: only " + kinds.size() + " kinds");
-		helper.assertTrue(plans == PlanSheetRules.HOUSE_TYPES, "one house plan per type, got " + plans);
+		// MOD-892: one house plan per type and the warehouse plan, all the same item.
+		helper.assertTrue(plans == PlanSheetRules.HOUSE_TYPES + 1, "one house plan per type and the warehouse "
+				+ "plan, got " + plans);
 		Settlement settlement = SettlementRegistry.get(helper.getLevel().getServer()).find(town).orElseThrow();
 		int nests = DroneNestRules.nestLimit(settlement.tier(), true);
 		helper.assertTrue(drones == nests, "one drone per nest (" + nests + "), got " + drones);

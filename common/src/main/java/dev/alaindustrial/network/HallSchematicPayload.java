@@ -44,14 +44,21 @@ public record HallSchematicPayload(ResourceKey<Level> dimension, BlockPos core, 
 	 *
 	 * @param pos   where, packed ({@link BlockPos#asLong()})
 	 * @param state the block that belongs there, turned with the hall
+	 * @param gap   whether the cell is where the town's road network is cut off (R132, MOD-884): drawn highlighted
 	 */
-	public record Ghost(long pos, BlockState state) {
+	public record Ghost(long pos, BlockState state, boolean gap) {
+
+		/** A cell still to build that is no gap of the network. */
+		public Ghost(long pos, BlockState state) {
+			this(pos, state, false);
+		}
 	}
 
 	/** One ghost cell, as the house laying window (MOD-877) carries its house too. */
 	public static final StreamCodec<RegistryFriendlyByteBuf, Ghost> GHOST = StreamCodec.composite(
 			ByteBufCodecs.LONG, Ghost::pos,
 			ByteBufCodecs.idMapper(Block.BLOCK_STATE_REGISTRY), Ghost::state,
+			ByteBufCodecs.BOOL, Ghost::gap,
 			Ghost::new);
 
 	public static final StreamCodec<RegistryFriendlyByteBuf, HallSchematicPayload> CODEC = StreamCodec.composite(

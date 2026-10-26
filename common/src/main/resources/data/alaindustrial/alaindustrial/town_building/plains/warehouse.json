@@ -1,4 +1,34 @@
 {
   "template": "alaindustrial:ala_town/plains/warehouse",
-  "name": "settlement.alaindustrial.building.warehouse"
+  "intact": "alaindustrial:ala_town/plains/intact/warehouse",
+  "name": "settlement.alaindustrial.building.warehouse",
+  "restored_at": 0.9,
+  "clear_ring": 3,
+  "key_points": [
+    {
+      "name": "settlement.alaindustrial.building.key.door",
+      "blocks": [
+        "#minecraft:doors"
+      ]
+    },
+    {
+      "name": "settlement.alaindustrial.building.key.house_roof",
+      "from": [
+        0,
+        7,
+        0
+      ],
+      "to": [
+        11,
+        7,
+        7
+      ]
+    },
+    {
+      "name": "settlement.alaindustrial.building.key.shelves",
+      "blocks": [
+        "alaindustrial:warehouse_shelf"
+      ]
+    }
+  ]
 }

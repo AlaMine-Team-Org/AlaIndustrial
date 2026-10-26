@@ -43,6 +43,8 @@ public final class ConstructionTab {
 	private static final int REFRESH_TICKS = 40;
 	private static final int SCROLL_STEP = 15;
 	private static final int LINE = 10;
+	/** The tooltip of a block-in-the-way line's «show it» button (MOD-890). */
+	public static final String SHOW_OBSTRUCTION = "settlement.alaindustrial.works.show_obstruction";
 
 	/** One laid-out block of the pane, at {@code y} from the pane's content top. */
 	private record Block(Kind kind, int y, int height, @Nullable Card card, @Nullable Component text,
@@ -50,8 +52,12 @@ public final class ConstructionTab {
 		enum Kind { HEADING, CARD, NETWORK, SHEETS, HOUSE_PLANS, NOTE }
 	}
 
-	/** A control on screen and what it does. */
-	private record Hit(ConstructionRow.Action action, int target) {
+	/** A control on screen and what it does; {@code spot} — the «show it» button of a block in the way (MOD-890). */
+	private record Hit(ConstructionRow.@Nullable Action action, int target, WorksModel.@Nullable Spot spot) {
+
+		Hit(ConstructionRow.Action action, int target) {
+			this(action, target, null);
+		}
 	}
 
 	private int scroll;
@@ -363,10 +369,15 @@ public final class ConstructionTab {
 				} else if (WorksPaint.inside(mouseX, mouseY, x + width - small, at - 1, small, small)) {
 					return Optional.of(control(new Hit(control.action(), control.target())));
 				}
+			} else if (line.spot() != null && WorksPaint.inside(mouseX, mouseY, x + width - small, at - 1, small,
+					small)) {
+				return Optional.of(new Target(new Hit(null, -1, line.spot()), -1,
+						Component.translatable(SHOW_OBSTRUCTION)));
 			}
 			int height = LINE + (line.barPercent() >= 0 ? 3 : 0);
+			int textWidth = line.spot() != null ? width - small - 3 : width;
 			if (mouseY >= at - 1 && mouseY < at - 1 + height && control == null
-					&& !WorksPaint.fits(font, line.text(), width)) {
+					&& !WorksPaint.fits(font, line.text(), textWidth)) {
 				return Optional.of(new Target(null, -1, line.text()));
 			}
 			at += height;
@@ -403,6 +414,11 @@ public final class ConstructionTab {
 			return false;
 		}
 		Hit hit = target.get().hit();
+		if (hit != null && hit.spot() != null) {
+			// MOD-890: the server checks the cell is in this town's way, and outlines it for this player alone.
+			TownWorksClient.showObstruction(hit.spot().x(), hit.spot().y(), hit.spot().z());
+			return true;
+		}
 		if (hit != null) {
 			TownWorksPayload payload = TownWorksClient.latest();
 			if (hit.action() == ConstructionRow.Action.SCHEMATIC) {

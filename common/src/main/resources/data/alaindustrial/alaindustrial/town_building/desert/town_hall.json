@@ -4,6 +4,11 @@
   "name": "settlement.alaindustrial.building.town_hall",
   "restored_at": 0.9,
   "clear_ring": 3,
+  "dispatcher_spot": [
+    2,
+    1,
+    1
+  ],
   "key_points": [
     {
       "name": "settlement.alaindustrial.building.key.core",

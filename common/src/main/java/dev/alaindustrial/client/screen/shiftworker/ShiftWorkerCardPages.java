@@ -105,7 +105,10 @@ final class ShiftWorkerCardPages {
 		line(Component.translatable(UI + "status", ShiftWorkerCardText.status(card.status())), inX, row, inW,
 				alive ? GuiStyle.TEXT : GuiStyle.STATUS_BLOCKING);
 		row += ROW;
-		line(ShiftWorkerCardText.assignment(card), inX, row, inW, GuiStyle.TEXT);
+		// MOD-888: a living worker of a town shows its work here; room on the right for «Off work» / «Back to work».
+		boolean workButton = alive && card.viewerIsOwner() && card.work() != ShiftWorkerCardPayload.WORK_NONE;
+		line(alive && card.settlement() > 0 ? ShiftWorkerCardText.work(card) : ShiftWorkerCardText.assignment(card),
+				inX, row, workButton ? inW - WORK_BUTTON_W - 4 : inW, GuiStyle.TEXT);
 		if (alive) {
 			row += ROW;
 			// Room on the right for the «Relocate» buttons when the owner can move the worker.

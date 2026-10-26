@@ -105,6 +105,10 @@ public final class HallSchematic {
 			}
 			missing = missing(level, plan.get());
 			missing.addAll(road(level, town, works, target));
+			Optional<BlockPos> gap = ConstructionRows.gapCell(level, town, works.buildings().get(target), target);
+			if (gap.isPresent()) {
+				markGap(missing, gap.get());
+			}
 		}
 		int[] x = new int[missing.size()];
 		int[] y = new int[missing.size()];
@@ -167,7 +171,23 @@ public final class HallSchematic {
 				out.add(new HallSchematicPayload.Ghost(cell.pos().asLong(), road));
 			}
 		}
+		// R132 (MOD-884): where a restored building is cut off, its first missing cell — laid once, so the plan
+		// counts it built and the loop above passes it — is drawn as a highlighted road ghost.
+		List<TownBuilding> buildings = SettlementRegistry.get(level.getServer()).works().town(town).buildings();
+		for (int i = 0; i < buildings.size(); i++) {
+			ConstructionRows.gapCell(level, town, buildings.get(i), i).ifPresent(gap -> markGap(out, gap));
+		}
 		return out;
+	}
+
+	/**
+	 * Puts a road ghost marked as the network's gap at {@code gap} into {@code ghosts}, in place of the ghost drawn
+	 * there already, if any (R132, MOD-884).
+	 */
+	static void markGap(List<HallSchematicPayload.Ghost> ghosts, BlockPos gap) {
+		long packed = gap.asLong();
+		ghosts.removeIf(ghost -> ghost.pos() == packed);
+		ghosts.add(new HallSchematicPayload.Ghost(packed, ModContent.TOWN_ROAD.get().defaultBlockState(), true));
 	}
 
 	/**

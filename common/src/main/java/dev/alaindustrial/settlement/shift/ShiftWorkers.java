@@ -100,6 +100,7 @@ public final class ShiftWorkers {
 					+ "is closed", number, at);
 			return Optional.empty();
 		}
+		TownChronicle.arrived(level.getServer(), record, now); // MOD-886: the town's chronicle
 		Industrialization.LOGGER.info("[ala-towns] worker restored {} at {}", number, BlockPos.containing(at));
 		return Optional.of(worker);
 	}
@@ -122,11 +123,13 @@ public final class ShiftWorkers {
 		if (worker == null) {
 			return Optional.empty();
 		}
-		if (!enter(level, worker, returnedRecord(waiting, worker, level.getGameTime()), waiting)) {
+		ShiftWorkerRecord returned = returnedRecord(waiting, worker, level.getGameTime());
+		if (!enter(level, worker, returned, waiting)) {
 			Industrialization.LOGGER.warn("[ala-towns] shift worker {} could not come back at {}; it waits on", number,
 					at);
 			return Optional.empty();
 		}
+		TownChronicle.arrived(level.getServer(), returned, level.getGameTime()); // MOD-886: the town's chronicle
 		Industrialization.LOGGER.info("[ala-towns] worker brought back {} at {}", number, BlockPos.containing(at));
 		return Optional.of(worker);
 	}
@@ -180,6 +183,13 @@ public final class ShiftWorkers {
 			return false;
 		}
 		return true;
+	}
+
+	/** Shows {@code record} on its worker's loaded body in {@code level} (its trade's patch, MOD-888). */
+	public static void showOnBody(ServerLevel level, ShiftWorkerRecord record) {
+		if (level.getEntity(record.entity()) instanceof ShiftWorker worker && !worker.isRemoved()) {
+			worker.showRecord(record);
+		}
 	}
 
 	/** How many living workers town {@code settlement} has — what its tier's limit is measured against. */
@@ -274,27 +284,37 @@ public final class ShiftWorkers {
 		return true;
 	}
 
-	/** Runs the planner for {@code worker} on the ticks it thinks on (every 20 ticks, offset by its id). */
+	/**
+	 * Runs the planner for {@code worker} on the ticks it thinks on (every 20 ticks, offset by its id): the town's
+	 * power and oil first, then the worker's day ({@link ShiftRoutine}, MOD-889) — where it goes, its bed at night.
+	 */
 	public static void think(ServerLevel level, ShiftWorker worker) {
 		if (!ShiftSchedule.thinksOn(worker.tickCount, worker.getId(), worker.mode())) {
 			return;
 		}
 		ShiftWorkerBattery.settle(level, worker);
-		ShiftSchedule.TownState state = townState(town(level.getServer(), worker.settlement()),
-				ShiftWorkerBattery.charged(level.getServer(), worker));
-		ShiftMode mode = ShiftSchedule.modeAt(level.getOverworldClockTime(), false, state);
-		if (mode != worker.mode()) {
-			worker.setMode(mode);
-			if (mode == ShiftMode.HIBERNATE) {
+		Optional<Settlement> town = town(level.getServer(), worker.settlement());
+		ShiftSchedule.TownState state = townState(town, ShiftWorkerBattery.charged(level.getServer(), worker));
+		long clock = ShiftRoutine.clock(level, worker.settlement());
+		ShiftMode mode = ShiftSchedule.modeAt(clock, false, state);
+		if (mode == ShiftMode.HIBERNATE) {
+			if (worker.mode() != ShiftMode.HIBERNATE) {
+				worker.setMode(mode);
 				worker.getNavigation().stop();
 				worker.setNoAi(true);
-				return;
 			}
-			worker.setHomeTo(worker.getHomePosition(), ShiftSchedule.strollRadius(mode, worker.wanderRadius()));
+			return;
 		}
-		if (mode != ShiftMode.HIBERNATE) {
-			HouseCharging.think(level, worker); // MOD-862: a resident charges on its house's bed
+		if (mode == ShiftMode.HALF_SLEEP) {
+			if (mode != worker.mode()) {
+				worker.setMode(mode);
+				worker.setHomeTo(worker.townAnchor(), ShiftSchedule.strollRadius(mode, worker.wanderRadius()));
+			}
+			Optional<ShiftWorkerRecord> record = book(level.getServer()).byEntity(worker.getUUID());
+			HouseCharging.think(level, worker, record, HouseCharging.bed(level, record), false, true);
+			return;
 		}
+		ShiftRoutine.think(level, worker, town, clock);
 	}
 
 	/**

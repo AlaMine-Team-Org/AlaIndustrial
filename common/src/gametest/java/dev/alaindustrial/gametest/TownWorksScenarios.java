@@ -297,8 +297,10 @@ public final class TownWorksScenarios {
 				return "building " + i + " is " + known + ", the piece is " + template + " at " + piece.getPosition()
 						+ " turned " + piece.getRotation();
 			}
-			// The town hall and, since MOD-862, the capsule houses have an intact template.
-			boolean hall = template.getPath().endsWith("/town_hall") || template.getPath().contains("/capsule_house_");
+			// The town hall and, since MOD-862, the capsule houses have an intact template; since MOD-885 and
+			// MOD-888 the warehouse too.
+			boolean hall = template.getPath().endsWith("/town_hall") || template.getPath().contains("/capsule_house_")
+					|| template.getPath().endsWith("/warehouse");
 			if (known.intact().isPresent() != hall || known.name().isEmpty()) {
 				return "building " + template + " has intact " + known.intact() + " and name '" + known.name() + "'";
 			}

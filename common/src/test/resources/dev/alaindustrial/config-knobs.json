@@ -557,6 +557,7 @@
     {"key": "shiftWorkerRespecCost", "section": "settlements", "type": "int", "default": 50000, "min": 0.0, "exclusive": false, "doc": "EU taking back all of a shift worker's invested points costs, paid from the reception capsule it stands at."},
     {"key": "shiftWorkerStatCap", "section": "settlements", "type": "int", "default": 10, "min": 1.0, "exclusive": false, "doc": "Points one stat of a shift worker holds at most."},
     {"key": "shiftWorkerWanderRadius", "section": "settlements", "type": "int", "default": 12, "min": 1.0, "exclusive": false, "doc": "Blocks a shift worker walks away from its town's core at most (never past the territory); it walks back once it is further."},
-    {"key": "shiftWorkerXpLevelOneCost", "section": "settlements", "type": "int", "default": 15, "min": 1.0, "exclusive": false, "floorTo": 1.0, "doc": "Experience a shift worker needs for level 2; each next level costs shiftWorkerLevelXpMultiplier times the previous one, over 40 levels."}
+    {"key": "shiftWorkerXpLevelOneCost", "section": "settlements", "type": "int", "default": 15, "min": 1.0, "exclusive": false, "floorTo": 1.0, "doc": "Experience a shift worker needs for level 2; each next level costs shiftWorkerLevelXpMultiplier times the previous one, over 40 levels."},
+    {"key": "townPulseIntervalTicks", "section": "settlements", "type": "int", "default": 100, "min": 1.0, "exclusive": false, "doc": "Ticks between two looks of a lit settlement core at what its town needs; the core's screen shows the latest."}
   ]
 }

@@ -114,4 +114,9 @@ public final class ShiftWorkerCardClient {
 	public static void relocate(String number, int house) {
 		NetworkDispatcher.get().sendToServer(ShiftWorkerActionPayload.relocate(number, house));
 	}
+
+	/** Off work, or back to work (MOD-888). */
+	public static void toggleWork(String number) {
+		NetworkDispatcher.get().sendToServer(ShiftWorkerActionPayload.toggleWork(number));
+	}
 }

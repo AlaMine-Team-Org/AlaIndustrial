@@ -192,4 +192,35 @@ class PlanSheetRulesTest {
 		assertArrayEquals(new int[] {-1, 0, 2}, PlanSheetRules.homeSlots(new int[] {-1, 1, 1}));
 		assertThrows(IllegalArgumentException.class, () -> PlanSheetRules.homeSlots(new int[] {1, 2}));
 	}
+
+	/**
+	 * MOD-892 (R154): the town learns the plans of the four houses and of the warehouse, never the hall's; the
+	 * warehouse plan's table sits beside the house plans' in the style's folder, and both built-in styles ship it
+	 * with exactly that plan.
+	 *
+	 * @implements MOD-892-RULES
+	 */
+	@Test
+	void theWarehousePlanIsLearnedLikeAHousePlanAndShippedForEveryStyle() throws IOException {
+		for (int type = 1; type <= PlanSheetRules.HOUSE_TYPES; type++) {
+			assertTrue(PlanSheetRules.learned(PlanSheetRules.house(type)), "house " + type);
+		}
+		assertTrue(PlanSheetRules.learned(PlanSheetRules.WAREHOUSE));
+		assertFalse(PlanSheetRules.learned(PlanSheetRules.TOWN_HALL));
+		assertFalse(PlanSheetRules.learned("guard_post"));
+		assertEquals("alaindustrial:chests/ala_town/plains/warehouse_plan",
+				PlanSheetRules.buildingPlanTable(PLAINS, PlanSheetRules.WAREHOUSE));
+		assertEquals("pack:chests/ala_town/swamp/warehouse_plan",
+				PlanSheetRules.buildingPlanTable("pack:swamp", PlanSheetRules.WAREHOUSE));
+		Path data = Path.of("src/main/resources/data/alaindustrial");
+		for (String style : PlanSheetRules.BUILT_IN_STYLES) {
+			String table = PlanSheetRules.buildingPlanTable(style, PlanSheetRules.WAREHOUSE);
+			Path file = data.resolve("loot_table/" + table.substring(table.indexOf(':') + 1) + ".json");
+			assertTrue(Files.isRegularFile(file), "no loot table " + file);
+			String json = Files.readString(file);
+			String template = PlanSheetRules.intactTemplate(style, PlanSheetRules.WAREHOUSE);
+			assertTrue(json.contains("\"template\": \"" + template + "\""),
+					"the table must give the warehouse plan of " + style + ": " + file);
+		}
+	}
 }

@@ -1,6 +1,7 @@
 package dev.alaindustrial.client.screen.shiftworker;
 
 import dev.alaindustrial.network.ShiftWorkerCardPayload;
+import dev.alaindustrial.settlement.shift.Profession;
 import dev.alaindustrial.settlement.shift.ShiftWorkerProfile;
 import dev.alaindustrial.settlement.shift.ShiftWorkerRecord;
 import java.util.List;
@@ -65,6 +66,19 @@ public final class ShiftWorkerCardText {
 	public static Component assignment(ShiftWorkerCardPayload card) {
 		return card.settlement() <= 0 ? Component.translatable(UI + "assigned_none")
 				: Component.translatable(UI + "assigned", card.settlement());
+	}
+
+	/**
+	 * "Work: storekeeper", "Work: none" or "Work: none (taken off)" (MOD-888): the trade a living worker of a town has,
+	 * shown on the row of its assignment — the town row above already names its town.
+	 */
+	public static Component work(ShiftWorkerCardPayload card) {
+		if (card.employed()) {
+			return Component.translatable(UI + "work", Component.translatable(Profession.byName(card.profession())
+					.langKey()));
+		}
+		return Component.translatable(card.work() == ShiftWorkerCardPayload.WORK_OFF ? UI + "work_off"
+				: UI + "work_none");
 	}
 
 	/** "Home: house at x, y, z", or "Homeless" (MOD-862). */

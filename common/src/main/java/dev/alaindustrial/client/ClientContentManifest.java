@@ -26,8 +26,10 @@ import dev.alaindustrial.block.entity.StormWindMillBlockEntity;
 import dev.alaindustrial.block.entity.SprinklerBlockEntity;
 import dev.alaindustrial.block.entity.TeleporterBlockEntity;
 import dev.alaindustrial.block.entity.AdvancedIndustrialWorkbenchBlockEntity;
+import dev.alaindustrial.block.entity.WarehouseShelfBlockEntity;
 import dev.alaindustrial.block.entity.BlockBreakerBlockEntity;
 import dev.alaindustrial.client.render.AdvancedIndustrialWorkbenchBlockEntityRenderer;
+import dev.alaindustrial.client.render.WarehouseShelfBlockEntityRenderer;
 import dev.alaindustrial.client.render.BlockBreakerBlockEntityRenderer;
 import dev.alaindustrial.block.entity.ThermalCentrifugeBlockEntity;
 import dev.alaindustrial.block.entity.WaterMillBlockEntity;
@@ -272,6 +274,9 @@ public final class ClientContentManifest {
 			renderer(ContentManifest.blockEntity("advanced_industrial_workbench",
 					AdvancedIndustrialWorkbenchBlockEntity.class),
 					AdvancedIndustrialWorkbenchBlockEntityRenderer::new),
+			// MOD-885: the icons of the four kinds a warehouse shelf holds the most of, on its bin cards.
+			renderer(ContentManifest.blockEntity("warehouse_shelf", WarehouseShelfBlockEntity.class),
+					WarehouseShelfBlockEntityRenderer::new),
 			// MOD-763: the assembled mob wheel — frame, running wheel and gate. Drawn by the drive; every
 			// other member's formed model is empty.
 			renderer(ContentManifest.blockEntity("mob_wheel_controller", MobWheelBlockEntity.class),

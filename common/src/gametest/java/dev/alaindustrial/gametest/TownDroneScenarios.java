@@ -111,7 +111,7 @@ public final class TownDroneScenarios {
 	private static final Identifier STYLE = Industrialization.id("plains");
 	/** Inside the intact plains hall, on its floor: air where the dispatcher stands (docs/structures/ala_town.md). */
 	private static final BlockPos DISPATCHER_LOCAL = new BlockPos(6, 1, 7);
-	private static final UUID OWNER = UUID.fromString("00000000-0000-4858-8000-000000000858");
+	static final UUID OWNER = UUID.fromString("00000000-0000-4858-8000-000000000858");
 
 	/** One case's town: the hall, its core, its dispatcher and its nests. */
 	record Rig(ServerLevel level, int town, BuildingPlan plan, SettlementCoreBlockEntity core,
@@ -181,6 +181,11 @@ public final class TownDroneScenarios {
 	}
 
 	static Rig rig(GameTestHelper helper, int nests, UUID owner, boolean withPlan) {
+		return rig(helper, nests, owner, withPlan, DISPATCHER_LOCAL);
+	}
+
+	/** As {@link #rig(GameTestHelper, int, UUID, boolean)}, the dispatcher at {@code dispatcherLocal} in the hall. */
+	static Rig rig(GameTestHelper helper, int nests, UUID owner, boolean withPlan, BlockPos dispatcherLocal) {
 		ServerLevel level = helper.getLevel();
 		BlockPos origin = nextOrigin();
 		// Kept loaded for the case: the hall lies far from the test's own structure, whose chunks alone the lane
@@ -208,7 +213,7 @@ public final class TownDroneScenarios {
 		BuildingPlan plan = TownWorksScanner.plan(level, town, 0)
 				.orElseThrow(() -> helper.assertionException("the hall has no plan"));
 		TownWorksScanner.measureNow(level, town, 0);
-		BlockPos at = origin.offset(DISPATCHER_LOCAL);
+		BlockPos at = origin.offset(dispatcherLocal);
 		level.setBlock(at, ModContent.TOWN_DISPATCHER.get().defaultBlockState()
 				.setValue(TownDispatcherBlock.FACING, Direction.SOUTH), Block.UPDATE_ALL);
 		List<BlockPos> carpets = new ArrayList<>();

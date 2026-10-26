@@ -1,5 +1,6 @@
 package dev.alaindustrial.settlement.works;
 
+import dev.alaindustrial.item.misc.HousePlanItem;
 import dev.alaindustrial.settlement.Settlement;
 import dev.alaindustrial.settlement.TownPowerLinks;
 import dev.alaindustrial.settlement.drone.RoadWork;
@@ -49,11 +50,13 @@ public final class ConstructionRows {
 	public static final String ROAD_NETWORK = "settlement.alaindustrial.works.road_network";
 	/** «No house plan of type %s yet: look for the sheet in this house's ruin» — a house the town cannot order (Q4). */
 	public static final String NO_HOUSE_PLAN = "settlement.alaindustrial.works.wait.no_house_plan";
+	/** «No warehouse plan yet: look for it in the warehouse ruin or craft it» (MOD-892). */
+	public static final String NO_WAREHOUSE_PLAN = "settlement.alaindustrial.works.wait.no_warehouse_plan";
 	/** «No link to the core: the road is broken at (%1$s, %2$s)» (R132). */
 	public static final String NETWORK_GAP = "settlement.alaindustrial.works.network_gap";
 	/** The target of the road network's row: no building. */
 	public static final int NETWORK_TARGET = -1;
-	/** The house plans section (Q4): the four types and whether the town knows each. */
+	/** The plans section (Q4, MOD-892): the house types and the warehouse, and whether the town knows each. */
 	public static final String SECTION_HOUSE_PLANS = "settlement.alaindustrial.works.section.house_plans";
 	/** A house plan's status words. */
 	public static final String PLAN_KNOWN = "settlement.alaindustrial.works.house_plan.known";
@@ -138,8 +141,7 @@ public final class ConstructionRows {
 		}
 		Optional<ConstructionRow.Text> gap = networkGap(context, i).or(() -> stop(works, i, button));
 		Optional<ConstructionRow.Text> detail = gap.isPresent() ? gap : wait.isPresent()
-				? wait.map(suffix -> TownOrders.NO_PLAN.equals(suffix)
-						? ConstructionRow.Text.of(NO_HOUSE_PLAN, String.valueOf(TownHouses.type(building)))
+				? wait.map(suffix -> TownOrders.NO_PLAN.equals(suffix) ? noPlan(building)
 						: ConstructionRow.Text.of(WAIT_PREFIX + suffix))
 				: !intact && !building.missingKeys().isEmpty()
 						? Optional.of(new ConstructionRow.Text(MISSING_KEYS, building.missingKeys(), true))
@@ -149,6 +151,13 @@ public final class ConstructionRows {
 		return new ConstructionRow(SECTION_BUILDINGS, ConstructionRow.Text.of(TownHouses.displayName(building)),
 				Optional.of(ConstructionRow.Text.of(STATE + building.state().serializedName())),
 				building.percent(), tone, detail, i, actions);
+	}
+
+	/** The line of a building whose plan the town lacks: a house names its type (Q4), the warehouse (MOD-892). */
+	public static ConstructionRow.Text noPlan(TownBuilding building) {
+		return TownHouses.isHouse(building)
+				? ConstructionRow.Text.of(NO_HOUSE_PLAN, String.valueOf(TownHouses.type(building)))
+				: ConstructionRow.Text.of(NO_WAREHOUSE_PLAN);
 	}
 
 	/**
@@ -171,24 +180,36 @@ public final class ConstructionRows {
 	 * building linked, never restored, or whose way is not known or not loaded.
 	 */
 	static Optional<ConstructionRow.Text> networkGap(Context context, int i) {
-		TownBuilding building = context.works().buildings().get(i);
+		return gapCell(context.level(), context.town().id(), context.works().buildings().get(i), i)
+				.map(pos -> ConstructionRow.Text.of(NETWORK_GAP, String.valueOf(pos.getX()),
+						String.valueOf(pos.getZ())));
+	}
+
+	/**
+	 * The cell where building {@code i} (that is {@code building}) of town {@code town} is cut off from the core
+	 * (R132): the first cell of its way to the hall holding neither road nor cable — what its row names and the
+	 * network schematic highlights (MOD-884). Empty for a building linked, never restored, or whose way is not known
+	 * or not loaded.
+	 */
+	public static Optional<BlockPos> gapCell(ServerLevel level, int town, TownBuilding building, int i) {
 		if (!building.everRestored() || !building.missingKeys().contains(TownPowerLinks.NOT_CONNECTED_KEY)) {
 			return Optional.empty();
 		}
-		ServerLevel level = context.level();
-		for (BlockPos pos : TownRoadNetwork.course(level, context.town().id(), i).orElse(List.of())) {
+		for (BlockPos pos : TownRoadNetwork.course(level, town, i).orElse(List.of())) {
 			if (!level.isLoaded(pos)) {
 				return Optional.empty();
 			}
 			if (!RoadWork.done(level, pos, level.getBlockState(pos))) {
-				return Optional.of(ConstructionRow.Text.of(NETWORK_GAP, String.valueOf(pos.getX()),
-						String.valueOf(pos.getZ())));
+				return Optional.of(pos);
 			}
 		}
 		return Optional.empty();
 	}
 
-	/** The town's library of house plans (round 2 of 0.1.219, Q4): each house type of its style, known or not. */
+	/**
+	 * The town's library of plans (round 2 of 0.1.219, Q4): each house type of its style, known or not, then the
+	 * warehouse's when the town has a warehouse or knows its plan (MOD-892).
+	 */
 	static void housePlans(Context context, List<ConstructionRow> rows) {
 		TownWorks works = context.works();
 		Set<String> known = HousePlans.known(works, TownHall.index(works));
@@ -208,6 +229,15 @@ public final class ConstructionRows {
 					ConstructionRow.Text.of("item.alaindustrial.house_plan.typed", String.valueOf(type)),
 					Optional.of(ConstructionRow.Text.of(has ? PLAN_KNOWN : PLAN_UNKNOWN)), -1,
 					has ? ConstructionRow.Tone.GOOD : ConstructionRow.Tone.DIM, Optional.empty(), 0, 0));
+		}
+		String warehouse = "/" + PlanSheetRules.WAREHOUSE;
+		boolean hasWarehouse = works.buildings().stream()
+				.anyMatch(b -> HousePlans.needsPlan(b) && !TownHouses.isHouse(b));
+		boolean knowsWarehouse = known.stream().anyMatch(id -> id.endsWith(warehouse));
+		if (hasWarehouse || knowsWarehouse) {
+			rows.add(new ConstructionRow(SECTION_HOUSE_PLANS, ConstructionRow.Text.of(HousePlanItem.WAREHOUSE_NAME),
+					Optional.of(ConstructionRow.Text.of(knowsWarehouse ? PLAN_KNOWN : PLAN_UNKNOWN)), -1,
+					knowsWarehouse ? ConstructionRow.Tone.GOOD : ConstructionRow.Tone.DIM, Optional.empty(), 0, 0));
 		}
 	}
 
