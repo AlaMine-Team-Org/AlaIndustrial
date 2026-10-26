@@ -100,6 +100,7 @@ final class BlockEntitySlotLayoutSnapshot {
 			"upgrade_table: size=7 upgrades=2 battery=6 menu=yes overclockable=yes batteryFed=yes",
 			"vacuum_collector: size=9 upgrades=- battery=- menu=yes overclockable=no batteryFed=no",
 			"vulcanizer: size=8 upgrades=3 battery=7 menu=yes overclockable=yes batteryFed=yes",
+			"warehouse_shelf: size=27 upgrades=- battery=- menu=yes overclockable=no batteryFed=no",
 			"water_mill: size=5 upgrades=1 battery=- menu=yes overclockable=no batteryFed=no",
 			"wind_mill: size=6 upgrades=2 battery=- menu=yes overclockable=no batteryFed=no",
 			"workstation: size=- upgrades=- battery=- menu=no overclockable=no batteryFed=no");

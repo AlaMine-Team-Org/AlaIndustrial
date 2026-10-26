@@ -51,8 +51,12 @@ public final class PlanSheetNews {
 		return false;
 	}
 
-	/** The words of a hall log note, or empty for any other line. What the town hall's journal will show. */
+	/**
+	 * The words of a hall log note, or empty for any other line. What the town hall's journal will show. A note that
+	 * names a worker (a broken house inlet, MOD-884) gets its number as the sentence's argument.
+	 */
 	public static Optional<Component> logLineText(ShiftWorkerBook.LogLine line) {
-		return line.note().map(note -> Component.translatable(note.key()));
+		Object[] args = line.number().map(number -> new Object[] {number.toString()}).orElse(new Object[0]);
+		return line.note().map(note -> Component.translatable(note.key(), args));
 	}
 }

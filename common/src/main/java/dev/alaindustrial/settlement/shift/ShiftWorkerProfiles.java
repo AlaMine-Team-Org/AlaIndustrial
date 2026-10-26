@@ -302,7 +302,11 @@ public final class ShiftWorkerProfiles {
 				record.housed() ? Optional.of(house(level, record.settlement(), record.home())) : Optional.empty(),
 				owner && alive ? TownHousing.freeHomes(level, record.settlement()).stream()
 						.filter(index -> index != record.home())
-						.map(index -> house(level, record.settlement(), index)).toList() : List.of());
+						.map(index -> house(level, record.settlement(), index)).toList() : List.of(),
+				record.employed() ? record.profession().serializedName() : "",
+				record.employed() ? ShiftWorkerCardPayload.WORK_EMPLOYED
+						: record.workplace() == ShiftWorkerRecord.OFF_WORK ? ShiftWorkerCardPayload.WORK_OFF
+						: ShiftWorkerCardPayload.WORK_NONE);
 	}
 
 	/** House {@code index} of town {@code town} for the card: where its charging bed stands. */
@@ -325,7 +329,9 @@ public final class ShiftWorkerProfiles {
 		for (ShiftWorkerRecord record : records) {
 			ShiftWorkerRosterPayload.Row row = new ShiftWorkerRosterPayload.Row(record.number().toString(),
 					record.name(), record.profile().level(), record.status(),
-					record.status() == ShiftWorkerRecord.Status.ALIVE, record.look(), record.slim());
+					record.status() == ShiftWorkerRecord.Status.ALIVE, record.look(), record.slim(),
+					record.employed() && record.status() == ShiftWorkerRecord.Status.ALIVE
+							? record.profession().serializedName() : "");
 			boolean dead = record.status() == ShiftWorkerRecord.Status.DEAD;
 			List<ShiftWorkerRosterPayload.Row> into = dead ? closed : active;
 			if (into.size() < ShiftWorkerRosterPayload.MAX_ROWS) {

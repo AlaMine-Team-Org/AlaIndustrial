@@ -186,7 +186,8 @@ public final class ShiftWorkerRenumberingScenarios {
 	/** The hall's log has exactly one line about {@code old}: its re-registration as {@code fresh}, in words. */
 	private static void checkLogLine(GameTestHelper helper, ShiftWorkerBook book, RecordNumber old,
 			RecordNumber fresh) {
-		List<ShiftWorkerBook.LogLine> lines = book.log().stream().filter(line -> line.about(old)).toList();
+		List<ShiftWorkerBook.LogLine> lines = book.log().stream()
+				.filter(line -> line.about(old) && line.note().isEmpty()).toList(); // MOD-886: events aside
 		helper.assertTrue(lines.size() == 1 && lines.get(0).death().isEmpty()
 				&& lines.get(0).renumbering().map(ShiftWorkerBook.Renumbering::number).equals(Optional.of(fresh)),
 				"the hall's log about " + old + ": " + lines);

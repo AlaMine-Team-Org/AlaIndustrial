@@ -2,6 +2,7 @@ package dev.alaindustrial.settlement.works;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Why a job stands still, in words a player reads (MOD-857, epic principle «no job without its reason»): a
@@ -91,6 +92,34 @@ public record BlockReason(String key, List<String> args, boolean joined) {
 	/** A cell's coordinates as a reason shows them: «12 64 -5». */
 	public static String at(int x, int y, int z) {
 		return x + " " + y + " " + z;
+	}
+
+	/**
+	 * The cell an {@link #OBSTRUCTED_AT} reason names, as {@code {x, y, z}}, or empty for any other reason or for
+	 * arguments that do not read as a cell (MOD-890: the core's «show it» button outlines that cell in the world).
+	 */
+	public static Optional<int[]> obstructedCell(String key, List<String> args) {
+		if (!OBSTRUCTED_AT.equals(key) || args.size() < 2) {
+			return Optional.empty();
+		}
+		return cell(args.get(1));
+	}
+
+	/** «12 64 -5» read back into {@code {12, 64, -5}} ({@link #at}), or empty when it is not three whole numbers. */
+	public static Optional<int[]> cell(String at) {
+		String[] parts = at.trim().split(" ");
+		if (parts.length != 3) {
+			return Optional.empty();
+		}
+		int[] cell = new int[3];
+		try {
+			for (int i = 0; i < 3; i++) {
+				cell[i] = Integer.parseInt(parts[i]);
+			}
+		} catch (NumberFormatException notANumber) {
+			return Optional.empty();
+		}
+		return Optional.of(cell);
 	}
 
 	/** «{@code blockDescriptionId} cannot be built at {@code where}» ({@link #CELL_STUCK}). */

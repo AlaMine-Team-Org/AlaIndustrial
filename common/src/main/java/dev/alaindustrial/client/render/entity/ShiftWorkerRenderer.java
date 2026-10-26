@@ -5,6 +5,7 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.client.render.entity.layers.ShiftWorkerGearLayer;
 import dev.alaindustrial.client.render.entity.layers.ShiftWorkerGlassLayer;
 import dev.alaindustrial.client.render.entity.layers.ShiftWorkerNumberLayer;
+import dev.alaindustrial.client.render.entity.layers.ShiftWorkerPatchLayer;
 import dev.alaindustrial.entity.ShiftWorker;
 import dev.alaindustrial.registry.ModDataRegistries;
 import dev.alaindustrial.settlement.shift.ShiftWorkerLook;
@@ -20,7 +21,7 @@ import org.jspecify.annotations.Nullable;
 /**
  * Draws a shift worker (MOD-832): the look's skin on a player's body — the classic or the slim one, swapped per
  * frame the way vanilla's ageable renderer swaps its adult and baby models — and three layers on top: the balloon with
- * its hose, the number on the balloon, and the window's glass.
+ * its hose, the number on the balloon, the window's glass, and a trade's patch on the shoulder (MOD-888).
  *
  * <p><b>The look comes from the synced registry</b> {@code alaindustrial:shift_worker_look} (ADR-050 point 6): the
  * entity syncs the look's id, the renderer reads the entry from the client's copy of the registry. A resource pack
@@ -54,6 +55,7 @@ public class ShiftWorkerRenderer extends MobRenderer<ShiftWorker, ShiftWorkerRen
 		addLayer(new ShiftWorkerGearLayer(this, context.bakeLayer(GEAR_LAYER)));
 		addLayer(new ShiftWorkerNumberLayer(this, context.getFont()));
 		addLayer(new ShiftWorkerGlassLayer(this, context.bakeLayer(GLASS_LAYER)));
+		addLayer(new ShiftWorkerPatchLayer(this)); // MOD-888: the trade's patch on the shoulder (R151)
 	}
 
 	@Override
@@ -69,6 +71,7 @@ public class ShiftWorkerRenderer extends MobRenderer<ShiftWorker, ShiftWorkerRen
 		state.hibernating = worker.isNoAi();
 		state.watching = worker.watching(partialTicks);
 		state.greetTicks = worker.greetTicks(partialTicks);
+		state.profession = worker.profession();
 		ShiftWorkerLook look = look(worker);
 		if (look != null) {
 			state.texture = look.textureLocation();

@@ -43,6 +43,7 @@ final class ShiftWorkerRecordSnapshot {
 			"workers[].look: string",
 			"workers[].name: string",
 			"workers[].number: string",
+			"workers[].profession: string",
 			"workers[].profile.biography: list",
 			"workers[].profile.charge: long",
 			"workers[].profile.eu_drained: long",
@@ -54,5 +55,6 @@ final class ShiftWorkerRecordSnapshot {
 			"workers[].profile.marks[].kind: string",
 			"workers[].settlement: int",
 			"workers[].slim: byte",
-			"workers[].status: string");
+			"workers[].status: string",
+			"workers[].workplace: int");
 }

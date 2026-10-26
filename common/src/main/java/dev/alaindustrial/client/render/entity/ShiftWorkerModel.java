@@ -106,6 +106,18 @@ public class ShiftWorkerModel extends HumanoidModel<ShiftWorkerRenderState> {
 	}
 
 	/**
+	 * A trade's patch (MOD-888, R151): a 3 × 3 badge one pixel thick, in the left arm's coordinates with its outer face
+	 * at x = 1; {@code ShiftWorkerPatchLayer} moves it onto the outside of the arm's shoulder end. Its two 3 × 3 sides
+	 * (u 0 and u 4 of a 16 × 16 texture) carry the badge; whichever faces out shows it.
+	 */
+	public static LayerDefinition createPatchLayer() {
+		MeshDefinition mesh = new MeshDefinition();
+		mesh.getRoot().addOrReplaceChild("patch", CubeListBuilder.create().texOffs(0, 0)
+				.addBox(0.0F, -1.0F, -1.5F, 1.0F, 3.0F, 3.0F), PartPose.ZERO);
+		return LayerDefinition.create(mesh, 16, 16);
+	}
+
+	/**
 	 * The glass of the «window» helmet: one face, 7 × 7, just behind the helmet's front (the hat's front is at
 	 * z = -4.5, the face at -4); its edges are hidden behind the helmet's copper frame. Drawn by
 	 * {@code ShiftWorkerGlassLayer} from {@code window_glass.png}, in the translucent pass.

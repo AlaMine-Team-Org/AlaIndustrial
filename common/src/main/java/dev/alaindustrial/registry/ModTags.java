@@ -153,6 +153,11 @@ public final class ModTags {
 		 * is compared with its template.
 		 */
 		public static final TagKey<Block> TOWN_PLAQUE_PLATES = key("town_plaque_plates");
+		/**
+		 * The containers of a town's storage (MOD-888, R152): a chest, a barrel or a warehouse shelf of a building
+		 * the town has restored once. The storekeeper takes materials out of them and puts the clearing's spoil in.
+		 */
+		public static final TagKey<Block> TOWN_STORAGE = key("town_storage");
 
 		/**
 		 * Blocks a town building puts in its «windows and doors» stage (MOD-860): doors, trapdoors, gates,

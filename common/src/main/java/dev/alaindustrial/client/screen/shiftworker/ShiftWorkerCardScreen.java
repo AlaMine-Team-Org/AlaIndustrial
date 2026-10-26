@@ -151,7 +151,7 @@ public final class ShiftWorkerCardScreen extends Screen {
 	/** The state the controls depend on; when it changes they are built again. */
 	private String controlsKey() {
 		StringBuilder key = new StringBuilder().append(tab).append(editing).append(canEdit()).append(card.canRespec())
-				.append(card.freeHouses()).append(relocateChoice);
+				.append(card.freeHouses()).append(relocateChoice).append(card.work());
 		for (ShiftWorkerProfile.Stat stat : ShiftWorkerProfile.Stat.values()) {
 			key.append(canInvest(stat) ? '+' : '-');
 		}
@@ -242,6 +242,7 @@ public final class ShiftWorkerCardScreen extends Screen {
 			}
 		}
 		initRelocateControls(x, rightEdge);
+		initWorkControl(rightEdge);
 		if (card.canRespec()) {
 			Component label = Component.translatable(ShiftWorkerCardText.UI + "respec",
 					ShiftWorkerCardText.amount(card.respecCost()));
@@ -257,6 +258,21 @@ public final class ShiftWorkerCardScreen extends Screen {
 					.tooltip(Tooltip.create(Component.translatable(ShiftWorkerCardText.UI + "respec.tooltip")))
 					.build());
 		}
+	}
+
+	/** «Off work» or «Back to work» on the work row (MOD-888), for a worker that works or was taken off work. */
+	private void initWorkControl(int rightEdge) {
+		if (!canEdit() || card.work() == ShiftWorkerCardPayload.WORK_NONE) {
+			return;
+		}
+		boolean off = card.work() == ShiftWorkerCardPayload.WORK_OFF;
+		String key = ShiftWorkerCardText.UI + (off ? "back_to_work" : "off_work");
+		int y = panelY + workRowY() - 2;
+		addRenderableWidget(Button.builder(Component.translatable(key),
+				b -> ShiftWorkerCardClient.toggleWork(card.number()))
+				.bounds(rightEdge - WORK_BUTTON_W, y, WORK_BUTTON_W, SMALL_BUTTON)
+				.tooltip(Tooltip.create(Component.translatable(key + ".tooltip")))
+				.build());
 	}
 
 	/** «Relocate» and the arrow that picks the house, on the home row (MOD-862, R102). */

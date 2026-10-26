@@ -54,5 +54,8 @@ public final class NeoForgeNetworkVisualization {
 		// MOD-857 (round 2): the town hall's schematic, for the player who turned it on in its core's screen.
 		dev.alaindustrial.client.render.HallSchematicOverlay.submitFrame(event.getSubmitNodeCollector(),
 				event.getLevelRenderState().cameraRenderState);
+		// MOD-890: the block in the way of the town's work, after «show it» in its core's screen.
+		dev.alaindustrial.client.render.ObstructionHighlight.submitFrame(event.getSubmitNodeCollector(),
+				event.getLevelRenderState().cameraRenderState);
 	}
 }

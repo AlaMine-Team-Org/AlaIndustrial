@@ -63,6 +63,8 @@ public final class ShiftWorkerCardLayout {
 	public static final int SMALL_BUTTON = 12;
 	/** The «Relocate» button on the home row (MOD-862); the arrow picking the house is {@link #SMALL_BUTTON} wide. */
 	public static final int RELOCATE_W = 64;
+	/** The «Off work» / «Back to work» button on the work row (MOD-888). */
+	public static final int WORK_BUTTON_W = 84;
 
 	private ShiftWorkerCardLayout() {
 	}
@@ -78,6 +80,14 @@ public final class ShiftWorkerCardLayout {
 	 */
 	public static int recordHeight(boolean alive) {
 		return MODULE_FIRST_ROW + 4 * ROW + 1;
+	}
+
+	/**
+	 * The top of the record module's work row (MOD-888): a living worker of a town shows its work there, where the
+	 * assignment stood, with «Off work» or «Back to work» on its right.
+	 */
+	public static int workRowY() {
+		return TOP + MODULE_FIRST_ROW + 2 * ROW;
 	}
 
 	/** The top of the record module's home row, where «Relocate» stands (MOD-862). */

@@ -8,7 +8,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
  * The buildings and work queues of every ALA town of the save (MOD-857, epic decision R79), kept inside the towns'
@@ -144,9 +146,26 @@ public final class SettlementWorks {
 					new TownRoadTrace.Column(front.x(), front.z())));
 			TownRoadPlan roads = new TownRoadPlan(cells, fronts);
 			TownWorks works = new TownWorks(town.buildings(), town.known(), new WorkQueue(jobs, town.nextJob()),
-					town.planSheets(), roads, town.orders(), town.housePlans());
+					town.planSheets(), roads, town.orders(), plans(town, jobs));
 			install(town.settlement(), works);
 		}
+	}
+
+	/**
+	 * The house plans town {@code town} knows as loaded, with what an older save is taught (MOD-892): a warehouse
+	 * that had work under MOD-888, when it needed no plan, keeps it ({@link HousePlans#grandfathered}).
+	 */
+	private static List<String> plans(SavedTown town, List<WorkJob> jobs) {
+		Set<Integer> worked = new TreeSet<>();
+		jobs.forEach(job -> worked.add(job.building()));
+		Set<String> out = new TreeSet<>(town.housePlans());
+		for (String plan : HousePlans.grandfathered(town.buildings(), worked)) {
+			if (out.add(plan)) {
+				Industrialization.LOGGER.info("[ala-towns] settlement {}: the warehouse had work before it needed a "
+						+ "plan, its plan {} is known", town.settlement(), plan);
+			}
+		}
+		return List.copyOf(out);
 	}
 
 	private List<SavedTown> saved() {

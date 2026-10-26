@@ -46,5 +46,8 @@ public final class NetworkVisualizationClient {
 		// MOD-857 (round 2): the town hall's schematic, for the player who turned it on in its core's screen.
 		dev.alaindustrial.client.render.HallSchematicOverlay.submitFrame(context.submitNodeCollector(),
 				context.levelState().cameraRenderState);
+		// MOD-890: the block in the way of the town's work, after «show it» in its core's screen.
+		dev.alaindustrial.client.render.ObstructionHighlight.submitFrame(context.submitNodeCollector(),
+				context.levelState().cameraRenderState);
 	}
 }

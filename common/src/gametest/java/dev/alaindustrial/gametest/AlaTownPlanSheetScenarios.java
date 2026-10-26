@@ -3,6 +3,8 @@ package dev.alaindustrial.gametest;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.compat.LineStructures;
 import dev.alaindustrial.item.misc.PlanSheet;
+import dev.alaindustrial.item.misc.RestorationPlan;
+import dev.alaindustrial.item.misc.RestorationPlanItem;
 import dev.alaindustrial.item.misc.TownHallPlanSheetItem;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.settlement.plan.PlanSheetRules;
@@ -39,7 +41,7 @@ import net.minecraft.world.level.storage.loot.LootTable;
  * The town hall plan sheets in a generated town (MOD-859, R92 of MOD-824): every town of a built-in style, laid out
  * and placed the way world generation does it, holds all three sheets of its own style — sheet 1 in the town hall,
  * sheet 2 in a house, sheet 3 in the lab under the hall — each in a container of the town's own templates, as a loot
- * table that, opened, gives exactly that sheet.
+ * table that, opened, gives exactly that sheet; and its warehouse ruin holds the warehouse plan (MOD-892).
  */
 public final class AlaTownPlanSheetScenarios {
 
@@ -53,7 +55,9 @@ public final class AlaTownPlanSheetScenarios {
 				RosterEntry.of(AlaTownPlanSheetScenarios::everyLabHasABarrelForSheetThree,
 						"ala_town_every_lab_has_a_barrel_for_sheet_three").ticks(20, 20),
 				RosterEntry.of(AlaTownPlanSheetScenarios::craftedSheetsCarryTheirNumberAndStyle,
-						"ala_town_plan_sheet_recipes_give_numbered_styled_sheets").ticks(20, 20));
+						"ala_town_plan_sheet_recipes_give_numbered_styled_sheets").ticks(20, 20),
+				RosterEntry.of(AlaTownPlanSheetScenarios::craftedWarehousePlansCarryTheirStyle,
+						"ala_town_warehouse_plan_recipes_give_styled_plans").ticks(20, 20));
 
 		private Roster() {}
 	}
@@ -126,6 +130,47 @@ public final class AlaTownPlanSheetScenarios {
 		helper.succeed();
 	}
 
+	/**
+	 * @implements MOD-892-CRAFT — the warehouse plan has its own full 3x3 grid (paper and barrels at the corners and
+	 *     middles, lapis at the sides, the style block in the centre): grass crafts the plains warehouse plan, yellow
+	 *     sandstone the desert one, each one stack of the house-plan item naming that style's intact warehouse; dirt
+	 *     in the centre crafts nothing.
+	 */
+	public static void craftedWarehousePlansCarryTheirStyle(GameTestHelper helper) {
+		Map<String, ItemStack> centres = Map.of(
+				"plains", new ItemStack(Items.GRASS_BLOCK),
+				"desert", new ItemStack(Items.CUT_SANDSTONE));
+		ServerLevel level = helper.getLevel();
+		for (Map.Entry<String, ItemStack> centre : centres.entrySet()) {
+			String style = Industrialization.id(centre.getKey()).toString();
+			CraftingInput input = warehouseGrid(centre.getValue());
+			ItemStack out = level.getServer().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, input, level)
+					.map(r -> r.value().assemble(input)).orElse(ItemStack.EMPTY);
+			RestorationPlan plan = RestorationPlanItem.planOf(out);
+			if (!out.is(ModContent.HOUSE_PLAN.get()) || out.getCount() != 1 || plan == null
+					|| !plan.template().toString().equals(PlanSheetRules.intactTemplate(style,
+							PlanSheetRules.WAREHOUSE))) {
+				helper.fail("the warehouse grid of " + centre.getKey() + " crafted " + out + " carrying " + plan);
+				return;
+			}
+		}
+		CraftingInput noStyle = warehouseGrid(new ItemStack(Items.DIRT));
+		level.getServer().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, noStyle, level).ifPresent(r ->
+				helper.fail("a warehouse grid with dirt in the centre crafted " + r.value().assemble(noStyle)));
+		helper.succeed();
+	}
+
+	/** The warehouse plan's grid {@code PBP / LSL / PBP}: paper, barrels, lapis and the style block S. */
+	private static CraftingInput warehouseGrid(ItemStack centre) {
+		ItemStack paper = new ItemStack(Items.PAPER);
+		ItemStack barrel = new ItemStack(Items.BARREL);
+		ItemStack lapis = new ItemStack(Items.LAPIS_LAZULI);
+		return CraftingInput.of(3, 3, List.of(
+				paper, barrel, paper,
+				lapis, centre, lapis,
+				paper, barrel, paper));
+	}
+
 	/** The sheet grid {@code PLP / XSX / LYL}: paper, lapis, the sheet's own pair X and Y, the style block S. */
 	private static CraftingInput sheetGrid(ItemStack[] pair, ItemStack centre) {
 		ItemStack paper = new ItemStack(Items.PAPER);
@@ -173,7 +218,52 @@ public final class AlaTownPlanSheetScenarios {
 				return;
 			}
 		}
+		String warehouse = holdsWarehousePlan(level, start, style);
+		if (warehouse != null) {
+			helper.fail(id + ": " + warehouse);
+			return;
+		}
 		helper.succeed();
+	}
+
+	/**
+	 * What is wrong with the town's warehouse plan (MOD-892, R154), or {@code null}: exactly one container of the
+	 * town has the style's warehouse-plan table, it stands in the warehouse ruin, and opened it gives the house-plan
+	 * item naming the style's intact warehouse.
+	 */
+	private static String holdsWarehousePlan(ServerLevel level, StructureStart start, String style) {
+		String table = PlanSheetRules.buildingPlanTable(Industrialization.id(style).toString(),
+				PlanSheetRules.WAREHOUSE);
+		List<RandomizableContainerBlockEntity> found = new ArrayList<>();
+		BoundingBox box = start.getBoundingBox();
+		for (int cx = box.minX() >> 4; cx <= box.maxX() >> 4; cx++) {
+			for (int cz = box.minZ() >> 4; cz <= box.maxZ() >> 4; cz++) {
+				for (BlockEntity be : level.getChunk(cx, cz).getBlockEntities().values()) {
+					if (be instanceof RandomizableContainerBlockEntity container && container.getLootTable() != null
+							&& container.getLootTable().identifier().toString().equals(table)) {
+						found.add(container);
+					}
+				}
+			}
+		}
+		if (found.size() != 1) {
+			return found.size() + " containers hold the warehouse plan, expected 1";
+		}
+		RandomizableContainerBlockEntity container = found.getFirst();
+		if (!inPiece(start, container.getBlockPos(), "/warehouse")) {
+			return "the warehouse plan at " + container.getBlockPos() + " is not in the warehouse";
+		}
+		container.unpackLootTable(null);
+		String template = PlanSheetRules.intactTemplate(Industrialization.id(style).toString(),
+				PlanSheetRules.WAREHOUSE);
+		for (int slot = 0; slot < container.getContainerSize(); slot++) {
+			ItemStack stack = container.getItem(slot);
+			RestorationPlan plan = RestorationPlanItem.planOf(stack);
+			if (stack.is(ModContent.HOUSE_PLAN.get()) && plan != null && plan.template().toString().equals(template)) {
+				return null;
+			}
+		}
+		return "the warehouse's container at " + container.getBlockPos() + " opened without the warehouse plan";
 	}
 
 	/**

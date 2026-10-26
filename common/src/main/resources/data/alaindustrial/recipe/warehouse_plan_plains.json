@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "warehouse_plan",
+  "pattern": [
+    "PBP",
+    "LSL",
+    "PBP"
+  ],
+  "key": {
+    "P": "minecraft:paper",
+    "B": "minecraft:barrel",
+    "L": "#c:gems/lapis",
+    "S": "minecraft:grass_block"
+  },
+  "result": {
+    "id": "alaindustrial:house_plan",
+    "count": 1,
+    "components": {
+      "alaindustrial:restoration_plan": {
+        "style": "alaindustrial:plains",
+        "template": "alaindustrial:ala_town/plains/intact/warehouse"
+      }
+    }
+  }
+}

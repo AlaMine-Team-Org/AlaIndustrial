@@ -10,6 +10,8 @@ import dev.alaindustrial.client.screen.works.HousePlacementClient;
 import dev.alaindustrial.client.render.SettlementBorderOverlay;
 import dev.alaindustrial.client.render.ZonePreviewRenderer;
 import dev.alaindustrial.client.screen.shiftworker.ShiftWorkerCardClient;
+import dev.alaindustrial.client.render.ObstructionHighlight;
+import dev.alaindustrial.client.screen.works.TownPulseClient;
 import dev.alaindustrial.client.screen.works.TownWorksClient;
 import dev.alaindustrial.network.ArchiveRecordPayload;
 import dev.alaindustrial.network.ConfigSyncPayload;
@@ -23,6 +25,8 @@ import dev.alaindustrial.network.HousePlacementPayload;
 import dev.alaindustrial.network.SettlementBorderPayload;
 import dev.alaindustrial.network.ShiftWorkerCardPayload;
 import dev.alaindustrial.network.ShiftWorkerRosterPayload;
+import dev.alaindustrial.network.TownObstructionPayload;
+import dev.alaindustrial.network.TownPulsePayload;
 import dev.alaindustrial.network.TownWorksPayload;
 import dev.alaindustrial.network.ZonePreviewPayload;
 import dev.alaindustrial.network.TeleportFadePayload;
@@ -145,7 +149,11 @@ public final class ClientPayloadManifest {
 			// MOD-877: the house laying window of a house inlet, and the house's ghosts.
 			queued(HousePlacementPayload.TYPE, HousePlacementClient::receive),
 			// Round 2 of 0.1.219 (Q2): the card of one town building.
-			queued(BuildingCardPayload.TYPE, BuildingCardClient::receive));
+			queued(BuildingCardPayload.TYPE, BuildingCardClient::receive),
+			// MOD-886: a town's needs and chronicle for its core's screen.
+			queued(TownPulsePayload.TYPE, TownPulseClient::receive),
+			// MOD-890: the block in the way of the town's work, outlined for a few seconds.
+			queued(TownObstructionPayload.TYPE, ObstructionHighlight::receive));
 
 	private static final Map<CustomPacketPayload.Type<?>, ClientHandlerDef<?>> BY_TYPE = index();
 

@@ -64,6 +64,10 @@ public final class HallSchematicGhosts {
 	static final int ALPHA = 0x73;
 	/** The plan tint multiplied into every ghost colour: a pale blue. */
 	static final int PLAN_TINT = 0xC8E0FF;
+	/** The tint of a ghost marking where the town's road network is cut off (R132, MOD-884): a strong red. */
+	static final int GAP_TINT = 0xFF3030;
+	/** The alpha of a gap ghost: 80 %, so it stands out of the pale plan. */
+	static final int GAP_ALPHA = 0xCC;
 	/** How much larger than the cell a ghost is, on each side, in blocks. */
 	static final float INFLATE = 0.01F;
 	/** Ghosts farther than this from the eye are not drawn. */
@@ -170,8 +174,8 @@ public final class HallSchematicGhosts {
 			}
 			BlockPos pos = BlockPos.of(ghost.pos());
 			StateQuads model = CACHE.computeIfAbsent(state, s -> StateQuads.of(models, s));
-			Cell cell = model.isEmpty() ? specialOrBoxCell(core, pos, state, models)
-					: modelCell(core, pos, state, model, wanted, level, colors);
+			Cell cell = model.isEmpty() ? specialOrBoxCell(core, pos, state, models, ghost.gap())
+					: modelCell(core, pos, state, model, wanted, level, colors, ghost.gap());
 			if (cell == null) {
 				continue;
 			}
@@ -247,7 +251,7 @@ public final class HallSchematicGhosts {
 	}
 
 	private static @Nullable Cell modelCell(BlockPos core, BlockPos pos, BlockState state, StateQuads model,
-			Map<Long, BlockState> wanted, @Nullable ClientLevel level, BlockColors colors) {
+			Map<Long, BlockState> wanted, @Nullable ClientLevel level, BlockColors colors, boolean gap) {
 		List<BakedQuad> quads = new ArrayList<>();
 		List<Integer> colours = new ArrayList<>();
 		Map<Integer, Integer> tints = new HashMap<>();
@@ -266,7 +270,7 @@ public final class HallSchematicGhosts {
 					rgb = tints.computeIfAbsent(index, i -> tint(colors, state, i, level, pos));
 				}
 				quads.add(quad);
-				colours.add(colour(rgb));
+				colours.add(colour(rgb, gap));
 			}
 		}
 		if (quads.isEmpty()) {
@@ -285,18 +289,19 @@ public final class HallSchematicGhosts {
 	 * redraw it, else {@link #boxCell}.
 	 */
 	private static @Nullable Cell specialOrBoxCell(BlockPos core, BlockPos pos, BlockState state,
-			BlockStateModelSet models) {
+			BlockStateModelSet models, boolean gap) {
 		List<SpecialModelCapture.Part> parts = SPECIAL_CACHE.computeIfAbsent(state, SpecialModelCapture::capture);
 		if (parts.isEmpty()) {
-			return boxCell(core, pos, state, models);
+			return boxCell(core, pos, state, models, gap);
 		}
 		return new Cell(pos.getX() - core.getX(), pos.getY() - core.getY(), pos.getZ() - core.getZ(),
-				new BakedQuad[0], new int[] {colour(0xFFFFFF)}, null, null,
+				new BakedQuad[0], new int[] {colour(0xFFFFFF, gap)}, null, null,
 				parts.toArray(SpecialModelCapture.Part[]::new));
 	}
 
 	/** A block whose model is empty: its shape's box with its particle sprite, or nothing when it has no shape. */
-	private static @Nullable Cell boxCell(BlockPos core, BlockPos pos, BlockState state, BlockStateModelSet models) {
+	private static @Nullable Cell boxCell(BlockPos core, BlockPos pos, BlockState state, BlockStateModelSet models,
+			boolean gap) {
 		var shape = state.getShape(EmptyBlockGetter.INSTANCE, BlockPos.ZERO);
 		if (shape.isEmpty()) {
 			return null;
@@ -309,7 +314,7 @@ public final class HallSchematicGhosts {
 		float[] bounds = {(float) box.minX, (float) box.minY, (float) box.minZ, (float) box.maxX, (float) box.maxY,
 				(float) box.maxZ};
 		return new Cell(pos.getX() - core.getX(), pos.getY() - core.getY(), pos.getZ() - core.getZ(),
-				new BakedQuad[0], new int[] {colour(0xFFFFFF)}, bounds, sprite, NO_PARTS);
+				new BakedQuad[0], new int[] {colour(0xFFFFFF, gap)}, bounds, sprite, NO_PARTS);
 	}
 
 	/**
@@ -336,10 +341,19 @@ public final class HallSchematicGhosts {
 
 	/** {@code rgb} times {@link #PLAN_TINT}, at {@link #ALPHA}. */
 	static int colour(int rgb) {
-		int r = (rgb >> 16 & 0xFF) * (PLAN_TINT >> 16 & 0xFF) / 255;
-		int g = (rgb >> 8 & 0xFF) * (PLAN_TINT >> 8 & 0xFF) / 255;
-		int b = (rgb & 0xFF) * (PLAN_TINT & 0xFF) / 255;
-		return ALPHA << 24 | r << 16 | g << 8 | b;
+		return colour(rgb, false);
+	}
+
+	/**
+	 * {@code rgb} times {@link #PLAN_TINT} at {@link #ALPHA}; for a gap of the network times {@link #GAP_TINT} at
+	 * {@link #GAP_ALPHA}.
+	 */
+	static int colour(int rgb, boolean gap) {
+		int tint = gap ? GAP_TINT : PLAN_TINT;
+		int r = (rgb >> 16 & 0xFF) * (tint >> 16 & 0xFF) / 255;
+		int g = (rgb >> 8 & 0xFF) * (tint >> 8 & 0xFF) / 255;
+		int b = (rgb & 0xFF) * (tint & 0xFF) / 255;
+		return (gap ? GAP_ALPHA : ALPHA) << 24 | r << 16 | g << 8 | b;
 	}
 
 	/** The six faces of a box, each textured with the whole sprite, normals out. */

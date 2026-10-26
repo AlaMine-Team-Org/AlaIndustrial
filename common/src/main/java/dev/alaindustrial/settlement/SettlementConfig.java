@@ -241,4 +241,9 @@ public final class SettlementConfig {
 	@Knob(section = Section.SETTLEMENTS, min = 1,
 			doc = "Ticks a tier-1 builder drone takes per block of flight path.")
 	public static int settlementDroneFlightTicksPerBlock = 2;
+	/** MOD-886: how often a lit core works out what its town needs (the town's pulse, TownPulse). */
+	@Knob(section = Section.SETTLEMENTS, min = 1,
+			doc = "Ticks between two looks of a lit settlement core at what its town needs; the core's screen shows"
+					+ " the latest.")
+	public static int townPulseIntervalTicks = 100;
 }

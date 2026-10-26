@@ -491,6 +491,11 @@ pitest {
                      'dev.alaindustrial.settlement.shift.PathQuota',
                      'dev.alaindustrial.settlement.shift.ShiftMode',
                      'dev.alaindustrial.settlement.shift.ShiftSchedule*',
+                     // MOD-889: the day grid, its activities and one worker's day as it goes — Minecraft-free,
+                     // listed WITH their L1 suites (DayRoutineTest, RoutineStateTest).
+                     'dev.alaindustrial.settlement.shift.DayRoutine',
+                     'dev.alaindustrial.settlement.shift.RoutineActivity',
+                     'dev.alaindustrial.settlement.shift.RoutineState*',
                      // MOD-834: when a worker marked for a new number may get it — Minecraft-free, listed WITH its
                      // L1 suite (RenumberWindowTest); the glob reaches the nested Body and Observer.
                      'dev.alaindustrial.settlement.shift.RenumberWindow*',
@@ -511,6 +516,9 @@ pitest {
                      // MOD-876: the house's power contract, an interface the beds of MOD-862 draw through; no code
                      // of its own to mutate, listed so the target set stays complete.
                      'dev.alaindustrial.settlement.HousePowerSource',
+                     // MOD-885: the warehouse shelf's «four biggest kinds» ranking — Minecraft-free, listed WITH
+                     // its L1 suite (MostHeldKindsTest).
+                     'dev.alaindustrial.storage.MostHeldKinds',
                      // MOD-859: the town hall plan sheets' assembly rules and the hint keys — Minecraft-free,
                      // listed WITH their L1 suite (PlanSheetRulesTest); the glob reaches the nested Sheet, Plan,
                      // Result and Reason.
@@ -546,6 +554,8 @@ pitest {
                      // with. The glob reaches the nested Fit record.
                      'dev.alaindustrial.client.screen.TextFit*',
                      'dev.alaindustrial.client.screen.SettlementCoreLayout',
+                     // MOD-890: the chronicle's rows as tall as their sentences — L1 suite ChronicleRowsTest.
+                     'dev.alaindustrial.client.screen.ChronicleRows*',
                      // MOD-854: where the shift worker's card puts its modules — Minecraft-free, L1 suite
                      // ShiftWorkerCardLayoutTest.
                      'dev.alaindustrial.client.screen.shiftworker.ShiftWorkerCardLayout',
@@ -587,7 +597,20 @@ pitest {
                      'dev.alaindustrial.settlement.works.TownRoadTrace*',
                      // Round 2 of 0.1.219 (R2-7): the town's road network as one tree — Minecraft-free, L1 suite
                      // TownRoadPlanTest.
-                     'dev.alaindustrial.settlement.works.TownRoadPlan*'
+                     'dev.alaindustrial.settlement.works.TownRoadPlan*',
+                     // MOD-886: what a town needs (the pulse) and how a line joins its chronicle — Minecraft-free,
+                     // L1 suites TownNeedsTest and ChronicleRulesTest. The globs reach the nested Kind, Need, Facts
+                     // and Result.
+                     'dev.alaindustrial.settlement.works.TownNeeds*',
+                     // MOD-890: the pictures of the town's needs — L1 suite NeedIconTest.
+                     'dev.alaindustrial.settlement.works.NeedIcon',
+                     'dev.alaindustrial.settlement.shift.ChronicleRules*',
+                     // MOD-888: who works where, what the storekeeper carries, and the trades — Minecraft-free,
+                     // L1 suites WorkplaceRulesTest and StorekeeperRulesTest. The globs reach the nested Place,
+                     // Worker and Change.
+                     'dev.alaindustrial.settlement.works.WorkplaceRules*',
+                     'dev.alaindustrial.settlement.works.StorekeeperRules',
+                     'dev.alaindustrial.settlement.shift.Profession'
             ]
     // The MC-coupled classes are excluded from MUTATION (the bytecode PIT rewrites). But PIT's
     // JUnit discovery also walks every class under `targetTests` via reflection to find @Test
@@ -938,6 +961,10 @@ pitest {
             'dev.alaindustrial.settlement.works.SettlementWorks',
             'dev.alaindustrial.settlement.works.TownWorks',
             'dev.alaindustrial.client.screen.works.TownWorksClient',
+            // MOD-886: the client end of the core's town line and «Chronicle» tab sends a record payload through
+            // NetworkDispatcher, as TownWorksClient does (pitest_check.py's TRANSITIVE_MC_COUPLING); held by the
+            // town_pulse game tests.
+            'dev.alaindustrial.client.screen.works.TownPulseClient',
             // MOD-860: the journal's save codec is a DataFixerUpper Codec, and the «Stages» rows read a town's staged
             // plan (BlockState, ServerLevel) — neither loads on common/'s test classpath (pitest_check.py's
             // TRANSITIVE_MC_COUPLING). Their rules live in WorkJournal and BuildStageRules (targeted above) and are

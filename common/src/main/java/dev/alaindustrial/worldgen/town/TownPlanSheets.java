@@ -42,7 +42,8 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
  *   <li>the house plans (MOD-862, R99) — every house's barrel or chest holds the plan of its own type, the sheet-2
  *       house's both;</li>
  *   <li>sheet 3 — the lab's first barrel (every built-in lab has one, so its trapped chest keeps its own
- *       loot).</li>
+ *       loot);</li>
+ *   <li>the warehouse plan (MOD-892, R154): the warehouse ruin's first barrel, else its first chest.</li>
  * </ul>
  * The tables are {@code <ns>:chests/ala_town/<style>/plan_sheet_<k>} ({@link PlanSheetRules#lootTable}); a style
  * from a datapack brings its own. A place a style's templates lack is logged once per style and sheet, and the town
@@ -77,6 +78,8 @@ final class TownPlanSheets {
 				if (anchor == null && !cells(template, pool, ModContent.SETTLEMENT_CORE.get()).isEmpty()) {
 					anchor = pool.getPosition();
 					hallChest = cells(template, pool, Blocks.CHEST).stream().findFirst();
+				} else if (PlanSheetRules.WAREHOUSE.equals(buildingName(pool))) {
+					placeInWarehouse(level, chunkBox, template, pool, styleId, random);
 				} else if (TownPlaques.hasPlaque(templates, pool)) {
 					container(template, pool).ifPresent(cell -> {
 						houseContainers.add(cell);
@@ -141,13 +144,30 @@ final class TownPlanSheets {
 		give(level, chunkBox, barrels.getFirst(), PlanSheetRules.lootTable(styleId, 3), random);
 	}
 
+	/** The warehouse plan (MOD-892, R154): the warehouse ruin's first barrel, else its first chest. */
+	private static void placeInWarehouse(WorldGenLevel level, BoundingBox chunkBox, StructureTemplate template,
+			PoolElementStructurePiece pool, String styleId, RandomSource random) {
+		Optional<BlockPos> cell = container(template, pool);
+		if (cell.isEmpty()) {
+			report(styleId, "warehouse plan", "the warehouse holds no barrel or chest");
+			return;
+		}
+		give(level, chunkBox, cell.get(), PlanSheetRules.buildingPlanTable(styleId, PlanSheetRules.WAREHOUSE),
+				random);
+	}
+
 	/** The capsule house type {@code pool}'s template is (MOD-862), or 0 for another building. */
 	private static int houseType(PoolElementStructurePiece pool) {
+		return PlanSheetRules.houseType(buildingName(pool));
+	}
+
+	/** The last path segment of {@code pool}'s template ({@code warehouse}), or empty for a piece of none. */
+	private static String buildingName(PoolElementStructurePiece pool) {
 		if (!(pool.getElement() instanceof SinglePoolElement single)) {
-			return 0;
+			return "";
 		}
 		String path = single.getTemplateLocation().getPath();
-		return PlanSheetRules.houseType(path.substring(path.lastIndexOf('/') + 1));
+		return path.substring(path.lastIndexOf('/') + 1);
 	}
 
 	/** The template of a rigid single-template pool piece, or {@code null}. */

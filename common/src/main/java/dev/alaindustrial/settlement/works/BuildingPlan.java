@@ -68,6 +68,10 @@ public final class BuildingPlan {
 
 	/** The lab hatches of the building in the world, packed: the drone keeps off their shafts (MOD-858, R93). */
 	private final long[] hatches;
+	/** Where the town's dispatcher has its place in the building, packed (MOD-891, R158); {@link #NO_SPOT}: none. */
+	private final long dispatcherSpot;
+	/** {@link #dispatcherSpot} of a building with no dispatcher's cell. */
+	private static final long NO_SPOT = Long.MIN_VALUE;
 	/** The ring around the footprint a clearing frees of terrain, packed, top layer first ({@link #ringPos}). */
 	private final long[] ring;
 	/** Whether the building is a house a player laid on free ground (MOD-877): it has no ruin, its site is nature. */
@@ -89,8 +93,9 @@ public final class BuildingPlan {
 	private final Set<Block> rubble = new HashSet<>();
 
 	private BuildingPlan(List<Cell> list, List<String> keyNames, double restoredAt, long[] hatches, int ringWidth,
-			Predicate<BlockPos> foreign, boolean laid, boolean house) {
+			Predicate<BlockPos> foreign, boolean laid, boolean house, long dispatcherSpot) {
 		this.hatches = hatches;
+		this.dispatcherSpot = dispatcherSpot;
 		this.laid = laid;
 		int size = list.size();
 		this.cells = new long[size];
@@ -333,6 +338,15 @@ public final class BuildingPlan {
 		return BlockPos.of(cells[index]);
 	}
 
+	/**
+	 * Where the town's dispatcher has its place in this building (MOD-891, R158): the cell the definition keeps for it
+	 * ({@link TownBuildingDef#dispatcherSpot}), placed with the building. The plan wants air there, so a drone never
+	 * builds on it; a dispatcher standing there counts as in place ({@link #matches}). Empty for a building with none.
+	 */
+	public Optional<BlockPos> dispatcherSpot() {
+		return dispatcherSpot == NO_SPOT ? Optional.empty() : Optional.of(BlockPos.of(dispatcherSpot));
+	}
+
 	/** The cell index of each packed position, built on the first {@link #indexOf} call. */
 	private Map<Long, Integer> byPos;
 
@@ -376,12 +390,13 @@ public final class BuildingPlan {
 	 * Whether {@code world} at cell {@code index} matches the plan: the same block, or air where air belongs. A drone
 	 * nest standing where the plan wants a yellow carpet matches too: the carpets mark the drone pad's nest spots,
 	 * and a nest is put on one in their place (MOD-858, owner decision 2026-10-21). Any plaque plate matches any other:
-	 * a house's plaque shows the number of whoever lives there (MOD-862, R40).
+	 * a house's plaque shows the number of whoever lives there (MOD-862, R40). On the dispatcher's cell
+	 * ({@link #dispatcherSpot}) the dispatcher matches as air does: it stands where it belongs (MOD-891, R158).
 	 */
 	public boolean matches(int index, BlockState world) {
 		BlockState want = expected[index];
 		if (want.isAir()) {
-			return world.isAir();
+			return world.isAir() || cells[index] == dispatcherSpot && world.is(ModContent.TOWN_DISPATCHER.get());
 		}
 		return world.is(want.getBlock())
 				|| world.is(ModContent.DRONE_NEST.get())
@@ -432,10 +447,13 @@ public final class BuildingPlan {
 		}
 		StructurePlaceSettings settings = new StructurePlaceSettings().setRotation(building.rotation());
 		List<TownBuildingDef.KeyPoint> keys = definition.keyPoints();
+		Optional<BlockPos> spotLocal = definition.dispatcherSpot();
 		List<Cell> list = new ArrayList<>();
 		for (Map.Entry<BlockPos, BlockState> entry : intact.get().entrySet()) {
 			BlockPos local = entry.getKey();
-			BlockState want = entry.getValue();
+			// The dispatcher's cell is air whatever the template holds there: the drone builds nothing on it (R158).
+			BlockState want = spotLocal.filter(local::equals).isPresent() ? Blocks.AIR.defaultBlockState()
+					: entry.getValue();
 			BlockState was = ruin.get().getOrDefault(local, Blocks.AIR.defaultBlockState());
 			boolean isDebris = want.isAir() && (laid || !was.isAir());
 			if (want.isAir() && !isDebris) {
@@ -459,8 +477,10 @@ public final class BuildingPlan {
 		List<String> names = new ArrayList<>();
 		keys.forEach(key -> names.add(key.name()));
 		long[] hatches = laid ? new long[0] : hatches(templates, building.template(), building.origin(), settings);
+		long spot = spotLocal.map(local -> StructureTemplate.calculateRelativePosition(settings, local)
+				.offset(building.origin()).asLong()).orElse(NO_SPOT);
 		return Optional.of(new BuildingPlan(list, names, definition.restoredAt(), hatches, definition.clearRing(),
-				foreign, laid, TownHouses.isHouse(building)));
+				foreign, laid, TownHouses.isHouse(building), spot));
 	}
 
 	/**

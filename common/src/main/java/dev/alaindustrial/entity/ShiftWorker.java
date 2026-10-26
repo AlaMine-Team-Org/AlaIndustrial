@@ -1,6 +1,8 @@
 package dev.alaindustrial.entity;
 
 import dev.alaindustrial.block.ChargingBedBlock;
+import dev.alaindustrial.settlement.shift.RoutineState;
+import dev.alaindustrial.settlement.shift.Profession;
 import dev.alaindustrial.settlement.shift.ShiftMode;
 import dev.alaindustrial.settlement.shift.ShiftWorkerBattery;
 import dev.alaindustrial.settlement.SettlementConfig;
@@ -24,6 +26,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.Pose;
@@ -31,6 +34,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.OpenDoorGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.DismountHelper;
@@ -51,7 +55,9 @@ import org.jspecify.annotations.Nullable;
  * the synced data below.
  *
  * <p><b>What it does.</b> Asks the shift planner every 20 ticks, offset by its id ({@link ShiftWorkers#think}), and
- * walks within its home radius through the town's path dispatcher ({@link ShiftWorkerWalkGoal}). Hostile mobs hunt
+ * walks within its home radius through the town's path dispatcher ({@link ShiftWorkerWalkGoal}); the day's routine
+ * moves that home — the workplace, the hall's gathering, its house at night ({@code ShiftRoutine}, MOD-889) — and it
+ * opens wooden doors on the way. Hostile mobs hunt
  * it as they hunt players ({@link ShiftWorkerHunters}), and it runs from them without leaving its town's territory
  * ({@link ShiftWorkerFleeGoal}, MOD-824). It looks at a
  * player near it, never at one in creative or spectator mode ({@link ShiftWorkerLookGoal}, MOD-847). It does not
@@ -80,6 +86,10 @@ public class ShiftWorker extends PathfinderMob {
 	private static final EntityDataAccessor<Integer> DATA_GREETS =
 			SynchedEntityData.defineId(ShiftWorker.class, EntityDataSerializers.INT);
 
+	/** Its trade's serialized name, empty — none (MOD-888): the client draws the trade's patch on the suit (R151). */
+	private static final EntityDataAccessor<String> DATA_PROFESSION =
+			SynchedEntityData.defineId(ShiftWorker.class, EntityDataSerializers.STRING);
+
 	/** Ticks the client takes to turn its eyes to a player or away, for the stand's look about. */
 	private static final float WATCH_EASE_TICKS = 8.0F;
 
@@ -102,6 +112,10 @@ public class ShiftWorker extends PathfinderMob {
 	private double drainCarry;
 	/** Server only: on its way to its charging bed, or lying on it (MOD-862, R101); not saved. */
 	private boolean goingToBed;
+	/** Server only: the anchor its town gave it (its core, or where a worker of no town was bound); not saved. */
+	private @Nullable BlockPos townAnchor;
+	/** Server only: its day as it goes (MOD-889); a fresh one after a reload, the routine takes up the clock. */
+	private final RoutineState routine = new RoutineState();
 	/** Server only: game time of the last wound, -1 — none; one fight is one service mark. */
 	private long lastHurtAt = -1L;
 	/**
@@ -118,6 +132,9 @@ public class ShiftWorker extends PathfinderMob {
 	public ShiftWorker(EntityType<? extends ShiftWorker> type, Level level) {
 		super(type, level);
 		setPersistenceRequired();
+		getNavigation().setCanOpenDoors(true); // MOD-889: the day leads it through doors
+		// What a storekeeper holds is a picture of its load (MOD-888): it never drops, so a death doubles nothing.
+		setDropChance(EquipmentSlot.MAINHAND, 0.0F);
 	}
 
 	/**
@@ -156,6 +173,7 @@ public class ShiftWorker extends PathfinderMob {
 		entityData.define(DATA_BED, Optional.empty());
 		entityData.define(DATA_WATCHING, false);
 		entityData.define(DATA_GREETS, 0);
+		entityData.define(DATA_PROFESSION, "");
 	}
 
 	@Override
@@ -163,9 +181,12 @@ public class ShiftWorker extends PathfinderMob {
 		goalSelector.addGoal(0, new FloatGoal(this));
 		fleeGoal = new ShiftWorkerFleeGoal(this);
 		goalSelector.addGoal(1, fleeGoal);
+		goalSelector.addGoal(3, new OpenDoorGoal(this, true));
+		goalSelector.addGoal(4, new ShiftWorkerStorekeeperGoal(this)); // MOD-888: the storekeeper's trips
 		goalSelector.addGoal(5, new ShiftWorkerWalkGoal(this));
 		goalSelector.addGoal(8, new ShiftWorkerLookGoal(this));
-		goalSelector.addGoal(9, new RandomLookAroundGoal(this));
+		goalSelector.addGoal(9, new ShiftWorkerGatherGoal(this));
+		goalSelector.addGoal(10, new RandomLookAroundGoal(this));
 	}
 
 	@Override
@@ -229,6 +250,12 @@ public class ShiftWorker extends PathfinderMob {
 		entityData.set(DATA_NUMBER, record.number().toString());
 		entityData.set(DATA_LOOK, record.look().toString());
 		entityData.set(DATA_SLIM, record.slim());
+		entityData.set(DATA_PROFESSION, record.employed() ? record.profession().serializedName() : "");
+	}
+
+	/** The worker's trade, as its record says (MOD-888); {@link Profession#NONE} without work. Both sides. */
+	public Profession profession() {
+		return Profession.byName(entityData.get(DATA_PROFESSION));
 	}
 
 	/** The number on the back, {@code <letter>-<NNN>}; empty until the record was found. */
@@ -259,6 +286,16 @@ public class ShiftWorker extends PathfinderMob {
 	/** Server side, by the planner only. */
 	public void setMode(ShiftMode mode) {
 		this.mode = mode;
+	}
+
+	/** Its day as it goes: activity, progress, unreachable targets (server side, MOD-889). */
+	public RoutineState routine() {
+		return routine;
+	}
+
+	/** The anchor its town gave it: its town's core, or where a worker of no town was bound (server side). */
+	public BlockPos townAnchor() {
+		return townAnchor != null ? townAnchor : getHomePosition();
 	}
 
 	/** The wander radius this worker is held to — the knob, never past its town's territory. */
@@ -389,6 +426,7 @@ public class ShiftWorker extends PathfinderMob {
 	public void joinTown(int settlement, BlockPos anchor, int wanderRadius) {
 		this.settlement = settlement;
 		this.wanderRadius = Math.max(1, wanderRadius);
+		this.townAnchor = anchor.immutable();
 		setHomeTo(anchor, this.wanderRadius);
 	}
 

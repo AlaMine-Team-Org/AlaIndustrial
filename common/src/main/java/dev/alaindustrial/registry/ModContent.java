@@ -403,6 +403,8 @@ public final class ModContent {
 	public static Supplier<Block> HOUSE_INLET = unbound("HOUSE_INLET");
 	/** MOD-876 - where a shift worker sleeps and charges. */
 	public static Supplier<Block> CHARGING_BED = unbound("CHARGING_BED");
+	/** MOD-885 - the town warehouse's storage: a chest whose bin cards show what it holds the most of. */
+	public static Supplier<Block> WAREHOUSE_SHELF = unbound("WAREHOUSE_SHELF");
 	// Enriched Uranium Torch (MOD-085) — a vanilla-behaviour torch (light 15, green flame) in two
 	// blocks: standing + wall. The wall variant has NO block item; it drops/names from the standing
 	// torch via overrideLootTable/overrideDescription, exactly as vanilla WALL_TORCH mirrors TORCH.
@@ -1100,6 +1102,8 @@ public final class ModContent {
 	// MOD-876
 	public static Supplier<BlockItem> HOUSE_INLET_ITEM = unbound("HOUSE_INLET_ITEM");
 	public static Supplier<BlockItem> CHARGING_BED_ITEM = unbound("CHARGING_BED_ITEM");
+	// MOD-885
+	public static Supplier<BlockItem> WAREHOUSE_SHELF_ITEM = unbound("WAREHOUSE_SHELF_ITEM");
 	// Enriched Uranium Torch (MOD-085) — only the STANDING torch has a block item; the wall variant
 	// drops this item via its overrideLootTable, so it needs no item of its own.
 	public static Supplier<BlockItem> ENRICHED_URANIUM_TORCH_ITEM = unbound("ENRICHED_URANIUM_TORCH_ITEM");
@@ -1174,6 +1178,8 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> DRONE_NEST_BE = unbound("DRONE_NEST_BE");
 	// MOD-876
 	public static Supplier<BlockEntityType<?>> HOUSE_INLET_BE = unbound("HOUSE_INLET_BE");
+	// MOD-885
+	public static Supplier<BlockEntityType<?>> WAREHOUSE_SHELF_BE = unbound("WAREHOUSE_SHELF_BE");
 	public static Supplier<BlockEntityType<?>> ELECTRIC_HEATER_BE = unbound("ELECTRIC_HEATER_BE");
 	public static Supplier<BlockEntityType<?>> CHARGE_PAD_BE = unbound("CHARGE_PAD_BE");
 	public static Supplier<BlockEntityType<?>> VACUUM_COLLECTOR_BE = unbound("VACUUM_COLLECTOR_BE");

@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"key": {
+		"T": "alaindustrial:tempered_iron_plate",
+		"P": "minecraft:paper",
+		"C": "minecraft:chest"
+	},
+	"pattern": [
+		"TPT",
+		"PCP",
+		"TPT"
+	],
+	"result": {
+		"id": "alaindustrial:warehouse_shelf"
+	}
+}

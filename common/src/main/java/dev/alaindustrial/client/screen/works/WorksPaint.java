@@ -125,6 +125,20 @@ final class WorksPaint {
 		graphics.item(icon, x + (size - 16) / 2, y + (size - 16) / 2);
 	}
 
+	/** What a block-in-the-way line's «show it» button shows (MOD-890): the spyglass of «Find» (R142). */
+	static ItemStack spotIcon() {
+		return new ItemStack(Items.SPYGLASS);
+	}
+
+	/**
+	 * The picture of a small button whose top-left is ({@code x}, {@code y}): half size, centred on a whole pixel
+	 * (MOD-890: it sat one pixel off the button's top and left edges and two off its bottom and right).
+	 */
+	static void smallButtonIcon(GuiGraphicsExtractor graphics, ItemStack stack, int x, int y) {
+		int inset = SettlementCoreLayout.smallIconInset(SettlementCoreLayout.WORKS_SMALL_BUTTON);
+		smallIcon(graphics, stack, x + inset, y + inset);
+	}
+
 	/** An item at half size; a whole-pixel offset, so it samples no neighbour in the atlas (round 2, R2-2). */
 	static void smallIcon(GuiGraphicsExtractor graphics, ItemStack stack, int x, int y) {
 		graphics.pose().pushMatrix();
@@ -215,20 +229,21 @@ final class WorksPaint {
 				boolean hovered = inside(mouseX, mouseY, x, at - 1, w, SettlementCoreLayout.WORKS_SMALL_BUTTON);
 				graphics.fill(x, at - 1, x + w, at - 1 + SettlementCoreLayout.WORKS_SMALL_BUTTON,
 						hovered || shown ? GuiStyle.BUTTON_ACTIVE : GuiStyle.BUTTON);
-				smallIcon(graphics, icon(ConstructionRow.Action.SCHEMATIC), x + 1, at);
+				smallButtonIcon(graphics, icon(ConstructionRow.Action.SCHEMATIC), x, at - 1);
 				cell(graphics, font, words, x + SettlementCoreLayout.WORKS_SMALL_BUTTON + 2, at + 1,
 						w - SettlementCoreLayout.WORKS_SMALL_BUTTON - 4, GuiStyle.HEADER_TEXT);
 			} else {
-				int textWidth = control == null ? width : width - SettlementCoreLayout.WORKS_SMALL_BUTTON - 3;
+				boolean button = control != null || line.spot() != null;
+				int textWidth = button ? width - SettlementCoreLayout.WORKS_SMALL_BUTTON - 3 : width;
 				cell(graphics, font, line.text(), x, at, textWidth, line.colour());
-				if (control != null) {
+				if (button) {
 					int bx = x + width - SettlementCoreLayout.WORKS_SMALL_BUTTON;
 					boolean hovered = inside(mouseX, mouseY, bx, at - 1, SettlementCoreLayout.WORKS_SMALL_BUTTON,
 							SettlementCoreLayout.WORKS_SMALL_BUTTON);
 					graphics.fill(bx, at - 1, bx + SettlementCoreLayout.WORKS_SMALL_BUTTON,
 							at - 1 + SettlementCoreLayout.WORKS_SMALL_BUTTON,
 							hovered ? GuiStyle.BUTTON_ACTIVE : GuiStyle.BUTTON);
-					smallIcon(graphics, icon(control.action()), bx + 1, at);
+					smallButtonIcon(graphics, control != null ? icon(control.action()) : spotIcon(), bx, at - 1);
 				}
 			}
 			if (line.barPercent() >= 0) {

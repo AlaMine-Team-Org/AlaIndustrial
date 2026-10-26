@@ -40,6 +40,8 @@ public final class NextStepHint {
 	public static final String REPAIR = KEY + "repair";
 	/** Houses whose plans the town does not know. */
 	public static final String HOUSE_PLANS = KEY + "house_plans";
+	/** The warehouse, whose plan the town does not know (MOD-892). */
+	public static final String WAREHOUSE_PLAN = KEY + "warehouse_plan";
 	/** No room under the tier's house limit. */
 	public static final String LIMIT = KEY + "limit";
 	/** Nothing left to do. */
@@ -47,7 +49,7 @@ public final class NextStepHint {
 
 	/** Every key this class words. */
 	public static final List<String> KEYS = List.of(SHEETS, DISPATCHER, ASSEMBLE, NEST, ORDER_HALL, MATERIALS, STOPPED,
-			BUILDING, ORDER_HOUSE, REPAIR, HOUSE_PLANS, LIMIT, DONE);
+			BUILDING, ORDER_HOUSE, REPAIR, HOUSE_PLANS, WAREHOUSE_PLAN, LIMIT, DONE);
 
 	private NextStepHint() {
 	}
@@ -107,7 +109,8 @@ public final class NextStepHint {
 			return Optional.of(ConstructionRow.Text.of(DISPATCHER));
 		}
 		if (!ConstructionDroneWork.planKnown(context.works(), index, dispatcher.get().plan())) {
-			return Optional.of(ConstructionRow.Text.of(TownHouses.isHouse(building.get()) ? HOUSE_PLANS : ASSEMBLE));
+			return Optional.of(ConstructionRow.Text.of(TownHouses.isHouse(building.get()) ? HOUSE_PLANS
+					: HousePlans.needsPlan(building.get()) ? WAREHOUSE_PLAN : ASSEMBLE));
 		}
 		if (dispatcher.get().readyNests() <= 0) {
 			return Optional.of(ConstructionRow.Text.of(NEST));
@@ -128,6 +131,7 @@ public final class NextStepHint {
 		List<String> waits = new ArrayList<>();
 		boolean house = false;
 		boolean repair = false;
+		boolean warehousePlan = false;
 		for (int i = 0; i < works.buildings().size(); i++) {
 			TownBuilding building = works.buildings().get(i);
 			Optional<OrderButton> button = TownOrders.button(works, i);
@@ -135,7 +139,9 @@ public final class NextStepHint {
 				continue;
 			}
 			Optional<String> wait = TownOrders.blocker(context.town(), works, i);
-			if (wait.isPresent()) {
+			if (wait.isPresent() && TownOrders.NO_PLAN.equals(wait.get()) && !TownHouses.isHouse(building)) {
+				warehousePlan = true; // MOD-892: the warehouse's plan, not a house's
+			} else if (wait.isPresent()) {
 				waits.add(wait.get());
 			} else if (button.get() == OrderButton.REPAIR) {
 				repair = true;
@@ -151,6 +157,9 @@ public final class NextStepHint {
 		}
 		if (waits.contains(TownOrders.NO_PLAN)) {
 			return ConstructionRow.Text.of(HOUSE_PLANS);
+		}
+		if (warehousePlan) {
+			return ConstructionRow.Text.of(WAREHOUSE_PLAN);
 		}
 		if (waits.contains(TownHouses.LIMIT)) {
 			return ConstructionRow.Text.of(LIMIT);

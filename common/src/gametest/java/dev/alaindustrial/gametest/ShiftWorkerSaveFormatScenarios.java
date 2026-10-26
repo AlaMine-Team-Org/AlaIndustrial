@@ -5,6 +5,7 @@ import static dev.alaindustrial.gametest.SaveFormatTestSupport.parse;
 import dev.alaindustrial.settlement.record.RecordNumber;
 import dev.alaindustrial.settlement.shift.ShiftWorkerRecord;
 import dev.alaindustrial.settlement.SettlementRegistry;
+import dev.alaindustrial.settlement.shift.Profession;
 import dev.alaindustrial.settlement.shift.ShiftWorkerBook;
 import dev.alaindustrial.settlement.shift.ShiftWorkerProfile;
 import java.io.IOException;
@@ -54,7 +55,8 @@ public final class ShiftWorkerSaveFormatScenarios {
 
 	/**
 	 * Every field of the form spelt out, in the shape the file has (version 1): a worker re-registered from K-001 to
-	 * W-117 (MOD-834) who later died, with a profile (MOD-854); the hall's log has the re-registration line, the
+	 * W-117 (MOD-834) who later died, with a profile (MOD-854) and a trade (MOD-888); the hall's log has the
+	 * re-registration line, the
 	 * death, then the town hall restored (MOD-857) — a line with no worker number.
 	 */
 	private static final String FULL_SAVE = "{data_version:1,"
@@ -65,7 +67,7 @@ public final class ShiftWorkerSaveFormatScenarios {
 			+ "profile:{charge:12000L,eu_drained:80000L,highest_level:5,investments:[\"strength\",\"battery\"],"
 			+ "issued_game_time:24000L,marks:[{kind:\"issued\",game_time:24000L},"
 			+ "{kind:\"named\",game_time:30000L,args:[\"Anna\"]}],"
-			+ "biography:[\"alaindustrial:origin/here\"]}}],"
+			+ "biography:[\"alaindustrial:origin/here\"]},profession:\"storekeeper\",workplace:2}],"
 			+ "hall_log:[{settlement:3,number:\"K-001\",name:\"Anna\",renumbered:{to:\"W-117\",game_time:120000L}},"
 			+ "{settlement:3,number:\"W-117\",name:\"Anna\","
 			+ "death:{cause:\"minecraft:mob_attack\",killer:\"minecraft:zombie\",game_time:240000L}},"
@@ -145,12 +147,18 @@ public final class ShiftWorkerSaveFormatScenarios {
 				&& profile.issuedGameTime() == 24000L && profile.marks().size() == 2
 				&& profile.marks().get(1).kind() == ShiftWorkerProfile.ServiceMark.Kind.NAMED
 				&& profile.marks().get(1).args().equals(List.of("Anna")), "its profile came back as " + profile);
+		helper.assertTrue(record.profession() == Profession.STOREKEEPER && record.workplace() == 2,
+				"MOD-888: its trade came back as " + record.profession() + " at " + record.workplace());
 		ShiftWorkerRecord firstSlice = decode(helper, FIRST_SLICE_SAVE)
 				.byEntity(UUIDUtil.uuidFromIntArray(new int[] {5, 6, 7, 8}))
 				.orElseThrow(() -> helper.assertionException("the first-slice worker did not come back"));
 		helper.assertTrue(firstSlice.profile().equals(ShiftWorkerProfile.FRESH) && firstSlice.profile().level() == 1
 				&& firstSlice.profile().chargeNow() == firstSlice.profile().capacity(),
 				"a first-slice worker must read with a full battery at level 1, came back as " + firstSlice.profile());
+		helper.assertTrue(firstSlice.profession() == Profession.NONE
+				&& firstSlice.workplace() == ShiftWorkerRecord.NO_WORKPLACE && !firstSlice.employed(),
+				"MOD-888: a worker saved before workplaces must read without work, came back as "
+						+ firstSlice.profession() + " at " + firstSlice.workplace());
 		helper.assertTrue(registry.log().size() == 4 && registry.log().get(0).about(former)
 				&& registry.log().get(0).renumbering().equals(Optional.of(new ShiftWorkerBook.Renumbering(number,
 						120000L))) && registry.log().get(0).death().isEmpty()

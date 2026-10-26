@@ -26,7 +26,6 @@ import dev.alaindustrial.settlement.works.BuildStageRules;
 import dev.alaindustrial.settlement.works.BuildingPlan;
 import dev.alaindustrial.settlement.works.HousePlans;
 import dev.alaindustrial.settlement.works.TownBuilding;
-import dev.alaindustrial.settlement.works.TownHouses;
 import dev.alaindustrial.settlement.works.TownHousing;
 import dev.alaindustrial.settlement.works.TownWorks;
 import dev.alaindustrial.settlement.works.TownWorksScanner;
@@ -952,8 +951,9 @@ public final class ConstructionDroneWork {
 
 	/**
 	 * Whether building {@code building} of {@code works} may be built with {@code slot} in the dispatcher's plan slot:
-	 * a repair of a building restored once needs no plan (MOD-862); a house needs its type learned by the town — or,
-	 * for a moment, lying in the slot before the dispatcher learns it; the hall its own plan in the slot.
+	 * a repair of a building restored once needs no plan (MOD-862); a house or the warehouse needs its plan learned by
+	 * the town (MOD-892, {@link HousePlans#needsPlan}) — or, for a moment, lying in the slot before the dispatcher
+	 * learns it; the hall its own plan in the slot.
 	 */
 	public static boolean planKnown(TownWorks works, int building, Optional<RestorationPlan> slot) {
 		Optional<TownBuilding> found = works.building(building);
@@ -964,7 +964,7 @@ public final class ConstructionDroneWork {
 				.anyMatch(job -> job.building() == building && job.repair() && job.status().open());
 		boolean inSlot = slot.isPresent() && slot.get().template().equals(found.get().intact().get());
 		return repair && found.get().everRestored() || inSlot
-				|| TownHouses.isHouse(found.get()) && HousePlans.knows(works, TownHall.index(works),
+				|| HousePlans.needsPlan(found.get()) && HousePlans.knows(works, TownHall.index(works),
 						found.get().intact().get());
 	}
 

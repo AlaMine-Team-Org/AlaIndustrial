@@ -200,11 +200,17 @@ public final class TownWorksScanner {
 			HallBuildNews.hallRestored(level, settlementId, index);
 		}
 		if (verdict.isPresent() && before.isPresent()) {
+			TownHousing.logInletBroken(level, settlementId, index, before.get(), missing);
 			TownMaintenance.afterPass(level, settlementId, index, before.get(), verdict.get(), measure);
 		}
 		return verdict;
 	}
 
+	/**
+	 * The town's chronicle line when a house restored before has just lost its inlet (MOD-886; R110, MOD-876): the
+	 * previous pass found the inlet in place, this one finds it missing. A house never measured says nothing, so a
+	 * world loaded again does not repeat a line its save already holds.
+	 */
 	private static void nextBuilding(TownWorks works) {
 		works.scanBuilding++;
 		works.scanCursor = 0;

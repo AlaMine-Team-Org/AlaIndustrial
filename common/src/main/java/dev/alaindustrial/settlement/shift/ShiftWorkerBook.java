@@ -77,6 +77,33 @@ public final class ShiftWorkerBook {
 					Optional.empty(), Optional.of(note));
 		}
 
+		/**
+		 * A note of town {@code settlement} about the worker with {@code number} and {@code name} (MOD-886): an event
+		 * of the town's chronicle.
+		 */
+		public static LogLine noted(int settlement, RecordNumber number, String name, Note note) {
+			return new LogLine(settlement, Optional.of(number), name, Optional.empty(), Optional.empty(),
+					Optional.empty(), Optional.of(note));
+		}
+
+		/**
+		 * Whether {@code next} repeats this line (MOD-886): both notes of one town, the same sentence with the same
+		 * arguments about the same worker. A death, a re-registration or a restoration never repeats.
+		 */
+		public boolean repeatedBy(LogLine next) {
+			return settlement == next.settlement && number.equals(next.number) && name.equals(next.name)
+					&& note.isPresent() && next.note.isPresent() && note.get().key().equals(next.note.get().key())
+					&& note.get().args().equals(next.note.get().args());
+		}
+
+		/** This note with {@code next}'s repeats added and {@code next}'s time: the merge of {@link #repeatedBy}. */
+		LogLine withRepeat(LogLine next) {
+			Note was = note.orElseThrow();
+			Note now = next.note.orElseThrow();
+			return new LogLine(settlement, number, name, death, renumbering, building, Optional.of(new Note(was.key(),
+					now.gameTime(), was.args(), was.repeats() + now.repeats())));
+		}
+
 		/** Whether this line is about the worker who held {@code held} at the time of the line. */
 		public boolean about(RecordNumber held) {
 			return number.isPresent() && number.get().equals(held);
@@ -96,16 +123,33 @@ public final class ShiftWorkerBook {
 	}
 
 	/**
-	 * A note of the town (MOD-859): a sentence by its translation key, and when it was written.
+	 * A note of the town (MOD-859): a sentence by its translation key, and when it was written. An event of the town's
+	 * chronicle is a note too (MOD-886): a worker arrived, moved into a house, a house's inlet broken — its arguments
+	 * fill the sentence, and a repeat of the town's newest note counts in {@code repeats} instead of adding a line.
 	 *
 	 * @param key      the translation key of the sentence
-	 * @param gameTime the game time of the note; the day is {@code gameTime / 24000}
+	 * @param gameTime the game time of the note (of its latest repeat); the day is {@code gameTime / 24000 + 1}
+	 * @param args     the sentence's arguments, each shown as a translation
+	 * @param repeats  how many times the event happened in a row, at least 1
 	 */
-	public record Note(String key, long gameTime) {
+	public record Note(String key, long gameTime, List<String> args, int repeats) {
 
+		public Note {
+			args = List.copyOf(args);
+			repeats = Math.max(1, repeats);
+		}
+
+		/** A note with no arguments, said once (MOD-859). */
+		public Note(String key, long gameTime) {
+			this(key, gameTime, List.of(), 1);
+		}
+
+		// "args" and "repeats" came with MOD-886: a note saved before reads as said once, with no arguments.
 		public static final Codec<Note> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 				Codec.STRING.fieldOf("key").forGetter(Note::key),
-				Codec.LONG.fieldOf("game_time").forGetter(Note::gameTime)
+				Codec.LONG.fieldOf("game_time").forGetter(Note::gameTime),
+				Codec.STRING.listOf().optionalFieldOf("args", List.of()).forGetter(Note::args),
+				Codec.INT.optionalFieldOf("repeats", 1).forGetter(Note::repeats)
 		).apply(instance, Note::new));
 	}
 
@@ -223,10 +267,26 @@ public final class ShiftWorkerBook {
 		}
 	}
 
-	/** Adds a line to the hall's log. */
-	public void addToLog(LogLine line) {
-		log.add(line);
+	/**
+	 * Adds a line to the hall's log (MOD-886, {@link ChronicleRules}): a repeat of its town's newest line is merged
+	 * into it, and the town keeps its newest {@link ChronicleRules#CAPACITY} lines. Returns whether a line was added.
+	 */
+	public boolean addToLog(LogLine line) {
+		ChronicleRules.Result result = ChronicleRules.append(log, line, LogLine::settlement, LogLine::repeatedBy,
+				LogLine::withRepeat, ChronicleRules.CAPACITY);
 		onChange.run();
+		return result == ChronicleRules.Result.ADDED;
+	}
+
+	/** Town {@code settlement}'s lines of the hall's log, oldest first: its chronicle (MOD-886). */
+	public List<LogLine> log(int settlement) {
+		List<LogLine> lines = new ArrayList<>();
+		for (LogLine line : log) {
+			if (line.settlement() == settlement) {
+				lines.add(line);
+			}
+		}
+		return lines;
 	}
 
 	/** The path dispatcher of town {@code settlement} (0: workers of no town share one). */

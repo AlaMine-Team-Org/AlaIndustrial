@@ -44,9 +44,16 @@ public record ShiftWorkerRosterPayload(BlockPos core, int settlement, List<Row> 
 	 * @param alive  whether it is alive ({@code status == ALIVE})
 	 * @param look   the id of the worker's look, for the face at the row's start (owner request 7, stage 6 round 4)
 	 * @param slim   the slim body, as on the card
+	 * @param profession its trade's serialized name (MOD-888), empty — none: the row names the trade
 	 */
 	public record Row(String number, String name, int level, ShiftWorkerRecord.Status status, boolean alive,
-			Identifier look, boolean slim) {
+			Identifier look, boolean slim, String profession) {
+
+		/** A row of a worker without work. */
+		public Row(String number, String name, int level, ShiftWorkerRecord.Status status, boolean alive,
+				Identifier look, boolean slim) {
+			this(number, name, level, status, alive, look, slim, "");
+		}
 	}
 
 	private static final StreamCodec<ByteBuf, Row> ROW = StreamCodec.composite(
@@ -57,6 +64,7 @@ public record ShiftWorkerRosterPayload(BlockPos core, int settlement, List<Row> 
 			ByteBufCodecs.BOOL, Row::alive,
 			Identifier.STREAM_CODEC, Row::look,
 			ByteBufCodecs.BOOL, Row::slim,
+			ByteBufCodecs.stringUtf8(ShiftWorkerCardPayload.TEXT_LIMIT), Row::profession,
 			Row::new);
 
 	public static final StreamCodec<RegistryFriendlyByteBuf, ShiftWorkerRosterPayload> CODEC = StreamCodec.composite(

@@ -102,9 +102,9 @@ public final class TownSupplies {
 		}
 		out.add(RestorationPlanItem.of(RestorationPlan.of(new PlanSheetRules.Plan(style,
 				PlanSheetRules.intactTemplate(style, PlanSheetRules.TOWN_HALL)))));
-		for (int type = 1; type <= PlanSheetRules.HOUSE_TYPES; type++) {
+		for (String building : PlanSheetRules.learnedBuildings()) { // the houses' plans and the warehouse's (MOD-892)
 			out.add(HousePlanItem.of(RestorationPlan.of(new PlanSheetRules.Plan(style,
-					PlanSheetRules.intactTemplate(style, PlanSheetRules.house(type))))));
+					PlanSheetRules.intactTemplate(style, building)))));
 		}
 		return out;
 	}

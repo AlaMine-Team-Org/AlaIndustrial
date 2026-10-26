@@ -8,8 +8,11 @@ import dev.alaindustrial.block.entity.FluidTapBlockEntity;
 import dev.alaindustrial.block.entity.FluidTankBlockEntity;
 import dev.alaindustrial.block.entity.KokSagyzRootBlockEntity;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.WallTorchBlock;
@@ -249,6 +252,18 @@ final class MiscZone implements DemoZone {
 		w.place(w.origin().offset(77, 1, 24), bed.setValue(ChargingBedBlock.PART, BedPart.HEAD));
 		// A town road (MOD-861) in front of the inlet's socket: the first segment of the line to the town's core.
 		w.set(75, 1, 23, ModContent.TOWN_ROAD.get());
+		warehouseShelf(w);
+	}
+
+	/**
+	 * A warehouse shelf (MOD-885) between the inlet and the bed, its bins toward the camera (north), stocked with
+	 * five kinds so its four cards show the four biggest: cobblestone, iron, coal, planks — and no redstone.
+	 */
+	private static void warehouseShelf(StandWriter w) {
+		w.placeFacing(76, 1, 24, ModContent.WAREHOUSE_SHELF.get(), Direction.NORTH);
+		w.stock(76, 1, 24, List.of(new ItemStack(Items.COBBLESTONE, 64), new ItemStack(Items.IRON_INGOT, 32),
+				new ItemStack(Items.COBBLESTONE, 64), new ItemStack(Items.COAL, 20),
+				new ItemStack(Items.OAK_PLANKS, 12), new ItemStack(Items.REDSTONE, 5)));
 	}
 
 	/**

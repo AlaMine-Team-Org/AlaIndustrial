@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
+import dev.alaindustrial.settlement.works.TownNeeds;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -82,6 +83,30 @@ class SettlementCoreLayoutTest {
 					SettlementCoreLayout.worksOpenWidth(), 1);
 			check(failures, code, SettlementCoreLayout.WORKS_CARD_STAGES_DONE,
 					text(lang, SettlementCoreLayout.WORKS_CARD_STAGES_DONE), SettlementCoreLayout.worksOpenWidth(), 1);
+			// MOD-886: the town's needs under the rows and the chronicle's rows.
+			String need = text(lang, TownNeeds.ENERGY);
+			check(failures, code, TownNeeds.TOP, text(lang, TownNeeds.TOP, need), SettlementCoreLayout.needsTopWidth(),
+					SettlementCoreLayout.NEEDS_TOP_MAX_LINES);
+			check(failures, code, TownNeeds.NOTHING, text(lang, TownNeeds.NOTHING), SettlementCoreLayout.hintWidth(),
+					1);
+			int needWidth = SettlementCoreLayout.hintWidth() - SettlementCoreLayout.NEEDS_INDENT;
+			for (String key : List.of(TownNeeds.ENERGY, TownNeeds.HOME_FOR_NEXT)) {
+				check(failures, code, key, text(lang, key), needWidth, 1);
+			}
+			for (String key : List.of(TownNeeds.HOME, TownNeeds.WORKPLACE)) {
+				check(failures, code, key, text(lang, key, "99"), needWidth, 1);
+			}
+			for (String key : List.of(TownNeeds.MATERIALS, TownNeeds.RESTORE, TownNeeds.REPAIR)) {
+				check(failures, code, key, text(lang, key, "Glass x64, Bricks x64"), needWidth, 1);
+			}
+			int chronicleWidth = SettlementCoreLayout.ROSTER_RIGHT - SettlementCoreLayout.ROSTER_LEFT
+					- SettlementCoreLayout.CHRONICLE_TEXT - 2;
+			for (String key : CHRONICLE_SENTENCES) {
+				check(failures, code, key, "K-482 Alexandra: " + text(lang, key, "Capsule house (type 4)"),
+						chronicleWidth, SettlementCoreLayout.CHRONICLE_TEXT_LINES);
+			}
+			check(failures, code, CHRONICLE_DAY, text(lang, CHRONICLE_DAY, "9999"),
+					SettlementCoreLayout.CHRONICLE_TEXT - 4, 1);
 			String heading = text(lang, "block.alaindustrial.settlement_core");
 			if (width(heading) > SettlementCoreLayout.IMAGE_WIDTH - 2 * (SettlementCoreLayout.BORDER + 2)) {
 				failures.add(code + " heading: " + width(heading) + " px");
@@ -194,8 +219,78 @@ class SettlementCoreLayoutTest {
 
 	/** {@code NextStepHint.KEYS}: that class touches Minecraft and cannot load on this lane. */
 	private static final List<String> HINTS = List.of("sheets", "dispatcher", "assemble", "nest", "order_hall",
-			"materials", "stopped", "building", "order_house", "repair", "house_plans", "limit", "done").stream()
+			"materials", "stopped", "building", "order_house", "repair", "house_plans", "warehouse_plan", "limit",
+			"done").stream()
 			.map(name -> "settlement.alaindustrial.works.next." + name).toList();
+
+	/** {@code TownChronicle}'s sentences and day (MOD-886): that class touches Minecraft and cannot load here. */
+	private static final List<String> CHRONICLE_SENTENCES = List.of("arrived", "settled", "inlet_broken", "died",
+			"became.storekeeper", "off_work")
+			.stream().map(name -> "settlement.alaindustrial.chronicle." + name).toList();
+	private static final String CHRONICLE_DAY = "settlement.alaindustrial.chronicle.day";
+
+	/** The town's needs fit under the tallest readout (MOD-886): two lines of the top need, then the short list. */
+	@Test
+	void theNeedsStayInsideThePanel() {
+		int afterRows = SettlementCoreLayout.firstNumberRowY(SettlementCoreLayout.STATUS_MAX_LINES)
+				+ (SettlementCoreLayout.NUMBER_ROWS.size() + 1) * SettlementCoreLayout.ROW_STEP;
+		int top = SettlementCoreLayout.needsTop(afterRows);
+		int listTop = top + Math.max(SettlementCoreLayout.NEEDS_TOP_MAX_LINES * SettlementCoreLayout.LINE_STEP,
+				SettlementCoreLayout.NEEDS_ICON) + SettlementCoreLayout.NEEDS_GAP;
+		int bottom = listTop + (SettlementCoreLayout.NEEDS_LIST_ROWS - 1) * SettlementCoreLayout.LINE_STEP + 9;
+		assertTrue(bottom <= SettlementCoreLayout.IMAGE_HEIGHT - SettlementCoreLayout.BORDER,
+				"needs bottom " + bottom + " crosses the frame of height " + SettlementCoreLayout.IMAGE_HEIGHT);
+		assertTrue(afterRows - SettlementCoreLayout.ROW_STEP + 9 <= top, "the owner row runs into the needs");
+		assertTrue(SettlementCoreLayout.BUTTON_Y + ZONE_BUTTON_SIZE <= top, "the button runs into the needs");
+	}
+
+	/**
+	 * The small buttons' pictures sit centred on a whole pixel (MOD-890): the picture is an item at half size, eight
+	 * pixels, so a button's side minus eight must be even, and the inset the drawing code uses splits it evenly. The
+	 * textures were measured too (research.md): the barrier's opaque pixels span 1..14 of 16 and the map's 0..15, both
+	 * symmetric, so a centred square is a centred picture. The list's needs fit their row beside their picture.
+	 */
+	@Test
+	void smallButtonPicturesAreCentred() {
+		for (int button : new int[] {SettlementCoreLayout.WORKS_SMALL_BUTTON, SettlementCoreLayout.LOCATE_BUTTON}) {
+			int inset = SettlementCoreLayout.smallIconInset(button);
+			int after = button - inset - SettlementCoreLayout.SMALL_ICON;
+			assertEquals(inset, after, "a " + button + "-pixel button leaves " + inset + " before and " + after
+					+ " after its picture");
+		}
+		assertTrue(SettlementCoreLayout.NEEDS_SMALL_ICON + 2 <= SettlementCoreLayout.NEEDS_INDENT,
+				"a need's picture runs into its words");
+		assertTrue(SettlementCoreLayout.NEEDS_SMALL_ICON <= SettlementCoreLayout.LINE_STEP,
+				"a need's picture is taller than its row");
+	}
+
+	/** A tooltip wraps at a vanilla-like width, never across a wide screen, and still fits a narrow one (MOD-890). */
+	@Test
+	void tooltipsWrapAtAReasonableWidth() {
+		assertEquals(SettlementCoreLayout.TOOLTIP_MAX_WIDTH, SettlementCoreLayout.tooltipWidth(1920 / 2));
+		assertEquals(SettlementCoreLayout.TOOLTIP_MAX_WIDTH, SettlementCoreLayout.tooltipWidth(3840));
+		assertTrue(SettlementCoreLayout.tooltipWidth(320) <= 320 / 2, "a narrow screen gets a narrower tooltip");
+	}
+
+	/**
+	 * The chronicle's «building restored» line does not lean on the building name's grammatical gender (MOD-890: the
+	 * Russian line agreed in the neuter with a feminine name): in every language it is a label and a colon, the name
+	 * after it.
+	 */
+	@Test
+	void theRestoredLineIsALabelBeforeTheName() throws IOException, URISyntaxException {
+		List<String> failures = new ArrayList<>();
+		for (Path file : langFiles()) {
+			String line = read(file).get(RESTORED);
+			if (line == null || !line.matches("(?s).*\\S\\s?[:\uFF1A]\\s?%s")) {
+				failures.add(file.getFileName() + ": " + line);
+			}
+		}
+		assertEquals(List.of(), failures, "«" + RESTORED + "» must read «label: %s» in every language");
+	}
+
+	/** {@code TownWorksService.LOG_LINE_KEY}: that class touches Minecraft and cannot load on this lane. */
+	private static final String RESTORED = "settlement.alaindustrial.log.building_restored";
 
 	/** {@code ZonePreviewButton.SIZE}; that class touches Minecraft and cannot load on this lane. */
 	private static final int ZONE_BUTTON_SIZE = 22;

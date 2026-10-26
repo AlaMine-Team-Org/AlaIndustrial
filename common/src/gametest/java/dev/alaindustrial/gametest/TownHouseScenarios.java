@@ -22,7 +22,13 @@ import dev.alaindustrial.settlement.record.RecordNumber;
 import dev.alaindustrial.settlement.shift.ShiftWorkerBook;
 import dev.alaindustrial.settlement.shift.ShiftWorkerRecord;
 import dev.alaindustrial.settlement.shift.ShiftWorkers;
+import dev.alaindustrial.network.HallSchematicPayload;
+import dev.alaindustrial.network.HallSchematicRequestPayload;
+import dev.alaindustrial.settlement.drone.TownRoadNetwork;
 import dev.alaindustrial.settlement.works.BuildingPlan;
+import dev.alaindustrial.settlement.works.ConstructionRows;
+import dev.alaindustrial.settlement.works.HallSchematic;
+import dev.alaindustrial.settlement.works.PlanSheetNews;
 import dev.alaindustrial.settlement.works.TownBuilding;
 import dev.alaindustrial.settlement.works.TownHouses;
 import dev.alaindustrial.settlement.works.TownHousing;
@@ -39,6 +45,8 @@ import java.util.Set;
 import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -51,6 +59,7 @@ import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnoreProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.JigsawReplacementProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+import net.minecraft.world.phys.Vec3;
 
 /**
  * L2 suite of the capsule houses of an ALA town (MOD-862; epic MOD-824, decisions R40, R100, R102, R103, R110):
@@ -66,6 +75,8 @@ public final class TownHouseScenarios {
 		public static final List<RosterEntry> ENTRIES = List.of(
 				RosterEntry.of(TownHouseScenarios::restoredHouseTakesAResidentAndLosesItWithItsInlet,
 						"town_house_restored_house_takes_a_resident").ticks(40),
+				RosterEntry.of(TownHouseScenarios::roadGapShowsInTheNetworkSchematic,
+						"town_house_road_gap_shows_in_network_schematic").ticks(40),
 				RosterEntry.of(TownHouseScenarios::capsuleRefusesWithoutHousing,
 						"town_house_capsule_refuses_without_housing").ticks(40),
 				RosterEntry.of(TownHouseScenarios::clearingTakesRubbleRoundTheHouse,
@@ -81,13 +92,15 @@ public final class TownHouseScenarios {
 	private static final Identifier HOUSE = Industrialization.id("ala_town/plains/capsule_house_1");
 	private static final Identifier HOUSE_INTACT = Industrialization.id("ala_town/plains/intact/capsule_house_1");
 	/** Where the house stands from the rig's hall: south of it, inside the LV territory, in chunks of its own. */
-	private static final BlockPos HOUSE_OFFSET = new BlockPos(0, 0, -20);
+	static final BlockPos HOUSE_OFFSET = new BlockPos(0, 0, -20);
 
 	/**
 	 * @implements MOD-862-SETTLE — an intact capsule house is fit to live in; settling moves the homeless worker in
 	 *     and puts the ruin's former resident into the house's history; the plaque then asks a drone for the
 	 *     resident's full number, the letter whole (R4-12), and for the letter broken once the house stands empty.
 	 * @implements MOD-862-INLET — a broken house inlet takes the house off the count, and the resident out.
+	 * @implements MOD-884-INLET-LOG — the broken inlet writes one line to the town hall's log naming the resident
+	 *     homeless; the next pass over the house writes none.
 	 */
 	public static void restoredHouseTakesAResidentAndLosesItWithItsInlet(GameTestHelper helper) {
 		Rig rig = TownDroneScenarios.rig(helper, 0);
@@ -136,8 +149,21 @@ public final class TownHouseScenarios {
 				&& plates.contains(ModContent.ENGRAVED_PLATE_6.get())
 				&& plates.contains(ModContent.ENGRAVED_PLATE_2.get()), "the plaque must show 862: " + plates);
 		helper.assertTrue(inlet != null, "control: the house's plan has no inlet");
+		int logBefore = book.log().size();
 		level.setBlock(inlet, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
 		TownWorksScanner.measureNow(level, rig.town(), 1);
+		List<ShiftWorkerBook.LogLine> added = List.copyOf(book.log().subList(logBefore, book.log().size()));
+		helper.assertTrue(added.size() == 1 && added.getFirst().settlement() == rig.town()
+				&& added.getFirst().about(number) && added.getFirst().note()
+						.map(note -> TownHousing.JOURNAL_INLET_BROKEN.equals(note.key())).orElse(false),
+				"MOD-884: a broken house inlet must write one hall log line naming its resident: " + added);
+		Component text = PlanSheetNews.logLineText(added.getFirst()).orElseThrow();
+		helper.assertTrue(text.getContents() instanceof TranslatableContents words
+						&& words.getArgs().length == 1 && number.toString().equals(words.getArgs()[0]),
+				"MOD-884: the line must read with the resident's number: " + text);
+		TownWorksScanner.measureNow(level, rig.town(), 1);
+		helper.assertTrue(book.log().size() == logBefore + 1,
+				"MOD-884: a second pass over the house without its inlet must write nothing more: " + book.log());
 		TownHousing.settle(level, rig.town());
 		helper.assertTrue(!TownHouses.counted(works, 1), "a house without its inlet must be off the count");
 		helper.assertTrue(!book.byEntity(entity).orElseThrow().housed(), "the resident must be homeless again");
@@ -151,6 +177,61 @@ public final class TownHouseScenarios {
 		hold.release();
 		rig.release();
 		helper.succeed();
+	}
+
+	/**
+	 * @implements MOD-884-ROAD-GAP — a road cell cut out of a restored house's way to the hall takes the house off
+	 *     the core's network; the core's row names the cell, and the network schematic — and the house's own —
+	 *     draws a road ghost marked as the gap there, where the plan, laid once, draws nothing else; with the road
+	 *     put back no gap is drawn.
+	 */
+	public static void roadGapShowsInTheNetworkSchematic(GameTestHelper helper) {
+		Rig rig = TownDroneScenarios.rig(helper, 0);
+		ServerLevel level = rig.level();
+		ChunkHold hold = addIntactHouse(helper, rig, true);
+		TownWorks works = rig.works();
+		helper.assertTrue(TownHouses.fitToLive(works.buildings().get(1)) && works.buildings().get(1).everRestored(),
+				"control: the wired house must be restored and fit to live in: " + works.buildings().get(1));
+		BlockPos core = rig.core().getBlockPos();
+		helper.assertTrue(gaps(level, rig, core, HallSchematicRequestPayload.NETWORK).isEmpty(),
+				"a linked town must show no gap in its network schematic");
+		List<BlockPos> course = TownRoadNetwork.course(level, rig.town(), 1).orElseThrow();
+		BlockPos cut = null;
+		for (int i = course.size() / 2; i < course.size() && cut == null; i++) {
+			if (level.getBlockState(course.get(i)).is(ModContent.TOWN_ROAD.get())) {
+				cut = course.get(i);
+			}
+		}
+		helper.assertTrue(cut != null, "control: the house's way to the hall holds no road block: " + course);
+		level.setBlock(cut, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+		TownWorksScanner.measureNow(level, rig.town(), 1);
+		helper.assertTrue(works.buildings().get(1).missingKeys().contains(TownPowerLinks.NOT_CONNECTED_KEY),
+				"control: a cut road must take the house off the core's network: " + works.buildings().get(1));
+		helper.assertTrue(ConstructionRows.gapCell(level, rig.town(), works.buildings().get(1), 1)
+				.equals(Optional.of(cut)), "the house's gap must be the cut cell " + cut);
+		List<HallSchematicPayload.Ghost> network = gaps(level, rig, core, HallSchematicRequestPayload.NETWORK);
+		helper.assertTrue(network.size() == 1 && network.getFirst().pos() == cut.asLong()
+				&& network.getFirst().state().is(ModContent.TOWN_ROAD.get()),
+				"the network schematic must mark the cut cell " + cut + " as its one gap: " + network);
+		List<HallSchematicPayload.Ghost> house = gaps(level, rig, core, 1);
+		helper.assertTrue(house.size() == 1 && house.getFirst().pos() == cut.asLong(),
+				"the house's schematic must mark the cut cell " + cut + " too: " + house);
+		level.setBlock(cut, ModContent.TOWN_ROAD.get().defaultBlockState(), Block.UPDATE_ALL);
+		if (level.getBlockEntity(cut) instanceof TownRoadBlockEntity segment) {
+			segment.ensureRegistered();
+		}
+		TownWorksScanner.measureNow(level, rig.town(), 1);
+		helper.assertTrue(gaps(level, rig, core, HallSchematicRequestPayload.NETWORK).isEmpty(),
+				"with the road put back the network schematic must show no gap");
+		hold.release();
+		rig.release();
+		helper.succeed();
+	}
+
+	/** The ghosts marked as a gap in the reply for {@code building} of the rig's town, seen from the core. */
+	private static List<HallSchematicPayload.Ghost> gaps(ServerLevel level, Rig rig, BlockPos core, int building) {
+		return HallSchematic.reply(level, core, rig.town(), Vec3.atCenterOf(core), building).cells().stream()
+				.filter(HallSchematicPayload.Ghost::gap).toList();
 	}
 
 	/**

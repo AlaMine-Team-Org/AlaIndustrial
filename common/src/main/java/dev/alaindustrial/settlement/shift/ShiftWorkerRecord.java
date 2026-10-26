@@ -39,13 +39,22 @@ import net.minecraft.util.StringRepresentable;
  *                   it reads as {@link ShiftWorkerProfile#FRESH} — a full battery at level 1
  * @param home       the index of the house it lives in among its town's buildings (MOD-862, R102), or
  *                   {@link #HOMELESS}; a record saved before houses reads as homeless
+ * @param profession its trade (MOD-888, R150): what its workplace makes of it; {@link Profession#NONE} without one
+ * @param workplace  the index of the building it works in among its town's buildings (MOD-888), or
+ *                   {@link #NO_WORKPLACE}, or {@link #OFF_WORK} — taken off work by the restorer, and so not given a
+ *                   place by the town again until the restorer sends it back; a record saved before workplaces reads
+ *                   as {@link #NO_WORKPLACE}
  */
 public record ShiftWorkerRecord(RecordNumber number, UUID entity, Identifier look, boolean slim, String name,
 		int settlement, Status status, Optional<Death> death, List<RecordNumber> formerNumbers,
-		ShiftWorkerProfile profile, int home) {
+		ShiftWorkerProfile profile, int home, Profession profession, int workplace) {
 
 	/** {@link #home} of a worker without a house: the homeless of an old world, and a new worker until one is free. */
 	public static final int HOMELESS = -1;
+	/** {@link #workplace} of a worker without work: the town gives it the next free place (MOD-888, R150). */
+	public static final int NO_WORKPLACE = -1;
+	/** {@link #workplace} of a worker the restorer took off work: the town gives it no place by itself (MOD-888). */
+	public static final int OFF_WORK = -2;
 
 	public ShiftWorkerRecord {
 		formerNumbers = List.copyOf(formerNumbers);
@@ -98,6 +107,10 @@ public record ShiftWorkerRecord(RecordNumber number, UUID entity, Identifier loo
 					.orElseGet(() -> DataResult.error(() -> "not a record number: " + text)),
 			RecordNumber::toString);
 
+	/** A trade by its serialized name (MOD-888); an unknown name reads as {@link Profession#NONE}. */
+	public static final Codec<Profession> PROFESSION_CODEC = Codec.STRING.xmap(Profession::byName,
+			Profession::serializedName);
+
 	public static final Codec<ShiftWorkerRecord> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			NUMBER_CODEC.fieldOf("number").forGetter(ShiftWorkerRecord::number),
 			UUIDUtil.CODEC.fieldOf("entity").forGetter(ShiftWorkerRecord::entity),
@@ -111,20 +124,23 @@ public record ShiftWorkerRecord(RecordNumber number, UUID entity, Identifier loo
 					.forGetter(ShiftWorkerRecord::formerNumbers),
 			ShiftWorkerProfile.CODEC.optionalFieldOf("profile", ShiftWorkerProfile.FRESH)
 					.forGetter(ShiftWorkerRecord::profile),
-			Codec.INT.optionalFieldOf("home", HOMELESS).forGetter(ShiftWorkerRecord::home)
+			Codec.INT.optionalFieldOf("home", HOMELESS).forGetter(ShiftWorkerRecord::home),
+			PROFESSION_CODEC.optionalFieldOf("profession", Profession.NONE).forGetter(ShiftWorkerRecord::profession),
+			Codec.INT.optionalFieldOf("workplace", NO_WORKPLACE).forGetter(ShiftWorkerRecord::workplace)
 	).apply(instance, ShiftWorkerRecord::new));
 
 	/** A worker just issued: alive, no name, no death. */
 	public static ShiftWorkerRecord issued(RecordNumber number, UUID entity, Identifier look, boolean slim,
 			int settlement) {
 		return new ShiftWorkerRecord(number, entity, look, slim, "", settlement, Status.ALIVE, Optional.empty(),
-				List.of(), ShiftWorkerProfile.FRESH, HOMELESS);
+				List.of(), ShiftWorkerProfile.FRESH, HOMELESS, Profession.NONE, NO_WORKPLACE);
 	}
 
 	/** This record after the worker died; dead for good with {@code permadeath}, waiting to come back without (R39). */
 	public ShiftWorkerRecord died(Death how, boolean permadeath) {
 		return new ShiftWorkerRecord(number, entity, look, slim, name, settlement,
-				permadeath ? Status.DEAD : Status.AWAITING_RETURN, Optional.of(how), formerNumbers, profile, home);
+				permadeath ? Status.DEAD : Status.AWAITING_RETURN, Optional.of(how), formerNumbers, profile, home,
+				profession, workplace);
 	}
 
 	/**
@@ -133,19 +149,19 @@ public record ShiftWorkerRecord(RecordNumber number, UUID entity, Identifier loo
 	 */
 	public ShiftWorkerRecord returned(UUID newEntity) {
 		return new ShiftWorkerRecord(number, newEntity, look, slim, name, settlement, Status.ALIVE, Optional.empty(),
-				formerNumbers, profile, home);
+				formerNumbers, profile, home, profession, workplace);
 	}
 
 	/** This record with another look — the old one left the datapack and the rule chose again. */
 	public ShiftWorkerRecord withLook(Identifier newLook) {
 		return new ShiftWorkerRecord(number, entity, newLook, slim, name, settlement, status, death, formerNumbers,
-				profile, home);
+				profile, home, profession, workplace);
 	}
 
 	/** This record with another look and its body — a look chosen by hand (a stand, an admin's command). */
 	public ShiftWorkerRecord withLook(Identifier newLook, boolean newSlim) {
 		return new ShiftWorkerRecord(number, entity, newLook, newSlim, name, settlement, status, death,
-				formerNumbers, profile, home);
+				formerNumbers, profile, home, profession, workplace);
 	}
 
 	/**
@@ -157,25 +173,39 @@ public record ShiftWorkerRecord(RecordNumber number, UUID entity, Identifier loo
 		List<RecordNumber> history = new ArrayList<>(formerNumbers);
 		history.add(number);
 		return new ShiftWorkerRecord(newNumber, entity, look, slim, name, settlement, status, death, history,
-				profile, home);
+				profile, home, profession, workplace);
 	}
 
 	/** This record with the name {@code newName} (R3v, MOD-854) — the caller has sanitised it. */
 	public ShiftWorkerRecord withName(String newName) {
 		return new ShiftWorkerRecord(number, entity, look, slim, newName, settlement, status, death, formerNumbers,
-				profile, home);
+				profile, home, profession, workplace);
 	}
 
 	/** This record with {@code newProfile} (MOD-854): the battery, the level, the points or a new service mark. */
 	public ShiftWorkerRecord withProfile(ShiftWorkerProfile newProfile) {
 		return new ShiftWorkerRecord(number, entity, look, slim, name, settlement, status, death, formerNumbers,
-				newProfile, home);
+				newProfile, home, profession, workplace);
 	}
 
 	/** This record living in house {@code index} of its town (MOD-862), or homeless with {@link #HOMELESS}. */
 	public ShiftWorkerRecord withHome(int index) {
 		return new ShiftWorkerRecord(number, entity, look, slim, name, settlement, status, death, formerNumbers,
-				profile, index);
+				profile, index, profession, workplace);
+	}
+
+	/**
+	 * This record working as {@code newProfession} in building {@code index} of its town (MOD-888), or without work:
+	 * {@link Profession#NONE} with {@link #NO_WORKPLACE} or {@link #OFF_WORK}.
+	 */
+	public ShiftWorkerRecord withWork(Profession newProfession, int index) {
+		return new ShiftWorkerRecord(number, entity, look, slim, name, settlement, status, death, formerNumbers,
+				profile, home, newProfession, index);
+	}
+
+	/** Whether the worker has a workplace (MOD-888). */
+	public boolean employed() {
+		return workplace >= 0 && profession != Profession.NONE;
 	}
 
 	/** Whether the worker has a house. */

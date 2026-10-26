@@ -278,6 +278,40 @@ public final class PlanSheetRules {
 	}
 
 	/**
+	 * The warehouse (MOD-892, R154 of MOD-824): the one building besides the houses whose plan the town learns. Its
+	 * plan lies in a container of the warehouse's ruin, or is crafted, like a house plan.
+	 */
+	public static final String WAREHOUSE = "warehouse";
+
+	/**
+	 * Whether the town learns the plan of {@code building} for good, as a library entry (MOD-892): a capsule house or
+	 * the warehouse. The town hall's plan is not learned: it lies in the dispatcher's plan slot.
+	 */
+	public static boolean learned(String building) {
+		return houseType(building) > 0 || WAREHOUSE.equals(building);
+	}
+
+	/** Every building whose plan the town learns, in the creative tab's order: the four houses, then the warehouse. */
+	public static List<String> learnedBuildings() {
+		List<String> out = new ArrayList<>();
+		for (int type = 1; type <= HOUSE_TYPES; type++) {
+			out.add(house(type));
+		}
+		out.add(WAREHOUSE);
+		return List.copyOf(out);
+	}
+
+	/**
+	 * The loot table of the plan of {@code building} in {@code style} (MOD-892):
+	 * {@code ns:chests/ala_town/<path>/<building>_plan}, which the building's ruin gives to one of its containers.
+	 * Today only the warehouse's.
+	 */
+	public static String buildingPlanTable(String style, String building) {
+		String[] id = split(style);
+		return id[0] + ":chests/ala_town/" + id[1] + "/" + building + "_plan";
+	}
+
+	/**
 	 * Which of {@code houses} candidate houses holds sheet 2, in [0, houses): a hash of the world seed and the town's
 	 * anchor cell, so every chunk of the town picks the same house and two towns of one world pick independently.
 	 *

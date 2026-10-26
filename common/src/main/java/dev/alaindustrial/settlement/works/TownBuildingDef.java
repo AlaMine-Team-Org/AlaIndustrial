@@ -40,9 +40,12 @@ import net.minecraft.world.level.block.state.BlockState;
  *                   by its block ({@link BuildMaterials})
  * @param clearRing  how wide a ring around the building's footprint a clearing frees of terrain, from the layer over
  *                   its floor up (owner's round 4 of stage 6); 0 — none
+ * @param dispatcherSpot the cell of the intact template, in its own coordinates, kept for the town's dispatcher
+ *                   (MOD-891, R158): the plan wants air there, and a dispatcher standing there counts as in place;
+ *                   empty for a building with no such cell
  */
 public record TownBuildingDef(Identifier template, Optional<Identifier> intact, String name, double restoredAt,
-		List<KeyPoint> keyPoints, List<StageOverride> stages, int clearRing) {
+		List<KeyPoint> keyPoints, List<StageOverride> stages, int clearRing, Optional<BlockPos> dispatcherSpot) {
 
 	/** Most key points one building may name. */
 	public static final int MAX_KEY_POINTS = 16;
@@ -153,7 +156,8 @@ public record TownBuildingDef(Identifier template, Optional<Identifier> intact, 
 					.forGetter(TownBuildingDef::restoredAt),
 			KeyPoint.CODEC.listOf().optionalFieldOf("key_points", List.of()).forGetter(TownBuildingDef::keyPoints),
 			StageOverride.CODEC.listOf().optionalFieldOf("stages", List.of()).forGetter(TownBuildingDef::stages),
-			Codec.INT.optionalFieldOf("clear_ring", DEFAULT_CLEAR_RING).forGetter(TownBuildingDef::clearRing)
+			Codec.INT.optionalFieldOf("clear_ring", DEFAULT_CLEAR_RING).forGetter(TownBuildingDef::clearRing),
+			BlockPos.CODEC.optionalFieldOf("dispatcher_spot").forGetter(TownBuildingDef::dispatcherSpot)
 	).apply(i, TownBuildingDef::new));
 
 	/** The definitions of {@code access}'s {@code town_building} registry, by the ruin template each names. */

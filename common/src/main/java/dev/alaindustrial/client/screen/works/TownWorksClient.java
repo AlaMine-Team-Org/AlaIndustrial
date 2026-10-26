@@ -1,9 +1,11 @@
 package dev.alaindustrial.client.screen.works;
 
 import dev.alaindustrial.network.NetworkDispatcher;
+import dev.alaindustrial.network.TownObstructionRequestPayload;
 import dev.alaindustrial.network.TownWorksPayload;
 import dev.alaindustrial.network.TownWorksRequestPayload;
 import dev.alaindustrial.settlement.works.ConstructionRow;
+import net.minecraft.core.BlockPos;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -41,5 +43,10 @@ public final class TownWorksClient {
 	/** Presses {@code action} on the row whose target is {@code target}; the reply brings fresh rows. */
 	public static void press(ConstructionRow.Action action, int target) {
 		NetworkDispatcher.get().sendToServer(TownWorksRequestPayload.press(action, target));
+	}
+
+	/** Asks the server to outline the block in the way at the cell x y z (MOD-890); it answers only the town's own. */
+	public static void showObstruction(int x, int y, int z) {
+		NetworkDispatcher.get().sendToServer(new TownObstructionRequestPayload(new BlockPos(x, y, z)));
 	}
 }

@@ -16,6 +16,7 @@ import dev.alaindustrial.settlement.Settlement;
 import dev.alaindustrial.settlement.SettlementGate;
 import dev.alaindustrial.settlement.SettlementRegistry;
 import dev.alaindustrial.settlement.drone.DispatcherBuffer;
+import dev.alaindustrial.settlement.drone.DispatcherSpot;
 import dev.alaindustrial.settlement.drone.DispatcherStatus;
 import dev.alaindustrial.settlement.drone.DispatcherView;
 import dev.alaindustrial.settlement.drone.DispatcherViews;
@@ -27,6 +28,7 @@ import dev.alaindustrial.settlement.drone.TownDroneRoster;
 import dev.alaindustrial.settlement.drone.TownHall;
 import dev.alaindustrial.settlement.plan.PlanSheetRules;
 import dev.alaindustrial.settlement.works.BuildMaterials;
+import dev.alaindustrial.settlement.works.HousePlans;
 import dev.alaindustrial.settlement.works.MaterialSource;
 import dev.alaindustrial.settlement.works.TownOrders;
 import dev.alaindustrial.settlement.works.TownWorks;
@@ -45,6 +47,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -205,6 +208,18 @@ public final class TownDispatcherBlockEntity extends MachineBlockEntity implemen
 		return binding.admits(level, player);
 	}
 
+	/**
+	 * {@code placer} has just put the dispatcher here (MOD-891, R158): it finds its town now, and on a cell of the
+	 * town's hall where the plan wants a block the placer hears that it will stop the restoration, and where its
+	 * place is ({@link DispatcherSpot#placed}).
+	 */
+	public void placedBy(ServerPlayer placer) {
+		if (level instanceof ServerLevel serverLevel) {
+			binding.resolve(serverLevel, worldPosition, this::setChanged).ifPresent(town -> DispatcherSpot
+					.placed(serverLevel, town.id(), worldPosition, getBlockState(), placer));
+		}
+	}
+
 	/** Whether {@code player} breaks this block: the town's owner, or anyone while the town has none. */
 	public boolean mayBeBrokenBy(Player player) {
 		return binding.mayControl(level, player);
@@ -280,14 +295,20 @@ public final class TownDispatcherBlockEntity extends MachineBlockEntity implemen
 	}
 
 	/**
-	 * A house plan of the town's style put into the plan slot is learned by the town and used up (round 2 of 0.1.219,
-	 * Q4): the slot is the town hall's, a house plan only passes through it. A plan of another style stays where it is.
+	 * A house plan (or the warehouse plan, MOD-892) of the town's style put into the plan slot is learned by the town
+	 * and used up (round 2 of 0.1.219, Q4): the slot is the town hall's, a house plan only passes through it. A plan
+	 * of another style, or one the town already knows, stays where it is.
 	 */
 	private void learnHousePlan(ServerLevel level, Settlement town) {
 		ItemStack stack = getItem(PLAN_SLOT);
 		RestorationPlan plan = stack.getItem() instanceof HousePlanItem ? RestorationPlanItem.planOf(stack) : null;
-		if (plan == null || PlanSheetRules.houseType(plan.building()) == 0
+		if (plan == null || !PlanSheetRules.learned(plan.building())
 				|| !town.style().isEmpty() && !town.style().equals(plan.style().toString())) {
+			return;
+		}
+		// A plan the town knows stays in the slot, as on the core: the sheet is the player's, not used up for nothing.
+		TownWorks works = SettlementRegistry.get(level.getServer()).works().town(town.id());
+		if (HousePlans.knows(works, TownHall.index(works), plan.template())) {
 			return;
 		}
 		removeItem(PLAN_SLOT, 1);

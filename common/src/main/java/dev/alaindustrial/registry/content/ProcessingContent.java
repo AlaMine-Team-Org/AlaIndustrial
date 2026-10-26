@@ -30,6 +30,7 @@ import dev.alaindustrial.block.PolymerizerBlock;
 import dev.alaindustrial.block.ChargingBedBlock;
 import dev.alaindustrial.block.DroneNestBlock;
 import dev.alaindustrial.block.HouseInletBlock;
+import dev.alaindustrial.block.WarehouseShelfBlock;
 import dev.alaindustrial.block.ReceptionCapsuleBlock;
 import dev.alaindustrial.block.TownDispatcherBlock;
 import dev.alaindustrial.block.RecyclerBlock;
@@ -57,6 +58,7 @@ import dev.alaindustrial.block.entity.MaceratorBlockEntity;
 import dev.alaindustrial.block.entity.PolymerizerBlockEntity;
 import dev.alaindustrial.block.entity.DroneNestBlockEntity;
 import dev.alaindustrial.block.entity.HouseInletBlockEntity;
+import dev.alaindustrial.block.entity.WarehouseShelfBlockEntity;
 import dev.alaindustrial.block.entity.ReceptionCapsuleBlockEntity;
 import dev.alaindustrial.block.entity.TownDispatcherBlockEntity;
 import dev.alaindustrial.block.entity.RecyclerBlockEntity;
@@ -264,6 +266,11 @@ public final class ProcessingContent {
 	public static final BlockDef<ChargingBedBlock> CHARGING_BED = block("charging_bed", ChargingBedBlock::new,
 			machine(p -> p.strength(2.0f, 6.0f).sound(SoundType.METAL).noOcclusion()),
 			s -> ModContent.CHARGING_BED = s);
+	// MOD-885 - the warehouse shelf (R157): the town warehouse's storage, a chest of 27 slots whose four bin cards show
+	// what it holds the most of. A full cube; its recessed front is the block breaker's case (WarehouseShelfBlock).
+	public static final BlockDef<WarehouseShelfBlock> WAREHOUSE_SHELF = block("warehouse_shelf",
+			WarehouseShelfBlock::new, machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.WAREHOUSE_SHELF = s);
 
 	private static final List<BlockDef<?>> BLOCKS = endBlocks();
 
@@ -314,7 +321,9 @@ public final class ProcessingContent {
 			blockItem("house_inlet", s -> ModContent.HOUSE_INLET_ITEM = s),
 			blockItem("charging_bed", s -> ModContent.CHARGING_BED_ITEM = s),
 			// MOD-862 - the house plans, one per capsule house type; appended at the very tail.
-			item("house_plan", p -> new HousePlanItem(p.stacksTo(1)), s -> ModContent.HOUSE_PLAN = s));
+			item("house_plan", p -> new HousePlanItem(p.stacksTo(1)), s -> ModContent.HOUSE_PLAN = s),
+			// MOD-885 - the warehouse shelf; appended at the very tail.
+			blockItem("warehouse_shelf", s -> ModContent.WAREHOUSE_SHELF_ITEM = s));
 
 	// MOD-858 - constants, because the capability roster names them (no energy: BlockCapabilityRoster).
 	public static final BlockEntityDef<TownDispatcherBlockEntity> TOWN_DISPATCHER_BE =
@@ -387,7 +396,10 @@ public final class ProcessingContent {
 			// MOD-858: the dispatcher's plan slots and buffer; the nest, whose state is the drone.
 			TOWN_DISPATCHER_BE, DRONE_NEST_BE, // and MOD-876's house inlet, an EnergyPortHost:
 			blockEntity("house_inlet", HouseInletBlockEntity.class, HouseInletBlockEntity::new,
-					s -> ModContent.HOUSE_INLET_BE = s, HOUSE_INLET));
+					s -> ModContent.HOUSE_INLET_BE = s, HOUSE_INLET),
+			// MOD-885: the warehouse shelf, a plain container, so the item capability follows.
+			blockEntity("warehouse_shelf", WarehouseShelfBlockEntity.class, WarehouseShelfBlockEntity::new,
+					s -> ModContent.WAREHOUSE_SHELF_BE = s, WAREHOUSE_SHELF));
 
 	private static final List<MenuDef<?>> MENUS = List.of(
 			menu("macerator", MaceratorMenu::new, s -> ModContent.MACERATOR_MENU = s),
@@ -482,6 +494,8 @@ public final class ProcessingContent {
 		show(out, ModContent.TOWN_DISPATCHER_ITEM);
 		show(out, ModContent.DRONE_NEST_ITEM);
 		show(out, ModContent.CHARGING_BED_ITEM);
+		// MOD-885 - the warehouse shelf, the storage of a restored warehouse.
+		show(out, ModContent.WAREHOUSE_SHELF_ITEM);
 	}
 
 	/**
@@ -500,11 +514,10 @@ public final class ProcessingContent {
 			}
 			showStack(out, ModContent.RESTORATION_PLAN, () -> RestorationPlanItem.of(RestorationPlan.of(
 					new PlanSheetRules.Plan(id, PlanSheetRules.intactTemplate(id, PlanSheetRules.TOWN_HALL)))));
-			// MOD-862 - the four house plans of the style, after its hall plan.
-			for (int type = 1; type <= PlanSheetRules.HOUSE_TYPES; type++) {
-				String house = PlanSheetRules.house(type);
+			// MOD-862 - the four house plans of the style, after its hall plan; MOD-892 - then the warehouse plan.
+			for (String building : PlanSheetRules.learnedBuildings()) {
 				showStack(out, ModContent.HOUSE_PLAN, () -> HousePlanItem.of(RestorationPlan.of(
-						new PlanSheetRules.Plan(id, PlanSheetRules.intactTemplate(id, house)))));
+						new PlanSheetRules.Plan(id, PlanSheetRules.intactTemplate(id, building)))));
 			}
 		}
 	}

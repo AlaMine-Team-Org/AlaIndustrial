@@ -62,6 +62,11 @@ neoForge {
         gameTests {
             type = "gameTestServer"
             gameDirectory = this.mkdir(this.file('runs/gameTests'))
+            // MOD-891 — the same explicit heap as the Fabric server lane (MOD-858, fabric/build.gradle).
+            // Without it the JVM takes a quarter of the runner slice, and CI run 40232050075 died of
+            // OutOfMemoryError while saving chunks in batch 35, once the dispatcher-spot rigs joined
+            // the town-hall stands. The lanes run one after the other, so 2 GiB stays inside the slice.
+            jvmArguments.addAll '-Xmx2g'
         }
     }
     mods {
