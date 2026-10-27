@@ -2,6 +2,7 @@ package dev.alaindustrial.block;
 
 import dev.alaindustrial.block.entity.CableBlockEntity;
 import dev.alaindustrial.core.energy.CableType;
+import dev.alaindustrial.item.fluid.ItemFluidBridge;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -18,9 +19,12 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemUtils;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.PipeBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jspecify.annotations.Nullable;
 
@@ -36,6 +40,12 @@ import org.jspecify.annotations.Nullable;
  * <p>Cost: one dye per segment for a single click; a Shift run charges one dye per
  * {@link #SEGMENTS_PER_DYE} segments, the same eight-for-one as the crafting recipe, and dyes as far
  * as the dyes in hand reach. A segment that already has the colour is neither repainted nor charged.
+ *
+ * <p>Washing (MOD-898) is the way back: a bucket of water right-clicked on a dyed segment strips it to
+ * plain rubber, with Shift the whole run, for one bucket either way. Any container the loader's item fluid
+ * API can take a bucket of water out of counts, not only the vanilla bucket. Water in hand on a cable of
+ * the mod always takes the click, even when there is nothing to wash: otherwise the bucket would pour
+ * next to the line, and running water washes the mod's cables away (MOD-661).
  */
 public final class CableDyeing {
 
@@ -104,7 +114,61 @@ public final class CableDyeing {
 		return InteractionResult.SUCCESS;
 	}
 
-	private static List<CableBlockEntity> single(Level level, BlockPos pos, DyeColor dye) {
+	/**
+	 * The early-hook entry point for water; {@link InteractionResult#PASS} for anything that is not water on a
+	 * cable of the mod.
+	 */
+	public static InteractionResult tryWash(Level level, @Nullable Player player, InteractionHand hand,
+			@Nullable BlockHitResult hit) {
+		if (player == null || hit == null || player.isSpectator()) {
+			return InteractionResult.PASS;
+		}
+		BlockPos pos = hit.getBlockPos();
+		if (!(level.getBlockState(pos).getBlock() instanceof CableBlock cable)) {
+			return InteractionResult.PASS;
+		}
+		ItemStack stack = player.getItemInHand(hand);
+		boolean viaBridge = ItemFluidBridge.get().takeBucketFromHand(player, hand, Fluids.WATER, true);
+		if (!viaBridge && !stack.is(Items.WATER_BUCKET)) {
+			return InteractionResult.PASS;
+		}
+		if (!player.mayBuild() || !level.mayInteract(player, pos)) {
+			return InteractionResult.PASS;
+		}
+		if (!cable.type().isInsulated() || level.isClientSide()) {
+			return InteractionResult.SUCCESS;
+		}
+		List<CableBlockEntity> targets = player.isSecondaryUseActive()
+				? run(level, pos, cable.type(), null)
+				: single(level, pos, null);
+		if (targets.isEmpty()) {
+			return InteractionResult.SUCCESS;
+		}
+		if (!player.getAbilities().instabuild && !spendBucketOfWater(player, hand, stack, viaBridge)) {
+			return InteractionResult.SUCCESS;
+		}
+		for (CableBlockEntity target : targets) {
+			target.setColor(null);
+		}
+		level.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 1.0f, 1.0f);
+		return InteractionResult.SUCCESS;
+	}
+
+	/**
+	 * Take the bucket of water a wash costs. Through the loader's item fluid API when the container speaks
+	 * it, so the container picks what it turns into; the vanilla bucket by hand only when no API answered
+	 * for it (a loader bridge not installed yet).
+	 */
+	private static boolean spendBucketOfWater(Player player, InteractionHand hand, ItemStack stack,
+			boolean viaBridge) {
+		if (viaBridge) {
+			return ItemFluidBridge.get().takeBucketFromHand(player, hand, Fluids.WATER, false);
+		}
+		player.setItemInHand(hand, ItemUtils.createFilledResult(stack, player, new ItemStack(Items.BUCKET)));
+		return true;
+	}
+
+	private static List<CableBlockEntity> single(Level level, BlockPos pos, @Nullable DyeColor dye) {
 		return level.getBlockEntity(pos) instanceof CableBlockEntity cable && cable.color() != dye
 				? List.of(cable)
 				: List.of();
@@ -113,10 +177,11 @@ public final class CableDyeing {
 	/**
 	 * The segments a Shift click repaints, nearest first: every insulated segment of {@code grade}
 	 * reachable from {@code start} through drawn connections, up to {@link #MAX_RUN}, skipping those
-	 * that already carry {@code dye}. A connection into another grade, a bare cable or a machine ends
+	 * that already carry {@code dye} ({@code null}: the undyed ones, so a wash collects the dyed segments).
+	 * A connection into another grade, a bare cable or a machine ends
 	 * the run there.
 	 */
-	public static List<CableBlockEntity> run(Level level, BlockPos start, CableType grade, DyeColor dye) {
+	public static List<CableBlockEntity> run(Level level, BlockPos start, CableType grade, @Nullable DyeColor dye) {
 		List<CableBlockEntity> out = new ArrayList<>();
 		Set<BlockPos> seen = new HashSet<>();
 		ArrayDeque<BlockPos> queue = new ArrayDeque<>();

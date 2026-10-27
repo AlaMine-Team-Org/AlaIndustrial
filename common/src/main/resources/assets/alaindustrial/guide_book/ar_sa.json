@@ -3308,6 +3308,36 @@
           ]
         },
         {
+          "id": "reinforced_bone_meal",
+          "title": "مسحوق العظام المعزَّز",
+          "icon": "alaindustrial:reinforced_bone_meal",
+          "pages": [
+            {
+              "type": "text",
+              "title": "مسحوق العظام المعزَّز",
+              "text": "مسحوق عظام بلا حظ — الشتلة تصبح شجرة دائمًا، والمحصول ينضج فورًا، وكل ما عدا ذلك ينمو كما مع مسحوق العظام العادي ولكن دون إخفاق. إن لم يكن هناك ما ينمو، لا يُستهلك المسحوق ويبقى العالم كما كان."
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
+              "grid": [
+                "minecraft:bone_meal",
+                "",
+                "minecraft:bone_meal",
+                "",
+                "alaindustrial:biomass",
+                "",
+                "minecraft:bone_meal",
+                "",
+                "minecraft:bone_meal"
+              ],
+              "result_id": "alaindustrial:reinforced_bone_meal",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "teleporter",
           "title": "ناقل",
           "icon": "alaindustrial:teleporter",

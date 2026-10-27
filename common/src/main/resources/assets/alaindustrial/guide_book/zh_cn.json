@@ -3308,6 +3308,36 @@
           ]
         },
         {
+          "id": "reinforced_bone_meal",
+          "title": "强化骨粉",
+          "icon": "alaindustrial:reinforced_bone_meal",
+          "pages": [
+            {
+              "type": "text",
+              "title": "强化骨粉",
+              "text": "不靠运气的骨粉——树苗必定长成树，作物立即成熟，其他一切与普通骨粉相同，只是不会落空。如果没有可生长的东西，骨粉不会消耗，世界也保持原样。"
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "minecraft:bone_meal",
+                "",
+                "minecraft:bone_meal",
+                "",
+                "alaindustrial:biomass",
+                "",
+                "minecraft:bone_meal",
+                "",
+                "minecraft:bone_meal"
+              ],
+              "result_id": "alaindustrial:reinforced_bone_meal",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "teleporter",
           "title": "传送器",
           "icon": "alaindustrial:teleporter",

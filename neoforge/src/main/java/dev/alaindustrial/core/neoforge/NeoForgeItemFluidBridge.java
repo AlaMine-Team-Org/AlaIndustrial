@@ -1,10 +1,14 @@
 package dev.alaindustrial.core.neoforge;
 
 import com.google.common.primitives.Ints;
+import dev.alaindustrial.core.fluid.FluidAmounts;
 import dev.alaindustrial.core.fluid.FluidPort;
 import dev.alaindustrial.item.fluid.ItemFluidBridge;
 import net.minecraft.world.Container;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
@@ -49,6 +53,35 @@ public final class NeoForgeItemFluidBridge implements ItemFluidBridge {
 			return false;
 		}
 		return ItemAccess.forStack(stack).getCapability(Capabilities.Fluid.ITEM) != null;
+	}
+
+	/**
+	 * One bucket out of the hand's container (MOD-898). {@code ItemAccess.forPlayerInteraction} swaps the
+	 * container in the hand (or into the inventory for a stack of them) and, in creative, leaves the hand
+	 * alone — the behaviour of vanilla's {@code ItemUtils.createFilledResult}.
+	 */
+	@Override
+	public boolean takeBucketFromHand(Player player, InteractionHand hand, Fluid fluid, boolean simulate) {
+		if (player.getItemInHand(hand).isEmpty()) {
+			return false;
+		}
+		// oneByOne: a stack of containers reads as one item, as in the slot exchange below — without it a hand
+		// of four capsules reads as 4000 mB, and a capsule cannot give up a quarter of itself (WSH06).
+		ResourceHandler<FluidResource> item =
+				ItemAccess.forPlayerInteraction(player, hand).oneByOne().getCapability(Capabilities.Fluid.ITEM);
+		if (item == null) {
+			return false;
+		}
+		int bucket = Ints.saturatedCast(FluidAmounts.BUCKET);
+		try (Transaction transaction = Transaction.openRoot()) {
+			if (item.extract(FluidResource.of(fluid), bucket, transaction) != bucket) {
+				return false;
+			}
+			if (!simulate) {
+				transaction.commit();
+			}
+			return true;
+		}
 	}
 
 	/**

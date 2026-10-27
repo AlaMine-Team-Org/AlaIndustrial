@@ -3308,6 +3308,36 @@
           ]
         },
         {
+          "id": "reinforced_bone_meal",
+          "title": "Zesílená kostní moučka",
+          "icon": "alaindustrial:reinforced_bone_meal",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Zesílená kostní moučka",
+              "text": "Kostní moučka bez náhody — stromek vždy vyroste ve strom, plodina hned dozraje a vše ostatní roste jako po obyčejné kostní moučce, jen bez nezdaru. Když nemá co růst, moučka se nespotřebuje a svět zůstane, jaký byl."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Výroba podle vzoru",
+              "grid": [
+                "minecraft:bone_meal",
+                "",
+                "minecraft:bone_meal",
+                "",
+                "alaindustrial:biomass",
+                "",
+                "minecraft:bone_meal",
+                "",
+                "minecraft:bone_meal"
+              ],
+              "result_id": "alaindustrial:reinforced_bone_meal",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "teleporter",
           "title": "Teleportér",
           "icon": "alaindustrial:teleporter",

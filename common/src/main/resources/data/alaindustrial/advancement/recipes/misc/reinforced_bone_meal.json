@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_biomass": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:biomass"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_biomass"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "alaindustrial:reinforced_bone_meal"
+    ]
+  }
+}

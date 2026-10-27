@@ -426,6 +426,7 @@ final class ContentManifestOrder {
 			"item cotton_fiber",
 			"item kok_sagyz_root",
 			"item inulin",
+			"item reinforced_bone_meal",
 			"item sprinkler",
 			"item incubator",
 			"item trellis",

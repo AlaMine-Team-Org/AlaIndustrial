@@ -3308,6 +3308,36 @@
           ]
         },
         {
+          "id": "reinforced_bone_meal",
+          "title": "Poudre d'os renforcée",
+          "icon": "alaindustrial:reinforced_bone_meal",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Poudre d'os renforcée",
+              "text": "De la poudre d'os sans hasard : une pousse devient toujours un arbre, une culture mûrit aussitôt, et tout le reste pousse comme avec la poudre d'os ordinaire, sans les ratés. Si rien ne peut pousser, la poudre n'est pas consommée et le monde reste tel qu'il était."
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "minecraft:bone_meal",
+                "",
+                "minecraft:bone_meal",
+                "",
+                "alaindustrial:biomass",
+                "",
+                "minecraft:bone_meal",
+                "",
+                "minecraft:bone_meal"
+              ],
+              "result_id": "alaindustrial:reinforced_bone_meal",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "teleporter",
           "title": "Téléporteur",
           "icon": "alaindustrial:teleporter",

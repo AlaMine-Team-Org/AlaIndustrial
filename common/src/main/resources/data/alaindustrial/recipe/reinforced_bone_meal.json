@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "B B",
+    " M ",
+    "B B"
+  ],
+  "key": {
+    "B": "minecraft:bone_meal",
+    "M": "alaindustrial:biomass"
+  },
+  "result": {
+    "id": "alaindustrial:reinforced_bone_meal",
+    "count": 2
+  }
+}

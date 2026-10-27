@@ -3308,6 +3308,36 @@
           ]
         },
         {
+          "id": "reinforced_bone_meal",
+          "title": "Усиленная костная мука",
+          "icon": "alaindustrial:reinforced_bone_meal",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Усиленная костная мука",
+              "text": "Костная мука без случайности — саженец всегда становится деревом, посев сразу доходит до зрелости, остальное растёт как от обычной муки, но без осечки. Если вырасти нечему или негде, мука не тратится и мир не меняется."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт на верстаке",
+              "grid": [
+                "minecraft:bone_meal",
+                "",
+                "minecraft:bone_meal",
+                "",
+                "alaindustrial:biomass",
+                "",
+                "minecraft:bone_meal",
+                "",
+                "minecraft:bone_meal"
+              ],
+              "result_id": "alaindustrial:reinforced_bone_meal",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "teleporter",
           "title": "Телепорт",
           "icon": "alaindustrial:teleporter",

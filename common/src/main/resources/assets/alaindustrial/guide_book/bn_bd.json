@@ -3308,6 +3308,36 @@
           ]
         },
         {
+          "id": "reinforced_bone_meal",
+          "title": "শক্তিশালী হাড়ের গুঁড়া",
+          "icon": "alaindustrial:reinforced_bone_meal",
+          "pages": [
+            {
+              "type": "text",
+              "title": "শক্তিশালী হাড়ের গুঁড়া",
+              "text": "ভাগ্যের ওপর নির্ভর না করা হাড়ের গুঁড়া — চারা সবসময় গাছ হয়, ফসল তখনই পাকে, আর বাকি সব সাধারণ হাড়ের গুঁড়ার মতোই বাড়ে, তবে ব্যর্থতা ছাড়া। কিছু বাড়তে না পারলে গুঁড়া খরচ হয় না এবং পৃথিবী যেমন ছিল তেমনই থাকে।"
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "minecraft:bone_meal",
+                "",
+                "minecraft:bone_meal",
+                "",
+                "alaindustrial:biomass",
+                "",
+                "minecraft:bone_meal",
+                "",
+                "minecraft:bone_meal"
+              ],
+              "result_id": "alaindustrial:reinforced_bone_meal",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "teleporter",
           "title": "টেলিপোর্টার",
           "icon": "alaindustrial:teleporter",

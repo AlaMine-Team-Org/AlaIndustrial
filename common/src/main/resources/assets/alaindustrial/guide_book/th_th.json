@@ -3308,6 +3308,36 @@
           ]
         },
         {
+          "id": "reinforced_bone_meal",
+          "title": "ผงกระดูกเสริมพลัง",
+          "icon": "alaindustrial:reinforced_bone_meal",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ผงกระดูกเสริมพลัง",
+              "text": "ผงกระดูกที่ไม่ต้องพึ่งดวง — ต้นกล้ากลายเป็นต้นไม้เสมอ พืชผลสุกทันที และสิ่งอื่นเติบโตเหมือนใช้ผงกระดูกธรรมดา เพียงแต่ไม่พลาด หากไม่มีสิ่งใดเติบโตได้ ผงจะไม่ถูกใช้และโลกยังคงเหมือนเดิม"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:bone_meal",
+                "",
+                "minecraft:bone_meal",
+                "",
+                "alaindustrial:biomass",
+                "",
+                "minecraft:bone_meal",
+                "",
+                "minecraft:bone_meal"
+              ],
+              "result_id": "alaindustrial:reinforced_bone_meal",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "teleporter",
           "title": "เครื่องเทเลพอร์ต",
           "icon": "alaindustrial:teleporter",

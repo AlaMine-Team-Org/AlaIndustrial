@@ -3308,6 +3308,36 @@
           ]
         },
         {
+          "id": "reinforced_bone_meal",
+          "title": "Güçlendirilmiş Kemik Tozu",
+          "icon": "alaindustrial:reinforced_bone_meal",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Güçlendirilmiş Kemik Tozu",
+              "text": "Şansa bırakmayan kemik tozu — fidan her zaman ağaca dönüşür, ekin hemen olgunlaşır ve geri kalan her şey sıradan kemik tozuyla olduğu gibi büyür, yalnızca ıskalamadan. Büyüyebilecek bir şey yoksa toz harcanmaz ve dünya olduğu gibi kalır."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "minecraft:bone_meal",
+                "",
+                "minecraft:bone_meal",
+                "",
+                "alaindustrial:biomass",
+                "",
+                "minecraft:bone_meal",
+                "",
+                "minecraft:bone_meal"
+              ],
+              "result_id": "alaindustrial:reinforced_bone_meal",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "teleporter",
           "title": "Işınlayıcı",
           "icon": "alaindustrial:teleporter",

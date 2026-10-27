@@ -71,6 +71,13 @@ public final class ModTags {
 		 */
 		public static final TagKey<Block> GARDEN_DRONE_WEEDS = key("garden_drone_weeds");
 		/**
+		 * Plants reinforced bone meal must leave alone (MOD-906). Empty in the mod: it exists for modpack
+		 * authors, who fill it by datapack when a foreign plant should not get the guaranteed growth. A block
+		 * in the tag is refused and the meal is not used up. Backed by
+		 * {@code data/alaindustrial/tags/block/reinforced_bone_meal_blacklist.json}.
+		 */
+		public static final TagKey<Block> REINFORCED_BONE_MEAL_BLACKLIST = key("reinforced_bone_meal_blacklist");
+		/**
 		 * Uranium ore as it sits in the rock — the source a Geiger counter is carried into a mine for
 		 * (MOD-475).
 		 *

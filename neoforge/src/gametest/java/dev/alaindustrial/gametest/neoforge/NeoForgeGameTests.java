@@ -114,6 +114,11 @@ public final class NeoForgeGameTests {
 		// Capabilities.Energy.ITEM, not just the ones someone remembered to add to the literal list.
 		registerTest(event, "xmod_every_powered_item_exposes_capability", 40, true,
 				ItemEnergyCapabilityScenarios::reg01EveryPoweredItemExposesCapability);
+		// MOD-906: reinforced bone meal against BonemealEvent, which only NeoForge has.
+		registerTest(event, "reinforced_bone_meal_event_handled", 40, true,
+				BonemealEventScenarios::handledByAnotherModSpendsNothing);
+		registerTest(event, "reinforced_bone_meal_event_denied", 40, true,
+				BonemealEventScenarios::deniedByAnotherModSpendsNothing);
 
 		// MOD-193: the MOD-115 furnace family, which ran on Fabric only. The sided WorldlyContainer path
 		// (top=input, side=fuel, bottom=result) is exactly where this loader differed: Fabric's

@@ -3308,6 +3308,36 @@
           ]
         },
         {
+          "id": "reinforced_bone_meal",
+          "title": "Polvo de hueso reforzado",
+          "icon": "alaindustrial:reinforced_bone_meal",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Polvo de hueso reforzado",
+              "text": "Polvo de hueso sin azar: un brote siempre se convierte en árbol, un cultivo madura al instante y todo lo demás crece como con el polvo de hueso normal, pero sin fallos. Si nada puede crecer, el polvo no se gasta y el mundo queda como estaba."
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "minecraft:bone_meal",
+                "",
+                "minecraft:bone_meal",
+                "",
+                "alaindustrial:biomass",
+                "",
+                "minecraft:bone_meal",
+                "",
+                "minecraft:bone_meal"
+              ],
+              "result_id": "alaindustrial:reinforced_bone_meal",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "teleporter",
           "title": "Teletransportador",
           "icon": "alaindustrial:teleporter",

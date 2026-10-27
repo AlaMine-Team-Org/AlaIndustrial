@@ -3308,6 +3308,36 @@
           ]
         },
         {
+          "id": "reinforced_bone_meal",
+          "title": "Посилене кісткове борошно",
+          "icon": "alaindustrial:reinforced_bone_meal",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Посилене кісткове борошно",
+              "text": "Кісткове борошно без удачі — саджанець завжди стає деревом, посів одразу дозріває, а все інше росте як від звичайного кісткового борошна, тільки без осічки. Якщо рости нічому або ніде, борошно не витрачається, а світ лишається таким, як був."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "minecraft:bone_meal",
+                "",
+                "minecraft:bone_meal",
+                "",
+                "alaindustrial:biomass",
+                "",
+                "minecraft:bone_meal",
+                "",
+                "minecraft:bone_meal"
+              ],
+              "result_id": "alaindustrial:reinforced_bone_meal",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "teleporter",
           "title": "Телепорт",
           "icon": "alaindustrial:teleporter",

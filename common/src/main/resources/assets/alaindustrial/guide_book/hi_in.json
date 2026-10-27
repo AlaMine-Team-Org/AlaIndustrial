@@ -3308,6 +3308,36 @@
           ]
         },
         {
+          "id": "reinforced_bone_meal",
+          "title": "सशक्त हड्डी का चूरा",
+          "icon": "alaindustrial:reinforced_bone_meal",
+          "pages": [
+            {
+              "type": "text",
+              "title": "सशक्त हड्डी का चूरा",
+              "text": "बिना किस्मत वाला हड्डी का चूरा — पौधा हमेशा पेड़ बनता है, फसल तुरंत पक जाती है, और बाकी सब साधारण हड्डी के चूरे की तरह बढ़ता है, बस बिना चूके। अगर कुछ बढ़ नहीं सकता, तो चूरा खर्च नहीं होता और दुनिया जैसी थी वैसी ही रहती है।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "minecraft:bone_meal",
+                "",
+                "minecraft:bone_meal",
+                "",
+                "alaindustrial:biomass",
+                "",
+                "minecraft:bone_meal",
+                "",
+                "minecraft:bone_meal"
+              ],
+              "result_id": "alaindustrial:reinforced_bone_meal",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "teleporter",
           "title": "टेलीपोर्टर",
           "icon": "alaindustrial:teleporter",

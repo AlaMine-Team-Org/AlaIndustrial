@@ -64,7 +64,7 @@ public class KokSagyzBlock extends BushBlock {
 	public static final IntegerProperty AGE = IntegerProperty.create("age", AGE_ROSETTE, AGE_MATURE);
 
 	/** Same light floor vanilla crops use — see the cotton trellis. */
-	private static final int MIN_LIGHT = 9;
+	public static final int MIN_LIGHT = 9;
 
 	public KokSagyzBlock(Properties properties) {
 		super(properties);
@@ -335,15 +335,23 @@ public class KokSagyzBlock extends BushBlock {
 
 	// --- bone meal (also the sprinkler's hook) ---
 
+	/**
+	 * Bone meal, the sprinkler and the garden drone grow the plant only where it would grow by itself: in light
+	 * of at least {@code MIN_LIGHT}, as {@link #randomTick} demands, and with somewhere to grow (not yet mature,
+	 * or {@link #canGrowRoot}). The light gate lives here, not in {@code isBonemealSuccess}, so meal used in the
+	 * dark is refused before it is spent (MOD-906, owner's decision). The soil is held by {@code canSurvive}.
+	 */
 	@Override
 	public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state, BonemealSource source) {
+		if (level.getRawBrightness(pos, 0) < MIN_LIGHT) {
+			return false;
+		}
 		return state.getValue(AGE) < AGE_MATURE || canGrowRoot(level, pos);
 	}
 
 	/**
-	 * One step of growth, no chance roll: a stage of age, or one block of root. Meal (and the
-	 * sprinkler) buys speed, not exemption — the light floor and the "somewhere to grow" checks
-	 * still apply.
+	 * One step of growth, no chance roll ({@code BushBlock.isBonemealSuccess} is always true): a stage of
+	 * age, or one block of root. Every gate, light included, is {@link #isValidBonemealTarget}.
 	 */
 	@Override
 	public void performBonemeal(ServerLevel level, RandomSource random, BlockPos pos, BlockState state,
