@@ -5844,6 +5844,36 @@
           ]
         },
         {
+          "id": "antirad_bar",
+          "title": "Barre Antirad",
+          "icon": "alaindustrial:antirad_bar",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Barre Antirad",
+              "text": "Barre au lait et à l'inuline : quatre bouchées, chacune retire un quart de l'échelle de radiation ; la barre entière agit comme un seau de lait sans toucher aux autres effets. Se mange l'estomac plein."
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication non façonnée",
+              "grid": [
+                "minecraft:milk_bucket",
+                "minecraft:cocoa_beans",
+                "alaindustrial:inulin",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:antirad_bar",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "fluxweave_armor",
           "title": "Armure de flux",
           "icon": "alaindustrial:fluxweave_chestplate",
@@ -6199,6 +6229,48 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "iodine_tablets",
+          "title": "Comprimés d'iode",
+          "icon": "alaindustrial:iodine_tablets",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Comprimés d'iode",
+              "text": "Prévention des radiations : un comprimé divise par deux pendant 5 minutes la vitesse d'accumulation de la dose. N'enlève pas la dose déjà reçue. Fait de cendre de varech via le bain galvanique et le compresseur."
+            }
+          ]
+        },
+        {
+          "id": "chewing_gum",
+          "title": "Chewing-gum au caoutchouc",
+          "icon": "alaindustrial:chewing_gum",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Chewing-gum au caoutchouc",
+              "text": "Chewing-gum au caoutchouc et à l'inuline de kok-saghyz : mâché en moins d'une seconde, il dissipe la nausée et l'empêche de revenir pendant trois minutes. Ne rassasie pas ; se mâche l'estomac plein."
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication non façonnée",
+              "grid": [
+                "alaindustrial:raw_rubber",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:chewing_gum",
+              "result_count": 2
             }
           ]
         },

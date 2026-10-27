@@ -20,7 +20,10 @@ public enum GalvanicBathStatus implements StatusLine {
 	/** The two inputs do not form a known recipe. */
 	NO_RECIPE,
 	/** The result slot cannot take the output. */
-	OUTPUT_BLOCKED;
+	OUTPUT_BLOCKED,
+	// MOD-916 — appended, so the ordinals the menu syncs stay where they were.
+	NO_KELP_ASH,
+	NO_SULFUR;
 
 	private static final GalvanicBathStatus[] VALUES = values();
 

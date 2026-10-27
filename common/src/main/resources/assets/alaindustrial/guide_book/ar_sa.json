@@ -5844,6 +5844,36 @@
           ]
         },
         {
+          "id": "antirad_bar",
+          "title": "لوح أنتيراد",
+          "icon": "alaindustrial:antirad_bar",
+          "pages": [
+            {
+              "type": "text",
+              "title": "لوح أنتيراد",
+              "text": "لوح حليب بالإينولين: أربع قضمات، كل واحدة تزيل ربع مقياس الإشعاع؛ اللوح كله يزيله مثل دلو الحليب لكنه لا يمس التأثيرات الأخرى. يؤكل والمعدة ممتلئة."
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع غير مرتب",
+              "grid": [
+                "minecraft:milk_bucket",
+                "minecraft:cocoa_beans",
+                "alaindustrial:inulin",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:antirad_bar",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "fluxweave_armor",
           "title": "درع تدفقي",
           "icon": "alaindustrial:fluxweave_chestplate",
@@ -6199,6 +6229,48 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "iodine_tablets",
+          "title": "أقراص اليود",
+          "icon": "alaindustrial:iodine_tablets",
+          "pages": [
+            {
+              "type": "text",
+              "title": "أقراص اليود",
+              "text": "وقاية من الإشعاع: قرص واحد يبطئ تراكم الجرعة إلى النصف لمدة 5 دقائق. لا يزيل جرعة أخذتها. يُصنع من رماد عشب البحر عبر الحوض الجلفاني والضاغط."
+            }
+          ]
+        },
+        {
+          "id": "chewing_gum",
+          "title": "علكة مطاطية",
+          "icon": "alaindustrial:chewing_gum",
+          "pages": [
+            {
+              "type": "text",
+              "title": "علكة مطاطية",
+              "text": "علكة من مطاط وإينولين الكوك ساغيز: تُمضغ في أقل من ثانية، تزيل الغثيان وتمنع عودته ثلاث دقائق. لا تُشبع، ويمكن مضغها والمعدة ممتلئة."
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع غير مرتب",
+              "grid": [
+                "alaindustrial:raw_rubber",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:chewing_gum",
+              "result_count": 2
             }
           ]
         },

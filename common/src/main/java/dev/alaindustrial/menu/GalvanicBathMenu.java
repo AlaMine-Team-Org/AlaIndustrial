@@ -4,7 +4,6 @@ import dev.alaindustrial.block.entity.GalvanicBathBlockEntity;
 import dev.alaindustrial.block.entity.GalvanicBathStatus;
 import dev.alaindustrial.item.fluid.ItemFluidBridge;
 import dev.alaindustrial.registry.ModContent;
-import dev.alaindustrial.registry.ModTags;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerLevelAccess;
@@ -49,13 +48,13 @@ public final class GalvanicBathMenu extends MachineMenu {
 		addSlot(new Slot(container, GalvanicBathBlockEntity.FIBER_SLOT, 40, 47) {
 			@Override
 			public boolean mayPlace(ItemStack stack) {
-				return stack.is(ModTags.Items.FIBER);
+				return GalvanicBathBlockEntity.acceptsInput(GalvanicBathBlockEntity.FIBER_SLOT, stack);
 			}
 		});
 		addSlot(new Slot(container, GalvanicBathBlockEntity.SILVER_SLOT, 62, 47) {
 			@Override
 			public boolean mayPlace(ItemStack stack) {
-				return stack.is(ModContent.SILVER_DUST.get());
+				return GalvanicBathBlockEntity.acceptsInput(GalvanicBathBlockEntity.SILVER_SLOT, stack);
 			}
 		});
 		addSlot(new OutputSlot(container, GalvanicBathBlockEntity.OUTPUT_SLOT, 117, 35));

@@ -197,11 +197,15 @@ public class GalvanicBathBlockEntity extends MachineBlockEntity implements Overc
 			ItemStack result, long waterPerOp) {
 		int fiberNeeded = recipe != null ? recipe.inputCount(FIBER_SLOT) : 1;
 		int silverNeeded = recipe != null ? recipe.inputCount(SILVER_SLOT) : 1;
+		// MOD-916: whichever iodine input is already in names the missing one, so a half-loaded iodine batch
+		// does not ask for fibre or silver.
+		boolean iodine = items.get(FIBER_SLOT).is(ModContent.KELP_ASH.get())
+				|| items.get(SILVER_SLOT).is(ModTags.Items.C_SULFUR_DUSTS);
 		if (items.get(FIBER_SLOT).getCount() < fiberNeeded) {
-			return GalvanicBathStatus.NO_FIBER;
+			return iodine ? GalvanicBathStatus.NO_KELP_ASH : GalvanicBathStatus.NO_FIBER;
 		}
 		if (items.get(SILVER_SLOT).getCount() < silverNeeded) {
-			return GalvanicBathStatus.NO_SILVER;
+			return iodine ? GalvanicBathStatus.NO_SULFUR : GalvanicBathStatus.NO_SILVER;
 		}
 		if (recipe == null) {
 			return GalvanicBathStatus.NO_RECIPE;
@@ -252,11 +256,23 @@ public class GalvanicBathBlockEntity extends MachineBlockEntity implements Overc
 	 * bridge silently move nothing (the pump's MOD-107 bug). Automation policy is a separate question,
 	 * answered by {@link #canPlaceItemThroughFace}.
 	 */
+	/**
+	 * What each material slot takes (MOD-916) — the one rule for automation and the menu, as in the vulcanizer.
+	 * The first slot takes what gets plated or leached (fibre, kelp ash), the second what does it (silver dust,
+	 * sulfur dust); both are item tags, so a datapack recipe can bring its own inputs.
+	 */
+	public static boolean acceptsInput(int slot, ItemStack stack) {
+		return switch (slot) {
+			case FIBER_SLOT -> stack.is(ModTags.Items.GALVANIC_BATH_BASES);
+			case SILVER_SLOT -> stack.is(ModTags.Items.GALVANIC_BATH_REAGENTS);
+			default -> false;
+		};
+	}
+
 	@Override
 	public boolean canPlaceItem(int slot, ItemStack stack) {
 		return switch (slot) {
-			case FIBER_SLOT -> stack.is(ModTags.Items.FIBER);
-			case SILVER_SLOT -> stack.is(ModContent.SILVER_DUST.get());
+			case FIBER_SLOT, SILVER_SLOT -> acceptsInput(slot, stack);
 			case FILL_INPUT_SLOT, FILL_OUTPUT_SLOT -> ItemFluidBridge.get().isFluidContainer(stack);
 			default -> false;
 		};

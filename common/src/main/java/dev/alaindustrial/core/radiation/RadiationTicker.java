@@ -1,6 +1,7 @@
 package dev.alaindustrial.core.radiation;
 
 import dev.alaindustrial.core.radiation.RadiationSources.Source;
+import dev.alaindustrial.effect.IodineProtectionEffect;
 import dev.alaindustrial.registry.ModTags;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -120,7 +121,7 @@ public final class RadiationTicker {
 		// MOD-483 Respirator. Applied AFTER wearSuit above, deliberately: the suit is charged for
 		// what it stopped, and billing it for the skill's share too would wear it out for protection
 		// it never provided.
-		int added = SkillHazard.doseAdded(field + items + low, player);
+		int added = IodineProtectionEffect.doseAdded(SkillHazard.doseAdded(field + items + low, player), player);
 		if (added <= 0) {
 			return;
 		}

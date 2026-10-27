@@ -577,6 +577,10 @@ public final class ModContent {
 	public static Supplier<Item> EMERALD_DUST = unbound("EMERALD_DUST");
 	public static Supplier<Item> EMPTY_CAN = unbound("EMPTY_CAN");
 	public static Supplier<Item> CANNED_RATION = unbound("CANNED_RATION");
+	/** Iodine chain (MOD-916): ash of dried kelp, iodine from the galvanic bath, tablets from the compressor. */
+	public static Supplier<Item> KELP_ASH = unbound("KELP_ASH");
+	public static Supplier<Item> IODINE = unbound("IODINE");
+	public static Supplier<Item> IODINE_TABLETS = unbound("IODINE_TABLETS");
 	public static Supplier<Item> LAPIS_DUST = unbound("LAPIS_DUST");
 	public static Supplier<Item> TIN_DUST = unbound("TIN_DUST");
 	public static Supplier<Item> RAW_TIN = unbound("RAW_TIN");
@@ -839,6 +843,13 @@ public final class ModContent {
 	public static Supplier<Item> KOK_SAGYZ_ROOT_ITEM = unbound("KOK_SAGYZ_ROOT_ITEM");
 	/** Inulin (MOD-537) — the kok sagyz by-product carried by every macerated root. */
 	public static Supplier<Item> INULIN = unbound("INULIN");
+	/** Rubber chewing gum (MOD-918) — clears Nausea and keeps it away for a while. */
+	public static Supplier<Item> CHEWING_GUM = unbound("CHEWING_GUM");
+	/** Milk Antirad bar (MOD-914) and its three bite stages, each the use remainder of the one before. */
+	public static Supplier<Item> ANTIRAD_BAR_QUARTER = unbound("ANTIRAD_BAR_QUARTER");
+	public static Supplier<Item> ANTIRAD_BAR_HALF = unbound("ANTIRAD_BAR_HALF");
+	public static Supplier<Item> ANTIRAD_BAR_THREE_QUARTERS = unbound("ANTIRAD_BAR_THREE_QUARTERS");
+	public static Supplier<Item> ANTIRAD_BAR = unbound("ANTIRAD_BAR");
 	/** Reinforced bone meal (MOD-906) — bone meal whose growth never misses. */
 	public static Supplier<Item> REINFORCED_BONE_MEAL = unbound("REINFORCED_BONE_MEAL");
 	// Fluxweave chain (MOD-127): the Galvanic Bath plates fibre with silver into conductive thread, and

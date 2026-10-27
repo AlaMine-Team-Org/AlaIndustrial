@@ -1,5 +1,7 @@
 package dev.alaindustrial.registry;
 
+import dev.alaindustrial.effect.FreshBreathEffect;
+import dev.alaindustrial.effect.IodineProtectionEffect;
 import dev.alaindustrial.effect.RadiationEffect;
 import java.util.List;
 import java.util.function.Consumer;
@@ -41,9 +43,21 @@ public final class ModEffects {
 		throw new IllegalStateException("ModEffects.RADIATION read before its loader bound it");
 	};
 
+	/** Chewing gum's guard against Nausea (MOD-918). */
+	public static Supplier<Holder<MobEffect>> FRESH_BREATH = () -> {
+		throw new IllegalStateException("ModEffects.FRESH_BREATH read before its loader bound it");
+	};
+
+	/** Iodine tablets' slower dose build-up (MOD-916). */
+	public static Supplier<Holder<MobEffect>> IODINE_PROTECTION = () -> {
+		throw new IllegalStateException("ModEffects.IODINE_PROTECTION read before its loader bound it");
+	};
+
 	/** Every status effect, in one shared registration order. Both loaders replay this list. */
 	public static final List<EffectDef> EFFECTS = List.of(
-			new EffectDef("radiation", RadiationEffect::new, h -> RADIATION = h));
+			new EffectDef("radiation", RadiationEffect::new, h -> RADIATION = h),
+			new EffectDef("fresh_breath", FreshBreathEffect::new, h -> FRESH_BREATH = h),
+			new EffectDef("iodine_protection", IodineProtectionEffect::new, h -> IODINE_PROTECTION = h));
 
 	private ModEffects() {
 	}

@@ -5844,6 +5844,36 @@
           ]
         },
         {
+          "id": "antirad_bar",
+          "title": "안티라드 바",
+          "icon": "alaindustrial:antirad_bar",
+          "pages": [
+            {
+              "type": "text",
+              "title": "안티라드 바",
+              "text": "이눌린을 넣은 우유 바: 네 입으로 먹으며, 한 입마다 방사능 눈금의 4분의 1을 없앱니다. 한 개를 다 먹으면 우유 양동이처럼 방사능을 없애지만 다른 효과는 건드리지 않습니다. 배가 불러도 먹을 수 있습니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "무정형 제작",
+              "grid": [
+                "minecraft:milk_bucket",
+                "minecraft:cocoa_beans",
+                "alaindustrial:inulin",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:antirad_bar",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "fluxweave_armor",
           "title": "플럭스 방어구",
           "icon": "alaindustrial:fluxweave_chestplate",
@@ -6199,6 +6229,48 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "iodine_tablets",
+          "title": "요오드정",
+          "icon": "alaindustrial:iodine_tablets",
+          "pages": [
+            {
+              "type": "text",
+              "title": "요오드정",
+              "text": "방사능 예방: 한 알이 5분 동안 선량이 쌓이는 속도를 절반으로 줄입니다. 이미 받은 선량은 없애지 않습니다. 다시마 재로 전기 도금조와 압축기를 거쳐 만듭니다."
+            }
+          ]
+        },
+        {
+          "id": "chewing_gum",
+          "title": "고무 껌",
+          "icon": "alaindustrial:chewing_gum",
+          "pages": [
+            {
+              "type": "text",
+              "title": "고무 껌",
+              "text": "콕사기즈 고무와 이눌린으로 만든 껌: 1초도 안 걸려 씹히고, 멀미를 없애며 3분 동안 다시 생기지 않게 합니다. 배를 채우지 않아 배가 불러도 씹을 수 있습니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "무정형 제작",
+              "grid": [
+                "alaindustrial:raw_rubber",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:chewing_gum",
+              "result_count": 2
             }
           ]
         },

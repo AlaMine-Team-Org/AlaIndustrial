@@ -77,6 +77,21 @@ public final class RadiationConfig {
 			doc = "Percent of the dose scale that tag radioactive_low alone can reach; inside level I on purpose, so"
 					+ " raw ore sickens but never kills.")
 	public static int radiationLowDoseCapPercent = 20;
+	/** Iodine tablets (MOD-916): how long Iodine Protection lasts after one tablet. */
+	@Knob(section = Section.SAFETY, min = 1,
+			doc = "MOD-916 iodine tablets: ticks of Iodine Protection per tablet; another tablet resets the timer."
+					+ " 6000 = 5 minutes.")
+	public static int iodineProtectionTicks = 6000;
+	/** Percent of the newly added dose a protected player still takes. 50 = radiation builds up half as fast. */
+	@Knob(section = Section.SAFETY, min = 0,
+			doc = "MOD-916 iodine tablets: percent of each new dose taken under Iodine Protection (50 = half as fast)."
+					+ " A dose already carried is never reduced.")
+	public static int iodineDosePercent = 50;
+	/** Antirad bar (MOD-914): percent of the dose scale one bite takes off. 25 = four bites clear a full scale. */
+	@Knob(section = Section.SAFETY, min = 0,
+			doc = "MOD-914 Antirad bar: percent of the radiation dose scale one bite removes (25 = four bites clear"
+					+ " a full scale). Other effects are never touched.")
+	public static int antiradBiteDosePercent = 25;
 	/** Percent of a dose each worn shielding piece cuts. Four pieces = 100 % of ordinary exposure. */
 	@Knob(section = Section.SAFETY, min = 0,
 			doc = "Percent of incoming dose each worn shielding-suit piece blocks; four pieces block all ordinary"

@@ -5844,6 +5844,36 @@
           ]
         },
         {
+          "id": "antirad_bar",
+          "title": "অ্যান্টিরেড বার",
+          "icon": "alaindustrial:antirad_bar",
+          "pages": [
+            {
+              "type": "text",
+              "title": "অ্যান্টিরেড বার",
+              "text": "ইনুলিন দেওয়া দুধের বার: চার কামড়, প্রতিটি বিকিরণ মাপকাঠির এক চতুর্থাংশ সরায়; পুরো বার দুধের বালতির মতো তা সরায়, কিন্তু অন্য প্রভাব ছোঁয় না। ভরা পেটেও খাওয়া যায়।"
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিহীন ক্রাফটিং",
+              "grid": [
+                "minecraft:milk_bucket",
+                "minecraft:cocoa_beans",
+                "alaindustrial:inulin",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:antirad_bar",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "fluxweave_armor",
           "title": "ফ্লাক্স বর্ম",
           "icon": "alaindustrial:fluxweave_chestplate",
@@ -6199,6 +6229,48 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "iodine_tablets",
+          "title": "আয়োডিন ট্যাবলেট",
+          "icon": "alaindustrial:iodine_tablets",
+          "pages": [
+            {
+              "type": "text",
+              "title": "আয়োডিন ট্যাবলেট",
+              "text": "বিকিরণ প্রতিরোধ: একটি ট্যাবলেট ৫ মিনিট ডোজ জমা অর্ধেক ধীর করে। আগে পাওয়া ডোজ সরায় না। গ্যালভানিক বাথ ও কম্প্রেসরে কেল্প ছাই থেকে তৈরি।"
+            }
+          ]
+        },
+        {
+          "id": "chewing_gum",
+          "title": "রাবারের চুইংগাম",
+          "icon": "alaindustrial:chewing_gum",
+          "pages": [
+            {
+              "type": "text",
+              "title": "রাবারের চুইংগাম",
+              "text": "কোক-সাগিজের রাবার আর ইনুলিনের গাম: এক সেকেন্ডের কম সময়ে চিবানো যায়, বমিভাব দূর করে আর তিন মিনিট তা ফিরতে দেয় না। পেট ভরায় না, ভরা পেটেও চিবানো যায়।"
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিহীন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:raw_rubber",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:chewing_gum",
+              "result_count": 2
             }
           ]
         },

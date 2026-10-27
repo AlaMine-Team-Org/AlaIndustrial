@@ -5844,6 +5844,36 @@
           ]
         },
         {
+          "id": "antirad_bar",
+          "title": "Tyčinka Antirad",
+          "icon": "alaindustrial:antirad_bar",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tyčinka Antirad",
+              "text": "Mléčná tyčinka s inulinem: čtyři sousta, každé ubere čtvrtinu stupnice záření; celá tyčinka ho odstraní jako kbelík mléka, ale ostatní efekty nechá být. Dá se jíst i s plným žaludkem."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Výroba bez vzoru",
+              "grid": [
+                "minecraft:milk_bucket",
+                "minecraft:cocoa_beans",
+                "alaindustrial:inulin",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:antirad_bar",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "fluxweave_armor",
           "title": "Fluxová výstroj",
           "icon": "alaindustrial:fluxweave_chestplate",
@@ -6199,6 +6229,48 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "iodine_tablets",
+          "title": "Jodové tablety",
+          "icon": "alaindustrial:iodine_tablets",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Jodové tablety",
+              "text": "Prevence záření: jedna tableta na 5 minut zpomalí nabírání dávky na polovinu. Už nabranou dávku nesníží. Vyrábí se z popele z chaluh v galvanické lázni a kompresoru."
+            }
+          ]
+        },
+        {
+          "id": "chewing_gum",
+          "title": "Kaučuková žvýkačka",
+          "icon": "alaindustrial:chewing_gum",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kaučuková žvýkačka",
+              "text": "Žvýkačka z kaučuku a inulinu kok-sagyzu: rozžvýká se za necelou sekundu, odstraní nevolnost a tři minuty ji nepustí zpět. Nezasytí, dá se žvýkat i s plným žaludkem."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Výroba bez vzoru",
+              "grid": [
+                "alaindustrial:raw_rubber",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:chewing_gum",
+              "result_count": 2
             }
           ]
         },

@@ -5844,6 +5844,36 @@
           ]
         },
         {
+          "id": "antirad_bar",
+          "title": "Antirad Bar",
+          "icon": "alaindustrial:antirad_bar",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Antirad Bar",
+              "text": "İnülinli süt barı: dört ısırık, her biri radyasyon ölçeğinin dörtte birini alır; tüm bar bir kova süt gibi işe yarar ama diğer etkilere dokunmaz. Tok karnına da yenir."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilsiz Üretim",
+              "grid": [
+                "minecraft:milk_bucket",
+                "minecraft:cocoa_beans",
+                "alaindustrial:inulin",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:antirad_bar",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "fluxweave_armor",
           "title": "Fluks zırh takımı",
           "icon": "alaindustrial:fluxweave_chestplate",
@@ -6199,6 +6229,48 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "iodine_tablets",
+          "title": "İyot Tabletleri",
+          "icon": "alaindustrial:iodine_tablets",
+          "pages": [
+            {
+              "type": "text",
+              "title": "İyot Tabletleri",
+              "text": "Radyasyondan korunma: bir tablet 5 dakika boyunca dozun birikme hızını yarıya indirir. Alınmış dozu silmez. Yosun külünden galvanik banyo ve kompresörle yapılır."
+            }
+          ]
+        },
+        {
+          "id": "chewing_gum",
+          "title": "Kauçuk Sakız",
+          "icon": "alaindustrial:chewing_gum",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kauçuk Sakız",
+              "text": "Kok-sagız kauçuğu ve inülinden sakız: bir saniyeden kısa sürede çiğnenir, bulantıyı giderir ve üç dakika geri gelmesini önler. Doyurmaz, tok karnına da çiğnenebilir."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilsiz Üretim",
+              "grid": [
+                "alaindustrial:raw_rubber",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:chewing_gum",
+              "result_count": 2
             }
           ]
         },

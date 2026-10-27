@@ -5844,6 +5844,36 @@
           ]
         },
         {
+          "id": "antirad_bar",
+          "title": "Antirad-bar",
+          "icon": "alaindustrial:antirad_bar",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Antirad-bar",
+              "text": "Mjölkbar med inulin: fyra tuggor, var och en tar bort en fjärdedel av strålningsskalan; hela baren verkar som en hink mjölk men rör inte andra effekter. Går att äta med full mage."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formlös tillverkning",
+              "grid": [
+                "minecraft:milk_bucket",
+                "minecraft:cocoa_beans",
+                "alaindustrial:inulin",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:antirad_bar",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "fluxweave_armor",
           "title": "Fluxvävsrustning",
           "icon": "alaindustrial:fluxweave_chestplate",
@@ -6199,6 +6229,48 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "iodine_tablets",
+          "title": "Jodtabletter",
+          "icon": "alaindustrial:iodine_tablets",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Jodtabletter",
+              "text": "Strålningsskydd i förväg: en tablett halverar i 5 minuter hur snabbt dosen byggs upp. Tar inte bort en dos du redan har. Görs av kelpaska via galvaniska badet och kompressorn."
+            }
+          ]
+        },
+        {
+          "id": "chewing_gum",
+          "title": "Tuggummi av gummi",
+          "icon": "alaindustrial:chewing_gum",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tuggummi av gummi",
+              "text": "Tuggummi av kok-saghyz-gummi och inulin: tuggas på under en sekund, tar bort illamående och håller det borta i tre minuter. Mättar inte, så det går att tugga med full mage."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formlös tillverkning",
+              "grid": [
+                "alaindustrial:raw_rubber",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:chewing_gum",
+              "result_count": 2
             }
           ]
         },

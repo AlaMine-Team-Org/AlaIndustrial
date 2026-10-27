@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:compressing",
+  "ingredient": "alaindustrial:iodine",
+  "result": {
+    "id": "alaindustrial:iodine_tablets",
+    "count": 2
+  },
+  "energy": 260
+}

@@ -10,6 +10,7 @@ import static dev.alaindustrial.registry.content.ContentDeclarations.item;
 import static dev.alaindustrial.registry.content.ContentDeclarations.machine;
 import static dev.alaindustrial.registry.content.ContentDeclarations.menu;
 import static dev.alaindustrial.registry.content.ContentDeclarations.plain;
+import static dev.alaindustrial.registry.content.ContentDeclarations.registeredItem;
 import static dev.alaindustrial.registry.content.TabEntries.show;
 
 import dev.alaindustrial.block.CrystalFarmControllerBlock;
@@ -29,6 +30,8 @@ import dev.alaindustrial.block.entity.IncubatorBlockEntity;
 import dev.alaindustrial.block.entity.KokSagyzRootBlockEntity;
 import dev.alaindustrial.block.entity.SprinklerBlockEntity;
 import dev.alaindustrial.compat.LineBlockProps;
+import dev.alaindustrial.item.misc.AntiradBarItem;
+import dev.alaindustrial.item.misc.ChewingGumItem;
 import dev.alaindustrial.item.misc.ReinforcedBoneMealItem;
 import dev.alaindustrial.menu.GardenDroneStationMenu;
 import dev.alaindustrial.menu.IncubatorMenu;
@@ -168,6 +171,22 @@ public final class AgricultureContent {
 			// MOD-537 — the kok sagyz harvest and its by-product: the dug root (macerable into
 			// raw rubber + inulin) and the inulin itself.
 			plain("inulin", s -> ModContent.INULIN = s),
+			// MOD-918 — raw rubber + inulin chewed against Nausea; the guard itself is FreshBreathEffect.
+			item("chewing_gum", ChewingGumItem::new, s -> ModContent.CHEWING_GUM = s),
+			// MOD-914 — milk + inulin. Declared from the last quarter up: each stage's use remainder is the stage
+			// declared just above it, which registeredItem can only resolve once it is registered.
+			item("antirad_bar_quarter", AntiradBarItem::new, s -> ModContent.ANTIRAD_BAR_QUARTER = s,
+					hiddenFromPlayers("a bite stage of the antirad bar, left in hand by eating the half bar")),
+			item("antirad_bar_half", p -> new AntiradBarItem(p.usingConvertsTo(registeredItem("antirad_bar_quarter"))),
+					s -> ModContent.ANTIRAD_BAR_HALF = s,
+					hiddenFromPlayers("a bite stage of the antirad bar, left in hand by eating three quarters")),
+			item("antirad_bar_three_quarters",
+					p -> new AntiradBarItem(p.usingConvertsTo(registeredItem("antirad_bar_half"))),
+					s -> ModContent.ANTIRAD_BAR_THREE_QUARTERS = s,
+					hiddenFromPlayers("a bite stage of the antirad bar, left in hand by eating the whole bar")),
+			item("antirad_bar",
+					p -> new AntiradBarItem(p.usingConvertsTo(registeredItem("antirad_bar_three_quarters"))),
+					s -> ModContent.ANTIRAD_BAR = s),
 			// MOD-906 — bone meal without the luck: its own useOn, the growth itself is ReinforcedBonemeal.
 			item("reinforced_bone_meal", ReinforcedBoneMealItem::new, s -> ModContent.REINFORCED_BONE_MEAL = s),
 			blockItem("sprinkler", s -> ModContent.SPRINKLER_ITEM = s),
@@ -259,6 +278,10 @@ public final class AgricultureContent {
 		show(out, ModContent.KOK_SAGYZ_SEEDS);
 		show(out, ModContent.KOK_SAGYZ_ROOT_ITEM);
 		show(out, ModContent.INULIN);
+		// MOD-918 — the gum is made of the two kok sagyz products right above it.
+		show(out, ModContent.CHEWING_GUM);
+		// MOD-914 — only the whole bar; the bite stages are what eating leaves in hand.
+		show(out, ModContent.ANTIRAD_BAR);
 		// MOD-906 — the guaranteed fertilizer closes the farming run.
 		show(out, ModContent.REINFORCED_BONE_MEAL);
 	}

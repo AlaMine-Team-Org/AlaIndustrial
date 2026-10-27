@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_inulin": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:inulin"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_inulin"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "alaindustrial:chewing_gum"
+    ]
+  }
+}

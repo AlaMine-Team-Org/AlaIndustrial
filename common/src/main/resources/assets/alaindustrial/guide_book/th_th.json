@@ -5844,6 +5844,36 @@
           ]
         },
         {
+          "id": "antirad_bar",
+          "title": "แท่งแอนติแรด",
+          "icon": "alaindustrial:antirad_bar",
+          "pages": [
+            {
+              "type": "text",
+              "title": "แท่งแอนติแรด",
+              "text": "แท่งนมผสมอินูลิน กินได้สี่คำ แต่ละคำลดมาตรรังสีลงหนึ่งในสี่ กินหมดแท่งได้ผลเหมือนนมหนึ่งถังแต่ไม่แตะผลอื่น กินได้แม้ท้องอิ่ม"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบไม่มีรูปแบบ",
+              "grid": [
+                "minecraft:milk_bucket",
+                "minecraft:cocoa_beans",
+                "alaindustrial:inulin",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:antirad_bar",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "fluxweave_armor",
           "title": "ชุดเกราะฟลักซ์วีฟ",
           "icon": "alaindustrial:fluxweave_chestplate",
@@ -6199,6 +6229,48 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "iodine_tablets",
+          "title": "เม็ดไอโอดีน",
+          "icon": "alaindustrial:iodine_tablets",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เม็ดไอโอดีน",
+              "text": "ป้องกันรังสีล่วงหน้า: หนึ่งเม็ดทำให้รังสีสะสมช้าลงครึ่งหนึ่งเป็นเวลา 5 นาที ไม่ลบปริมาณที่ได้รับแล้ว ทำจากเถ้าสาหร่ายเคลป์ผ่านอ่างชุบไฟฟ้าและเครื่องอัด"
+            }
+          ]
+        },
+        {
+          "id": "chewing_gum",
+          "title": "หมากฝรั่งยาง",
+          "icon": "alaindustrial:chewing_gum",
+          "pages": [
+            {
+              "type": "text",
+              "title": "หมากฝรั่งยาง",
+              "text": "หมากฝรั่งจากยางและอินูลินของต้นค็อกซากิซ เคี้ยวได้ในไม่ถึงวินาที แก้อาการคลื่นไส้และกันไม่ให้กลับมาสามนาที ไม่ทำให้อิ่ม จึงเคี้ยวได้แม้ท้องอิ่ม"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบไม่มีรูปแบบ",
+              "grid": [
+                "alaindustrial:raw_rubber",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:chewing_gum",
+              "result_count": 2
             }
           ]
         },

@@ -1,0 +1,9 @@
+{
+	"replace": false,
+	"values": [
+		"alaindustrial:antirad_bar",
+		"alaindustrial:antirad_bar_three_quarters",
+		"alaindustrial:antirad_bar_half",
+		"alaindustrial:antirad_bar_quarter"
+	]
+}

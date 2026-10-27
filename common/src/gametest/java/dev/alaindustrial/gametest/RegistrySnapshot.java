@@ -542,6 +542,8 @@ final class RegistrySnapshot {
 			"menu vulcanizer",
 			"menu water_mill",
 			"menu wind_mill",
+			"mob_effect fresh_breath",
+			"mob_effect iodine_protection",
 			"mob_effect radiation",
 			"particle_type enriched_uranium_flame",
 			"particle_type nutrient_spray",

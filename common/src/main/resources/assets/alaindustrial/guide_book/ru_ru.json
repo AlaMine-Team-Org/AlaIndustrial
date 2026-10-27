@@ -5844,6 +5844,36 @@
           ]
         },
         {
+          "id": "antirad_bar",
+          "title": "Батончик «Антирад»",
+          "icon": "alaindustrial:antirad_bar",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Батончик «Антирад»",
+              "text": "Молочный батончик с инулином — четыре укуса, каждый снимает четверть шкалы радиации; весь батончик снимает её как ведро молока, но другие эффекты не трогает. Едят и на полный желудок."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Бесформенный крафт",
+              "grid": [
+                "minecraft:milk_bucket",
+                "minecraft:cocoa_beans",
+                "alaindustrial:inulin",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:antirad_bar",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "fluxweave_armor",
           "title": "Броня из Флюкс-ткани",
           "icon": "alaindustrial:fluxweave_chestplate",
@@ -6199,6 +6229,48 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "iodine_tablets",
+          "title": "Йодные таблетки",
+          "icon": "alaindustrial:iodine_tablets",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Йодные таблетки",
+              "text": "Профилактика радиации — таблетка на 5 минут вдвое замедляет набор дозы. Уже набранную не снимает. Делается из золы ламинарии через гальваническую ванну и компрессор."
+            }
+          ]
+        },
+        {
+          "id": "chewing_gum",
+          "title": "Каучуковая жвачка",
+          "icon": "alaindustrial:chewing_gum",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Каучуковая жвачка",
+              "text": "Жвачка из каучука и инулина кок-сагыза — жуётся за секунду, снимает тошноту и три минуты не даёт ей вернуться. Не насыщает, жевать можно на полный желудок."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Бесформенный крафт",
+              "grid": [
+                "alaindustrial:raw_rubber",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:chewing_gum",
+              "result_count": 2
             }
           ]
         },
