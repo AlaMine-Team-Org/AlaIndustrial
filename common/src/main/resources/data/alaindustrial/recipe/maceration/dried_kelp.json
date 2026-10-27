@@ -1,0 +1,9 @@
+{
+  "type": "alaindustrial:maceration",
+  "ingredient": "minecraft:dried_kelp",
+  "result": {
+    "id": "alaindustrial:kelp_ash",
+    "count": 1
+  },
+  "energy": 300
+}

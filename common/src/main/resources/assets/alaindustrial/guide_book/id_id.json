@@ -5844,6 +5844,36 @@
           ]
         },
         {
+          "id": "antirad_bar",
+          "title": "Batang Antirad",
+          "icon": "alaindustrial:antirad_bar",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Batang Antirad",
+              "text": "Batang susu dengan inulin: empat gigitan, tiap gigitan menghapus seperempat skala radiasi; satu batang penuh bekerja seperti seember susu tetapi tidak menyentuh efek lain. Bisa dimakan saat kenyang."
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Tanpa Pola",
+              "grid": [
+                "minecraft:milk_bucket",
+                "minecraft:cocoa_beans",
+                "alaindustrial:inulin",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:antirad_bar",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "fluxweave_armor",
           "title": "Set zirah fluks",
           "icon": "alaindustrial:fluxweave_chestplate",
@@ -6199,6 +6229,48 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "iodine_tablets",
+          "title": "Tablet Yodium",
+          "icon": "alaindustrial:iodine_tablets",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tablet Yodium",
+              "text": "Pencegahan radiasi: satu tablet memperlambat penumpukan dosis setengahnya selama 5 menit. Dosis yang sudah ada tidak hilang. Dibuat dari abu rumput laut lewat bak galvanik dan kompresor."
+            }
+          ]
+        },
+        {
+          "id": "chewing_gum",
+          "title": "Permen Karet Getah",
+          "icon": "alaindustrial:chewing_gum",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Permen Karet Getah",
+              "text": "Permen karet dari getah dan inulin kok-sagyz: dikunyah dalam kurang dari sedetik, menghilangkan mual dan mencegahnya kembali selama tiga menit. Tidak mengenyangkan, bisa dikunyah saat perut penuh."
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Tanpa Pola",
+              "grid": [
+                "alaindustrial:raw_rubber",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:chewing_gum",
+              "result_count": 2
             }
           ]
         },

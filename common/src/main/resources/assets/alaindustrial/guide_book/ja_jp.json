@@ -5844,6 +5844,36 @@
           ]
         },
         {
+          "id": "antirad_bar",
+          "title": "アンチラドバー",
+          "icon": "alaindustrial:antirad_bar",
+          "pages": [
+            {
+              "type": "text",
+              "title": "アンチラドバー",
+              "text": "イヌリン入りのミルクバー。4口で食べ、ひと口ごとに放射線の目盛りを4分の1消す。1本で牛乳バケツと同じく放射線を消すが、ほかの効果には触れない。満腹でも食べられる。"
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "不定形クラフト",
+              "grid": [
+                "minecraft:milk_bucket",
+                "minecraft:cocoa_beans",
+                "alaindustrial:inulin",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:antirad_bar",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "fluxweave_armor",
           "title": "フラックス織の防具",
           "icon": "alaindustrial:fluxweave_chestplate",
@@ -6199,6 +6229,48 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "iodine_tablets",
+          "title": "ヨウ素錠",
+          "icon": "alaindustrial:iodine_tablets",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ヨウ素錠",
+              "text": "放射線の予防。1錠で5分間、線量がたまる速さが半分になる。すでに受けた線量は消えない。昆布の灰から電気めっき槽と圧縮機で作る。"
+            }
+          ]
+        },
+        {
+          "id": "chewing_gum",
+          "title": "ゴムのチューインガム",
+          "icon": "alaindustrial:chewing_gum",
+          "pages": [
+            {
+              "type": "text",
+              "title": "ゴムのチューインガム",
+              "text": "コクサギズの生ゴムとイヌリンのガム。1秒かからずに噛めて、吐き気を消し、3分間は戻らないようにする。満腹度は増えないので、満腹でも噛める。"
+            },
+            {
+              "type": "recipe",
+              "title": "レシピ",
+              "recipe_type": "不定形クラフト",
+              "grid": [
+                "alaindustrial:raw_rubber",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:chewing_gum",
+              "result_count": 2
             }
           ]
         },

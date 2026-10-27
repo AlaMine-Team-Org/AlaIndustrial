@@ -5844,6 +5844,36 @@
           ]
         },
         {
+          "id": "antirad_bar",
+          "title": "Батончик «Антирад»",
+          "icon": "alaindustrial:antirad_bar",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Батончик «Антирад»",
+              "text": "Молочний батончик з інуліном: чотири укуси, кожен знімає чверть шкали радіації; увесь батончик знімає її як відро молока, але інших ефектів не чіпає. Можна їсти на повний шлунок."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт без форми",
+              "grid": [
+                "minecraft:milk_bucket",
+                "minecraft:cocoa_beans",
+                "alaindustrial:inulin",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:antirad_bar",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "fluxweave_armor",
           "title": "Флюкс-броня",
           "icon": "alaindustrial:fluxweave_chestplate",
@@ -6199,6 +6229,48 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "iodine_tablets",
+          "title": "Йодні таблетки",
+          "icon": "alaindustrial:iodine_tablets",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Йодні таблетки",
+              "text": "Профілактика радіації: таблетка на 5 хвилин удвічі сповільнює набір дози. Уже набрану не знімає. Робиться з попелу ламінарії через гальванічну ванну й компресор."
+            }
+          ]
+        },
+        {
+          "id": "chewing_gum",
+          "title": "Каучукова жуйка",
+          "icon": "alaindustrial:chewing_gum",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Каучукова жуйка",
+              "text": "Жуйка з каучуку та інуліну кок-сагизу: жується менш ніж за секунду, знімає нудоту й три хвилини не дає їй повернутися. Не насичує, можна жувати на повний шлунок."
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт без форми",
+              "grid": [
+                "alaindustrial:raw_rubber",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:chewing_gum",
+              "result_count": 2
             }
           ]
         },

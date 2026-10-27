@@ -46,6 +46,19 @@ class RadiationCoreTest {
 	}
 
 	@Test
+	void antiradBiteTakesAShareOfTheScaleNotOfTheDose() {
+		// MOD-914: four bites of 25 % clear a full scale exactly, by equal quarters.
+		int dose = CAPACITY;
+		for (int bite = 1; bite <= 4; bite++) {
+			dose = RadiationCore.afterBite(dose, CAPACITY, 25);
+			assertEquals(CAPACITY - CAPACITY * bite / 4, dose, "bite " + bite);
+		}
+		assertEquals(0, RadiationCore.afterBite(CAPACITY / 10, CAPACITY, 25), "a small dose goes in one bite");
+		assertEquals(0, RadiationCore.afterBite(0, CAPACITY, 25), "no dose, nothing below zero");
+		assertEquals(700, RadiationCore.afterBite(700, CAPACITY, 0), "a zero share takes nothing");
+	}
+
+	@Test
 	void doseAccumulatesAndStopsAtTheTop() {
 		assertEquals(100, RadiationCore.addDose(0, 100, CAPACITY));
 		assertEquals(300, RadiationCore.addDose(100, 200, CAPACITY));

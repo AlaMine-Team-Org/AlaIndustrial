@@ -5844,6 +5844,36 @@
           ]
         },
         {
+          "id": "antirad_bar",
+          "title": "Antirad-Riegel",
+          "icon": "alaindustrial:antirad_bar",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Antirad-Riegel",
+              "text": "Milchriegel mit Inulin: vier Bissen, jeder nimmt ein Viertel der Strahlenskala; der ganze Riegel wirkt wie ein Eimer Milch, lässt andere Effekte aber unberührt. Auch mit vollem Magen essbar."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Formloses Handwerk",
+              "grid": [
+                "minecraft:milk_bucket",
+                "minecraft:cocoa_beans",
+                "alaindustrial:inulin",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:antirad_bar",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "fluxweave_armor",
           "title": "Fluxgewebe-Rüstung",
           "icon": "alaindustrial:fluxweave_chestplate",
@@ -6199,6 +6229,48 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "iodine_tablets",
+          "title": "Iodtabletten",
+          "icon": "alaindustrial:iodine_tablets",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Iodtabletten",
+              "text": "Strahlenvorsorge: Eine Tablette halbiert 5 Minuten lang, wie schnell sich die Dosis aufbaut. Eine bereits erhaltene Dosis bleibt. Hergestellt aus Seetangasche über das galvanische Bad und den Kompressor."
+            }
+          ]
+        },
+        {
+          "id": "chewing_gum",
+          "title": "Kautschuk-Kaugummi",
+          "icon": "alaindustrial:chewing_gum",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kautschuk-Kaugummi",
+              "text": "Kaugummi aus Kok-Saghys-Kautschuk und Inulin: in unter einer Sekunde gekaut, beseitigt Übelkeit und hält sie drei Minuten fern. Macht nicht satt, also auch mit vollem Magen kaubar."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Formloses Handwerk",
+              "grid": [
+                "alaindustrial:raw_rubber",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:chewing_gum",
+              "result_count": 2
             }
           ]
         },

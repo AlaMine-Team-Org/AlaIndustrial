@@ -5844,6 +5844,36 @@
           ]
         },
         {
+          "id": "antirad_bar",
+          "title": "Antirad-reep",
+          "icon": "alaindustrial:antirad_bar",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Antirad-reep",
+              "text": "Melkreep met inuline: vier happen, elk haalt een kwart van de stralingsschaal weg; de hele reep werkt als een emmer melk maar laat andere effecten met rust. Ook met een volle maag te eten."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Vormloos vervaardigen",
+              "grid": [
+                "minecraft:milk_bucket",
+                "minecraft:cocoa_beans",
+                "alaindustrial:inulin",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:antirad_bar",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "fluxweave_armor",
           "title": "Fluxweefsel-uitrusting",
           "icon": "alaindustrial:fluxweave_chestplate",
@@ -6199,6 +6229,48 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "iodine_tablets",
+          "title": "Jodiumtabletten",
+          "icon": "alaindustrial:iodine_tablets",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Jodiumtabletten",
+              "text": "Stralingspreventie: één tablet halveert 5 minuten lang hoe snel de dosis oploopt. Een opgelopen dosis blijft. Gemaakt van kelpas via het galvanische bad en de compressor."
+            }
+          ]
+        },
+        {
+          "id": "chewing_gum",
+          "title": "Rubberen kauwgom",
+          "icon": "alaindustrial:chewing_gum",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Rubberen kauwgom",
+              "text": "Kauwgom van kok-saghyz-rubber en inuline: in minder dan een seconde gekauwd, verdrijft misselijkheid en houdt die drie minuten weg. Vult niet, dus ook met een volle maag te kauwen."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Vormloos vervaardigen",
+              "grid": [
+                "alaindustrial:raw_rubber",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:chewing_gum",
+              "result_count": 2
             }
           ]
         },

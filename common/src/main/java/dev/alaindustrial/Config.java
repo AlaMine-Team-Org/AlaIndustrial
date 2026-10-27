@@ -1181,6 +1181,11 @@ public final class Config {
 	@Knob(section = Section.PLAYER, min = 0,
 			doc = "MOD-483 Crystal Care: percent faster greenhouse growth, read through the sprinkler's owner (the greenhouse controller has no owner of its own).")
 	public static int skillCrystalCarePercent = 10;
+	/** Chewing gum (MOD-918): how long Fresh Breath keeps Nausea away after one piece. */
+	@Knob(section = Section.PLAYER, min = 1,
+			doc = "MOD-918 chewing gum: ticks of Fresh Breath, during which Nausea cannot be applied."
+					+ " 3600 = 3 minutes.")
+	public static int chewingGumGuardTicks = 3600;
 
 	// --- Energy tiers: per-tick voltage cap + default buffer capacity, configurable per tier ---
 	/**

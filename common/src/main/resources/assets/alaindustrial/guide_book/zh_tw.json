@@ -5844,6 +5844,36 @@
           ]
         },
         {
+          "id": "antirad_bar",
+          "title": "抗輻能量棒",
+          "icon": "alaindustrial:antirad_bar",
+          "pages": [
+            {
+              "type": "text",
+              "title": "抗輻能量棒",
+              "text": "加了菊粉的牛奶能量棒：分四口吃，每口清除四分之一輻射刻度；整根相當於一桶牛奶，但不影響其他效果。吃飽時也能吃。"
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "無序合成",
+              "grid": [
+                "minecraft:milk_bucket",
+                "minecraft:cocoa_beans",
+                "alaindustrial:inulin",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:antirad_bar",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "fluxweave_armor",
           "title": "通量織物盔甲",
           "icon": "alaindustrial:fluxweave_chestplate",
@@ -6199,6 +6229,48 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "iodine_tablets",
+          "title": "碘片",
+          "icon": "alaindustrial:iodine_tablets",
+          "pages": [
+            {
+              "type": "text",
+              "title": "碘片",
+              "text": "輻射預防：一片藥在 5 分鐘內讓劑量累積速度減半。不會清除已有劑量。用海帶灰經電鍍槽和壓縮機製成。"
+            }
+          ]
+        },
+        {
+          "id": "chewing_gum",
+          "title": "橡膠口香糖",
+          "icon": "alaindustrial:chewing_gum",
+          "pages": [
+            {
+              "type": "text",
+              "title": "橡膠口香糖",
+              "text": "用橡膠草的生膠和菊粉做的口香糖：不到一秒就能嚼完，消除反胃並在三分鐘內不讓它回來。不提供飽食度，吃飽時也能嚼。"
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "無序合成",
+              "grid": [
+                "alaindustrial:raw_rubber",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:chewing_gum",
+              "result_count": 2
             }
           ]
         },

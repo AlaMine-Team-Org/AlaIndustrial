@@ -5844,6 +5844,36 @@
           ]
         },
         {
+          "id": "antirad_bar",
+          "title": "Barretta Antirad",
+          "icon": "alaindustrial:antirad_bar",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Barretta Antirad",
+              "text": "Barretta al latte con inulina: quattro morsi, ognuno toglie un quarto della scala delle radiazioni; la barretta intera agisce come un secchio di latte ma lascia gli altri effetti. Si mangia anche a stomaco pieno."
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione non sagomata",
+              "grid": [
+                "minecraft:milk_bucket",
+                "minecraft:cocoa_beans",
+                "alaindustrial:inulin",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:antirad_bar",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "fluxweave_armor",
           "title": "Armatura di flusso",
           "icon": "alaindustrial:fluxweave_chestplate",
@@ -6199,6 +6229,48 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "iodine_tablets",
+          "title": "Compresse di iodio",
+          "icon": "alaindustrial:iodine_tablets",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Compresse di iodio",
+              "text": "Prevenzione delle radiazioni: una compressa dimezza per 5 minuti la velocità con cui sale la dose. Non toglie la dose già presa. Si fa con cenere di alghe nel bagno galvanico e nel compressore."
+            }
+          ]
+        },
+        {
+          "id": "chewing_gum",
+          "title": "Gomma da masticare di caucciù",
+          "icon": "alaindustrial:chewing_gum",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Gomma da masticare di caucciù",
+              "text": "Gomma di caucciù e inulina di kok-saghyz: si mastica in meno di un secondo, elimina la nausea e la tiene lontana per tre minuti. Non sazia, si mastica anche a stomaco pieno."
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione non sagomata",
+              "grid": [
+                "alaindustrial:raw_rubber",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:chewing_gum",
+              "result_count": 2
             }
           ]
         },

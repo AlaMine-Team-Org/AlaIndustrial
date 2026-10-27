@@ -5844,6 +5844,36 @@
           ]
         },
         {
+          "id": "antirad_bar",
+          "title": "Antirad Bar",
+          "icon": "alaindustrial:antirad_bar",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Antirad Bar",
+              "text": "A milk bar with inulin — four bites, each takes a quarter of the radiation scale off; the whole bar clears it like a bucket of milk but leaves other effects alone. Edible on a full stomach."
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shapeless Crafting",
+              "grid": [
+                "minecraft:milk_bucket",
+                "minecraft:cocoa_beans",
+                "alaindustrial:inulin",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:antirad_bar",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "fluxweave_armor",
           "title": "Fluxweave Armor",
           "icon": "alaindustrial:fluxweave_chestplate",
@@ -6199,6 +6229,48 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "iodine_tablets",
+          "title": "Iodine Tablets",
+          "icon": "alaindustrial:iodine_tablets",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Iodine Tablets",
+              "text": "Radiation prevention — one tablet halves how fast the dose builds up for 5 minutes. It does not remove a dose you already have. Made from kelp ash through the galvanic bath and the compressor."
+            }
+          ]
+        },
+        {
+          "id": "chewing_gum",
+          "title": "Rubber Chewing Gum",
+          "icon": "alaindustrial:chewing_gum",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Rubber Chewing Gum",
+              "text": "Gum from kok sagyz rubber and inulin — chewed in under a second, it clears nausea and keeps it away for three minutes. Not filling; chew it on a full stomach."
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shapeless Crafting",
+              "grid": [
+                "alaindustrial:raw_rubber",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:chewing_gum",
+              "result_count": 2
             }
           ]
         },

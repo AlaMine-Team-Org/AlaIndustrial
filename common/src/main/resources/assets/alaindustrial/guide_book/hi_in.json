@@ -5844,6 +5844,36 @@
           ]
         },
         {
+          "id": "antirad_bar",
+          "title": "एंटीरेड बार",
+          "icon": "alaindustrial:antirad_bar",
+          "pages": [
+            {
+              "type": "text",
+              "title": "एंटीरेड बार",
+              "text": "इनुलिन वाला दूध का बार: चार कौर, हर कौर विकिरण पैमाने का चौथाई हटाता है; पूरा बार दूध की बाल्टी जैसा असर करता है, पर दूसरे प्रभाव नहीं छूता। भरे पेट भी खा सकते हैं।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "बिना आकार की क्राफ्टिंग",
+              "grid": [
+                "minecraft:milk_bucket",
+                "minecraft:cocoa_beans",
+                "alaindustrial:inulin",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:antirad_bar",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "fluxweave_armor",
           "title": "फ्लक्स कवच",
           "icon": "alaindustrial:fluxweave_chestplate",
@@ -6199,6 +6229,48 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "iodine_tablets",
+          "title": "आयोडीन की गोलियाँ",
+          "icon": "alaindustrial:iodine_tablets",
+          "pages": [
+            {
+              "type": "text",
+              "title": "आयोडीन की गोलियाँ",
+              "text": "विकिरण से बचाव: एक गोली 5 मिनट तक खुराक जमा होने की गति आधी कर देती है। पहले से मिली खुराक नहीं हटाती। समुद्री घास की राख से गैल्वेनिक बाथ और कंप्रेसर में बनती है।"
+            }
+          ]
+        },
+        {
+          "id": "chewing_gum",
+          "title": "रबर च्युइंग गम",
+          "icon": "alaindustrial:chewing_gum",
+          "pages": [
+            {
+              "type": "text",
+              "title": "रबर च्युइंग गम",
+              "text": "कोक-सागीज़ के रबर और इनुलिन से बनी गम: एक सेकंड से कम में चबती है, मतली दूर करती है और तीन मिनट तक उसे लौटने नहीं देती। पेट नहीं भरती, भरे पेट भी चबा सकते हैं।"
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "बिना आकार की क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:raw_rubber",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:chewing_gum",
+              "result_count": 2
             }
           ]
         },

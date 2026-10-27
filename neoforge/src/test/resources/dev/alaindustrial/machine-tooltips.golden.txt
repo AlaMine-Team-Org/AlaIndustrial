@@ -36,6 +36,10 @@ tooltip.alaindustrial.energy_per_op(1200) {gray}
 tooltip.alaindustrial.hold_shift {dark_gray}
 -- shift no-eu
 tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:antirad_bar plain : none
+== alaindustrial:antirad_bar_half plain : none
+== alaindustrial:antirad_bar_quarter plain : none
+== alaindustrial:antirad_bar_three_quarters plain : none
 == alaindustrial:ash plain : none
 == alaindustrial:assembler plain
 -- plain eu
@@ -287,6 +291,7 @@ tooltip.alaindustrial.charging_bed.purpose {gray}
 == alaindustrial:cherry_iron_chest_boat plain : none
 == alaindustrial:cherry_shielding_chest_boat plain : none
 == alaindustrial:cherry_silver_chest_boat plain : none
+== alaindustrial:chewing_gum plain : none
 == alaindustrial:choke plain : none
 == alaindustrial:choke_advanced plain : none
 == alaindustrial:choke_reinforced plain : none
@@ -1674,6 +1679,8 @@ tooltip.alaindustrial.cable_safe {green}
 == alaindustrial:invar_slab plain : none
 == alaindustrial:invar_stairs plain : none
 == alaindustrial:invar_wall plain : none
+== alaindustrial:iodine plain : none
+== alaindustrial:iodine_tablets plain : none
 == alaindustrial:iron_chest plain
 -- plain eu
 tooltip.alaindustrial.hold_shift {dark_gray}
@@ -1739,6 +1746,7 @@ tooltip.alaindustrial.jetpack.charge(30000, 30000) {gold}
 == alaindustrial:jungle_iron_chest_boat plain : none
 == alaindustrial:jungle_shielding_chest_boat plain : none
 == alaindustrial:jungle_silver_chest_boat plain : none
+== alaindustrial:kelp_ash plain : none
 == alaindustrial:kok_sagyz_root plain : none
 == alaindustrial:kok_sagyz_seeds plain : none
 == alaindustrial:lapis_dust plain : none

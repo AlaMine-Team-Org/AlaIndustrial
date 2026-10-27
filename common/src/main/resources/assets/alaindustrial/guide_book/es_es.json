@@ -5844,6 +5844,36 @@
           ]
         },
         {
+          "id": "antirad_bar",
+          "title": "Barrita Antirad",
+          "icon": "alaindustrial:antirad_bar",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Barrita Antirad",
+              "text": "Barrita de leche con inulina: cuatro mordiscos, cada uno quita un cuarto de la escala de radiación; la barrita entera la quita como un cubo de leche, pero no toca otros efectos. Se come con el estómago lleno."
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación sin forma",
+              "grid": [
+                "minecraft:milk_bucket",
+                "minecraft:cocoa_beans",
+                "alaindustrial:inulin",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:antirad_bar",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "fluxweave_armor",
           "title": "Armadura de flujo",
           "icon": "alaindustrial:fluxweave_chestplate",
@@ -6199,6 +6229,48 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "iodine_tablets",
+          "title": "Pastillas de yodo",
+          "icon": "alaindustrial:iodine_tablets",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Pastillas de yodo",
+              "text": "Prevención de la radiación: una pastilla reduce a la mitad durante 5 minutos lo rápido que sube la dosis. No quita la dosis que ya tienes. Se hace con ceniza de algas en el baño galvánico y el compresor."
+            }
+          ]
+        },
+        {
+          "id": "chewing_gum",
+          "title": "Chicle de caucho",
+          "icon": "alaindustrial:chewing_gum",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Chicle de caucho",
+              "text": "Chicle de caucho e inulina de kok sagyz: se mastica en menos de un segundo, quita las náuseas y no las deja volver durante tres minutos. No sacia; se puede mascar con el estómago lleno."
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación sin forma",
+              "grid": [
+                "alaindustrial:raw_rubber",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:chewing_gum",
+              "result_count": 2
             }
           ]
         },

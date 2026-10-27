@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:milk_bucket",
+    "minecraft:cocoa_beans",
+    "alaindustrial:inulin",
+    "alaindustrial:inulin"
+  ],
+  "result": {
+    "id": "alaindustrial:antirad_bar",
+    "count": 2
+  }
+}

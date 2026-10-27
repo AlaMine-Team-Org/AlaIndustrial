@@ -268,6 +268,13 @@ public final class ModTags {
 		 * recipe already read this tag, but the slot accepted only the mod's own dust, so another mod's
 		 * sulfur showed in the recipe viewer and could not be put in.
 		 */
+		/**
+		 * What the galvanic bath takes in its first and second slot (MOD-916): the fibre or the kelp ash it
+		 * plates or leaches, and the silver or sulfur that does the work. One rule for automation and the menu.
+		 */
+		public static final TagKey<Item> GALVANIC_BATH_BASES = key("galvanic_bath_bases");
+		public static final TagKey<Item> GALVANIC_BATH_REAGENTS = key("galvanic_bath_reagents");
+
 		public static final TagKey<Item> C_SULFUR_DUSTS =
 				TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "dusts/sulfur"));
 

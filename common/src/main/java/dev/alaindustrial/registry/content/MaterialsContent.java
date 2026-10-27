@@ -21,6 +21,7 @@ import dev.alaindustrial.item.energy.CrystalBlankItem;
 import dev.alaindustrial.item.energy.CrystalTier;
 import dev.alaindustrial.item.misc.CannedRation;
 import dev.alaindustrial.item.misc.HintItem;
+import dev.alaindustrial.item.misc.IodineTabletsItem;
 import dev.alaindustrial.item.tool.NetheriteDrillUpgradeTemplate;
 import dev.alaindustrial.registry.ContentManifest.BlockDef;
 import dev.alaindustrial.registry.ContentManifest.BlockEntityDef;
@@ -233,6 +234,10 @@ public final class MaterialsContent {
 			plain("empty_can", s -> ModContent.EMPTY_CAN = s),
 			// Canned Ration (MOD-383): the mod's first edible item; its food numbers are declared in CannedRation.
 			item("canned_ration", CannedRation::create, s -> ModContent.CANNED_RATION = s),
+			// MOD-916 — the iodine chain: kelp ash → iodine (galvanic bath) → tablets (compressor).
+			plain("kelp_ash", s -> ModContent.KELP_ASH = s),
+			plain("iodine", s -> ModContent.IODINE = s),
+			item("iodine_tablets", IodineTabletsItem::new, s -> ModContent.IODINE_TABLETS = s),
 			plain("lapis_dust", s -> ModContent.LAPIS_DUST = s),
 			plain("tin_dust", s -> ModContent.TIN_DUST = s),
 			plain("raw_tin", s -> ModContent.RAW_TIN = s),
@@ -473,6 +478,10 @@ public final class MaterialsContent {
 		// Canning line (MOD-383): the tin can and what the machine fills it with.
 		show(out, ModContent.EMPTY_CAN);
 		show(out, ModContent.CANNED_RATION);
+		// MOD-916 — the iodine chain next to the other thing a player eats.
+		show(out, ModContent.KELP_ASH);
+		show(out, ModContent.IODINE);
+		show(out, ModContent.IODINE_TABLETS);
 	}
 
 	/** The eight metal plates (MOD-078), in the mod's canonical metal order. */

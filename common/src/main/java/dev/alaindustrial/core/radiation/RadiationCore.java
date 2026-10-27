@@ -46,6 +46,16 @@ public final class RadiationCore {
 	}
 
 	/** Add exposure to a standing dose, never past the top of the scale. */
+	/**
+	 * The dose left after one bite of the Antirad bar (MOD-914): {@code percent} of the whole scale off, never
+	 * below zero. A share of the SCALE, not of the dose carried, so four bites of 25 % clear a full scale exactly
+	 * and a smaller dose goes in fewer bites.
+	 */
+	public static int afterBite(int current, int capacity, int percent) {
+		long off = (long) Math.max(0, capacity) * Math.max(0, percent) / 100;
+		return (int) Math.max(0L, Math.max(0, current) - off);
+	}
+
 	public static int addDose(int current, int added, int capacity) {
 		if (added <= 0) {
 			return Math.max(0, current);

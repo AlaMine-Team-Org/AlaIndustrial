@@ -6,6 +6,7 @@
   "mixins": [
     "ColumnBoreCrackMixin",
     "FurnaceFuelSlotMixin",
+    "LivingEntityNauseaGuardMixin",
     "LivingEntityOilDrowningMixin",
     "SkeletonSpawnEquipmentMixin",
     "VillagerFixedTradesMixin",

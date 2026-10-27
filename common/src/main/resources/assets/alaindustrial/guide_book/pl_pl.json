@@ -5844,6 +5844,36 @@
           ]
         },
         {
+          "id": "antirad_bar",
+          "title": "Baton Antirad",
+          "icon": "alaindustrial:antirad_bar",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Baton Antirad",
+              "text": "Mleczny baton z inuliną: cztery kęsy, każdy zdejmuje ćwierć skali promieniowania; cały baton działa jak wiadro mleka, ale nie rusza innych efektów. Można jeść z pełnym żołądkiem."
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie bez wzoru",
+              "grid": [
+                "minecraft:milk_bucket",
+                "minecraft:cocoa_beans",
+                "alaindustrial:inulin",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:antirad_bar",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "fluxweave_armor",
           "title": "Zbroja fluksowa",
           "icon": "alaindustrial:fluxweave_chestplate",
@@ -6199,6 +6229,48 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "iodine_tablets",
+          "title": "Tabletki jodowe",
+          "icon": "alaindustrial:iodine_tablets",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tabletki jodowe",
+              "text": "Profilaktyka promieniowania: jedna tabletka przez 5 minut spowalnia o połowę narastanie dawki. Nie usuwa już przyjętej dawki. Robi się je z popiołu z wodorostów w wannie galwanicznej i kompresorze."
+            }
+          ]
+        },
+        {
+          "id": "chewing_gum",
+          "title": "Guma do żucia z kauczuku",
+          "icon": "alaindustrial:chewing_gum",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Guma do żucia z kauczuku",
+              "text": "Guma z kauczuku i inuliny kok-sagyzu: żuje się w niecałą sekundę, usuwa nudności i nie pozwala im wrócić przez trzy minuty. Nie syci, można ją żuć z pełnym żołądkiem."
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie bez wzoru",
+              "grid": [
+                "alaindustrial:raw_rubber",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:chewing_gum",
+              "result_count": 2
             }
           ]
         },

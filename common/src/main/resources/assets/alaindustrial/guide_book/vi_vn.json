@@ -5844,6 +5844,36 @@
           ]
         },
         {
+          "id": "antirad_bar",
+          "title": "Thanh Antirad",
+          "icon": "alaindustrial:antirad_bar",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Thanh Antirad",
+              "text": "Thanh sữa có inulin: bốn miếng cắn, mỗi miếng giảm một phần tư thang phóng xạ; cả thanh có tác dụng như một xô sữa nhưng không động đến hiệu ứng khác. Ăn được cả khi đã no."
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo không định hình",
+              "grid": [
+                "minecraft:milk_bucket",
+                "minecraft:cocoa_beans",
+                "alaindustrial:inulin",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:antirad_bar",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "fluxweave_armor",
           "title": "Bộ giáp từ thông",
           "icon": "alaindustrial:fluxweave_chestplate",
@@ -6199,6 +6229,48 @@
                   "result_count": 1
                 }
               ]
+            }
+          ]
+        },
+        {
+          "id": "iodine_tablets",
+          "title": "Viên i-ốt",
+          "icon": "alaindustrial:iodine_tablets",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Viên i-ốt",
+              "text": "Phòng phóng xạ: một viên làm liều tích lũy chậm đi một nửa trong 5 phút. Không xóa liều đã nhiễm. Làm từ tro tảo bẹ qua bể mạ điện và máy nén."
+            }
+          ]
+        },
+        {
+          "id": "chewing_gum",
+          "title": "Kẹo cao su từ mủ cao su",
+          "icon": "alaindustrial:chewing_gum",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Kẹo cao su từ mủ cao su",
+              "text": "Kẹo cao su từ mủ và inulin của cây kok-sagyz: nhai chưa tới một giây, xua tan buồn nôn và giữ nó không quay lại trong ba phút. Không làm no, nhai được cả khi đã no."
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo không định hình",
+              "grid": [
+                "alaindustrial:raw_rubber",
+                "alaindustrial:inulin",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:chewing_gum",
+              "result_count": 2
             }
           ]
         },
