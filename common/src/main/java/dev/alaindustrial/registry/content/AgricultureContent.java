@@ -6,6 +6,7 @@ import static dev.alaindustrial.registry.content.ContentDeclarations.blockEntity
 import static dev.alaindustrial.registry.content.ContentDeclarations.blockItem;
 import static dev.alaindustrial.registry.content.ContentDeclarations.endBlocks;
 import static dev.alaindustrial.registry.content.ContentDeclarations.hiddenFromPlayers;
+import static dev.alaindustrial.registry.content.ContentDeclarations.item;
 import static dev.alaindustrial.registry.content.ContentDeclarations.machine;
 import static dev.alaindustrial.registry.content.ContentDeclarations.menu;
 import static dev.alaindustrial.registry.content.ContentDeclarations.plain;
@@ -28,6 +29,7 @@ import dev.alaindustrial.block.entity.IncubatorBlockEntity;
 import dev.alaindustrial.block.entity.KokSagyzRootBlockEntity;
 import dev.alaindustrial.block.entity.SprinklerBlockEntity;
 import dev.alaindustrial.compat.LineBlockProps;
+import dev.alaindustrial.item.misc.ReinforcedBoneMealItem;
 import dev.alaindustrial.menu.GardenDroneStationMenu;
 import dev.alaindustrial.menu.IncubatorMenu;
 import dev.alaindustrial.menu.SprinklerMenu;
@@ -166,6 +168,8 @@ public final class AgricultureContent {
 			// MOD-537 — the kok sagyz harvest and its by-product: the dug root (macerable into
 			// raw rubber + inulin) and the inulin itself.
 			plain("inulin", s -> ModContent.INULIN = s),
+			// MOD-906 — bone meal without the luck: its own useOn, the growth itself is ReinforcedBonemeal.
+			item("reinforced_bone_meal", ReinforcedBoneMealItem::new, s -> ModContent.REINFORCED_BONE_MEAL = s),
 			blockItem("sprinkler", s -> ModContent.SPRINKLER_ITEM = s),
 			blockItem("incubator", s -> ModContent.INCUBATOR_ITEM = s),
 			blockItem("trellis", s -> ModContent.TRELLIS_ITEM = s),
@@ -255,5 +259,7 @@ public final class AgricultureContent {
 		show(out, ModContent.KOK_SAGYZ_SEEDS);
 		show(out, ModContent.KOK_SAGYZ_ROOT_ITEM);
 		show(out, ModContent.INULIN);
+		// MOD-906 — the guaranteed fertilizer closes the farming run.
+		show(out, ModContent.REINFORCED_BONE_MEAL);
 	}
 }

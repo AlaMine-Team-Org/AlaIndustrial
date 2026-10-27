@@ -210,7 +210,9 @@ public final class ServerHookRoster {
 			OilLiquidBlock::tryLight,
 			// MOD-666: a dye on an insulated cable paints it; with Shift, the whole run — vanilla never
 			// lets a sneaking player's held item reach the block.
-			CableDyeing::tryDye);
+			CableDyeing::tryDye,
+			// MOD-898: water in hand on a cable of the mod washes the dye off and never pours beside the line.
+			CableDyeing::tryWash);
 
 	/** End of a server tick: the per-level hooks for every level, then the per-server hooks. */
 	public static void onServerTick(MinecraftServer server) {

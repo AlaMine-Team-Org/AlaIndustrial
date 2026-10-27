@@ -3308,6 +3308,36 @@
           ]
         },
         {
+          "id": "reinforced_bone_meal",
+          "title": "Bột xương tăng cường",
+          "icon": "alaindustrial:reinforced_bone_meal",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Bột xương tăng cường",
+              "text": "Bột xương không phụ thuộc may rủi — cây non luôn thành cây lớn, nông sản chín ngay, còn mọi thứ khác lớn như với bột xương thường, chỉ là không thất bại. Nếu không có gì có thể lớn, bột không bị tiêu hao và thế giới vẫn như cũ."
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "minecraft:bone_meal",
+                "",
+                "minecraft:bone_meal",
+                "",
+                "alaindustrial:biomass",
+                "",
+                "minecraft:bone_meal",
+                "",
+                "minecraft:bone_meal"
+              ],
+              "result_id": "alaindustrial:reinforced_bone_meal",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "teleporter",
           "title": "Máy dịch chuyển",
           "icon": "alaindustrial:teleporter",

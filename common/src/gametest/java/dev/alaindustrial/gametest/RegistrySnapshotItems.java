@@ -364,6 +364,7 @@ final class RegistrySnapshotItems {
 			"item refined_uranium class=Item stack=64 damage=0 rarity=COMMON fireproof=no",
 			"item reinforced_amethyst class=Item stack=64 damage=0 rarity=COMMON fireproof=no",
 			"item reinforced_bearing class=Item stack=64 damage=0 rarity=COMMON fireproof=no",
+			"item reinforced_bone_meal class=ReinforcedBoneMealItem stack=64 damage=0 rarity=COMMON fireproof=no",
 			"item reinforced_fluid_pipe class=FluidPipeBlockItem stack=64 damage=0 rarity=COMMON fireproof=no",
 			"item reinforced_glass class=BlockItem stack=64 damage=0 rarity=COMMON fireproof=no",
 			"item reinforced_steam_pipe class=FluidPipeBlockItem stack=64 damage=0 rarity=COMMON fireproof=no",

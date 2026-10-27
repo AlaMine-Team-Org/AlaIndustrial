@@ -3308,6 +3308,36 @@
           ]
         },
         {
+          "id": "reinforced_bone_meal",
+          "title": "강화 뼛가루",
+          "icon": "alaindustrial:reinforced_bone_meal",
+          "pages": [
+            {
+              "type": "text",
+              "title": "강화 뼛가루",
+              "text": "운에 좌우되지 않는 뼛가루 — 묘목은 반드시 나무가 되고, 작물은 즉시 다 자라며, 나머지는 일반 뼛가루처럼 자라지만 실패가 없다. 자랄 것이 없으면 뼛가루는 소모되지 않고 세계도 그대로 남는다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "minecraft:bone_meal",
+                "",
+                "minecraft:bone_meal",
+                "",
+                "alaindustrial:biomass",
+                "",
+                "minecraft:bone_meal",
+                "",
+                "minecraft:bone_meal"
+              ],
+              "result_id": "alaindustrial:reinforced_bone_meal",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "teleporter",
           "title": "텔레포터",
           "icon": "alaindustrial:teleporter",

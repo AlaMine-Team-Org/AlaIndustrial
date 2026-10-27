@@ -251,6 +251,8 @@ public final class IndustrializationNeoForge {
 		// MOD-022: NeoForge payload registration (every ModPayloads entry) — counterpart to the
 		// Fabric PayloadTypeRegistry calls + receivers.
 		modBus.addListener(NeoForgeNetwork::register);
+		// MOD-906: reinforced bone meal asks NeoForge's BonemealEvent, as vanilla bone meal does (Fabric has none).
+		dev.alaindustrial.compat.BonemealEventsNeoForge.install();
 		// MOD-830: the mod's datapack registries (ADR-050), the list both loaders replay; the ALA town's structure
 		// and lab-piece types (two DeferredRegisters — before datapack load and the first saved town).
 		modBus.addListener(dev.alaindustrial.registry.neoforge.ModDataRegistriesNeoForge::addAll);

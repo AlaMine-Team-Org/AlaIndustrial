@@ -3308,6 +3308,36 @@
           ]
         },
         {
+          "id": "reinforced_bone_meal",
+          "title": "Verstärktes Knochenmehl",
+          "icon": "alaindustrial:reinforced_bone_meal",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Verstärktes Knochenmehl",
+              "text": "Knochenmehl ohne Glücksspiel — ein Setzling wird immer zum Baum, eine Feldfrucht reift sofort, und alles andere wächst wie mit gewöhnlichem Knochenmehl, nur ohne Fehlschlag. Kann nichts wachsen, wird das Mehl nicht verbraucht und die Welt bleibt, wie sie war."
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "minecraft:bone_meal",
+                "",
+                "minecraft:bone_meal",
+                "",
+                "alaindustrial:biomass",
+                "",
+                "minecraft:bone_meal",
+                "",
+                "minecraft:bone_meal"
+              ],
+              "result_id": "alaindustrial:reinforced_bone_meal",
+              "result_count": 2
+            }
+          ]
+        },
+        {
           "id": "teleporter",
           "title": "Teleporter",
           "icon": "alaindustrial:teleporter",

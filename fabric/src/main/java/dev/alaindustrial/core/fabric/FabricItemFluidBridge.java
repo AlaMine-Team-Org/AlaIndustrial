@@ -5,6 +5,7 @@ import dev.alaindustrial.core.fluid.FluidPort;
 import dev.alaindustrial.item.fluid.ItemFluidBridge;
 import java.util.List;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage;
@@ -15,7 +16,10 @@ import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.world.Container;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.material.Fluid;
 
 /**
  * Fabric implementation of the machine-slot fluid bridge (MOD-107): resolves the container item in a
@@ -50,6 +54,31 @@ public final class FabricItemFluidBridge implements ItemFluidBridge {
 			return false;
 		}
 		return ContainerItemContext.withConstant(stack).find(FluidStorage.ITEM) != null;
+	}
+
+	/**
+	 * One bucket out of the hand's container (MOD-898). {@code forPlayerInteraction} is the context Fabric
+	 * documents for item use: the swapped container replaces the hand stack, or lands in the inventory when
+	 * the hand held a stack of them.
+	 */
+	@Override
+	public boolean takeBucketFromHand(Player player, InteractionHand hand, Fluid fluid, boolean simulate) {
+		if (player.getItemInHand(hand).isEmpty()) {
+			return false;
+		}
+		Storage<FluidVariant> item = ContainerItemContext.forPlayerInteraction(player, hand).find(FluidStorage.ITEM);
+		if (item == null) {
+			return false;
+		}
+		try (Transaction transaction = Transaction.openOuter()) {
+			if (item.extract(FluidVariant.of(fluid), FluidConstants.BUCKET, transaction) != FluidConstants.BUCKET) {
+				return false;
+			}
+			if (!simulate) {
+				transaction.commit();
+			}
+			return true;
+		}
 	}
 
 	/**

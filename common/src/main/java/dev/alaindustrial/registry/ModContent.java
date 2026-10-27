@@ -839,6 +839,8 @@ public final class ModContent {
 	public static Supplier<Item> KOK_SAGYZ_ROOT_ITEM = unbound("KOK_SAGYZ_ROOT_ITEM");
 	/** Inulin (MOD-537) — the kok sagyz by-product carried by every macerated root. */
 	public static Supplier<Item> INULIN = unbound("INULIN");
+	/** Reinforced bone meal (MOD-906) — bone meal whose growth never misses. */
+	public static Supplier<Item> REINFORCED_BONE_MEAL = unbound("REINFORCED_BONE_MEAL");
 	// Fluxweave chain (MOD-127): the Galvanic Bath plates fibre with silver into conductive thread, and
 	// four threads weave into one sheet of cloth — the material the LV armor set is built from.
 	public static Supplier<Item> FLUX_THREAD = unbound("FLUX_THREAD");

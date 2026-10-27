@@ -8,7 +8,8 @@ and a port is a plain `git cherry-pick -x`; the adaptation, if any, lands in the
 The roots: `dev.alaindustrial.compat` (server-safe) and `dev.alaindustrial.compat.client` (client types in the
 signature) in `common/src/main`; `dev.alaindustrial.gametest.compat` in `common/src/gametest` (on NeoForge the
 gametest source set is its own JPMS module and cannot share a package with the main one); `dev.alaindustrial.compat`
-in `fabric/src/gametest` for the L3 client lane. Subpackages that integrate other mods (`compat.rei`,
+in `fabric/src/gametest` for the L3 client lane; `dev.alaindustrial.compat` in `neoforge/src/main` for a NeoForge API
+whose signature differs between the lines (MOD-906). Subpackages that integrate other mods (`compat.rei`,
 `compat.modmenu`, `client.compat.jei`) are not facades. Whatever this register says, the javadoc of each twin is
 the authority on what its line does and why (javap evidence included).
 
@@ -48,6 +49,12 @@ the authority on what its line does and why (javap evidence included).
 The field type of `CriterionPlayer.FIELD` is the line's: `SimpleCriterionTrigger.SimpleInstance#player()` fixes
 it, so the `player` component of the three triggers' record headers stays a one-line difference.
 
+## `dev.alaindustrial.compat` (neoforge/src/main)
+
+| Facade | Signature | 26.3 body | 26.2 body | Task |
+|---|---|---|---|---|
+| `BonemealEventsNeoForge` | `ReinforcedBonemeal.Verdict check(@Nullable Player, Level, BlockPos, BlockState, ItemStack)` | `EventHooks.fireBonemealEvent(…, BonemealSource.INTERACTION, stack)` | `EventHooks.fireBonemealEvent(…, stack)` — no source | MOD-906 |
+
 ## `dev.alaindustrial.compat.client` (common/src/main)
 
 | Facade | Signature | 26.3 body | 26.2 body | Task |
@@ -78,6 +85,7 @@ line-neutral.
 | `UseResults` | `boolean isSwingSuccess(InteractionResult)`, `boolean isNoSwingConsume(InteractionResult)` | a `Success` with swing source `PREDICTED` / `NONE` | swing source `CLIENT` / `NONE` | MOD-703 |
 | `LineShovelFacts` | `boolean dousesLitCampfire(Direction, boolean)` | `!sneaking`: the campfire douses by the `#minecraft:douses_campfires` tag (NeoForge: `SHOVEL_DOUSE`, by the same tag) from any face, and a sneaking click skips the block | `face != DOWN`: `ShovelItem.useOn` answers `PASS` for `DOWN` first and ignores sneaking | MOD-744 |
 | `TownTerrain` | `RandomState randomState(RegistryAccess, Holder<NoiseGeneratorSettings>, long)`, `Climate.Sampler climate(RandomState)`, `Holder<Biome> noiseBiome(BiomeSource, Climate.Sampler, int, int, int)`, `StructureStart generate(ServerLevel, Holder<Structure>, ChunkGenerator, BiomeSource, Climate.Sampler, RandomState, long, ChunkPos)` | `RandomState.create(noises, seed, settings)`; `createClimateSampler(SamplerContext.EMPTY_UNCACHED)`; `createResolver(sampler).getNoiseBiome(x, y, z)`; `generate` with the sampler | `RandomState.create(settings, noises, seed)`; `randomState.sampler()`; `getNoiseBiome(x, y, z, sampler)`; `generate` without it | MOD-830 |
+| `StubPlants` | `BonemealableBlock rolling(double, AtomicInteger)` — a stand-in foreign plant, not a block | the bone-meal trio overridden with `BonemealSource` | the trio without a source | MOD-906 |
 
 ## `dev.alaindustrial.compat` (fabric/src/gametest, the L3 lane)
 

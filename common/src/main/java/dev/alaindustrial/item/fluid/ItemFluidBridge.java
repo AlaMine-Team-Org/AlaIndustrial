@@ -4,7 +4,10 @@ import dev.alaindustrial.item.energy.ItemEnergyBridge;
 
 import dev.alaindustrial.core.fluid.FluidPort;
 import net.minecraft.world.Container;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.material.Fluid;
 
 /**
  * Platform-neutral bridge to fluid containers held in a machine's own slots (MOD-107): moves one bucket
@@ -53,6 +56,18 @@ public interface ItemFluidBridge {
 	 */
 	boolean isFluidContainer(ItemStack stack);
 
+	/**
+	 * Take exactly one bucket of {@code fluid} out of the container item in {@code player}'s {@code hand}
+	 * (MOD-898: washing a cable's dye off with water), and report whether the whole bucket was there.
+	 *
+	 * <p>The container decides what it becomes — a vanilla water bucket turns into an empty bucket, a filled
+	 * capsule into an empty capsule, a foreign canister into whatever its own capability hands back — so no
+	 * result item is named here. With {@code simulate} nothing changes: the move runs in a transaction that
+	 * is rolled back, which makes it safe to ask on the client. A partial bucket is a {@code false}, never a
+	 * partial drain.
+	 */
+	boolean takeBucketFromHand(Player player, InteractionHand hand, Fluid fluid, boolean simulate);
+
 	/** Bridge that moves nothing — used before a loader installs its own, and in loader-free unit tests. */
 	ItemFluidBridge NONE = new ItemFluidBridge() {
 		@Override
@@ -67,6 +82,11 @@ public interface ItemFluidBridge {
 
 		@Override
 		public boolean isFluidContainer(ItemStack stack) {
+			return false;
+		}
+
+		@Override
+		public boolean takeBucketFromHand(Player player, InteractionHand hand, Fluid fluid, boolean simulate) {
 			return false;
 		}
 	};

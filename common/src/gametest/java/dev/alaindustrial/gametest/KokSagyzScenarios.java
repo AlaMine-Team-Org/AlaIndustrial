@@ -42,10 +42,11 @@ import net.minecraft.world.phys.Vec3;
  *
  * <p><b>Why every growth step is driven by bone meal, not random ticks.</b> The 8³ rig is a closed
  * box and the flower's {@code randomTick} refuses to grow below light 9 — inside a rig that gate is
- * not reliably passable, and the chance rolls are not reliably exhaustible. Bone meal
- * ({@code performBonemeal}) is deliberately NOT gated by light (verified against
- * {@link KokSagyzBlock#performBonemeal}: no brightness check) and applies exactly one growth step
- * per application with no chance roll, so every scenario here is deterministic on both loaders.
+ * not reliably passable, and the chance rolls are not reliably exhaustible. These scenarios call
+ * {@code performBonemeal} directly: it has no brightness check (since MOD-906 the light floor is
+ * {@link KokSagyzBlock#isValidBonemealTarget}, which a player's bone meal and the sprinkler ask first,
+ * and which {@code ReinforcedBoneMealScenarios} covers) and applies exactly one growth step per
+ * application with no chance roll, so every scenario here is deterministic on both loaders.
  * The light gate and the chance divisors of {@code randomTick} stay uncovered by this suite — see
  * the report note; what IS covered is the state machine itself (age stages, the two-deep root
  * column, the harvest/regrow cycle) through the same entry point the sprinkler uses.
@@ -866,8 +867,8 @@ public final class KokSagyzScenarios {
 
 	/**
 	 * One bone-meal step on the flower, via the block's real {@code performBonemeal}: deterministic
-	 * (no chance roll, no light gate) and the exact path the sprinkler rides, so these scenarios
-	 * double as coverage for the sprinkler's growth hook.
+	 * (no chance roll; the light gate sits in {@code isValidBonemealTarget}, not called here) and the
+	 * growth step the sprinkler rides, so these scenarios double as coverage for the sprinkler's hook.
 	 *
 	 * <p>Through {@link Bonemeal}, the version facade the sprinkler itself calls (MOD-703): its signature is
 	 * the same on both lines, and where a line's bone-meal methods take a source (26.3), it passes the

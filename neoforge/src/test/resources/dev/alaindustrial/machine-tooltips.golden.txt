@@ -2033,6 +2033,7 @@ tooltip.alaindustrial.tier_lv {green}
 == alaindustrial:refined_uranium plain : none
 == alaindustrial:reinforced_amethyst plain : none
 == alaindustrial:reinforced_bearing plain : none
+== alaindustrial:reinforced_bone_meal plain : none
 == alaindustrial:reinforced_fluid_pipe plain : none
 == alaindustrial:reinforced_glass plain : none
 == alaindustrial:reinforced_steam_pipe plain : none

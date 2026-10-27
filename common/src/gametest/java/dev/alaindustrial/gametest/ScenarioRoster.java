@@ -191,6 +191,7 @@ public final class ScenarioRoster {
 			RecipeTagScenarios.Roster.ENTRIES,
 			RecordNumberLedgerScenarios.Roster.ENTRIES,
 			RegistrySnapshotScenarios.Roster.ENTRIES,
+			ReinforcedBoneMealScenarios.Roster.ENTRIES,
 			RosterSelfTestScenarios.Roster.ENTRIES,
 			RtpScenarios.Roster.ENTRIES,
 			SavedDataRoundTripScenarios.Roster.ENTRIES,
