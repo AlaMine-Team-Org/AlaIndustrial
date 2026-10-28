@@ -362,7 +362,7 @@
 <div class="group-title">能源</div>
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
-<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="8 个页面">8</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="9 个页面">9</span></a>
 <a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>核能设施</span><span class="cat-count" aria-label="15 个页面">15</span></a>
 <div class="group-title">加工</div>
 <a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>机器</span><span class="cat-count" aria-label="17 个页面">17</span></a>
@@ -373,15 +373,15 @@
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>流体储存</span><span class="cat-count" aria-label="2 个页面">2</span></a>
 <div class="group-title">世界与自动化</div>
 <a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="26 个页面">26</span></a>
-<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>农业</span><span class="cat-count" aria-label="6 个页面">6</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>农业</span><span class="cat-count" aria-label="7 个页面">7</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>高级机器</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <div class="group-title">其他</div>
 <a class="cat-link" href="../construction/index.html"><img class="nav-icon" src="../../assets/item/engraved_plate_0_3d.png" alt=""><span>建筑方块</span><span class="cat-count" aria-label="3 个页面">3</span></a>
-<a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="27 个页面">27</span></a>
+<a class="cat-link active" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="29 个页面">29</span></a>
 <div class="group-title">物品</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
-<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="32 个页面">32</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="32 个页面">32</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="33 个页面">33</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="35 个页面">35</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">首页</a><span class="sep">/</span><a href="../utility/index.html">实用方块</a><span class="sep">/</span><span>城镇调度台</span></div>
@@ -397,27 +397,41 @@
 </div>
 <h2 id="概览">概览</h2>
 
-<p><strong>城镇调度台</strong>是定居点修复自身建筑的控制台。<a href="../components/restoration_plan.html">修复图纸</a>在这里由三张<a href="../components/town_hall_plan_sheet.html">残页</a>拼成，它的缓存里放着材料，而<a href="drone_nest.html">建筑无人机</a>只从这里取方块。第一座这样修复的建筑是市政厅。</p>
+<p><strong>城镇调度台</strong>是定居点修复和建造自身建筑的控制台。市政厅的<a href="../components/restoration_plan.html">修复图纸</a>在这里由三张<a href="../components/town_hall_plan_sheet.html">残页</a>拼成；这里存放着<strong>工单</strong>队列——无人机修理和建造哪些建筑、按什么顺序；它的缓存里放着材料，而<a href="drone_nest.html">建筑无人机</a>只从这里取方块。最先修复的是市政厅，之后是轮班工的房屋。</p>
 
-<blockquote><strong>小例子：</strong> 市政厅的核心亮着，定居点归你了。把调度台放在市政厅里面，放入三张市政厅图纸残页，按「组装蓝图」——图纸留在调度台里。在市政厅上方放一个无人机巢并放入建筑无人机，把本阶段的方块放进缓存，然后在「任务」标签页上按「开始」。</blockquote>
+<blockquote><strong>小例子：</strong> 市政厅的核心亮着，定居点归你了。把调度台放在市政厅里面，放入三张市政厅图纸残页（每张放进各自的格子），按「组装蓝图」——图纸留在调度台里。在市政厅上方放一个无人机巢并放入建筑无人机，把本阶段的方块放进缓存，然后在「任务」标签页上按「开始」。市政厅修复之后，在核心的「建设」标签页中选择一座房屋并按「修复」——它会进入「工单」标签页的队列。</blockquote>
 
 <h2 id="工作方式">工作方式</h2>
 
-<ol><li><strong>自己的定居点。</strong> 调度台会自己找到它所在领地的定居点（如果两个定居点的领地重叠，就选核心更近的那个），之后不再改变。</li><li><strong>只在市政厅里。</strong> 调度台只有放在自己定居点的市政厅内部——在它的范围内——才会工作。放在外面时，它会显示「不在市政厅内」。</li><li><strong>一个定居点一台。</strong> 同一定居点的第二台调度台不会工作，并显示「城镇已有调度台」。工作的是先开始工作的那一台。</li><li><strong>图纸。</strong> 三张市政厅图纸残页（k/3）放进三个残页槽。「组装蓝图」按钮从每个槽各取一张残页，把「修复图纸」放进图纸槽。残页必须同一风格——这个定居点的风格；如果哪里不对，按钮下方会写明原因（缺少残页、残页重复、残页风格不一、风格不对）。也可以直接把做好的图纸放进图纸槽。拼好的图纸留在图纸槽里——这就是生效的图纸，不需要取出：取出图纸（或拆掉调度台）会让无人机停下，工作会带着原因「没有修复计划」停住，直到图纸放回。残页和图纸都不能放进缓存。</li><li><strong>材料缓存。</strong> 27 个槽位。无人机从这里取方块，而且只从这里取：它不会打开定居点的箱子。物品在<strong>无人机放下方块的那一刻</strong>才被扣除——而不是在起飞时。</li><li><strong>状态。</strong> 调度台的正面显示一个雷达：空闲时是安静的屏幕，定居点的无人机工作时，通信波纹从中心扩散开来。</li></ol>
+<ol><li><strong>自己的定居点。</strong> 调度台会自己找到它所在领地的定居点（如果两个定居点的领地重叠，就选核心更近的那个），之后不再改变。</li><li><strong>只在市政厅里。</strong> 调度台只有放在自己定居点的市政厅内部——在它的范围内——才会工作。放在外面时，它会显示「不在市政厅内」。 <strong>专属位置。</strong> 两种风格的完整市政厅都给调度台留了一格：一楼的一个角落（市政厅模板中的 2, 1, 1 格；废墟里那里有一个机器外壳，清理时会被移走）。放在那里，调度台不会妨碍修复，并算作放在了正确位置。放在地面的任何空格上也不妨碍任何东西。在图纸上是别的方块的格子上（长椅、柜台、无人机平台的地毯）也能放调度台，但聊天栏会立刻提示：放在这里会妨碍市政厅的修复，并告诉它的位置在哪里；无人机做到那个阶段时，工作会以「妨碍：城镇调度台」停下。</li><li><strong>一个定居点一台。</strong> 同一定居点的第二台调度台不会工作，并显示「城镇已有调度台」。工作的是先开始工作的那一台。</li><li><strong>市政厅图纸。</strong> 三张市政厅图纸残页放进三个图纸格子，<strong>第 N 张只能放进第 N 格</strong>（1 → 1、2 → 2、3 → 3），Shift 点击时也一样：看空着的格子就知道还缺哪一张。「组装蓝图」按钮从每个格子各取一张残页，把「修复图纸」放进图纸槽。残页必须同一风格——这个定居点的风格；如果哪里不对，按钮下方会写明原因（缺少残页、残页重复、残页风格不一、风格不对）。也可以直接把做好的图纸放进图纸槽。拼好的图纸留在槽里——这就是生效的图纸，不需要取出：取出图纸（或拆掉调度台）会让市政厅上的无人机停下，工作会带着原因「没有修复计划」停住，直到图纸放回。残页和图纸都不能放进缓存。</li><li><strong>房屋图纸。</strong> <a href="../components/house_plan.html">房屋图纸</a>也放进图纸槽，但不会留在那里：定居点会<strong>掌握</strong>它，图纸被消耗，聊天里会出现「定居点已掌握房屋图纸（类型N）。」定居点会永久掌握这种类型，之后就能为这种类型的房屋下工单。定居点已经掌握的图纸，槽位同样会收走，但不发消息。其他风格的房屋图纸会留在槽里。</li><li><strong>工单。</strong> 定居点的工作就是针对某座具体建筑的工单。工单通过<a href="settlement_core.html">定居点核心</a>「建设」标签页里建筑卡片上的按钮下达（「修复」「建造」「修理」），市政厅也可以用这里的「开始」按钮下达。工单包含建筑所需的一切：如果有需要清除的东西就进行清理；如果房屋还没接入定居点路网，就修一条通到路网的道路；然后是建造。空闲的无人机会接手队列中第一个还没被其他无人机占用的工单：一座建筑——一架无人机，有 N 个巢就最多同时进行 N 个工单。建成的建筑会自动离开队列。</li><li><strong>取消的工单。</strong> 取消会撤下该建筑所有未完成的工作；已经做好的部分留在世界里。定居点自己不会再次下达被取消的工单。被取消的市政厅用「开始」按钮继续（「任务」标签页显示「工单已取消。按「开始」继续」），被取消的房屋用它在核心里卡片上的「继续」按钮继续。无人机从停下的地方接着干。</li><li><strong>队列不会丢下建筑。</strong> 如果工单结束了，而建筑还没修复、上面也没有工作，定居点会在 10 秒后自己重新下达工单——每座建筑每 5 分钟最多一次。如果这时无人机仍然无事可做，「任务」标签页会说明是什么在阻碍它们。</li><li><strong>材料缓存。</strong> 27 个槽位。无人机从这里取方块，而且只从这里取：它不会打开定居点的箱子。物品在<strong>无人机放下方块的那一刻</strong>才被扣除——而不是在起飞时。无人机在新房屋地基和道路路线上挖下的泥土和石头也放进这里（放不下的掉落在原地）。</li><li><strong>状态。</strong> 调度台的正面显示一个雷达：空闲时是安静的屏幕，定居点的无人机工作时，通信波纹从中心扩散开来。</li></ol>
+
+<h3 id="施工为什么停了">施工为什么停了</h3>
+
+<p>没有哪项工作会默默等待：停下的工作总有原因，以及该怎么做的提示。</p>
+
+<table><thead><tr><th>原因</th><th>该怎么做</th></tr></thead><tbody><tr><td>「受阻于：X（x y z）」</td><td>「移走它，施工会自行继续」。无人机这样提示它不会动的方块：带数据的方块（箱子、机器），或者图纸上该放别的方块的位置上任何不是杂物的方块。草、花、雪和其他杂物，无人机会自己清掉，不会抱怨</td></tr><tr><td>「无人机无法飞到 x y z」</td><td>「清出通往该处的空中通道，施工会自行继续」</td></tr><tr><td>「无法建造：X（x y z）」</td><td>「查看那个位置：移走那里的东西，或取消工单」</td></tr><tr><td>「缺少材料：…」</td><td>「把缺少的放进缓冲区（缓存标签页）」</td></tr><tr><td>「没有修复计划」</td><td>「把修复计划放进计划槽」</td></tr><tr><td>「没有可铺设道路的路线」</td><td>「没有高差不超过一格的路线：清出道路，或自己铺设道路或电缆」</td></tr><tr><td>「区块未加载」</td><td>「走近一些让区块加载」</td></tr><tr><td>「没有能量」</td><td>「为聚落核心供能」</td></tr></tbody></table>
+
+<p>如果市政厅还没修复，而无人机无事可做，原因是图纸方块的位置上放着一个带数据的方块，「任务」标签页会用红字写出「X 位于 x y z，按图纸此处应为 Y」和「无人机不会动带数据的方块：请自行移走，然后按「开始」」。移走之后，工作会自己继续。</p>
 
 <h3 id="谁来管理">谁来管理</h3>
 
-<p>图纸、材料和开工只归定居点的修复者管。不属于定居点的玩家根本打不开调度台：聊天里会出现「核心不认识你：你不是这个聚落的一员。」创造模式下的管理员可以打开窗口、看到一切，但不能放入或取出物品，也不能拼合图纸或开工。在没人唤醒定居点之前，任何人都可以管理。修复者用「任务」标签页上的「开始」按钮开工（它会把市政厅的清理和建造排进核心的队列），也可以在定居点核心窗口的「建设」标签页开工。</p>
+<p>图纸、材料、工单的顺序和取消，以及开工，都只归定居点的修复者管。不属于定居点的玩家根本打不开调度台：聊天里会出现「核心不认识你：你不是这个聚落的一员。」创造模式下的管理员可以打开窗口、看到一切，但不能放入或取出物品，也不能拼合图纸、改动队列或开工。任何被定居点认可的人都可以选择一个工单来查看。在没人唤醒定居点之前，任何人都可以管理。</p>
 
 <h2 id="界面">界面</h2>
 
-<p>窗口比普通的宽（256 像素），标签页以图标形式排在左边，和定居点核心一样。所有文字都会换行，不会盖住物品栏。</p>
+<p>窗口为 256 × 240 像素——在界面缩放为 3 时能放进 1280 × 720 的屏幕；标签页以图标形式排在左边，和定居点核心一样：「任务」「工单」「缓存」「材料」「日志」。所有文字都会换行，不会盖住物品栏。</p>
 
-<ul><li>顶部是方块名称（在其他标签页上是标签页名称），下方单独一行是状态：「附近没有城镇」「不在市政厅内」「城镇已有调度台」「等待工作」「无人机工作中」，或图纸没拼成的原因。</li><li>「任务」（首先打开）——一排图纸区：三个残页槽、「组装蓝图」按钮、图纸槽、「开始」按钮；下方在物品栏上方的框里，是给第一次见到调度台的人看的四个步骤。列表不会超出框：如果太长，可以用鼠标滚轮滚动，右侧会出现滚动条。每一步都有对勾或叉号，未完成的一步有一行提示下一步做什么：<ol><li>「修复蓝图」——放入三张残页并按「组装蓝图」；拼好后是「把蓝图留在这里，不用取出」；另一座市政厅（另一种风格）的图纸——叉号和「这份图纸属于另一座市政厅」；</li><li>「有无人机的巢：N / M」——市政厅上方有多少个装有无人机并在工作的巢，以及核心等级允许多少个；</li><li>「本阶段材料在缓存中」——当前阶段需要的一切都在缓存里；</li><li>「建造」——「按「开始」」，按钮还没准备好时是「有了图纸和无人机后即可“开始”」；工作在队列中时显示它们的状态和停下的原因；修复之后是「市政厅完好，无人机会自行照看」，修理期间显示修理工作。</li></ol></li><li>缺少什么时，「开始」按钮不可用；按钮上的提示会列出具体缺少什么。必需条件有：定居点的修复者、一座可以修复且还没有相关工作的市政厅、图纸槽里放着<strong>这座</strong>市政厅的图纸，以及市政厅上方至少一个装有无人机的巢。<strong>材料不是必需的</strong>：先进行的是清理，清理不需要方块，所以材料不足只是提示里的一条警告（「材料不足：无人机先进行清理」）。按下按钮时，服务器会再检查一遍同样的条件。市政厅修复之后，按钮就永远不可用（「市政厅已修复，无人机会自行照看」）：受损的市政厅由无人机自行修理，修理不用按钮就会安排。</li><li>「缓存」——三排、每排九个槽位，以及无人机只从这里取方块的提示。</li><li>「材料」——市政厅的当前阶段，以及本阶段物品的图标网格，和槽位一样。图标下方是「已有/需要」：不足时为红色，足够时带绿色对勾。建设窗口里所有「完成」用的都是同一种绿色，沉稳的深色，在浅灰底上清晰可读。悬停会显示普通的物品提示；鼠标滚轮可以滚动长列表。</li><li>「日志」——无人机做了什么，最新的在上面，每行都有游戏时间；鼠标滚轮可以滚动。完成的阶段和市政厅的修复单独成行标出。</li><li><strong>聊天消息。</strong> 市政厅的某个阶段完成时，修复定居点的玩家会在聊天里收到一行带 [Ala Industrial] 标签的消息：定居点编号和核心坐标、哪个阶段完成、下一阶段是什么，以及它的材料是否已在调度台里（「第3号定居点（核心 120, 64, -340）：「墙体」阶段完成。下一阶段「陈设」：请把材料放进调度台。」）。市政厅第一次修复有单独的一行（「市政厅已修复」）；之前修复过的市政厅完成最后一个阶段时，会写它已完整重建。修理已修复的市政厅不算阶段：安排修理时一行（「第3号定居点（核心 120, 64, -340）：市政厅受损，无人机正在修理。」），恢复完好时一行（「…：市政厅已修好。」）；同样的两行也会写进「日志」。只在玩家在线时发送。</li><li>下方是玩家物品栏。</li></ul>
+<ul><li>顶部是方块名称（在其他标签页上是标签页名称），下方单独一行是状态：「附近没有城镇」「不在市政厅内」「城镇已有调度台」「等待工作」「无人机工作中」，或图纸没拼成的原因。</li><li><strong>「任务」</strong>（首先打开）——一排图纸区：三个残页格子、「组装蓝图」按钮、图纸槽、「开始」按钮；下方在物品栏上方的框里，是<strong>针对所选工单</strong>的四个步骤（默认是队列中的第一个，没有工单时是市政厅）。列表不会超出框：如果太长，可以用鼠标滚轮滚动，右侧会出现滚动条。每一步都有对勾或叉号，未完成的一步有下一步该做什么的提示：<ol><li>「修复蓝图」——市政厅：「把 3 张蓝图纸放进上方格子并按「组装蓝图」」；拼好后是「把蓝图留在这里，不用取出」；另一座市政厅的图纸——叉号和「这份图纸属于另一座市政厅」。房屋：「定居点已掌握类型N的房屋图纸」或「这座房屋需要类型N的房屋图纸」；</li><li>「有无人机的巢：N / M」——市政厅上方有多少个装有无人机并在工作的巢，以及核心等级允许多少个；</li><li>「本阶段材料在缓存中」——所选建筑当前阶段需要的一切都在缓存里；</li><li>「建造」（带所选工单的名称）——工作进行时显示「工作正在进行：无需开始」，下面列出该建筑的各项工作及其状态，停下的工作用红字写出原因和提示；没有工作的市政厅显示「按「开始」」或「有了图纸和无人机后即可“开始”」；修复之后是「市政厅完好，无人机会自行照看」。</li></ol></li><li><strong>「开始」</strong>按钮用于市政厅。缺少什么时按钮不可用；按钮上的提示会列出具体缺少什么。必需条件有：定居点的修复者、一座可以修复且还没有相关工作的市政厅、图纸槽里放着<strong>这座</strong>市政厅的图纸，以及市政厅上方至少一个装有无人机的巢。<strong>材料不是必需的</strong>：先进行的是清理，清理不需要方块，所以材料不足只是提示里的一条警告（「材料不足：无人机先进行清理」）。如果无人机无事可做——「无人机没有可建造的了：见「建造」步骤中的说明」。按下按钮时，服务器会再检查一遍同样的条件。「开始」把市政厅的工单放到队列的第一位。市政厅修复之后，按钮就永远不可用（「建筑已修复，无人机会自行照看」）：受损的市政厅由无人机自行修理，修理不用按钮就会安排。</li><li><strong>「工单」</strong>——按顺序排列的定居点工单队列，每个工单一张浅色卡片：建筑名称（修理时为「修理：…」；有无人机占用该建筑时为绿色），下面是它的工作所处的状态：工作类型和「无人机工作中」「下一个由空闲无人机接手」「等待空闲无人机，全部忙碌中」或「没有无人机，在市政厅上方放一个有无人机的巢」（「建造：无人机工作中」），还有「等待道路：房屋在其之后建造」「把市政厅图纸放进图纸槽」「这座房屋需要类型N的房屋图纸」或停下的原因（红字）。修复者在右侧有三个按钮：▲「在队列中提前」、▼「在队列中推后」、✕「取消工单」。点击卡片会选中该工单——「任务」和「材料」标签页显示的就是它，被选中的卡片会高亮。选择不会保存：重新进入后显示的又是第一个工单。队列为空时显示「没有工单：在核心的「建设」标签中选择建筑，或右键点击住宅进线口」。</li><li><strong>「缓存」</strong>——三排、每排九个槽位，以及无人机只从这里取方块的提示。</li><li><strong>「材料」</strong>——所选建筑的当前阶段（「胶囊屋（类型1）：第 2/5 阶段，墙体」），以及本阶段物品的图标网格，和槽位一样。还需要修路的房屋，第一个阶段是「胶囊屋（类型1）：道路阶段，还需 N 个道路方块」：<a href="../energy-transfer/town_road.html">聚落道路</a>方块，以及用于垫高处的土。房屋地基下的土也计入同一行「填充土」：泥土、砂土、圆石、深板岩圆石、石头和砂岩都可以。图标下方是「已有/需要」：不足时为红色，足够时带绿色对勾。悬停会显示普通的物品提示；鼠标滚轮可以滚动长列表。定居点尚未掌握类型的房屋，标签页显示「胶囊屋（类型N）：定居点尚未掌握类型N的房屋图纸」。<strong>打开这个标签页时，Shift 点击自己物品栏里的物品，会把本阶段还缺的数量正好放进缓存</strong>（需要量减去缓存里已有的），其余留在玩家身上；本阶段不需要的物品不会被移动。在其他标签页上，Shift 点击照常工作。</li><li><strong>「日志」</strong>——无人机做了什么，最新的在上面，每行都有游戏时间；鼠标滚轮可以滚动。完成的阶段、建筑的修复、市政厅的受损和修好，以及材料不足，都单独成行标出。</li><li>下方是玩家物品栏。</li></ul>
+
+<h2 id="聊天消息">聊天消息</h2>
+
+<p>修复定居点的玩家在线时，施工的消息会以带 [Ala Industrial] 标签的形式发给他。每一行都以「第N号定居点（核心 x, y, z）：」开头，并带有颜色：开头为白色，坐标为灰色，建筑、阶段和图纸的名称为黄色，完成的事情为绿色，损坏或停下的事情为红色，玩家下一步该做的为金色。</p>
+
+<ul><li>市政厅的阶段完成：「「墙体」阶段完成。下一阶段「陈设」：请把材料放进调度台。」——或「下一阶段「陈设」，材料已在调度台，无人机继续施工。」</li><li>房屋的阶段完成：「胶囊屋（类型1）：第 2/5 阶段「墙体」完成。」以及同样的「下一阶段……」。</li><li>清理完成：「无人机已清理「…」的场地及周围地面。」</li><li>市政厅第一次修复——<strong>一行</strong>消息，连同它给出的房屋图纸：「市政厅已修复。定居点重新苏醒。获得：房屋图纸（类型1）。」最后一个阶段不再单独成行。如果修复比例在无人机做完最后几格之前就已达到，这条消息会在工作完成、工单离开队列时发出。</li><li>房屋修复：「一座胶囊屋已修复，又能多住一名轮班工。」新房屋：「新的「…」已奠基。无人机将清理场地、铺设道路并建造它。」以及「新的「…」已建成，又能多住一名轮班工。」</li><li>掌握房屋图纸：「定居点已掌握房屋图纸（类型N）。」</li><li>施工因无人机自己清不掉的东西而停下：「「…」的施工已停止。受阻于：X（x y z）。」并用金色写出该怎么做。「受阻于」「无人机无法飞到」和「无法建造」都是这样发出的——<strong>每座建筑、每种原因只发一次</strong>；同一原因只有在该位置发生变化或工作结束后才会再次发出。</li><li>修理已修复的市政厅不算阶段：安排修理时一行（「市政厅受损，无人机正在修理。」），恢复完好时一行（「市政厅已修好。」）；两行也都写进「日志」。</li><li>调度台放在图纸上是别的方块的格子上：「调度台放在这里会妨碍市政厅的修复。按图纸这里是：云杉木活板门。」以及金色的「它在市政厅里的位置：x, y, z。」这一行发给放置调度台的人。</li></ul>
 
 <h2 id="物品栏">物品栏</h2>
 
-<table><thead><tr><th>槽位</th><th>接受</th><th>谁来放</th></tr></thead><tbody><tr><td>1–3</td><td>市政厅图纸残页（k/3）</td><td>定居点的修复者</td></tr><tr><td>4</td><td>修复图纸</td><td>「组装蓝图」按钮或修复者</td></tr><tr><td>5–31</td><td>建设材料（不能是残页或图纸）</td><td>定居点的修复者；漏斗和管道也可以</td></tr></tbody></table>
+<table><thead><tr><th>槽位</th><th>接受</th><th>谁来放</th></tr></thead><tbody><tr><td>1–3</td><td>市政厅图纸残页：第 N 格只放第 N 张</td><td>定居点的修复者</td></tr><tr><td>4</td><td>修复图纸；房屋图纸（会被掌握并消耗）</td><td>「组装蓝图」按钮或修复者</td></tr><tr><td>5–31</td><td>建设材料（不能是残页或图纸）</td><td>定居点的修复者；漏斗和管道也可以；无人机会把挖下的泥土和石头放到这里</td></tr></tbody></table>
 
 <h2 id="能量">能量</h2>
 
@@ -435,11 +449,11 @@
 
 <h2 id="进阶">进阶</h2>
 
-<ul><li>需要所属定居点的<a href="settlement_core.html">定居点核心</a>，以及由三张残页拼成的修复图纸。</li><li>为市政厅屋顶上的<a href="drone_nest.html">无人机巢</a>提供工作。</li></ul>
+<ul><li>需要所属定居点的<a href="settlement_core.html">定居点核心</a>，以及由三张残页拼成的市政厅修复图纸。</li><li>为市政厅屋顶上的<a href="drone_nest.html">无人机巢</a>提供工作。</li><li>市政厅之后是轮班工的房屋：<a href="../components/house_plan.html">房屋图纸</a>、<a href="house_inlet.html">住宅进线口</a>、<a href="charging_bed.html">充电床</a>和<a href="../energy-transfer/town_road.html">聚落道路</a>。</li></ul>
 
 <h2 id="相关内容">相关内容</h2>
 
-<ul><li><a href="drone_nest.html">无人机巢</a>——无人机从调度台的缓存里取材料。</li><li><a href="settlement_core.html">定居点核心</a>——工作队列和「建设」标签页。</li></ul>
+<ul><li><a href="drone_nest.html">无人机巢</a>——无人机从调度台的缓存里取材料。</li><li><a href="settlement_core.html">定居点核心</a>——建筑卡片、工单按钮和「建设」标签页。</li><li><a href="../components/house_plan.html">房屋图纸</a>——在图纸槽中被掌握。</li></ul>
 
 <h2>合成</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="城镇调度台 alaindustrial:town_dispatcher" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="铜板"><img src="../../assets/item/copper_plate_3d.png" alt="铜板" width="32" height="32"></div> <div class="cell" title="铜缆"><img src="../../assets/item/copper_cable_3d.png" alt="铜缆" width="32" height="32"></div> <div class="cell" title="铜板"><img src="../../assets/item/copper_plate_3d.png" alt="铜板" width="32" height="32"></div> <div class="cell" title="电子电路"><img src="../../assets/item/electronic_circuit_3d.png" alt="电子电路" width="32" height="32"></div> <div class="cell" title="机器外壳"><img src="../../assets/item/machine_casing_3d.png" alt="机器外壳" width="32" height="32"></div> <div class="cell" title="电子电路"><img src="../../assets/item/electronic_circuit_3d.png" alt="电子电路" width="32" height="32"></div> <div class="cell" title="铜板"><img src="../../assets/item/copper_plate_3d.png" alt="铜板" width="32" height="32"></div> <div class="cell" title="电池"><img src="../../assets/item/battery_3d.png" alt="电池" width="32" height="32"></div> <div class="cell" title="铜板"><img src="../../assets/item/copper_plate_3d.png" alt="铜板" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="城镇调度台"><img src="../../assets/item/town_dispatcher_3d.png" alt="城镇调度台" width="32" height="32"></div><div class="result-name">城镇调度台</div></div></div></div></div>
