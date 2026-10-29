@@ -3394,6 +3394,36 @@
           ]
         },
         {
+          "id": "industrial_concrete",
+          "title": "산업용 콘크리트",
+          "icon": "alaindustrial:industrial_concrete",
+          "pages": [
+            {
+              "type": "text",
+              "title": "산업용 콘크리트",
+              "text": "모드의 건축용 콘크리트입니다. 어떤 슬래그로든 구운 시멘트를 모래, 자갈, 물과 섞으면 생콘크리트가 되고, 월드에 놓으면 게임 하루 안에 단단한 산업용 콘크리트로 굳습니다. 반 블록과 계단도 있습니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:industrial_concrete_slab",
+                "",
+                "",
+                "alaindustrial:industrial_concrete_slab",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:industrial_concrete",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tempered_iron_bars",
           "title": "담금질 철 창살",
           "icon": "alaindustrial:tempered_iron_bars",
@@ -3540,6 +3570,36 @@
               ],
               "result_id": "alaindustrial:reactor_glass",
               "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "quarry_foundation",
+          "title": "채석장 토대",
+          "icon": "alaindustrial:quarry_foundation",
+          "pages": [
+            {
+              "type": "text",
+              "title": "채석장 토대",
+              "text": "세 단계의 채석장 토대, 담금질된 철 비계, 콘크리트 레일 들보와 판 레일 들보, 반 블록과 계단이 딸린 강화 판 블록, 경고 줄무늬 블록: 나중에 채석장을 지을 블록이며, 그때까지는 튼튼한 산업용 장식입니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:industrial_concrete",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:industrial_concrete",
+                "alaindustrial:tempered_iron_block",
+                "alaindustrial:industrial_concrete",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:industrial_concrete",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:quarry_foundation",
+              "result_count": 4
             }
           ]
         },

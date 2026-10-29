@@ -266,8 +266,11 @@ public final class ElectricMobTrapScenarios {
 
 	/**
 	 * @implements TC-MOBTRAP-001-FUN03 — the loot of a killed mob falls as on any death, and the trap then draws
-	 *     it in: a sweep takes every drop that rests on the block into the buffer. A dozen skeletons make an
-	 *     all-empty roll (bones and arrows are random) about one chance in 3.10^11.
+	 *     it in: the drops that rest on the block go into the buffer, every one of them and every item in them. A
+	 *     sweep acts on a bounded number of drops, so the test sweeps until none is left, each sweep taking at least
+	 *     one: a dozen skeletons drop 0 to 24 stacks (bones and arrows are random), and one sweep alone failed the
+	 *     moment the roll came to more drops than one sweep acts on (MOD-874). An all-empty roll is about one
+	 *     chance in 3.10^11; the most a roll can bring, 24 bones and 24 arrows, takes two of the nine slots.
 	 */
 	public static void lootGoesToTheBuffer(GameTestHelper helper) {
 		ElectricMobTrapBlockEntity be = place(helper, cost() * 20);
@@ -283,11 +286,19 @@ public final class ElectricMobTrapScenarios {
 		helper.assertTrue(bufferTotal(be) == 0, "nothing may reach the buffer before a sweep");
 		loot.forEach(item -> layOnTheLid(be, item));
 		item0PickupDelay(loot);
+		int dropped = loot.stream().mapToInt(item -> item.getItem().getCount()).sum();
 
-		be.sweep(level);
+		for (int sweeps = 1; loot.stream().anyMatch(ItemEntity::isAlive); sweeps++) {
+			long left = loot.stream().filter(ItemEntity::isAlive).count();
+			helper.assertTrue(sweeps <= loot.size(), "sweeping must end: " + left + " of " + loot.size()
+					+ " drops still lie on the block after " + loot.size() + " sweeps");
+			int acted = be.sweep(level);
+			helper.assertTrue(acted > 0, "a sweep must take a drop resting on the block: " + left + " of "
+					+ loot.size() + " drops still lie there, sweep " + sweeps + " acted on none");
+		}
 
-		helper.assertTrue(bufferTotal(be) > 0, "the swept loot must be in the buffer");
-		helper.assertTrue(loot.stream().noneMatch(ItemEntity::isAlive), "every drop resting on the block is taken");
+		helper.assertTrue(bufferTotal(be) == dropped, "every dropped item must be in the buffer: dropped " + dropped
+				+ " in " + loot.size() + " drops, buffer holds " + bufferTotal(be));
 		helper.succeed();
 	}
 

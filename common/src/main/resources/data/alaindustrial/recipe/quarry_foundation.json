@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "PBP",
+    "BIB",
+    "PBP"
+  ],
+  "key": {
+    "P": "alaindustrial:tempered_iron_plate",
+    "B": "alaindustrial:industrial_concrete",
+    "I": "alaindustrial:tempered_iron_block"
+  },
+  "result": {
+    "id": "alaindustrial:quarry_foundation",
+    "count": 4
+  }
+}

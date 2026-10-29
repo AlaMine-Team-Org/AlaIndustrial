@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "north": "alaindustrial:block/reinforced_plate_block",
+    "south": "alaindustrial:block/reinforced_plate_block",
+    "east": "alaindustrial:block/reinforced_plate_block",
+    "west": "alaindustrial:block/reinforced_plate_block",
+    "up": "alaindustrial:block/reinforced_plate_block_top",
+    "down": "alaindustrial:block/reinforced_plate_block_bottom",
+    "particle": "alaindustrial:block/reinforced_plate_block"
+  }
+}

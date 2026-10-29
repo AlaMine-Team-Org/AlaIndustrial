@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "north": "alaindustrial:block/netherite_alloy_quarry_foundation",
+    "south": "alaindustrial:block/netherite_alloy_quarry_foundation",
+    "east": "alaindustrial:block/netherite_alloy_quarry_foundation",
+    "west": "alaindustrial:block/netherite_alloy_quarry_foundation",
+    "up": "alaindustrial:block/netherite_alloy_quarry_foundation_top",
+    "down": "alaindustrial:block/netherite_alloy_quarry_foundation_bottom",
+    "particle": "alaindustrial:block/netherite_alloy_quarry_foundation"
+  }
+}

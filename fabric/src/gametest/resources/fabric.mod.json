@@ -11,6 +11,7 @@
     "main": [
       "dev.alaindustrial.gametest.ForeignEnergyItemMod",
       "dev.alaindustrial.gametest.ForeignMaterialMod",
+      "dev.alaindustrial.gametest.ForeignWaterItemMod",
       "dev.alaindustrial.gametest.ScenarioRosterFabric"
     ],
     "fabric-client-gametest": [

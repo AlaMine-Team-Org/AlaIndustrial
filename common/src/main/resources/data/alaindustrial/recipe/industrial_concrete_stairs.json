@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "#  ",
+    "## ",
+    "###"
+  ],
+  "key": {
+    "#": "alaindustrial:industrial_concrete"
+  },
+  "result": {
+    "id": "alaindustrial:industrial_concrete_stairs",
+    "count": 4
+  }
+}

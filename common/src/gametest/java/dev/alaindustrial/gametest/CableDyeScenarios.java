@@ -81,7 +81,7 @@ public final class CableDyeScenarios {
 	private CableDyeScenarios() {
 	}
 
-	private static CableBlockEntity cable(GameTestHelper helper, BlockPos pos) {
+	static CableBlockEntity cable(GameTestHelper helper, BlockPos pos) {
 		return helper.getBlockEntity(pos, CableBlockEntity.class);
 	}
 
@@ -241,7 +241,7 @@ public final class CableDyeScenarios {
 	// ── WSH01–WSH07: washing the dye off with water (MOD-898) ──────────────────────────────────────
 
 	/** A row of {@code grade} at y=2 from x=1, each segment dyed with {@code colours[i]} (null: undyed). */
-	private static void dyedRow(GameTestHelper helper, Block grade, DyeColor... colours) {
+	static void dyedRow(GameTestHelper helper, Block grade, DyeColor... colours) {
 		for (int i = 0; i < colours.length; i++) {
 			helper.setBlock(new BlockPos(1 + i, 2, 1), grade);
 		}
@@ -252,14 +252,14 @@ public final class CableDyeScenarios {
 		}
 	}
 
-	private static ServerPlayer holding(GameTestHelper helper, ItemStack stack) {
+	static ServerPlayer holding(GameTestHelper helper, ItemStack stack) {
 		ServerPlayer player = AlaGameTestHelper.survivalPlayer(helper);
 		player.setItemInHand(InteractionHand.MAIN_HAND, stack);
 		return player;
 	}
 
 	/** A real right-click on the top face of {@code pos}, through the loader's block-use chain. */
-	private static InteractionResult click(GameTestHelper helper, ServerPlayer player, BlockPos pos) {
+	static InteractionResult click(GameTestHelper helper, ServerPlayer player, BlockPos pos) {
 		BlockPos abs = helper.absolutePos(pos);
 		BlockHitResult hit = new BlockHitResult(Vec3.atCenterOf(abs), Direction.UP, abs, false);
 		return player.gameMode.useItemOn(player, helper.getLevel(), player.getItemInHand(InteractionHand.MAIN_HAND),
@@ -272,7 +272,7 @@ public final class CableDyeScenarios {
 		return stack;
 	}
 
-	private static ItemStack hand(ServerPlayer player) {
+	static ItemStack hand(ServerPlayer player) {
 		return player.getItemInHand(InteractionHand.MAIN_HAND);
 	}
 
@@ -417,7 +417,7 @@ public final class CableDyeScenarios {
 		dyedRow(helper, ModContent.INSULATED_TIN_CABLE.get(), DyeColor.ORANGE, null, DyeColor.ORANGE);
 		// Asked of the bridge, not clicked: a lava capsule clicked on the cable would pour lava beside it.
 		ServerPlayer lava = holding(helper, capsuleOf(Fluids.LAVA));
-		if (ItemFluidBridge.get().takeBucketFromHand(lava, InteractionHand.MAIN_HAND, Fluids.WATER, true)) {
+		if (ItemFluidBridge.get().takeFromHand(lava, InteractionHand.MAIN_HAND, Fluids.WATER, 1000L, true)) {
 			helper.fail("a capsule of lava must not count as water");
 			return;
 		}

@@ -126,6 +126,8 @@ public final class OilScenarios {
 						.fabricId("OilGameTest", "tcOil001Prf01_viscousSpreadProfile").ticks(300),
 				RosterEntry.of(OilScenarios::fun08TorchLogsWithOil, "oil_torch_logs_with_oil")
 						.fabricId("OilGameTest", "tcOil001Fun07_torchLogsWithOil").ticks(60, 80),
+				RosterEntry.of(OilScenarios::fun12IndustrialLightLogsWithWaterAndOil,
+						"oil_industrial_light_logs_with_water_and_oil").ticks(60, 80),
 				RosterEntry.of(OilScenarios::fun09FirstOilAwardsTheAdvancement, "oil_first_bucket_awards_advancement")
 						.fabricId("OilGameTest", "tcOil001Fun08_firstOilAwardsTheAdvancement").ticks(20, 100));
 
@@ -921,6 +923,68 @@ public final class OilScenarios {
 			if (!isOil(fs) || !fs.isSource()) {
 				helper.fail("an oil-logged torch must report a full oil source to the renderer, got "
 						+ (fs.isEmpty() ? "nothing" : fs.getType() + " source=" + fs.isSource()));
+				return;
+			}
+			helper.succeed();
+		});
+	}
+
+	// ── FUN12: the industrial light placed into a pool keeps the fluid in its cell ───────────────
+
+	/**
+	 * Placing the industrial light into a water source and into an oil source logs the cell with that
+	 * fluid; placed on a dry floor it stays unlogged (MOD-865).
+	 *
+	 * <p><b>The bug this pins.</b> The light is a one-pixel panel, yet it was not waterloggable: placed
+	 * into a pool it replaced the fluid with an air cell, and the water around rendered its side faces
+	 * into that pocket — an air bubble around the light. As in {@link #fun08TorchLogsWithOil}, the
+	 * fluid state is asserted, not only the property: the renderer reads the fluid state.
+	 */
+	public static void fun12IndustrialLightLogsWithWaterAndOil(GameTestHelper helper) {
+		ServerLevel level = helper.getLevel();
+		BlockPos waterCell = new BlockPos(2, 2, 2);
+		BlockPos oilCell = new BlockPos(2, 2, 5);
+		BlockPos dryCell = new BlockPos(5, 2, 2);
+		basin(helper, 2, 2, 2, 2);
+		basin(helper, 2, 5, 2, 5);
+		helper.setBlock(dryCell.below(), Blocks.STONE);
+		level.setBlockAndUpdate(helper.absolutePos(waterCell), Blocks.WATER.defaultBlockState());
+		level.setBlockAndUpdate(helper.absolutePos(oilCell), oilSource());
+
+		helper.runAtTickTime(5, () -> {
+			ServerPlayer player = survivalPlayer(helper);
+			for (BlockPos cell : List.of(waterCell, oilCell, dryCell)) {
+				InteractionResult placed = useOnTopFace(helper, player,
+						new ItemStack(ModContent.INDUSTRIAL_LIGHT_ITEM.get()), cell.below());
+				if (!placed.consumesAction()) {
+					helper.fail("the industrial light refused to be placed at " + cell + ": " + placed);
+					return;
+				}
+			}
+			BlockState water = level.getBlockState(helper.absolutePos(waterCell));
+			BlockState oil = level.getBlockState(helper.absolutePos(oilCell));
+			BlockState dry = level.getBlockState(helper.absolutePos(dryCell));
+			for (BlockState state : List.of(water, oil, dry)) {
+				if (!state.is(ModContent.INDUSTRIAL_LIGHT.get())) {
+					helper.fail("expected the industrial light, found " + state);
+					return;
+				}
+			}
+			FluidState inWater = water.getFluidState();
+			if (!inWater.is(Fluids.WATER) || !inWater.isSource()) {
+				helper.fail("the industrial light placed into water must keep a water source in its cell, got "
+						+ (inWater.isEmpty() ? "nothing" : inWater.getType() + " source=" + inWater.isSource())
+						+ " — the pool is left standing around an air bubble");
+				return;
+			}
+			FluidState inOil = oil.getFluidState();
+			if (!isOil(inOil) || !inOil.isSource()) {
+				helper.fail("the industrial light placed into oil must keep an oil source in its cell, got "
+						+ (inOil.isEmpty() ? "nothing" : inOil.getType() + " source=" + inOil.isSource()));
+				return;
+			}
+			if (!dry.getFluidState().isEmpty()) {
+				helper.fail("the industrial light placed on a dry floor reports a fluid: " + dry.getFluidState());
 				return;
 			}
 			helper.succeed();

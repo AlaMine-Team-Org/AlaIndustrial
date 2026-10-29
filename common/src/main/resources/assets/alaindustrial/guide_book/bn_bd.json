@@ -3394,6 +3394,36 @@
           ]
         },
         {
+          "id": "industrial_concrete",
+          "title": "শিল্প কংক্রিট",
+          "icon": "alaindustrial:industrial_concrete",
+          "pages": [
+            {
+              "type": "text",
+              "title": "শিল্প কংক্রিট",
+              "text": "মডের নির্মাণ কংক্রিট। যেকোনো স্ল্যাগ পুড়িয়ে পাওয়া সিমেন্ট, বালি, নুড়ি আর জলের সাথে মিশিয়ে তাজা কংক্রিট হয়; জগতে বসালে এক খেলার দিনে তা মজবুত শিল্প কংক্রিটে জমে যায়। সাথে স্ল্যাব আর সিঁড়ি আছে।"
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:industrial_concrete_slab",
+                "",
+                "",
+                "alaindustrial:industrial_concrete_slab",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:industrial_concrete",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tempered_iron_bars",
           "title": "টেম্পার্ড আয়রন শিক",
           "icon": "alaindustrial:tempered_iron_bars",
@@ -3540,6 +3570,36 @@
               ],
               "result_id": "alaindustrial:reactor_glass",
               "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "quarry_foundation",
+          "title": "খাদানের ভিত্তি",
+          "icon": "alaindustrial:quarry_foundation",
+          "pages": [
+            {
+              "type": "text",
+              "title": "খাদানের ভিত্তি",
+              "text": "তিন স্তরের ভিত্তি, টেম্পার্ড লোহার ভারা, কংক্রিটের ও পাতের রেল বিম, স্ল্যাব আর সিঁড়িসহ মজবুত পাতের ব্লক এবং সতর্কতা ডোরার ব্লক: যে ব্লক দিয়ে পরে খাদান তৈরি হবে, আর ততদিন এগুলো মজবুত শিল্প সজ্জা।"
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:industrial_concrete",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:industrial_concrete",
+                "alaindustrial:tempered_iron_block",
+                "alaindustrial:industrial_concrete",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:industrial_concrete",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:quarry_foundation",
+              "result_count": 4
             }
           ]
         },

@@ -167,6 +167,8 @@ public final class CreativeTabContent {
 		// MOD-796 — the metal family and the chest boats close the tab (owner decision 2026-10-09): building
 		// material and boat variants a player looks up rather than progresses through.
 		DecorContent.metalFamily(out);
+		// MOD-927 — the quarry's building blocks, building material like the metal family above.
+		DecorContent.quarryConstruction(out);
 		StorageContent.chestBoats(out);
 	}
 
@@ -237,6 +239,7 @@ public final class CreativeTabContent {
 	public static void buildingBlocks(Sink out) {
 		DecorContent.metalBlocks(out);
 		DecorContent.metalFamily(out);
+		DecorContent.quarryConstruction(out);
 		DecorContent.labPlaque(out);
 	}
 

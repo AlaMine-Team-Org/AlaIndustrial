@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "alaindustrial:industrial_concrete",
+  "result": {
+    "id": "alaindustrial:industrial_concrete_slab",
+    "count": 2
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "RPR",
+    "PPP"
+  ],
+  "key": {
+    "R": "minecraft:rail",
+    "P": "alaindustrial:tempered_iron_plate"
+  },
+  "result": {
+    "id": "alaindustrial:plate_rail_beam",
+    "count": 3
+  }
+}

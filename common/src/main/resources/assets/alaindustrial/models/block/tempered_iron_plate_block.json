@@ -1,6 +1,12 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "minecraft:block/cube",
   "textures": {
-    "all": "alaindustrial:block/tempered_iron_plate_block"
+    "north": "alaindustrial:block/tempered_iron_plate_block",
+    "south": "alaindustrial:block/tempered_iron_plate_block",
+    "east": "alaindustrial:block/tempered_iron_plate_block",
+    "west": "alaindustrial:block/tempered_iron_plate_block",
+    "up": "alaindustrial:block/tempered_iron_plate_block_top",
+    "down": "alaindustrial:block/tempered_iron_plate_block_bottom",
+    "particle": "alaindustrial:block/tempered_iron_plate_block"
   }
 }

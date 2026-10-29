@@ -12,6 +12,8 @@
     "alaindustrial:electrum_stairs",
     "alaindustrial:netherite_alloy_stairs",
     "alaindustrial:shielding_alloy_stairs",
-    "alaindustrial:tempered_iron_stairs"
+    "alaindustrial:tempered_iron_stairs",
+    "alaindustrial:industrial_concrete_stairs",
+    "alaindustrial:reinforced_plate_stairs"
   ]
 }

@@ -251,6 +251,7 @@ tooltip.alaindustrial.tier_lv {green}
 == alaindustrial:carbon_ceramic plain : none
 == alaindustrial:carbon_rod plain : none
 == alaindustrial:carbon_rod_double plain : none
+== alaindustrial:cement plain : none
 == alaindustrial:ceramic_plate plain : none
 == alaindustrial:cesu plain
 -- plain eu
@@ -327,6 +328,7 @@ tooltip.alaindustrial.hold_shift {dark_gray}
 -- shift no-eu
 tooltip.alaindustrial.tier_lv {green}
 == alaindustrial:concentrator_section plain : none
+== alaindustrial:concrete_rail_beam plain : none
 == alaindustrial:construction_drone plain : none
 == alaindustrial:control_rod_drive plain : none
 == alaindustrial:copper_cable plain
@@ -1372,6 +1374,7 @@ tooltip.alaindustrial.tank_mb(1000) {gray}
 == alaindustrial:fluxweave_solar_helmet eu=1 : none
 == alaindustrial:fluxweave_solar_helmet full : none
 == alaindustrial:forge_hammer plain : none
+== alaindustrial:fresh_concrete plain : none
 == alaindustrial:fuel_oil_bucket plain : none
 == alaindustrial:fuel_rod_assembly plain : none
 == alaindustrial:galvanic_bath plain
@@ -1482,6 +1485,7 @@ tooltip.alaindustrial.storage_slots_double(108) {dark_gray}
 == alaindustrial:gold_gear plain : none
 == alaindustrial:gold_plate plain : none
 == alaindustrial:guide_book plain : none
+== alaindustrial:hazard_stripe_block plain : none
 == alaindustrial:high_altitude_wind_mill plain : none
 == alaindustrial:house_inlet plain
 -- plain eu
@@ -1521,6 +1525,9 @@ gui.alaindustrial.incubator.mode.create {gray} + " — " + tooltip.alaindustrial
 tooltip.alaindustrial.hold_shift {dark_gray}
 -- shift no-eu
 tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:industrial_concrete plain : none
+== alaindustrial:industrial_concrete_slab plain : none
+== alaindustrial:industrial_concrete_stairs plain : none
 == alaindustrial:industrial_light plain : none
 == alaindustrial:industrial_workbench plain : none
 == alaindustrial:insulated_boots plain : none
@@ -1675,6 +1682,7 @@ tooltip.alaindustrial.cable_safe {green}
 == alaindustrial:invar_block plain : none
 == alaindustrial:invar_ingot plain : none
 == alaindustrial:invar_plate plain : none
+== alaindustrial:invar_quarry_foundation plain : none
 == alaindustrial:invar_reinforced_plate plain : none
 == alaindustrial:invar_slab plain : none
 == alaindustrial:invar_stairs plain : none
@@ -1852,6 +1860,7 @@ tooltip.alaindustrial.tier_lv {green}
 == alaindustrial:mute_chip plain : none
 == alaindustrial:netherite_alloy_block plain : none
 == alaindustrial:netherite_alloy_ingot plain : none
+== alaindustrial:netherite_alloy_quarry_foundation plain : none
 == alaindustrial:netherite_alloy_slab plain : none
 == alaindustrial:netherite_alloy_stairs plain : none
 == alaindustrial:netherite_alloy_wall plain : none
@@ -1947,6 +1956,7 @@ tooltip.alaindustrial.piezo_plate_press {gray}
 tooltip.alaindustrial.tier_lv {green}
 tooltip.alaindustrial.piezo_plate_connect {dark_gray}
 tooltip.alaindustrial.piezo_plate_wrench {dark_gray}
+== alaindustrial:plate_rail_beam plain : none
 == alaindustrial:polymerizer plain
 -- plain eu
 tooltip.alaindustrial.energy_input(2) {gray}
@@ -1973,6 +1983,7 @@ tooltip.alaindustrial.tier_lv {green}
 tooltip.alaindustrial.hold_shift {dark_gray}
 -- shift no-eu
 tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:quarry_foundation plain : none
 == alaindustrial:radiant_solar_panel plain
 -- plain eu
 tooltip.alaindustrial.energy_output_day(8) {gray}
@@ -2044,6 +2055,9 @@ tooltip.alaindustrial.tier_lv {green}
 == alaindustrial:reinforced_bone_meal plain : none
 == alaindustrial:reinforced_fluid_pipe plain : none
 == alaindustrial:reinforced_glass plain : none
+== alaindustrial:reinforced_plate_block plain : none
+== alaindustrial:reinforced_plate_slab plain : none
+== alaindustrial:reinforced_plate_stairs plain : none
 == alaindustrial:reinforced_steam_pipe plain : none
 == alaindustrial:resonance_chip plain : none
 == alaindustrial:resonance_coil plain : none
@@ -2358,6 +2372,7 @@ tooltip.alaindustrial.teleporter_io {gray}
 == alaindustrial:tempered_iron_pickaxe plain : none
 == alaindustrial:tempered_iron_plate plain : none
 == alaindustrial:tempered_iron_plate_block plain : none
+== alaindustrial:tempered_iron_scaffold plain : none
 == alaindustrial:tempered_iron_shovel plain : none
 == alaindustrial:tempered_iron_slab plain : none
 == alaindustrial:tempered_iron_stairs plain : none

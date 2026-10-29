@@ -630,6 +630,9 @@ public class ArchitectureRules {
 					"alaindustrial:config_overrides_3 — pins sprinklerRange; one sprinkler scenario per batch"),
 			Map.entry(GAMETEST_CLASSES + "SprinklerScenarios.con02NothingToWaterCostsNothing",
 					"alaindustrial:config_overrides_4 — pins sprinklerRange; one sprinkler scenario per batch"),
+			Map.entry(GAMETEST_CLASSES + "QuarryConstructionScenarios.freshConcreteSetsAfterFourStages",
+					"alaindustrial:config_overrides_3 — holds freshConcreteStageTicks while the concrete sets on real "
+							+ "ticks; no other scenario reads that knob"),
 			Map.entry(GAMETEST_CLASSES + "ConfigOverridesScenarios.restoredWhenTheOwningTestEnds",
 					"alaindustrial:config_overrides — self-test of the end-of-test restore; holds a knob no other "
 							+ "scenario reads for five ticks"),

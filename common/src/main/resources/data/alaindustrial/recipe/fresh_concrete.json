@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "GCG",
+    "SWS",
+    "GCG"
+  ],
+  "key": {
+    "G": "#c:gravels",
+    "C": "alaindustrial:cement",
+    "S": "#c:sands",
+    "W": "minecraft:water_bucket"
+  },
+  "result": {
+    "id": "alaindustrial:fresh_concrete",
+    "count": 8
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "T T",
+    " R ",
+    "T T"
+  ],
+  "key": {
+    "T": "alaindustrial:tempered_iron",
+    "R": "alaindustrial:tempered_iron_bars"
+  },
+  "result": {
+    "id": "alaindustrial:tempered_iron_scaffold",
+    "count": 6
+  }
+}

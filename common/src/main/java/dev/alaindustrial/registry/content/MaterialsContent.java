@@ -332,6 +332,8 @@ public final class MaterialsContent {
 			plain("slag_poor", s -> ModContent.SLAG_POOR = s),
 			plain("slag", s -> ModContent.SLAG = s),
 			plain("slag_rich", s -> ModContent.SLAG_RICH = s),
+			// MOD-927 — slag burnt in a furnace: the binder of fresh concrete.
+			plain("cement", s -> ModContent.CEMENT = s),
 			plain("ash", s -> ModContent.ASH = s),
 			durableComponent("recycler_blades_iron", () -> Config.recyclerBladesIronMaxDamage,
 					s -> ModContent.RECYCLER_BLADES_IRON = s),

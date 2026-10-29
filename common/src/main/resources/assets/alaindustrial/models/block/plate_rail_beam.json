@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "north": "alaindustrial:block/plate_rail_beam_end",
+    "south": "alaindustrial:block/plate_rail_beam_end",
+    "east": "alaindustrial:block/plate_rail_beam",
+    "west": "alaindustrial:block/plate_rail_beam",
+    "up": "alaindustrial:block/plate_rail_beam_top",
+    "down": "alaindustrial:block/plate_rail_beam_bottom",
+    "particle": "alaindustrial:block/plate_rail_beam_end"
+  }
+}

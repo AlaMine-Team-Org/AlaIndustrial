@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "north": "alaindustrial:block/invar_quarry_foundation",
+    "south": "alaindustrial:block/invar_quarry_foundation",
+    "east": "alaindustrial:block/invar_quarry_foundation",
+    "west": "alaindustrial:block/invar_quarry_foundation",
+    "up": "alaindustrial:block/invar_quarry_foundation_top",
+    "down": "alaindustrial:block/invar_quarry_foundation_bottom",
+    "particle": "alaindustrial:block/invar_quarry_foundation"
+  }
+}

@@ -46,8 +46,8 @@ public class MonitorPanelBlockEntityRenderer
 
 	private static final float TEXT_SCALE = 0.022F;
 
-	/** The generated screen plane is at model Z 0.6/16, i.e. this far from block centre. */
-	private static final float SCREEN_DEPTH = 0.4645F;
+	/** Text lies just in front of the screen plane (model Z 0.6/16); {@link MonitorItemFit} places the item. */
+	private static final float SCREEN_DEPTH = MonitorItemFit.SCREEN_PLANE + MonitorItemFit.SCREEN_CLEARANCE;
 
 	private final ItemModelResolver itemModelResolver;
 	private final Font font;
@@ -64,6 +64,7 @@ public class MonitorPanelBlockEntityRenderer
 		MonitorReadout readout = MonitorReadout.IDLE;
 		long count;
 		boolean showText;
+		MonitorItemFit.Fit fit = MonitorItemFit.DEFAULT;
 	}
 
 	@Override
@@ -94,6 +95,29 @@ public class MonitorPanelBlockEntityRenderer
 		// showing "the inventory icon" should show exactly that icon, not a second interpretation.
 		itemModelResolver.updateForTopItem(state.item, panel.getFilter(), ItemDisplayContext.GUI,
 				panel.getLevel(), null, (int) panel.getBlockPos().asLong());
+		state.fit = fitOf(state.item);
+	}
+
+	/**
+	 * Measures the item as it will be drawn — display transform included — so a 3D model's back rests on
+	 * the screen instead of sinking behind it (MOD-863). {@code visitExtents} rather than
+	 * {@code getModelBoundingBox}: the latter throws on a model with no extents.
+	 */
+	private static MonitorItemFit.Fit fitOf(ItemStackRenderState item) {
+		float[] box = {Float.MAX_VALUE, -Float.MAX_VALUE, Float.MAX_VALUE, -Float.MAX_VALUE,
+				Float.MAX_VALUE, -Float.MAX_VALUE};
+		item.visitExtents(point -> {
+			box[0] = Math.min(box[0], point.x());
+			box[1] = Math.max(box[1], point.x());
+			box[2] = Math.min(box[2], point.y());
+			box[3] = Math.max(box[3], point.y());
+			box[4] = Math.min(box[4], point.z());
+			box[5] = Math.max(box[5], point.z());
+		});
+		if (box[0] > box[1]) {
+			return MonitorItemFit.DEFAULT;
+		}
+		return MonitorItemFit.fit(box[0], box[1], box[2], box[3], box[4], box[5]);
 	}
 
 	@Override
@@ -108,10 +132,11 @@ public class MonitorPanelBlockEntityRenderer
 		Poses.rotate(poseStack, Axis.YP.rotationDegrees(-state.facing.toYRot()));
 		// The screen is recessed behind the bezel, so dynamic content sits on that exact plane.
 		poseStack.pushPose();
-		// A GUI item may be a 3D block. Flatten only its depth instead of moving it behind the opaque
-		// screen: that keeps the familiar inventory silhouette without looking like a floating model.
-		poseStack.translate(0.0F, 0.16F, SCREEN_DEPTH);
-		poseStack.scale(0.38F, 0.38F, 0.03F);
+		// A GUI item may be a 3D block. Flatten only its depth and rest its BACK on the opaque screen:
+		// centred on the screen, the far half of the model was hidden behind it (MOD-863).
+		MonitorItemFit.Fit fit = state.fit;
+		poseStack.translate(0.0F, 0.16F, fit.z());
+		poseStack.scale(fit.scale(), fit.scale(), fit.depthScale());
 		state.item.submit(poseStack, collector, state.lightCoords,
 				net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY, 0);
 		poseStack.popPose();

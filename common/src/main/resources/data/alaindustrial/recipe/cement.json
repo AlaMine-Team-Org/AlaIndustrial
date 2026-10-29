@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "ingredient": "alaindustrial:slag",
+  "result": {
+    "id": "alaindustrial:cement"
+  },
+  "experience": 0.1
+}
