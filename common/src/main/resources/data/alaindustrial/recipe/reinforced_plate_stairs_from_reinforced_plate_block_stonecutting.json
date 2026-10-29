@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "alaindustrial:reinforced_plate_block",
+  "result": {
+    "id": "alaindustrial:reinforced_plate_stairs",
+    "count": 1
+  }
+}

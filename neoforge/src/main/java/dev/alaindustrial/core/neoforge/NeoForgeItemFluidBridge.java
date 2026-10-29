@@ -1,7 +1,6 @@
 package dev.alaindustrial.core.neoforge;
 
 import com.google.common.primitives.Ints;
-import dev.alaindustrial.core.fluid.FluidAmounts;
 import dev.alaindustrial.core.fluid.FluidPort;
 import dev.alaindustrial.item.fluid.ItemFluidBridge;
 import net.minecraft.world.Container;
@@ -56,12 +55,13 @@ public final class NeoForgeItemFluidBridge implements ItemFluidBridge {
 	}
 
 	/**
-	 * One bucket out of the hand's container (MOD-898). {@code ItemAccess.forPlayerInteraction} swaps the
-	 * container in the hand (or into the inventory for a stack of them) and, in creative, leaves the hand
-	 * alone — the behaviour of vanilla's {@code ItemUtils.createFilledResult}.
+	 * {@code mb} out of the hand's container (MOD-898, MOD-912). {@code ItemAccess.forPlayerInteraction} swaps
+	 * the container in the hand (or into the inventory for a stack of them) and, in creative, leaves the hand
+	 * alone — the behaviour of vanilla's {@code ItemUtils.createFilledResult}. NeoForge amounts are
+	 * millibuckets, so only the long→int narrowing is needed.
 	 */
 	@Override
-	public boolean takeBucketFromHand(Player player, InteractionHand hand, Fluid fluid, boolean simulate) {
+	public boolean takeFromHand(Player player, InteractionHand hand, Fluid fluid, long mb, boolean simulate) {
 		if (player.getItemInHand(hand).isEmpty()) {
 			return false;
 		}
@@ -72,9 +72,9 @@ public final class NeoForgeItemFluidBridge implements ItemFluidBridge {
 		if (item == null) {
 			return false;
 		}
-		int bucket = Ints.saturatedCast(FluidAmounts.BUCKET);
+		int amount = Ints.saturatedCast(mb);
 		try (Transaction transaction = Transaction.openRoot()) {
-			if (item.extract(FluidResource.of(fluid), bucket, transaction) != bucket) {
+			if (item.extract(FluidResource.of(fluid), amount, transaction) != amount) {
 				return false;
 			}
 			if (!simulate) {

@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "north": "alaindustrial:block/industrial_concrete",
+    "south": "alaindustrial:block/industrial_concrete",
+    "east": "alaindustrial:block/industrial_concrete",
+    "west": "alaindustrial:block/industrial_concrete",
+    "up": "alaindustrial:block/industrial_concrete_top",
+    "down": "alaindustrial:block/industrial_concrete_bottom",
+    "particle": "alaindustrial:block/industrial_concrete"
+  }
+}

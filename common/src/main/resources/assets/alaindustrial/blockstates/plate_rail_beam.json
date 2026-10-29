@@ -1,0 +1,11 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "alaindustrial:block/plate_rail_beam",
+      "y": 90
+    },
+    "axis=z": {
+      "model": "alaindustrial:block/plate_rail_beam"
+    }
+  }
+}

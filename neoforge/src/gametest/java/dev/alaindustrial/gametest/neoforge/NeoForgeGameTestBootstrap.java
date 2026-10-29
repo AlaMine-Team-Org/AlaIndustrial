@@ -23,6 +23,8 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
  *       additionally guards itself with {@code FMLEnvironment.isProduction()}.</li>
  *   <li>{@link ForeignMaterialStandIn#register} — the MOD-290 fake foreign-mod tin, registered under
  *       a namespace this mod does not own; same production guard.</li>
+ *   <li>{@link ForeignWaterItemStandIn#register} — the MOD-912 fake foreign-mod water canister; same
+ *       production guard.</li>
  * </ul>
  */
 public final class NeoForgeGameTestBootstrap {
@@ -34,6 +36,7 @@ public final class NeoForgeGameTestBootstrap {
 		NeoForgeGameTests.INSTANCE_TYPES.register(modBus);
 		modBus.addListener(NeoForgeGameTests::register);
 		modBus.addListener((RegisterCapabilitiesEvent event) -> ForeignEnergyItemStandIn.register(event));
+		modBus.addListener((RegisterCapabilitiesEvent event) -> ForeignWaterItemStandIn.register(event));
 		ForeignMaterialStandIn.register(modBus);
 		ScenarioRosterNeoForge.init(modBus); // MOD-717: roster bodies into TEST_FUNCTION
 	}

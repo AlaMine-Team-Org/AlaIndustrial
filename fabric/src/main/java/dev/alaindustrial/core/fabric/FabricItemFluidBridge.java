@@ -5,7 +5,6 @@ import dev.alaindustrial.core.fluid.FluidPort;
 import dev.alaindustrial.item.fluid.ItemFluidBridge;
 import java.util.List;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage;
@@ -57,12 +56,12 @@ public final class FabricItemFluidBridge implements ItemFluidBridge {
 	}
 
 	/**
-	 * One bucket out of the hand's container (MOD-898). {@code forPlayerInteraction} is the context Fabric
-	 * documents for item use: the swapped container replaces the hand stack, or lands in the inventory when
-	 * the hand held a stack of them.
+	 * {@code mb} out of the hand's container (MOD-898, MOD-912). {@code forPlayerInteraction} is the context
+	 * Fabric documents for item use: the swapped container replaces the hand stack, or lands in the inventory
+	 * when the hand held a stack of them. Fabric counts droplets, so the amount is scaled on the way in.
 	 */
 	@Override
-	public boolean takeBucketFromHand(Player player, InteractionHand hand, Fluid fluid, boolean simulate) {
+	public boolean takeFromHand(Player player, InteractionHand hand, Fluid fluid, long mb, boolean simulate) {
 		if (player.getItemInHand(hand).isEmpty()) {
 			return false;
 		}
@@ -71,7 +70,8 @@ public final class FabricItemFluidBridge implements ItemFluidBridge {
 			return false;
 		}
 		try (Transaction transaction = Transaction.openOuter()) {
-			if (item.extract(FluidVariant.of(fluid), FluidConstants.BUCKET, transaction) != FluidConstants.BUCKET) {
+			long droplets = FluidAmounts.toDroplets(mb);
+			if (item.extract(FluidVariant.of(fluid), droplets, transaction) != droplets) {
 				return false;
 			}
 			if (!simulate) {

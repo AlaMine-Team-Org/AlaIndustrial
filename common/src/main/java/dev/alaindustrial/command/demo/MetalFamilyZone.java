@@ -1,6 +1,7 @@
 package dev.alaindustrial.command.demo;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.block.ConcreteRailBeamBlock;
 import java.util.List;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -31,6 +32,11 @@ import net.minecraft.world.level.block.StairBlock;
  * <p>MOD-804 puts a pair of sound absorbers two rows behind it (z=38, x=78..79): touching, so the stand shows
  * them joined into one tier-II panel with two lamps lit, not two single blocks.
  *
+ * <p>MOD-927 puts the quarry's building blocks in two rows behind them (x=72..84, one block every other column):
+ * concrete fresh and set, its slab and stairs, the hazard stripes, the concrete rail beam lying along x and the
+ * scaffold at z=40; the three quarry foundations, the reinforced plate block with its slab and stairs and the plate
+ * rail beam, also along x, at z=42. The reactor row ends near x=40, far to the west of z=42.
+ *
  * <p>Domain (coding standard, section 1): Decor.
  */
 final class MetalFamilyZone implements DemoZone {
@@ -48,6 +54,10 @@ final class MetalFamilyZone implements DemoZone {
 	private static final int FITTINGS_Z = 36;
 	/** MOD-804: the sound absorber pair. */
 	private static final int ABSORBER_Z = 38;
+	/** MOD-927: the concrete row and the foundation-and-plate row of the quarry's building blocks. */
+	private static final int CONCRETE_Z = 40;
+	private static final int FOUNDATION_Z = 42;
+	private static final int QUARRY_X0 = 72;
 
 	@Override
 	public void build(StandWriter w) {
@@ -73,6 +83,30 @@ final class MetalFamilyZone implements DemoZone {
 		w.set(84, 1, FITTINGS_Z, block("tempered_iron_chain"));
 		w.set(78, 1, ABSORBER_Z, block("sound_absorber"));
 		w.set(79, 1, ABSORBER_Z, block("sound_absorber"));
+		quarryConstruction(w);
+	}
+
+	/** MOD-927: the quarry's building blocks, released as decor ahead of the quarry. */
+	private static void quarryConstruction(StandWriter w) {
+		w.set(QUARRY_X0, 1, CONCRETE_Z, block("fresh_concrete"));
+		w.set(QUARRY_X0 + STEP, 1, CONCRETE_Z, block("industrial_concrete"));
+		w.set(QUARRY_X0 + 2 * STEP, 1, CONCRETE_Z, block("industrial_concrete_slab"));
+		w.place(w.origin().offset(QUARRY_X0 + 3 * STEP, 1, CONCRETE_Z), block("industrial_concrete_stairs")
+				.defaultBlockState().setValue(StairBlock.FACING, Direction.SOUTH));
+		w.set(QUARRY_X0 + 4 * STEP, 1, CONCRETE_Z, block("hazard_stripe_block"));
+		// Along x, so the rails read across the camera's view.
+		w.place(w.origin().offset(QUARRY_X0 + 5 * STEP, 1, CONCRETE_Z), block("concrete_rail_beam")
+				.defaultBlockState().setValue(ConcreteRailBeamBlock.AXIS, Direction.Axis.X));
+		w.set(QUARRY_X0 + 6 * STEP, 1, CONCRETE_Z, block("tempered_iron_scaffold"));
+		w.place(w.origin().offset(QUARRY_X0 + 6 * STEP, 1, FOUNDATION_Z), block("plate_rail_beam")
+				.defaultBlockState().setValue(ConcreteRailBeamBlock.AXIS, Direction.Axis.X));
+		w.set(QUARRY_X0, 1, FOUNDATION_Z, block("quarry_foundation"));
+		w.set(QUARRY_X0 + STEP, 1, FOUNDATION_Z, block("invar_quarry_foundation"));
+		w.set(QUARRY_X0 + 2 * STEP, 1, FOUNDATION_Z, block("netherite_alloy_quarry_foundation"));
+		w.set(QUARRY_X0 + 3 * STEP, 1, FOUNDATION_Z, block("reinforced_plate_block"));
+		w.set(QUARRY_X0 + 4 * STEP, 1, FOUNDATION_Z, block("reinforced_plate_slab"));
+		w.place(w.origin().offset(QUARRY_X0 + 5 * STEP, 1, FOUNDATION_Z), block("reinforced_plate_stairs")
+				.defaultBlockState().setValue(StairBlock.FACING, Direction.SOUTH));
 	}
 
 	/** A block of the family by its id; a missing one throws rather than leaving a hole in the row. */

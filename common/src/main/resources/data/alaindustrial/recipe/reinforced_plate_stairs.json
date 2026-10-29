@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "#  ",
+    "## ",
+    "###"
+  ],
+  "key": {
+    "#": "alaindustrial:reinforced_plate_block"
+  },
+  "result": {
+    "id": "alaindustrial:reinforced_plate_stairs",
+    "count": 4
+  }
+}

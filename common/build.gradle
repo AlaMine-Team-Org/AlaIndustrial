@@ -354,6 +354,9 @@ pitest {
                      // inside its block and that the glass core shares no plane with the frame —
                      // the property that keeps the ghost from flickering as the camera moves.
                      'dev.alaindustrial.client.render.ConcentratorSectionGhost',
+                     // MOD-863: where a monitoring panel puts its item — the back of a 3D model rests on
+                     // the opaque screen instead of sinking behind it. MonitorItemFitTest guards it.
+                     'dev.alaindustrial.client.render.MonitorItemFit',
                      // MOD-146: the fermenter's idle diagnosis — MC-free by the same design as the
                      // status enums above, and added here WITH its L1 suite (FermenterStatusTest),
                      // not a release later.

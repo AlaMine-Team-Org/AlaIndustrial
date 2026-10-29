@@ -261,6 +261,11 @@ public final class AlaCommonScenarios {
 			if (id.getPath().equals("kok_sagyz_root")) {
 				continue;
 			}
+			// MOD-927: fresh concrete is soft until it sets — it breaks at once by hand and drops itself, so a
+			// bare hand IS its correct tool. The hand drop is asserted in QuarryConstructionScenarios.
+			if (id.getPath().equals("fresh_concrete")) {
+				continue;
+			}
 			// MOD-638: oil fire breaks instantly and drops nothing, like vanilla fire; the soot layer is
 			// SHOVEL-gated like snow, not pickaxe-gated — its hand/shovel contract is in OilScenarios FUN11.
 			if (id.getPath().equals("oil_fire") || id.getPath().equals("soot_layer")) {

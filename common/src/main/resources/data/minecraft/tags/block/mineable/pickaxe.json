@@ -203,6 +203,19 @@
     "alaindustrial:industrial_light",
     "alaindustrial:tempered_iron_ladder",
     "alaindustrial:tempered_iron_trapdoor",
-    "alaindustrial:sound_absorber"
+    "alaindustrial:sound_absorber",
+    "alaindustrial:industrial_concrete",
+    "alaindustrial:industrial_concrete_slab",
+    "alaindustrial:industrial_concrete_stairs",
+    "alaindustrial:quarry_foundation",
+    "alaindustrial:invar_quarry_foundation",
+    "alaindustrial:netherite_alloy_quarry_foundation",
+    "alaindustrial:tempered_iron_scaffold",
+    "alaindustrial:concrete_rail_beam",
+    "alaindustrial:reinforced_plate_block",
+    "alaindustrial:reinforced_plate_slab",
+    "alaindustrial:reinforced_plate_stairs",
+    "alaindustrial:hazard_stripe_block",
+    "alaindustrial:plate_rail_beam"
   ]
 }

@@ -3394,6 +3394,36 @@
           ]
         },
         {
+          "id": "industrial_concrete",
+          "title": "Industribetong",
+          "icon": "alaindustrial:industrial_concrete",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Industribetong",
+              "text": "Moddens byggbetong. Cement bränd av valfri slagg, blandad med sand, grus och vatten, ger färsk betong; placerad i världen härdar den inom en speldag till stark industribetong. Med plattor och trappor."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formad tillverkning",
+              "grid": [
+                "alaindustrial:industrial_concrete_slab",
+                "",
+                "",
+                "alaindustrial:industrial_concrete_slab",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:industrial_concrete",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tempered_iron_bars",
           "title": "Galler av härdat järn",
           "icon": "alaindustrial:tempered_iron_bars",
@@ -3540,6 +3570,36 @@
               ],
               "result_id": "alaindustrial:reactor_glass",
               "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "quarry_foundation",
+          "title": "Stenbrottsfundament",
+          "icon": "alaindustrial:quarry_foundation",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Stenbrottsfundament",
+              "text": "Stenbrottsfundament i tre nivåer, byggnadsställning av härdat järn, en rälsbalk av betong och en av plåt, ett förstärkt plåtblock med platta och trappa och ett varningsrandigt block: blocken som stenbrottet senare byggs av, och fram till dess stadig industriell dekor."
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formad tillverkning",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:industrial_concrete",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:industrial_concrete",
+                "alaindustrial:tempered_iron_block",
+                "alaindustrial:industrial_concrete",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:industrial_concrete",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:quarry_foundation",
+              "result_count": 4
             }
           ]
         },

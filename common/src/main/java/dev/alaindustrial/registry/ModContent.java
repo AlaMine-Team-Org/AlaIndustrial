@@ -388,6 +388,21 @@ public final class ModContent {
 	public static Supplier<Block> TEMPERED_IRON_CHAIN = unbound("TEMPERED_IRON_CHAIN");
 	// MOD-804
 	public static Supplier<Block> SOUND_ABSORBER = unbound("SOUND_ABSORBER");
+	// MOD-927 — the quarry's building blocks, released as decor.
+	public static Supplier<Block> FRESH_CONCRETE = unbound("FRESH_CONCRETE");
+	public static Supplier<Block> INDUSTRIAL_CONCRETE = unbound("INDUSTRIAL_CONCRETE");
+	public static Supplier<Block> INDUSTRIAL_CONCRETE_SLAB = unbound("INDUSTRIAL_CONCRETE_SLAB");
+	public static Supplier<Block> INDUSTRIAL_CONCRETE_STAIRS = unbound("INDUSTRIAL_CONCRETE_STAIRS");
+	public static Supplier<Block> QUARRY_FOUNDATION = unbound("QUARRY_FOUNDATION");
+	public static Supplier<Block> INVAR_QUARRY_FOUNDATION = unbound("INVAR_QUARRY_FOUNDATION");
+	public static Supplier<Block> NETHERITE_ALLOY_QUARRY_FOUNDATION = unbound("NETHERITE_ALLOY_QUARRY_FOUNDATION");
+	public static Supplier<Block> TEMPERED_IRON_SCAFFOLD = unbound("TEMPERED_IRON_SCAFFOLD");
+	public static Supplier<Block> CONCRETE_RAIL_BEAM = unbound("CONCRETE_RAIL_BEAM");
+	public static Supplier<Block> PLATE_RAIL_BEAM = unbound("PLATE_RAIL_BEAM");
+	public static Supplier<Block> REINFORCED_PLATE_BLOCK = unbound("REINFORCED_PLATE_BLOCK");
+	public static Supplier<Block> REINFORCED_PLATE_SLAB = unbound("REINFORCED_PLATE_SLAB");
+	public static Supplier<Block> REINFORCED_PLATE_STAIRS = unbound("REINFORCED_PLATE_STAIRS");
+	public static Supplier<Block> HAZARD_STRIPE_BLOCK = unbound("HAZARD_STRIPE_BLOCK");
 	public static Supplier<Block> INDUSTRIAL_WORKBENCH = unbound("INDUSTRIAL_WORKBENCH");
 	/** MOD-810 - the second tier of the crafting bench: keeps its grid, shared by viewers, pipe-aware. */
 	public static Supplier<Block> ADVANCED_INDUSTRIAL_WORKBENCH = unbound("ADVANCED_INDUSTRIAL_WORKBENCH");
@@ -492,6 +507,8 @@ public final class ModContent {
 	public static Supplier<Item> SLAG_POOR = unbound("SLAG_POOR");
 	public static Supplier<Item> SLAG = unbound("SLAG");
 	public static Supplier<Item> SLAG_RICH = unbound("SLAG_RICH");
+	/** MOD-927: slag burnt in a furnace — the binder of fresh concrete. */
+	public static Supplier<Item> CEMENT = unbound("CEMENT");
 	public static Supplier<Item> ASH = unbound("ASH");
 	/** MOD-590: sixteen coal dust pressed into one rod — the first rung of the ceramic chain. */
 	public static Supplier<Item> CARBON_ROD = unbound("CARBON_ROD");
@@ -1097,6 +1114,22 @@ public final class ModContent {
 	public static Supplier<BlockItem> TEMPERED_IRON_CHAIN_ITEM = unbound("TEMPERED_IRON_CHAIN_ITEM");
 	// MOD-804
 	public static Supplier<BlockItem> SOUND_ABSORBER_ITEM = unbound("SOUND_ABSORBER_ITEM");
+	// MOD-927 — the quarry's building blocks.
+	public static Supplier<BlockItem> FRESH_CONCRETE_ITEM = unbound("FRESH_CONCRETE_ITEM");
+	public static Supplier<BlockItem> INDUSTRIAL_CONCRETE_ITEM = unbound("INDUSTRIAL_CONCRETE_ITEM");
+	public static Supplier<BlockItem> INDUSTRIAL_CONCRETE_SLAB_ITEM = unbound("INDUSTRIAL_CONCRETE_SLAB_ITEM");
+	public static Supplier<BlockItem> INDUSTRIAL_CONCRETE_STAIRS_ITEM = unbound("INDUSTRIAL_CONCRETE_STAIRS_ITEM");
+	public static Supplier<BlockItem> QUARRY_FOUNDATION_ITEM = unbound("QUARRY_FOUNDATION_ITEM");
+	public static Supplier<BlockItem> INVAR_QUARRY_FOUNDATION_ITEM = unbound("INVAR_QUARRY_FOUNDATION_ITEM");
+	public static Supplier<BlockItem> NETHERITE_ALLOY_QUARRY_FOUNDATION_ITEM =
+			unbound("NETHERITE_ALLOY_QUARRY_FOUNDATION_ITEM");
+	public static Supplier<BlockItem> TEMPERED_IRON_SCAFFOLD_ITEM = unbound("TEMPERED_IRON_SCAFFOLD_ITEM");
+	public static Supplier<BlockItem> CONCRETE_RAIL_BEAM_ITEM = unbound("CONCRETE_RAIL_BEAM_ITEM");
+	public static Supplier<BlockItem> PLATE_RAIL_BEAM_ITEM = unbound("PLATE_RAIL_BEAM_ITEM");
+	public static Supplier<BlockItem> REINFORCED_PLATE_BLOCK_ITEM = unbound("REINFORCED_PLATE_BLOCK_ITEM");
+	public static Supplier<BlockItem> REINFORCED_PLATE_SLAB_ITEM = unbound("REINFORCED_PLATE_SLAB_ITEM");
+	public static Supplier<BlockItem> REINFORCED_PLATE_STAIRS_ITEM = unbound("REINFORCED_PLATE_STAIRS_ITEM");
+	public static Supplier<BlockItem> HAZARD_STRIPE_BLOCK_ITEM = unbound("HAZARD_STRIPE_BLOCK_ITEM");
 	public static Supplier<BlockItem> INDUSTRIAL_WORKBENCH_ITEM = unbound("INDUSTRIAL_WORKBENCH_ITEM");
 	public static Supplier<BlockItem> ADVANCED_INDUSTRIAL_WORKBENCH_ITEM =
 			unbound("ADVANCED_INDUSTRIAL_WORKBENCH_ITEM");

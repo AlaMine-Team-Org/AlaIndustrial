@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "setting=0": {
+      "model": "alaindustrial:block/fresh_concrete_0"
+    },
+    "setting=1": {
+      "model": "alaindustrial:block/fresh_concrete_1"
+    },
+    "setting=2": {
+      "model": "alaindustrial:block/fresh_concrete_2"
+    },
+    "setting=3": {
+      "model": "alaindustrial:block/fresh_concrete_3"
+    }
+  }
+}

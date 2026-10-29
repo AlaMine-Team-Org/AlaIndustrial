@@ -3394,6 +3394,36 @@
           ]
         },
         {
+          "id": "industrial_concrete",
+          "title": "Beton Industri",
+          "icon": "alaindustrial:industrial_concrete",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Beton Industri",
+              "text": "Beton bangunan dari mod ini. Semen yang dibakar dari terak apa pun, dicampur pasir, kerikil, dan air, menjadi beton segar; setelah dipasang di dunia, beton mengeras dalam satu hari permainan menjadi beton industri yang kuat. Ada lempeng dan tangganya."
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "alaindustrial:industrial_concrete_slab",
+                "",
+                "",
+                "alaindustrial:industrial_concrete_slab",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "result_id": "alaindustrial:industrial_concrete",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "tempered_iron_bars",
           "title": "Jeruji Besi Temper",
           "icon": "alaindustrial:tempered_iron_bars",
@@ -3540,6 +3570,36 @@
               ],
               "result_id": "alaindustrial:reactor_glass",
               "result_count": 8
+            }
+          ]
+        },
+        {
+          "id": "quarry_foundation",
+          "title": "Fondasi Tambang",
+          "icon": "alaindustrial:quarry_foundation",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Fondasi Tambang",
+              "text": "Fondasi tambang tiga tingkat, perancah besi temper, balok rel beton dan balok rel pelat, blok pelat diperkuat dengan lempeng dan tangga, serta blok garis peringatan: blok yang kelak menjadi bahan tambang, dan sampai saat itu dekorasi industri yang kokoh."
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:industrial_concrete",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:industrial_concrete",
+                "alaindustrial:tempered_iron_block",
+                "alaindustrial:industrial_concrete",
+                "alaindustrial:tempered_iron_plate",
+                "alaindustrial:industrial_concrete",
+                "alaindustrial:tempered_iron_plate"
+              ],
+              "result_id": "alaindustrial:quarry_foundation",
+              "result_count": 4
             }
           ]
         },

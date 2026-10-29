@@ -10,12 +10,14 @@ import static dev.alaindustrial.registry.content.ContentDeclarations.menu;
 import static dev.alaindustrial.registry.content.ContentDeclarations.registeredBlock;
 import static dev.alaindustrial.registry.content.TabEntries.show;
 
+import dev.alaindustrial.block.ConcreteRailBeamBlock;
 import dev.alaindustrial.block.ElectricMobTrapBlock;
 import dev.alaindustrial.block.EngravedLetterPlateBlock;
 import dev.alaindustrial.block.EngravedPlateBlock;
 import dev.alaindustrial.block.EnrichedUraniumTorchBlock;
 import dev.alaindustrial.block.EnrichedUraniumWallTorchBlock;
 import dev.alaindustrial.block.FluidTapBlock;
+import dev.alaindustrial.block.FreshConcreteBlock;
 import dev.alaindustrial.block.MetalStairBlock;
 import dev.alaindustrial.block.MobRepellerBlock;
 import dev.alaindustrial.block.MobRepellerHvBlock;
@@ -25,6 +27,7 @@ import dev.alaindustrial.block.ReinforcedGlassBlock;
 import dev.alaindustrial.block.SoundAbsorberBlock;
 import dev.alaindustrial.block.TemperedIronBarsBlock;
 import dev.alaindustrial.block.TemperedIronLadderBlock;
+import dev.alaindustrial.block.TemperedIronScaffoldBlock;
 import dev.alaindustrial.block.TemperedIronTrapdoorBlock;
 import dev.alaindustrial.block.entity.ElectricMobTrapBlockEntity;
 import dev.alaindustrial.block.entity.FluidTapBlockEntity;
@@ -395,6 +398,61 @@ public final class DecorContent {
 			block("engraved_letter_plate", EngravedLetterPlateBlock::new,
 					machine(MapColor.COLOR_GRAY, p -> p.strength(3.5f, 6.0f).sound(SoundType.POLISHED_DEEPSLATE)),
 					s -> ModContent.ENGRAVED_LETTER_PLATE = s);
+	// MOD-927 — the quarry's building blocks, released as decor before the quarry itself. Fresh concrete sets
+	// into industrial concrete within a game day; the rest are plain building blocks whose ids the quarry keeps.
+	public static final BlockDef<FreshConcreteBlock> FRESH_CONCRETE = block("fresh_concrete", FreshConcreteBlock::new,
+			// Soft until it sets: breaks at once by hand and drops itself, so no machine() tool requirement.
+			// Wet underfoot: walking on it is slowed to 0.6 of the pace, a milder soul sand.
+			p -> p.mapColor(MapColor.COLOR_GRAY).instabreak().sound(SoundType.STONE).speedFactor(0.6f),
+			s -> ModContent.FRESH_CONCRETE = s);
+	public static final BlockDef<Block> INDUSTRIAL_CONCRETE = block("industrial_concrete", Block::new,
+			machine(MapColor.COLOR_GRAY, p -> p.strength(3.0f, 9.0f).sound(SoundType.STONE)),
+			s -> ModContent.INDUSTRIAL_CONCRETE = s);
+	public static final BlockDef<SlabBlock> INDUSTRIAL_CONCRETE_SLAB = block("industrial_concrete_slab", SlabBlock::new,
+			machine(MapColor.COLOR_GRAY, p -> p.strength(3.0f, 9.0f).sound(SoundType.STONE)),
+			s -> ModContent.INDUSTRIAL_CONCRETE_SLAB = s);
+	public static final BlockDef<MetalStairBlock> INDUSTRIAL_CONCRETE_STAIRS = block("industrial_concrete_stairs",
+			p -> new MetalStairBlock(registeredBlock("industrial_concrete").defaultBlockState(), p),
+			machine(MapColor.COLOR_GRAY, p -> p.strength(3.0f, 9.0f).sound(SoundType.STONE)),
+			s -> ModContent.INDUSTRIAL_CONCRETE_STAIRS = s);
+	public static final BlockDef<Block> QUARRY_FOUNDATION = block("quarry_foundation", Block::new,
+			machine(MapColor.TERRACOTTA_LIGHT_BLUE, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.QUARRY_FOUNDATION = s);
+	public static final BlockDef<Block> INVAR_QUARRY_FOUNDATION = block("invar_quarry_foundation", Block::new,
+			machine(MapColor.STONE, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.INVAR_QUARRY_FOUNDATION = s);
+	public static final BlockDef<Block> NETHERITE_ALLOY_QUARRY_FOUNDATION = block("netherite_alloy_quarry_foundation",
+			Block::new,
+			// The netherite alloy block's numbers: ancient debris in blast resistance.
+			machine(MapColor.COLOR_BROWN, p -> p.strength(50.0f, 1200.0f).sound(SoundType.NETHERITE_BLOCK)),
+			s -> ModContent.NETHERITE_ALLOY_QUARRY_FOUNDATION = s);
+	public static final BlockDef<TemperedIronScaffoldBlock> TEMPERED_IRON_SCAFFOLD = block("tempered_iron_scaffold",
+			TemperedIronScaffoldBlock::new,
+			// A lattice: see-through, never suffocates; the collision is the scaffolding one (see the class).
+			machine(MapColor.TERRACOTTA_LIGHT_BLUE, p -> LineBlockProps.seeThrough(p.strength(3.0f, 6.0f)
+					.sound(SoundType.METAL).noOcclusion())), s -> ModContent.TEMPERED_IRON_SCAFFOLD = s);
+	public static final BlockDef<ConcreteRailBeamBlock> CONCRETE_RAIL_BEAM = block("concrete_rail_beam",
+			ConcreteRailBeamBlock::new,
+			machine(MapColor.COLOR_GRAY, p -> p.strength(3.0f, 9.0f).sound(SoundType.STONE)),
+			s -> ModContent.CONCRETE_RAIL_BEAM = s);
+	// The same beam in tempered iron plates: the rail beam class, metal numbers.
+	public static final BlockDef<ConcreteRailBeamBlock> PLATE_RAIL_BEAM = block("plate_rail_beam",
+			ConcreteRailBeamBlock::new,
+			machine(MapColor.TERRACOTTA_LIGHT_BLUE, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.PLATE_RAIL_BEAM = s);
+	public static final BlockDef<Block> REINFORCED_PLATE_BLOCK = block("reinforced_plate_block", Block::new,
+			machine(MapColor.TERRACOTTA_LIGHT_BLUE, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.REINFORCED_PLATE_BLOCK = s);
+	public static final BlockDef<SlabBlock> REINFORCED_PLATE_SLAB = block("reinforced_plate_slab", SlabBlock::new,
+			machine(MapColor.TERRACOTTA_LIGHT_BLUE, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.REINFORCED_PLATE_SLAB = s);
+	public static final BlockDef<MetalStairBlock> REINFORCED_PLATE_STAIRS = block("reinforced_plate_stairs",
+			p -> new MetalStairBlock(registeredBlock("reinforced_plate_block").defaultBlockState(), p),
+			machine(MapColor.TERRACOTTA_LIGHT_BLUE, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.REINFORCED_PLATE_STAIRS = s);
+	public static final BlockDef<Block> HAZARD_STRIPE_BLOCK = block("hazard_stripe_block", Block::new,
+			machine(MapColor.COLOR_YELLOW, p -> p.strength(3.0f, 9.0f).sound(SoundType.STONE)),
+			s -> ModContent.HAZARD_STRIPE_BLOCK = s);
 
 	/** This domain's blocks, in declaration order — collected since {@code beginBlocks()} above. */
 	private static final List<BlockDef<?>> BLOCKS = endBlocks();
@@ -496,7 +554,23 @@ public final class DecorContent {
 			// MOD-818 — the Electric Mob Trap.
 			blockItem("electric_mob_trap", s -> ModContent.ELECTRIC_MOB_TRAP_ITEM = s),
 			// MOD-837 — the Tap.
-			blockItem("fluid_tap", s -> ModContent.FLUID_TAP_ITEM = s));
+			blockItem("fluid_tap", s -> ModContent.FLUID_TAP_ITEM = s),
+			// MOD-927 — the quarry's building blocks.
+			blockItem("fresh_concrete", s -> ModContent.FRESH_CONCRETE_ITEM = s),
+			blockItem("industrial_concrete", s -> ModContent.INDUSTRIAL_CONCRETE_ITEM = s),
+			blockItem("industrial_concrete_slab", s -> ModContent.INDUSTRIAL_CONCRETE_SLAB_ITEM = s),
+			blockItem("industrial_concrete_stairs", s -> ModContent.INDUSTRIAL_CONCRETE_STAIRS_ITEM = s),
+			blockItem("quarry_foundation", s -> ModContent.QUARRY_FOUNDATION_ITEM = s),
+			blockItem("invar_quarry_foundation", s -> ModContent.INVAR_QUARRY_FOUNDATION_ITEM = s),
+			blockItem("netherite_alloy_quarry_foundation", "netherite_alloy_quarry_foundation",
+					Item.Properties::fireResistant, s -> ModContent.NETHERITE_ALLOY_QUARRY_FOUNDATION_ITEM = s),
+			blockItem("tempered_iron_scaffold", s -> ModContent.TEMPERED_IRON_SCAFFOLD_ITEM = s),
+			blockItem("concrete_rail_beam", s -> ModContent.CONCRETE_RAIL_BEAM_ITEM = s),
+			blockItem("plate_rail_beam", s -> ModContent.PLATE_RAIL_BEAM_ITEM = s),
+			blockItem("reinforced_plate_block", s -> ModContent.REINFORCED_PLATE_BLOCK_ITEM = s),
+			blockItem("reinforced_plate_slab", s -> ModContent.REINFORCED_PLATE_SLAB_ITEM = s),
+			blockItem("reinforced_plate_stairs", s -> ModContent.REINFORCED_PLATE_STAIRS_ITEM = s),
+			blockItem("hazard_stripe_block", s -> ModContent.HAZARD_STRIPE_BLOCK_ITEM = s));
 
 	private static final List<BlockEntityDef<?>> BLOCK_ENTITIES = List.of(
 			blockEntity("mob_repeller", MobRepellerBlockEntity.class, MobRepellerBlockEntity::new,
@@ -598,6 +672,29 @@ public final class DecorContent {
 		show(out, ModContent.TEMPERED_IRON_FENCE_ITEM);
 		// END GENERATED metal blocks
 		fittings(out);
+	}
+
+	/**
+	 * The quarry's building blocks (MOD-927), released as decor ahead of the quarry: concrete fresh and set, the
+	 * three foundation tiers, the two rail beams, the reinforced plate block and the hazard stripes, then the slabs,
+	 * stairs and the scaffolding. Called right after {@link #metalFamily} in the mod's tab and in vanilla
+	 * Building Blocks; full cubes first, then the shaped blocks.
+	 */
+	public static void quarryConstruction(Sink out) {
+		show(out, ModContent.FRESH_CONCRETE_ITEM);
+		show(out, ModContent.INDUSTRIAL_CONCRETE_ITEM);
+		show(out, ModContent.QUARRY_FOUNDATION_ITEM);
+		show(out, ModContent.INVAR_QUARRY_FOUNDATION_ITEM);
+		show(out, ModContent.NETHERITE_ALLOY_QUARRY_FOUNDATION_ITEM);
+		show(out, ModContent.CONCRETE_RAIL_BEAM_ITEM);
+		show(out, ModContent.PLATE_RAIL_BEAM_ITEM);
+		show(out, ModContent.REINFORCED_PLATE_BLOCK_ITEM);
+		show(out, ModContent.HAZARD_STRIPE_BLOCK_ITEM);
+		show(out, ModContent.INDUSTRIAL_CONCRETE_SLAB_ITEM);
+		show(out, ModContent.INDUSTRIAL_CONCRETE_STAIRS_ITEM);
+		show(out, ModContent.REINFORCED_PLATE_SLAB_ITEM);
+		show(out, ModContent.REINFORCED_PLATE_STAIRS_ITEM);
+		show(out, ModContent.TEMPERED_IRON_SCAFFOLD_ITEM);
 	}
 
 	/** MOD-795 — reinforced glass, the panel lamp, and tempered iron bars, ladder, trapdoor and chain. */

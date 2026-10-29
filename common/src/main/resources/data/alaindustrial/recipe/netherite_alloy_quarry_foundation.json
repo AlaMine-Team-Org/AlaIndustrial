@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "PBP",
+    "BIB",
+    "PBP"
+  ],
+  "key": {
+    "P": "alaindustrial:netherite_alloy_ingot",
+    "B": "alaindustrial:industrial_concrete",
+    "I": "alaindustrial:netherite_alloy_block"
+  },
+  "result": {
+    "id": "alaindustrial:netherite_alloy_quarry_foundation",
+    "count": 4
+  }
+}

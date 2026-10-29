@@ -1030,6 +1030,12 @@ public final class Config {
 			doc = "Kok sagyz: landing on a flower from above knocks it back one growth stage. Walking through and sneaking never trample.")
 	public static boolean kokSagyzTrampling = true;
 
+	// --- Fresh concrete (MOD-927): sets into industrial concrete in four stages. ---
+	/** Ticks one setting stage of fresh concrete lasts; four stages, so 6000 is one game day in all. */
+	@Knob(section = Section.WORLD, min = 1,
+			doc = "Fresh concrete: ticks one of its four setting stages lasts (6000 = one game day in all).")
+	public static int freshConcreteStageTicks = 6000;
+
 	// --- Iron Furnace (fuel-based, MOD-115): ticks to smelt one item. Vanilla furnace = 200. ---
 	/** Ticks the iron furnace needs to smelt one item on fuel. Between vanilla (200) and the
 	 * electric furnace, so it reads as "a bit faster than stone" without devaluing the electric tier. */

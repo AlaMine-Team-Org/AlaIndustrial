@@ -12,6 +12,8 @@
     "alaindustrial:electrum_slab",
     "alaindustrial:netherite_alloy_slab",
     "alaindustrial:shielding_alloy_slab",
-    "alaindustrial:tempered_iron_slab"
+    "alaindustrial:tempered_iron_slab",
+    "alaindustrial:industrial_concrete_slab",
+    "alaindustrial:reinforced_plate_slab"
   ]
 }

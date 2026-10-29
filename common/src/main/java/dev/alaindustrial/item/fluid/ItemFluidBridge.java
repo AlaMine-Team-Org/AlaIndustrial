@@ -57,16 +57,17 @@ public interface ItemFluidBridge {
 	boolean isFluidContainer(ItemStack stack);
 
 	/**
-	 * Take exactly one bucket of {@code fluid} out of the container item in {@code player}'s {@code hand}
-	 * (MOD-898: washing a cable's dye off with water), and report whether the whole bucket was there.
+	 * Take exactly {@code mb} millibuckets of {@code fluid} out of the container item in {@code player}'s
+	 * {@code hand} (MOD-898, MOD-912: washing a cable's dye off with water), and report whether that whole
+	 * amount was there.
 	 *
 	 * <p>The container decides what it becomes — a vanilla water bucket turns into an empty bucket, a filled
 	 * capsule into an empty capsule, a foreign canister into whatever its own capability hands back — so no
 	 * result item is named here. With {@code simulate} nothing changes: the move runs in a transaction that
-	 * is rolled back, which makes it safe to ask on the client. A partial bucket is a {@code false}, never a
-	 * partial drain.
+	 * is rolled back, which makes it safe to ask on the client. A container that gives less — a bucket asked
+	 * for a quarter of itself, a canister holding less than asked — is a {@code false}, never a partial drain.
 	 */
-	boolean takeBucketFromHand(Player player, InteractionHand hand, Fluid fluid, boolean simulate);
+	boolean takeFromHand(Player player, InteractionHand hand, Fluid fluid, long mb, boolean simulate);
 
 	/** Bridge that moves nothing — used before a loader installs its own, and in loader-free unit tests. */
 	ItemFluidBridge NONE = new ItemFluidBridge() {
@@ -86,7 +87,7 @@ public interface ItemFluidBridge {
 		}
 
 		@Override
-		public boolean takeBucketFromHand(Player player, InteractionHand hand, Fluid fluid, boolean simulate) {
+		public boolean takeFromHand(Player player, InteractionHand hand, Fluid fluid, long mb, boolean simulate) {
 			return false;
 		}
 	};

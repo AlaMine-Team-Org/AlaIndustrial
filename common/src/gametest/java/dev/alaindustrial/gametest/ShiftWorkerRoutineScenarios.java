@@ -222,6 +222,7 @@ public final class ShiftWorkerRoutineScenarios {
 			workers.add(spawn(helper, standAt(helper, level, corner), town));
 		}
 		double reach = 3.0 + 0.5;
+		int[] turning = {0};
 		helper.startSequence().thenWaitUntil(() -> {
 			workers.forEach(ShiftWorkerRoutineScenarios::live);
 			for (ShiftWorker worker : workers) {
@@ -231,16 +232,28 @@ public final class ShiftWorkerRoutineScenarios {
 							+ " blocks from the core (activity " + worker.routine().activity() + ")");
 				}
 			}
-		}).thenExecuteFor(80, () -> workers.forEach(ShiftWorkerRoutineScenarios::live)).thenExecute(() -> {
+		}).thenWaitUntil(() -> {
+			// The gathering goal starts by chance (one in ten of the goal selector's evaluations, every second tick),
+			// so the moment each worker turns to a peer varies run to run (MOD-909): wait for the state, not a tick.
+			workers.forEach(ShiftWorkerRoutineScenarios::live);
+			turning[0]++;
+			for (ShiftWorker worker : workers) {
+				Vec3 wanted = new Vec3(worker.getLookControl().getWantedX(), 0, worker.getLookControl().getWantedZ());
+				boolean facesPeer = worker.getNavigation().isDone() && workers.stream().filter(other -> other != worker)
+						.anyMatch(other -> new Vec3(other.getX(), 0, other.getZ()).distanceTo(wanted) < 1.0);
+				if (!facesPeer) {
+					throw helper.assertionException("a worker of the gathering does not face another: looks at "
+							+ wanted + " (activity " + worker.routine().activity() + ")");
+				}
+			}
+		}).thenExecute(() -> {
+			Industrialization.LOGGER.info("[ala-towns] routine: the gathering faced each other {} ticks after arriving",
+					turning[0]);
 			for (ShiftWorker worker : workers) {
 				helper.assertTrue(worker.routine().activity() == RoutineActivity.GATHER,
 						"the activity is the gathering: " + worker.routine().activity());
 				helper.assertTrue(TownHall.contains(level, town, worker.blockPosition()),
 						"a worker of the gathering stands outside the hall: " + worker.blockPosition());
-				Vec3 wanted = new Vec3(worker.getLookControl().getWantedX(), 0, worker.getLookControl().getWantedZ());
-				boolean facesPeer = workers.stream().filter(other -> other != worker)
-						.anyMatch(other -> new Vec3(other.getX(), 0, other.getZ()).distanceTo(wanted) < 1.0);
-				helper.assertTrue(facesPeer, "a worker of the gathering does not face another: looks at " + wanted);
 			}
 			for (ShiftWorker worker : workers) {
 				ShiftWorkers.book(level.getServer()).remove(worker.getUUID());

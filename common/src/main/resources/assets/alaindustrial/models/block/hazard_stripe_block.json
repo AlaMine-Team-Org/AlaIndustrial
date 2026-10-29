@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "north": "alaindustrial:block/hazard_stripe_block",
+    "south": "alaindustrial:block/hazard_stripe_block",
+    "east": "alaindustrial:block/hazard_stripe_block",
+    "west": "alaindustrial:block/hazard_stripe_block",
+    "up": "alaindustrial:block/hazard_stripe_block_top",
+    "down": "alaindustrial:block/hazard_stripe_block",
+    "particle": "alaindustrial:block/hazard_stripe_block"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "PBP",
+    "BIB",
+    "PBP"
+  ],
+  "key": {
+    "P": "alaindustrial:invar_plate",
+    "B": "alaindustrial:industrial_concrete",
+    "I": "alaindustrial:invar_block"
+  },
+  "result": {
+    "id": "alaindustrial:invar_quarry_foundation",
+    "count": 4
+  }
+}

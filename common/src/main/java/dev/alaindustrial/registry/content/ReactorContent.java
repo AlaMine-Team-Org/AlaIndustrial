@@ -216,6 +216,8 @@ public final class ReactorContent {
 		show(out, ModContent.SLAG);
 		show(out, ModContent.SLAG_RICH);
 		show(out, ModContent.SLAG_BLOCK_ITEM);
+		// MOD-927 - the slag burnt into cement, the binder of fresh concrete.
+		show(out, ModContent.CEMENT);
 		show(out, ModContent.ASH);
 		// MOD-590 - the coal sink the slag feeds, listed in the order the player walks it: dust is
 		// pressed into rods, two rods are hammered into one, two of those are fired with slag into a
