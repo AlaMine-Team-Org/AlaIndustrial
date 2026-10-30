@@ -50,14 +50,14 @@ public final class RecipeFamilyRegistrationScenarios {
 			"maceration", "smelting", "compressing", "extracting", "vulcanizing", "galvanic_bath", "centrifuging",
 			"sawing_planks", "sawing_sticks", "sawing_slabs", "sawing_stairs", "sawing_sawdust",
 			"mutation_transform", "mutation_duplicate", "mutation_create", "fermenting",
-			"polymerizing", "distilling", "alloying");
+			"polymerizing", "distilling", "alloying", "honey_centrifuging");
 
 	/** The mod's recipe types, in registry order. The crafting recipe has none: it is vanilla's crafting. */
 	static final List<String> EXPECTED_TYPES = List.of(
 			"maceration", "smelting", "compressing", "extracting", "vulcanizing", "galvanic_bath", "centrifuging",
 			"sawing_planks", "sawing_sticks", "sawing_slabs", "sawing_stairs", "sawing_sawdust",
 			"mutation_transform", "mutation_duplicate", "mutation_create", "fermenting",
-			"polymerizing", "distilling", "alloying");
+			"polymerizing", "distilling", "alloying", "honey_centrifuging");
 
 	/** The type the charge-transfer recipes declare; it is a serializer only. */
 	private static final String CRAFTING_ONLY = "crafting_shaped_charge_transfer";

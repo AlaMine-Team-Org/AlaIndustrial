@@ -15,11 +15,12 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
 
 /**
- * What the three machine recipe families have in common (MOD-708): an id, a default energy cost, the
+ * What the four machine recipe families have in common (MOD-708): an id, a default energy cost, the
  * block that works the family, its draw per tick, the codec factories of its recipe class, and the type
  * and serializer each loader binds. {@link ModRecipes.Kind} (positional item input),
- * {@link ModRecipes.FluidKind} (a fluid input) and {@link ModRecipes.AlloyKind} (an unordered three-slot
- * input) differ only in the input type and the recipe class, which are this class's type parameters.
+ * {@link ModRecipes.FluidKind} (a fluid input), {@link ModRecipes.AlloyKind} (an unordered three-slot
+ * input) and {@link ModRecipes.ItemFluidKind} (an item in, a fluid out, MOD-924) differ only in the input
+ * type and the recipe class, which are this class's type parameters.
  *
  * @param <I> the recipe input the machine matches against
  * @param <R> the recipe class of the family
@@ -27,7 +28,7 @@ import net.minecraft.world.level.block.Block;
  */
 public abstract sealed class MachineRecipeFamily<I extends RecipeInput, R extends Recipe<I>,
 		F extends MachineRecipeFamily<I, R, F>> implements RecipeFamily<R>
-		permits ModRecipes.Kind, ModRecipes.FluidKind, ModRecipes.AlloyKind {
+		permits ModRecipes.Kind, ModRecipes.FluidKind, ModRecipes.AlloyKind, ModRecipes.ItemFluidKind {
 	private final String id;
 	private final int defaultEnergy;
 	/** Read lazily: the {@link ModContent} slot is rebound by whichever loader registered it. */

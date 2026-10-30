@@ -159,6 +159,7 @@
     {"key": "gardenDroneFlightTicksPerBlock", "section": "machines", "type": "int", "default": 11, "min": 0.0, "exclusive": false, "doc": "Ticks the Garden Drone flies per block of distance before its action lands."},
     {"key": "gardenDroneRange", "section": "machines", "type": "int", "default": 4, "min": 1.0, "exclusive": false, "doc": "Garden Drone zone-scan radius in blocks around the station."},
     {"key": "gardenDroneScanIntervalTicks", "section": "machines", "type": "int", "default": 20, "min": 1.0, "exclusive": false, "doc": "Ticks between Garden Drone zone rebuilds after cache invalidation."},
+    {"key": "honeyCentrifugeDuration", "section": "machines", "type": "int", "default": 100, "min": 1.0, "exclusive": false, "doc": "Ticks a honey centrifuge takes per operation at 1.0 speed (every input)."},
     {"key": "incubatorBuffer", "section": "machines", "type": "int", "default": 8000, "min": 1.0, "exclusive": false, "doc": "Incubator internal EU buffer."},
     {"key": "incubatorEuPerTick", "section": "machines", "type": "int", "default": 8, "min": 1.0, "exclusive": false, "doc": "EU/t the incubator draws while running (4x the machine standard)."},
     {"key": "incubatorWaterPerOp", "section": "machines", "type": "int", "default": 1000, "min": 1.0, "exclusive": false, "doc": "mB of water an incubator attempt drinks (not part of the recipe JSON)."},

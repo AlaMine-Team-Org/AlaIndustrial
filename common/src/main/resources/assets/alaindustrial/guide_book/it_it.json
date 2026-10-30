@@ -1542,6 +1542,44 @@
           ]
         },
         {
+          "id": "honey_centrifuge",
+          "title": "Smielatore",
+          "icon": "alaindustrial:honey_centrifuge",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Smielatore",
+              "text": "Estrae il miele liquido da favi, blocchi di favo, ampolle di miele e blocchi di miele — un serbatoio da dieci secchi, svuotato da un tubo o da un secchio."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiche",
+              "lines": [
+                "Energia: 200 EU/op",
+                "Buffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione sagomata",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:honeycomb",
+                "alaindustrial:iron_plate",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:machine_casing",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:honey_centrifuge",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "polymerizer",
           "title": "Polimerizzatore",
           "icon": "alaindustrial:polymerizer",
@@ -2499,6 +2537,18 @@
               "type": "text",
               "title": "Diesel",
               "text": "La frazione leggera della distillazione del petrolio — un fluido giallo dorato, il prodotto obiettivo della colonna. Futuro combustibile del generatore a combustibile liquido (12 EU/t)."
+            }
+          ]
+        },
+        {
+          "id": "honey",
+          "title": "Miele liquido",
+          "icon": "alaindustrial:honey_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Miele liquido",
+              "text": "Il denso liquido ambrato dell'apiario — secchio, pozza lenta, tubi e serbatoi. La pozza si spande come la lava e chi ci entra resta invischiato come in un blocco di miele."
             }
           ]
         },

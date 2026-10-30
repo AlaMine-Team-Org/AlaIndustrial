@@ -1542,6 +1542,44 @@
           ]
         },
         {
+          "id": "honey_centrifuge",
+          "title": "মধু নিষ্কাশক যন্ত্র",
+          "icon": "alaindustrial:honey_centrifuge",
+          "pages": [
+            {
+              "type": "text",
+              "title": "মধু নিষ্কাশক যন্ত্র",
+              "text": "মৌচাক, মৌচাক ব্লক, মধুর বোতল ও মধুর ব্লক থেকে তরল মধু বের করে — দশ বালতির ট্যাংক, পাইপ বা বালতি দিয়ে খালি করা যায়।"
+            },
+            {
+              "type": "stats",
+              "title": "পরিসংখ্যান",
+              "lines": [
+                "শক্তি: 200 EU/ক্রিয়া",
+                "বাফার: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "রেসিপি",
+              "recipe_type": "আকৃতিসম্পন্ন ক্রাফটিং",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:honeycomb",
+                "alaindustrial:iron_plate",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:machine_casing",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:honey_centrifuge",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "polymerizer",
           "title": "পলিমারাইজার",
           "icon": "alaindustrial:polymerizer",
@@ -2499,6 +2537,18 @@
               "type": "text",
               "title": "ডিজেল",
               "text": "তেল পাতনের হালকা ভগ্নাংশ — সোনালি-হলুদ একটি তরল, স্তম্ভের লক্ষ্য-পণ্য। তরল জ্বালানি জেনারেটরের ভবিষ্যৎ জ্বালানি (12 EU/t)।"
+            }
+          ]
+        },
+        {
+          "id": "honey",
+          "title": "তরল মধু",
+          "icon": "alaindustrial:honey_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "তরল মধু",
+              "text": "মৌখামারের ঘন অ্যাম্বার তরল — বালতি, ধীর জলাশয়, পাইপ আর ট্যাংক। জলাশয় লাভার মতো ছড়ায়, আর ভেতরে ঢুকলে মধুর ব্লকের মতো আটকে যায়।"
             }
           ]
         },

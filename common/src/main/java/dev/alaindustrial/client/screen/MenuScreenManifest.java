@@ -126,6 +126,7 @@ public final class MenuScreenManifest {
 			screen(() -> ModContent.ALLOY_SMELTER_MENU.get(), AlloySmelterScreen::new),
 			screen(() -> ModContent.GALVANIC_BATH_MENU.get(), GalvanicBathScreen::new),
 			screen(() -> ModContent.FERMENTER_MENU.get(), FermenterScreen::new),
+			screen(() -> ModContent.HONEY_CENTRIFUGE_MENU.get(), HoneyCentrifugeScreen::new),
 			screen(() -> ModContent.SPRINKLER_MENU.get(), SprinklerScreen::new),
 			screen(() -> ModContent.BATTERY_BOX_MENU.get(), BatteryBoxScreen::new),
 			screen(() -> ModContent.ENERGY_CONDENSER_MENU.get(), EnergyCondenserScreen::new),

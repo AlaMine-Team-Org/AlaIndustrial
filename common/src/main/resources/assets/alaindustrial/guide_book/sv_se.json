@@ -1542,6 +1542,44 @@
           ]
         },
         {
+          "id": "honey_centrifuge",
+          "title": "Honungsslunga",
+          "icon": "alaindustrial:honey_centrifuge",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Honungsslunga",
+              "text": "Slungar flytande honung ur honungskakor, honungskakeblock, honungsflaskor och honungsblock — en tank på tio hinkar som töms med rör eller hink."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Energi: 200 EU/op",
+                "Buffert: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Formad tillverkning",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:honeycomb",
+                "alaindustrial:iron_plate",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:machine_casing",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:honey_centrifuge",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "polymerizer",
           "title": "Polymerisator",
           "icon": "alaindustrial:polymerizer",
@@ -2499,6 +2537,18 @@
               "type": "text",
               "title": "Diesel",
               "text": "Den lätta fraktionen från oljedestillationen — en guldgul vätska, kolonnens målprodukt. Framtida bränsle för generatorn för flytande bränsle (12 EU/t)."
+            }
+          ]
+        },
+        {
+          "id": "honey",
+          "title": "Flytande honung",
+          "icon": "alaindustrial:honey_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Flytande honung",
+              "text": "Bigårdens tjocka bärnstensfärgade vätska — hink, trög pöl, rör och tankar. Pölen sprider sig som lava, och den som vadar in fastnar som i ett honungsblock."
             }
           ]
         },

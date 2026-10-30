@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "redstone",
+	"key": {
+		"P": "alaindustrial:iron_plate",
+		"H": "minecraft:honeycomb",
+		"B": "alaindustrial:basic_bearing",
+		"M": "alaindustrial:machine_casing",
+		"E": "alaindustrial:electronic_circuit"
+	},
+	"pattern": [
+		"PHP",
+		"BMB",
+		"PEP"
+	],
+	"result": {
+		"id": "alaindustrial:honey_centrifuge"
+	}
+}

@@ -120,6 +120,9 @@ public class ScreensClientGameTest implements FabricClientGameTest {
             // on the left, biofuel coming out on the right. The pair is the state worth guarding: a
             // regression that wired both gauges to one tank would still look plausible in isolation.
             new Screen("fermenter", "fermenter", "Fermenter"),
+            // MOD-924: the honey centrifuge — the fermenter's right half (gauge, bucket pair, energy) with the
+            // input group moved left; the frame guards that the moved slots still sit on their troughs.
+            new Screen("honey_centrifuge", "honey_centrifuge", "Honey Centrifuge"),
             // MOD-525: the sprinkler, the smallest machine screen in the mod. No energy bar at all —
             // this block takes no EU, and a bar creeping back in would read as a fault to a player.
             new Screen("sprinkler", "sprinkler", "Sprinkler"),

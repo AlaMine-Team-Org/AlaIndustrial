@@ -1542,6 +1542,44 @@
           ]
         },
         {
+          "id": "honey_centrifuge",
+          "title": "Medomet",
+          "icon": "alaindustrial:honey_centrifuge",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Medomet",
+              "text": "Vytáčí tekutý med z plástů medu, bloků plástů, lahví medu a bloků medu — nádrž na deset kbelíků, vyprazdňuje se trubkou nebo kbelíkem."
+            },
+            {
+              "type": "stats",
+              "title": "Parametry",
+              "lines": [
+                "Energie: 200 EU/operace",
+                "Zásobník: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Výroba podle vzoru",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:honeycomb",
+                "alaindustrial:iron_plate",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:machine_casing",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:honey_centrifuge",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "polymerizer",
           "title": "Polymerizátor",
           "icon": "alaindustrial:polymerizer",
@@ -2499,6 +2537,18 @@
               "type": "text",
               "title": "Nafta",
               "text": "Lehká frakce destilace ropy — zlatožlutá tekutina, cílový produkt kolony. Budoucí palivo generátoru na kapalná paliva (12 EU/t)."
+            }
+          ]
+        },
+        {
+          "id": "honey",
+          "title": "Tekutý med",
+          "icon": "alaindustrial:honey_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tekutý med",
+              "text": "Hustá jantarová kapalina včelína — kbelík, pomalá louže, trubky a nádrže. Louže se rozlévá jako láva a kdo do ní vstoupí, uvízne jako v bloku medu."
             }
           ]
         },

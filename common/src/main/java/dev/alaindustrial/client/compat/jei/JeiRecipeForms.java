@@ -4,6 +4,7 @@ import dev.alaindustrial.client.compat.CanningExchange;
 import dev.alaindustrial.client.compat.RecipeViewerForm;
 import dev.alaindustrial.recipe.AlloyingRecipe;
 import dev.alaindustrial.recipe.FluidOutputRecipe;
+import dev.alaindustrial.recipe.ItemToFluidRecipe;
 import dev.alaindustrial.recipe.PolymerizingRecipe;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,6 +33,7 @@ final class JeiRecipeForms {
 			RecipeViewerForm.POLYMERIZING,
 			RecipeViewerForm.ALLOYING,
 			RecipeViewerForm.DISTILLING,
+			RecipeViewerForm.HONEY_CENTRIFUGING,
 			RecipeViewerForm.CANNING,
 			RecipeViewerForm.MACHINE_INFO,
 			RecipeViewerForm.EVOLUTION_INFO,
@@ -63,6 +65,10 @@ final class JeiRecipeForms {
 			case DISTILLING -> new Binding<>(AlaJeiRecipeTypes.DISTILLING,
 					gui -> new FluidOutputJeiCategory(AlaJeiRecipeTypes.DISTILLING, form.icon(), form.title(), gui),
 					synced -> holders(synced, FluidOutputRecipe.class));
+			case HONEY_CENTRIFUGING -> new Binding<>(AlaJeiRecipeTypes.HONEY_CENTRIFUGING,
+					gui -> new ItemToFluidJeiCategory(AlaJeiRecipeTypes.HONEY_CENTRIFUGING, form.icon(), form.title(),
+							gui),
+					synced -> holders(synced, ItemToFluidRecipe.class));
 			// One card per accepted food, derived from the (by now frozen) item registry — no recipes to collect.
 			case CANNING -> new Binding<>(AlaJeiRecipeTypes.CANNING,
 					gui -> new CanningJeiCategory(AlaJeiRecipeTypes.CANNING, form.icon(), form.title(), gui),

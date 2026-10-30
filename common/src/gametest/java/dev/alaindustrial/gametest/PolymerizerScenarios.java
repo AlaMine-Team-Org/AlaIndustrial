@@ -71,7 +71,12 @@ public final class PolymerizerScenarios {
 						.ticks(20, 60),
 				RosterEntry.of(PolymerizerScenarios::sta01NbtRoundTripPreservesTank,
 								"polymerizer_nbt_round_trip_preserves_tank")
-						.fabricId("PolymerizerGameTest", "tcPoly001Sta01_nbtRoundTripPreservesTank").ticks(20, 60));
+						.fabricId("PolymerizerGameTest", "tcPoly001Sta01_nbtRoundTripPreservesTank").ticks(20, 60),
+				// MOD-924: liquid honey is the second feedstock.
+				RosterEntry.of(PolymerizerScenarios::fun03HoneyBecomesHoneyBlock,
+						"polymerizer_honey_becomes_honey_block").ticks(400),
+				RosterEntry.of(PolymerizerScenarios::reg03TankTakesHoneyAndOilOnly,
+						"polymerizer_tank_takes_honey_and_oil_only").ticks(20, 60));
 
 		private Roster() {}
 	}
@@ -344,6 +349,78 @@ public final class PolymerizerScenarios {
 		if (moved[0] != FluidAmounts.BUCKET || be.fluidTank.amount != FluidAmounts.BUCKET) {
 			helper.fail("insert through the published port moved " + moved[0] + " mB, tank holds "
 					+ be.fluidTank.amount + " mB");
+			return;
+		}
+		helper.succeed();
+	}
+
+	// ── FUN03 / REG03 (MOD-924): liquid honey is the second feedstock ──────────────────────────────────
+
+	/**
+	 * One bucket of liquid honey + EU → one vanilla honey block, and the tank ends empty.
+	 *
+	 * @implements TC-POLY-001-FUN03 — 1000 mB of liquid honey plus EU yields one honey block.
+	 */
+	public static void fun03HoneyBecomesHoneyBlock(GameTestHelper helper) {
+		PolymerizerBlockEntity be = place(helper);
+		be.getEnergyStorage().setAmountUntracked(AMPLE_EU);
+		be.fluidTank.fluid = FluidHolder.of(ModContent.HONEY.get());
+		be.fluidTank.amount = FluidAmounts.BUCKET;
+
+		drive(be, helper, driveTicks());
+
+		ItemStack out = be.getItem(PolymerizerBlockEntity.OUTPUT_SLOT);
+		if (!out.is(net.minecraft.world.item.Items.HONEY_BLOCK) || out.getCount() != 1) {
+			helper.fail("expected 1x honey block, got " + out);
+			return;
+		}
+		if (be.fluidTank.amount != 0 || !be.fluidTank.fluid.isEmpty()) {
+			helper.fail("expected the tank drained and cleared, got " + be.fluidTank.amount + " mB of "
+					+ be.fluidTank.fluid);
+			return;
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * Through the published port the tank takes liquid honey and oil (each into an empty tank) and refuses
+	 * lava, a fluid with no polymerizing recipe; a tank holding honey refuses oil (no mixing).
+	 *
+	 * @implements TC-POLY-001-REG03 — the tank accepts honey and oil and refuses an unrelated fluid.
+	 */
+	public static void reg03TankTakesHoneyAndOilOnly(GameTestHelper helper) {
+		PolymerizerBlockEntity be = place(helper);
+		FluidPort port = FluidLookup.get().find(helper.getLevel(), helper.absolutePos(POS), Direction.UP);
+		if (port == null) {
+			helper.fail("no fluid port published for the polymerizer");
+			return;
+		}
+		long[] moved = {0};
+		EnergyTransactions.get().runCommitting(txn ->
+				moved[0] = port.insert(FluidHolder.of(Fluids.LAVA), FluidAmounts.BUCKET, txn));
+		if (moved[0] != 0 || be.fluidTank.amount != 0) {
+			helper.fail("the tank must refuse lava, took " + moved[0] + " mB");
+			return;
+		}
+		EnergyTransactions.get().runCommitting(txn ->
+				moved[0] = port.insert(FluidHolder.of(ModContent.HONEY.get()), FluidAmounts.BUCKET, txn));
+		if (moved[0] != FluidAmounts.BUCKET || !be.fluidTank.fluid.is(ModContent.HONEY.get())) {
+			helper.fail("the tank must accept liquid honey, took " + moved[0] + " mB");
+			return;
+		}
+		// The tank is single-variant: while it holds honey, oil does not go in (and the other way round).
+		EnergyTransactions.get().runCommitting(txn ->
+				moved[0] = port.insert(FluidHolder.of(ModContent.OIL.get()), FluidAmounts.BUCKET, txn));
+		if (moved[0] != 0 || !be.fluidTank.fluid.is(ModContent.HONEY.get())) {
+			helper.fail("a tank holding honey must refuse oil, took " + moved[0] + " mB");
+			return;
+		}
+		be.fluidTank.amount = 0;
+		be.fluidTank.fluid = FluidHolder.EMPTY;
+		EnergyTransactions.get().runCommitting(txn ->
+				moved[0] = port.insert(FluidHolder.of(ModContent.OIL.get()), FluidAmounts.BUCKET, txn));
+		if (moved[0] != FluidAmounts.BUCKET || !be.fluidTank.fluid.is(ModContent.OIL.get())) {
+			helper.fail("the tank must still accept oil, took " + moved[0] + " mB");
 			return;
 		}
 		helper.succeed();

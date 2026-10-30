@@ -4,6 +4,7 @@ import dev.alaindustrial.fluid.BiofuelFluid;
 import dev.alaindustrial.fluid.DieselFluid;
 import dev.alaindustrial.fluid.ExperienceFluid;
 import dev.alaindustrial.fluid.FuelOilFluid;
+import dev.alaindustrial.fluid.HoneyFluid;
 import dev.alaindustrial.fluid.NutrientSolutionFluid;
 import dev.alaindustrial.fluid.OilFluid;
 import dev.alaindustrial.fluid.SteamFluid;
@@ -113,6 +114,9 @@ public final class ModFluidsManifest {
 			pair("nutrient_solution", NutrientSolutionFluid.Source::new, NutrientSolutionFluid.Flowing::new,
 					new FluidPhysics(1000, 900, 300), s -> ModContent.NUTRIENT_SOLUTION = s,
 					s -> ModContent.FLOWING_NUTRIENT_SOLUTION = s),
+			// MOD-922: liquid honey, the apiary's product — the densest and thickest thing the mod pours.
+			pair("honey", HoneyFluid.Source::new, HoneyFluid.Flowing::new, new FluidPhysics(1400, 6000, 300),
+					s -> ModContent.HONEY = s, s -> ModContent.FLOWING_HONEY = s),
 			// MOD-468: steam lives only in tanks and pipes — "water vapour at the boil". It has no block to
 			// borrow a name from, so its type uses the fluid key every lang file carries.
 			single("steam", SteamFluid::new, new FluidPhysics(1, 200, 373), "fluid.alaindustrial.steam",

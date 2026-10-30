@@ -40,6 +40,9 @@ public enum RecipeViewerForm {
 	/** The distillation column's fluid → two-fluids family (MOD-251). */
 	DISTILLING(ModRecipes.DISTILLING.id(), true, blockName(ModRecipes.DISTILLING.station()),
 			ModRecipes.DISTILLING.station(), List.of(ModRecipes.DISTILLING.station())),
+	/** The honey centrifuge's item → fluid family (MOD-924). */
+	HONEY_CENTRIFUGING(ModRecipes.HONEY_CENTRIFUGING.id(), true, blockName(ModRecipes.HONEY_CENTRIFUGING.station()),
+			ModRecipes.HONEY_CENTRIFUGING.station(), List.of(ModRecipes.HONEY_CENTRIFUGING.station())),
 	/**
 	 * The canning machine (MOD-383): no recipe type at all — the cards come from the item registry
 	 * ({@link CanningExchange}), so the title is its own lang key rather than a block name.
@@ -92,7 +95,8 @@ public enum RecipeViewerForm {
 	}
 
 	/**
-	 * Whether the form is a recipe family the recipe manager holds (polymerizing, alloying, distilling), as
+	 * Whether the form is a recipe family the recipe manager holds (polymerizing, alloying, distilling, honey
+	 * centrifuging), as
 	 * opposed to cards or pages computed on the client. JEI's summary line counts exactly these.
 	 */
 	public boolean recipeFamily() {
@@ -134,6 +138,13 @@ public enum RecipeViewerForm {
 					out.add(new ClickArea(t.screenClass(), t.progressArea()));
 				}
 			}
+			case HONEY_CENTRIFUGING -> {
+				for (MachineRecipeViewerTargets.ItemFluidTarget t : MachineRecipeViewerTargets.ITEM_FLUID_ALL) {
+					if (t.kind().id().equals(id)) {
+						out.add(new ClickArea(t.screenClass(), t.progressArea()));
+					}
+				}
+			}
 			case CANNING -> {
 				for (MachineRecipeViewerTargets.CanningTarget t : MachineRecipeViewerTargets.CANNING_ALL) {
 					out.add(new ClickArea(t.screenClass(), t.progressArea()));
@@ -165,7 +176,7 @@ public enum RecipeViewerForm {
 				yield pages;
 			}
 			case PLANT_INFO -> RecipeViewerInfo.kokSagyzEntries();
-			case POLYMERIZING, ALLOYING, DISTILLING, CANNING -> List.of();
+			case POLYMERIZING, ALLOYING, DISTILLING, HONEY_CENTRIFUGING, CANNING -> List.of();
 		};
 	}
 

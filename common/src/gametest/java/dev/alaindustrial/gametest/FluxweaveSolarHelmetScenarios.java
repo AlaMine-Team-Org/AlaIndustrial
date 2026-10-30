@@ -129,6 +129,12 @@ public final class FluxweaveSolarHelmetScenarios {
 		ServerPlayer player = wearer(helper, 0);
 		ItemStack helmet = player.getItemBySlot(EquipmentSlot.HEAD);
 		helper.succeedWhen(() -> {
+			// Time and weather are shared by every test of the batch: a night or rain test running beside
+			// this one can flip the sky inside the polling window, so the sky is cleared again right before
+			// the tick that lands on a whole second.
+			if (helper.getLevel().getGameTime() % 20 == 0) {
+				SolarPanelRig.setClearDay(helper);
+			}
 			helmet.getItem().inventoryTick(helmet, helper.getLevel(), player, EquipmentSlot.HEAD);
 			helper.assertTrue(ItemEnergy.get(helmet) > 0, "an empty solar helmet stayed empty in the sun");
 		});

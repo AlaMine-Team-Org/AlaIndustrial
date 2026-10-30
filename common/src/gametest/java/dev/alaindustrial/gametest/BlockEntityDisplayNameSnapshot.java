@@ -65,6 +65,7 @@ final class BlockEntityDisplayNameSnapshot {
 			"distillation_column @distillation_column: block.alaindustrial.distillation_column",
 			"pump @pump: block.alaindustrial.pump",
 			"fermenter @fermenter: block.alaindustrial.fermenter",
+			"honey_centrifuge @honey_centrifuge: block.alaindustrial.honey_centrifuge",
 			"monitor_core @monitor_core: block.alaindustrial.monitor_core",
 			"battery_box @battery_box: block.alaindustrial.battery_box",
 			"cesu @cesu: block.alaindustrial.cesu",

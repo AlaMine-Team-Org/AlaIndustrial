@@ -9,6 +9,7 @@ import dev.alaindustrial.recipe.AlloyingRecipe;
 import dev.alaindustrial.recipe.ChargedCraftRecipe;
 import dev.alaindustrial.recipe.FluidRecipeInput;
 import dev.alaindustrial.recipe.FluidOutputRecipe;
+import dev.alaindustrial.recipe.ItemToFluidRecipe;
 import dev.alaindustrial.recipe.PolymerizingRecipe;
 import dev.alaindustrial.recipe.ProcessingRecipeInput;
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.block.Block;
 
 /**
@@ -47,8 +49,8 @@ import net.minecraft.world.level.block.Block;
  *
  * <p><b>One list (MOD-708).</b> Every {@link RecipeFamily} is declared through {@link #family}, which
  * appends it to {@link #families()} in declaration order — the registration order of both loaders. A new
- * family is that one declaration; {@link #kinds()}, {@link #fluidKinds()} and {@link #alloyKinds()} (the
- * lists the recipe viewers replay) are derived from it.
+ * family is that one declaration; {@link #kinds()}, {@link #fluidKinds()}, {@link #alloyKinds()} and
+ * {@link #itemFluidKinds()} (the lists the recipe viewers replay) are derived from it.
  */
 public final class ModRecipes {
 	private ModRecipes() {
@@ -232,6 +234,32 @@ public final class ModRecipes {
 	/** The alloying families, in registration order — the list the recipe viewers replay. */
 	public static AlloyKind<?>[] alloyKinds() {
 		return ALLOY_ALL;
+	}
+
+	/**
+	 * One item → fluid family (MOD-924): a {@link SingleRecipeInput} and the {@link ItemToFluidRecipe} class. The
+	 * fourth {@link MachineRecipeFamily}, next to {@link Kind}, {@link FluidKind} and {@link AlloyKind}: the
+	 * input is an item like {@link Kind}'s, but the result is a fluid volume, which that shared class has no
+	 * field for.
+	 */
+	public static final class ItemFluidKind
+			extends MachineRecipeFamily<SingleRecipeInput, ItemToFluidRecipe, ItemFluidKind> {
+		private ItemFluidKind(String id, int defaultEnergy, Supplier<Block> station) {
+			super(id, defaultEnergy, station, ServerBalance::machineEuPerTick,
+					ItemToFluidRecipe::mapCodec, ItemToFluidRecipe::streamCodec);
+		}
+	}
+
+	// Honey Centrifuge (MOD-924). defaultEnergy 200 = honeyCentrifugeDuration (100) × machineEuPerTick (2);
+	// every shipped JSON states it, so the fallback is kept in step only for recipe_check.py (MOD-134).
+	public static final ItemFluidKind HONEY_CENTRIFUGING = family(new ItemFluidKind(
+			"honey_centrifuging", 200, () -> ModContent.HONEY_CENTRIFUGE.get()));
+
+	private static final ItemFluidKind[] ITEM_FLUID_ALL = only(ItemFluidKind.class, ItemFluidKind[]::new);
+
+	/** The item → fluid families, in registration order — the list the recipe viewers replay. */
+	public static ItemFluidKind[] itemFluidKinds() {
+		return ITEM_FLUID_ALL;
 	}
 
 	/** Resolve a {@link Kind} back from its string id, or {@code null} if unknown. Used by the REI

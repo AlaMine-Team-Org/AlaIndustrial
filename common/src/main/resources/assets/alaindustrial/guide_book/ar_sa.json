@@ -1542,6 +1542,44 @@
           ]
         },
         {
+          "id": "honey_centrifuge",
+          "title": "فرّازة العسل",
+          "icon": "alaindustrial:honey_centrifuge",
+          "pages": [
+            {
+              "type": "text",
+              "title": "فرّازة العسل",
+              "text": "تستخرج العسل السائل من أقراص الشمع وكتل أقراص الشمع وزجاجات العسل وكتل العسل — خزان بسعة عشرة دلاء يُفرَغ بأنبوب أو دلو."
+            },
+            {
+              "type": "stats",
+              "title": "المواصفات",
+              "lines": [
+                "الطاقة: 200 EU/عملية",
+                "الاحتياطي: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "الوصفة",
+              "recipe_type": "تصنيع مرتب",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:honeycomb",
+                "alaindustrial:iron_plate",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:machine_casing",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:honey_centrifuge",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "polymerizer",
           "title": "مبلمر",
           "icon": "alaindustrial:polymerizer",
@@ -2499,6 +2537,18 @@
               "type": "text",
               "title": "ديزل",
               "text": "الجزء الخفيف من تقطير النفط — سائل أصفر ذهبي، وهو الناتج المقصود من العمود. ووقود مولد الوقود السائل مستقبلا (12 EU/t)."
+            }
+          ]
+        },
+        {
+          "id": "honey",
+          "title": "عسل سائل",
+          "icon": "alaindustrial:honey_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "عسل سائل",
+              "text": "سائل المنحل الكهرماني الكثيف — دلو وبركة بطيئة وأنابيب وخزانات. تنتشر البركة مثل الحمم، ومن يخوض فيها يلتصق كأنه في كتلة عسل."
             }
           ]
         },

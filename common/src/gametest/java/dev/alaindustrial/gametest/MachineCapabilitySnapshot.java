@@ -137,6 +137,9 @@ final class MachineCapabilitySnapshot {
 			"fermenter: owner=Characterizer active=3 items=5 eu=11/13/17/19 panel=1 mute=1 stats=1"
 					+ " oc=1/3 rate=4 dur=160 evolve=-1/-1",
 			"fermenter keys: -EvolveProgress -EvolveChip",
+			"honey_centrifuge: owner=Characterizer active=3 items=5 eu=11/13/17/19 panel=1 mute=1"
+					+ " stats=1 oc=1/3 rate=4 dur=160 evolve=-1/-1",
+			"honey_centrifuge keys: -EvolveProgress -EvolveChip",
 			"battery_box: owner=Characterizer active=3 items=5 eu=11/13/17/19 panel=1 mute=1 stats=1"
 					+ " oc=0/0 rate=2 dur=200 evolve=-1/-1",
 			"battery_box keys: -EvolveProgress -EvolveChip",

@@ -1542,6 +1542,44 @@
           ]
         },
         {
+          "id": "honey_centrifuge",
+          "title": "Медогонка",
+          "icon": "alaindustrial:honey_centrifuge",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Медогонка",
+              "text": "Откачивает жидкий мёд из сот, блоков сот, бутылок и блоков мёда — бак на 10 вёдер, мёд забирают трубой или ведром."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Энергия: 200 EU/оп",
+                "Буфер: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт на верстаке",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:honeycomb",
+                "alaindustrial:iron_plate",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:machine_casing",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:honey_centrifuge",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "polymerizer",
           "title": "Полимеризатор",
           "icon": "alaindustrial:polymerizer",
@@ -2499,6 +2537,18 @@
               "type": "text",
               "title": "Дизель",
               "text": "Лёгкая фракция перегонки нефти — золотисто-жёлтая жидкость, целевой продукт колонны. Будущее топливо жидкотопливного генератора (12 EU/такт)."
+            }
+          ]
+        },
+        {
+          "id": "honey",
+          "title": "Жидкий мёд",
+          "icon": "alaindustrial:honey_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Жидкий мёд",
+              "text": "Густая янтарная жидкость пасеки — ведро, медленная лужа, трубы и баки. Лужа растекается, как лава, а всё, что в неё попало, вязнет, как в паутине."
             }
           ]
         },

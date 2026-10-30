@@ -1542,6 +1542,44 @@
           ]
         },
         {
+          "id": "honey_centrifuge",
+          "title": "Máy Quay Mật Ong",
+          "icon": "alaindustrial:honey_centrifuge",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Máy Quay Mật Ong",
+              "text": "Quay lấy mật ong lỏng từ tổ ong, khối tổ ong, chai mật ong và khối mật ong — bể chứa mười xô, rút bằng ống hoặc xô."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Năng lượng: 200 EU/thao tác",
+                "Bộ đệm: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:honeycomb",
+                "alaindustrial:iron_plate",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:machine_casing",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:honey_centrifuge",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "polymerizer",
           "title": "Máy Trùng Hợp",
           "icon": "alaindustrial:polymerizer",
@@ -2499,6 +2537,18 @@
               "type": "text",
               "title": "Dầu diesel",
               "text": "Phân đoạn nhẹ của quá trình chưng cất dầu — chất lỏng màu vàng óng, sản phẩm chính của tháp. Nhiên liệu tương lai của máy phát điện nhiên liệu lỏng (12 EU/t)."
+            }
+          ]
+        },
+        {
+          "id": "honey",
+          "title": "Mật ong lỏng",
+          "icon": "alaindustrial:honey_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Mật ong lỏng",
+              "text": "Chất lỏng màu hổ phách đặc của trại ong — xô, vũng chảy chậm, ống và bể. Vũng lan như dung nham, thứ gì lội vào sẽ dính như trong khối mật ong."
             }
           ]
         },

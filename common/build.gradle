@@ -361,6 +361,9 @@ pitest {
                      // status enums above, and added here WITH its L1 suite (FermenterStatusTest),
                      // not a release later.
                      'dev.alaindustrial.block.entity.FermenterStatus',
+                     // MOD-924: why the honey centrifuge is idle — same shape, added WITH its L1 suite
+                     // (HoneyCentrifugeStatusTest).
+                     'dev.alaindustrial.block.entity.HoneyCentrifugeStatus',
                      'dev.alaindustrial.block.entity.IncubatorStatus',
                      'dev.alaindustrial.mutation.MutationGrade',
                      'dev.alaindustrial.mutation.MutationRoll',

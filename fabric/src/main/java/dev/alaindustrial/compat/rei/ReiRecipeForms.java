@@ -28,6 +28,7 @@ final class ReiRecipeForms {
 			RecipeViewerForm.POLYMERIZING,
 			RecipeViewerForm.DISTILLING,
 			RecipeViewerForm.ALLOYING,
+			RecipeViewerForm.HONEY_CENTRIFUGING,
 			RecipeViewerForm.CANNING,
 			RecipeViewerForm.EVOLUTION_INFO,
 			RecipeViewerForm.MACHINE_INFO,
@@ -42,6 +43,7 @@ final class ReiRecipeForms {
 			case POLYMERIZING -> PolymerizingDisplay.CATEGORY;
 			case ALLOYING -> AlloyingDisplay.CATEGORY;
 			case DISTILLING -> CategoryIdentifier.of(Industrialization.id(form.id()));
+			case HONEY_CENTRIFUGING -> ItemToFluidDisplay.CATEGORY;
 			case CANNING -> CanningDisplay.CATEGORY;
 			case MACHINE_INFO -> AlaInfoDisplay.MACHINE_CATEGORY;
 			case EVOLUTION_INFO -> AlaInfoDisplay.CATEGORY;
@@ -57,6 +59,7 @@ final class ReiRecipeForms {
 			case ALLOYING -> new AlloyingCategory(form.icon(), form.title());
 			case DISTILLING -> new FluidOutputCategory(
 					(CategoryIdentifier<FluidOutputDisplay>) categoryId(form), form.icon(), form.title());
+			case HONEY_CENTRIFUGING -> new ItemToFluidCategory(form.icon(), form.title());
 			case CANNING -> new CanningCategory(form.icon(), form.title());
 			case MACHINE_INFO, EVOLUTION_INFO, PLANT_INFO -> new AlaInfoCategory(
 					(CategoryIdentifier<AlaInfoDisplay>) categoryId(form), form::title, form.icon(), sizingPages(form));
@@ -81,7 +84,7 @@ final class ReiRecipeForms {
 	@SuppressWarnings("unchecked")
 	static void addDisplays(RecipeViewerForm form, DisplayRegistry registry) {
 		switch (form) {
-			case POLYMERIZING, ALLOYING, DISTILLING -> {
+			case POLYMERIZING, ALLOYING, DISTILLING, HONEY_CENTRIFUGING -> {
 				// Filled server-side by AlaReiCommonPlugin and synced.
 			}
 			// One canning card per accepted food. The sweep over the (by now frozen) item registry happens on

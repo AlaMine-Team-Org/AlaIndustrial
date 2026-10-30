@@ -56,6 +56,7 @@ public final class BlockPropsCharacterizationScenarios {
 			"enriched_uranium_torch push=pops ticks=none",
 			"enriched_uranium_wall_torch push=pops ticks=none",
 			"fuel_oil push=pops ticks=none",
+			"honey push=pops ticks=none",
 			"incubator_dome push=pinned ticks=none",
 			"irradiated_soil push=normal ticks=all",
 			"kok_sagyz push=pops ticks=all",

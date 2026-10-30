@@ -24,6 +24,22 @@ import org.junit.jupiter.params.provider.ValueSource;
  */
 class FluidAmountsTest {
 
+	// --- the bottle (MOD-922): one number, a quarter of a bucket, so bottles and buckets close a round trip ---
+
+	/**
+	 * Four bottles are one honey block and one bucket — NeoForge's and Create's bottle, not Fabric's third of a
+	 * bucket. A bottle that did not divide the bucket would leave a remainder on every bottles → block → bucket
+	 * → bottles trip, creating or destroying honey; and its droplet figure must be exact so the Fabric adapter
+	 * has no tail to carry.
+	 */
+	@Test
+	void bottle_isAQuarterOfABucket_andExactInDroplets() {
+		assertEquals(250L, FluidAmounts.BOTTLE, "a bottle is 250 mB, as NeoForge and Create count it");
+		assertEquals(FluidAmounts.BUCKET, 4 * FluidAmounts.BOTTLE, "four bottles make exactly one bucket");
+		assertEquals(0L, FluidAmounts.remainderDroplets(FluidAmounts.toDroplets(FluidAmounts.BOTTLE)),
+				"a bottle converts to whole droplets with no tail");
+	}
+
 	// --- toDroplets: scaling up is exact, and overflow is loud rather than silent ---
 
 	@Test

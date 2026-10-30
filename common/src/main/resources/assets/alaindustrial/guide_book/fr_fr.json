@@ -1542,6 +1542,44 @@
           ]
         },
         {
+          "id": "honey_centrifuge",
+          "title": "Centrifugeuse à miel",
+          "icon": "alaindustrial:honey_centrifuge",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Centrifugeuse à miel",
+              "text": "Extrait le miel liquide des rayons de miel, des blocs de rayon, des fioles de miel et des blocs de miel — un réservoir de dix seaux, vidé par un tuyau ou un seau."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiques",
+              "lines": [
+                "Énergie : 200 EU/op",
+                "Tampon : 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recette",
+              "recipe_type": "Fabrication façonnée",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:honeycomb",
+                "alaindustrial:iron_plate",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:machine_casing",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:honey_centrifuge",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "polymerizer",
           "title": "Polymériseur",
           "icon": "alaindustrial:polymerizer",
@@ -2499,6 +2537,18 @@
               "type": "text",
               "title": "Diesel",
               "text": "La fraction légère de la distillation du pétrole — un fluide jaune doré, le produit cible de la colonne. Futur carburant du générateur à combustible liquide (12 EU/t)."
+            }
+          ]
+        },
+        {
+          "id": "honey",
+          "title": "Miel liquide",
+          "icon": "alaindustrial:honey_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Miel liquide",
+              "text": "Le liquide ambré et épais du rucher — seau, flaque lente, tuyaux et réservoirs. La flaque s'étale comme la lave, et ce qui y entre colle comme dans un bloc de miel."
             }
           ]
         },

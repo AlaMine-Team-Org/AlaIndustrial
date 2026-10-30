@@ -20,6 +20,16 @@ public final class FluidAmounts {
 	/** 1 bucket, in the internal unit (millibuckets). */
 	public static final long BUCKET = 1000L;
 
+	/**
+	 * 1 bottle, in millibuckets (MOD-922): a quarter of a bucket, as NeoForge and Create count it, so four
+	 * bottles of honey are one honey block and one bucket. Fabric's own bottle is a third of a bucket
+	 * (27000 droplets). Today no code reads this constant: the honey bottle's 250 mB is stated in its
+	 * recipe JSON (honey_centrifuging/honey_bottle.json), and FluidAmountsTest holds the two equal in spirit.
+	 * Bottling (MOD-925) is to convert by this figure, never Fabric's, so a round trip neither gains nor
+	 * loses fluid.
+	 */
+	public static final long BOTTLE = 250L;
+
 	/** Droplets per millibucket on Fabric (81000 droplets/bucket ÷ 1000 mB/bucket), exact with no remainder. */
 	public static final long FABRIC_DROPLETS_PER_MB = 81L;
 
@@ -38,7 +48,7 @@ public final class FluidAmounts {
 	 *
 	 * <p><b>MOD-284.</b> Rounding down is only safe when the leftover from {@link #remainderDroplets} is
 	 * dealt with. A foreign Fabric storage may accept or yield an amount that is not a multiple of 81
-	 * (a mod working in ninths of a bucket yields 9000 droplets, a bottle is 27000 — neither divides by
+	 * (a mod working in ninths of a bucket yields 9000 droplets, a Fabric bottle is 27000 — neither divides by
 	 * 81), and silently flooring such a value makes the two sides of a transfer disagree: the mB figure
 	 * under-reports what actually crossed the boundary, which creates fluid on an insert and destroys it
 	 * on an extract.

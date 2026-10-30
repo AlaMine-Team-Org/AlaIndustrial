@@ -406,6 +406,14 @@ final class EnergyRoleForFaceSnapshot {
 			"fermenter[facing=west,lit=false] DUNSWE=IIIINI",
 			"fermenter[facing=east,lit=true] DUNSWE=IIIIIN",
 			"fermenter[facing=east,lit=false] DUNSWE=IIIIIN",
+			"honey_centrifuge[facing=north,lit=true] DUNSWE=IINIII",
+			"honey_centrifuge[facing=north,lit=false] DUNSWE=IINIII",
+			"honey_centrifuge[facing=south,lit=true] DUNSWE=IIINII",
+			"honey_centrifuge[facing=south,lit=false] DUNSWE=IIINII",
+			"honey_centrifuge[facing=west,lit=true] DUNSWE=IIIINI",
+			"honey_centrifuge[facing=west,lit=false] DUNSWE=IIIINI",
+			"honey_centrifuge[facing=east,lit=true] DUNSWE=IIIIIN",
+			"honey_centrifuge[facing=east,lit=false] DUNSWE=IIIIIN",
 			"item_pipe[down_mode=disabled,east_mode=disabled,north_mode=disabled,south_mode=disabled,up"
 					+ "_mode=disabled,west_mode=disabled] DUNSWE=NNNNNN",
 			"item_pipe@item_pipe_advanced[down_mode=disabled,east_mode=disabled,north_mode=disabled,sou"

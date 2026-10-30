@@ -19,6 +19,7 @@ import dev.alaindustrial.block.DistillationColumnBlock;
 import dev.alaindustrial.block.DistillationColumnMiddleBlock;
 import dev.alaindustrial.block.DistillationColumnTopBlock;
 import dev.alaindustrial.block.FermenterBlock;
+import dev.alaindustrial.block.HoneyCentrifugeBlock;
 import dev.alaindustrial.block.FluidPipeBlock;
 import dev.alaindustrial.block.FluidTankBlock;
 import dev.alaindustrial.block.ModLiquidBlock;
@@ -33,6 +34,7 @@ import dev.alaindustrial.block.SteamPipeBlock;
 import dev.alaindustrial.block.entity.DistillationColumnBlockEntity;
 import dev.alaindustrial.block.entity.DistillationColumnSegmentBlockEntity;
 import dev.alaindustrial.block.entity.FermenterBlockEntity;
+import dev.alaindustrial.block.entity.HoneyCentrifugeBlockEntity;
 import dev.alaindustrial.block.entity.FluidPipeBlockEntity;
 import dev.alaindustrial.block.entity.FluidTankBlockEntity;
 import dev.alaindustrial.block.entity.PumpBlockEntity;
@@ -43,6 +45,7 @@ import dev.alaindustrial.item.fluid.VacuumCapsuleItem;
 import dev.alaindustrial.item.misc.FluidPipeBlockItem;
 import dev.alaindustrial.menu.DistillationColumnMenu;
 import dev.alaindustrial.menu.FermenterMenu;
+import dev.alaindustrial.menu.HoneyCentrifugeMenu;
 import dev.alaindustrial.menu.PumpMenu;
 import dev.alaindustrial.registry.ContentManifest.BlockDef;
 import dev.alaindustrial.registry.ContentManifest.BlockEntityDef;
@@ -192,6 +195,12 @@ public final class FluidContent {
 					.mapColor(MapColor.EMERALD).replaceable().noCollision().strength(100.0F).noLootTable().liquid()
 					.sound(SoundType.EMPTY), s -> ModContent.NUTRIENT_SOLUTION_BLOCK = s,
 			hiddenFromPlayers("a liquid block is never held: the player places it from its bucket"));
+	// MOD-922: liquid honey's pool — the same liquid-block chain, an amber map colour.
+	public static final BlockDef<ModLiquidBlock> HONEY = block("honey",
+			p -> new ModLiquidBlock(ModContent.HONEY.get(), p), p -> LineBlockProps.popsOnPush(p)
+					.mapColor(MapColor.COLOR_ORANGE).replaceable().noCollision().strength(100.0F).noLootTable().liquid()
+					.sound(SoundType.EMPTY), s -> ModContent.HONEY_BLOCK = s,
+			hiddenFromPlayers("a liquid block is never held: the player places it from its bucket"));
 	// MOD-638 — burning oil and what it leaves behind: the fire a burning oil cell turns into (its own
 	// block so "burnt out by itself" is unambiguous), and the soot layer that fire may leave on a
 	// solid floor. Neither has a BlockItem — nobody holds fire, and the layer drops the `soot` item.
@@ -208,6 +217,10 @@ public final class FluidContent {
 			machine(p -> LineBlockProps.popsOnPush(p).mapColor(MapColor.COLOR_BLACK)
 					.noCollision().noOcclusion().strength(0.1F).sound(SoundType.SAND)), s -> ModContent.SOOT_LAYER = s,
 			hiddenFromPlayers("left behind only by burnt-out oil fire; a shovel takes the soot item off it"));
+	// MOD-924 — the honey centrifuge: an ordinary machine cube, lit while the drum spins.
+	public static final BlockDef<HoneyCentrifugeBlock> HONEY_CENTRIFUGE = block("honey_centrifuge",
+			HoneyCentrifugeBlock::new, machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)),
+			s -> ModContent.HONEY_CENTRIFUGE = s);
 
 	/** This domain's blocks, in declaration order — collected since {@code beginBlocks()} above. */
 	private static final List<BlockDef<?>> BLOCKS = endBlocks();
@@ -227,6 +240,8 @@ public final class FluidContent {
 			// The organic chain (MOD-146/MOD-525) — same vanilla BucketItem pattern.
 			bucket("biofuel_bucket", "biofuel", s -> ModContent.BIOFUEL_BUCKET = s),
 			bucket("nutrient_solution_bucket", "nutrient_solution", s -> ModContent.NUTRIENT_SOLUTION_BUCKET = s),
+			// MOD-922 — the apiary chain's bucket.
+			bucket("honey_bucket", "honey", s -> ModContent.HONEY_BUCKET = s),
 			blockItem("fluid_pipe", p -> new FluidPipeBlockItem(registeredBlock("fluid_pipe"),
 					p.useBlockDescriptionPrefix()), s -> ModContent.FLUID_PIPE_ITEM = s),
 			blockItem("fluid_pipe_advanced", p -> new FluidPipeBlockItem(registeredBlock("fluid_pipe_advanced"),
@@ -251,7 +266,9 @@ public final class FluidContent {
 			blockItem("fluid_tank_advanced", p -> new FluidTankBlockItem(
 					registeredBlock("fluid_tank_advanced"),
 					p.useBlockDescriptionPrefix().fireResistant()),
-					s -> ModContent.FLUID_TANK_ADVANCED_ITEM = s));
+					s -> ModContent.FLUID_TANK_ADVANCED_ITEM = s),
+			// MOD-924 — the apiary chain's machine.
+			blockItem("honey_centrifuge", s -> ModContent.HONEY_CENTRIFUGE_ITEM = s));
 
 	/*
 	 * Block entities named by a constant because code outside the list refers to the entry itself
@@ -281,7 +298,10 @@ public final class FluidContent {
 					s -> ModContent.FLUID_TANK_BE = s, FLUID_TANK, FLUID_TANK_ADVANCED),
 			// MOD-146/MOD-525: the organic chain's two ticking blocks.
 			blockEntity("fermenter", FermenterBlockEntity.class, FermenterBlockEntity::new,
-					s -> ModContent.FERMENTER_BE = s, FERMENTER));
+					s -> ModContent.FERMENTER_BE = s, FERMENTER),
+			// MOD-924 — the honey centrifuge.
+			blockEntity("honey_centrifuge", HoneyCentrifugeBlockEntity.class, HoneyCentrifugeBlockEntity::new,
+					s -> ModContent.HONEY_CENTRIFUGE_BE = s, HONEY_CENTRIFUGE));
 
 	private static final List<MenuDef<?>> MENUS = List.of(
 			// MOD-251 — the distillation column: three tank gauges, warm-up bar, status line.
@@ -289,7 +309,9 @@ public final class FluidContent {
 					s -> ModContent.DISTILLATION_COLUMN_MENU = s),
 			// MOD-146 — the fermenter: one input slot, two tank gauges, two container pairs.
 			menu("fermenter", FermenterMenu::new, s -> ModContent.FERMENTER_MENU = s),
-			menu("pump", PumpMenu::new, s -> ModContent.PUMP_MENU = s));
+			menu("pump", PumpMenu::new, s -> ModContent.PUMP_MENU = s),
+			// MOD-924 — the honey centrifuge: input, returned container, honey gauge, bucket pair.
+			menu("honey_centrifuge", HoneyCentrifugeMenu::new, s -> ModContent.HONEY_CENTRIFUGE_MENU = s));
 
 	/** Everything this domain declares; {@link dev.alaindustrial.registry.ContentManifest#DOMAINS} joins it in. */
 	public static final Domain DOMAIN = new Domain("Fluid", BLOCKS, ITEMS, BLOCK_ENTITIES, MENUS);
@@ -307,6 +329,8 @@ public final class FluidContent {
 		show(out, ModContent.GALVANIC_BATH_ITEM);
 		// MOD-146: the head of the organic chain, beside the other fluid-fed machines.
 		show(out, ModContent.FERMENTER_ITEM);
+		// MOD-924: the honey centrifuge beside the fermenter — both turn farm produce into a fluid.
+		show(out, ModContent.HONEY_CENTRIFUGE_ITEM);
 		// --- shaped: the tank and the two pipes draw flat sprites, the tower is a tall model.
 		show(out, ModContent.FLUID_TANK_ITEM);
 		// MOD-612: the two grades stand together — a player looking for "the tank" finds both.
@@ -340,5 +364,6 @@ public final class FluidContent {
 		show(out, ModContent.FUEL_OIL_BUCKET);
 		show(out, ModContent.BIOFUEL_BUCKET);
 		show(out, ModContent.NUTRIENT_SOLUTION_BUCKET);
+		show(out, ModContent.HONEY_BUCKET);
 	}
 }

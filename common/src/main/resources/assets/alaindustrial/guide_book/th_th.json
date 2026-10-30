@@ -1542,6 +1542,44 @@
           ]
         },
         {
+          "id": "honey_centrifuge",
+          "title": "เครื่องสลัดน้ำผึ้ง",
+          "icon": "alaindustrial:honey_centrifuge",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เครื่องสลัดน้ำผึ้ง",
+              "text": "ปั่นน้ำผึ้งเหลวออกจากรวงผึ้ง บล็อกรวงผึ้ง ขวดน้ำผึ้ง และบล็อกน้ำผึ้ง — ถังจุสิบถัง ดึงออกด้วยท่อหรือถัง"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "พลังงาน: 200 EU ต่อรอบ",
+                "บัฟเฟอร์: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:honeycomb",
+                "alaindustrial:iron_plate",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:machine_casing",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:honey_centrifuge",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "polymerizer",
           "title": "เครื่องพอลิเมอไรซ์",
           "icon": "alaindustrial:polymerizer",
@@ -2499,6 +2537,18 @@
               "type": "text",
               "title": "ดีเซล",
               "text": "ส่วนเบาจากการกลั่นน้ำมันดิบ — ของเหลวสีเหลืองทอง ผลผลิตหลักของหอกลั่น เชื้อเพลิงในอนาคตของเครื่องกำเนิดไฟฟ้าเชื้อเพลิงเหลว (12 EU ต่อทิก)"
+            }
+          ]
+        },
+        {
+          "id": "honey",
+          "title": "น้ำผึ้งเหลว",
+          "icon": "alaindustrial:honey_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "น้ำผึ้งเหลว",
+              "text": "ของเหลวสีอำพันข้นจากฟาร์มผึ้ง — ถัง แอ่งไหลช้า ท่อ และถังเก็บ แอ่งแผ่ออกเหมือนลาวา และสิ่งที่ลุยเข้าไปจะติดหนึบเหมือนอยู่ในบล็อกน้ำผึ้ง"
             }
           ]
         },

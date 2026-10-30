@@ -47,6 +47,7 @@ public class FluidAttributesSnapshotGameTest {
 	private static final String FUEL_OIL = custom(2400, 300);
 	private static final String BIOFUEL = custom(1000, 300);
 	private static final String NUTRIENT = custom(900, 300);
+	private static final String HONEY = custom(6000, 300);
 	private static final String STEAM = custom(200, 373);
 	private static final String EXPERIENCE = custom(1000, 300);
 
@@ -62,6 +63,8 @@ public class FluidAttributesSnapshotGameTest {
 			"flowing_biofuel " + BIOFUEL + " name=block.alaindustrial.biofuel" + BUCKET,
 			"nutrient_solution " + NUTRIENT + " name=block.alaindustrial.nutrient_solution" + BUCKET,
 			"flowing_nutrient_solution " + NUTRIENT + " name=block.alaindustrial.nutrient_solution" + BUCKET,
+			"honey " + HONEY + " name=block.alaindustrial.honey" + BUCKET,
+			"flowing_honey " + HONEY + " name=block.alaindustrial.honey" + BUCKET,
 			"steam " + STEAM + " name=fluid.alaindustrial.steam" + BUCKET,
 			"experience " + EXPERIENCE + " name=fluid.alaindustrial.experience" + BUCKET);
 

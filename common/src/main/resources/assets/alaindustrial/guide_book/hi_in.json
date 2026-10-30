@@ -1542,6 +1542,44 @@
           ]
         },
         {
+          "id": "honey_centrifuge",
+          "title": "शहद निकालने की मशीन",
+          "icon": "alaindustrial:honey_centrifuge",
+          "pages": [
+            {
+              "type": "text",
+              "title": "शहद निकालने की मशीन",
+              "text": "शहद के छत्तों, छत्ते के ब्लॉक, शहद की बोतलों और शहद के ब्लॉक से तरल शहद निकालती है — दस बाल्टी का टैंक, पाइप या बाल्टी से खाली होता है।"
+            },
+            {
+              "type": "stats",
+              "title": "आँकड़े",
+              "lines": [
+                "ऊर्जा: 200 EU/संचालन",
+                "बफ़र: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "रेसिपी",
+              "recipe_type": "आकारित क्राफ्टिंग",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:honeycomb",
+                "alaindustrial:iron_plate",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:machine_casing",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:honey_centrifuge",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "polymerizer",
           "title": "पॉलिमराइज़र",
           "icon": "alaindustrial:polymerizer",
@@ -2499,6 +2537,18 @@
               "type": "text",
               "title": "डीज़ल",
               "text": "तेल आसवन का हल्का अंश — सुनहरा-पीला तरल, स्तंभ का लक्षित उत्पाद। तरल ईंधन जनरेटर का भावी ईंधन (12 EU/t)।"
+            }
+          ]
+        },
+        {
+          "id": "honey",
+          "title": "तरल शहद",
+          "icon": "alaindustrial:honey_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "तरल शहद",
+              "text": "मधुशाला का गाढ़ा अंबर तरल — बाल्टी, धीमा पोखर, पाइप और टैंक। पोखर लावा की तरह फैलता है, और जो उसमें उतरे वह शहद के ब्लॉक की तरह चिपक जाता है।"
             }
           ]
         },

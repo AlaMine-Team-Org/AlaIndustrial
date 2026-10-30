@@ -1542,6 +1542,44 @@
           ]
         },
         {
+          "id": "honey_centrifuge",
+          "title": "Miodarka",
+          "icon": "alaindustrial:honey_centrifuge",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Miodarka",
+              "text": "Odwirowuje płynny miód z plastrów miodu, bloków plastrów, butelek miodu i bloków miodu — zbiornik na dziesięć wiader, opróżniany rurą lub wiadrem."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Energia: 200 EU/op",
+                "Bufor: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:honeycomb",
+                "alaindustrial:iron_plate",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:machine_casing",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:honey_centrifuge",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "polymerizer",
           "title": "Polimeryzator",
           "icon": "alaindustrial:polymerizer",
@@ -2499,6 +2537,18 @@
               "type": "text",
               "title": "Diesel",
               "text": "Lekka frakcja destylacji ropy — złocistożółty płyn, docelowy produkt kolumny. Przyszłe paliwo generatora na paliwo ciekłe (12 EU/t)."
+            }
+          ]
+        },
+        {
+          "id": "honey",
+          "title": "Płynny miód",
+          "icon": "alaindustrial:honey_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Płynny miód",
+              "text": "Gęsta bursztynowa ciecz pasieki — wiadro, powolna kałuża, rury i zbiorniki. Kałuża rozlewa się jak lawa, a kto w nią wejdzie, grzęźnie jak w bloku miodu."
             }
           ]
         },

@@ -1542,6 +1542,44 @@
           ]
         },
         {
+          "id": "honey_centrifuge",
+          "title": "Honey Centrifuge",
+          "icon": "alaindustrial:honey_centrifuge",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Honey Centrifuge",
+              "text": "Spins liquid honey out of honeycombs, comb blocks, honey bottles and honey blocks — a ten-bucket tank, emptied by a pipe or a bucket."
+            },
+            {
+              "type": "stats",
+              "title": "Stats",
+              "lines": [
+                "Energy: 200 EU/op",
+                "Buffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recipe",
+              "recipe_type": "Shaped Crafting",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:honeycomb",
+                "alaindustrial:iron_plate",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:machine_casing",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:honey_centrifuge",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "polymerizer",
           "title": "Polymerizer",
           "icon": "alaindustrial:polymerizer",
@@ -2499,6 +2537,18 @@
               "type": "text",
               "title": "Diesel",
               "text": "The light fraction of oil distillation — a golden-yellow fluid, the column's target product. Future fuel of the liquid fuel generator (12 EU/t)."
+            }
+          ]
+        },
+        {
+          "id": "honey",
+          "title": "Liquid Honey",
+          "icon": "alaindustrial:honey_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Liquid Honey",
+              "text": "The apiary's thick amber liquid — a bucket, a slow pool, pipes and tanks. The pool spreads like lava, and whatever wades in sticks as if in a honey block."
             }
           ]
         },

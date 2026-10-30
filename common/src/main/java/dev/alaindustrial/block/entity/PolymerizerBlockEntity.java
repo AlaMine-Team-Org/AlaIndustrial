@@ -69,12 +69,13 @@ public class PolymerizerBlockEntity extends MachineBlockEntity implements Overcl
 	public static final int FLUID_ID_NONE = FluidTank.FLUID_ID_NONE;
 
 	/**
-	 * Oil-only tank, insertable from any side, never extractable (R-CON-08 — the machine consumes its own
-	 * feedstock). The filter is the {@code c:oil} tag rather than our own fluid id, so it matches what the
-	 * shipped recipe accepts: any mod's oil that carries the conventional tag can be pumped in here.
+	 * Feedstock tank — oil or liquid honey — insertable from any side, never extractable (R-CON-08 — the
+	 * machine consumes its own feedstock). The filter is the conventional tags ({@code c:oil}, and since
+	 * MOD-924 {@code c:honey}) rather than our own fluid ids, so it matches what the shipped recipes accept:
+	 * any mod's oil or honey that carries the tag can be pumped in here, and nothing else can.
 	 */
 	public final FluidTank fluidTank = new FluidTank(TANK_CAPACITY,
-			PolymerizerBlockEntity::isOil,
+			PolymerizerBlockEntity::isFeedstock,
 			fluid -> false,
 			() -> {
 				setChanged();
@@ -99,14 +100,18 @@ public class PolymerizerBlockEntity extends MachineBlockEntity implements Overcl
 	}
 
 	/**
-	 * Whether {@code fluid} is oil the tank may hold: tagged {@code c:oil} <em>and</em> a source variant.
-	 * The tag names the flowing variant too — the pump's world search needs it — but a tank never holds
-	 * "flowing oil", and letting it would strand the machine: the tank is single-variant, so a partial
-	 * amount of the flowing form could never be topped up by ordinary oil to reach the recipe volume.
+	 * Whether {@code fluid} is feedstock the tank may hold: tagged {@code c:oil} or {@code c:honey} (MOD-924,
+	 * the honey block recipe) <em>and</em> a source variant. The tags name the flowing variant too — the
+	 * pump's world search needs it — but a tank never holds "flowing oil", and letting it would strand the
+	 * machine: the tank is single-variant, so a partial amount of the flowing form could never be topped up
+	 * by the ordinary fluid to reach the recipe volume.
 	 */
-	private static boolean isOil(FluidHolder fluid) {
-		return !fluid.isEmpty() && fluid.fluid().defaultFluidState().is(ModTags.Fluids.C_OIL)
-				&& PolymerizingRecipe.isSourceFluid(fluid.fluid());
+	private static boolean isFeedstock(FluidHolder fluid) {
+		if (fluid.isEmpty() || !PolymerizingRecipe.isSourceFluid(fluid.fluid())) {
+			return false;
+		}
+		var state = fluid.fluid().defaultFluidState();
+		return state.is(ModTags.Fluids.C_OIL) || state.is(ModTags.Fluids.C_HONEY);
 	}
 
 

@@ -47,7 +47,8 @@ class ReiTabOrderTest {
 
 	/** REI's tab order as shipped: the processing families first, then the special forms. */
 	static final List<String> SHIPPED_ORDER = List.of("kinds", "polymerizing", "distilling", "alloying",
-			"canning", "evolution_info", "machine_info", "plant_info");
+			// MOD-924: the honey centrifuge's family joins after the other recipe families, before the cards.
+			"honey_centrifuging", "canning", "evolution_info", "machine_info", "plant_info");
 
 	private static final Pattern JAVA_COMMENT = Pattern.compile("/\\*.*?\\*/|//[^\\n]*", Pattern.DOTALL);
 
