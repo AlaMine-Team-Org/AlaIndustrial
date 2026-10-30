@@ -46,10 +46,10 @@ public final class FluidAttributesSnapshotScenarios {
 		Facts facts(Fluid fluid, GameTestHelper helper);
 	}
 
-	/** The twelve fluids, in registration order. */
+	/** The fourteen fluids, in registration order. */
 	static final List<String> FLUIDS = List.of("oil", "flowing_oil", "diesel", "flowing_diesel",
 			"fuel_oil", "flowing_fuel_oil", "biofuel", "flowing_biofuel", "nutrient_solution",
-			"flowing_nutrient_solution", "steam", "experience");
+			"flowing_nutrient_solution", "honey", "flowing_honey", "steam", "experience");
 
 	/**
 	 * One line per fluid of {@link #FLUIDS} — {@code <id> <probe answer>} — compared with {@code expected}.

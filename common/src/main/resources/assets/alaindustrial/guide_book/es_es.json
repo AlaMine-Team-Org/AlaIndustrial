@@ -1542,6 +1542,44 @@
           ]
         },
         {
+          "id": "honey_centrifuge",
+          "title": "Centrifugadora de miel",
+          "icon": "alaindustrial:honey_centrifuge",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Centrifugadora de miel",
+              "text": "Saca miel líquida de panales, bloques de panal, frascos con miel y bloques de miel — un tanque de diez cubos que se vacía con una tubería o un cubo."
+            },
+            {
+              "type": "stats",
+              "title": "Estadísticas",
+              "lines": [
+                "Energía: 200 EU/op",
+                "Búfer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receta",
+              "recipe_type": "Fabricación con forma",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:honeycomb",
+                "alaindustrial:iron_plate",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:machine_casing",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:honey_centrifuge",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "polymerizer",
           "title": "Polimerizador",
           "icon": "alaindustrial:polymerizer",
@@ -2499,6 +2537,18 @@
               "type": "text",
               "title": "Diésel",
               "text": "La fracción ligera de la destilación del petróleo — un fluido amarillo dorado, el producto objetivo de la columna. Futuro combustible del generador de combustible líquido (12 EU/t)."
+            }
+          ]
+        },
+        {
+          "id": "honey",
+          "title": "Miel líquida",
+          "icon": "alaindustrial:honey_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Miel líquida",
+              "text": "El líquido ámbar y espeso del apiario — cubo, charco lento, tuberías y tanques. El charco se extiende como la lava y lo que entra se pega como en un bloque de miel."
             }
           ]
         },

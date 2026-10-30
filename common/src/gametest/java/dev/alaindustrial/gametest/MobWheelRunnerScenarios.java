@@ -52,6 +52,8 @@ public final class MobWheelRunnerScenarios {
 						"mob_wheel_creeper_runs_strongest_no_swell").ticks(40),
 				RosterEntry.of(MobWheelRunnerScenarios::chickenIsTheWeakest, "mob_wheel_chicken_is_weakest")
 						.ticks(40),
+				RosterEntry.of(MobWheelRunnerScenarios::chickenKeepsRunningOutput,
+						"mob_wheel_chicken_keeps_running_output").ticks(60),
 				RosterEntry.of(MobWheelRunnerScenarios::strayRunsHarderInASnowyBiome,
 						"mob_wheel_stray_bonus_in_snowy_biome").ticks(40),
 				RosterEntry.of(MobWheelRunnerScenarios::playerTargetDistractsTheOccupant,
@@ -168,6 +170,30 @@ public final class MobWheelRunnerScenarios {
 			if (freshOutput(other) < rate) {
 				helper.fail(other + " makes " + freshOutput(other) + " EU/t, less than the chicken's " + rate);
 			}
+		}
+		helper.succeed();
+	}
+
+	/**
+	 * MOD-867: a chicken keeps making 1 EU/t on every running tick, not only on its first, fresh one — the
+	 * formula's {@code floor(0.99)} must not round a running mob down to nothing — and the battery charges.
+	 */
+	public static void chickenKeepsRunningOutput(GameTestHelper helper) {
+		clearBox(helper);
+		MobWheelBlockEntity drive = energyRig(helper);
+		shutIn(helper, drive, EntityTypes.CHICKEN);
+		AlaGameTestHelper.drive(drive, helper, 1);
+		long afterFirst = batteryCharge(helper);
+		for (int tick = 2; tick <= 30; tick++) {
+			AlaGameTestHelper.drive(drive, helper, 1);
+			if (drive.status() != MobWheelStatus.RUNNING || drive.productionRate() < 1) {
+				helper.fail("running tick " + tick + ": the chicken is " + drive.status() + " at "
+						+ drive.productionRate() + " EU/t, expected running at 1 or more");
+			}
+		}
+		if (batteryCharge(helper) <= afterFirst) {
+			helper.fail("the battery did not charge after the chicken's first tick (" + afterFirst + " -> "
+					+ batteryCharge(helper) + ")");
 		}
 		helper.succeed();
 	}

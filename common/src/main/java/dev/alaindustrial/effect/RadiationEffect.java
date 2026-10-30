@@ -22,13 +22,18 @@ import net.minecraft.world.entity.player.Player;
  * both loaders without a single line of player-data code — see the task log for the alternative that
  * was considered and rejected.
  *
- * <p><b>Symptoms escalate with the dose, not with the amplifier.</b> The effect is always applied at
- * amplifier 0; asking the instance for its duration each tick is what makes a dose that is still
- * climbing feel different from one that is bleeding off, in both directions, with no re-application.
+ * <p><b>Symptoms escalate with the dose, not with the amplifier.</b> The amplifier only shows the level
+ * to the player ({@link RadiationDose#apply}); asking the instance for its duration each tick is what makes
+ * a dose that is still climbing feel different from one that is bleeding off, in both directions, with no
+ * re-application.
+ *
+ * <p><b>The symptoms carry no icon (MOD-568).</b> The radiation icon is the one message; the symptoms are
+ * felt — the screen wobbles, the hunger bar turns green, the hits get weaker — and the inventory screen
+ * still lists them.
  */
 public class RadiationEffect extends MobEffect {
 
-	/** Sickly green — the colour of the HUD icon and of the particles vanilla draws for the effect. */
+	/** Sickly green — the colour of the particles vanilla draws for the effect; the icon is its own texture. */
 	public static final int COLOR = 0x4CE04C;
 
 	public RadiationEffect() {
@@ -50,8 +55,8 @@ public class RadiationEffect extends MobEffect {
 		if (!RadiationConfig.radiationEnabled) {
 			return false;
 		}
-		// Only players carry a dose (MOD-470 decision): mobs would turn every reactor into a silent
-		// farm-killer, and the per-entity cost buys nothing.
+		// Only players take this effect's symptoms and damage (MOD-470 decision): mobs would turn every
+		// reactor into a silent farm-killer. A mob's dose does its own work in RadiationMobs.
 		if (!(mob instanceof Player player) || player.isCreative() || player.isSpectator()) {
 			return true;
 		}

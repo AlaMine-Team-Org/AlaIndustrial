@@ -6,7 +6,8 @@ package dev.alaindustrial.core.radiation;
  *
  * <p><b>Dose is a number of ticks.</b> It is stored as the remaining duration of the
  * {@code alaindustrial:radiation} effect, which means vanilla persists it with the player, syncs it to
- * the client and shows it in the HUD for free, on both loaders, with no player-data of our own. It
+ * the client and shows it for free — an icon in the HUD, the level and the time left in the inventory
+ * screen — on both loaders, with no player-data of our own. It
  * also means the decay rate is fixed and honest: one tick of dose bleeds off per tick, so a player who
  * walks away from a source recovers over exactly as long as the scale is deep.
  */

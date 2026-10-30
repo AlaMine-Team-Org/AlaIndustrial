@@ -422,6 +422,11 @@ public final class Config {
 	@Knob(section = Section.MACHINES, clientVisible = true, min = 1,
 			doc = "Ticks a polymerizer takes to turn one bucket of oil into raw rubber at 1.0 speed.")
 	public static int polymerizerDuration = 200;
+	/** Honey Centrifuge (MOD-924): ticks per operation at 1.0 speed, the same for a comb and a honey block.
+	 * 100 → 200 EU/op, as cheap as the electric furnace: spinning honey out is light work. */
+	@Knob(section = Section.MACHINES, clientVisible = true, min = 1,
+			doc = "Ticks a honey centrifuge takes per operation at 1.0 speed (every input).")
+	public static int honeyCentrifugeDuration = 100;
 	/** Vulcanizer (MOD-258): ticks per operation at 1.0 speed. The shipped recipe costs 400 EU, so at
 	 * the ordinary-machine rate of 2 EU/t the operation takes 200 ticks at every heat tier. */
 	@Knob(section = Section.MACHINES, clientVisible = true, min = 1,

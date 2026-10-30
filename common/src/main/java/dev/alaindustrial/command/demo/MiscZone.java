@@ -210,6 +210,9 @@ final class MiscZone implements DemoZone {
 		w.set(80, 0, 24, ModContent.BIOFUEL_BLOCK.get());
 		w.set(44, -1, 24, FLOOR);
 		w.set(44, 0, 24, ModContent.NUTRIENT_SOLUTION_BLOCK.get());
+		// Liquid honey (MOD-922), the same sunken basin past the biofuel: the slow amber pool of the apiary chain.
+		w.set(84, -1, 24, FLOOR);
+		w.set(84, 0, 24, ModContent.HONEY_BLOCK.get());
 		// Burning oil and its soot (MOD-638), on the east edge of the floor, away from the oil pool and
 		// from anything flammable. The fire is live: it burns out within seconds of the build and may
 		// itself leave soot — the coverage scan runs on the build tick, while it still stands.

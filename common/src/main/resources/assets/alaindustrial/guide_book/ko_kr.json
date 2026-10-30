@@ -1542,6 +1542,44 @@
           ]
         },
         {
+          "id": "honey_centrifuge",
+          "title": "꿀 채밀기",
+          "icon": "alaindustrial:honey_centrifuge",
+          "pages": [
+            {
+              "type": "text",
+              "title": "꿀 채밀기",
+              "text": "벌집 조각, 벌집 블록, 꿀이 든 병, 꿀 블록에서 액체 꿀을 뽑아낸다 — 양동이 열 개 분량의 탱크, 파이프나 양동이로 비운다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "에너지: 200 EU/작업",
+                "버퍼: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:honeycomb",
+                "alaindustrial:iron_plate",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:machine_casing",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:honey_centrifuge",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "polymerizer",
           "title": "중합기",
           "icon": "alaindustrial:polymerizer",
@@ -2499,6 +2537,18 @@
               "type": "text",
               "title": "디젤",
               "text": "석유 증류의 가벼운 유분 — 황금빛 노란 유체로, 증류탑의 목표 산물입니다. 액체 연료 발전기(12 EU/t)의 미래 연료입니다."
+            }
+          ]
+        },
+        {
+          "id": "honey",
+          "title": "액체 꿀",
+          "icon": "alaindustrial:honey_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "액체 꿀",
+              "text": "양봉장의 걸쭉한 호박색 액체 — 양동이, 느린 웅덩이, 파이프와 탱크. 웅덩이는 용암처럼 퍼지고, 들어간 것은 꿀 블록처럼 달라붙는다."
             }
           ]
         },

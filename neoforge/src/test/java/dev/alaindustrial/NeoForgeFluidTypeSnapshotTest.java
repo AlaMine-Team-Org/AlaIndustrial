@@ -39,10 +39,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(StopEphemeralServerBeforeFmlTeardown.class)
 class NeoForgeFluidTypeSnapshotTest {
 
-	/** The twelve fluids, in registration order. */
+	/** The fourteen fluids, in registration order. */
 	private static final List<String> FLUIDS = List.of("oil", "flowing_oil", "diesel", "flowing_diesel",
 			"fuel_oil", "flowing_fuel_oil", "biofuel", "flowing_biofuel", "nutrient_solution",
-			"flowing_nutrient_solution", "steam", "experience");
+			"flowing_nutrient_solution", "honey", "flowing_honey", "steam", "experience");
 
 	/** The reference: the mod's fluid types by id, then each fluid's type. */
 	static final List<String> EXPECTED = List.of(
@@ -66,6 +66,11 @@ class NeoForgeFluidTypeSnapshotTest {
 					+ " descriptionId=block.alaindustrial.fuel_oil dripInfo=null fallDistanceModifier=1.0"
 					+ " isWaterLike=false lightLevel=0 motionScale=0.0 pathType=WATER rarity=COMMON sounds={}"
 					+ " supportsBoating=false temperature=300 viscosity=2400",
+			"type honey adjacentPathType=WATER_BORDER canConvertToSource=false canDrown=false canExtinguish=false"
+					+ " canHydrate=false canPushEntity=false canSwim=false density=1400"
+					+ " descriptionId=block.alaindustrial.honey dripInfo=null fallDistanceModifier=1.0"
+					+ " isWaterLike=false lightLevel=0 motionScale=0.0 pathType=WATER rarity=COMMON sounds={}"
+					+ " supportsBoating=false temperature=300 viscosity=6000",
 			"type nutrient_solution adjacentPathType=WATER_BORDER canConvertToSource=false canDrown=false"
 					+ " canExtinguish=false canHydrate=false canPushEntity=false canSwim=false density=1000"
 					+ " descriptionId=block.alaindustrial.nutrient_solution dripInfo=null fallDistanceModifier=1.0"
@@ -91,6 +96,8 @@ class NeoForgeFluidTypeSnapshotTest {
 			"fluid flowing_biofuel -> alaindustrial:biofuel",
 			"fluid nutrient_solution -> alaindustrial:nutrient_solution",
 			"fluid flowing_nutrient_solution -> alaindustrial:nutrient_solution",
+			"fluid honey -> alaindustrial:honey",
+			"fluid flowing_honey -> alaindustrial:honey",
 			"fluid steam -> alaindustrial:steam",
 			"fluid experience -> alaindustrial:experience");
 

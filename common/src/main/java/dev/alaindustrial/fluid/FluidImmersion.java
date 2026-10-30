@@ -50,6 +50,7 @@ import net.minecraft.world.phys.Vec3;
  *   <tr><td>Diesel</td><td>≈ 9.6 blocks/s</td><td>≈ 2.4 blocks/s</td></tr>
  *   <tr><td>Fuel oil</td><td>≈ 6.8 blocks/s</td><td>≈ 1.7 blocks/s</td></tr>
  *   <tr><td>Crude oil</td><td>≈ 5.4 blocks/s</td><td>≈ 1.4 blocks/s</td></tr>
+ *   <tr><td>Liquid honey</td><td>≈ 0.75 blocks/s</td><td>≈ 0.45 blocks/s (and a four-times-slower walk)</td></tr>
  * </table>
  *
  * <p><b>Drowning stays crude-only.</b> The fractions are machine products the player pours between
@@ -104,7 +105,28 @@ public enum FluidImmersion {
 			() -> ModContent.FLOWING_NUTRIENT_SOLUTION.get(),
 			0.90D, 0.90D, false,
 			0xFF16301F, 6.0F, 28.0F,
-			Industrialization.id("textures/misc/nutrient_solution_overlay.png"), 0.40F);
+			Industrialization.id("textures/misc/nutrient_solution_overlay.png"), 0.40F),
+
+	/**
+	 * Liquid honey (MOD-922) — the thickest liquid the mod pours (viscosity 6000), and the owner asked for it
+	 * to be "super viscous": barely wading, slow to sink, hard to climb out of, yet never a trap (MOD-496).
+	 *
+	 * <p>Drag alone cannot give that. The walking input is added before the drag every tick, so however hard
+	 * the drag, a walk on the pool floor never drops below about half of normal speed. Honey therefore also
+	 * holds an entity the way a cobweb does ({@link Entity#makeStuckInBlock}): the whole next move, input
+	 * included, is scaled by {@link #stuckHorizontal} / {@link #stuckVertical}, and the momentum is dropped.
+	 * With 0.55 a walk on the pool floor is about 1.1 blocks/s against 4.4 on dry ground — four times slower
+	 * and slower than sneaking, where a cobweb (0.25) gives 0.5 and a honey block about 2.6. Vertically, a
+	 * stuck move cancels the momentum each tick, so the drag only scales one tick of gravity: with 0.80 and
+	 * 0.60 an entity sinks at about 0.75 blocks/s and rises on held jump at about 0.45 blocks/s (was 4.4
+	 * and 1.1). The horizontal drag never comes into play under the stuck move and is kept at the honey
+	 * block's speed factor only for completeness. It does not drown; the film is a dense amber.
+	 */
+	HONEY(() -> ModContent.HONEY.get(), () -> ModContent.FLOWING_HONEY.get(),
+			0.40D, 0.80D, false,
+			0xFF5A3306, 1.0F, 6.0F,
+			Industrialization.id("textures/misc/honey_overlay.png"), 0.70F,
+			0.55D, 0.60D);
 
 	/**
 	 * Upward impulse added per tick while an entity holds jump inside any of these fluids (MOD-250,
@@ -117,6 +139,18 @@ public enum FluidImmersion {
 	 */
 	public static final double ASCENT_IMPULSE = 0.10D;
 
+	/**
+	 * Upward speed given to an entity that holds jump against a rim with free air above it, in a fluid that
+	 * {@linkplain #holdsLikeCobweb() holds like a cobweb} — vanilla water's ledge hop ({@code travelInWater}),
+	 * same 0.3. A stuck move drops all momentum each tick and the fluid stops acting at its surface, so without
+	 * this nothing could ever lift the feet over a one-block rim: honey would be a trap (MOD-496). Away from a
+	 * rim, and in a deep pit whose walls rise above the honey, the climb stays slow.
+	 */
+	public static final double LEDGE_CLIMB_IMPULSE = 0.30D;
+
+	/** How far above the entity the air must be free for {@link #LEDGE_CLIMB_IMPULSE} — vanilla water's 0.6. */
+	public static final double LEDGE_REACH = 0.60D;
+
 	private final Supplier<Fluid> source;
 	private final Supplier<Fluid> flowing;
 	private final double horizontalDrag;
@@ -127,10 +161,19 @@ public enum FluidImmersion {
 	private final float fogEnd;
 	private final Identifier overlayTexture;
 	private final float overlayAlpha;
+	private final double stuckHorizontal;
+	private final double stuckVertical;
 
 	FluidImmersion(Supplier<Fluid> source, Supplier<Fluid> flowing, double horizontalDrag,
 			double verticalDrag, boolean drowns, int fogColor, float fogStart, float fogEnd,
 			Identifier overlayTexture, float overlayAlpha) {
+		this(source, flowing, horizontalDrag, verticalDrag, drowns, fogColor, fogStart, fogEnd, overlayTexture,
+				overlayAlpha, 0.0D, 0.0D);
+	}
+
+	FluidImmersion(Supplier<Fluid> source, Supplier<Fluid> flowing, double horizontalDrag,
+			double verticalDrag, boolean drowns, int fogColor, float fogStart, float fogEnd,
+			Identifier overlayTexture, float overlayAlpha, double stuckHorizontal, double stuckVertical) {
 		this.source = source;
 		this.flowing = flowing;
 		this.horizontalDrag = horizontalDrag;
@@ -141,6 +184,8 @@ public enum FluidImmersion {
 		this.fogEnd = fogEnd;
 		this.overlayTexture = overlayTexture;
 		this.overlayAlpha = overlayAlpha;
+		this.stuckHorizontal = stuckHorizontal;
+		this.stuckVertical = stuckVertical;
 	}
 
 	/** The profile for this fluid, or {@code null} when the fluid is not one of the mod's. */
@@ -203,14 +248,43 @@ public enum FluidImmersion {
 			return;
 		}
 		Vec3 motion = entity.getDeltaMovement();
+		boolean affected = !(entity instanceof LivingEntity living) || living.isAffectedByFluids();
 		double ascent = 0.0D;
-		if (entity instanceof LivingEntity living && living.isJumping() && living.isAffectedByFluids()) {
+		if (entity instanceof LivingEntity living && living.isJumping() && affected) {
 			ascent = ASCENT_IMPULSE;
 		}
 		entity.setDeltaMovement(motion.x * profile.horizontalDrag,
 				motion.y * profile.verticalDrag + ascent,
 				motion.z * profile.horizontalDrag);
 		entity.resetFallDistance();
+		if (!profile.holdsLikeCobweb() || !affected) {
+			return;
+		}
+		if (ascent > 0.0D && entity.horizontalCollision && entity.isFree(0.0D, LEDGE_REACH, 0.0D)) {
+			// Climbing out at a rim: the one way up that is not slowed, as vanilla water's ledge hop.
+			entity.setDeltaMovement(entity.getDeltaMovement().x, LEDGE_CLIMB_IMPULSE, entity.getDeltaMovement().z);
+			return;
+		}
+		entity.makeStuckInBlock(level.getBlockState(pos),
+				new Vec3(profile.stuckHorizontal, profile.stuckVertical, profile.stuckHorizontal));
+	}
+
+	/**
+	 * Whether this fluid scales the entity's whole next move, input included, the way a cobweb does — honey
+	 * only; the thinner fluids are drag alone.
+	 */
+	public boolean holdsLikeCobweb() {
+		return stuckHorizontal > 0.0D;
+	}
+
+	/** Share of the next horizontal move kept inside this fluid, or 0 when the fluid is drag alone. */
+	public double stuckHorizontal() {
+		return stuckHorizontal;
+	}
+
+	/** Share of the next vertical move kept inside this fluid, or 0 when the fluid is drag alone. */
+	public double stuckVertical() {
+		return stuckVertical;
 	}
 
 	/** Whether an entity with its eyes in this fluid loses air (crude oil only — see the class doc). */

@@ -58,6 +58,7 @@ import dev.alaindustrial.menu.WindMillMenu;
 import dev.alaindustrial.menu.AlloySmelterMenu;
 import dev.alaindustrial.menu.VulcanizerMenu;
 import dev.alaindustrial.menu.FermenterMenu;
+import dev.alaindustrial.menu.HoneyCentrifugeMenu;
 import dev.alaindustrial.menu.GalvanicBathMenu;
 import dev.alaindustrial.menu.ReceptionCapsuleMenu;
 import dev.alaindustrial.menu.SettlementCoreMenu;
@@ -236,6 +237,8 @@ public final class ModContent {
 	public static Supplier<Block> GALVANIC_BATH = unbound("GALVANIC_BATH");
 	// The organic chain (MOD-146/MOD-525): the fermenter that brews it and the sprinkler that ends it.
 	public static Supplier<Block> FERMENTER = unbound("FERMENTER");
+	/** Honey Centrifuge (MOD-924) — spins combs, bottles and honey blocks into liquid honey. */
+	public static Supplier<Block> HONEY_CENTRIFUGE = unbound("HONEY_CENTRIFUGE");
 	public static Supplier<Block> SPRINKLER = unbound("SPRINKLER");
 	/** Thermal Centrifuge (MOD-424) — redstone-started, heated from below; doubles a dust a second time. */
 	public static Supplier<Block> THERMAL_CENTRIFUGE = unbound("THERMAL_CENTRIFUGE");
@@ -438,6 +441,8 @@ public final class ModContent {
 	// Organic chain (MOD-146/MOD-525): brewed fuel and the growth solution cracked out of it.
 	public static Supplier<Block> BIOFUEL_BLOCK = unbound("BIOFUEL_BLOCK");
 	public static Supplier<Block> NUTRIENT_SOLUTION_BLOCK = unbound("NUTRIENT_SOLUTION_BLOCK");
+	// MOD-922: liquid honey's pool in the world — not vanilla's honey_block, which is a solid block.
+	public static Supplier<Block> HONEY_BLOCK = unbound("HONEY_BLOCK");
 
 	// --- Fluids ---
 	// Oil (MOD-238): still + flowing. OilFluid (common) reads these at runtime for its
@@ -464,6 +469,9 @@ public final class ModContent {
 	// MOD-525: biofuel cracked a second time — the sprinkler's only feedstock, and no fuel at all.
 	public static Supplier<FlowingFluid> NUTRIENT_SOLUTION = unbound("NUTRIENT_SOLUTION");
 	public static Supplier<FlowingFluid> FLOWING_NUTRIENT_SOLUTION = unbound("FLOWING_NUTRIENT_SOLUTION");
+	// MOD-922: liquid honey — the apiary chain's fluid, tagged c:honey.
+	public static Supplier<FlowingFluid> HONEY = unbound("HONEY");
+	public static Supplier<FlowingFluid> FLOWING_HONEY = unbound("FLOWING_HONEY");
 
 	// --- Items (crafting components + tools) ---
 	public static Supplier<Item> ELECTRONIC_CIRCUIT = unbound("ELECTRONIC_CIRCUIT");
@@ -843,6 +851,8 @@ public final class ModContent {
 	// Organic chain buckets (MOD-146/MOD-525) — same pattern again.
 	public static Supplier<Item> BIOFUEL_BUCKET = unbound("BIOFUEL_BUCKET");
 	public static Supplier<Item> NUTRIENT_SOLUTION_BUCKET = unbound("NUTRIENT_SOLUTION_BUCKET");
+	// MOD-922: the honey bucket — same vanilla pattern.
+	public static Supplier<Item> HONEY_BUCKET = unbound("HONEY_BUCKET");
 	// Oil → rubber chain: the polymerizer makes raw rubber; the vulcanizer cures it with sulfur and heat.
 	public static Supplier<Item> RAW_RUBBER = unbound("RAW_RUBBER");
 	public static Supplier<Item> OIL_SLIME_SPAWN_EGG = unbound("OIL_SLIME_SPAWN_EGG");
@@ -988,6 +998,7 @@ public final class ModContent {
 	public static Supplier<BlockItem> ALLOY_SMELTER_ITEM = unbound("ALLOY_SMELTER_ITEM");
 	public static Supplier<BlockItem> GALVANIC_BATH_ITEM = unbound("GALVANIC_BATH_ITEM");
 	public static Supplier<BlockItem> FERMENTER_ITEM = unbound("FERMENTER_ITEM");
+	public static Supplier<BlockItem> HONEY_CENTRIFUGE_ITEM = unbound("HONEY_CENTRIFUGE_ITEM");
 	public static Supplier<BlockItem> SPRINKLER_ITEM = unbound("SPRINKLER_ITEM");
 	public static Supplier<BlockItem> THERMAL_CENTRIFUGE_ITEM = unbound("THERMAL_CENTRIFUGE_ITEM");
 
@@ -1200,6 +1211,7 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> ALLOY_SMELTER_BE = unbound("ALLOY_SMELTER_BE");
 	public static Supplier<BlockEntityType<?>> GALVANIC_BATH_BE = unbound("GALVANIC_BATH_BE");
 	public static Supplier<BlockEntityType<?>> FERMENTER_BE = unbound("FERMENTER_BE");
+	public static Supplier<BlockEntityType<?>> HONEY_CENTRIFUGE_BE = unbound("HONEY_CENTRIFUGE_BE");
 	public static Supplier<BlockEntityType<?>> SPRINKLER_BE = unbound("SPRINKLER_BE");
 	public static Supplier<BlockEntityType<?>> THERMAL_CENTRIFUGE_BE = unbound("THERMAL_CENTRIFUGE_BE");
 	public static Supplier<BlockEntityType<?>> REACTOR_CONTROLLER_BE = unbound("REACTOR_CONTROLLER_BE");
@@ -1291,6 +1303,7 @@ public final class ModContent {
 	public static Supplier<MenuType<AlloySmelterMenu>> ALLOY_SMELTER_MENU = unbound("ALLOY_SMELTER_MENU");
 	public static Supplier<MenuType<GalvanicBathMenu>> GALVANIC_BATH_MENU = unbound("GALVANIC_BATH_MENU");
 	public static Supplier<MenuType<FermenterMenu>> FERMENTER_MENU = unbound("FERMENTER_MENU");
+	public static Supplier<MenuType<HoneyCentrifugeMenu>> HONEY_CENTRIFUGE_MENU = unbound("HONEY_CENTRIFUGE_MENU");
 	public static Supplier<MenuType<SprinklerMenu>> SPRINKLER_MENU = unbound("SPRINKLER_MENU");
 	/** Thermal Centrifuge readout (MOD-424): rotor spin-up gauge + the status line for its three gates. */
 	public static Supplier<MenuType<ThermalCentrifugeMenu>> THERMAL_CENTRIFUGE_MENU =

@@ -1487,6 +1487,22 @@ tooltip.alaindustrial.storage_slots_double(108) {dark_gray}
 == alaindustrial:guide_book plain : none
 == alaindustrial:hazard_stripe_block plain : none
 == alaindustrial:high_altitude_wind_mill plain : none
+== alaindustrial:honey_bucket plain : none
+== alaindustrial:honey_centrifuge plain
+-- plain eu
+tooltip.alaindustrial.energy_input(2) {gray}
+tooltip.alaindustrial.duration_ticks(100) {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.energy_input(2) {gray}
+tooltip.alaindustrial.duration_ticks(100) {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.buffer(800) {gray}
+tooltip.alaindustrial.energy_per_op(200) {gray}
+-- plain no-eu
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.tier_lv {green}
 == alaindustrial:house_inlet plain
 -- plain eu
 "Wall socket of a shift worker's" {gray}

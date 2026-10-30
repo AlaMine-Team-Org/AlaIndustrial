@@ -1542,6 +1542,44 @@
           ]
         },
         {
+          "id": "honey_centrifuge",
+          "title": "Centrífuga de Mel",
+          "icon": "alaindustrial:honey_centrifuge",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Centrífuga de Mel",
+              "text": "Extrai mel líquido de favos de mel, blocos de favo, garrafas de mel e blocos de mel — um tanque de dez baldes, esvaziado por cano ou balde."
+            },
+            {
+              "type": "stats",
+              "title": "Estatísticas",
+              "lines": [
+                "Energia: 200 EU/op",
+                "Buffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Receita",
+              "recipe_type": "Fabricação com forma",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:honeycomb",
+                "alaindustrial:iron_plate",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:machine_casing",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:honey_centrifuge",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "polymerizer",
           "title": "Polimerizador",
           "icon": "alaindustrial:polymerizer",
@@ -2499,6 +2537,18 @@
               "type": "text",
               "title": "Diesel",
               "text": "A fração leve da destilação do petróleo — um fluido amarelo-dourado, o produto-alvo da coluna. Futuro combustível do gerador de combustível líquido (12 EU/t)."
+            }
+          ]
+        },
+        {
+          "id": "honey",
+          "title": "Mel Líquido",
+          "icon": "alaindustrial:honey_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Mel Líquido",
+              "text": "O líquido âmbar e espesso do apiário — balde, poça lenta, canos e tanques. A poça se espalha como lava, e quem entra fica preso como num bloco de mel."
             }
           ]
         },

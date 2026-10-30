@@ -1542,6 +1542,44 @@
           ]
         },
         {
+          "id": "honey_centrifuge",
+          "title": "Honigschleuder",
+          "icon": "alaindustrial:honey_centrifuge",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Honigschleuder",
+              "text": "Schleudert flüssigen Honig aus Honigwaben, Honigwabenblöcken, Honigflaschen und Honigblöcken — ein Tank für zehn Eimer, geleert per Rohr oder Eimer."
+            },
+            {
+              "type": "stats",
+              "title": "Werte",
+              "lines": [
+                "Energie: 200 EU/Vorgang",
+                "Puffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Rezept",
+              "recipe_type": "Geformtes Handwerk",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:honeycomb",
+                "alaindustrial:iron_plate",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:machine_casing",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:honey_centrifuge",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "polymerizer",
           "title": "Polymerisator",
           "icon": "alaindustrial:polymerizer",
@@ -2499,6 +2537,18 @@
               "type": "text",
               "title": "Diesel",
               "text": "Die leichte Fraktion der Öldestillation — eine goldgelbe Flüssigkeit, das Zielprodukt der Kolonne. Künftiger Brennstoff des Flüssigbrennstoff-Generators (12 EU/t)."
+            }
+          ]
+        },
+        {
+          "id": "honey",
+          "title": "Flüssiger Honig",
+          "icon": "alaindustrial:honey_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Flüssiger Honig",
+              "text": "Die zähe, bernsteinfarbene Flüssigkeit der Imkerei — Eimer, träge Lache, Rohre und Tanks. Die Lache fließt wie Lava, und wer hineinwatet, klebt fest wie in einem Honigblock."
             }
           ]
         },

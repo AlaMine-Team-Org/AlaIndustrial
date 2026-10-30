@@ -1542,6 +1542,44 @@
           ]
         },
         {
+          "id": "honey_centrifuge",
+          "title": "Bal Santrifüjü",
+          "icon": "alaindustrial:honey_centrifuge",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Bal Santrifüjü",
+              "text": "Bal peteklerinden, petek bloklarından, bal şişelerinden ve bal bloklarından sıvı bal çıkarır — on kovalık tank, boru ya da kovayla boşaltılır."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Enerji: 200 EU/işlem",
+                "Tampon: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:honeycomb",
+                "alaindustrial:iron_plate",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:machine_casing",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:honey_centrifuge",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "polymerizer",
           "title": "Polimerleştirici",
           "icon": "alaindustrial:polymerizer",
@@ -2499,6 +2537,18 @@
               "type": "text",
               "title": "Dizel",
               "text": "Petrol damıtmasının hafif fraksiyonu — altın sarısı bir sıvı, kolonun hedef ürünü. Sıvı yakıt jeneratörünün gelecekteki yakıtı (12 EU/t)."
+            }
+          ]
+        },
+        {
+          "id": "honey",
+          "title": "Sıvı bal",
+          "icon": "alaindustrial:honey_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Sıvı bal",
+              "text": "Arılığın koyu kehribar sıvısı — kova, yavaş birikinti, borular ve tanklar. Birikinti lav gibi yayılır, içine giren bal bloğundaki gibi yapışır."
             }
           ]
         },

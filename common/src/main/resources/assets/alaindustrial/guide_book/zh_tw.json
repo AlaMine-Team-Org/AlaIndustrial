@@ -1542,6 +1542,44 @@
           ]
         },
         {
+          "id": "honey_centrifuge",
+          "title": "搖蜜機",
+          "icon": "alaindustrial:honey_centrifuge",
+          "pages": [
+            {
+              "type": "text",
+              "title": "搖蜜機",
+              "text": "從蜜脾、蜜脾塊、蜂蜜瓶和蜂蜜塊中搖出液態蜂蜜——十桶容量的儲罐，由管線或桶取走。"
+            },
+            {
+              "type": "stats",
+              "title": "數據",
+              "lines": [
+                "能量：200 EU/操作",
+                "緩衝：800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:honeycomb",
+                "alaindustrial:iron_plate",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:machine_casing",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:honey_centrifuge",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "polymerizer",
           "title": "聚合機",
           "icon": "alaindustrial:polymerizer",
@@ -2499,6 +2537,18 @@
               "type": "text",
               "title": "柴油",
               "text": "石油蒸餾的輕餾分——金黃色的流體，蒸餾塔的目標產物。液態燃料發電機（12 EU/t）的未來燃料。"
+            }
+          ]
+        },
+        {
+          "id": "honey",
+          "title": "液態蜂蜜",
+          "icon": "alaindustrial:honey_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "液態蜂蜜",
+              "text": "養蜂場濃稠的琥珀色液體——桶、緩慢的液池、管線和儲罐。液池像熔岩一樣蔓延，踏入其中的會像在蜂蜜塊裡一樣被黏住。"
             }
           ]
         },

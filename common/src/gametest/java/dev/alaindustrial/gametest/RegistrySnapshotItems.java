@@ -229,6 +229,8 @@ final class RegistrySnapshotItems {
 			"item guide_book class=GuideBookItem stack=1 damage=0 rarity=COMMON fireproof=no",
 			"item hazard_stripe_block class=BlockItem stack=64 damage=0 rarity=COMMON fireproof=no",
 			"item high_altitude_wind_mill class=BlockItem stack=64 damage=0 rarity=COMMON fireproof=no",
+			"item honey_bucket class=BucketItem stack=1 damage=0 rarity=COMMON fireproof=no",
+			"item honey_centrifuge class=BlockItem stack=64 damage=0 rarity=COMMON fireproof=no",
 			"item house_inlet class=BlockItem stack=64 damage=0 rarity=COMMON fireproof=no",
 			"item house_plan class=HousePlanItem stack=1 damage=0 rarity=COMMON fireproof=no",
 			"item incubator class=BlockItem stack=64 damage=0 rarity=COMMON fireproof=no",

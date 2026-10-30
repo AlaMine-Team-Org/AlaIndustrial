@@ -1,0 +1,12 @@
+{
+	"type": "alaindustrial:honey_centrifuging",
+	"ingredient": "minecraft:honey_bottle",
+	"fluid_result": {
+		"fluid": "alaindustrial:honey",
+		"amount": 250
+	},
+	"remainder": {
+		"id": "minecraft:glass_bottle"
+	},
+	"energy": 200
+}

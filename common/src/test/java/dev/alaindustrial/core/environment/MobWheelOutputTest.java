@@ -12,7 +12,7 @@ import org.junit.jupiter.params.provider.CsvSource;
  * {@code produce()}. Run against the shipped knob defaults (EU and stamina multipliers 100 %, bonus +50 %) and
  * the species table of {@link MobWheelProfile} — the boundary values the spec and the docs quote.
  *
- * @implements mob wheel output = floor(power × euMultiplier × bonusFactor × pace × (0.5 + 0.5 × stamina))
+ * @implements mob wheel output = max(1, floor(power × euMultiplier × bonusFactor × pace × (0.5 + 0.5 × stamina)))
  */
 class MobWheelOutputTest {
 
@@ -58,9 +58,24 @@ class MobWheelOutputTest {
 	@Test
 	void zeroStaminaIsHalfPowerFlooredNotZero() {
 		assertEquals(2, MobWheelOutput.euFor(5, 100, 0, 1.0, 0.0), "pig 5 × 0.5 = 2.5 → 2");
-		assertEquals(0, MobWheelOutput.euFor(1, 100, 0, 1.0, 0.0), "chicken 1 × 0.5 = 0.5 → 0");
+		assertEquals(1, MobWheelOutput.euFor(1, 100, 0, 1.0, 0.0), "chicken 1 × 0.5 = 0.5 → never below 1 (MOD-867)");
 		assertEquals(5, MobWheelOutput.euFor(10, 100, 0, 1.0, 0.0), "creeper 10 × 0.5 = 5");
 		assertEquals(4, MobWheelOutput.euFor(7, 100, 0, MobWheelProfile.RAGGED_PACE_MAX, 0.0), "4.2 → 4");
+	}
+
+	@Test
+	void aRunningMobNeverMakesLessThanOne() {
+		// MOD-867: floor(1 × 0.99) used to be 0 from a chicken's second running tick on.
+		double[] fractions = { 1.0, 0.99, 0.5, 1.0 / 24000, 0.0 };
+		for (MobWheelProfile profile : MobWheelProfile.values()) {
+			for (double fraction : fractions) {
+				for (double pace : new double[] { MobWheelProfile.RAGGED_PACE_MIN, 1.0 }) {
+					int eu = MobWheelOutput.euFor(profile.basePowerEuPerTick(), 100, 0, pace, fraction);
+					assertTrue(eu >= 1, profile.name() + " at stamina " + fraction + ", pace " + pace + ": " + eu);
+				}
+			}
+		}
+		assertEquals(1, MobWheelOutput.euFor(5, 10, 0, 1.0, 0.0), "a low EU multiplier bottoms out at 1, not 0");
 	}
 
 	@Test

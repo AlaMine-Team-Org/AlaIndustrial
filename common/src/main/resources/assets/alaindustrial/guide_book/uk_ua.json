@@ -1542,6 +1542,44 @@
           ]
         },
         {
+          "id": "honey_centrifuge",
+          "title": "Медогонка",
+          "icon": "alaindustrial:honey_centrifuge",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Медогонка",
+              "text": "Відкачує рідкий мед із медових стільників, блоків стільників, пляшок меду й медових блоків — бак на десять відер, мед забирають трубою або відром."
+            },
+            {
+              "type": "stats",
+              "title": "Характеристики",
+              "lines": [
+                "Енергія: 200 EU/оп",
+                "Буфер: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Рецепт",
+              "recipe_type": "Крафт за формою",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:honeycomb",
+                "alaindustrial:iron_plate",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:machine_casing",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:honey_centrifuge",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "polymerizer",
           "title": "Полімеризатор",
           "icon": "alaindustrial:polymerizer",
@@ -2499,6 +2537,18 @@
               "type": "text",
               "title": "Дизель",
               "text": "Легка фракція перегонки нафти — золотисто-жовта рідина, цільовий продукт колони. Майбутнє паливо генератора на рідкому паливі (12 EU/t)."
+            }
+          ]
+        },
+        {
+          "id": "honey",
+          "title": "Рідкий мед",
+          "icon": "alaindustrial:honey_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Рідкий мед",
+              "text": "Густа бурштинова рідина пасіки — відро, повільна калюжа, труби й баки. Калюжа розтікається, як лава, а хто в неї зайде, вгрузає, як у медовому блоці."
             }
           ]
         },

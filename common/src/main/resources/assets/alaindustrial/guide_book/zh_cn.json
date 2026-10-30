@@ -74,7 +74,7 @@
             {
               "type": "text",
               "title": "矿藏是有限的",
-              "text": "舀走的每一格石油都永远消失了——与水不同，矿藏不会重新填满。\n\n矿层湖泊约有 160 桶，深层储层约有 1300 桶，矿脉的穹顶则接近四千桶。抽干一处就得去找下一处，所以找到时记得标记位置。\n\n用桶一格格舀很费时间：在旁边放一台抽水泵，它会自己把整片矿藏抽进储罐。"
+              "text": "舀走的每一格石油都永远消失了——与水不同，矿藏不会重新填满。\n\n矿层湖泊约有 160 桶，深层储层约有 1300 桶，矿脉的穹顶则接近四千桶。抽干一处就得去找下一处，所以找到时记得标记位置。\n\n用桶一格格舀很费时间：在旁边放一台泵，它会自己把整片矿藏抽进储罐。"
             },
             {
               "type": "text",
@@ -1542,6 +1542,44 @@
           ]
         },
         {
+          "id": "honey_centrifuge",
+          "title": "摇蜜机",
+          "icon": "alaindustrial:honey_centrifuge",
+          "pages": [
+            {
+              "type": "text",
+              "title": "摇蜜机",
+              "text": "从蜜脾、蜜脾块、蜂蜜瓶和蜂蜜块中摇出液态蜂蜜——十桶容量的储罐，由管道或桶取走。"
+            },
+            {
+              "type": "stats",
+              "title": "属性",
+              "lines": [
+                "能量：200 EU/次",
+                "缓冲：800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "配方",
+              "recipe_type": "有序合成",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:honeycomb",
+                "alaindustrial:iron_plate",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:machine_casing",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:honey_centrifuge",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "polymerizer",
           "title": "聚合机",
           "icon": "alaindustrial:polymerizer",
@@ -1998,13 +2036,13 @@
         },
         {
           "id": "pump",
-          "title": "抽水泵",
+          "title": "泵",
           "icon": "alaindustrial:pump",
           "pages": [
             {
               "type": "text",
-              "title": "抽水泵",
-              "text": "LV 抽水泵，可从世界或相邻储罐抽取流体到其 10 桶内部储罐，并推送给接收方；可与胶囊及其他模组的容器交换流体。"
+              "title": "泵",
+              "text": "LV 泵，可从世界或相邻储罐抽取流体到其 10 桶内部储罐，并推送给接收方；可与胶囊及其他模组的容器交换流体。"
             },
             {
               "type": "stats",
@@ -2503,6 +2541,18 @@
           ]
         },
         {
+          "id": "honey",
+          "title": "液态蜂蜜",
+          "icon": "alaindustrial:honey_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "液态蜂蜜",
+              "text": "养蜂场浓稠的琥珀色液体——桶、缓慢的液池、管道和储罐。液池像熔岩一样蔓延，踏入其中的会像在蜂蜜块里一样被粘住。"
+            }
+          ]
+        },
+        {
           "id": "invar_ingot",
           "title": "因瓦锭",
           "icon": "alaindustrial:invar_ingot",
@@ -2836,7 +2886,7 @@
             {
               "type": "text",
               "title": "石油",
-              "text": "一种液态化石资源——世界中有限的湖泊，可用桶、胶囊或抽水泵收集；黏稠、易燃，也是橡胶产业链的起点。"
+              "text": "一种液态化石资源——世界中有限的湖泊，可用桶、胶囊或泵收集；黏稠、易燃，也是橡胶产业链的起点。"
             }
           ]
         },
@@ -2957,7 +3007,7 @@
             {
               "type": "text",
               "title": "烟灰",
-              "text": "在石油自行燃尽的地方残留在地面上；可用铲子收集，压缩机会将 16 个烟灰压成一个碳压块。"
+              "text": "在石油自行燃尽的地方残留在地面上；可用锹收集，压缩机会将 16 个烟灰压成一个碳压块。"
             },
             {
               "type": "stats",
@@ -6961,13 +7011,13 @@
         },
         {
           "id": "electric_shovel",
-          "title": "电动铲",
+          "title": "电动锹",
           "icon": "alaindustrial:electric_shovel",
           "pages": [
             {
               "type": "text",
-              "title": "电动铲",
-              "text": "可充电的EU铲——有电时挖掘泥土、沙子和砂砾，每方块消耗EU，永不损坏。"
+              "title": "电动锹",
+              "text": "可充电的EU锹——有电时挖掘泥土、沙子和砂砾，每方块消耗EU，永不损坏。"
             },
             {
               "type": "stats",

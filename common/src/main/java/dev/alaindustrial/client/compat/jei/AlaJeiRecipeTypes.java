@@ -9,6 +9,7 @@ import dev.alaindustrial.recipe.AlloyRecipeInput;
 import dev.alaindustrial.recipe.AlloyingRecipe;
 import dev.alaindustrial.recipe.FluidOutputRecipe;
 import dev.alaindustrial.recipe.FluidRecipeInput;
+import dev.alaindustrial.recipe.ItemToFluidRecipe;
 import dev.alaindustrial.recipe.PolymerizingRecipe;
 import dev.alaindustrial.registry.ModRecipes;
 import java.util.Collections;
@@ -29,8 +30,9 @@ import net.minecraft.world.item.crafting.Recipe;
  * player got no Ala Industrial recipe card at all, for any machine, for a whole release cycle. A
  * missing line in a lookup table cost the entire integration.
  *
- * <p>The maps below are filled from {@link ModRecipes#kinds()}, {@link ModRecipes#fluidKinds()} and
- * {@link ModRecipes#alloyKinds()} — the very lists both loaders register the families from. A family
+ * <p>The maps below are filled from {@link ModRecipes#kinds()}, {@link ModRecipes#fluidKinds()},
+ * {@link ModRecipes#alloyKinds()} and {@link ModRecipes#itemFluidKinds()} — the very lists both loaders
+ * register the families from. A family
  * that exists therefore has a viewer type, with no second list to keep in step and no branch to
  * forget; the {@code throw} that made a forgotten one fatal is gone with the ladder that needed it.
  */
@@ -42,6 +44,9 @@ final class AlaJeiRecipeTypes {
 	/** The same for the fluid-fed families (MOD-019, MOD-251) and for alloying (MOD-064). */
 	private static final Map<ModRecipes.FluidKind<?>, IRecipeHolderType<?>> BY_FLUID_KIND = fluidKindTypes();
 	private static final Map<ModRecipes.AlloyKind<?>, IRecipeHolderType<?>> BY_ALLOY_KIND = alloyKindTypes();
+	/** The item → fluid families (MOD-924). */
+	private static final Map<ModRecipes.ItemFluidKind, IRecipeHolderType<ItemToFluidRecipe>>
+			BY_ITEM_FLUID_KIND = itemFluidKindTypes();
 
 	/** The Polymerizer's fluid → item family (MOD-019) — a different recipe class, so a separate type. */
 	static final IRecipeHolderType<PolymerizingRecipe> POLYMERIZING = fluidType(ModRecipes.POLYMERIZING);
@@ -49,6 +54,9 @@ final class AlaJeiRecipeTypes {
 	static final IRecipeHolderType<FluidOutputRecipe> DISTILLING = fluidType(ModRecipes.DISTILLING);
 	/** The alloy smelter's multi-component family (MOD-064). */
 	static final IRecipeHolderType<AlloyingRecipe> ALLOYING = alloyType(ModRecipes.ALLOYING);
+	/** The honey centrifuge's item → fluid family (MOD-924). */
+	static final IRecipeHolderType<ItemToFluidRecipe> HONEY_CENTRIFUGING =
+			BY_ITEM_FLUID_KIND.get(ModRecipes.HONEY_CENTRIFUGING);
 
 	/**
 	 * The Canning Machine (MOD-383). The one viewer type here that is NOT an {@link IRecipeHolderType}:
@@ -89,7 +97,7 @@ final class AlaJeiRecipeTypes {
 			case MACHINE_INFO -> MACHINE_INFO;
 			case EVOLUTION_INFO -> EVOLUTION_INFO;
 			case PLANT_INFO -> PLANT_INFO;
-			case POLYMERIZING, ALLOYING, DISTILLING, CANNING ->
+			case POLYMERIZING, ALLOYING, DISTILLING, HONEY_CENTRIFUGING, CANNING ->
 					throw new IllegalArgumentException(form + " is a card form, not a page form");
 		};
 	}
@@ -128,6 +136,15 @@ final class AlaJeiRecipeTypes {
 		Map<ModRecipes.AlloyKind<?>, IRecipeHolderType<?>> types = new LinkedHashMap<>();
 		for (ModRecipes.AlloyKind<?> kind : ModRecipes.alloyKinds()) {
 			types.put(kind, newAlloyType(kind));
+		}
+		return Collections.unmodifiableMap(types);
+	}
+
+	private static Map<ModRecipes.ItemFluidKind, IRecipeHolderType<ItemToFluidRecipe>>
+			itemFluidKindTypes() {
+		Map<ModRecipes.ItemFluidKind, IRecipeHolderType<ItemToFluidRecipe>> types = new LinkedHashMap<>();
+		for (ModRecipes.ItemFluidKind kind : ModRecipes.itemFluidKinds()) {
+			types.put(kind, IRecipeHolderType.create(Industrialization.id(kind.id())));
 		}
 		return Collections.unmodifiableMap(types);
 	}

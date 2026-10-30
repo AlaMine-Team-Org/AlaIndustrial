@@ -16,6 +16,7 @@ import dev.alaindustrial.client.screen.PolymerizerScreen;
 import dev.alaindustrial.client.screen.SawmillScreen;
 import dev.alaindustrial.client.screen.GalvanicBathScreen;
 import dev.alaindustrial.client.screen.GuiRect;
+import dev.alaindustrial.client.screen.HoneyCentrifugeScreen;
 import dev.alaindustrial.client.screen.ThermalCentrifugeScreen;
 import dev.alaindustrial.client.screen.VulcanizerScreen;
 
@@ -102,6 +103,21 @@ public final class MachineRecipeViewerTargets {
 	 */
 	public static final List<AlloyTarget> ALLOY_ALL = List.of(
 			new AlloyTarget(AlloySmelterScreen.class, ModRecipes.ALLOYING, AlloySmelterScreen.PROGRESS_AREA));
+
+	/**
+	 * The item → fluid families ({@link ModRecipes.ItemFluidKind}, MOD-924) — one more list for the same reason
+	 * as {@link FluidTarget}: the family type is unrelated in Java to the others.
+	 */
+	public record ItemFluidTarget(
+			Class<? extends AbstractContainerScreen<?>> screenClass,
+			ModRecipes.ItemFluidKind kind,
+			GuiRect progressArea) {
+	}
+
+	/** The honey centrifuge's click target: its progress arrow. */
+	public static final List<ItemFluidTarget> ITEM_FLUID_ALL = List.of(
+			new ItemFluidTarget(HoneyCentrifugeScreen.class, ModRecipes.HONEY_CENTRIFUGING,
+					HoneyCentrifugeScreen.PROGRESS_AREA));
 
 	/**
 	 * And a fourth list for the Canning Machine (MOD-383), which has no {@link ModRecipes.Kind} to key on

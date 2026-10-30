@@ -407,6 +407,10 @@ public final class ServerBalance {
 		return current.doubleValue("goldCableLossPerBlock", Config.goldCableLossPerBlock);
 	}
 
+	public static int honeyCentrifugeDuration() {
+		return current.intValue("honeyCentrifugeDuration", Config.honeyCentrifugeDuration);
+	}
+
 	public static int incubatorBuffer() {
 		return current.intValue("incubatorBuffer", Config.incubatorBuffer);
 	}

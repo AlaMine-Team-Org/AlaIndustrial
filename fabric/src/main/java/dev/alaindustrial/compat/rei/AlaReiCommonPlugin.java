@@ -47,6 +47,8 @@ public class AlaReiCommonPlugin implements REICommonPlugin {
 		registry.register(Industrialization.id("alloying"), AlloyingDisplay.SERIALIZER);
 		// MOD-251: the distillation column's fluid → two-fluids card (the MOD-257 contract).
 		registry.register(Industrialization.id("fluid_output"), FluidOutputDisplay.SERIALIZER);
+		// MOD-924: the honey centrifuge's item → fluid card.
+		registry.register(Industrialization.id("item_to_fluid"), ItemToFluidDisplay.SERIALIZER);
 	}
 
 	@Override
@@ -89,6 +91,9 @@ public class AlaReiCommonPlugin implements REICommonPlugin {
 		// MOD-251: the distillation column's family — one fluid volume in, two fractions out.
 		registry.beginRecipeFiller(dev.alaindustrial.recipe.FluidOutputRecipe.class)
 				.fill(holder -> new FluidOutputDisplay(holder.value()));
+		// MOD-924: the honey centrifuge's family — one item in, a fluid volume (and maybe a container) out.
+		registry.beginRecipeFiller(dev.alaindustrial.recipe.ItemToFluidRecipe.class)
+				.fill(holder -> new ItemToFluidDisplay(holder.value()));
 	}
 
 	/**

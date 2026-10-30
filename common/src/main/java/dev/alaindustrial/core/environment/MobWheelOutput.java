@@ -6,11 +6,14 @@ package dev.alaindustrial.core.environment;
  * code is the production code.
  *
  * <p>Output of a running mob =
- * {@code floor(power × euMultiplier × bonusFactor × pace × (0.5 + 0.5 × staminaFraction))}, with
+ * {@code max(1, floor(power × euMultiplier × bonusFactor × pace × (0.5 + 0.5 × staminaFraction)))}, with
  * {@code euMultiplier = mobWheelEuMultiplierPercent / 100} and {@code bonusFactor = (100 + bonusPercent) / 100}
  * while the species' bonus condition holds, 1 otherwise. Rounded DOWN, once, at the very end: a fresh night
  * zombie at its fastest pace makes {@code floor(7 × 1.5 × 1.2) = 12} — exactly a copper cable's throughput,
- * never one more. A mob that is not running — paused, exhausted, distracted, absent — gives nothing.
+ * never one more. A running mob never makes less than 1 EU/t (MOD-867): without that floor a 1 EU/t species
+ * would round {@code 0.99} down to 0 from its second running tick on. With the EU multiplier knob below 100 %
+ * every runner bottoms out at 1, not 0; only 0 % switches the wheel off. A mob that is not running — paused,
+ * exhausted, distracted, absent — gives nothing.
  */
 public final class MobWheelOutput {
 	private MobWheelOutput() {
@@ -23,7 +26,7 @@ public final class MobWheelOutput {
 	private static final double EPSILON = 1e-9;
 
 	/**
-	 * EU/t of a running mob.
+	 * EU/t of a running mob: the formula rounded down, but never below 1 while the mob runs.
 	 *
 	 * @param power             the species' base power in EU/t (≤ 0 gives 0)
 	 * @param multiplierPercent the roster-wide EU multiplier in percent (≤ 0 gives 0)
@@ -38,7 +41,7 @@ public final class MobWheelOutput {
 		}
 		double fraction = Math.max(0.0, Math.min(1.0, staminaFraction));
 		double scale = multiplierPercent / 100.0 * (100 + Math.max(0, bonusPercent)) / 100.0;
-		return (int) Math.floor(power * scale * pace * (0.5 + 0.5 * fraction) + EPSILON);
+		return Math.max(1, (int) Math.floor(power * scale * pace * (0.5 + 0.5 * fraction) + EPSILON));
 	}
 
 	/**

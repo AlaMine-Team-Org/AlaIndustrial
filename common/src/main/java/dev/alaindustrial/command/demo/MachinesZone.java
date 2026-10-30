@@ -6,6 +6,7 @@ import dev.alaindustrial.block.entity.AlloySmelterBlockEntity;
 import dev.alaindustrial.block.entity.CanningMachineBlockEntity;
 import dev.alaindustrial.block.entity.ComponentRepairBenchBlockEntity;
 import dev.alaindustrial.block.entity.FermenterBlockEntity;
+import dev.alaindustrial.block.entity.HoneyCentrifugeBlockEntity;
 import dev.alaindustrial.block.entity.GalvanicBathBlockEntity;
 import dev.alaindustrial.block.entity.IncubatorBlockEntity;
 import dev.alaindustrial.block.entity.PolymerizerBlockEntity;
@@ -138,7 +139,10 @@ final class MachinesZone implements DemoZone {
 		w.set(35, 2, 24, Blocks.REDSTONE_BLOCK);
 	}
 
-	/** The galvanic bath, the fermenter and the sprinkler: the machines whose feedstock is a stocked tank. */
+	/**
+	 * The galvanic bath, the fermenter, the honey centrifuge and the sprinkler: the machines of the fluid
+	 * chains, stocked so they run on the stand.
+	 */
 	private static void fluidChain(StandWriter w) {
 		// Galvanic Bath (MOD-127): like the polymerizer its feedstock is a fluid, so the tank is stocked
 		// directly rather than through a bucket — one bucket would buy four operations and then the stand
@@ -158,6 +162,11 @@ final class MachinesZone implements DemoZone {
 		w.fillSlot(40, 1, 24, FermenterBlockEntity.ORGANIC_SLOT,
 				new ItemStack(Items.POISONOUS_POTATO, 64));
 		w.fillTank(40, 1, 24, FermenterBlockEntity.class, be -> be.waterTank, Fluids.WATER, FULL);
+		// Honey Centrifuge (MOD-924), on the east edge two cells past the liquid-honey pool it makes: fed a stack
+		// of honeycombs so the stand shows it spinning; the stack ends at 6400 of the tank's 10 000 mB.
+		w.set(86, 1, 24, ModContent.HONEY_CENTRIFUGE.get());
+		w.chargeBuffer(86, 1, 24);
+		w.fillSlot(86, 1, 24, HoneyCentrifugeBlockEntity.INPUT_SLOT, new ItemStack(Items.HONEYCOMB, 64));
 		// Sprinkler (MOD-525): the tail of the same chain, and the one block here that takes no cable —
 		// so it is shown charged with solution instead, beside the farm plot rather than in the machine
 		// row. Its head only turns when the tank can pay, which is the whole readout it has.

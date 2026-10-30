@@ -1,0 +1,10 @@
+{
+	"type": "alaindustrial:polymerizing",
+	"fluid": "#c:honey",
+	"amount": 1000,
+	"result": {
+		"id": "minecraft:honey_block",
+		"count": 1
+	},
+	"energy": 400
+}

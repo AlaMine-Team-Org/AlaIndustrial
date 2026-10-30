@@ -387,6 +387,14 @@ public final class ModTags {
 				TagKey.create(Registries.FLUID, Identifier.fromNamespaceAndPath("c", "biofuel"));
 
 		/**
+		 * Liquid honey (MOD-922) — {@code c:honey}, still + flowing, same convention as {@link #C_OIL}; the
+		 * name NeoForge's {@code Tags.Fluids.HONEY} and Fabric's convention tags give it, so another mod's honey
+		 * counts too.
+		 */
+		public static final TagKey<Fluid> C_HONEY =
+				TagKey.create(Registries.FLUID, Identifier.fromNamespaceAndPath("c", "honey"));
+
+		/**
 		 * Steam (MOD-662) — {@code c:steam}, backed by {@code data/c/tags/fluid/steam.json}. The one fluid
 		 * a steam pipe carries and a liquid pipe refuses, read by tag so another mod's steam counts too.
 		 */

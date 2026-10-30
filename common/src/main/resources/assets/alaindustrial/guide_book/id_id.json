@@ -1542,6 +1542,44 @@
           ]
         },
         {
+          "id": "honey_centrifuge",
+          "title": "Sentrifus Madu",
+          "icon": "alaindustrial:honey_centrifuge",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Sentrifus Madu",
+              "text": "Memutar madu cair dari sarang lebah, blok sarang lebah, botol madu, dan blok madu — tangki sepuluh ember, dikosongkan dengan pipa atau ember."
+            },
+            {
+              "type": "stats",
+              "title": "Statistik",
+              "lines": [
+                "Energi: 200 EU/op",
+                "Bufer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Resep",
+              "recipe_type": "Pembuatan Berpola",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:honeycomb",
+                "alaindustrial:iron_plate",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:machine_casing",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:honey_centrifuge",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "polymerizer",
           "title": "Polimerisator",
           "icon": "alaindustrial:polymerizer",
@@ -2499,6 +2537,18 @@
               "type": "text",
               "title": "Diesel",
               "text": "Fraksi ringan hasil distilasi minyak — cairan kuning keemasan, produk utama kolom. Bahan bakar masa depan generator bahan bakar cair (12 EU/t)."
+            }
+          ]
+        },
+        {
+          "id": "honey",
+          "title": "Madu Cair",
+          "icon": "alaindustrial:honey_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Madu Cair",
+              "text": "Cairan ambar kental dari peternakan lebah — ember, genangan lambat, pipa, dan tangki. Genangannya menyebar seperti lava, dan yang masuk lengket seperti di blok madu."
             }
           ]
         },

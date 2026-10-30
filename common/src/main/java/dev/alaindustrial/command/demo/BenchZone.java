@@ -123,8 +123,9 @@ final class BenchZone implements DemoZone {
 		w.stock(78, 1, BENCH_Z, List.of(
 				new ItemStack(ModContent.OIL_BUCKET.get()), new ItemStack(ModContent.DIESEL_BUCKET.get()),
 				new ItemStack(ModContent.FUEL_OIL_BUCKET.get()), new ItemStack(ModContent.BIOFUEL_BUCKET.get()),
-				new ItemStack(ModContent.NUTRIENT_SOLUTION_BUCKET.get()), new ItemStack(Items.WATER_BUCKET),
-				new ItemStack(Items.LAVA_BUCKET), new ItemStack(Items.COAL, 64), new ItemStack(Items.REDSTONE, 64),
+				new ItemStack(ModContent.NUTRIENT_SOLUTION_BUCKET.get()), new ItemStack(ModContent.HONEY_BUCKET.get()),
+				new ItemStack(Items.WATER_BUCKET), new ItemStack(Items.LAVA_BUCKET),
+				new ItemStack(Items.COAL, 64), new ItemStack(Items.REDSTONE, 64),
 				new ItemStack(Items.LEVER, 16), new ItemStack(ModContent.URANIUM_FUEL_ROD.get(), 16),
 				new ItemStack(ModContent.EMPTY_CAN.get(), 64), new ItemStack(Items.COOKED_BEEF, 64),
 				new ItemStack(ModContent.COTTON_SEEDS.get(), 64), new ItemStack(ModContent.KOK_SAGYZ_SEEDS.get(), 64),

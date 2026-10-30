@@ -35,6 +35,8 @@ public final class FluidTankVisuals {
 	private static final int FUEL_OIL = 0x362614;
 	private static final int BIOFUEL = 0x6B8E23;
 	private static final int NUTRIENT_SOLUTION = 0x3FA36B;
+	/** Liquid honey (MOD-922), the average colour of {@code block/honey_still}. */
+	private static final int HONEY = 0xC57B16;
 
 	/**
 	 * Steam (MOD-468) — the average colour of {@code block/steam_still}, like the three above. It has to
@@ -97,6 +99,9 @@ public final class FluidTankVisuals {
 		}
 		if (ModContent.NUTRIENT_SOLUTION.get().isSame(fluid)) {
 			return OptionalInt.of(NUTRIENT_SOLUTION);
+		}
+		if (ModContent.HONEY.get().isSame(fluid)) {
+			return OptionalInt.of(HONEY);
 		}
 		if (ModContent.STEAM.get().isSame(fluid)) {
 			return OptionalInt.of(STEAM);

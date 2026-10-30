@@ -18,6 +18,7 @@ category alaindustrial:fermenting 150x48 icon=alaindustrial:fermenter title={blo
 category alaindustrial:polymerizing 150x48 icon=alaindustrial:polymerizer title={block.alaindustrial.polymerizer}
 category alaindustrial:alloying 150x48 icon=alaindustrial:alloy_smelter title={block.alaindustrial.alloy_smelter}
 category alaindustrial:distilling 150x48 icon=alaindustrial:distillation_column title={block.alaindustrial.distillation_column}
+category alaindustrial:honey_centrifuging 150x48 icon=alaindustrial:honey_centrifuge title={block.alaindustrial.honey_centrifuge}
 category alaindustrial:canning 150x48 icon=alaindustrial:canning_machine title={jei.alaindustrial.category.canning}
 category alaindustrial:machine_info 160x110 icon=alaindustrial:geothermal_generator title={jei.alaindustrial.category.machine_info}
 category alaindustrial:evolution_info 160x110 icon=alaindustrial:alignment_chip_day title={jei.alaindustrial.category.evolution}
@@ -31,6 +32,7 @@ station alaindustrial:distilling alaindustrial:distillation_column
 station alaindustrial:extracting alaindustrial:extractor
 station alaindustrial:fermenting alaindustrial:fermenter
 station alaindustrial:galvanic_bath alaindustrial:galvanic_bath
+station alaindustrial:honey_centrifuging alaindustrial:honey_centrifuge
 station alaindustrial:maceration alaindustrial:macerator
 station alaindustrial:machine_info alaindustrial:geothermal_generator alaindustrial:energy_condenser
 station alaindustrial:mutation_create alaindustrial:incubator
@@ -55,6 +57,7 @@ click EnergyCondenserScreen 57 15 63 23 -> alaindustrial:machine_info
 click ExtractorScreen 80 37 29 10 -> alaindustrial:extracting
 click GalvanicBathScreen 86 35 24 17 -> alaindustrial:galvanic_bath
 click GeothermalGeneratorScreen 82 38 10 7 -> alaindustrial:machine_info
+click HoneyCentrifugeScreen 39 35 24 17 -> alaindustrial:honey_centrifuging
 click IncubatorScreen 112 20 24 16 -> alaindustrial:mutation_transform,alaindustrial:mutation_duplicate,alaindustrial:mutation_create
 click MaceratorScreen 82 38 25 9 -> alaindustrial:maceration
 click PolymerizerScreen 79 35 24 17 -> alaindustrial:polymerizing

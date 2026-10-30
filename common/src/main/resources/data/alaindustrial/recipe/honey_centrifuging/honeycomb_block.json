@@ -1,0 +1,9 @@
+{
+	"type": "alaindustrial:honey_centrifuging",
+	"ingredient": "minecraft:honeycomb_block",
+	"fluid_result": {
+		"fluid": "alaindustrial:honey",
+		"amount": 400
+	},
+	"energy": 200
+}

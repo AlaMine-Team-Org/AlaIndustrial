@@ -328,8 +328,8 @@ public final class DemoStand {
 	 * the complaint the owner raised the first time they read it in game.
 	 *
 	 * <p>Blocks with no item at all cannot appear here (they stand in the item-less row instead, see
-	 * {@link ItemlessRowZone}): the five fluids
-	 * ({@code oil}, {@code diesel}, {@code fuel_oil}, {@code biofuel}, {@code nutrient_solution} —
+	 * {@link ItemlessRowZone}): the six fluids
+	 * ({@code oil}, {@code diesel}, {@code fuel_oil}, {@code biofuel}, {@code nutrient_solution}, {@code honey} —
 	 * their buckets do appear), the two upper distillation-column sections, the incubator dome and
 	 * the kok sagyz root block. None is a block a player ever holds, and each is placed on the stand
 	 * where its own machine stands.

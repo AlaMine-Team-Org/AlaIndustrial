@@ -1542,6 +1542,44 @@
           ]
         },
         {
+          "id": "honey_centrifuge",
+          "title": "Honingslinger",
+          "icon": "alaindustrial:honey_centrifuge",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Honingslinger",
+              "text": "Slingert vloeibare honing uit honingraten, honingraatblokken, honingflessen en honingblokken — een tank van tien emmers, geleegd met een buis of een emmer."
+            },
+            {
+              "type": "stats",
+              "title": "Statistieken",
+              "lines": [
+                "Energie: 200 EU/bew.",
+                "Buffer: 800 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Recept",
+              "recipe_type": "Gevormd vervaardigen",
+              "grid": [
+                "alaindustrial:iron_plate",
+                "minecraft:honeycomb",
+                "alaindustrial:iron_plate",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:machine_casing",
+                "alaindustrial:basic_bearing",
+                "alaindustrial:iron_plate",
+                "alaindustrial:electronic_circuit",
+                "alaindustrial:iron_plate"
+              ],
+              "result_id": "alaindustrial:honey_centrifuge",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "polymerizer",
           "title": "Polymerisator",
           "icon": "alaindustrial:polymerizer",
@@ -2499,6 +2537,18 @@
               "type": "text",
               "title": "Diesel",
               "text": "De lichte fractie van de oliedestillatie — een goudgele vloeistof, het doelproduct van de kolom. Toekomstige brandstof van de generator op vloeibare brandstof (12 EU/t)."
+            }
+          ]
+        },
+        {
+          "id": "honey",
+          "title": "Vloeibare honing",
+          "icon": "alaindustrial:honey_bucket",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Vloeibare honing",
+              "text": "De dikke amberkleurige vloeistof van de bijenstal — emmer, trage plas, buizen en tanks. De plas stroomt als lava, en wie erin waadt, blijft plakken als in een honingblok."
             }
           ]
         },
