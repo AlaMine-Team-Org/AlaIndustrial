@@ -365,14 +365,14 @@
 <a class="cat-link active" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="9 个页面">9</span></a>
 <a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>核能设施</span><span class="cat-count" aria-label="15 个页面">15</span></a>
 <div class="group-title">加工</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>机器</span><span class="cat-count" aria-label="17 个页面">17</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>机器</span><span class="cat-count" aria-label="18 个页面">18</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>流体机器</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <div class="group-title">物流</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>物品物流</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>流体物流</span><span class="cat-count" aria-label="5 个页面">5</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>流体储存</span><span class="cat-count" aria-label="2 个页面">2</span></a>
 <div class="group-title">世界与自动化</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="26 个页面">26</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="27 个页面">27</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>农业</span><span class="cat-count" aria-label="7 个页面">7</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>高级机器</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <div class="group-title">其他</div>
@@ -411,7 +411,7 @@
 
 <p><strong>线路如何分配能量（、）。</strong> 每一刻遵循三条规则：</p>
 
-<ol><li><strong>机器先吃。</strong> 每台机器在电缆能送到的范围内，得到它一刻工作所需的量（已计入电缆损耗）；不够分时，离发电机最近的机器先得，距离相同的机器平分。</li><li><strong>机器拿不走的部分立即送往储能方块</strong>（电池箱、传送器、能量凝聚器、充电站），离得近的先充。之后机器才补满自己的缓冲。网络不知道耗电量的其他模组的机器或电池，按储能方块对待；间歇耗电的抽水泵、喷灌器和园艺无人机基站也一样。</li><li><strong>发电机供不上机器时，储能方块向机器供电。</strong></li></ol>
+<ol><li><strong>机器先吃。</strong> 每台机器在电缆能送到的范围内，得到它一刻工作所需的量（已计入电缆损耗）；不够分时，离发电机最近的机器先得，距离相同的机器平分。</li><li><strong>机器拿不走的部分立即送往储能方块</strong>（电池箱、传送器、能量凝聚器、充电站），离得近的先充。之后机器才补满自己的缓冲。网络不知道耗电量的其他模组的机器或电池，按储能方块对待；间歇耗电的泵、喷灌器和园艺无人机基站也一样。</li><li><strong>发电机供不上机器时，储能方块向机器供电。</strong></li></ol>
 
 <p>因此，储能方块还有空位时，机器的缓冲可能显示 0 EU/FE，而机器本身仍在全速工作。什么都没接的支线和最后一个耗电方之后的线路，只有在线路上谁都不再需要能量时才会充电（、）；机器工作期间，这样的支线保持为空，也不会电人（）。每个耗电方只从自己接触的电缆取能量。</p>
 

@@ -365,14 +365,14 @@
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="9 pages">9</span></a>
 <a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>Nuclear</span><span class="cat-count" aria-label="15 pages">15</span></a>
 <div class="group-title">Processing</div>
-<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="17 pages">17</span></a>
+<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="18 pages">18</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <div class="group-title">Logistics</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>Item Transport</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Fluid Transport</span><span class="cat-count" aria-label="5 pages">5</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>Fluid Storage</span><span class="cat-count" aria-label="2 pages">2</span></a>
 <div class="group-title">World &amp; Automation</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="26 pages">26</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Materials</span><span class="cat-count" aria-label="27 pages">27</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>Agriculture</span><span class="cat-count" aria-label="7 pages">7</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
@@ -413,9 +413,11 @@
 
 <h2 id="fluid">Fluid</h2>
 
-<p>The tank takes oil only — ours, and any other oil carrying the conventional <code>c:oil</code> tag.</p>
+<p>The tank takes oil — ours, and any other oil carrying the conventional <code>c:oil</code> tag — and liquid honey (the <code>c:honey</code> tag). Other fluids don't go in.</p>
 
-<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Tank size</td><td>10,000 mB (10 buckets)</td></tr><tr><td>Used per operation</td><td>1000 mB (1 bucket)</td></tr><tr><td>Accepts</td><td>oil (the <code>c:oil</code> tag)</td></tr><tr><td>Gives it back</td><td>no — oil in the tank is feedstock, not storage</td></tr></tbody></table>
+<blockquote><strong>Note:</strong> there is one tank and it does not mix. While it holds honey, oil won't go in (and the other way round) — use the honey up first: the machine takes it 1000 mB at a time, and a remainder under a bucket waits.</blockquote>
+
+<table><thead><tr><th>What</th><th>Value</th></tr></thead><tbody><tr><td>Tank size</td><td>10,000 mB (10 buckets)</td></tr><tr><td>Used per operation</td><td>1000 mB (1 bucket)</td></tr><tr><td>Accepts</td><td>oil (the <code>c:oil</code> tag), liquid honey (the <code>c:honey</code> tag)</td></tr><tr><td>Gives it back</td><td>no — fluid in the tank is feedstock, not storage</td></tr></tbody></table>
 
 <p>There are two ways to fill it and both land in the same tank: a pipe or pump from outside, or a container through the interface slot. There is no mixing — another fluid simply won't go in.</p>
 
@@ -454,7 +456,9 @@
 <p>The Polymerizer is crafted at a table from a <a href="../components/machine_casing.html">machine casing</a>, a bucket, iron and an <a href="../components/electronic_circuit.html">electronic circuit</a>.</p>
 
 
-<table><thead><tr><th>Input</th><th>Output</th></tr></thead><tbody><tr><td>1000 mB of oil</td><td>1 raw rubber</td></tr></tbody></table>
+<table><thead><tr><th>Input</th><th>Output</th></tr></thead><tbody><tr><td>1000 mB of oil</td><td>1 raw rubber</td></tr><tr><td>1000 mB of liquid honey</td><td>1 honey block</td></tr></tbody></table>
+
+<p>Liquid honey comes from the <a href="honey_centrifuge.html">Honey Centrifuge</a>; four honey bottles spun there make exactly one block here.</p>
 
 <p>The raw rubber then goes into a <a href="vulcanizer.html">Vulcanizer</a> together with sulfur dust:</p>
 

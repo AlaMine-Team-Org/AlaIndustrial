@@ -365,14 +365,14 @@
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="9 ページ">9</span></a>
 <a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>原子力</span><span class="cat-count" aria-label="15 ページ">15</span></a>
 <div class="group-title">加工</div>
-<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>マシン</span><span class="cat-count" aria-label="17 ページ">17</span></a>
+<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>マシン</span><span class="cat-count" aria-label="18 ページ">18</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>液体マシン</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <div class="group-title">物流</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>アイテム輸送</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>液体輸送</span><span class="cat-count" aria-label="5 ページ">5</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>液体貯蔵</span><span class="cat-count" aria-label="2 ページ">2</span></a>
 <div class="group-title">世界と自動化</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>素材</span><span class="cat-count" aria-label="26 ページ">26</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>素材</span><span class="cat-count" aria-label="27 ページ">27</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>農業</span><span class="cat-count" aria-label="7 ページ">7</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>高度なマシン</span><span class="cat-count" aria-label="1 ページ">1</span></a>
 <div class="group-title">その他</div>
@@ -413,9 +413,11 @@
 
 <h2 id="液体">液体</h2>
 
-<p>タンクは石油だけを受け付けます — モッド自前のものも、共通モッドタグ <code>c:oil</code> でマークされた他のものも同様です。</p>
+<p>タンクは石油（モッド自前のもの、共通モッドタグ <code>c:oil</code> の付いた他のもの）と液体ハチミツ（タグ <code>c:honey</code>）を受け付けます。ほかの液体は入りません。</p>
 
-<table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>タンク容量</td><td>10 000 mB（10バケツ）</td></tr><tr><td>操作あたりの消費</td><td>1000 mB（1バケツ）</td></tr><tr><td>受け入れ</td><td>石油（タグ <code>c:oil</code>）</td></tr><tr><td>排出</td><td>なし — タンク内の石油は備蓄ではなく原料</td></tr></tbody></table>
+<blockquote><strong>注意：</strong>タンクは1つで、混ざりません。ハチミツが入っている間は石油は入りません（逆も同様）。先にハチミツを使い切ってください：機械は1000 mB ずつ取るので、1バケツ未満の残りはそのまま待ち続けます。</blockquote>
+
+<table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>タンク容量</td><td>10 000 mB（10バケツ）</td></tr><tr><td>操作あたりの消費</td><td>1000 mB（1バケツ）</td></tr><tr><td>受け入れ</td><td>石油（タグ <code>c:oil</code>）、液体ハチミツ（タグ <code>c:honey</code>）</td></tr><tr><td>排出</td><td>なし — タンク内の液体は備蓄ではなく原料</td></tr></tbody></table>
 
 <p>タンクへの充填は2つの方法があり、どちらも同じタンクに至ります：外部からのパイプ/ポンプ、またはインターフェースのスロット経由の容器です。混ざり合うことはありません — 別の液体はタンクに入りません。</p>
 
@@ -453,7 +455,9 @@
 
 <p>何をするか：</p>
 
-<table><thead><tr><th>入力</th><th>出力</th></tr></thead><tbody><tr><td>石油 1000 mB</td><td>生ゴム ×1</td></tr></tbody></table>
+<table><thead><tr><th>入力</th><th>出力</th></tr></thead><tbody><tr><td>石油 1000 mB</td><td>生ゴム ×1</td></tr><tr><td>液体ハチミツ 1000 mB</td><td>ハチミツブロック ×1</td></tr></tbody></table>
+
+<p>液体ハチミツは <a href="honey_centrifuge.html">ハチミツ遠心分離機</a> で作れます。そこでハチミツ入りの瓶4本を分離すると、ここでちょうどブロック1個分になります。</p>
 
 <p>続いて生ゴムは硫黄の粉と共に <a href="vulcanizer.html">加硫機</a> へ：</p>
 

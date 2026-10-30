@@ -365,14 +365,14 @@
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="9 个页面">9</span></a>
 <a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>核能设施</span><span class="cat-count" aria-label="15 个页面">15</span></a>
 <div class="group-title">加工</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>机器</span><span class="cat-count" aria-label="17 个页面">17</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>机器</span><span class="cat-count" aria-label="18 个页面">18</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>流体机器</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <div class="group-title">物流</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>物品物流</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>流体物流</span><span class="cat-count" aria-label="5 个页面">5</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>流体储存</span><span class="cat-count" aria-label="2 个页面">2</span></a>
 <div class="group-title">世界与自动化</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="26 个页面">26</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="27 个页面">27</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>农业</span><span class="cat-count" aria-label="7 个页面">7</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>高级机器</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <div class="group-title">其他</div>
@@ -397,7 +397,7 @@
 </div>
 <h2 id="概览">概览</h2>
 
-<p><strong>电动锄</strong>是本系列第四件也是最后一件手持电动工具：在<a href="electric_drill.html">电钻</a>（石头）、<a href="electric_chainsaw.html">链锯</a>（木材）和<a href="electric_shovel.html">铲</a>（泥土）之后，它负责农田。契约相同：用 EU/FE 代替耐久，不会损坏，没电时仍以徒手速度工作并完整保留掉落。</p>
+<p><strong>电动锄</strong>是本系列第四件也是最后一件手持电动工具：在<a href="electric_drill.html">电钻</a>（石头）、<a href="electric_chainsaw.html">链锯</a>（木材）和<a href="electric_shovel.html">锹</a>（泥土）之后，它负责农田。契约相同：用 EU/FE 代替耐久，不会损坏，没电时仍以徒手速度工作并完整保留掉落。</p>
 
 <p>锄能做两件事，每件都消耗 <strong>50 EU/FE</strong>：</p>
 
@@ -441,9 +441,9 @@
 
 <ul><li><strong>锄地及其它右键转化——消耗 50 EU/FE。</strong> 泥土、草地、土路 → 农田；砂土 → 泥土；缠根泥土 → 泥土 + 垂根。转化与你所玩的游戏版本和加载器上的原版锄头一致：泥土、草地、土路和砂土上方必须是空气；其他模组添加的转化也会自动生效。<strong>只有当转化真正发生时</strong>才扣电量：点在石墙上或已经锄过的农田上都不会动缓存。电量不够时锄不会锄地，并会在快捷栏上方提示——就像电钻放火把那样，但<strong>仅限指向可锄方块时</strong>：没电的锄右键点在石头、箱子或别的方块上会直接放行，既不提示也不拦截，副手物品照常生效（）。</li><li><strong>破坏方块：</strong> 当电量 ≥ 50 EU/FE 时，锄以 9.0 的速度破坏 <code>#minecraft:mineable/hoe</code>（钻石锄为 8.0）。每破这样一个方块扣 50 EU/FE。</li><li><strong>没电的锄：</strong> 电量低于 50 EU/FE 时以徒手速度（1.0）破坏，但采集等级和掉落都保留，且不消耗 EU/FE。此时效率附魔不起作用（原版门槛为 <code>speed &gt; 1.0</code>）。在创造模式以外，没电的锄不能锄地——见上文。</li><li><strong>充电：</strong> 储能库的充能槽和穿在身上的能量背包都会自动接受锄，最高 32 EU/FE/刻。</li><li><strong>攻击：</strong> 像原版锄一样——不是武器（伤害 1，攻击速度 4）。挥击<strong>不消耗 EU/FE</strong>，也不磨损锄。</li><li><strong>附魔：</strong> 锄属于 <code>#minecraft:hoes</code>，因此附魔台和铁砧把它当作锄。耐久和经验修补在不损坏的锄上毫无用处，但也没有害处。</li><li><strong>作物收割——不支持。</strong> 这是<a href="scythe.html">大镰刀</a>的工作，它就是为此而做；没必要在锄里复制一遍。</li><li><strong>指示：</strong> 图标下方的横条显示电量（黄色，LV 颜色）。悬浮提示——"电量：X / 10 000 EU/FE"，归零时显示红色"已放电"。纹理在零电量时切换为"熄灭"样式。</li><li><strong>丢弃/死亡/重新登录：</strong> 电量保存在物品中，会保留。</li><li><strong>创造模式：</strong> 不消耗也不检查电量——缓存为空也能锄地。</li></ul>
 
-<h2 id="金刚石涂层升级">金刚石涂层（升级）</h2>
+<h2 id="钻石刀头升级">钻石刀头（升级）</h2>
 
-<p><strong>金刚石涂层电动锄</strong>（，）是电动锄的第二档，也是本系列继 <a href="electric_drill.html">金刚石涂层电钻</a>和<a href="electric_chainsaw.html">金刚石涂层电动链锯</a>之后的第三个升级。相对基础 电动锄只有两处不同，其余一切原样继承。</p>
+<p><strong>钻石刀头电动锄</strong>（，）是电动锄的第二档，也是本系列继 <a href="electric_drill.html">钻石钻头电钻</a>和<a href="electric_chainsaw.html">钻石刀头电动链锯</a>之后的第三个升级。相对基础 电动锄只有两处不同，其余一切原样继承。</p>
 
 <p><strong>1. 挖得更快。</strong> 速度为 <strong>10.5</strong>，基础电动锄为 9.0——与电钻（8.5 -&gt; 10.0）和链锯（9.0 -&gt; 10.5）相同的 +1.5 步进。挖掘等级<strong>不变</strong>：升级只是加快作业，并不解锁新方块。</p>
 
@@ -451,7 +451,7 @@
 
 <ul><li>若水平 ±4 格范围内有水，或正在下雨，湿度会自行回到最大值；</li><li>若没有水，湿度每次随机刻减少 1；当湿度归零且上方没有作物时，方块会<strong>变回泥土</strong>。</li></ul>
 
-<p>升级的价值正在于此：在原版里，在远离水源的地方耕地又不立刻种下作物几乎毫无意义——耕地会干涸并塌回泥土。 金刚石涂层电动锄让每块新耕地直接拥有满湿度，既带来更快的生长（原版在湿润土地上作物长得更快），也留出 七个随机刻的余量，之后耕地才可能回退。</p>
+<p>升级的价值正在于此：在原版里，在远离水源的地方耕地又不立刻种下作物几乎毫无意义——耕地会干涸并塌回泥土。 钻石刀头电动锄让每块新耕地直接拥有满湿度，既带来更快的生长（原版在湿润土地上作物长得更快），也留出 七个随机刻的余量，之后耕地才可能回退。</p>
 
 <p>这是<strong>起步优势，而不是洒水器</strong>。此后湿度按原版的正常节奏下降；升级既不会持续补水，也不能取代田边的水源。 它同样不会给已有的耕地浇水——该效果只在它自己刚刚变成耕地的方块上触发，且必须是真正发生了的耕作（非创造模式下即已扣除电量）。 在创造模式以外，没电的锄头浇不了任何东西。</p>
 
@@ -461,7 +461,7 @@
 
 <p><strong>原样继承：</strong> 10 000 EU/FE 缓冲、每方块 50 EU/FE 与每次耕作 50 EU/FE、32 EU/FE/刻 的输入、相同的充电位置、没有耐久度、 电量耗尽时以徒手速度工作、创造模式行为，以及原版锄头的攻击属性（它不是武器）。该升级没有自己的配置项。</p>
 
-<p><strong>合成：</strong> ——基础电动锄居中，上方一排三个 <a href="../components/material_forms.html">金刚石粉</a>（即「涂层」本身），两侧各一块 <a href="../materials/cupronickel.html">白铜</a>锭，下方是<a href="../components/material_forms.html">青金石粉</a>。这些材料刻意 与电钻（因瓦、银齿轮）和链锯（青铜、金齿轮）的都不相同，以免三条升级支线争夺同一种瓶颈资源。配方里没有 齿轮是有意为之：锄头没有旋转部件，传动无处可传——底部改为青金石粉，作为配方中负责浇灌的「水」的部分。</p>
+<p><strong>合成：</strong> ——基础电动锄居中，上方一排三个 <a href="../components/material_forms.html">钻石粉</a>（即「刀头」本身），两侧各一块 <a href="../materials/cupronickel.html">白铜</a>锭，下方是<a href="../components/material_forms.html">青金石粉</a>。这些材料刻意 与电钻（因瓦、银齿轮）和链锯（青铜、金齿轮）的都不相同，以免三条升级支线争夺同一种瓶颈资源。配方里没有 齿轮是有意为之：锄头没有旋转部件，传动无处可传——底部改为青金石粉，作为配方中负责浇灌的「水」的部分。</p>
 
 <blockquote><strong>升级时电量会保留。</strong> 该配方使用 类型，因此放入的基础 电动锄中的 EU/FE 会转移到成品上，而不是烧掉。电钻和链锯的配方也是这样。</blockquote>
 
@@ -469,16 +469,16 @@
 
 <h2 id="进阶">进阶</h2>
 
-<ul><li>本系列第四件也是最后一件电动工具：<a href="electric_drill.html">电钻</a>负责石头，<a href="electric_chainsaw.html">链锯</a>负责木材，<a href="electric_shovel.html">铲</a>负责泥土，锄负责农田。</li><li>在<a href="../energy-storage/battery_box.html">储能库</a>和电池之后可用：没有 LV 基础设施就无法合成与充电。</li><li>LV 等级。此后系列又加入了<a href="electric_saber.html">电动军刀</a>和<a href="electric_bow.html">电动弓</a>。</li></ul>
+<ul><li>本系列第四件也是最后一件电动工具：<a href="electric_drill.html">电钻</a>负责石头，<a href="electric_chainsaw.html">链锯</a>负责木材，<a href="electric_shovel.html">锹</a>负责泥土，锄负责农田。</li><li>在<a href="../energy-storage/battery_box.html">储能库</a>和电池之后可用：没有 LV 基础设施就无法合成与充电。</li><li>LV 等级。此后系列又加入了<a href="electric_saber.html">电动军刀</a>和<a href="electric_bow.html">电动弓</a>。</li></ul>
 
 <h2 id="相关内容">相关内容</h2>
 
-<ul><li><a href="electric_drill.html">电钻</a>——系列中负责石料的部分，每方块消耗相同。</li><li><a href="electric_chainsaw.html">电动链锯</a>——系列中负责木材的部分。</li><li><a href="electric_shovel.html">电动铲</a>——负责泥土的部分；它的右键机制相同，但它的动作免费，而锄的是付费。</li><li><a href="scythe.html">大镰刀</a>——收割作物的工具，锄无法替代它。</li><li><a href="../energy-storage/battery_box.html">储能库</a>——锄的充电来源（充能槽）。</li></ul>
+<ul><li><a href="electric_drill.html">电钻</a>——系列中负责石料的部分，每方块消耗相同。</li><li><a href="electric_chainsaw.html">电动链锯</a>——系列中负责木材的部分。</li><li><a href="electric_shovel.html">电动锹</a>——负责泥土的部分；它的右键机制相同，但它的动作免费，而锄的是付费。</li><li><a href="scythe.html">大镰刀</a>——收割作物的工具，锄无法替代它。</li><li><a href="../energy-storage/battery_box.html">储能库</a>——锄的充电来源（充能槽）。</li></ul>
 
 <h2>合成</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="电动锄 alaindustrial:electric_hoe" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="电池"><img src="../../assets/item/battery_3d.png" alt="电池" width="32" height="32"></div> <div class="cell" title="钻石锄"><img src="../../assets/item/diamond_hoe_3d.png" alt="钻石锄" width="32" height="32"></div> <div class="cell" title="电池"><img src="../../assets/item/battery_3d.png" alt="电池" width="32" height="32"></div> <div class="cell" title="铜线圈"><img src="../../assets/item/copper_coil_3d.png" alt="铜线圈" width="32" height="32"></div> <div class="cell" title="电子电路"><img src="../../assets/item/electronic_circuit_3d.png" alt="电子电路" width="32" height="32"></div> <div class="cell" title="铜线圈"><img src="../../assets/item/copper_coil_3d.png" alt="铜线圈" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="电动锄"><img src="../../assets/item/electric_hoe_3d.png" alt="电动锄" width="32" height="32"></div><div class="result-name">电动锄</div></div></div></div></div>
 <h2>用于</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="金刚石涂层电动锄 alaindustrial:electric_hoe_diamond_tip" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="钻石粉"><img src="../../assets/item/diamond_dust_3d.png" alt="钻石粉" width="32" height="32"></div> <div class="cell" title="钻石粉"><img src="../../assets/item/diamond_dust_3d.png" alt="钻石粉" width="32" height="32"></div> <div class="cell" title="钻石粉"><img src="../../assets/item/diamond_dust_3d.png" alt="钻石粉" width="32" height="32"></div> <div class="cell" title="白铜锭"><img src="../../assets/item/cupronickel_ingot_3d.png" alt="白铜锭" width="32" height="32"></div> <div class="cell" title="电动锄"><img src="../../assets/item/electric_hoe_3d.png" alt="电动锄" width="32" height="32"></div> <div class="cell" title="白铜锭"><img src="../../assets/item/cupronickel_ingot_3d.png" alt="白铜锭" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell" title="青金石粉"><img src="../../assets/item/lapis_dust_3d.png" alt="青金石粉" width="32" height="32"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="金刚石涂层电动锄"><img src="../../assets/item/electric_hoe_diamond_tip_3d.png" alt="金刚石涂层电动锄" width="32" height="32"></div><div class="result-name">金刚石涂层电动锄</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="钻石刀头电动锄 alaindustrial:electric_hoe_diamond_tip" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="钻石粉"><img src="../../assets/item/diamond_dust_3d.png" alt="钻石粉" width="32" height="32"></div> <div class="cell" title="钻石粉"><img src="../../assets/item/diamond_dust_3d.png" alt="钻石粉" width="32" height="32"></div> <div class="cell" title="钻石粉"><img src="../../assets/item/diamond_dust_3d.png" alt="钻石粉" width="32" height="32"></div> <div class="cell" title="白铜锭"><img src="../../assets/item/cupronickel_ingot_3d.png" alt="白铜锭" width="32" height="32"></div> <div class="cell" title="电动锄"><img src="../../assets/item/electric_hoe_3d.png" alt="电动锄" width="32" height="32"></div> <div class="cell" title="白铜锭"><img src="../../assets/item/cupronickel_ingot_3d.png" alt="白铜锭" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell" title="青金石粉"><img src="../../assets/item/lapis_dust_3d.png" alt="青金石粉" width="32" height="32"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="钻石刀头电动锄"><img src="../../assets/item/electric_hoe_diamond_tip_3d.png" alt="钻石刀头电动锄" width="32" height="32"></div><div class="result-name">钻石刀头电动锄</div></div></div></div></div>
   </main>
 </div>
 

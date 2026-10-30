@@ -365,14 +365,14 @@
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="9 个页面">9</span></a>
 <a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>核能设施</span><span class="cat-count" aria-label="15 个页面">15</span></a>
 <div class="group-title">加工</div>
-<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>机器</span><span class="cat-count" aria-label="17 个页面">17</span></a>
+<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>机器</span><span class="cat-count" aria-label="18 个页面">18</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>流体机器</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <div class="group-title">物流</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>物品物流</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>流体物流</span><span class="cat-count" aria-label="5 个页面">5</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>流体储存</span><span class="cat-count" aria-label="2 个页面">2</span></a>
 <div class="group-title">世界与自动化</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="26 个页面">26</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="27 个页面">27</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>农业</span><span class="cat-count" aria-label="7 个页面">7</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>高级机器</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <div class="group-title">其他</div>
@@ -399,7 +399,7 @@
 
 <p><strong>聚合机</strong> 是本模组第一台吞噬的不是物品而是 <strong>液体</strong> 的机器。其内部有一个可容纳十桶石油的储罐；每次操作恰好多消耗一桶，并产出一块生橡胶。生橡胶随后会在 <a href="vulcanizer.html">硫化机</a> 中与硫磺粉结合。</p>
 
-<blockquote><strong>小示例：</strong> 用管道把立在石油湖上的抽水泵接到聚合机，供上电，它就会自己把石油熬成生橡胶，直到储罐见底。</blockquote>
+<blockquote><strong>小示例：</strong> 用管道把立在石油湖上的泵接到聚合机，供上电，它就会自己把石油熬成生橡胶，直到储罐见底。</blockquote>
 
 <p>石油也可以手动灌注：将桶（或胶囊）放入顶部槽位，液体会流入储罐，空容器则掉入其下方的槽位。</p>
 
@@ -413,9 +413,11 @@
 
 <h2 id="液体">液体</h2>
 
-<p>储罐只接受石油，无论是本模组的石油，还是任何带通用模组标签 <code>c:oil</code> 的石油。</p>
+<p>储罐接受石油（本模组的石油或任何带通用模组标签 <code>c:oil</code> 的石油）以及液态蜂蜜（标签 <code>c:honey</code>）。其他液体无法灌入。</p>
 
-<table><thead><tr><th>项目</th><th>数值</th></tr></thead><tbody><tr><td>储罐容量</td><td>10000 mB（10 桶）</td></tr><tr><td>每次操作消耗</td><td>1000 mB（1 桶）</td></tr><tr><td>接受内容</td><td>石油（标签 <code>c:oil</code>）</td></tr><tr><td>是否回排</td><td>否，储罐中的石油已是原料而非储备</td></tr></tbody></table>
+<blockquote><strong>注意：</strong>储罐只有一个，且不会混合。罐中有蜂蜜时石油灌不进去（反之亦然）——请先用完蜂蜜：机器每次取 1000 mB，不足一桶的余量会一直留在罐中。</blockquote>
+
+<table><thead><tr><th>项目</th><th>数值</th></tr></thead><tbody><tr><td>储罐容量</td><td>10000 mB（10 桶）</td></tr><tr><td>每次操作消耗</td><td>1000 mB（1 桶）</td></tr><tr><td>接受内容</td><td>石油（标签 <code>c:oil</code>）、液态蜂蜜（标签 <code>c:honey</code>）</td></tr><tr><td>是否回排</td><td>否，储罐中的液体已是原料而非储备</td></tr></tbody></table>
 
 <p>填充储罐有两种方式，两者进入的是同一个储罐：从外部用管道/泵注入，或通过界面上的槽位用容器灌入。不会发生混合，其他液体根本灌不进来。</p>
 
@@ -453,7 +455,9 @@
 
 <p>它能做的事：</p>
 
-<table><thead><tr><th>输入</th><th>输出</th></tr></thead><tbody><tr><td>1000 mB 石油</td><td>1 份生橡胶</td></tr></tbody></table>
+<table><thead><tr><th>输入</th><th>输出</th></tr></thead><tbody><tr><td>1000 mB 石油</td><td>1 份生橡胶</td></tr><tr><td>1000 mB 液态蜂蜜</td><td>1 个蜂蜜块</td></tr></tbody></table>
+
+<p>液态蜂蜜来自 <a href="honey_centrifuge.html">摇蜜机</a>；在那里摇出 4 瓶蜂蜜，正好够这里做 1 个蜂蜜块。</p>
 
 <p>接下来，生橡胶会与硫磺粉一起进入 <a href="vulcanizer.html">硫化机</a>：</p>
 
@@ -461,11 +465,11 @@
 
 <h2 id="进阶">进阶</h2>
 
-<ul><li>等级：LV。在玩家找到石油并搭建抽水泵之后才会投入使用。</li><li>橡胶是未来绝缘导线和 MV 组件的材料。</li><li>需要 LV 电源供电，例如 <a href="../generators/generator.html">发电机</a>。</li></ul>
+<ul><li>等级：LV。在玩家找到石油并搭建泵之后才会投入使用。</li><li>橡胶是未来绝缘导线和 MV 组件的材料。</li><li>需要 LV 电源供电，例如 <a href="../generators/generator.html">发电机</a>。</li></ul>
 
 <h2 id="相关内容">相关内容</h2>
 
-<ul><li><a href="../materials/oil.html">石油</a> — 原料及其获取方式。</li><li><a href="../components/rubber.html">橡胶</a> — 整条产线的最终产物。</li><li><a href="../fluid-machines/pump.html">抽水泵</a> — 将石油从湖中抽入储罐。</li><li><a href="../fluid-storage/fluid_tank.html">便携式流体储罐</a> — 在机器旁储备石油。</li></ul>
+<ul><li><a href="../materials/oil.html">石油</a> — 原料及其获取方式。</li><li><a href="../components/rubber.html">橡胶</a> — 整条产线的最终产物。</li><li><a href="../fluid-machines/pump.html">泵</a> — 将石油从湖中抽入储罐。</li><li><a href="../fluid-storage/fluid_tank.html">便携式流体储罐</a> — 在机器旁储备石油。</li></ul>
 
 <h2>合成</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="聚合机 alaindustrial:polymerizer" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="铁桶"><img src="../../assets/item/bucket_3d.png" alt="铁桶" width="32" height="32"></div> <div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="机器外壳"><img src="../../assets/item/machine_casing_3d.png" alt="机器外壳" width="32" height="32"></div> <div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="电子电路"><img src="../../assets/item/electronic_circuit_3d.png" alt="电子电路" width="32" height="32"></div> <div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="聚合机"><img src="../../assets/item/polymerizer_3d.png" alt="聚合机" width="32" height="32"></div><div class="result-name">聚合机</div></div></div></div></div>

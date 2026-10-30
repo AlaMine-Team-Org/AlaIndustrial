@@ -365,14 +365,14 @@
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>Передача энергии</span><span class="cat-count" aria-label="9 страниц">9</span></a>
 <a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>Ядерная техника</span><span class="cat-count" aria-label="15 страниц">15</span></a>
 <div class="group-title">Переработка</div>
-<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="17 страниц">17</span></a>
+<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>Машины</span><span class="cat-count" aria-label="18 страниц">18</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>Машины для жидкостей</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <div class="group-title">Логистика</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>Логистика предметов</span><span class="cat-count" aria-label="3 страницы">3</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Логистика жидкостей</span><span class="cat-count" aria-label="5 страниц">5</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>Хранение жидкостей</span><span class="cat-count" aria-label="2 страницы">2</span></a>
 <div class="group-title">Мир и автоматизация</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="26 страниц">26</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Материалы</span><span class="cat-count" aria-label="27 страниц">27</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>Сельское хозяйство</span><span class="cat-count" aria-label="7 страниц">7</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>Хай-тек машины</span><span class="cat-count" aria-label="1 страница">1</span></a>
 <div class="group-title">Прочее</div>
@@ -414,9 +414,11 @@
 
 <h2 id="жидкость">Жидкость</h2>
 
-<p>Бак принимает только нефть — свою и любую другую, помеченную общемодовым тегом <code>c:oil</code>.</p>
+<p>Бак принимает нефть — свою и любую другую с общемодовым тегом <code>c:oil</code> — и, с, жидкий мёд (тег <code>c:honey</code>). Другие жидкости в бак не заходят.</p>
 
-<table><thead><tr><th>Что</th><th>Значение</th></tr></thead><tbody><tr><td>Объём бака</td><td>10 000 mB (10 вёдер)</td></tr><tr><td>Расход за операцию</td><td>1000 mB (1 ведро)</td></tr><tr><td>Что принимает</td><td>нефть (тег <code>c:oil</code>)</td></tr><tr><td>Отдаёт ли обратно</td><td>нет — нефть в баке уже сырьё, а не запас</td></tr></tbody></table>
+<blockquote><strong>Внимание:</strong> бак один и не смешивает. Пока в нём мёд, нефть не зальётся (и наоборот) — сначала израсходуйте мёд до конца: машина берёт его порциями по 1000 mB, остаток меньше ведра так и будет ждать.</blockquote>
+
+<table><thead><tr><th>Что</th><th>Значение</th></tr></thead><tbody><tr><td>Объём бака</td><td>10 000 mB (10 вёдер)</td></tr><tr><td>Расход за операцию</td><td>1000 mB (1 ведро)</td></tr><tr><td>Что принимает</td><td>нефть (тег <code>c:oil</code>), жидкий мёд (тег <code>c:honey</code>)</td></tr><tr><td>Отдаёт ли обратно</td><td>нет — жидкость в баке уже сырьё, а не запас</td></tr></tbody></table>
 
 <p>Заполнять бак можно двумя способами, и оба ведут в один и тот же бак: трубой/помпой снаружи или тарой через слот в интерфейсе. Смешивания нет — другая жидкость в бак просто не зальётся.</p>
 
@@ -453,7 +455,9 @@
 <h2 id="рецепты">Рецепты</h2>
 
 
-<table><thead><tr><th>Вход</th><th>Выход</th></tr></thead><tbody><tr><td>1000 mB нефти</td><td>1 сырой каучук</td></tr></tbody></table>
+<table><thead><tr><th>Вход</th><th>Выход</th></tr></thead><tbody><tr><td>1000 mB нефти</td><td>1 сырой каучук</td></tr><tr><td>1000 mB жидкого мёда</td><td>1 блок мёда</td></tr></tbody></table>
+
+<p>Жидкий мёд даёт <a href="honey_centrifuge.html">Медогонка</a>; четыре бутылочки мёда в ней — ровно один блок здесь.</p>
 
 <p>Дальше сырой каучук идёт в <a href="vulcanizer.html">Вулканизатор</a> вместе с пылью серы:</p>
 

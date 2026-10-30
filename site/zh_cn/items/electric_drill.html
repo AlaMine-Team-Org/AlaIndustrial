@@ -365,14 +365,14 @@
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="9 个页面">9</span></a>
 <a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>核能设施</span><span class="cat-count" aria-label="15 个页面">15</span></a>
 <div class="group-title">加工</div>
-<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>机器</span><span class="cat-count" aria-label="17 个页面">17</span></a>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>机器</span><span class="cat-count" aria-label="18 个页面">18</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>流体机器</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <div class="group-title">物流</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>物品物流</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>流体物流</span><span class="cat-count" aria-label="5 个页面">5</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>流体储存</span><span class="cat-count" aria-label="2 个页面">2</span></a>
 <div class="group-title">世界与自动化</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="26 个页面">26</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="27 个页面">27</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>农业</span><span class="cat-count" aria-label="7 个页面">7</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>高级机器</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <div class="group-title">其他</div>
@@ -403,9 +403,9 @@
 
 <p>和本模组的其它 EU/FE 物品（<a href="battery_pouch.html">储物袋</a>、<a href="energy_pack.html">能量背包</a>）一样，电钻<strong>没有耐久</strong>且不会损坏：图标下方的横条显示的不是磨损，而是 EU/FE 电量（黄色，LV 颜色）。它的充电位置也一样——在<a href="../energy-storage/battery_box.html">储能库</a>的充能槽和穿戴在身上的<a href="energy_pack.html">能量背包</a>处。</p>
 
-<p>电钻还有第二阶——<strong>附钻石刀头的电钻</strong>（）：同一件工具，但挖得更快，并能把采集切换为精准采集模式。详见下方<a href="#附钻石刀头升级">"附钻石刀头（升级）"</a>章节。</p>
+<p>电钻还有第二阶——<strong>钻石钻头电钻</strong>（）：同一件工具，但挖得更快，并能把采集切换为精准采集模式。详见下方<a href="#钻石钻头升级">"钻石钻头（升级）"</a>章节。</p>
 
-<p>电钻还有第三阶，也是最后一阶——<strong>附下界合金刀头的电钻</strong>（）：挖得更快、打得更痛，蓄电量也多出一半。详见下方<a href="#附下界合金刀头升级">"附下界合金刀头（升级）"</a>章节。</p>
+<p>电钻还有第三阶，也是最后一阶——<strong>下界合金钻头电钻</strong>（）：挖得更快、打得更痛，蓄电量也多出一半。详见下方<a href="#下界合金钻头升级">"下界合金钻头（升级）"</a>章节。</p>
 
 <h2 id="能量">能量</h2>
 
@@ -435,9 +435,9 @@
 
 <ul><li><strong>挖掘：</strong> 当电量 ≥ 50 EU/FE 时，电钻以 8.5 的速度挖掘 <code>#minecraft:mineable/pickaxe</code>（略高于钻石镐的 8.0），采集等级为钻石——在采集方面等同于钻石镐：钻石矿石、黑曜石，甚至远古残骸（钻石是采集等级的顶棚）。每挖这样一个方块扣 50 EU/FE。</li><li><strong>没电的电钻：</strong> 电量低于 50 EU/FE 时以徒手速度（1.0）挖掘，但采集等级和掉落都保留，且不消耗 EU/FE。此时效率附魔不起作用（原版门槛为 <code>speed &gt; 1.0</code>）。</li><li><strong>充电：</strong> 储能库的充能槽和穿在身上的能量背包——两者都会自动接受电钻（任何带 EU/FE 缓存的物品），最高 32 EU/FE/刻。</li><li><strong>攻击：</strong> 攻击力略高于钻石镐（伤害 6，攻击速度 1.3），但挥击<strong>不消耗 EU/FE</strong>，也不磨损电钻。</li><li><strong>附魔：</strong> 电钻被视为镐，因此附魔台和铁砧把它当作钻石镐——效率、时运、精准采集、耐久、经验修补。耐久和经验修补在不损坏的电钻上毫无用处，但也没有害处。</li><li><strong>紫晶芽簇：</strong> 电钻可获得最大碎片掉落（<code>#minecraft:cluster_max_harvestables</code>）。</li><li><strong>指示：</strong> 图标下方的横条显示电量（黄色，LV 颜色）。悬浮提示——"电量：X / 10 000 EU/FE"，归零时显示红色"空"。纹理在零电量时切换为"熄灭"样式。</li><li><strong>屏幕指示（HUD）：</strong> 电钻在手中时，左上角会显示它的图标、电量百分比和横条（随放电由绿 → 黄 → 红）。此覆盖层和<a href="energy_pack.html">能量背包</a>使用相同的快捷键 <strong>H</strong>（本模组所有能量 HUD 的统一开关，可在"控制" → Ala Industrial 类别和模组设置中修改）；如果同时穿戴了背包，电钻的读数会显示在背包面板下方一行。手中没拿电钻时不显示指示。</li><li><strong>耐久与修复：</strong> 无耐久——电钻不会损坏也不会磨损；砂轮可移除附魔，但无法"修好"它（没有可修的东西）。</li><li><strong>丢弃/死亡/重新登录：</strong> 电量保存在物品中，会保留。</li><li><strong>放置火把（右键，）：</strong> 主手持电钻且物品栏中有火把时，右键点击方块会像火把就在手中一样放置火把——电钻仍留在快捷栏，火把从物品栏中消耗（−1 件）。优先使用<a href="../utility/enriched_uranium_torch.html">浓缩铀火把</a>（高级版，水下不熄灭），若没有则使用原版火把。放置火把扣 <strong>5 EU/FE</strong>。如果电量不够——火把<strong>不会放置</strong>（）：电钻会在快捷栏上方显示一行消息，物品栏中的火把不消耗，电量不动。这行消息只会出现在满电电钻确实能放下火把的位置；若该处本来就放不下火把（无支撑、对原版火把是水），没电的电钻完全不插手——不显示消息，点击照常交给副手物品，就像手里没有电钻一样（）。火把靠能量而非免费运作；用手放火把依旧免费——把火把放到快捷栏即可。放置方式与亲手放置完全一致，对你和附近的玩家都一样：会考虑朝向（落地/墙面）和铀火把的浸水状态；在火把放不下的位置（无支撑、对原版火把是水）——不消耗任何东西。放置伴随正常的<strong>火把放置音效</strong>，放置音既被放置者听到，也被附近的玩家听到（）。在创造模式下既不消耗火把，也不消耗 EU/FE，且不应用电量检查。如果物品栏没有火把——右键什么也不做，此时左手上的原版火把会自动生效。无冷却。</li><li><strong>创造模式：</strong> 无论挖掘还是放火把都不消耗电量——就像原版镐在创造模式下不掉耐久。这条规则对整个电力系列通用（），见<a href="energy_pack.html">能量背包</a>和<a href="battery_pouch.html">电池储物袋</a>。</li></ul>
 
-<h2 id="附钻石刀头升级">附钻石刀头（升级）</h2>
+<h2 id="钻石钻头升级">钻石钻头（升级）</h2>
 
-<p><strong>附钻石刀头的电钻</strong>（，）是电钻的第二阶。与基础版的差异只有两点，其余一律不变继承。</p>
+<p><strong>钻石钻头电钻</strong>（，）是电钻的第二阶。与基础版的差异只有两点，其余一律不变继承。</p>
 
 <p><strong>1. 挖得更快。</strong> 速度 <strong>10.0</strong>，对比基础版的 8.5（以及下界合金镐的 9.0）。采集等级<strong>不变</strong>——和基础版一样仍是钻石级：升级加快工作速度，但不开采新的方块。</p>
 
@@ -453,17 +453,17 @@
 
 <p><strong>不变继承的部分：</strong> EU/FE 缓存 10 000，每方块消耗 50 EU/FE，接收 32 EU/FE/刻，充电位置相同，右键放火把（）同样扣 5 EU/FE，无耐久，空电量时按徒手速度工作，创造模式行为一致。操作上的唯一差异：<strong>Shift + 右键点击方块会切换模式且不放置火把</strong>——放火把要用不带 Shift 的普通右键。</p>
 
-<p><strong>合成：</strong> ——中心是基础电钻，上方一行三颗<a href="../components/material_forms.html">钻石粉</a>（即"刀头镀层"），两侧是两锭<a href="../materials/invar.html">因瓦锭</a>（外壳），下方是<a href="../components/metal_gears.html">银齿轮</a>（钻头驱动）。这三种材料此前在模组中都未使用——升级为它们提供了首个用途。</p>
+<p><strong>合成：</strong> ——中心是基础电钻，上方一行三颗<a href="../components/material_forms.html">钻石粉</a>（即"钻头镀层"），两侧是两锭<a href="../materials/invar.html">因瓦锭</a>（外壳），下方是<a href="../components/metal_gears.html">银齿轮</a>（钻头驱动）。这三种材料此前在模组中都未使用——升级为它们提供了首个用途。</p>
 
 <p><strong>电钻的电量会转移到升级件上</strong>（）。合成前无需先把电钻用空：电钻里有多少 EU/FE，升级件出来就带多少 EU/FE。两者的缓存相同——都是 10 000 EU/FE——因此转移没有损耗，满电的电钻能换来满电的升级件。这是本模组的通用规则：能量转移到产物中，而不是凭空烧掉；凡是产物自带 EU/FE 缓存的配方都遵循同一规则（参见<a href="../components/battery.html">电池</a>）。</p>
 
 <blockquote><strong>请用手把电钻放进合成网格。</strong> 配方接受任何状态的电钻——空的、充满的、附魔的——用手动合成永远成立。但<strong>自动填充</strong>按钮（配方书和 REI/JEI 等查看器中的"+"号）找不到充满的电钻，会提示材料不足。这是 Minecraft 本身的限制，而非模组：自动填充只寻找与配方展示完全相同组件的物品，而展示里的电钻被画成空的。同理，自动填充永远不会选取已附魔或已改名的物品——任何游戏配方都是如此。自己把网格摆好只需几秒，且对任何电钻都有效。</blockquote>
 
-<h2 id="附下界合金刀头升级">附下界合金刀头（升级）</h2>
+<h2 id="下界合金钻头升级">下界合金钻头（升级）</h2>
 
-<p><strong>附下界合金刀头的电钻</strong>（，）是该系列的第三阶，也是最后一阶。与钻石刀头相比恰好有三处不同；其余全部原样继承，包括可切换的精准采集。</p>
+<p><strong>下界合金钻头电钻</strong>（，）是该系列的第三阶，也是最后一阶。与钻石钻头相比恰好有三处不同；其余全部原样继承，包括可切换的精准采集。</p>
 
-<p><strong>1. 挖得更快。</strong> 速度 <strong>12.0</strong>，对比钻石刀头的 10.0（以及原版下界合金镐的 9.0）。<strong>采集等级不变</strong>——仍是钻石，和下面两阶完全一样。26.2 中根本不存在高于钻石的采集等级，因此这里的"下界合金"指的是工作速度，而不是能挖新方块：这与原版下界合金镐相对钻石镐的关系完全相同。</p>
+<p><strong>1. 挖得更快。</strong> 速度 <strong>12.0</strong>，对比钻石钻头的 10.0（以及原版下界合金镐的 9.0）。<strong>采集等级不变</strong>——仍是钻石，和下面两阶完全一样。26.2 中根本不存在高于钻石的采集等级，因此这里的"下界合金"指的是工作速度，而不是能挖新方块：这与原版下界合金镐相对钻石镐的关系完全相同。</p>
 
 <p><strong>2. 打得更痛。</strong> 伤害 <strong>7</strong>，对比下面两阶的 6——正是原版给下界合金相对钻石的提升幅度。攻击速度不变，攻击同样不消耗 EU/FE。</p>
 
@@ -475,15 +475,15 @@
 
 <p><strong>第一步——组装钻头（工作台）。</strong> 顶行三块下界合金碎片，下面一行依次是一枚<a href="../materials/netherite_alloy.html">下界合金复合锭</a>、一枚<a href="../components/metal_gears.html">琥珀金齿轮</a>和第二枚复合锭，得到<strong>下界合金钻头组件</strong>。这一步有其机制上的理由：锻造台只有三个槽位，四种材料放不下，钻头组件把它们合成了一件。</p>
 
-<p><strong>第二步——装上钻头（锻造台）。</strong> 模板 + 附钻石刀头的电钻 + 钻头组件。模板在合成时<strong>不会消耗</strong>，与原版下界合金模板一致。</p>
+<p><strong>第二步——装上钻头（锻造台）。</strong> 模板 + 钻石钻头电钻 + 钻头组件。模板在合成时<strong>不会消耗</strong>，与原版下界合金模板一致。</p>
 
 <p><strong>模板</strong>位于下界<strong>堡垒遗迹</strong>的箱子中，正是原版藏匿其下界合金模板的那四张战利品表，每个箱子 20% 概率。与原版模板一样，它可以<strong>在工作台上复制</strong>：7 颗钻石 + 1 块下界岩围绕模板可得两个。只需找到一次。</p>
 
-<p><strong>电量和模式都会带入。</strong> 26.2 的锻造台通过 <code>TransmuteRecipe.createWithOriginalComponents</code> 组装成品，会复制基础物品的<strong>全部</strong>组件。因此下界合金电钻不仅继承钻石刀头的 EU/FE（成品缓存更大，不会被截断），还一并继承附魔和精准采集模式。</p>
+<p><strong>电量和模式都会带入。</strong> 26.2 的锻造台通过 <code>TransmuteRecipe.createWithOriginalComponents</code> 组装成品，会复制基础物品的<strong>全部</strong>组件。因此下界合金电钻不仅继承钻石钻头的 EU/FE（成品缓存更大，不会被截断），还一并继承附魔和精准采集模式。</p>
 
 <h2 id="进阶">进阶</h2>
 
-<ul><li>本模组第一件电动工具——在能源进阶和手动挖矿之间架起桥梁。</li><li>在<a href="../energy-storage/battery_box.html">储能库</a>和<a href="energy_pack.html">电池</a>之后可用：没有 LV 基础设施就无法合成与充电。</li><li>第二阶——"附钻石刀头"升级（更高速、可切换精准采集），见上方章节。前置门槛是<a href="../machines/alloy_smelter.html">合金熔炉</a>（因瓦）和<a href="../machines/macerator.html">粉碎机</a>（钻石粉）。</li><li>第三阶，也是最后一阶——"附下界合金刀头"（）：更高速、更高伤害、更大缓存。前置门槛是前往下界获取下界合金，外加同一台合金熔炉（<a href="../materials/netherite_alloy.html">下界合金复合锭</a>）。</li><li>LV 等级。其余电动工具（链锯/锄/军刀/纳米弓）属于未来工作。</li></ul>
+<ul><li>本模组第一件电动工具——在能源进阶和手动挖矿之间架起桥梁。</li><li>在<a href="../energy-storage/battery_box.html">储能库</a>和<a href="energy_pack.html">电池</a>之后可用：没有 LV 基础设施就无法合成与充电。</li><li>第二阶——"钻石钻头"升级（更高速、可切换精准采集），见上方章节。前置门槛是<a href="../machines/alloy_smelter.html">合金熔炉</a>（因瓦）和<a href="../machines/macerator.html">粉碎机</a>（钻石粉）。</li><li>第三阶，也是最后一阶——"下界合金钻头"（）：更高速、更高伤害、更大缓存。前置门槛是前往下界获取下界合金，外加同一台合金熔炉（<a href="../materials/netherite_alloy.html">下界合金复合锭</a>）。</li><li>LV 等级。其余电动工具（链锯/锄/军刀/纳米弓）属于未来工作。</li></ul>
 
 <h2 id="相关内容">相关内容</h2>
 
@@ -492,7 +492,7 @@
 <h2>合成</h2>
 <div class="recipe-cards"><div class="recipe-card" data-name="电钻 alaindustrial:electric_drill" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="任意铁锭"><img src="../../assets/item/iron_ingot_3d.png" alt="任意铁锭" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="电池"><img src="../../assets/item/battery_3d.png" alt="电池" width="32" height="32"></div> <div class="cell" title="钻石镐"><img src="../../assets/item/diamond_pickaxe_3d.png" alt="钻石镐" width="32" height="32"></div> <div class="cell" title="电池"><img src="../../assets/item/battery_3d.png" alt="电池" width="32" height="32"></div> <div class="cell" title="铜线圈"><img src="../../assets/item/copper_coil_3d.png" alt="铜线圈" width="32" height="32"></div> <div class="cell" title="电子电路"><img src="../../assets/item/electronic_circuit_3d.png" alt="电子电路" width="32" height="32"></div> <div class="cell" title="铜线圈"><img src="../../assets/item/copper_coil_3d.png" alt="铜线圈" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="电钻"><img src="../../assets/item/electric_drill_3d.png" alt="电钻" width="32" height="32"></div><div class="result-name">电钻</div></div></div></div></div>
 <h2>用于</h2>
-<div class="recipe-cards"><div class="recipe-card" data-name="金刚石钻头电钻 alaindustrial:electric_drill_diamond_tip" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="钻石粉"><img src="../../assets/item/diamond_dust_3d.png" alt="钻石粉" width="32" height="32"></div> <div class="cell" title="钻石粉"><img src="../../assets/item/diamond_dust_3d.png" alt="钻石粉" width="32" height="32"></div> <div class="cell" title="钻石粉"><img src="../../assets/item/diamond_dust_3d.png" alt="钻石粉" width="32" height="32"></div> <div class="cell" title="因瓦锭"><img src="../../assets/item/invar_ingot_3d.png" alt="因瓦锭" width="32" height="32"></div> <div class="cell" title="电钻"><img src="../../assets/item/electric_drill_3d.png" alt="电钻" width="32" height="32"></div> <div class="cell" title="因瓦锭"><img src="../../assets/item/invar_ingot_3d.png" alt="因瓦锭" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell" title="银齿轮"><img src="../../assets/item/silver_gear_3d.png" alt="银齿轮" width="32" height="32"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="金刚石钻头电钻"><img src="../../assets/item/electric_drill_diamond_tip_3d.png" alt="金刚石钻头电钻" width="32" height="32"></div><div class="result-name">金刚石钻头电钻</div></div></div></div></div>
+<div class="recipe-cards"><div class="recipe-card" data-name="钻石钻头电钻 alaindustrial:electric_drill_diamond_tip" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="钻石粉"><img src="../../assets/item/diamond_dust_3d.png" alt="钻石粉" width="32" height="32"></div> <div class="cell" title="钻石粉"><img src="../../assets/item/diamond_dust_3d.png" alt="钻石粉" width="32" height="32"></div> <div class="cell" title="钻石粉"><img src="../../assets/item/diamond_dust_3d.png" alt="钻石粉" width="32" height="32"></div> <div class="cell" title="因瓦锭"><img src="../../assets/item/invar_ingot_3d.png" alt="因瓦锭" width="32" height="32"></div> <div class="cell" title="电钻"><img src="../../assets/item/electric_drill_3d.png" alt="电钻" width="32" height="32"></div> <div class="cell" title="因瓦锭"><img src="../../assets/item/invar_ingot_3d.png" alt="因瓦锭" width="32" height="32"></div> <div class="cell empty"></div> <div class="cell" title="银齿轮"><img src="../../assets/item/silver_gear_3d.png" alt="银齿轮" width="32" height="32"></div> <div class="cell empty"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="钻石钻头电钻"><img src="../../assets/item/electric_drill_diamond_tip_3d.png" alt="钻石钻头电钻" width="32" height="32"></div><div class="result-name">钻石钻头电钻</div></div></div></div></div>
   </main>
 </div>
 

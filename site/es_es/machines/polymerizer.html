@@ -365,14 +365,14 @@
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>Transferencia de energía</span><span class="cat-count" aria-label="9 páginas">9</span></a>
 <a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>Energía nuclear</span><span class="cat-count" aria-label="15 páginas">15</span></a>
 <div class="group-title">Procesamiento</div>
-<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>Máquinas</span><span class="cat-count" aria-label="17 páginas">17</span></a>
+<a class="cat-link active" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>Máquinas</span><span class="cat-count" aria-label="18 páginas">18</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>Máquinas de fluidos</span><span class="cat-count" aria-label="3 páginas">3</span></a>
 <div class="group-title">Logística</div>
 <a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>Transporte de objetos</span><span class="cat-count" aria-label="3 páginas">3</span></a>
 <a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Transporte de fluidos</span><span class="cat-count" aria-label="5 páginas">5</span></a>
 <a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>Almacenamiento de fluidos</span><span class="cat-count" aria-label="2 páginas">2</span></a>
 <div class="group-title">Mundo y automatización</div>
-<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Materiales</span><span class="cat-count" aria-label="26 páginas">26</span></a>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Materiales</span><span class="cat-count" aria-label="27 páginas">27</span></a>
 <a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>Agricultura</span><span class="cat-count" aria-label="7 páginas">7</span></a>
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>Máquinas avanzadas</span><span class="cat-count" aria-label="1 página">1</span></a>
 <div class="group-title">Otros</div>
@@ -413,9 +413,11 @@
 
 <h2 id="fluido">Fluido</h2>
 
-<p>El tanque solo acepta petróleo — el nuestro y cualquier otro petróleo que lleve la etiqueta convencional <code>c:oil</code>.</p>
+<p>El tanque acepta petróleo — el nuestro y cualquier otro que lleve la etiqueta convencional <code>c:oil</code> — y miel líquida (la etiqueta <code>c:honey</code>). Otros fluidos no entran.</p>
 
-<table><thead><tr><th>Qué</th><th>Valor</th></tr></thead><tbody><tr><td>Tamaño del tanque</td><td>10 000 mB (10 cubos)</td></tr><tr><td>Usado por operación</td><td>1000 mB (1 cubo)</td></tr><tr><td>Acepta</td><td>petróleo (la etiqueta <code>c:oil</code>)</td></tr><tr><td>Lo devuelve</td><td>no — el petróleo del tanque es materia prima, no almacenamiento</td></tr></tbody></table>
+<blockquote><strong>Atención:</strong> hay un solo tanque y no mezcla. Mientras tenga miel, el petróleo no entra (y al revés): gasta antes la miel; la máquina la toma de 1000 mB en 1000 mB y un resto de menos de un cubo se queda esperando.</blockquote>
+
+<table><thead><tr><th>Qué</th><th>Valor</th></tr></thead><tbody><tr><td>Tamaño del tanque</td><td>10 000 mB (10 cubos)</td></tr><tr><td>Usado por operación</td><td>1000 mB (1 cubo)</td></tr><tr><td>Acepta</td><td>petróleo (la etiqueta <code>c:oil</code>), miel líquida (la etiqueta <code>c:honey</code>)</td></tr><tr><td>Lo devuelve</td><td>no — el fluido del tanque es materia prima, no almacenamiento</td></tr></tbody></table>
 
 <p>Hay dos formas de llenarlo y ambas acaban en el mismo tanque: una tubería o bomba desde fuera, o un recipiente por la ranura de la interfaz. No hay mezcla posible — otro fluido simplemente no entra.</p>
 
@@ -454,7 +456,9 @@
 <p>El Polimerizador se fabrica en una mesa a partir de una <a href="../components/machine_casing.html">carcasa de máquina</a>, un cubo, hierro y un <a href="../components/electronic_circuit.html">circuito electrónico</a>.</p>
 
 
-<table><thead><tr><th>Entrada</th><th>Salida</th></tr></thead><tbody><tr><td>1000 mB de petróleo</td><td>1 caucho en bruto</td></tr></tbody></table>
+<table><thead><tr><th>Entrada</th><th>Salida</th></tr></thead><tbody><tr><td>1000 mB de petróleo</td><td>1 caucho en bruto</td></tr><tr><td>1000 mB de miel líquida</td><td>1 bloque de miel</td></tr></tbody></table>
+
+<p>La miel líquida sale de la <a href="honey_centrifuge.html">Centrifugadora de miel</a>; cuatro frascos con miel centrifugados allí dan exactamente un bloque aquí.</p>
 
 <p>El caucho en bruto pasa luego a un <a href="vulcanizer.html">Vulcanizador</a> junto con polvo de azufre:</p>
 
