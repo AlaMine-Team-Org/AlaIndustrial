@@ -7,6 +7,8 @@ version = "${version}" #mandatory
 displayName = "Ala Industrial" #mandatory
 credits = "${credits}"
 authors = "${mod_author}"
+# Studio site, shown as the link on the NeoForge mod list screen (MOD-931).
+displayURL = "https://alalab.work"
 description = '''${description}''' #mandatory
 # Icon in the NeoForge mod list (MOD-444, keys updated in MOD-495). Root-relative jar path, the
 # same asset the Fabric side ships in fabric.mod.json "icon". iconBlur=true: the icon is an

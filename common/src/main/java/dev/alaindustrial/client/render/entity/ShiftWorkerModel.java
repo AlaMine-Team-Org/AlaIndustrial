@@ -43,7 +43,8 @@ import net.minecraft.world.entity.Pose;
  * <p><b>Movement</b> (MOD-882) is a humanoid's with {@link ShiftWorkerMotion} on top: the heavy suit's walk, a
  * breathing stand, a wave for a player who came up. The balloon hangs from an empty part {@code pack} on the body's
  * back (z = 2, the balloon's top front edge); the gear and the number layers draw through it, so they swing with it.
- * A hibernating worker — its goals off — and a sleeping, riding, swimming or crouching one keep the humanoid's pose.
+ * A hibernating worker — its goals off — stands in the rest pose, with nothing that moves with time or a push
+ * ({@link ShiftWorkerMotion#still}); a sleeping, riding, swimming or crouching one keeps the humanoid's pose.
  */
 public class ShiftWorkerModel extends HumanoidModel<ShiftWorkerRenderState> {
 
@@ -167,12 +168,21 @@ public class ShiftWorkerModel extends HumanoidModel<ShiftWorkerRenderState> {
 		braid.visible = open && state.hair == ShiftWorkerLook.Hair.BRAID;
 		bob.visible = open && state.hair == ShiftWorkerLook.Hair.BOB;
 		curls.visible = open && state.hair == ShiftWorkerLook.Hair.CURLS;
-		if (state.hibernating || state.isPassenger || state.isCrouching || state.isVisuallySwimming
+		if (state.isPassenger || state.isCrouching || state.isVisuallySwimming
 				|| state.isFallFlying || state.hasPose(Pose.SLEEPING)) {
 			return;
 		}
 		motion.compute(state.walkAnimationPos, state.walkAnimationSpeed, state.ageInTicks, state.greetTicks,
-				state.watching);
+				state.watching, state.hibernating);
+		if (motion.still) {
+			// The humanoid's arm bob and limb swing undone; the head keeps the frozen direction it looks in.
+			body.resetPose();
+			rightArm.resetPose();
+			leftArm.resetPose();
+			rightLeg.resetPose();
+			leftLeg.resetPose();
+			return;
+		}
 		head.xRot += motion.headX;
 		head.yRot += motion.headY;
 		head.zRot += motion.headZ;
