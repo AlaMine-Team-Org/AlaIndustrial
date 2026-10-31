@@ -23,6 +23,10 @@ package dev.alaindustrial.client.render.entity;
  * inner edge starts right at the head's edge, so a vertical arm would go into the helmet. The arm is raised by its
  * {@code xRot} before its {@code zRot} turns it (the part's rotation order is Z·Y·X), and for a raised right arm
  * «outward» is the negative {@code zRot}.
+ *
+ * <p><b>Hibernation.</b> A worker whose goals are off stands still: no walk, no breath, no look, no greeting, and
+ * {@link #still} tells the model to put the body, the arms and the legs back to their rest pose, so the humanoid's own
+ * arm bob and limb swing do not show either. The frame is the same whatever the clock and the walk say.
  */
 public final class ShiftWorkerMotion {
 
@@ -78,17 +82,26 @@ public final class ShiftWorkerMotion {
 	public float greet;
 	public float greetArmX;
 	public float greetArmZ;
+	/** The worker hibernates: every delta is zero and the body, the arms and the legs take their rest pose. */
+	public boolean still;
 
 	/**
 	 * Works out one frame.
 	 *
-	 * @param walkPos   the walk animation's position (distance walked)
-	 * @param walkSpeed the walk animation's speed
-	 * @param age       ticks lived, with the partial tick
-	 * @param greetAge  ticks since the greeting began, or a negative number — none
-	 * @param watching  0 — the worker watches no one, 1 — it watches a player; in between while it turns to one
+	 * @param walkPos     the walk animation's position (distance walked)
+	 * @param walkSpeed   the walk animation's speed
+	 * @param age         ticks lived, with the partial tick
+	 * @param greetAge    ticks since the greeting began, or a negative number — none
+	 * @param watching    0 — the worker watches no one, 1 — it watches a player; in between while it turns to one
+	 * @param hibernating the worker's goals are off: a still frame, whatever the other inputs say
 	 */
-	public void compute(float walkPos, float walkSpeed, float age, float greetAge, float watching) {
+	public void compute(float walkPos, float walkSpeed, float age, float greetAge, float watching,
+			boolean hibernating) {
+		still = hibernating;
+		if (hibernating) {
+			holdStill();
+			return;
+		}
 		float s = Math.max(0.0F, walkSpeed);
 		float walk = clamp(s / FULL_WALK_SPEED);
 		float stand = 1.0F - walk;
@@ -137,6 +150,27 @@ public final class ShiftWorkerMotion {
 			headZ -= rad(4.0F) * greet;
 			packZ += rad(2.0F) * sin((greetAge - 3.0F) * TAU / WAVE_TICKS) * greet;
 		}
+	}
+
+	/** The hibernation frame: nothing added to the rest pose. */
+	private void holdStill() {
+		headX = 0.0F;
+		headY = 0.0F;
+		headZ = 0.0F;
+		bodyY = 0.0F;
+		bodyZ = 0.0F;
+		rightArmX = 0.0F;
+		rightArmZ = 0.0F;
+		leftArmX = 0.0F;
+		leftArmZ = 0.0F;
+		rightLegX = 0.0F;
+		leftLegX = 0.0F;
+		lift = 0.0F;
+		packX = 0.0F;
+		packZ = 0.0F;
+		greet = 0.0F;
+		greetArmX = 0.0F;
+		greetArmZ = 0.0F;
 	}
 
 	static float rad(float degrees) {

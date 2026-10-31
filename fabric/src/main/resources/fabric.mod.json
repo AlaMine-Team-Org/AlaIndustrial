@@ -5,10 +5,11 @@
 	"name": "Ala Industrial",
 	"description": "${description}",
 	"authors": [
-		"Ala Team"
+		"Ala Lab",
+		"Ma3auka"
 	],
 	"contact": {
-		"homepage": "https://github.com/AlaMine-Team-Org/AlaIndustrial",
+		"homepage": "https://alamine-team-org.github.io/AlaIndustrial/en/index.html",
 		"sources": "https://github.com/AlaMine-Team-Org/AlaIndustrial",
 		"issues": "https://github.com/AlaMine-Team-Org/AlaIndustrial/issues",
 		"discord": "https://discord.gg/ky7cFDF8JD"
