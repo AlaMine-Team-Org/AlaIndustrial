@@ -6,6 +6,14 @@ plugins {
 repositories {
     // JEI (recipe viewer) optional compat for NeoForge.
     maven { url = 'https://maven.blamejared.com/' }
+    // WTHIT + Bad Packets (MOD-938).
+    maven {
+        url = 'https://maven2.bai.lol'
+        content {
+            includeGroup 'mcp.mobius.waila'
+            includeGroup 'lol.bai'
+        }
+    }
 }
 
 // MOD-242 — world-gametest lane moved out of `main` (it used to ship in the release jar).
@@ -102,6 +110,14 @@ dependencies {
     compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}@jar"
     compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}@jar"
     runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}@jar"
+
+    // WTHIT tank plugin (MOD-938): API to compile the shared plugin; the full mod only with `-PwithWthit`
+    // (its only build is for 26.2 — opt in on the 26.2 line).
+    compileOnly "mcp.mobius.waila:wthit-api:mojmap-${wthit_version}"
+    if (project.hasProperty('withWthit')) {
+        runtimeOnly "mcp.mobius.waila:wthit:neo-${wthit_version}"
+        runtimeOnly "lol.bai:badpackets:neo-${badpackets_version}"
+    }
 
     // net.neoforged:testframework provides EphemeralTestServerProvider (verified coordinate from the
     // neoforge userdev config.json `testLibraries`). Pulled from the NeoForged maven (settings.gradle).

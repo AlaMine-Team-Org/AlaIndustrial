@@ -30,6 +30,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -199,6 +200,18 @@ public class ReceptionCapsuleBlock extends HorizontalMachineBlock implements Has
 			case UPPER -> UPPER;
 		};
 		return shapes.get(state.getValue(FACING));
+	}
+
+	/**
+	 * The flask is closed on three sides, so no walk may lead through it (MOD-937). By default the game lets a mob
+	 * path through any block that is not a full cube, and a worker behind the capsule was sent straight through its
+	 * back wall toward the town hall's core, pushed against it and gave its place up. As a chest, the capsule is walked
+	 * round; the worker standing on its floor still walks out of the open front, since a path's start is not checked
+	 * against the cell the mob stands in.
+	 */
+	@Override
+	protected boolean isPathfindable(BlockState state, PathComputationType type) {
+		return false;
 	}
 
 	/** Facing the player, with room for the flask above: as a door, nothing is placed where the flask cannot go. */
