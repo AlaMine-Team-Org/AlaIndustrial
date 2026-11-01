@@ -1,18 +1,12 @@
 # Changelog
 
-## 0.1.225
+## 0.1.226
 
-<p><img alt="Ala Industrial Minecraft mod: shift workers standing still in a dark town square, a pump named in Chinese and the Ala Lab credit" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.225-mc26.3/release-media/v0.1.225-mc26.3/changelog.png" width="720"></p>
+<p><img alt="Ala Industrial Minecraft mod: a WTHIT tank tooltip whose fluid bar fills with water, lava and liquid honey" src="https://raw.githubusercontent.com/AlaMine-Team-Org/AlaIndustrial/v0.1.226-mc26.3/release-media/v0.1.226-mc26.3/changelog.webp" width="720"></p>
 
-A small polish release: resting shift workers now stand perfectly still, Traditional Chinese names are fixed, and the mod is now credited to Ala Lab.
-
-### Improved
-
-- Traditional Chinese: the pump is now 泵, as in Simplified Chinese, and the three diamond-tipped tools
-  say "tipped" rather than "coated".
-- **The mod is now credited to Ala Lab.** The mod list shows "Ala Lab, Ma3auka" as the author, and its
-  links now lead to the guide site and to the studio site, alalab.work.
+This update stops a crash with WTHIT on nearly empty tanks and helps shift workers reach the town hall.
 
 ### Bug Fixes
 
-- A hibernating shift worker now stands still: its arms no longer sway.
+- Shift workers now walk round the reception capsule. A worker standing behind it no longer gets stuck against its back wall and misses the gathering in the town hall.
+- **WTHIT and nearly empty tanks.** Looking at a tank 1 to 3 percent full no longer crashes the game with WTHIT. Every tank, tap and machine of the mod shows its fluid line as before.

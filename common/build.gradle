@@ -26,6 +26,14 @@ repositories {
     // JEI. The recipe-viewer integration is loader-neutral since MOD-558 and therefore compiles
     // here; the loaders keep only their entry point. Same BlameJared maven both of them already use.
     maven { url = 'https://maven.blamejared.com/' }
+    // WTHIT API (MOD-938).
+    maven {
+        url = 'https://maven2.bai.lol'
+        content {
+            includeGroup 'mcp.mobius.waila'
+            includeGroup 'lol.bai'
+        }
+    }
 }
 
 dependencies {
@@ -41,6 +49,11 @@ dependencies {
     // interface used here live in it. The two loader-specific api jars carry only their own fluid
     // ingredient types, which this integration does not touch, and they stay in the loader modules.
     compileOnly("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}@jar")
+
+    // WTHIT — the tank plugin (MOD-938). compileOnly for the same two reasons as JEI: the mod loads
+    // without WTHIT (only WTHIT reads waila_plugins.json and touches the plugin classes), and the L1
+    // lane stays WTHIT-free.
+    compileOnly("mcp.mobius.waila:wthit-api:mojmap-${wthit_version}")
 
     // Fabric and NeoForge both bundle Fabric Mixin, so it is safe to use in common.
     // Version cross-checked against both loaders' gradle.properties (MOD-022):
@@ -616,7 +629,10 @@ pitest {
                      // Worker and Change.
                      'dev.alaindustrial.settlement.works.WorkplaceRules*',
                      'dev.alaindustrial.settlement.works.StorekeeperRules',
-                     'dev.alaindustrial.settlement.shift.Profession'
+                     'dev.alaindustrial.settlement.shift.Profession',
+                     // MOD-938: the floor that keeps WTHIT's fluid bar off an empty scissor, Minecraft- and
+                     // WTHIT-free on purpose; L1 suite TankBarRatioTest.
+                     'dev.alaindustrial.compat.wthit.TankBarRatio'
             ]
     // The MC-coupled classes are excluded from MUTATION (the bytecode PIT rewrites). But PIT's
     // JUnit discovery also walks every class under `targetTests` via reflection to find @Test
@@ -630,6 +646,11 @@ pitest {
     // (HudSmootherTest, LevelMathTest, GuidePaginatorTest, TemperedGearRollTest) invisible to PIT.
     targetTests = ['dev.alaindustrial.*Test']
     excludedClasses = [
+            // MOD-938: the two WTHIT entry points name no Minecraft type but implement WTHIT's plugin
+            // interfaces, and the WTHIT API is compileOnly, so it is not on the L1 classpath. Each is one
+            // registration call; the line they register is checked in the dev client with -PwithWthit.
+            'dev.alaindustrial.compat.wthit.AlaWthitCommonPlugin',
+            'dev.alaindustrial.client.compat.wthit.AlaWthitClientPlugin',
             // MOD-862: which buildings are houses, which count against the limit, and which building the
             // dispatcher is about. They import no Minecraft type themselves, but they read TownBuilding,
             // whose BlockPos and Identifier the L1 classpath cannot load, so no L1 suite reaches them.

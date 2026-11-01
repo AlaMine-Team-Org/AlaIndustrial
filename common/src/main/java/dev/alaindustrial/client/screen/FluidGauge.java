@@ -45,16 +45,9 @@ public final class FluidGauge {
 	 * distortion reads as a rendering bug. The fill height is rarely a multiple of 16, so tiles are laid
 	 * from the bottom edge upward and the top one is cut off mid-texture by the scissor.
 	 */
-	// MOD-498 — FluidModel#tintSource() is deprecated by NeoForge only, in favour of fluidTintSource(),
-	// which returns NeoForge's own FluidTintSource type. In vanilla tintSource() is the record component
-	// itself and there is no such replacement, so this shared client code cannot use it.
-	@SuppressWarnings("deprecation")
 	public static void draw(GuiGraphicsExtractor graphics, Fluid fluid, int leftX, int topY, int width, int height) {
-		Minecraft minecraft = Minecraft.getInstance();
-		FluidState state = fluid.defaultFluidState();
-		FluidModel model = minecraft.getModelManager().getFluidStateModelSet().get(state);
-		TextureAtlasSprite sprite = model.stillMaterial().sprite();
-		int tint = tint(model.tintSource(), state, minecraft);
+		TextureAtlasSprite sprite = sprite(fluid);
+		int tint = tint(fluid);
 
 		int bottomY = topY + height;
 		graphics.enableScissor(leftX, topY, leftX + width, bottomY);
@@ -64,6 +57,30 @@ public final class FluidGauge {
 			}
 		}
 		graphics.disableScissor();
+	}
+
+	/**
+	 * The still texture {@link #draw} tiles for {@code fluid}. Public for the WTHIT tank line (MOD-938),
+	 * which draws the same fluid with the same picture as the machine screens.
+	 */
+	public static TextureAtlasSprite sprite(Fluid fluid) {
+		return model(fluid).stillMaterial().sprite();
+	}
+
+	/**
+	 * The opaque ARGB {@link #draw} multiplies {@code fluid}'s texture by (see the private overload). Public
+	 * for the WTHIT tank line (MOD-938).
+	 */
+	// MOD-498 — FluidModel#tintSource() is deprecated by NeoForge only, in favour of fluidTintSource(),
+	// which returns NeoForge's own FluidTintSource type. In vanilla tintSource() is the record component
+	// itself and there is no such replacement, so this shared client code cannot use it.
+	@SuppressWarnings("deprecation")
+	public static int tint(Fluid fluid) {
+		return tint(model(fluid).tintSource(), fluid.defaultFluidState(), Minecraft.getInstance());
+	}
+
+	private static FluidModel model(Fluid fluid) {
+		return Minecraft.getInstance().getModelManager().getFluidStateModelSet().get(fluid.defaultFluidState());
 	}
 
 	/**

@@ -1,0 +1,10 @@
+{
+  "alaindustrial:tanks": {
+    "entrypoints": {
+      "common": "dev.alaindustrial.compat.wthit.AlaWthitCommonPlugin",
+      "client": "dev.alaindustrial.client.compat.wthit.AlaWthitClientPlugin"
+    },
+    "side": "*",
+    "required": []
+  }
+}

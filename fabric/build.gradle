@@ -18,6 +18,14 @@ repositories {
         url = 'https://api.modrinth.com/maven'
         content { includeGroup 'maven.modrinth' }
     }
+    // WTHIT + Bad Packets (MOD-938).
+    maven {
+        url = 'https://maven2.bai.lol'
+        content {
+            includeGroup 'mcp.mobius.waila'
+            includeGroup 'lol.bai'
+        }
+    }
 }
 
 dependencies {
@@ -97,6 +105,15 @@ dependencies {
             exclude group: 'net.fabricmc.fabric-api'
             exclude group: 'net.fabricmc', module: 'fabric-loader'
         }
+    }
+
+    // WTHIT tank plugin (MOD-938): the shared plugin source compiles here too, so the API is on this
+    // classpath. The full mod joins the dev client only with `-PwithWthit` — off by default, so the
+    // gametest lanes and CI never load it. Its only 26.2 build is 20.0.0: opt in on the 26.2 line.
+    compileOnly("mcp.mobius.waila:wthit-api:mojmap-${wthit_version}")
+    if (project.hasProperty('withWthit')) {
+        runtimeOnly("mcp.mobius.waila:wthit:fabric-${wthit_version}")
+        runtimeOnly("lol.bai:badpackets:fabric-${badpackets_version}")
     }
 }
 

@@ -18,6 +18,7 @@ import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.ai.util.LandRandomPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.Vec3;
 
 /**
@@ -35,7 +36,9 @@ public final class ShiftWorkerReleaseScenarios {
 				RosterEntry.of(ShiftWorkerReleaseScenarios::aBreakFindingANewWorkerInItsCapsuleKeepsItToTheCore,
 						"shift_worker_release_break_keeps_to_the_core").ticks(200),
 				RosterEntry.of(ShiftWorkerReleaseScenarios::theCapsuleRoofIsNoPlaceToKeepOrToWalkTo,
-						"shift_worker_release_capsule_roof_is_no_place").ticks(20));
+						"shift_worker_release_capsule_roof_is_no_place").ticks(20),
+				RosterEntry.of(ShiftWorkerReleaseScenarios::theCapsuleIsWalkedRoundAndOutOfThroughItsFront,
+						"shift_worker_release_capsule_is_walked_round").ticks(500));
 
 		private Roster() {
 		}
@@ -150,5 +153,50 @@ public final class ShiftWorkerReleaseScenarios {
 				"a short walk to the floor " + floor + " must not be refused");
 		body.discard();
 		helper.succeed();
+	}
+
+	/**
+	 * The capsule is walked round, never through (MOD-937): at the gathering hour a worker standing right behind the
+	 * town hall's capsule comes to the core round it, and a worker on the capsule's floor walks out of its open front
+	 * to the core. The game lets a walk through any block short of a full cube, so the first one used to be led
+	 * through the capsule's back wall, pushed against it and gave the hall up (the gathering's gametest failed so, now
+	 * and then).
+	 * The limit is shorter than {@link RoutineState#STUCK_TICKS}: a worker held at the wall fails here, not gives up.
+	 *
+	 * @implements MOD-937-CAPSULE-WALK — a reception capsule is walked round, and out of through its open front
+	 */
+	public static void theCapsuleIsWalkedRoundAndOutOfThroughItsFront(GameTestHelper helper) {
+		Rig rig = TownDroneScenarios.rig(helper, 0);
+		ServerLevel level = rig.level();
+		int town = rig.town();
+		ShiftWorkerRoutineScenarios.pin(helper, town, ShiftWorkerRoutineScenarios.GATHERING);
+		BlockPos core = rig.core().getBlockPos();
+		BlockPos lower = core.offset(-3, 0, 0);
+		helper.assertTrue(level.getBlockState(lower).getBlock() instanceof ReceptionCapsuleBlock
+				&& level.getBlockState(lower.west()).isAir(),
+				"control: the hall's capsule stands three blocks west of its core, open floor behind it: " + lower);
+		helper.assertFalse(level.getBlockState(lower).isPathfindable(PathComputationType.LAND),
+				"no walk may lead through the capsule " + lower);
+		List<ShiftWorker> workers = List.of(
+				ShiftWorkers.spawn(level, Vec3.atBottomCenterOf(lower.west()), 270.0F, town)
+						.orElseThrow(() -> helper.assertionException("no worker made behind the capsule")),
+				ShiftWorkers.spawn(level, onTheFloor(lower), 90.0F, town)
+						.orElseThrow(() -> helper.assertionException("no worker made in the capsule")));
+		helper.startSequence().thenWaitUntil(() -> {
+			workers.forEach(ShiftWorkerRoutineScenarios::live);
+			for (ShiftWorker worker : workers) {
+				if (!worker.getHomePosition().equals(core) || !worker.isWithinHome()) {
+					throw helper.assertionException("a worker has not come round the capsule " + lower + " to the core "
+							+ core + ": it stands at " + worker.blockPosition() + ", keeps to "
+							+ worker.getHomePosition());
+				}
+			}
+		}).thenExecute(() -> {
+			for (ShiftWorker worker : workers) {
+				ShiftWorkers.book(level.getServer()).remove(worker.getUUID());
+				worker.discard();
+			}
+			rig.release();
+		}).thenSucceed();
 	}
 }

@@ -225,12 +225,19 @@ public final class ShiftWorkerRoutineScenarios {
 		int[] turning = {0};
 		helper.startSequence().thenWaitUntil(() -> {
 			workers.forEach(ShiftWorkerRoutineScenarios::live);
+			// Every worker not there yet, and why: one named alone hid a peer that had given the hall up (MOD-937).
+			StringBuilder away = new StringBuilder();
 			for (ShiftWorker worker : workers) {
 				double distance = Math.sqrt(worker.blockPosition().distSqr(core));
 				if (distance > reach || !worker.getNavigation().isDone()) {
-					throw helper.assertionException("a worker is " + String.format(Locale.ROOT, "%.1f", distance)
-							+ " blocks from the core (activity " + worker.routine().activity() + ")");
+					away.append(String.format(Locale.ROOT, "; %s %.1f blocks from the core, %s, keeps to %s"
+							+ " (activity %s)", worker.number(), distance,
+							worker.getNavigation().isDone() ? "standing" : "walking",
+							worker.getHomePosition().subtract(core), worker.routine().activity()));
 				}
+			}
+			if (!away.isEmpty()) {
+				throw helper.assertionException("the gathering has not come to the core" + away);
 			}
 		}).thenWaitUntil(() -> {
 			// The gathering goal starts by chance (one in ten of the goal selector's evaluations, every second tick),
