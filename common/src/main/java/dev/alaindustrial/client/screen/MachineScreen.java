@@ -632,11 +632,48 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 	// --- Input: gear, modal panel (buttons, slots, drag), click routing ---
 
 	/**
+	 * Whether this screen takes mouse input right now; a screen that refuses swallows the event. Always true but for
+	 * a screen that animates in and out (the reactor tablet, MOD-946), which takes input only once it has settled.
+	 */
+	protected boolean acceptsMouse() {
+		return true;
+	}
+
+	/**
+	 * The point of this screen's own layout drawn at screen {@code x} — the identity, but for a screen drawn under a
+	 * scale of its own (the reactor tablet, MOD-946). Every input below is mapped through it before routing, so
+	 * overlays, controls and vanilla all see layout coordinates.
+	 */
+	protected double layoutX(double x) {
+		return x;
+	}
+
+	/** The vertical twin of {@link #layoutX}. */
+	protected double layoutY(double y) {
+		return y;
+	}
+
+	/** Screen pixels per layout pixel, for drag deltas; 1 but for a screen with a scale of its own. */
+	protected double layoutScale() {
+		return 1.0;
+	}
+
+	private MouseButtonEvent inLayout(MouseButtonEvent event) {
+		double x = layoutX(event.x());
+		double y = layoutY(event.y());
+		return x == event.x() && y == event.y() ? event : new MouseButtonEvent(x, y, event.buttonInfo());
+	}
+
+	/**
 	 * Final for the reason {@link #extractTooltip} is (MOD-762): the overlays take a click first, a screen's own
 	 * control ({@link #controlClicked}) only where {@link #frameAcceptsInput} lets it through, vanilla the rest.
 	 */
 	@Override
-	public final boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+	public final boolean mouseClicked(MouseButtonEvent screenEvent, boolean doubleClick) {
+		if (!acceptsMouse()) {
+			return true;
+		}
+		MouseButtonEvent event = inLayout(screenEvent);
 		// Handles first (the drawer key, the gear, the statistics tab — they never overlap), then the open
 		// bodies from the top one down: a body is modal over its footprint and takes every click there.
 		for (ScreenOverlay overlay : overlays) {
@@ -668,7 +705,12 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 	 * where {@link #frameAcceptsInput} refuses, never reaches {@link #controlScrolled}.
 	 */
 	@Override
-	public final boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+	public final boolean mouseScrolled(double screenX, double screenY, double scrollX, double scrollY) {
+		if (!acceptsMouse()) {
+			return true;
+		}
+		double mouseX = layoutX(screenX);
+		double mouseY = layoutY(screenY);
 		if (!overlayCovers(mouseX, mouseY) && frameAcceptsInput(mouseX, mouseY)
 				&& controlScrolled(mouseX, mouseY, scrollX, scrollY)) {
 			return true;
@@ -686,7 +728,13 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 	 * panel being moved), then this screen's own control ({@link #controlDragged}), vanilla the rest.
 	 */
 	@Override
-	public final boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
+	public final boolean mouseDragged(MouseButtonEvent screenEvent, double screenDragX, double screenDragY) {
+		if (!acceptsMouse()) {
+			return true;
+		}
+		MouseButtonEvent event = inLayout(screenEvent);
+		double dragX = screenDragX / layoutScale();
+		double dragY = screenDragY / layoutScale();
 		for (ScreenOverlay overlay : overlays) {
 			if (overlay.drag(event)) {
 				return true;
@@ -712,7 +760,11 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 	 * screen's own control ({@link #controlReleased}), vanilla the rest.
 	 */
 	@Override
-	public final boolean mouseReleased(MouseButtonEvent event) {
+	public final boolean mouseReleased(MouseButtonEvent screenEvent) {
+		if (!acceptsMouse()) {
+			return true;
+		}
+		MouseButtonEvent event = inLayout(screenEvent);
 		for (ScreenOverlay overlay : overlays) {
 			if (overlay.release(event)) {
 				return true;

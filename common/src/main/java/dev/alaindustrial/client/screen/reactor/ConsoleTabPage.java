@@ -20,6 +20,8 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.ItemStack;
 import org.jspecify.annotations.Nullable;
 
+// size-justified: the reactor's main tab in its three forms (running, bare, building), its two controls and their
+// tooltips; the forms share rows and bars, and splitting them would scatter one panel's layout over three files.
 /**
  * The reactor's «Console» tab (MOD-618): heat, output, coolant, steam, buffer, the rod depth and what to
  * do next.
@@ -107,11 +109,7 @@ public final class ConsoleTabPage implements ReactorTabPage {
 
 	/** The menu's channels as one snapshot, each share kept on its 0…100 scale. */
 	public static ReactorConsole.Readout readout(ReactorControllerMenu menu) {
-		return new ReactorConsole.Readout(menu.getStatus(), menu.getIdleReason(), menu.getRods(),
-				menu.getOutput(), percent(menu.getHeatPercent()), percent(menu.getWaterPercent()),
-				percent(menu.getSteamPercent()), percent(menu.getBlastPercent()), menu.isMeltingDown(),
-				percent(menu.getInstabilityPercent()), percent(menu.getCoolantSharePercent()), menu.getHeatWarnPercent(),
-				menu.getMeltdownStartPercent());
+		return ReactorConsole.readout(menu::reactorChannel);
 	}
 
 	@Override
@@ -179,7 +177,8 @@ public final class ConsoleTabPage implements ReactorTabPage {
 	 */
 	private void updateControls() {
 		ReactorConsole.Readout r = readout(screen.getMenu());
-		boolean live = shown && r.formed();
+		// A tablet's view (MOD-941) never shows the throttle or STOP: it only reads the reactor.
+		boolean live = shown && r.formed() && !screen.getMenu().isViewOnly();
 		boolean building = shown && !r.formed() && !r.bare();
 		if (roomLink != null) {
 			roomLink.visible = building;
@@ -264,6 +263,11 @@ public final class ConsoleTabPage implements ReactorTabPage {
 
 		row(graphics, CONTENT_LEFT, RODS_Y, COLUMN_W, Component.translatable(KEY + "label.rods"),
 				Component.literal(Integer.toString(r.rods())), GuiStyle.TEXT);
+		// MOD-941: a tablet shows the panel but has no throttle; say so where the controls would be.
+		if (menu.isViewOnly()) {
+			wrapped(graphics, Component.translatable(KEY + "note.view_only"), CONTENT_LEFT, CONTROLS_Y + 2,
+					CONTENT_RIGHT - CONTENT_LEFT, CONTROLS_H, GuiStyle.TEXT_DIM);
+		}
 	}
 
 	/**

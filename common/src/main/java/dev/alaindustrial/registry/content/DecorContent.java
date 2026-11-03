@@ -24,6 +24,7 @@ import dev.alaindustrial.block.MobRepellerHvBlock;
 import dev.alaindustrial.block.MobRepellerMvBlock;
 import dev.alaindustrial.block.IndustrialLightBlock;
 import dev.alaindustrial.block.ReinforcedGlassBlock;
+import dev.alaindustrial.block.ReinforcedGlassTrapdoorBlock;
 import dev.alaindustrial.block.SoundAbsorberBlock;
 import dev.alaindustrial.block.TemperedIronBarsBlock;
 import dev.alaindustrial.block.TemperedIronLadderBlock;
@@ -301,6 +302,12 @@ public final class DecorContent {
 			TemperedIronTrapdoorBlock::new,
 			machine(MapColor.TERRACOTTA_LIGHT_BLUE, p -> p.strength(5.0f, 6.0f).noOcclusion()
 					.isValidSpawn((state, level, pos, type) -> false)), s -> ModContent.TEMPERED_IRON_TRAPDOOR = s);
+	// MOD-864 — the reinforced glass pane in a trapdoor: glass strength, the sound comes from its block set type.
+	public static final BlockDef<ReinforcedGlassTrapdoorBlock> REINFORCED_GLASS_TRAPDOOR =
+			block("reinforced_glass_trapdoor", ReinforcedGlassTrapdoorBlock::new,
+					machine(MapColor.NONE, p -> p.strength(3.0f, 30.0f).noOcclusion()
+							.isValidSpawn((state, level, pos, type) -> false)),
+					s -> ModContent.REINFORCED_GLASS_TRAPDOOR = s);
 	public static final BlockDef<ChainBlock> TEMPERED_IRON_CHAIN = block("tempered_iron_chain", ChainBlock::new,
 			machine(MapColor.NONE, p -> p.strength(5.0f, 6.0f).sound(SoundType.CHAIN).noOcclusion().forceSolidOn()),
 			s -> ModContent.TEMPERED_IRON_CHAIN = s);
@@ -524,6 +531,7 @@ public final class DecorContent {
 			blockItem("tempered_iron_bars", s -> ModContent.TEMPERED_IRON_BARS_ITEM = s),
 			blockItem("tempered_iron_ladder", s -> ModContent.TEMPERED_IRON_LADDER_ITEM = s),
 			blockItem("tempered_iron_trapdoor", s -> ModContent.TEMPERED_IRON_TRAPDOOR_ITEM = s),
+			blockItem("reinforced_glass_trapdoor", s -> ModContent.REINFORCED_GLASS_TRAPDOOR_ITEM = s),
 			blockItem("tempered_iron_chain", s -> ModContent.TEMPERED_IRON_CHAIN_ITEM = s),
 			blockItem("sound_absorber", s -> ModContent.SOUND_ABSORBER_ITEM = s),
 			// Enriched Uranium Torch (MOD-085): a StandingAndWallBlockItem (like vanilla Items.TORCH) so using it
@@ -697,13 +705,14 @@ public final class DecorContent {
 		show(out, ModContent.TEMPERED_IRON_SCAFFOLD_ITEM);
 	}
 
-	/** MOD-795 — reinforced glass, the panel lamp, and tempered iron bars, ladder, trapdoor and chain. */
+	/** MOD-795 — reinforced glass, the panel lamp, tempered iron fittings; MOD-864 — the glass trapdoor. */
 	public static void fittings(Sink out) {
 		show(out, ModContent.REINFORCED_GLASS_ITEM);
 		show(out, ModContent.INDUSTRIAL_LIGHT_ITEM);
 		show(out, ModContent.TEMPERED_IRON_BARS_ITEM);
 		show(out, ModContent.TEMPERED_IRON_LADDER_ITEM);
 		show(out, ModContent.TEMPERED_IRON_TRAPDOOR_ITEM);
+		show(out, ModContent.REINFORCED_GLASS_TRAPDOOR_ITEM);
 		show(out, ModContent.TEMPERED_IRON_CHAIN_ITEM);
 	}
 

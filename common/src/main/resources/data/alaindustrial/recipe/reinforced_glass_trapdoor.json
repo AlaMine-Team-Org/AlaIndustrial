@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "GG",
+    "GG"
+  ],
+  "key": {
+    "G": "alaindustrial:reinforced_glass"
+  },
+  "result": {
+    "id": "alaindustrial:reinforced_glass_trapdoor",
+    "count": 2
+  }
+}

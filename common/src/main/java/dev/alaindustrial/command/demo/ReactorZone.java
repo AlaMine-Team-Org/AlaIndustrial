@@ -1,6 +1,8 @@
 package dev.alaindustrial.command.demo;
 
 import dev.alaindustrial.block.FuelRodAssemblyBlock;
+import dev.alaindustrial.block.ReactorAntennaBlock;
+import dev.alaindustrial.block.ReactorAntennaMastBlock;
 import dev.alaindustrial.block.ReactorDoorBlock;
 import dev.alaindustrial.block.SteamNozzleBlock;
 import dev.alaindustrial.registry.ModContent;
@@ -67,6 +69,13 @@ final class ReactorZone implements DemoZone {
 		w.place(origin.offset(22, 1, z),
 				ModContent.REACTOR_CONTROLLER.get().defaultBlockState()
 						.setValue(HorizontalDirectionalBlock.FACING, Direction.SOUTH));
+
+		// The antenna (MOD-941) with its boom pointing up: two cells, placed by hand like the airlock, because
+		// setPlacedBy (which normally puts up the boom) does not run for a programmatic setBlock.
+		w.place(origin.offset(24, 1, z), ModContent.REACTOR_ANTENNA.get().defaultBlockState()
+				.setValue(ReactorAntennaBlock.FACING, Direction.UP));
+		w.place(origin.offset(24, 2, z), ModContent.REACTOR_ANTENNA_MAST.get().defaultBlockState()
+				.setValue(ReactorAntennaMastBlock.FACING, Direction.UP));
 
 		// The exhaust, facing south into open air — a nozzle pointing at a block vents nothing, and a
 		// stand that showed one buried in a wall would be showing a broken installation.

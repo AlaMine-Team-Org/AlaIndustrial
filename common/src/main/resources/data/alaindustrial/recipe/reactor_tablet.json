@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "TGT",
+    "ARA",
+    "TBT"
+  ],
+  "key": {
+    "T": "#c:plates/tin",
+    "G": "#c:glass_panes/colorless",
+    "A": "alaindustrial:advanced_circuit",
+    "R": "alaindustrial:reactor_circuit",
+    "B": "alaindustrial:battery"
+  },
+  "result": {
+    "id": "alaindustrial:reactor_tablet",
+    "count": 1
+  }
+}

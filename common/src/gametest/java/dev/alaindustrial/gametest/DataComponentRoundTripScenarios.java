@@ -115,6 +115,10 @@ public final class DataComponentRoundTripScenarios {
 				new TeleportPoint(Level.OVERWORLD, new BlockPos(10, 64, -20), "Home", 1),
 				new TeleportPoint(Level.NETHER, new BlockPos(-5, 70, 3), "", 2))));
 		s.put(ModDataComponents.DRILL_UPGRADES_ID, new DrillUpgrades(List.of(DrillUpgrades.COLUMN_BORE)));
+		// MOD-941: a tablet bound to a reactor in another dimension, so the dimension is part of what round-trips.
+		s.put(ModDataComponents.REACTOR_TABLET_LINK_ID,
+				net.minecraft.core.GlobalPos.of(Level.NETHER, new BlockPos(-12, 40, 33)));
+		s.put(ModDataComponents.REACTOR_TABLET_ALARM_ID, Unit.INSTANCE);
 		s.put(ModDataComponents.DRILL_COLUMN_ENABLED_ID, true);
 		s.put(ModDataComponents.DRILL_ROW_ENABLED_ID, true);
 		s.put(ModDataComponents.TELEPORTER_LOG_ID, new RemoteLog(3, 1, List.of(

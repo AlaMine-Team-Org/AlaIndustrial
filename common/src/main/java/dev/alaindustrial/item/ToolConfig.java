@@ -250,6 +250,23 @@ public final class ToolConfig {
 	@Knob(section = Section.TOOLS, min = 1,
 			doc = "Max EU/t the bow accepts while charging in a slot.")
 	public static int electricBowInputRate = 32;
+	// --- Reactor tablet (MOD-941, tier 1: a view of the reactor that the player keeps charged) ---
+	/** Reactor tablet EU buffer: at {@link #reactorTabletEuPerTick} about eight minutes of watching. */
+	@Knob(section = Section.TOOLS, clientVisible = true, min = 1,
+			doc = "Reactor tablet EU buffer.")
+	public static int reactorTabletBuffer = 20_000;
+	/** EU per tick the tablet spends while its screen is open. A closed tablet spends nothing. */
+	@Knob(section = Section.TOOLS, min = 0,
+			doc = "EU per tick a reactor tablet spends while its screen is open.")
+	public static int reactorTabletEuPerTick = 2;
+	/** EU per tick while the watched reactor runs hot: the tablet works harder when the news is bad. */
+	@Knob(section = Section.TOOLS, min = 0,
+			doc = "EU per tick a reactor tablet spends while its screen is open and the reactor runs hot.")
+	public static int reactorTabletAlarmEuPerTick = 6;
+	/** Max EU/tick the tablet accepts in a charge slot — the LV ceiling, like the other hand-held devices. */
+	@Knob(section = Section.TOOLS, min = 1,
+			doc = "Max EU/t the reactor tablet accepts while charging in a slot.")
+	public static int reactorTabletInputRate = 32;
 	// --- Electromagnet (MOD-132, item-pull convenience) ---
 	/** Electromagnet EU buffer (tier 1). A modest LV reservoir: at {@link #magnetEuPerItem} per pulled
 	 * item·tick it reaps hundreds of drops before a recharge, and tops up in ~8 s at an LV charger. */

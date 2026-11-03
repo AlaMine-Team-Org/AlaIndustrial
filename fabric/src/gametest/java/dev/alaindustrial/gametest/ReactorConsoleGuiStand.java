@@ -5,15 +5,20 @@ import static dev.alaindustrial.gametest.VisualStandSupport.awaitMenuScreen;
 import dev.alaindustrial.block.entity.ReactorIdleReason;
 import dev.alaindustrial.block.entity.ReactorRoomStatus;
 import dev.alaindustrial.block.entity.reactor.ReactorChannels;
+import dev.alaindustrial.block.entity.reactor.ReactorTabletLink;
 import dev.alaindustrial.client.screen.ReactorControllerScreen;
+import dev.alaindustrial.client.screen.ReactorTabletScreen;
 import dev.alaindustrial.client.screen.reactor.ConsoleTabPage;
 import dev.alaindustrial.client.screen.reactor.RoomTabPage;
 import dev.alaindustrial.client.screen.reactor.CoolantTabPage;
 import dev.alaindustrial.client.screen.reactor.ZoneTabPage;
+import dev.alaindustrial.client.tablet.ReactorTabletTimeline;
 import dev.alaindustrial.core.structure.ReactorZone;
 import dev.alaindustrial.network.ReactorZonePayload;
 import dev.alaindustrial.gametest.visual.ShotRecorder;
+import dev.alaindustrial.item.energy.ItemEnergy;
 import dev.alaindustrial.menu.ReactorControllerMenu;
+import dev.alaindustrial.menu.ReactorTabletMenu;
 import dev.alaindustrial.registry.ModContent;
 import java.nio.file.Path;
 import java.util.List;
@@ -22,6 +27,9 @@ import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Util;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.ItemStack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -483,6 +491,84 @@ public final class ReactorConsoleGuiStand {
 			stack(0, 0, 1, 4, 0, 100, 110, 1, 0, 0),
 			stack(1, 0, 1, 4, 0, 120, 130, 2, 0, 0),
 			stack(2, 1, 1, 4, 0, 90, 100, 0, 0, 0)));
+
+	/**
+	 * The same panel through a tier-1 tablet (MOD-941): linked it is the console with no throttle and a line that
+	 * says so; unlinked it is interference with the reason in a box. Built on the client menu like the frames above,
+	 * with the link state injected on the tablet's own channel.
+	 */
+	public static void shootTablet(ClientGameTestContext context) {
+		long open = ReactorTabletTimeline.TOTAL_MS;
+		shootTablet(context, "linked",
+				"Tablet in range, open: the dark tablet casing almost filling the screen, rubber grips on its outer "
+						+ "edges, the item name top left, four green signal bars, a green lamp, \"50%\" and a battery "
+						+ "mark with three green segments top right, three buttons and two speaker grilles below; "
+						+ "inside, the controller's console with NO slider and NO STOP button and a dim view-only "
+						+ "line in their place",
+				Reading.running(), ReactorTabletLink.State.LINKED, 0.5f, open);
+		shootTablet(context, "out_of_range",
+				"Tablet out of range (MOD-946): the panel replaced by a dim crawl of interference with a card "
+						+ "in the middle: red NO SIGNAL, a compass icon, the amber title \"Out of range\" and one "
+						+ "line on what to do; no tab strip, no tab title, no page buttons; signal bars dark with a "
+						+ "blinking red cross",
+				Reading.running(), ReactorTabletLink.State.OUT_OF_RANGE, 0.5f, open);
+		shootTablet(context, "unbound",
+				"Tablet not bound (MOD-946): the card with the reactor antenna icon, \"Not bound\" and the "
+						+ "shift-right-click hint, nothing of the reactor panel visible around it",
+				Reading.running(), ReactorTabletLink.State.UNBOUND, 0.5f, open);
+		shootTablet(context, "antenna_unpowered",
+				"Antenna unpowered (MOD-946): the card with a copper cable icon, \"Antenna unpowered\" and the hint "
+						+ "to run a cable to the antenna or its mast or start the reactor, wrapped inside the card",
+				Reading.running(), ReactorTabletLink.State.ANTENNA_UNPOWERED, 0.5f, open);
+		shootTablet(context, "alarm_low_battery",
+				"Reactor in meltdown, tablet nearly flat (MOD-946): the console's red countdown under a red wash "
+						+ "with a red rim around the glass, the lamp and signal bars red, the battery mark and \"10%\" "
+						+ "red, the mark with one segment or not drawn at all (it blinks)",
+				Reading.running().heat(100).output(512).depth(100).water(0).rate(0).steam(22).meltdown(true)
+						.blast(63).stored(100),
+				ReactorTabletLink.State.LINKED, 0.1f, open);
+		shootTablet(context, "unfolding",
+				"A third into the unfold (MOD-946): the casing smaller than open and a little above the middle of "
+						+ "the screen, the world only partly dimmed, the glass still dark with a bright line across it",
+				Reading.running(), ReactorTabletLink.State.LINKED, 0.5f,
+				ReactorTabletTimeline.RAISE_MS + ReactorTabletTimeline.UNFOLD_MS / 3);
+		shootTablet(context, "powering_on",
+				"Halfway through the power-on (MOD-946): the casing open, a horizontal band of the console visible "
+						+ "through the middle of the glass between two bright lines, black above and below",
+				Reading.running(), ReactorTabletLink.State.LINKED, 0.5f,
+				ReactorTabletTimeline.OPEN_MS + ReactorTabletTimeline.POWER_MS * 7 / 10);
+	}
+
+	/**
+	 * One frame of the tablet: a charged tablet put in the client player's hand (the casing reads its charge), the
+	 * animation pinned at {@code progressMs} so the frame shows that moment whatever the test clock does, and the hand
+	 * emptied again afterwards.
+	 */
+	private static void shootTablet(ClientGameTestContext context, String state, String checks, Reading reading,
+			ReactorTabletLink.State link, float charge, long progressMs) {
+		LOG.info("[GUITEST][MOD-946] opening reactor_tablet/{}", state);
+		context.runOnClient(mc -> {
+			ItemStack tablet = new ItemStack(ModContent.REACTOR_TABLET.get());
+			ItemEnergy.set(tablet, (long) (ItemEnergy.capacity(tablet) * charge));
+			mc.player.setItemInHand(InteractionHand.MAIN_HAND, tablet);
+			MenuScreens.create(ModContent.REACTOR_TABLET_MENU.get(), mc, 0,
+					Component.translatable("item.alaindustrial.reactor_tablet"));
+			if (!(mc.gui.screen() instanceof ReactorTabletScreen screen)
+					|| !(screen.getMenu() instanceof ReactorTabletMenu menu)) {
+				throw new AssertionError("[GUITEST][MOD-941] MenuScreens.create did not open the reactor tablet "
+						+ "screen for " + state);
+			}
+			reading.applyTo(menu, RoomBox.NONE);
+			menu.setData(ReactorTabletMenu.LINK_CHANNEL, link.ordinal());
+			screen.selectPage(ReactorControllerScreen.PAGE_CONSOLE);
+			ReactorTabletTimeline.CLIENT.pin(Util.getMillis(), progressMs);
+		});
+		awaitMenuScreen(context);
+		context.waitTicks(SETTLE_TICKS);
+		context.runOnClient(mc -> ReactorTabletTimeline.CLIENT.pin(Util.getMillis(), progressMs));
+		ShotRecorder.captureScreen("reactor_tablet", state, ShotRecorder.rules("R-GUI-01", "R-GUI-03"), checks);
+		context.runOnClient(mc -> mc.player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY));
+	}
 
 	private static Path shoot(ClientGameTestContext context, String state, String checks, Reading reading,
 			RoomBox box, int page) {

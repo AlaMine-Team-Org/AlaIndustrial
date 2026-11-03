@@ -1,0 +1,38 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_reactor_circuit": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:reactor_circuit"
+          }
+        ]
+      }
+    },
+    "has_battery": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:battery"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_reactor_circuit"
+    ],
+    [
+      "has_battery"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "alaindustrial:reactor_tablet"
+    ]
+  }
+}

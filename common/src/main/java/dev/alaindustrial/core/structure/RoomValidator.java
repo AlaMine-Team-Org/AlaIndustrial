@@ -33,8 +33,8 @@ public final class RoomValidator {
 	}
 
 	/**
-	 * Classifies a block for the scan. Seven blocks may stand in a shell — casing, glass, door, port,
-	 * controller, plus the lamp and the outlet (both counted as casing) — and anything else is
+	 * Classifies a block for the scan. Eight blocks may stand in a shell — casing, glass, door, port,
+	 * controller, plus the lamp, the outlet and the antenna (all counted as casing) — and anything else is
 	 * {@link RoomScan.ShellKind#OTHER}: legal inside the room, never part of its shell.
 	 */
 	public static RoomScan.ShellKind kindOf(BlockState state) {
@@ -54,6 +54,11 @@ public final class RoomValidator {
 			return RoomScan.ShellKind.DOOR;
 		}
 		if (state.is(ModContent.REACTOR_OUTLET.get())) {
+			return RoomScan.ShellKind.CASING;
+		}
+		// MOD-941: the antenna is a wall that transmits — casing to the scan, exactly like the outlet. Asked by
+		// interface, not by name: the core names no block (ADR-039).
+		if (state.getBlock() instanceof ReactorCasingPart) {
 			return RoomScan.ShellKind.CASING;
 		}
 		if (state.is(ModContent.REACTOR_PORT.get())) {

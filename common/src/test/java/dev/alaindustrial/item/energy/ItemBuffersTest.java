@@ -44,7 +44,7 @@ class ItemBuffersTest {
 	@Test
 	void everyComponentIsAClientVisibleToolConfigKnob() throws NoSuchFieldException {
 		RecordComponent[] components = ItemBuffers.class.getRecordComponents();
-		assertEquals(17, components.length, "one component per powered-item buffer knob");
+		assertEquals(18, components.length, "one component per powered-item buffer knob");
 		for (RecordComponent component : components) {
 			Field field = knob(component);
 			Knob knob = field.getAnnotation(Knob.class);

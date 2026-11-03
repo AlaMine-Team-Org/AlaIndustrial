@@ -299,6 +299,7 @@ final class MenuChannelValuesSnapshot {
 					+ " getSteamPercent=0 getStoredEu=0",
 			"reactor_controller placed menu[24]: getStoredPercent=0 getWaterPercent=0 getWaterRate=0"
 					+ " isBare=false isBoxMeasured=false isMeltingDown=false",
+			"reactor_controller placed menu[30]: isViewOnly=false",
 			"reactor_controller charged [0]: 100000 200000 0 0 1 0 0 0 0 0 0 0",
 			"reactor_controller charged [12]: 0 100 0 0 0 0 0 50 1000 0 0 0",
 			"reactor_controller charged [24]: 100 70 85 0 0 3 12 30 0 0 0 0",
@@ -316,6 +317,7 @@ final class MenuChannelValuesSnapshot {
 					+ " getSteamPercent=0 getStoredEu=100000",
 			"reactor_controller charged menu[24]: getStoredPercent=50 getWaterPercent=0 getWaterRate=0"
 					+ " isBare=false isBoxMeasured=false isMeltingDown=false",
+			"reactor_controller charged menu[30]: isViewOnly=false",
 			"incubator placed [0]: 0 8000 0 0 -1 0 0 0",
 			"incubator placed getters: energy=0 capacity=8000 progress=0/0",
 			"incubator placed menu[0]: getCharge=0 isFormed=false",

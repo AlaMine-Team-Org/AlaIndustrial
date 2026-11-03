@@ -22,7 +22,8 @@ import dev.alaindustrial.item.ToolConfig;
 public record ItemBuffers(int lvPouchBuffer, int batteryBuffer, int energyCrystalBuffer, int lapotronCrystalBuffer,
 		int resonantCrystalBuffer, int energyPackBuffer, int electricDrillBuffer, int electricDrillNetheriteTipBuffer,
 		int electricChainsawBuffer, int electricShovelBuffer, int electricHoeBuffer, int electricSaberBuffer,
-		int electricBowBuffer, int magnetBuffer, int magnetAdvancedBuffer, int jetpackBuffer, int fluxweaveBuffer) {
+		int electricBowBuffer, int magnetBuffer, int magnetAdvancedBuffer, int jetpackBuffer, int fluxweaveBuffer,
+		int reactorTabletBuffer) {
 
 	/** The buffers this side plays by — {@link ToolConfig}, read now. Server logic only. */
 	public static ItemBuffers live() {
@@ -31,7 +32,8 @@ public record ItemBuffers(int lvPouchBuffer, int batteryBuffer, int energyCrysta
 				ToolConfig.electricDrillBuffer, ToolConfig.electricDrillNetheriteTipBuffer,
 				ToolConfig.electricChainsawBuffer, ToolConfig.electricShovelBuffer, ToolConfig.electricHoeBuffer,
 				ToolConfig.electricSaberBuffer, ToolConfig.electricBowBuffer, ToolConfig.magnetBuffer,
-				ToolConfig.magnetAdvancedBuffer, ToolConfig.jetpackBuffer, ToolConfig.fluxweaveBuffer);
+				ToolConfig.magnetAdvancedBuffer, ToolConfig.jetpackBuffer, ToolConfig.fluxweaveBuffer,
+				ToolConfig.reactorTabletBuffer);
 	}
 
 	/**
@@ -46,6 +48,6 @@ public record ItemBuffers(int lvPouchBuffer, int batteryBuffer, int energyCrysta
 				ServerBalance.electricChainsawBuffer(), ServerBalance.electricShovelBuffer(),
 				ServerBalance.electricHoeBuffer(), ServerBalance.electricSaberBuffer(),
 				ServerBalance.electricBowBuffer(), ServerBalance.magnetBuffer(), ServerBalance.magnetAdvancedBuffer(),
-				ServerBalance.jetpackBuffer(), ServerBalance.fluxweaveBuffer());
+				ServerBalance.jetpackBuffer(), ServerBalance.fluxweaveBuffer(), ServerBalance.reactorTabletBuffer());
 	}
 }

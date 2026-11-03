@@ -1,0 +1,265 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "facing": "north"
+      },
+      "apply": {
+        "model": "alaindustrial:block/reactor_antenna_mast"
+      }
+    },
+    {
+      "when": {
+        "facing": "east"
+      },
+      "apply": {
+        "model": "alaindustrial:block/reactor_antenna_mast",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "south"
+      },
+      "apply": {
+        "model": "alaindustrial:block/reactor_antenna_mast",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "west"
+      },
+      "apply": {
+        "model": "alaindustrial:block/reactor_antenna_mast",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "up"
+      },
+      "apply": {
+        "model": "alaindustrial:block/reactor_antenna_mast",
+        "x": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "down"
+      },
+      "apply": {
+        "model": "alaindustrial:block/reactor_antenna_mast",
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "facing": "north",
+            "north": "true"
+          },
+          {
+            "facing": "north",
+            "east": "true"
+          },
+          {
+            "facing": "north",
+            "west": "true"
+          },
+          {
+            "facing": "north",
+            "down": "true"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/reactor_antenna_mast_sleeve"
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "facing": "east",
+            "north": "true"
+          },
+          {
+            "facing": "east",
+            "east": "true"
+          },
+          {
+            "facing": "east",
+            "south": "true"
+          },
+          {
+            "facing": "east",
+            "down": "true"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/reactor_antenna_mast_sleeve",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "facing": "south",
+            "east": "true"
+          },
+          {
+            "facing": "south",
+            "south": "true"
+          },
+          {
+            "facing": "south",
+            "west": "true"
+          },
+          {
+            "facing": "south",
+            "down": "true"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/reactor_antenna_mast_sleeve",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "facing": "west",
+            "north": "true"
+          },
+          {
+            "facing": "west",
+            "south": "true"
+          },
+          {
+            "facing": "west",
+            "west": "true"
+          },
+          {
+            "facing": "west",
+            "down": "true"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/reactor_antenna_mast_sleeve",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "facing": "up",
+            "north": "true"
+          },
+          {
+            "facing": "up",
+            "east": "true"
+          },
+          {
+            "facing": "up",
+            "west": "true"
+          },
+          {
+            "facing": "up",
+            "up": "true"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/reactor_antenna_mast_sleeve",
+        "x": 270
+      }
+    },
+    {
+      "when": {
+        "OR": [
+          {
+            "facing": "down",
+            "east": "true"
+          },
+          {
+            "facing": "down",
+            "south": "true"
+          },
+          {
+            "facing": "down",
+            "west": "true"
+          },
+          {
+            "facing": "down",
+            "down": "true"
+          }
+        ]
+      },
+      "apply": {
+        "model": "alaindustrial:block/reactor_antenna_mast_sleeve",
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "north": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/reactor_antenna_mast_arm"
+      }
+    },
+    {
+      "when": {
+        "east": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/reactor_antenna_mast_arm",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "south": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/reactor_antenna_mast_arm",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "west": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/reactor_antenna_mast_arm",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "up": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/reactor_antenna_mast_arm",
+        "x": 270
+      }
+    },
+    {
+      "when": {
+        "down": "true"
+      },
+      "apply": {
+        "model": "alaindustrial:block/reactor_antenna_mast_arm",
+        "x": 90
+      }
+    }
+  ]
+}

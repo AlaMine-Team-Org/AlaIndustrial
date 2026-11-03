@@ -105,6 +105,13 @@ public final class ShotFamilies {
                             + "open tab merged into the frame, the status chip names the state the frame is "
                             + "labelled with, the heat marks and their numbers do not collide, no row runs "
                             + "into its neighbour, and the advice box says what to do without clipping")},
+            new Object[] {"gui_reactor_tablet_", new Family(ShotGroup.GUI, List.of("R-GUI-03"),
+                    "Reactor tablet (MOD-941, MOD-946): the panel inside the tablet casing, which almost fills "
+                            + "the screen open and is smaller and higher mid-unfold; linked, the controller's console "
+                            + "without the throttle or STOP and with the view-only line in their place; unlinked, "
+                            + "a card per reason (icon, title, what to do) over dim interference and nothing of the "
+                            + "panel around it; mid-unfold the glass dark, then powering on; in an alarm, a red "
+                            + "wash and rim; the signal bars, lamp and battery mark agree with the frame's label")},
             new Object[] {"gui_settlement_core_", new Family(ShotGroup.GUI, List.of("R-GUI-03"),
                     "Settlement core (MOD-831, MOD-842): the energy bar on the left, the readout beside it "
                             + "(power state, radius, houses, workers, upkeep, owner; no tier row) inside the "

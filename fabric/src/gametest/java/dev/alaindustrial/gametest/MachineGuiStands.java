@@ -127,6 +127,8 @@ public final class MachineGuiStands {
         ReactorConsoleGuiStand.shootCoolant(context);
         // ── … and the Log tab: what happened, newest first, and the marker for an unread alarm (MOD-622) ──
         ReactorConsoleGuiStand.shootLog(context);
+        // ── … and the same panel through a tier-1 tablet: view-only, or interference and the reason (MOD-941) ──
+        ReactorConsoleGuiStand.shootTablet(context);
 
         // ── Teleporter Remote — the Stations tab: every lamp, three chips and a wrapped refusal (MOD-628) ──
         TeleporterRemoteGuiStand.shootStations(context);

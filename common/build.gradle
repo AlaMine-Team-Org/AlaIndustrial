@@ -195,6 +195,11 @@ pitest {
                      'dev.alaindustrial.client.guide.GuideLines',
                      // MOD-797: the blueprint catalogue, camera formula, bounds and viewed set — all
                      // Minecraft-free so BlueprintCatalogTest reaches them.
+                     // MOD-946: the reactor tablet's animation clock, unfold layout and casing signals — all
+                     // Minecraft-free so ReactorTabletAnimationTest reaches them.
+                     'dev.alaindustrial.client.tablet.ReactorTabletLayout',
+                     'dev.alaindustrial.client.tablet.ReactorTabletSignal',
+                     'dev.alaindustrial.client.tablet.ReactorTabletTimeline',
                      'dev.alaindustrial.client.blueprint.BlueprintBounds',
                      'dev.alaindustrial.client.blueprint.BlueprintCamera',
                      'dev.alaindustrial.client.blueprint.BlueprintCatalog',
@@ -349,6 +354,9 @@ pitest {
                      // and only ever narrow going up. That is what a broken regeneration would
                      // break, and the block reads this table as its VoxelShape.
                      'dev.alaindustrial.block.IncubatorDomeGeometry',
+                     // MOD-941: the antenna boom's boxes and their turn per facing — numbers and one switch,
+                     // Minecraft-free; ReactorAntennaGeometryTest holds them against the installed model.
+                     'dev.alaindustrial.block.ReactorAntennaGeometry',
                      // MOD-604: the incubator's front-panel equaliser, cut out of the same model
                      // by the same generator. In the run rather than excluded because L1 reaches it,
                      // and what IncubatorScreenGeometryTest guards is real: the bars stay inside their

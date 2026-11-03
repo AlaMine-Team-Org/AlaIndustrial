@@ -252,6 +252,10 @@ public final class ModContent {
 	public static Supplier<Block> REACTOR_LAMP = unbound("REACTOR_LAMP");
 	public static Supplier<Block> STEAM_NOZZLE = unbound("STEAM_NOZZLE");
 	public static Supplier<Block> REACTOR_OUTLET = unbound("REACTOR_OUTLET");
+	/** MOD-941 — the shell block a reactor tablet listens to. */
+	public static Supplier<Block> REACTOR_ANTENNA = unbound("REACTOR_ANTENNA");
+	/** MOD-941 — the antenna's boom in the cell in front; placed by the antenna, no item. */
+	public static Supplier<Block> REACTOR_ANTENNA_MAST = unbound("REACTOR_ANTENNA_MAST");
 	public static Supplier<Block> REACTOR_BUTTON = unbound("REACTOR_BUTTON");
 	public static Supplier<Block> REACTOR_LEVER = unbound("REACTOR_LEVER");
 	public static Supplier<Block> FUEL_ROD_ASSEMBLY = unbound("FUEL_ROD_ASSEMBLY");
@@ -388,6 +392,8 @@ public final class ModContent {
 	public static Supplier<Block> TEMPERED_IRON_BARS = unbound("TEMPERED_IRON_BARS");
 	public static Supplier<Block> TEMPERED_IRON_LADDER = unbound("TEMPERED_IRON_LADDER");
 	public static Supplier<Block> TEMPERED_IRON_TRAPDOOR = unbound("TEMPERED_IRON_TRAPDOOR");
+	// MOD-864
+	public static Supplier<Block> REINFORCED_GLASS_TRAPDOOR = unbound("REINFORCED_GLASS_TRAPDOOR");
 	public static Supplier<Block> TEMPERED_IRON_CHAIN = unbound("TEMPERED_IRON_CHAIN");
 	// MOD-804
 	public static Supplier<Block> SOUND_ABSORBER = unbound("SOUND_ABSORBER");
@@ -669,6 +675,8 @@ public final class ModContent {
 	public static Supplier<Item> GUIDE_BOOK = unbound("GUIDE_BOOK");
 	/** Teleporter Remote (MOD-092) — hidden from the creative tab until MOD-093 completes the feature. */
 	public static Supplier<Item> TELEPORTER_REMOTE = unbound("TELEPORTER_REMOTE");
+	/** MOD-941 — tier-1 reactor tablet: a view-only readout of a reactor, through its antenna. */
+	public static Supplier<Item> REACTOR_TABLET = unbound("REACTOR_TABLET");
 	public static Supplier<Item> BATTERY_POUCH = unbound("BATTERY_POUCH");
 	/** Shielding Pouch (MOD-545) — carries radioactive items without irradiating anyone. */
 	public static Supplier<Item> SHIELDING_POUCH = unbound("SHIELDING_POUCH");
@@ -1008,6 +1016,7 @@ public final class ModContent {
 	public static Supplier<BlockItem> REACTOR_LAMP_ITEM = unbound("REACTOR_LAMP_ITEM");
 	public static Supplier<BlockItem> STEAM_NOZZLE_ITEM = unbound("STEAM_NOZZLE_ITEM");
 	public static Supplier<BlockItem> REACTOR_OUTLET_ITEM = unbound("REACTOR_OUTLET_ITEM");
+	public static Supplier<BlockItem> REACTOR_ANTENNA_ITEM = unbound("REACTOR_ANTENNA_ITEM");
 	public static Supplier<BlockItem> REACTOR_BUTTON_ITEM = unbound("REACTOR_BUTTON_ITEM");
 	public static Supplier<BlockItem> REACTOR_LEVER_ITEM = unbound("REACTOR_LEVER_ITEM");
 	public static Supplier<BlockItem> FUEL_ROD_ASSEMBLY_ITEM = unbound("FUEL_ROD_ASSEMBLY_ITEM");
@@ -1116,6 +1125,8 @@ public final class ModContent {
 	public static Supplier<BlockItem> TEMPERED_IRON_BARS_ITEM = unbound("TEMPERED_IRON_BARS_ITEM");
 	public static Supplier<BlockItem> TEMPERED_IRON_LADDER_ITEM = unbound("TEMPERED_IRON_LADDER_ITEM");
 	public static Supplier<BlockItem> TEMPERED_IRON_TRAPDOOR_ITEM = unbound("TEMPERED_IRON_TRAPDOOR_ITEM");
+	// MOD-864
+	public static Supplier<BlockItem> REINFORCED_GLASS_TRAPDOOR_ITEM = unbound("REINFORCED_GLASS_TRAPDOOR_ITEM");
 	public static Supplier<BlockItem> TEMPERED_IRON_CHAIN_ITEM = unbound("TEMPERED_IRON_CHAIN_ITEM");
 	// MOD-804
 	public static Supplier<BlockItem> SOUND_ABSORBER_ITEM = unbound("SOUND_ABSORBER_ITEM");
@@ -1213,6 +1224,8 @@ public final class ModContent {
 	public static Supplier<BlockEntityType<?>> REACTOR_PORT_BE = unbound("REACTOR_PORT_BE");
 	public static Supplier<BlockEntityType<?>> STEAM_NOZZLE_BE = unbound("STEAM_NOZZLE_BE");
 	public static Supplier<BlockEntityType<?>> REACTOR_OUTLET_BE = unbound("REACTOR_OUTLET_BE");
+	/** MOD-941 — the antenna's buffer and its link to a controller. */
+	public static Supplier<BlockEntityType<?>> REACTOR_ANTENNA_BE = unbound("REACTOR_ANTENNA_BE");
 	/** MOD-493 — the airlock panel's travel clock; holds no game state. */
 	public static Supplier<BlockEntityType<?>> REACTOR_DOOR_BE = unbound("REACTOR_DOOR_BE");
 	/** MOD-505 — the only ticking object in a greenhouse; the seedbeds and buds have none. */
@@ -1304,6 +1317,9 @@ public final class ModContent {
 			unbound("THERMAL_CENTRIFUGE_MENU");
 	public static Supplier<MenuType<ReactorControllerMenu>> REACTOR_CONTROLLER_MENU =
 			unbound("REACTOR_CONTROLLER_MENU");
+	/** MOD-941 — the controller's screen seen through a tablet: view-only, with the link state. */
+	public static Supplier<MenuType<ReactorControllerMenu>> REACTOR_TABLET_MENU =
+			unbound("REACTOR_TABLET_MENU");
 	public static Supplier<MenuType<IncubatorMenu>> INCUBATOR_MENU = unbound("INCUBATOR_MENU");
 	public static Supplier<MenuType<BatteryBoxMenu>> BATTERY_BOX_MENU = unbound("BATTERY_BOX_MENU");
 	public static Supplier<MenuType<EnergyCondenserMenu>> ENERGY_CONDENSER_MENU = unbound("ENERGY_CONDENSER_MENU");

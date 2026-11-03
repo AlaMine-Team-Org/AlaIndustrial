@@ -78,6 +78,7 @@ final class BlockEntitySlotLayoutSnapshot {
 			"polymerizer: size=8 upgrades=3 battery=7 menu=yes overclockable=yes batteryFed=yes",
 			"pump: size=9 upgrades=4 battery=8 menu=yes overclockable=no batteryFed=yes",
 			"radiant_solar_panel: size=4 upgrades=0 battery=- menu=yes overclockable=no batteryFed=no",
+			"reactor_antenna: size=- upgrades=- battery=- menu=no overclockable=no batteryFed=no",
 			"reactor_controller: size=0 upgrades=- battery=- menu=yes overclockable=no batteryFed=no",
 			"reactor_door: size=- upgrades=- battery=- menu=no overclockable=no batteryFed=no",
 			"reactor_outlet: size=- upgrades=- battery=- menu=no overclockable=no batteryFed=no",

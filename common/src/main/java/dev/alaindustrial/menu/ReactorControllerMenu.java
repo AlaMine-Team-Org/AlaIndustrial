@@ -5,9 +5,12 @@ import dev.alaindustrial.block.entity.ReactorControllerBlockEntity;
 import dev.alaindustrial.block.entity.ReactorRoomStatus;
 import dev.alaindustrial.block.entity.reactor.ReactorChannels;
 import dev.alaindustrial.registry.ModContent;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -41,9 +44,12 @@ public class ReactorControllerMenu extends MachineMenu {
 		return BUTTON_LOG_SEEN_BASE + Math.max(0, Math.min(seq, Integer.MAX_VALUE - BUTTON_LOG_SEEN_BASE));
 	}
 
-	/** Set on the server side only; the client stub has no block entity to act on. */
+	/**
+	 * Set on the server side only; the client stub has no block entity to act on. Not final since MOD-941: a tablet's
+	 * view attaches and detaches its controller as the link comes and goes ({@link #attach}).
+	 */
 	@org.jspecify.annotations.Nullable
-	private final ReactorControllerBlockEntity controller;
+	private ReactorControllerBlockEntity controller;
 
 	/** Server side. */
 	public ReactorControllerMenu(int syncId, Inventory playerInventory, MachineBlockEntity be,
@@ -52,6 +58,30 @@ public class ReactorControllerMenu extends MachineMenu {
 				access, ModContent.REACTOR_CONTROLLER.get());
 		this.controller = be instanceof ReactorControllerBlockEntity c ? c : null;
 		this.viewer = playerInventory.player;
+	}
+
+	/**
+	 * For a view of this panel from elsewhere (MOD-941, the reactor tablet): its own menu type, no block entity behind
+	 * the container, and {@code data} the subclass supplies. The controller is attached later, if at all.
+	 */
+	protected ReactorControllerMenu(MenuType<?> type, int syncId, Inventory playerInventory, ContainerData data) {
+		super(type, syncId, playerInventory, new SimpleContainer(0), data,
+				ContainerLevelAccess.NULL, ModContent.REACTOR_CONTROLLER.get());
+		this.controller = null;
+		this.viewer = playerInventory.player;
+	}
+
+	/** Server side: the controller this view reads now, or {@code null} while it hears none (MOD-941). */
+	protected void attach(@org.jspecify.annotations.Nullable ReactorControllerBlockEntity controller) {
+		this.controller = controller;
+	}
+
+	/**
+	 * Whether this panel only shows (MOD-941): a tablet's view has no throttle and no STOP, and the server refuses
+	 * the depth buttons from it. The controller's own panel is not view-only.
+	 */
+	public boolean isViewOnly() {
+		return false;
 	}
 
 	/** Client side. The stub container is empty — no slots, and no upgrade block appended. */
@@ -202,6 +232,11 @@ public class ReactorControllerMenu extends MachineMenu {
 	@Override
 	public ItemStack quickMoveStack(Player player, int index) {
 		return ItemStack.EMPTY;
+	}
+
+	/** A synced channel by its {@link ReactorChannels} ordinal — what {@code ReactorConsole#readout} reads. */
+	public int reactorChannel(int ordinal) {
+		return data.get(ordinal);
 	}
 
 	public ReactorRoomStatus getStatus() {

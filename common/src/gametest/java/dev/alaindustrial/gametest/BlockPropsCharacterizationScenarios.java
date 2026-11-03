@@ -69,6 +69,8 @@ public final class BlockPropsCharacterizationScenarios {
 			"oil push=pops ticks=none",
 			"oil_fire push=pops ticks=none",
 			"piezo_plate push=pops ticks=none",
+			"reactor_antenna push=pinned ticks=none",
+			"reactor_antenna_mast push=pinned ticks=none",
 			"reactor_button push=pops ticks=none",
 			"reactor_door push=pops ticks=none",
 			"reactor_lever push=pops ticks=none",

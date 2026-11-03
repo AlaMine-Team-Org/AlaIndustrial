@@ -193,6 +193,7 @@ public final class ScenarioRoster {
 			ReactorGoldenTraceScenarios.Roster.ENTRIES,
 			ReactorScenarios.Roster.ENTRIES,
 			ReactorSteamScenarios.Roster.ENTRIES,
+			ReactorTabletScenarios.Roster.ENTRIES,
 			ReceptionCapsuleScenarios.Roster.ENTRIES,
 			RecipeCoverageScenarios.Roster.ENTRIES,
 			RecipeFamilyRegistrationScenarios.Roster.ENTRIES,
