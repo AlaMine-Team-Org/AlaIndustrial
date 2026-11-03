@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh_cn" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>反应堆天线 — Ala Industrial — 指南</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="打开菜单" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  </div>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../../assets/item/guide_book_3d.png" alt="">全部内容</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/ky7cFDF8JD" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../../assets/platform/discord.svg" alt="Discord"></a>
+      <a class="platform-link" href="https://alalab.work" target="_blank" rel="noopener noreferrer" title="Ala Lab"><img src="../../assets/platform/alalab.png" alt="Ala Lab"></a>
+    </div>
+    <search class="site-search"><input type="search" data-wiki-search placeholder="搜索维基…" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-label="搜索指南" autocomplete="off" spellcheck="false" data-index="../search-index.json" data-root="../" data-l10n="{&quot;list&quot;:&quot;搜索结果&quot;,&quot;one&quot;:&quot;个页面&quot;,&quot;few&quot;:&quot;个页面&quot;,&quot;many&quot;:&quot;个页面&quot;,&quot;loading&quot;:&quot;正在加载搜索索引…&quot;,&quot;nothing&quot;:&quot;未找到结果&quot;}"></search>
+    <details class="language-menu"><summary aria-label="Language">中文</summary><div class="language-popover"><span>中文</span><a href="../../en/nuclear/reactor_antenna.html">EN</a><a href="../../ru/nuclear/reactor_antenna.html">RU</a><a href="../../uk/nuclear/reactor_antenna.html">UA</a><a href="../../ja_jp/nuclear/reactor_antenna.html">日本語</a><a href="../../es_es/nuclear/reactor_antenna.html">ES</a></div></details>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">浏览</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../../assets/item/tempered_iron_pickaxe.png" alt=""><span>新手入门</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>配方</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>玩家档案</span></a>
+<div class="group-title">能源</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="14 个页面">14</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="9 个页面">9</span></a>
+<a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>核能设施</span><span class="cat-count" aria-label="16 个页面">16</span></a>
+<div class="group-title">加工</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>机器</span><span class="cat-count" aria-label="18 个页面">18</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>流体机器</span><span class="cat-count" aria-label="3 个页面">3</span></a>
+<div class="group-title">物流</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>物品物流</span><span class="cat-count" aria-label="3 个页面">3</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>流体物流</span><span class="cat-count" aria-label="5 个页面">5</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>流体储存</span><span class="cat-count" aria-label="2 个页面">2</span></a>
+<div class="group-title">世界与自动化</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>材料</span><span class="cat-count" aria-label="27 个页面">27</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>农业</span><span class="cat-count" aria-label="7 个页面">7</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>高级机器</span><span class="cat-count" aria-label="1 个页面">1</span></a>
+<div class="group-title">其他</div>
+<a class="cat-link" href="../construction/index.html"><img class="nav-icon" src="../../assets/item/engraved_plate_0_3d.png" alt=""><span>建筑方块</span><span class="cat-count" aria-label="5 个页面">5</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="29 个页面">29</span></a>
+<div class="group-title">物品</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="33 个页面">33</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="36 个页面">36</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">首页</a><span class="sep">/</span><a href="../nuclear/index.html">核能设施</a><span class="sep">/</span><span>反应堆天线</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../../assets/item/reactor_antenna_3d.png" alt="反应堆天线" width="64" height="64">
+    <div class="info">
+      <h1>反应堆天线</h1>
+      <div class="block-id">alaindustrial:reactor_antenna</div>
+      <div class="tags"><span class="tag cat" style="background:#ef4444">核能设施</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">已实现</span><span class="tag">nuclear</span><span class="tag">reactor</span><span class="tag">multiblock</span><span class="tag">shielding</span><span class="tag">remote</span><span class="tag">antenna</span><span class="tag">energy</span></div>
+    </div>
+  </div>
+</div>
+<h2 id="概览">概览</h2>
+
+<p><strong>反应堆天线</strong>是一种外壳方块，<a href="../items/reactor_tablet.html">反应堆平板</a>靠它从远处看到这座建筑。没有天线， 平板就看不到反应堆，也无法绑定到反应堆。这个方块源于玩家对远程查看反应堆的需求（），并沿用了 输入端和输出端已经采用的思路：<strong>墙要有某种功能，就交给一块专门做出来的墙体</strong>。</p>
+
+<p>天线占一格外壳。对房间扫描器而言它就是外壳：不算缺口，不计入玻璃上限，也不破坏密封。控制器用收集 <a href="reactor_outlet.html">输出端</a>的那一趟外壳巡视找到它，所以天线既不需要单独的查找，也不需要反向引用。</p>
+
+<p>天线<strong>要为工作付费</strong>：它有自己的小缓存和持续的耗电。没有能量它就不工作，平板会显示“天线无电力”。 耗电从第一个等级起就有：如果以后才加，玩家已经建好的天线会在更新后停止工作。</p>
+
+<p>状态：规格。缓存和耗电的数值已写入（见“平衡”）。</p>
+
+<h2 id="它做什么">它做什么</h2>
+
+<table><thead><tr><th>属性</th><th>数值</th></tr></thead><tbody><tr><td>在建筑中的作用</td><td>外壳方块；对扫描器而言是外壳（<code>CASING</code>）</td></tr><tr><td>提供什么</td><td>平板与这间房间控制器之间的连接</td></tr><tr><td>平板绑定</td><td>手持平板潜行右键天线——平板会记住这间房间的控制器</td></tr><tr><td>连接距离</td><td>= 距最近的有电天线 <strong>64</strong> 格，按三个轴计算，且在同一维度</td></tr><tr><td>缓存</td><td>= <strong>4000</strong> EU/FE</td></tr><tr><td>耗电</td><td>= <strong>4</strong> EU/FE/刻，持续</td></tr><tr><td>BlockEntity</td><td>有：EU/FE 缓存和持续耗电</td></tr><tr><td>对房间扫描器</td><td>外壳——不造成缺口，不计入玻璃上限</td></tr><tr><td>方块状态</td><td><code>formed</code>、<code>edge</code>——纯外观，和整个外壳一样</td></tr></tbody></table>
+
+<p>天线不保存反应堆的数据，自己也不传输任何东西：数据是平板在天线工作期间从控制器那里取的。天线只是 <strong>允许连接</strong>——并为此收取能量。</p>
+
+<h3 id="它可以放在哪里">它可以放在哪里</h3>
+
+<ul><li><strong>有房间的反应堆。</strong>天线替代墙、地板或天花板上的一格外壳。控制器在巡视周界时，与输出端同时把它收集 起来；它会在最近一次扫描（ = 40 刻）时进入房间的 <code>antennas</code> 列表，而不是 立刻进入。</li><li><strong>裸机反应堆</strong>（没有房间）。天线<strong>与控制器某一面相接</strong>才算数。裸机反应堆没有周界巡视，相接是天线能被 找到的唯一方式。</li><li>一间房间里可以有多根天线；连接按距离最近的<strong>有电</strong>天线计算。</li><li>在房间之外、又不与控制器相接的天线毫无作用：控制器找不到它，也不能把平板绑定到它——绑定记录的是 控制器，而这样的天线没有控制器。</li></ul>
+
+<h2 id="房间依然密封">房间依然密封</h2>
+
+<p>天线是一个外壳方块，扫描器把它当作外壳：既不当端口，也不当玻璃。这和输出端、 灯是同一条链：</p>
+
+<ul><li><strong>它不算缺口</strong>——可以放进墙、地板或天花板的任何一格；</li><li><strong>它不计入 = 30 % 的玻璃上限</strong>；</li><li><strong>它带有 <code>formed</code>/<code>edge</code></strong>，当控制器认可房间后，会和整面墙一起换成无缝纹理 （见<a href="reactor_casing.html">“无缝的外观”</a>）。</li></ul>
+
+<p>加上天线，扫描器认作墙的方块变成<strong>八种</strong>：原来的“七种”——外壳、玻璃、灯、气闸门、输入端、输出端和 墙里的控制器——再加天线。</p>
+
+<h2 id="能量">能量</h2>
+
+<table><thead><tr><th>字段</th><th>数值</th></tr></thead><tbody><tr><td>面的角色</td><td>接收端（IN）；电缆可以从任何一侧接到天线杆那一格，天线一侧和“八木”振子上方的一侧除外，并通过铜套管直接插入天线表面的插口；天线自己的空闲面照旧</td></tr></tbody></table>
+
+<p><strong>缓存的补充来源，按顺序：</strong></p>
+
+<ol><li><strong>外部电缆</strong>接到天线杆那一格（见“外观”）——主要途径。天线是电网里普通的用电者。</li><li><strong>控制器。</strong>没有外部供电时，控制器会自己把反应堆缓存里的能量补给天线——走的是它给输出端分配能量 的同一条路（）。不卖电、停着的反应堆，只要缓存里还有东西，也会供养天线。</li><li><strong>两边都没有。</strong>天线不工作：没有连接，平板显示“天线无电力”。</li></ol>
+
+<p>耗电的扣除仿照<a href="../utility/monitor_wall.html">监视器墙</a>核心的耗电：按经过的时间持续收费，而不是按事件。 耗电与有没有人在看平板、反应堆是否在运转无关：天线要么在线并付费，要么不在线。</p>
+
+<p>距离和等级是要花能量的，绕不过去。除了能量本身，没有任何办法能让天线工作。</p>
+
+<p>“天线先于卖电还是后于卖电”，当反应堆缓存同时不够时如何处理，留待实现时决定，并写在这里。有一条限制 是预先知道的：从缓存里分配只在缓存空时才停止（ ——在零电量时），所以只靠反应堆供电的 天线，会随着反应堆变空而熄灭。这是预期的：想在反应堆里没有能量时查看一座已停机的反应堆，就得用 电缆给天线供电。</p>
+
+<h2 id="方块属性">方块属性</h2>
+
+<table><thead><tr><th>字段</th><th>数值</th></tr></thead><tbody><tr><td>形状</td><td>完整方块 16³（遮挡）</td></tr><tr><td>硬度</td><td>与其余外壳相同（5.0），实现时确认</td></tr><tr><td>爆炸抗性</td><td>与其余外壳相同（30.0），实现时确认</td></tr><tr><td>工具</td><td>镐（掉落必需）</td></tr><tr><td>声音</td><td>金属</td></tr><tr><td>方块状态</td><td><code>formed</code>、<code>edge</code>——纯外观，和整个外壳一样</td></tr><tr><td>BlockEntity</td><td>有（缓存和耗电）</td></tr></tbody></table>
+
+<p>硬度不该低于墙：天线不能成为最容易撬开墙的地方。</p>
+
+<h2 id="外观">外观</h2>
+
+<p>外观是方案 09“八木”，由所有者于 2026-11-02 从十个草图中选定 （<code>tools/model_sources/reactor_antenna_concepts/</code>，源文件 <code>v09_yagi/reactor_antenna.bbmodel</code>）：一格 外壳，伸出一根带三个振子的杆。</p>
+
+<ul><li><strong>朝向。</strong>方块有六个朝向（<code>facing</code>）：放置时杆朝向玩家，也就是朝向在房间外面盖房间的一侧。再加上 <code>formed</code>/<code>edge</code>，共有 24 种方块状态。</li><li><strong>杆是单独的方块。</strong>杆向墙前面的相邻格伸出 14 px，作为它自己的方块立在那里（<code>reactor_antenna_mast</code>， 没有物品）：它有自己的光照、碰撞和轮廓，可以站在上面，而那一格不能再被占用。只有这一格空着，天线才 能放下，并且由天线自己放出杆；杆随天线一起消失，被玩家挖掉的杆会连天线一起挖掉（掉落的是天线）。被 爆炸炸掉的杆，天线会在那一格重新空出后把它长回来；那一格被占着，天线就保持沉默。</li><li><strong>电缆</strong>通过杆下方、位于天线外表面的<strong>插口</strong>接入天线。电缆从侧面、下面或前面接到杆那一格时，会得到一截 比电缆略粗的<strong>铜套管</strong>：从该格自己的那一侧伸向中心，再直接插进插口。套管只在电缆接上时才画出；没有 电缆时只能看到一个插口。不能从天线自身一侧（那里是墙）和“八木”振子上方一侧接电缆（套管会顶到它们）： 墙上的天线是顶面，屋顶上的天线是该格的南侧，天花板里的天线是北侧。对于天线自己的空闲面（裸机反应堆）， 电缆照旧接入。通向这个外观的过程：最初地面上的插座悬在空中，后来沿墙的盒子躺在地上——所有者要求电缆 直接插进方块（2026-11-02 和 2026-11-03 的游戏内检查）。</li><li><strong>物品图标</strong>展示完整的天线——带插口的方块和杆，缩小到格子里。</li><li><strong>无缝。</strong>未成形、成形和棱的模型，从同一张图集中取外壳纹理，和其余外壳方块一样。</li></ul>
+
+<h2 id="配方">配方</h2>
+
+<p>形状 3×3：<code>SWS / CRC / SWS</code>，产出 <strong>1</strong> 个天线。</p>
+
+<table><thead><tr><th>符号</th><th>材料</th></tr></thead><tbody><tr><td>S</td><td>屏蔽板（）</td></tr><tr><td>W</td><td>铜缆（）</td></tr><tr><td>C</td><td>高级电路（）</td></tr><tr><td>R</td><td>反应堆外壳（）</td></tr></tbody></table>
+
+<p>天线的成本是一格外壳，加一块高级电路和四块屏蔽板：一个有功能的墙体方块，但不是昂贵的选择。物品栏里有 外壳和高级电路时，配方会在配方书里解锁。</p>
+
+<h2 id="进阶">进阶</h2>
+
+<ul><li>等级：按接收能量算是 LV（耗电不大）；反应堆本身仍是 HV。</li><li>需要：核能阶段（屏蔽板和反应堆控制器），因为没有反应堆，天线就没有意义。</li><li>解锁：<a href="../items/reactor_tablet.html">反应堆平板</a>和远程查看。</li></ul>
+
+<h2 id="后续不在本规格内">后续（不在本规格内）</h2>
+
+<ul><li>天线里的信号增强卡——。</li><li>天线警报的红石输出和应急灯——。</li><li>反应堆警报器——。</li></ul>
+
+<p>第一版里没有“留给将来”的空槽位和输出口。</p>
+
+<h2 id="相关内容">相关内容</h2>
+
+<ul><li><a href="../items/reactor_tablet.html">反应堆平板</a>——天线是为谁准备的。</li><li><a href="reactor_controller.html">反应堆控制器</a>——谁来找到天线，并给它补充能量。</li><li><a href="reactor_outlet.html">反应堆输出端</a>——带自己功能和缓存的外壳方块的样板。</li><li><a href="reactor_lamp.html">反应堆灯</a>——带自己外观的外壳方块的样板。</li><li><a href="reactor_port.html">反应堆入口</a>——同样的原则，用于液体。</li><li><a href="reactor_casing.html">反应堆外壳</a>——其余的外壳和无缝的外观。</li><li><a href="../utility/monitor_wall.html">监视器墙</a>——持续耗电的样板。</li></ul>
+
+<h2>合成</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="反应堆天线 alaindustrial:reactor_antenna" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">有序合成</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="屏蔽板"><img src="../../assets/item/shielding_alloy_plate_3d.png" alt="屏蔽板" width="32" height="32"></div> <div class="cell" title="铜缆"><img src="../../assets/item/copper_cable_3d.png" alt="铜缆" width="32" height="32"></div> <div class="cell" title="屏蔽板"><img src="../../assets/item/shielding_alloy_plate_3d.png" alt="屏蔽板" width="32" height="32"></div> <div class="cell" title="高级电路"><img src="../../assets/item/advanced_circuit_3d.png" alt="高级电路" width="32" height="32"></div> <div class="cell" title="反应堆外壳"><img src="../../assets/item/reactor_casing_3d.png" alt="反应堆外壳" width="32" height="32"></div> <div class="cell" title="高级电路"><img src="../../assets/item/advanced_circuit_3d.png" alt="高级电路" width="32" height="32"></div> <div class="cell" title="屏蔽板"><img src="../../assets/item/shielding_alloy_plate_3d.png" alt="屏蔽板" width="32" height="32"></div> <div class="cell" title="铜缆"><img src="../../assets/item/copper_cable_3d.png" alt="铜缆" width="32" height="32"></div> <div class="cell" title="屏蔽板"><img src="../../assets/item/shielding_alloy_plate_3d.png" alt="屏蔽板" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="工作台" title="工作台" width="30" height="30"><div class="arrow" aria-label="合成">▶</div></div><div class="recipe-result"><div class="cell result" title="反应堆天线"><img src="../../assets/item/reactor_antenna_3d.png" alt="反应堆天线" width="32" height="32"></div><div class="result-name">反应堆天线</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>

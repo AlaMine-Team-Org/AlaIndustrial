@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="es_es" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>Antena de reactor — Ala Industrial — Guía</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="Abrir menú" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  </div>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../../assets/item/guide_book_3d.png" alt="">Todo el contenido</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/ky7cFDF8JD" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../../assets/platform/discord.svg" alt="Discord"></a>
+      <a class="platform-link" href="https://alalab.work" target="_blank" rel="noopener noreferrer" title="Ala Lab"><img src="../../assets/platform/alalab.png" alt="Ala Lab"></a>
+    </div>
+    <search class="site-search"><input type="search" data-wiki-search placeholder="Buscar en la wiki…" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-label="Buscar en la guía" autocomplete="off" spellcheck="false" data-index="../search-index.json" data-root="../" data-l10n="{&quot;list&quot;:&quot;Resultados de la búsqueda&quot;,&quot;one&quot;:&quot;página encontrada&quot;,&quot;few&quot;:&quot;páginas encontradas&quot;,&quot;many&quot;:&quot;páginas encontradas&quot;,&quot;loading&quot;:&quot;Cargando el índice de búsqueda…&quot;,&quot;nothing&quot;:&quot;Nada encontrado&quot;}"></search>
+    <details class="language-menu"><summary aria-label="Language">ES</summary><div class="language-popover"><span>ES</span><a href="../../en/nuclear/reactor_antenna.html">EN</a><a href="../../ru/nuclear/reactor_antenna.html">RU</a><a href="../../uk/nuclear/reactor_antenna.html">UA</a><a href="../../zh_cn/nuclear/reactor_antenna.html">中文</a><a href="../../ja_jp/nuclear/reactor_antenna.html">日本語</a></div></details>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">Explorar</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../../assets/item/tempered_iron_pickaxe.png" alt=""><span>Primeros pasos</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>Recetas</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>Perfil del jugador</span></a>
+<div class="group-title">Energía</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>Generadores</span><span class="cat-count" aria-label="14 páginas">14</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>Almacenamiento de energía</span><span class="cat-count" aria-label="4 páginas">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>Transferencia de energía</span><span class="cat-count" aria-label="9 páginas">9</span></a>
+<a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>Energía nuclear</span><span class="cat-count" aria-label="16 páginas">16</span></a>
+<div class="group-title">Procesamiento</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>Máquinas</span><span class="cat-count" aria-label="18 páginas">18</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>Máquinas de fluidos</span><span class="cat-count" aria-label="3 páginas">3</span></a>
+<div class="group-title">Logística</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>Transporte de objetos</span><span class="cat-count" aria-label="3 páginas">3</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Transporte de fluidos</span><span class="cat-count" aria-label="5 páginas">5</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>Almacenamiento de fluidos</span><span class="cat-count" aria-label="2 páginas">2</span></a>
+<div class="group-title">Mundo y automatización</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Materiales</span><span class="cat-count" aria-label="27 páginas">27</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>Agricultura</span><span class="cat-count" aria-label="7 páginas">7</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>Máquinas avanzadas</span><span class="cat-count" aria-label="1 página">1</span></a>
+<div class="group-title">Otros</div>
+<a class="cat-link" href="../construction/index.html"><img class="nav-icon" src="../../assets/item/engraved_plate_0_3d.png" alt=""><span>Construcción</span><span class="cat-count" aria-label="5 páginas">5</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>Utilidades</span><span class="cat-count" aria-label="29 páginas">29</span></a>
+<div class="group-title">Objetos</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>Mejoras</span><span class="cat-count" aria-label="3 páginas">3</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>Componentes</span><span class="cat-count" aria-label="33 páginas">33</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>Objetos</span><span class="cat-count" aria-label="36 páginas">36</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">Inicio</a><span class="sep">/</span><a href="../nuclear/index.html">Energía nuclear</a><span class="sep">/</span><span>Antena de reactor</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../../assets/item/reactor_antenna_3d.png" alt="Antena de reactor" width="64" height="64">
+    <div class="info">
+      <h1>Antena de reactor</h1>
+      <div class="block-id">alaindustrial:reactor_antenna</div>
+      <div class="tags"><span class="tag cat" style="background:#ef4444">Energía nuclear</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">Implementado</span><span class="tag">nuclear</span><span class="tag">reactor</span><span class="tag">multiblock</span><span class="tag">shielding</span><span class="tag">remote</span><span class="tag">antenna</span><span class="tag">energy</span></div>
+    </div>
+  </div>
+</div>
+<h2 id="resumen">Resumen</h2>
+
+<p>La <strong>Antena de reactor</strong> es un bloque de la carcasa a través del cual la <a href="../items/reactor_tablet.html">tableta de reactor</a> ve la construcción desde lejos. Sin antena la tableta no ve el reactor y no se vincula a él. El bloque nació de la petición de un jugador de poder ver el reactor a distancia y repite la solución con la que ya están hechas la entrada y la salida: <strong>si una pared debe tener una función, esa función se la lleva un trozo de pared hecho a propósito</strong>.</p>
+
+<p>La antena ocupa una celda de la carcasa. Para el escáner de la sala es carcasa corriente: no es una brecha, no cuenta contra el tope de vidrio y no rompe el sellado. El controlador la encuentra con el mismo recorrido de la carcasa con el que reúne las <a href="reactor_outlet.html">salidas</a>, así que la antena no necesita ni búsqueda aparte ni referencias inversas.</p>
+
+<p>La antena <strong>paga por funcionar</strong>: tiene un pequeño búfer de EU/FE propio y un consumo constante. Sin energía no funciona, y la tableta muestra «Antena sin energía». El consumo se introduce ya en el primer nivel: si se introdujera más tarde, las antenas que los jugadores ya hubieran construido dejarían de funcionar tras la actualización.</p>
+
+<p>Estado: especificación. Las cifras del búfer y del consumo están fijadas (ver «Equilibrio»).</p>
+
+<h2 id="qué-hace">Qué hace</h2>
+
+<table><thead><tr><th>Propiedad</th><th>Valor</th></tr></thead><tbody><tr><td>Papel en la construcción</td><td>bloque de la carcasa; para el escáner, carcasa corriente</td></tr><tr><td>Qué aporta</td><td>el enlace de la tableta con el controlador de esta sala</td></tr><tr><td>Vinculación de la tableta</td><td>Mayús + clic derecho con la tableta sobre la antena: la tableta recuerda el controlador de esta sala</td></tr><tr><td>Alcance del enlace</td><td>= <strong>64</strong> bloques desde la antena con energía más cercana, en los tres ejes, en la misma dimensión</td></tr><tr><td>Búfer</td><td>= <strong>4000</strong> EU/FE</td></tr><tr><td>Consumo</td><td>= <strong>4</strong> EU/FE/tick, constante</td></tr><tr><td>BlockEntity</td><td>sí: búfer de EU/FE y consumo constante</td></tr><tr><td>Para el escáner de la sala</td><td>carcasa: no hace brechas y no cuenta contra el tope de vidrio</td></tr><tr><td>Blockstates</td><td><code>formed</code>, <code>edge</code> — cosméticos, como en toda la carcasa</td></tr></tbody></table>
+
+<p>La antena no almacena datos del reactor y no transmite nada por sí misma: los datos los toma la tableta del controlador mientras la antena está en servicio. La antena solo <strong>permite el enlace</strong> — y cobra energía por ello.</p>
+
+<h3 id="dónde-puede-estar">Dónde puede estar</h3>
+
+<ul><li><strong>Un reactor con sala.</strong> La antena se coloca en lugar de una celda de la carcasa, en una pared, el suelo o el techo. El controlador la reúne en el recorrido del perímetro, a la vez que las salidas; entra en la lista <code>antennas</code> de la sala en el siguiente escaneo (= 40 ticks), no al instante.</li><li><strong>Un reactor desnudo</strong> (sin sala). La antena cuenta si <strong>toca al controlador con una cara</strong>. Un reactor desnudo no tiene recorrido del perímetro, y el contacto es la única manera de que la antena sea encontrada.</li><li>En una sala puede haber varias antenas; el enlace se calcula desde la más cercana <strong>con energía</strong>.</li><li>Una antena fuera de una sala y que no toca un controlador no aporta nada: el controlador no la encontrará, y la tableta no puede vincularse a ella — la vinculación registra el controlador, y esa antena no lo tiene.</li></ul>
+
+<h2 id="la-sala-sigue-sellada">La sala sigue sellada</h2>
+
+<p>La antena es un bloque de la carcasa, y el escáner la ve como carcasa: ni como entrada ni como vidrio. Es la misma cadena que la de la salida y la lámpara:</p>
+
+<ul><li><strong>no cuenta como brecha</strong> — se puede colocar en cualquier celda de la pared, el suelo o el techo;</li><li><strong>no entra en el tope = 30 %</strong>;</li><li><strong>lleva <code>formed</code>/<code>edge</code></strong> y cambia, junto con toda la pared, a la textura continua cuando el controlador da la sala por buena (ver <a href="reactor_casing.html">«El aspecto continuo»</a>).</li></ul>
+
+<p>Con la antena, los bloques que el escáner acepta como pared son <strong>ocho</strong>: el «siete» de antes — carcasa, vidrio, lámpara, puerta de esclusa, entrada, salida y controlador en la pared — más la antena.</p>
+
+<h2 id="energía">Energía</h2>
+
+<table><thead><tr><th>Campo</th><th>Valor</th></tr></thead><tbody><tr><td>Papel de las caras</td><td>receptor (IN); el cable se conecta a la celda del mástil desde cualquier lado excepto el de la antena y el de encima de los elementos «Yagi», y entra con un manguito de cobre directamente en el conector de la cara de la antena; a una cara libre de la propia antena, como antes</td></tr></tbody></table>
+
+<p><strong>De dónde se rellena el búfer, por orden:</strong></p>
+
+<ol><li><strong>Un cable externo</strong> a la celda del mástil (ver «Apariencia») — el camino principal. La antena es un consumidor corriente de la red.</li><li><strong>El controlador.</strong> Si no hay alimentación externa, el controlador mismo añade energía a la antena desde el búfer del reactor, por el mismo camino con el que la reparte a las salidas. Un reactor que está parado y no vende energía también alimenta la antena mientras haya algo en su búfer.</li><li><strong>Ni uno ni otro.</strong> La antena no funciona: no hay enlace, y la tableta muestra «Antena sin energía».</li></ol>
+
+<p>El consumo se descuenta según el modelo del consumo del núcleo del <a href="../utility/monitor_wall.html">muro de monitores</a>: un cargo constante por el tiempo transcurrido, y no por evento. El consumo no depende de si alguien mira la tableta ni de si el reactor está parado: la antena o está en servicio y paga, o no lo está.</p>
+
+<p>El alcance y el nivel cuestan energía, y eso no se puede eludir. Ningún medio salvo la propia energía enciende la antena.</p>
+
+<p>El orden «la antena antes de vender la energía o después» cuando el búfer del reactor no alcanza para todo se decide al implementar y se anota aquí. De antemano se conoce una limitación: el reparto desde el búfer termina cuando el búfer está vacío — con carga cero), así que una antena que vive solo del reactor se apaga junto con el reactor vacío. Es lo esperado: para mirar un reactor parado sin energía dentro, hay que alimentar la antena con un cable.</p>
+
+<h2 id="propiedades-del-bloque">Propiedades del bloque</h2>
+
+<table><thead><tr><th>Campo</th><th>Valor</th></tr></thead><tbody><tr><td>Forma</td><td>cubo completo 16³ (oclusor)</td></tr><tr><td>Dureza</td><td>como el resto de la carcasa (5.0), se confirma al implementar</td></tr><tr><td>Resistencia a explosiones</td><td>como el resto de la carcasa (30.0), se confirma al implementar</td></tr><tr><td>Herramienta</td><td>pico (necesario para el botín)</td></tr><tr><td>Sonido</td><td>metal</td></tr><tr><td>Blockstates</td><td><code>formed</code>, <code>edge</code> — cosméticos, como en toda la carcasa</td></tr><tr><td>BlockEntity</td><td>sí (búfer y consumo)</td></tr></tbody></table>
+
+<p>La dureza no debe ser menor que la de la pared: la antena no es el sitio por el que más cómodo resulte abrir la pared.</p>
+
+<h2 id="apariencia">Apariencia</h2>
+
+<p>El aspecto es la variante 09 «Yagi», elegida por el propietario el 2026-11-02 entre diez bocetos (<code>tools/model_sources/reactor_antenna_concepts/</code>, fuente <code>v09_yagi/reactor_antenna.bbmodel</code>): una celda de carcasa de la que sobresale un mástil con tres elementos.</p>
+
+<ul><li><strong>Orientación.</strong> El bloque tiene seis orientaciones: al colocarlo, el mástil mira al jugador, es decir, hacia fuera de la sala, que se construye desde fuera. Junto con <code>formed</code>/<code>edge</code> son 24 variantes del blockstate.</li><li><strong>El mástil es un bloque aparte.</strong> El mástil sale 14 px a la celda vecina delante de la pared y está allí como bloque propio (<code>reactor_antenna_mast</code>, sin objeto): tiene su propia luz, colisión y contorno, se puede estar de pie sobre él, y la celda no se puede edificar. La antena se coloca solo si esa celda está libre, y ella misma pone el mástil; el mástil desaparece junto con la antena, y si lo rompe un jugador, rompe también la antena (se suelta la antena). Un mástil derribado por una explosión, la antena lo hace crecer de nuevo en cuanto la celda vuelve a estar libre; si la celda está edificada, la antena calla.</li><li><strong>El cable</strong> entra en la antena por un <strong>conector en su cara exterior</strong> bajo el mástil. Un cable llevado a la celda del mástil desde un lado, desde abajo o desde delante recibe un <strong>manguito de cobre</strong> algo más grueso que el cable: desde su lado de la celda hacia el centro y de ahí directo al conector. El manguito se dibuja solo mientras el cable está conectado; sin cable se ve solo el conector. No se puede llevar el cable desde el lado de la propia antena (allí está la pared) ni desde el lado de encima de los elementos «Yagi» (el manguito chocaría con ellos): en una antena en una pared es la parte de arriba, en una antena en un tejado es el lado sur de la celda, en el techo es el norte. A una cara libre de la propia antena (en un reactor desnudo) el cable llega como antes. El camino hasta este aspecto: primero la toma del suelo colgaba en el aire, luego una caja junto a la pared yacía en el suelo — el propietario pidió que el cable entrara directamente en el bloque (comprobaciones en el juego del 2026-11-02 y 2026-11-03).</li><li><strong>El icono del objeto</strong> muestra la antena entera — el cubo con el conector y el mástil, reducidos para caber en la celda.</li><li><strong>El aspecto continuo.</strong> Los modelos sin formar, formado y de canto toman la carcasa del mismo atlas, como los demás bloques de la carcasa.</li></ul>
+
+<h2 id="recetas">Recetas</h2>
+
+<p>Forma «3×3»: <code>SWS / CRC / SWS</code>, resultado <strong>1</strong> antena.</p>
+
+<table><thead><tr><th>Símbolo</th><th>Ingrediente</th></tr></thead><tbody><tr><td>S</td><td>placa de blindaje</td></tr><tr><td>W</td><td>cable de cobre</td></tr><tr><td>C</td><td>circuito avanzado</td></tr><tr><td>R</td><td>carcasa de reactor</td></tr></tbody></table>
+
+<p>La antena cuesta una celda de carcasa más un circuito avanzado y cuatro placas: un bloque de pared con función, pero no de los caros. La receta se desbloquea en el libro de recetas cuando en el inventario hay carcasa y un circuito avanzado.</p>
+
+<h2 id="progresión">Progresión</h2>
+
+<ul><li>Nivel: LV por la recepción de energía (el consumo es pequeño); el reactor mismo sigue siendo HV.</li><li>Necesita: el escalón nuclear (placas de blindaje y el controlador del reactor), porque la antena no tiene sentido sin reactor.</li><li>Desbloquea: la <a href="../items/reactor_tablet.html">tableta de reactor</a> y la visión a distancia.</li></ul>
+
+<h2 id="más-adelante-no-en-esta-especificación">Más adelante (no en esta especificación)</h2>
+
+<ul><li>Tarjetas amplificadoras de señal en la antena —.</li><li>Salida de redstone de alarma de la antena y lámparas de emergencia —.</li><li>Sirena del reactor —.</li></ul>
+
+<p>En la primera versión no hay ranuras vacías ni salidas «para el futuro».</p>
+
+<h2 id="relacionado">Relacionado</h2>
+
+<ul><li><a href="../items/reactor_tablet.html">Tableta de reactor</a> — para quién hace falta la antena.</li><li><a href="reactor_controller.html">Controlador de reactor</a> — quien encuentra la antena y le añade energía.</li><li><a href="reactor_outlet.html">Salida del reactor</a> — modelo de bloque de la carcasa con función y búfer propios.</li><li><a href="reactor_lamp.html">Lámpara de reactor</a> — modelo de bloque de la carcasa con aspecto propio.</li><li><a href="reactor_port.html">Entrada del reactor</a> — el mismo principio para el fluido.</li><li><a href="reactor_casing.html">Carcasa de reactor</a> — el resto de la carcasa y el aspecto continuo.</li><li><a href="../utility/monitor_wall.html">Muro de monitores</a> — modelo de consumo constante.</li></ul>
+
+<h2>Fabricación</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="antena de reactor alaindustrial:reactor_antenna" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Fabricación con forma</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Placa de blindaje"><img src="../../assets/item/shielding_alloy_plate_3d.png" alt="Placa de blindaje" width="32" height="32"></div> <div class="cell" title="Cable de cobre"><img src="../../assets/item/copper_cable_3d.png" alt="Cable de cobre" width="32" height="32"></div> <div class="cell" title="Placa de blindaje"><img src="../../assets/item/shielding_alloy_plate_3d.png" alt="Placa de blindaje" width="32" height="32"></div> <div class="cell" title="Circuito avanzado"><img src="../../assets/item/advanced_circuit_3d.png" alt="Circuito avanzado" width="32" height="32"></div> <div class="cell" title="Carcasa de reactor"><img src="../../assets/item/reactor_casing_3d.png" alt="Carcasa de reactor" width="32" height="32"></div> <div class="cell" title="Circuito avanzado"><img src="../../assets/item/advanced_circuit_3d.png" alt="Circuito avanzado" width="32" height="32"></div> <div class="cell" title="Placa de blindaje"><img src="../../assets/item/shielding_alloy_plate_3d.png" alt="Placa de blindaje" width="32" height="32"></div> <div class="cell" title="Cable de cobre"><img src="../../assets/item/copper_cable_3d.png" alt="Cable de cobre" width="32" height="32"></div> <div class="cell" title="Placa de blindaje"><img src="../../assets/item/shielding_alloy_plate_3d.png" alt="Placa de blindaje" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Mesa de trabajo" title="Mesa de trabajo" width="30" height="30"><div class="arrow" aria-label="Fabricación">▶</div></div><div class="recipe-result"><div class="cell result" title="Antena de reactor"><img src="../../assets/item/reactor_antenna_3d.png" alt="Antena de reactor" width="32" height="32"></div><div class="result-name">Antena de reactor</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>

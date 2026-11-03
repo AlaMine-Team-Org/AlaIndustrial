@@ -364,7 +364,7 @@
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="9 个页面">9</span></a>
-<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>核能设施</span><span class="cat-count" aria-label="15 个页面">15</span></a>
+<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>核能设施</span><span class="cat-count" aria-label="16 个页面">16</span></a>
 <div class="group-title">加工</div>
 <a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>机器</span><span class="cat-count" aria-label="18 个页面">18</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>流体机器</span><span class="cat-count" aria-label="3 个页面">3</span></a>
@@ -382,7 +382,7 @@
 <div class="group-title">物品</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="33 个页面">33</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="35 个页面">35</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="36 个页面">36</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">首页</a><span class="sep">/</span><a href="../construction/index.html">建筑方块</a><span class="sep">/</span><span>回火铁栏杆</span></div>
@@ -392,7 +392,7 @@
     <div class="info">
       <h1>回火铁栏杆</h1>
       <div class="block-id">alaindustrial:tempered_iron_bars</div>
-      <div class="tags"><span class="tag cat" style="background:#a16207">建筑方块</span><span class="tag lifecycle" style="background:#22c55e">已实现</span><span class="tag">construction</span><span class="tag">tempered-iron</span><span class="tag">decor</span><span class="tag">bars</span><span class="tag">ladder</span><span class="tag">trapdoor</span><span class="tag">chain</span></div>
+      <div class="tags"><span class="tag cat" style="background:#a16207">建筑方块</span><span class="tag lifecycle" style="background:#22c55e">已实现</span><span class="tag">construction</span><span class="tag">tempered-iron</span><span class="tag">decor</span><span class="tag">bars</span><span class="tag">ladder</span><span class="tag">trapdoor</span><span class="tag">chain</span><span class="tag">reinforced-glass</span></div>
     </div>
   </div>
 </div>
@@ -404,11 +404,13 @@
 
 <p>纹理沿用原版纹理，只是改成了回火铁的配色：图案和阴影保持不变，只有颜色不同。形状和模型同样沿用原版， 因此这四个方块与原版方块的连接方式和它们的铁质孪生版本完全相同。</p>
 
+<p>它们旁边还有 <strong><a href="reinforced_glass.html">强化玻璃</a>活板门</strong>（）：3 像素宽的钢框围着一块半透明的玻璃。 它的行为与回火铁活板门相同——手动和红石均可打开——但硬度与强化玻璃相同，破坏和踩踏时发出玻璃的声音， 开关时则是铁活板门的咔嗒声。门的边缘全是钢，只有中间透光。</p>
+
 <h2 id="方块属性">方块属性</h2>
 
-<table><thead><tr><th>方块</th><th>硬度 / 爆炸抗性</th><th>工具</th><th>音效</th><th>行为</th></tr></thead><tbody><tr><td>栏杆</td><td>5.0 / 6.0</td><td>镐（掉落必需）</td><td>金属</td><td><code>IronBarsBlock</code>：侧面相连，可含水</td></tr><tr><td>梯子</td><td>3.0 / 6.0</td><td>镐（掉落必需）</td><td>金属</td><td><code>LadderBlock</code>：放在墙上，攀爬与原版相同</td></tr><tr><td>活板门</td><td>5.0 / 6.0</td><td>镐（掉落必需）</td><td>金属，铁活板门的音效</td><td><code>TrapDoorBlock</code>：手动和红石均可</td></tr><tr><td>链</td><td>5.0 / 6.0</td><td>镐（掉落必需）</td><td>锁链</td><td><code>ChainBlock</code>：x/y/z 轴，可含水</td></tr></tbody></table>
+<table><thead><tr><th>方块</th><th>硬度 / 爆炸抗性</th><th>工具</th><th>音效</th><th>行为</th></tr></thead><tbody><tr><td>栏杆</td><td>5.0 / 6.0</td><td>镐（掉落必需）</td><td>金属</td><td><code>IronBarsBlock</code>：侧面相连，可含水</td></tr><tr><td>梯子</td><td>3.0 / 6.0</td><td>镐（掉落必需）</td><td>金属</td><td><code>LadderBlock</code>：放在墙上，攀爬与原版相同</td></tr><tr><td>活板门</td><td>5.0 / 6.0</td><td>镐（掉落必需）</td><td>金属，铁活板门的音效</td><td><code>TrapDoorBlock</code>：手动和红石均可</td></tr><tr><td>链</td><td>5.0 / 6.0</td><td>镐（掉落必需）</td><td>锁链</td><td><code>ChainBlock</code>：x/y/z 轴，可含水</td></tr><tr><td>强化玻璃活板门</td><td>3.0 / 30</td><td>镐（掉落必需）</td><td>玻璃，铁活板门的音效</td><td><code>TrapDoorBlock</code>：手动和红石均可，玻璃半透明</td></tr></tbody></table>
 
-<p>四种方块破坏后都会直接掉落自身。</p>
+<p>五种方块破坏后都会直接掉落自身。</p>
 
 <h2 id="能量">能量</h2>
 
@@ -416,15 +418,15 @@
 
 <h2 id="配方">配方</h2>
 
-<p><code>I</code>——回火铁锭，<code>P</code>——回火铁板。</p>
+<p><code>I</code>——回火铁锭，<code>P</code>——回火铁板，<code>G</code>——<a href="reinforced_glass.html">强化玻璃</a>。</p>
 
-<table><thead><tr><th>方块</th><th>摆放</th><th>产出</th></tr></thead><tbody><tr><td>栏杆</td><td><code>III</code> / <code>III</code></td><td>16</td></tr><tr><td>梯子</td><td><code>I I</code> / <code>III</code> / <code>I I</code></td><td>8</td></tr><tr><td>活板门</td><td><code>II</code> / <code>II</code></td><td>1</td></tr><tr><td>链</td><td><code>P</code> / <code>I</code> / <code>P</code></td><td>2</td></tr></tbody></table>
+<table><thead><tr><th>方块</th><th>摆放</th><th>产出</th></tr></thead><tbody><tr><td>栏杆</td><td><code>III</code> / <code>III</code></td><td>16</td></tr><tr><td>梯子</td><td><code>I I</code> / <code>III</code> / <code>I I</code></td><td>8</td></tr><tr><td>活板门</td><td><code>II</code> / <code>II</code></td><td>1</td></tr><tr><td>链</td><td><code>P</code> / <code>I</code> / <code>P</code></td><td>2</td></tr><tr><td>强化玻璃活板门</td><td><code>GG</code> / <code>GG</code></td><td>2</td></tr></tbody></table>
 
-<p>物品栏中一出现回火铁锭，这些配方即解锁。</p>
+<p>物品栏中一出现回火铁锭，这些配方即解锁。物品栏中一出现强化玻璃，强化玻璃活板门的配方即解锁。</p>
 
 <h2 id="进阶">进阶</h2>
 
-<ul><li>等级：无（被动方块）。</li><li>需要：<a href="../components/tempered_iron.html">回火铁</a>——铁锭，铁链还需要铁板。</li></ul>
+<ul><li>等级：无（被动方块）。</li><li>需要：<a href="../components/tempered_iron.html">回火铁</a>——铁锭，铁链还需要铁板。强化玻璃活板门需要<a href="reinforced_glass.html">强化玻璃</a>。</li></ul>
 
 <h2 id="相关内容">相关内容</h2>
 

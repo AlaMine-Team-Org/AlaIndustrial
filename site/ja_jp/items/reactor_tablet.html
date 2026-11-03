@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="ja_jp" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>原子炉タブレット — Ala Industrial — ガイド</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="メニューを開く" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  </div>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../../assets/item/guide_book_3d.png" alt="">すべてのコンテンツ</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/ky7cFDF8JD" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../../assets/platform/discord.svg" alt="Discord"></a>
+      <a class="platform-link" href="https://alalab.work" target="_blank" rel="noopener noreferrer" title="Ala Lab"><img src="../../assets/platform/alalab.png" alt="Ala Lab"></a>
+    </div>
+    <search class="site-search"><input type="search" data-wiki-search placeholder="ウィキを検索…" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-label="ガイドを検索" autocomplete="off" spellcheck="false" data-index="../search-index.json" data-root="../" data-l10n="{&quot;list&quot;:&quot;検索結果&quot;,&quot;one&quot;:&quot;ページ&quot;,&quot;few&quot;:&quot;ページ&quot;,&quot;many&quot;:&quot;ページ&quot;,&quot;loading&quot;:&quot;検索インデックスを読み込み中…&quot;,&quot;nothing&quot;:&quot;見つかりません&quot;}"></search>
+    <details class="language-menu"><summary aria-label="Language">日本語</summary><div class="language-popover"><span>日本語</span><a href="../../en/items/reactor_tablet.html">EN</a><a href="../../ru/items/reactor_tablet.html">RU</a><a href="../../uk/items/reactor_tablet.html">UA</a><a href="../../zh_cn/items/reactor_tablet.html">中文</a><a href="../../es_es/items/reactor_tablet.html">ES</a></div></details>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">ブラウズ</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../../assets/item/tempered_iron_pickaxe.png" alt=""><span>はじめに</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>レシピ</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>プレイヤープロフィール</span></a>
+<div class="group-title">エネルギー</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="14 ページ">14</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="9 ページ">9</span></a>
+<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>原子力</span><span class="cat-count" aria-label="16 ページ">16</span></a>
+<div class="group-title">加工</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>マシン</span><span class="cat-count" aria-label="18 ページ">18</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>液体マシン</span><span class="cat-count" aria-label="3 ページ">3</span></a>
+<div class="group-title">物流</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>アイテム輸送</span><span class="cat-count" aria-label="3 ページ">3</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>液体輸送</span><span class="cat-count" aria-label="5 ページ">5</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>液体貯蔵</span><span class="cat-count" aria-label="2 ページ">2</span></a>
+<div class="group-title">世界と自動化</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>素材</span><span class="cat-count" aria-label="27 ページ">27</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>農業</span><span class="cat-count" aria-label="7 ページ">7</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>高度なマシン</span><span class="cat-count" aria-label="1 ページ">1</span></a>
+<div class="group-title">その他</div>
+<a class="cat-link" href="../construction/index.html"><img class="nav-icon" src="../../assets/item/engraved_plate_0_3d.png" alt=""><span>建築ブロック</span><span class="cat-count" aria-label="5 ページ">5</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="29 ページ">29</span></a>
+<div class="group-title">アイテム</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="33 ページ">33</span></a>
+<a class="cat-link active" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="36 ページ">36</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">ホーム</a><span class="sep">/</span><a href="../items/index.html">ゲームアイテム</a><span class="sep">/</span><span>原子炉タブレット</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../../assets/item/reactor_tablet_3d.png" alt="原子炉タブレット" width="64" height="64">
+    <div class="info">
+      <h1>原子炉タブレット</h1>
+      <div class="block-id">alaindustrial:reactor_tablet</div>
+      <div class="tags"><span class="tag cat" style="background:#d97706">ゲームアイテム</span><span class="tag tier">LV</span><span class="tag lifecycle" style="background:#22c55e">実装済み</span><span class="tag">item</span><span class="tag">energy</span><span class="tag">nuclear</span><span class="tag">reactor</span><span class="tag">remote</span><span class="tag">tablet</span></div>
+    </div>
+  </div>
+</div>
+<h2 id="概要">概要</h2>
+
+<p><strong>原子炉タブレット</strong>は、原子炉を遠くから見せる携行アイテムです。部屋の<a href="../nuclear/reactor_antenna.html">アンテナ</a>に 登録し、<strong><a href="../nuclear/reactor_controller.html">制御装置</a>と同じ画面</strong>——5 つのタブすべて——を、<strong>閲覧専用</strong>で 開きます。</p>
+
+<p>これは<strong>ティア 1</strong>、いちばん基本の段階です。見ることはできても、操作はできません。タブレットの画面には 深さスライダーも停止ボタンも無く、クライアントからの操作リクエストはサーバーが自分で拒否します。 今後タブレットはティアごとに育っていきます（信号増幅、他のワールド、操作 — ）。この仕様が 扱うのは最初のひとつだけです。</p>
+
+<p>タブレットは<strong>充電式</strong>です。専用の EU/FE バッファがあり、画面を開いているあいだ充電量を消費して、 充電が無ければノイズを表示します。充電は自分で行います。</p>
+
+<p>状態: 仕様。充電量と消費の数値は決定済みです（「バランス」参照）。</p>
+
+<blockquote><strong>ミニ例:</strong> 部屋の壁にアンテナを設置 → タブレットでアンテナを Shift+右クリック（登録）→ 建造物から 40 ブロック離れる → タブレットを右クリック → 制御装置の画面が開き、熱・発電・制御棒が見える。 スライダーも停止ボタンも無い。100 ブロック離れる → 画面は同じだが、その上にノイズと「範囲外」の 文字が重なる。範囲内に戻る → ノイズは消えてデータが再び生き返り、画面を開き直す必要は無い。</blockquote>
+
+<h2 id="エネルギー">エネルギー</h2>
+
+<table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>タブレットのバッファ</td><td>= <strong>20000</strong> EU/FE</td></tr><tr><td>充電</td><td>モッドの充電器で、他の電気アイテムと同じ</td></tr><tr><td>エネルギー受け入れ</td><td>= <strong>32</strong> EU/FE/tick</td></tr><tr><td>画面を開いているときの消費</td><td>= <strong>2</strong> EU/FE/tick</td></tr><tr><td>原子炉の過負荷時の消費</td><td>= <strong>6</strong> EU/FE/tick</td></tr><tr><td>画面を閉じているときの消費</td><td><strong>0</strong></td></tr></tbody></table>
+
+<p>タブレットは<a href="electromagnet.html">電気アイテム</a>と同種です。バッファとエネルギーの受け入れはアイテム に備わり、容量とアイテムの能力は他のものと同じ方法で宣言されます。</p>
+
+<ul><li><strong>消費は画面を開いているあいだだけです。</strong> 閉じてバッグに入れたタブレットはエネルギーを使いません。</li><li><strong>過負荷</strong>とは原子炉の警告状態（熱が「注意」のラインか、それ以上）のことです。そのあいだ画面は ノイズでちらつき、タブレットの消費はやや増えます。</li><li>引き落としは<strong>サーバー側</strong>で、通信の再計算と同じティックに行われます。</li><li>放電したタブレットも、開くこと自体は拒みません。画面はノイズと理由「タブレットが空」付きで開きます （「通信なし」参照）。</li></ul>
+
+<p>ティア 1 には、アンテナからのワイヤレス充電はありません。これは将来のティアの改良です（）。</p>
+
+
+<h2 id="使い方">使い方</h2>
+
+<h3 id="登録">登録</h3>
+
+<ul><li><strong><a href="../nuclear/reactor_antenna.html">原子炉アンテナ</a>を Shift+右クリック</strong>すると、その部屋の<strong>制御装置の ディメンションと位置</strong>がタブレットに書き込まれます（アンテナ自身ではなく、原子炉です）。</li><li>タブレットが覚えるのは<strong>原子炉 1 つ</strong>だけです。別のアンテナを Shift+右クリックし直すと<strong>再登録</strong> されます。それまでの登録は置き換えられ、一覧はありません。</li><li>アンテナが無ければタブレットは登録できません。制御装置そのものを Shift+右クリックしても、何も 書き込まれません。</li><li>登録の音と確認表示は、<a href="teleporter_remote.html">テレポーターリモコン</a>を手本にします。詳細は実装時に 決めます。</li></ul>
+
+<h3 id="画面">画面</h3>
+
+<p><strong>タブレットを空中で右クリック</strong>すると、登録した原子炉の画面が開きます。これは制御装置の操作画面と同じもので、タブの構成も同じ——「操作盤」「部屋」「炉心」「冷却水」「記録」——ですが、 閲覧モードです。</p>
+
+<table><thead><tr><th>項目</th><th>タブレットの画面</th></tr></thead><tbody><tr><td>ヘッダー、状態プレート、事故のカウントダウンバー</td><td>制御装置と同じ</td></tr><tr><td>5 つすべてのタブ、閉じているタブのマーク</td><td>制御装置と同じ</td></tr><tr><td>深さスライダー</td><td><strong>非表示</strong>で、サーバーはクライアントからの深さのリクエストを拒否する</td></tr><tr><td>停止ボタン</td><td><strong>非表示</strong>で、サーバーはクライアントからの停止のリクエストを拒否する</td></tr><tr><td>「記録を読んだ」の印</td><td>許可: 原子炉の操作ではないため</td></tr><tr><td>インベントリとスロット</td><td>無し（制御装置と同じ）</td></tr></tbody></table>
+
+<p>データは制御装置と同じ経路と、ゾーン・記録のパケットで届きますが、<strong>画面を開いているあいだだけ</strong>です。 サーバーはデータを二重に作りません。サーバーの負荷は、制御装置のそばにいるプレイヤー 1 人ぶんと同じです。</p>
+
+<p>画面が閉じるのは、手にタブレットが無くなったときだけです。通信が途切れても、画面は<strong>閉じません</strong>。</p>
+
+<h3 id="手に持った姿と画面の展開">手に持った姿と画面の展開</h3>
+
+<p>タブレットは「ウィンドウを開くアイテム」ではなく、手に持つ計器として感じられるようにします （）。</p>
+
+<ol><li><strong>右クリック</strong> — 手がタブレットを下から画面内へ持ち上げ、側面のゴムの留め具を両手でつかんで支え ます（約 0.3 秒）。</li><li>持ち上げられたタブレットから画面が<strong>展開します</strong>。本体がほぼ画面いっぱいまで広がり、周囲の世界が暗く なり（約 0.3 秒）、そのあとガラスが古いモニターのように<strong>点灯</strong>します。中央の明るい線が広がって映像 になります（約 0.25 秒）。本体が動いているあいだ、画面はクリックを受け付けません。持ち上げる 途中ではタブレットがわずかに傾いていて、目の高さで水平になります。持ち上げたあとは、手の中でわずかに 「呼吸」します。</li><li><strong>閉じる</strong>（Esc、インベントリキー）と、同じ動きが逆に再生されます。画面はタブレットへ縮んで消え、 手が画面の無いタブレットを下ろします——操作はすぐに戻ります。縮んでいる最中に Esc をもう一度押す と、画面はすぐに閉じます。</li></ol>
+
+<p>画面上の本体は暗い色で、縁にゴムの留め具があり、アイテム名、<strong>信号バー</strong>、<strong>通信ランプ</strong>、上部に<strong>充電の パーセントと表示</strong>、下部にボタンとスピーカーが付いています。本体は内側のパネルと同じものを示します。</p>
+
+<table><thead><tr><th>状態</th><th>見えるもの</th></tr></thead><tbody><tr><td>通信あり、原子炉は安定</td><td>ランプが緑で点灯したまま</td></tr><tr><td>原子炉の過熱、蒸気の遮断、水不足（操作盤の黄色いプレート）</td><td>ランプが 1 秒に 1 回、琥珀色に点滅し、ガラスの琥珀色の縁が「呼吸」する</td></tr><tr><td>炉心溶融、爆発のカウントダウン、むき出しの組が限界（赤いプレート）</td><td>画面の赤い塗りが滑らかに脈打つ（周期 1.25 秒、途切れなし）、ランプが 1 秒に 1 回、赤く点滅する</td></tr><tr><td>通信なし（下の表のどの理由でも）</td><td>ノイズ、画面がなめらかに暗く明るくなる（35 % より深くなく、周期 2.5 秒）、ランプが 1 秒に 1 回、赤く点滅する</td></tr><tr><td>充電が 20 % 未満</td><td>充電の表示が赤くなって 1 秒に 1 回点滅する。充電が無ければ空</td></tr></tbody></table>
+
+<p><strong>急なフラッシュはありません。</strong> 最初の案（120 ms ごとのランプ、60 ms の画面のランダムな途切れ）は見て いて痛かったので、所有者が和らげるよう依頼しました（実機確認、2026-11-03）。いま本体では、何も 1 秒に 1 回より速くは点滅せず、塗りと暗転もなめらかに変わります——アクセシビリティ規則（WCAG 2.3.1）の「1 秒に 3 回のフラッシュ」を十分に下回ります。ユニットテストが両方の上限を守っています。</p>
+
+<p>本体とパネルは同じ情報源を使います。通信はタブレットのメニューから、原子炉の状態はそのプレートを塗る のと同じコントロールパネルの出力から、充電は手の中のタブレットから取ります。</p>
+
+<p><strong>外観。</strong> アイテムは立体モデルの「つまみ付きリモコン」です（所有者の選択、2026-11-02）。画面付きの 本体、側面の溝入りのゴムの留め具、天面のランプ。ガイドサイトのアイコンは、今のところ従来の平面のままです。</p>
+
+<p><strong>事故はアイテム自体に表れます。</strong> タブレットが聞いている原子炉が赤い警報（プレートを塗るのと同じ コントロールパネルの出力）にあるあいだ、モデルの琥珀色のランプとつまみの耳は赤くなり、ゆっくり 「呼吸」します（周期 1.3 秒）——ホットバー、手の中、地面のどこでも、画面を閉じていても同じです。 サーバーは 1 秒に 1 回これを確認し、アイテムに の印を付けます。 アイテムのモデルは、その印でバリエーションを選びます。印が付くのは通信のあるタブレットだけです。 未登録、放電、範囲外のタブレットは赤くなりません（所有者の依頼、2026-11-03）。</p>
+
+<p><strong>もう片方の手。</strong> タブレットはどちらの手からでも使えます（利き手が先にチェックされます）。アニメー ションのあいだは両手がタブレットを持ち、もう片方の手のアイテムは描かれません。<strong>三人称視点</strong>は変わり ません。他のプレイヤーからは、通常のアイテムの持ち方に見えます。</p>
+
+<p><strong>ポーズ。</strong> タブレットの画面は、シングルプレイをポーズさせません。データは生きているからです。</p>
+
+<h3 id="通信なし">通信なし</h3>
+
+<p>画面は<strong>必ず開きます</strong>。通信が無いときは、原子炉のパネルがまったく見えません。タブも、見出しも、 ページのボタンも無く、マウスは何も強調せず、ツールチップもありません。その代わり、薄暗いノイズの 上に<strong>理由のカード</strong>が出ます。「信号なし」、アイコン、理由の名前、そして何をすべきかの一行です （実機確認に基づく所有者の決定、）。通信が戻ると、パネルは離れたときのタブでひとりでに現れます。 理由は次のとおりです。</p>
+
+<table><thead><tr><th>理由</th><th>いつ</th><th>カードのアイコンとヒント</th></tr></thead><tbody><tr><td>範囲外</td><td>同じディメンション内で、電力のある最寄りのアンテナから = <strong>64</strong> ブロックより遠い</td><td>コンパス: アンテナに近づく</td></tr><tr><td>別のディメンション</td><td>プレイヤーと原子炉が別々のディメンションにある（ティア 1 にはワールド間の通信は無い）</td><td>エンドの目: 原子炉は別のディメンションにある</td></tr><tr><td>アンテナなし</td><td>原子炉に、制御装置が見つけたアンテナが無い（アンテナが壊された場合を含む）</td><td>アンテナ: 部屋の壁に組み込む</td></tr><tr><td>アンテナに電力なし</td><td>アンテナはあるが、ケーブルも原子炉も給電していない</td><td>ケーブル: アンテナかマストにつなぐか、原子炉を起動する</td></tr><tr><td>タブレットが空</td><td>タブレットに EU/FE が無い</td><td>充電ステーション: そこで充電する</td></tr><tr><td>原子炉が応答しない</td><td>制御装置のチャンクが読み込まれていない</td><td>制御装置: 周辺が読み込まれていない、近づく</td></tr><tr><td>未登録</td><td>タブレットが何にも登録されていない</td><td>アンテナ: タブレットで原子炉のアンテナを Shift+右クリック</td></tr></tbody></table>
+
+<p>通信は<strong>毎ティック再計算されます</strong>。範囲を出ればノイズが出て、戻ればデータが画面を開き直さなくても ひとりでに戻ります。</p>
+
+<p><strong>タブレットのためにチャンクは読み込まれません。</strong> 制御装置が読み込まれていないチャンクにあれば、 それは「原子炉が応答しない」で、何も強制読み込みされません。</p>
+
+<p><strong>距離</strong>は、タブレットが登録した原子炉の、<strong>電力のある最寄りのアンテナ</strong>から 3 軸で 64 ブロック、同じ ディメンション内です。距離の計算とディメンションの確認は 1 つの通信関数で行われ、のちに増幅カード が加わります。距離を扱う別の経路はありません。</p>
+
+<p>ノイズは、グラフィック API を直接呼ぶのではなく、GUI の手段を使ってクライアントが毎回描き直します。</p>
+
+<h3 id="ツールチップ">ツールチップ</h3>
+
+<p>インベントリでタブレットにカーソルを合わせると、次が表示されます。</p>
+
+<ul><li>右クリックで何をするかの 1 行（「右クリック: 開く」）。</li><li>登録した原子炉の<strong>座標</strong>（「原子炉: X Y Z」）。未登録なら「未登録」と、その下の行に登録のしかた （「アンテナを Shift+右クリック」）。</li><li><strong>充電量</strong>。空なら「空」。</li></ul>
+
+<p>1 つの考えにつき短い 1 行です（所有者の決定 2026-11-02: 長いツールチップは読みにくかった）。ディメン ションはツールチップに書きません。原子炉に届かないときの別のディメンションは、画面で示されます。 アンテナのマストをクリックして登録することもできます。</p>
+
+<h2 id="タブレットがしないこと">タブレットがしないこと</h2>
+
+<ul><li><strong>原子炉を操作しません。</strong> 原子炉の停止と起動は、その場（レッドストーン信号、制御装置のスライダー、 原子炉のレバー）でしかできません。操作は別の将来のティア（）で、原子炉の危険を回避する ことへの対策付きです。</li><li><strong>警報音は出しません。</strong> 手の中でピーという音は鳴りません（所有者の決定）。</li><li><strong>チャンクを読み込みません。</strong></li><li><strong>ワールドをまたいでは動かず</strong>、カードでの増幅もありません。</li><li><strong>複数の原子炉を覚えません。</strong></li><li>「将来のため」の空のスロットはありません。</li></ul>
+
+<h2 id="アニメーション">アニメーション</h2>
+
+<p>手の中のアニメーションと、ほぼ画面いっぱいに展開するタブレットは別のタスク で、この仕様では 扱いません。</p>
+
+<h2 id="ブロックの性質">ブロックの性質</h2>
+
+<p>該当なし（アイテム）。スタック: 1。</p>
+
+<h2 id="レシピ">レシピ</h2>
+
+<p>クラフトは<strong>高価</strong>です。核の段階で、価格は原子炉制御装置に並びます。形は <code>TGT / ARA / TBT</code>、出力は <strong>1</strong> 個のタブレット。</p>
+
+<table><thead><tr><th>記号</th><th>材料</th></tr></thead><tbody><tr><td>T</td><td>スズ板（タグ <code>#c:plates/tin</code>、）</td></tr><tr><td>G</td><td>無色のガラス板（タグ <code>#c:glass_panes/colorless</code>）</td></tr><tr><td>A</td><td>高度な回路（）</td></tr><tr><td>R</td><td>原子炉制御回路（）</td></tr><tr><td>B</td><td>電池（）</td></tr></tbody></table>
+
+<p>レシピは、インベントリに原子炉制御回路と電池があるとレシピブックで解放されます。</p>
+
+<h2 id="進行">進行</h2>
+
+<ul><li>カテゴリ item のアイテム。エネルギーの受け入れティアは LV。核の段階（制御装置、アンテナ）のあとで 使えます。</li><li>必要: 原子炉の<a href="../nuclear/reactor_antenna.html">原子炉アンテナ</a>。</li><li>解放: 原子炉の遠隔表示。その先は増幅、ワールド間の通信、操作（）。</li></ul>
+
+<h2 id="関連項目">関連項目</h2>
+
+<ul><li><a href="../nuclear/reactor_antenna.html">原子炉アンテナ</a> — これが無いとタブレットは原子炉を見られない。</li><li><a href="../nuclear/reactor_controller.html">原子炉制御装置</a> — タブレットが表示する画面とデータの持ち主。</li><li><a href="teleporter_remote.html">テレポーターリモコン</a> — Shift+右クリックによる携行アイテムの登録の手本。</li><li><a href="electromagnet.html">電磁石</a> — 充電式アイテムの手本。</li></ul>
+
+<h2>クラフト</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="原子炉タブレット alaindustrial:reactor_tablet" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">定型クラフト</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="いずれかのスズ板"><img src="../../assets/item/tin_plate_3d.png" alt="いずれかのスズ板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかの無色ガラス板"><img src="../../assets/item/glass_pane_3d.png" alt="いずれかの無色ガラス板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="いずれかのスズ板"><img src="../../assets/item/tin_plate_3d.png" alt="いずれかのスズ板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="高度な回路"><img src="../../assets/item/advanced_circuit_3d.png" alt="高度な回路" width="32" height="32"></div> <div class="cell" title="原子炉制御回路"><img src="../../assets/item/reactor_circuit_3d.png" alt="原子炉制御回路" width="32" height="32"></div> <div class="cell" title="高度な回路"><img src="../../assets/item/advanced_circuit_3d.png" alt="高度な回路" width="32" height="32"></div> <div class="cell" title="いずれかのスズ板"><img src="../../assets/item/tin_plate_3d.png" alt="いずれかのスズ板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div> <div class="cell" title="電池"><img src="../../assets/item/battery_3d.png" alt="電池" width="32" height="32"></div> <div class="cell" title="いずれかのスズ板"><img src="../../assets/item/tin_plate_3d.png" alt="いずれかのスズ板" width="32" height="32"><span class="tag-mark" aria-hidden="true"></span></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="作業台" title="作業台" width="30" height="30"><div class="arrow" aria-label="クラフト">▶</div></div><div class="recipe-result"><div class="cell result" title="原子炉タブレット"><img src="../../assets/item/reactor_tablet_3d.png" alt="原子炉タブレット" width="32" height="32"></div><div class="result-name">原子炉タブレット</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>

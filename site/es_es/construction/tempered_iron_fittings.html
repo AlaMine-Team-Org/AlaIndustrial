@@ -364,7 +364,7 @@
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>Generadores</span><span class="cat-count" aria-label="14 páginas">14</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>Almacenamiento de energía</span><span class="cat-count" aria-label="4 páginas">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>Transferencia de energía</span><span class="cat-count" aria-label="9 páginas">9</span></a>
-<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>Energía nuclear</span><span class="cat-count" aria-label="15 páginas">15</span></a>
+<a class="cat-link" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>Energía nuclear</span><span class="cat-count" aria-label="16 páginas">16</span></a>
 <div class="group-title">Procesamiento</div>
 <a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>Máquinas</span><span class="cat-count" aria-label="18 páginas">18</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>Máquinas de fluidos</span><span class="cat-count" aria-label="3 páginas">3</span></a>
@@ -382,7 +382,7 @@
 <div class="group-title">Objetos</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>Mejoras</span><span class="cat-count" aria-label="3 páginas">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>Componentes</span><span class="cat-count" aria-label="33 páginas">33</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>Objetos</span><span class="cat-count" aria-label="35 páginas">35</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>Objetos</span><span class="cat-count" aria-label="36 páginas">36</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Inicio</a><span class="sep">/</span><a href="../construction/index.html">Construcción</a><span class="sep">/</span><span>Barrotes de hierro templado</span></div>
@@ -392,7 +392,7 @@
     <div class="info">
       <h1>Barrotes de hierro templado</h1>
       <div class="block-id">alaindustrial:tempered_iron_bars</div>
-      <div class="tags"><span class="tag cat" style="background:#a16207">Construcción</span><span class="tag lifecycle" style="background:#22c55e">Implementado</span><span class="tag">construction</span><span class="tag">tempered-iron</span><span class="tag">decor</span><span class="tag">bars</span><span class="tag">ladder</span><span class="tag">trapdoor</span><span class="tag">chain</span></div>
+      <div class="tags"><span class="tag cat" style="background:#a16207">Construcción</span><span class="tag lifecycle" style="background:#22c55e">Implementado</span><span class="tag">construction</span><span class="tag">tempered-iron</span><span class="tag">decor</span><span class="tag">bars</span><span class="tag">ladder</span><span class="tag">trapdoor</span><span class="tag">chain</span><span class="tag">reinforced-glass</span></div>
     </div>
   </div>
 </div>
@@ -404,11 +404,13 @@
 
 <p>Las texturas son las de vanilla, recoloreadas con la paleta del hierro templado: el dibujo y las sombras son los mismos, solo cambia el color. Las formas y los modelos también son los de vanilla, así que los cuatro bloques encajan con los bloques vanilla exactamente igual que sus gemelos de hierro.</p>
 
+<p>Junto a ellos está la <strong>trampilla de <a href="reinforced_glass.html">vidrio reforzado</a></strong>: un marco de acero de tres píxeles alrededor de un panel de vidrio translúcido. Se comporta como la trampilla de hierro templado (se abre a mano y con redstone), pero es tan resistente como el vidrio reforzado, se rompe y suena bajo los pies como el vidrio y, al abrirse, hace clic como la trampilla de hierro. Sus cantos son de acero macizo; solo el centro deja pasar la luz.</p>
+
 <h2 id="propiedades-del-bloque">Propiedades del bloque</h2>
 
-<table><thead><tr><th>Bloque</th><th>Dureza / resist. a explosiones</th><th>Herramienta</th><th>Sonido</th><th>Comportamiento</th></tr></thead><tbody><tr><td>Barrotes</td><td>5.0 / 6.0</td><td>pico (obligatorio para que suelte el bloque)</td><td>metal</td><td><code>IronBarsBlock</code>: se conectan por los lados, admiten agua</td></tr><tr><td>Escalera de mano</td><td>3.0 / 6.0</td><td>pico (obligatorio para que suelte el bloque)</td><td>metal</td><td><code>LadderBlock</code>: en la pared, se trepa como la vanilla</td></tr><tr><td>Trampilla</td><td>5.0 / 6.0</td><td>pico (obligatorio para que suelte el bloque)</td><td>metal, sonidos de la trampilla de hierro</td><td><code>TrapDoorBlock</code>: a mano y con redstone</td></tr><tr><td>Cadena</td><td>5.0 / 6.0</td><td>pico (obligatorio para que suelte el bloque)</td><td>cadena</td><td><code>ChainBlock</code>: eje x/y/z, admite agua</td></tr></tbody></table>
+<table><thead><tr><th>Bloque</th><th>Dureza / resist. a explosiones</th><th>Herramienta</th><th>Sonido</th><th>Comportamiento</th></tr></thead><tbody><tr><td>Barrotes</td><td>5.0 / 6.0</td><td>pico (obligatorio para que suelte el bloque)</td><td>metal</td><td><code>IronBarsBlock</code>: se conectan por los lados, admiten agua</td></tr><tr><td>Escalera de mano</td><td>3.0 / 6.0</td><td>pico (obligatorio para que suelte el bloque)</td><td>metal</td><td><code>LadderBlock</code>: en la pared, se trepa como la vanilla</td></tr><tr><td>Trampilla</td><td>5.0 / 6.0</td><td>pico (obligatorio para que suelte el bloque)</td><td>metal, sonidos de la trampilla de hierro</td><td><code>TrapDoorBlock</code>: a mano y con redstone</td></tr><tr><td>Cadena</td><td>5.0 / 6.0</td><td>pico (obligatorio para que suelte el bloque)</td><td>cadena</td><td><code>ChainBlock</code>: eje x/y/z, admite agua</td></tr><tr><td>Trampilla de vidrio reforzado</td><td>3.0 / 30</td><td>pico (obligatorio para que suelte el bloque)</td><td>vidrio, sonidos de la trampilla de hierro</td><td><code>TrapDoorBlock</code>: a mano y con redstone, panel translúcido</td></tr></tbody></table>
 
-<p>Los cuatro se sueltan solos.</p>
+<p>Los cinco se sueltan solos.</p>
 
 <h2 id="energía">Energía</h2>
 
@@ -416,15 +418,16 @@
 
 <h2 id="recetas">Recetas</h2>
 
-<p><code>I</code>: lingote de hierro templado; <code>P</code>: placa de hierro templado.</p>
+<p><code>I</code>: lingote de hierro templado; <code>P</code>: placa de hierro templado; <code>G</code>: <a href="reinforced_glass.html">vidrio reforzado</a>.</p>
 
-<table><thead><tr><th>Bloque</th><th>Disposición</th><th>Resultado</th></tr></thead><tbody><tr><td>Barrotes</td><td><code>III</code> / <code>III</code></td><td>16</td></tr><tr><td>Escalera de mano</td><td><code>I I</code> / <code>III</code> / <code>I I</code></td><td>8</td></tr><tr><td>Trampilla</td><td><code>II</code> / <code>II</code></td><td>1</td></tr><tr><td>Cadena</td><td><code>P</code> / <code>I</code> / <code>P</code></td><td>2</td></tr></tbody></table>
+<table><thead><tr><th>Bloque</th><th>Disposición</th><th>Resultado</th></tr></thead><tbody><tr><td>Barrotes</td><td><code>III</code> / <code>III</code></td><td>16</td></tr><tr><td>Escalera de mano</td><td><code>I I</code> / <code>III</code> / <code>I I</code></td><td>8</td></tr><tr><td>Trampilla</td><td><code>II</code> / <code>II</code></td><td>1</td></tr><tr><td>Cadena</td><td><code>P</code> / <code>I</code> / <code>P</code></td><td>2</td></tr><tr><td>Trampilla de vidrio reforzado</td><td><code>GG</code> / <code>GG</code></td><td>2</td></tr></tbody></table>
 
-<p>Las recetas se desbloquean en cuanto aparece un lingote de hierro templado en el inventario.</p>
+<p>Las recetas se desbloquean en cuanto aparece un lingote de hierro templado en el inventario. La receta de la trampilla de vidrio reforzado se desbloquea en cuanto aparece vidrio reforzado en el inventario.</p>
 
 <h2 id="progresión">Progresión</h2>
 
 <ul><li>Nivel: ninguno (bloques pasivos).</li><li>Requiere: <a href="../components/tempered_iron.html">hierro templado</a>: lingotes y, para la cadena, también placas.</li></ul>
+<p>La trampilla de vidrio reforzado se hace con <a href="reinforced_glass.html">vidrio reforzado</a>.</p>
 
 <h2 id="relacionado">Relacionado</h2>
 
