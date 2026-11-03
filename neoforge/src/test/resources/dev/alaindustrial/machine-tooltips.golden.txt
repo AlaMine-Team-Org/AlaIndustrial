@@ -2026,6 +2026,7 @@ tooltip.alaindustrial.tier_lv {green}
 == alaindustrial:raw_sulfur plain : none
 == alaindustrial:raw_tin plain : none
 == alaindustrial:raw_uranium plain : none
+== alaindustrial:reactor_antenna plain : none
 == alaindustrial:reactor_button plain : none
 == alaindustrial:reactor_casing plain : none
 == alaindustrial:reactor_circuit plain : none
@@ -2036,6 +2037,69 @@ tooltip.alaindustrial.tier_lv {green}
 == alaindustrial:reactor_lever plain : none
 == alaindustrial:reactor_outlet plain : none
 == alaindustrial:reactor_port plain : none
+== alaindustrial:reactor_tablet plain
+-- plain eu
+tooltip.alaindustrial.reactor_tablet.usage {gray}
+tooltip.alaindustrial.reactor_tablet.unbound {gray}
+tooltip.alaindustrial.reactor_tablet.unbound_hint {dark_gray}
+tooltip.alaindustrial.reactor_tablet.depleted {red}
+-- shift eu
+tooltip.alaindustrial.reactor_tablet.usage {gray}
+tooltip.alaindustrial.reactor_tablet.unbound {gray}
+tooltip.alaindustrial.reactor_tablet.unbound_hint {dark_gray}
+tooltip.alaindustrial.reactor_tablet.depleted {red}
+-- plain no-eu
+tooltip.alaindustrial.reactor_tablet.usage {gray}
+tooltip.alaindustrial.reactor_tablet.unbound {gray}
+tooltip.alaindustrial.reactor_tablet.unbound_hint {dark_gray}
+tooltip.alaindustrial.reactor_tablet.depleted {red}
+-- shift no-eu
+tooltip.alaindustrial.reactor_tablet.usage {gray}
+tooltip.alaindustrial.reactor_tablet.unbound {gray}
+tooltip.alaindustrial.reactor_tablet.unbound_hint {dark_gray}
+tooltip.alaindustrial.reactor_tablet.depleted {red}
+== alaindustrial:reactor_tablet eu=1
+-- plain eu
+tooltip.alaindustrial.reactor_tablet.usage {gray}
+tooltip.alaindustrial.reactor_tablet.unbound {gray}
+tooltip.alaindustrial.reactor_tablet.unbound_hint {dark_gray}
+tooltip.alaindustrial.reactor_tablet.charge(1, 20000) {gold}
+-- shift eu
+tooltip.alaindustrial.reactor_tablet.usage {gray}
+tooltip.alaindustrial.reactor_tablet.unbound {gray}
+tooltip.alaindustrial.reactor_tablet.unbound_hint {dark_gray}
+tooltip.alaindustrial.reactor_tablet.charge(1, 20000) {gold}
+-- plain no-eu
+tooltip.alaindustrial.reactor_tablet.usage {gray}
+tooltip.alaindustrial.reactor_tablet.unbound {gray}
+tooltip.alaindustrial.reactor_tablet.unbound_hint {dark_gray}
+tooltip.alaindustrial.reactor_tablet.charge(1, 20000) {gold}
+-- shift no-eu
+tooltip.alaindustrial.reactor_tablet.usage {gray}
+tooltip.alaindustrial.reactor_tablet.unbound {gray}
+tooltip.alaindustrial.reactor_tablet.unbound_hint {dark_gray}
+tooltip.alaindustrial.reactor_tablet.charge(1, 20000) {gold}
+== alaindustrial:reactor_tablet full
+-- plain eu
+tooltip.alaindustrial.reactor_tablet.usage {gray}
+tooltip.alaindustrial.reactor_tablet.unbound {gray}
+tooltip.alaindustrial.reactor_tablet.unbound_hint {dark_gray}
+tooltip.alaindustrial.reactor_tablet.charge(20000, 20000) {gold}
+-- shift eu
+tooltip.alaindustrial.reactor_tablet.usage {gray}
+tooltip.alaindustrial.reactor_tablet.unbound {gray}
+tooltip.alaindustrial.reactor_tablet.unbound_hint {dark_gray}
+tooltip.alaindustrial.reactor_tablet.charge(20000, 20000) {gold}
+-- plain no-eu
+tooltip.alaindustrial.reactor_tablet.usage {gray}
+tooltip.alaindustrial.reactor_tablet.unbound {gray}
+tooltip.alaindustrial.reactor_tablet.unbound_hint {dark_gray}
+tooltip.alaindustrial.reactor_tablet.charge(20000, 20000) {gold}
+-- shift no-eu
+tooltip.alaindustrial.reactor_tablet.usage {gray}
+tooltip.alaindustrial.reactor_tablet.unbound {gray}
+tooltip.alaindustrial.reactor_tablet.unbound_hint {dark_gray}
+tooltip.alaindustrial.reactor_tablet.charge(20000, 20000) {gold}
 == alaindustrial:reception_capsule plain
 -- plain eu
 tooltip.alaindustrial.reception_capsule.purpose {gray}
@@ -2077,6 +2141,7 @@ tooltip.alaindustrial.tier_lv {green}
 == alaindustrial:reinforced_bone_meal plain : none
 == alaindustrial:reinforced_fluid_pipe plain : none
 == alaindustrial:reinforced_glass plain : none
+== alaindustrial:reinforced_glass_trapdoor plain : none
 == alaindustrial:reinforced_plate_block plain : none
 == alaindustrial:reinforced_plate_slab plain : none
 == alaindustrial:reinforced_plate_stairs plain : none

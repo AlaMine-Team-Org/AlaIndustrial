@@ -52,7 +52,7 @@ final class MetalFamilyZone implements DemoZone {
 	private static final int FENCE_X = 85;
 	/** MOD-795: the row of glass, light and tempered iron fittings. */
 	private static final int FITTINGS_Z = 36;
-	/** MOD-804: the sound absorber pair. */
+	/** MOD-804: the sound absorber pair; MOD-864: the reinforced glass trapdoor. */
 	private static final int ABSORBER_Z = 38;
 	/** MOD-927: the concrete row and the foundation-and-plate row of the quarry's building blocks. */
 	private static final int CONCRETE_Z = 40;
@@ -83,6 +83,7 @@ final class MetalFamilyZone implements DemoZone {
 		w.set(84, 1, FITTINGS_Z, block("tempered_iron_chain"));
 		w.set(78, 1, ABSORBER_Z, block("sound_absorber"));
 		w.set(79, 1, ABSORBER_Z, block("sound_absorber"));
+		w.set(82, 1, ABSORBER_Z, block("reinforced_glass_trapdoor"));
 		quarryConstruction(w);
 	}
 

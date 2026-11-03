@@ -40,6 +40,44 @@ class ReactorConsoleTest {
 		return edit.apply(new Builder(base)).build();
 	}
 
+	// ── The channels and the alarm mark (MOD-941) ───────────────────────────────────────────────
+
+	/**
+	 * The readout taken from channels is the one the panel builds: every field lands on its own channel, a percent is
+	 * clamped to 0…100 and the thresholds pass through untouched.
+	 */
+	@Test
+	void theReadoutFromChannelsPutsEachFieldOnItsChannel() {
+		int[] ch = new int[dev.alaindustrial.block.entity.reactor.ReactorChannels.values().length];
+		ch[dev.alaindustrial.block.entity.reactor.ReactorChannels.STATUS.ordinal()] =
+				ReactorRoomStatus.FORMED.ordinal();
+		ch[dev.alaindustrial.block.entity.reactor.ReactorChannels.RODS.ordinal()] = 16;
+		ch[dev.alaindustrial.block.entity.reactor.ReactorChannels.OUTPUT.ordinal()] = 200;
+		ch[dev.alaindustrial.block.entity.reactor.ReactorChannels.HEAT_PERCENT.ordinal()] = 140;
+		ch[dev.alaindustrial.block.entity.reactor.ReactorChannels.BLAST_PERCENT.ordinal()] = 40;
+		ch[dev.alaindustrial.block.entity.reactor.ReactorChannels.COOLANT_SHARE.ordinal()] = -5;
+		ch[dev.alaindustrial.block.entity.reactor.ReactorChannels.HEAT_WARN.ordinal()] = 70;
+		ch[dev.alaindustrial.block.entity.reactor.ReactorChannels.HEAT_MELTDOWN.ordinal()] = 85;
+		Readout r = ReactorConsole.readout(i -> ch[i]);
+		assertEquals(ReactorRoomStatus.FORMED, r.status());
+		assertEquals(16, r.rods());
+		assertEquals(200, r.output());
+		assertEquals(100, r.heat(), "a percent is clamped");
+		assertEquals(40, r.blast());
+		assertEquals(0, r.coolantShare(), "a percent is clamped");
+		assertEquals(70, r.warnPercent());
+		assertEquals(85, r.meltdownPercent());
+	}
+
+	/** The tablet's red lamps follow the panel's red: a countdown and a meltdown sound it, a hot room only warns. */
+	@Test
+	void theAlarmMarkIsThePanelsRedAlarm() {
+		assertFalse(ReactorConsole.isAlarm(healthy()));
+		assertFalse(ReactorConsole.isAlarm(with(healthy(), b -> b.heat(80))), "running hot is amber, not red");
+		assertTrue(ReactorConsole.isAlarm(with(healthy(), b -> b.blast(40))));
+		assertTrue(ReactorConsole.isAlarm(with(healthy(), b -> b.meltdown(true).heat(90))));
+	}
+
 	// ── Verdict ──────────────────────────────────────────────────────────────────────────────────
 
 	@Test

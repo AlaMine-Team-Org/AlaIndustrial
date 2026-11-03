@@ -55,11 +55,19 @@ public final class CableArmEndpointParityScenarios {
 	 * <ul>
 	 *   <li>the crystal-farm controller publishes a port on its default front (north) that no cable arm
 	 *       reaches;</li>
+	 *   <li>the reactor antenna's boom (MOD-941) lends its antenna's port through every face of its cell but the
+	 *       antenna's and the one over its Yagi elements (south and up, for the default north facing), decided from its
+	 *       state alone; the sweep stands it alone, where the lent
+	 *       port has no host. In a world it never stands alone: it removes itself when its antenna goes;</li>
 	 *   <li>the storage module draws an arm on every face but publishes no energy port at all.</li>
 	 * </ul>
 	 */
 	static final List<String> KNOWN_DISAGREEMENTS = List.of(
 			"crystal_farm_controller/north: arm=false endpoint=true",
+			"reactor_antenna_mast/down: arm=true endpoint=false",
+			"reactor_antenna_mast/east: arm=true endpoint=false",
+			"reactor_antenna_mast/north: arm=true endpoint=false",
+			"reactor_antenna_mast/west: arm=true endpoint=false",
 			"storage_module/down: arm=true endpoint=false",
 			"storage_module/east: arm=true endpoint=false",
 			"storage_module/north: arm=true endpoint=false",

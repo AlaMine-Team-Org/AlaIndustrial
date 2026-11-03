@@ -2,8 +2,10 @@ package dev.alaindustrial.client.screen.reactor;
 
 import dev.alaindustrial.block.entity.ReactorIdleReason;
 import dev.alaindustrial.block.entity.ReactorRoomStatus;
+import dev.alaindustrial.block.entity.reactor.ReactorChannels;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.IntUnaryOperator;
 
 /**
  * What the reactor console says about the reactor it shows (MOD-618): the verdict on the status chip,
@@ -119,6 +121,32 @@ public final class ReactorConsole {
 		public Advice {
 			stepKeys = List.copyOf(stepKeys);
 		}
+	}
+
+	/**
+	 * The readout from the controller's channels, by {@link ReactorChannels} ordinal: the one place a reactor's
+	 * numbers become a readout, read by the panel and by the tablet's server-side alarm mark (MOD-941) alike.
+	 */
+	public static Readout readout(IntUnaryOperator channel) {
+		return new Readout(ReactorRoomStatus.byOrdinal(channel.applyAsInt(ReactorChannels.STATUS.ordinal())),
+				ReactorIdleReason.byOrdinal(channel.applyAsInt(ReactorChannels.IDLE_REASON.ordinal())),
+				channel.applyAsInt(ReactorChannels.RODS.ordinal()),
+				channel.applyAsInt(ReactorChannels.OUTPUT.ordinal()),
+				percent(channel, ReactorChannels.HEAT_PERCENT), percent(channel, ReactorChannels.WATER_PERCENT),
+				percent(channel, ReactorChannels.STEAM_PERCENT), percent(channel, ReactorChannels.BLAST_PERCENT),
+				channel.applyAsInt(ReactorChannels.MELTDOWN.ordinal()) != 0,
+				percent(channel, ReactorChannels.INSTABILITY), percent(channel, ReactorChannels.COOLANT_SHARE),
+				channel.applyAsInt(ReactorChannels.HEAT_WARN.ordinal()),
+				channel.applyAsInt(ReactorChannels.HEAT_MELTDOWN.ordinal()));
+	}
+
+	/** Whether the panel would sound its red alarm for {@code r}: the one rule the tablet's alarm mark copies. */
+	public static boolean isAlarm(Readout r) {
+		return advice(r).tone() == Tone.ALARM;
+	}
+
+	private static int percent(IntUnaryOperator channel, ReactorChannels which) {
+		return Math.max(0, Math.min(100, channel.applyAsInt(which.ordinal())));
 	}
 
 	/**

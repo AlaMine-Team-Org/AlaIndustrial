@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SWS",
+    "CRC",
+    "SWS"
+  ],
+  "key": {
+    "S": "alaindustrial:shielding_alloy_plate",
+    "W": "alaindustrial:copper_cable",
+    "C": "alaindustrial:advanced_circuit",
+    "R": "alaindustrial:reactor_casing"
+  },
+  "result": {
+    "id": "alaindustrial:reactor_antenna",
+    "count": 1
+  }
+}

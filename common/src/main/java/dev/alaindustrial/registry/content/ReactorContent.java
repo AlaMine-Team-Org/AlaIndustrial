@@ -5,6 +5,7 @@ import static dev.alaindustrial.registry.content.ContentDeclarations.block;
 import static dev.alaindustrial.registry.content.ContentDeclarations.blockEntity;
 import static dev.alaindustrial.registry.content.ContentDeclarations.blockItem;
 import static dev.alaindustrial.registry.content.ContentDeclarations.endBlocks;
+import static dev.alaindustrial.registry.content.ContentDeclarations.hiddenFromPlayers;
 import static dev.alaindustrial.registry.content.ContentDeclarations.item;
 import static dev.alaindustrial.registry.content.ContentDeclarations.machine;
 import static dev.alaindustrial.registry.content.ContentDeclarations.menu;
@@ -13,6 +14,8 @@ import static dev.alaindustrial.registry.content.TabEntries.show;
 
 import dev.alaindustrial.block.FuelRodAssemblyBlock;
 import dev.alaindustrial.block.IrradiatedSoilBlock;
+import dev.alaindustrial.block.ReactorAntennaBlock;
+import dev.alaindustrial.block.ReactorAntennaMastBlock;
 import dev.alaindustrial.block.ReactorButtonBlock;
 import dev.alaindustrial.block.ReactorControllerBlock;
 import dev.alaindustrial.block.ReactorDoorBlock;
@@ -23,6 +26,7 @@ import dev.alaindustrial.block.ReactorPortBlock;
 import dev.alaindustrial.block.ReactorShellBlock;
 import dev.alaindustrial.block.SteamNozzleBlock;
 import dev.alaindustrial.block.entity.FuelRodAssemblyBlockEntity;
+import dev.alaindustrial.block.entity.ReactorAntennaBlockEntity;
 import dev.alaindustrial.block.entity.ReactorControllerBlockEntity;
 import dev.alaindustrial.block.entity.ReactorDoorBlockEntity;
 import dev.alaindustrial.block.entity.ReactorOutletBlockEntity;
@@ -30,7 +34,9 @@ import dev.alaindustrial.block.entity.ReactorPortBlockEntity;
 import dev.alaindustrial.block.entity.SteamNozzleBlockEntity;
 import dev.alaindustrial.compat.LineBlockProps;
 import dev.alaindustrial.core.structure.FuelRodMath;
+import dev.alaindustrial.item.misc.ReactorTabletItem;
 import dev.alaindustrial.menu.ReactorControllerMenu;
+import dev.alaindustrial.menu.ReactorTabletMenu;
 import dev.alaindustrial.registry.ContentManifest.BlockDef;
 import dev.alaindustrial.registry.ContentManifest.BlockEntityDef;
 import dev.alaindustrial.registry.ContentManifest.Domain;
@@ -111,6 +117,18 @@ public final class ReactorContent {
 	public static final BlockDef<ReactorOutletBlock> REACTOR_OUTLET = block("reactor_outlet", ReactorOutletBlock::new,
 			machine(MapColor.COLOR_GRAY, p -> p.strength(5.0f, 30.0f).sound(SoundType.METAL)),
 			s -> ModContent.REACTOR_OUTLET = s);
+	/** MOD-941 — a shell block the tablet listens to; the shell's own numbers, as the outlet. */
+	public static final BlockDef<ReactorAntennaBlock> REACTOR_ANTENNA = block("reactor_antenna",
+			ReactorAntennaBlock::new,
+			// A piston must not take it: its boom stands in the next cell and would be left behind.
+			machine(MapColor.COLOR_GRAY, p -> LineBlockProps.pinnedAgainstPistons(p).strength(5.0f, 30.0f)
+					.sound(SoundType.METAL)), s -> ModContent.REACTOR_ANTENNA = s);
+	/** MOD-941 — the antenna's boom, a block of its own in the cell in front: light, collision, outline. */
+	public static final BlockDef<ReactorAntennaMastBlock> REACTOR_ANTENNA_MAST = block("reactor_antenna_mast",
+			ReactorAntennaMastBlock::new,
+			machine(MapColor.METAL, p -> LineBlockProps.pinnedAgainstPistons(p).strength(5.0f, 30.0f)
+					.sound(SoundType.METAL).noOcclusion()), s -> ModContent.REACTOR_ANTENNA_MAST = s,
+			hiddenFromPlayers("the antenna places its own boom; the boom has no item"));
 	/**
 	 * MOD-471 — ground a reactor accident poisoned. No block item: it is left behind, never placed.
 	 */
@@ -160,6 +178,9 @@ public final class ReactorContent {
 			blockItem("reactor_lamp", s -> ModContent.REACTOR_LAMP_ITEM = s),
 			blockItem("steam_nozzle", s -> ModContent.STEAM_NOZZLE_ITEM = s),
 			blockItem("reactor_outlet", s -> ModContent.REACTOR_OUTLET_ITEM = s),
+			blockItem("reactor_antenna", s -> ModContent.REACTOR_ANTENNA_ITEM = s),
+			// MOD-941 — tier-1 tablet: view-only, powered, one reactor at a time.
+			item("reactor_tablet", p -> new ReactorTabletItem(p.stacksTo(1)), s -> ModContent.REACTOR_TABLET = s),
 			blockItem("reactor_button", s -> ModContent.REACTOR_BUTTON_ITEM = s),
 			blockItem("reactor_lever", s -> ModContent.REACTOR_LEVER_ITEM = s),
 			blockItem("fuel_rod_assembly", s -> ModContent.FUEL_ROD_ASSEMBLY_ITEM = s));
@@ -180,6 +201,9 @@ public final class ReactorContent {
 			blockEntity("reactor_outlet", ReactorOutletBlockEntity.class,
 					ReactorOutletBlockEntity::new, s -> ModContent.REACTOR_OUTLET_BE = s,
 					REACTOR_OUTLET),
+			blockEntity("reactor_antenna", ReactorAntennaBlockEntity.class,
+					ReactorAntennaBlockEntity::new, s -> ModContent.REACTOR_ANTENNA_BE = s,
+					REACTOR_ANTENNA),
 			// MOD-493: the airlock's panel slides rather than swings, and a block state cannot hold a
 			// position between two ticks. This block entity stores no game state at all — it is the
 			// clock the client times that travel by.
@@ -190,7 +214,10 @@ public final class ReactorContent {
 	private static final List<MenuDef<?>> MENUS = List.of(
 			// MOD-468 — the reactor controller: a slotless diagnostic readout for the room multiblock.
 			menu("reactor_controller", ReactorControllerMenu::new,
-					s -> ModContent.REACTOR_CONTROLLER_MENU = s));
+					s -> ModContent.REACTOR_CONTROLLER_MENU = s),
+			// MOD-941 — the same panel through a tablet: view-only, with the link state as one more channel.
+			ContentDeclarations.<ReactorControllerMenu>menu("reactor_tablet", ReactorTabletMenu::new,
+					s -> ModContent.REACTOR_TABLET_MENU = s));
 
 	/** Everything this domain declares; {@link dev.alaindustrial.registry.ContentManifest#DOMAINS} joins it in. */
 	public static final Domain DOMAIN = new Domain("Reactor", BLOCKS, ITEMS, BLOCK_ENTITIES, MENUS);
@@ -243,6 +270,7 @@ public final class ReactorContent {
 		show(out, ModContent.REACTOR_CONTROLLER_ITEM);
 		show(out, ModContent.REACTOR_LAMP_ITEM);
 		show(out, ModContent.REACTOR_OUTLET_ITEM);
+		show(out, ModContent.REACTOR_ANTENNA_ITEM);
 		// --- the shaped parts of the same room (MOD-574): a door, a nozzle, the two controls and the
 		// fuel column all draw something other than a cube. They stay in the room, not in a shape band.
 		show(out, ModContent.REACTOR_DOOR_ITEM);
@@ -253,5 +281,6 @@ public final class ReactorContent {
 		show(out, ModContent.DEPLETED_URANIUM);
 		show(out, ModContent.EMPTY_FUEL_ROD);
 		show(out, ModContent.URANIUM_FUEL_ROD);
+		show(out, ModContent.REACTOR_TABLET);
 	}
 }

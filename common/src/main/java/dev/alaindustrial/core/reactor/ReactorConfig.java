@@ -129,6 +129,21 @@ public final class ReactorConfig {
 	@Knob(section = Section.MACHINES, min = 1,
 			doc = "EU a single reactor outlet holds before a cable drains it.")
 	public static int reactorOutletBuffer = 512;
+	/** EU a reactor antenna holds (MOD-941): a few minutes of upkeep, so a short gap in the cable does not cut it. */
+	@Knob(section = Section.MACHINES, min = 1,
+			doc = "EU a reactor antenna holds.")
+	public static int reactorAntennaBuffer = 4_000;
+	/**
+	 * What a reactor antenna costs to keep transmitting (MOD-941), twice an idle monitor core: the tablet's range is
+	 * paid for in energy, so a future amplifier card can only raise this.
+	 */
+	@Knob(section = Section.MACHINES, min = 0,
+			doc = "EU per tick a reactor antenna spends while it transmits; paid from its cable, else the reactor.")
+	public static int reactorAntennaUpkeepEuPerTick = 4;
+	/** How far a tier-1 reactor tablet hears an antenna (MOD-941), in blocks, on all three axes. */
+	@Knob(section = Section.MACHINES, min = 1,
+			doc = "Range in blocks between a reactor tablet and the nearest powered antenna of its reactor.")
+	public static int reactorTabletRange = 64;
 	/** Steam a nozzle releases per tick, in mB. Above one inlet's throughput, so the pipe is the limit. */
 	@Knob(section = Section.MACHINES, min = 1,
 			doc = "Steam a nozzle releases into the world per tick, in mB.")

@@ -619,6 +619,10 @@ public final class ServerBalance {
 		return current.intValue("radiantEuPerTick", GeneratorConfig.radiantEuPerTick);
 	}
 
+	public static int reactorTabletBuffer() {
+		return current.intValue("reactorTabletBuffer", ToolConfig.reactorTabletBuffer);
+	}
+
 	public static int recyclerBatchMass() {
 		return current.intValue("recyclerBatchMass", Config.recyclerBatchMass);
 	}

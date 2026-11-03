@@ -73,6 +73,9 @@ public final class MenuDataWidthScenarios {
 	// 47 -> 48 (MOD-833): the reception capsule - fourteen channels, EU in 15-bit halves and the price's readout.
 	// 48 -> 49 (MOD-858): the town dispatcher - ten channels, the last six its status, nests and plan refusal.
 	// 49 -> 50 (MOD-924): the honey centrifuge - seven channels, the tank, its fluid and the idle reason.
+	/** The one machine menu opened by an item (MOD-941): it has no block of its own to place and read. */
+	private static final String TABLET_VIEW = "reactor_tablet";
+
 	private static final int EXPECTED_MACHINE_MENUS = 50;
 
 	/** Reused single cell inside the test region; each machine is placed here, read, then cleared. */
@@ -92,6 +95,11 @@ public final class MenuDataWidthScenarios {
 		for (ContentManifest.MenuDef<?> def : ContentManifest.MENUS) {
 			AbstractContainerMenu stub = def.factory().create(1, player.getInventory());
 			if (!(stub instanceof MachineMenu machineStub)) {
+				continue;
+			}
+			// MOD-941: the tablet's view of the controller panel opens from an item, not a block, and carries the
+			// controller's channels plus its link state; ReactorTabletScenarios checks that width instead.
+			if (TABLET_VIEW.equals(def.id())) {
 				continue;
 			}
 			// Every machine menu is registered under its block's own path (macerator, pump, sawmill, …).

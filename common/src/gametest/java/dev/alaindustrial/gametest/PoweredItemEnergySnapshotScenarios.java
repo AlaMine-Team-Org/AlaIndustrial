@@ -53,6 +53,8 @@ public final class PoweredItemEnergySnapshotScenarios {
 			Map.entry("shielding_pouch", new Energy(2_000L, 32L)),
 			Map.entry("battery", new Energy(2_000L, 32L)),
 			Map.entry("energy_pack", new Energy(20_000L, 32L)),
+			// MOD-941: the tier-1 reactor tablet runs on its own charge.
+			Map.entry("reactor_tablet", new Energy(20_000L, 32L)),
 			Map.entry("electric_drill", new Energy(10_000L, 32L)),
 			Map.entry("electric_drill_diamond_tip", new Energy(10_000L, 32L)),
 			Map.entry("electric_drill_netherite_tip", new Energy(15_000L, 32L)),

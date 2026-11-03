@@ -1,6 +1,7 @@
 package dev.alaindustrial.block.entity.reactor;
 
 import dev.alaindustrial.block.entity.FuelRodAssemblyBlockEntity;
+import dev.alaindustrial.block.entity.ReactorAntennaBlockEntity;
 import dev.alaindustrial.block.entity.ReactorOutletBlockEntity;
 import dev.alaindustrial.block.entity.ReactorRoomStatus;
 import dev.alaindustrial.core.reactor.ReactorConfig;
@@ -43,6 +44,8 @@ public final class ReactorRoom {
 
 	/** Sockets set into this room's shell. Refreshed by the same sweep that finds the columns. */
 	private final List<BlockPos> outlets = new ArrayList<>();
+	/** The antennas in this room's shell (MOD-941), found on the same walk as the outlets. */
+	private final List<BlockPos> antennas = new ArrayList<>();
 
 	// ── MOD-469: the bare reactor ──
 	/**
@@ -128,6 +131,7 @@ public final class ReactorRoom {
 	public void forgetRoom() {
 		assemblies.clear();
 		outlets.clear();
+		antennas.clear();
 		rods = 0;
 	}
 
@@ -191,6 +195,7 @@ public final class ReactorRoom {
 	private void collectAssemblies(Level level, RoomScan.Result box) {
 		assemblies.clear();
 		outlets.clear();
+		antennas.clear();
 		rods = 0;
 		BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
 		// The scan reports the INTERIOR box; the shell is the ring one block outside it. Sweeping the
@@ -212,6 +217,8 @@ public final class ReactorRoom {
 						rods += rack.getRods();
 					} else if (level.getBlockEntity(cursor) instanceof ReactorOutletBlockEntity) {
 						outlets.add(cursor.immutable());
+					} else if (level.getBlockEntity(cursor) instanceof ReactorAntennaBlockEntity) {
+						antennas.add(cursor.immutable());
 					}
 				}
 			}
@@ -278,6 +285,11 @@ public final class ReactorRoom {
 
 	public List<BlockPos> outlets() {
 		return outlets;
+	}
+
+	/** The antennas in the sealed room's shell; empty when the room is not sealed (MOD-941). */
+	public List<BlockPos> antennas() {
+		return antennas;
 	}
 
 	public List<BlockPos> bareRacks() {

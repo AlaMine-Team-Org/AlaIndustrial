@@ -1,0 +1,85 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "casing_formed": "alaindustrial:block/reactor_antenna_casing_formed",
+    "particle": "alaindustrial:block/reactor_antenna_casing_formed",
+    "casing_formed_port": "alaindustrial:block/reactor_antenna_casing_formed_port"
+  },
+  "elements": [
+    {
+      "from": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "to": [
+        16.0,
+        16.0,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0.0,
+            0.0,
+            16.0,
+            16.0
+          ],
+          "texture": "#casing_formed_port",
+          "cullface": "north"
+        },
+        "east": {
+          "uv": [
+            0.0,
+            0.0,
+            16.0,
+            16.0
+          ],
+          "texture": "#casing_formed",
+          "cullface": "east"
+        },
+        "south": {
+          "uv": [
+            0.0,
+            0.0,
+            16.0,
+            16.0
+          ],
+          "texture": "#casing_formed",
+          "cullface": "south"
+        },
+        "west": {
+          "uv": [
+            0.0,
+            0.0,
+            16.0,
+            16.0
+          ],
+          "texture": "#casing_formed",
+          "cullface": "west"
+        },
+        "up": {
+          "uv": [
+            0.0,
+            0.0,
+            16.0,
+            16.0
+          ],
+          "texture": "#casing_formed",
+          "cullface": "up"
+        },
+        "down": {
+          "uv": [
+            0.0,
+            0.0,
+            16.0,
+            16.0
+          ],
+          "texture": "#casing_formed",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_reinforced_glass": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "alaindustrial:reinforced_glass"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_reinforced_glass"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "alaindustrial:reinforced_glass_trapdoor"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/template_trapdoor_open",
+  "textures": {
+    "texture": {
+      "sprite": "alaindustrial:block/reinforced_glass_trapdoor",
+      "force_translucent": true
+    }
+  }
+}

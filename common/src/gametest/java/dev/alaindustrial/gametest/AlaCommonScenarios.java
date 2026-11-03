@@ -168,7 +168,9 @@ public final class AlaCommonScenarios {
 			// The Incubator Dome (MOD-118) is likewise never held by the player: it exists only while the
 			// multiblock stands, and breaking it hands back the glass the player originally placed
 			// (IncubatorDomeBlock.returnGlass), so it has no block item and an empty loot table by design.
-			if (id.getPath().equals("incubator_dome")) {
+			// The reactor antenna's boom (MOD-941) is the antenna's other half: placed by it, no item, an empty loot
+			// table; breaking it breaks the antenna, which drops the antenna.
+			if (id.getPath().equals("incubator_dome") || id.getPath().equals("reactor_antenna_mast")) {
 				continue;
 			}
 			// The Teleporter Capsule's glass cells (MOD-112) are the same story: placed by the station out
@@ -343,8 +345,9 @@ public final class AlaCommonScenarios {
 			}
 			// The Incubator Dome (MOD-118) has no block item on purpose — it is placed by the multiblock,
 			// not by the player, and returns the original glass when broken. Occlusion is still asserted
-			// for it below by the base rule; only the block-item invariant is waived.
-			if (id.getPath().equals("incubator_dome")) {
+			// for it below by the base rule; only the block-item invariant is waived. The reactor antenna's
+			// boom (MOD-941) is the same: the antenna places it in front of itself.
+			if (id.getPath().equals("incubator_dome") || id.getPath().equals("reactor_antenna_mast")) {
 				continue;
 			}
 			// The Teleporter Capsule's glass cells (MOD-112): no block item on purpose — the station builds

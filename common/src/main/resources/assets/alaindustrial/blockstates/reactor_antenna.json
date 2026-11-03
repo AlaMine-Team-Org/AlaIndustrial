@@ -1,0 +1,96 @@
+{
+  "variants": {
+    "edge=false,facing=north,formed=false": {
+      "model": "alaindustrial:block/reactor_antenna"
+    },
+    "edge=true,facing=north,formed=false": {
+      "model": "alaindustrial:block/reactor_antenna"
+    },
+    "edge=false,facing=north,formed=true": {
+      "model": "alaindustrial:block/reactor_antenna_formed"
+    },
+    "edge=true,facing=north,formed=true": {
+      "model": "alaindustrial:block/reactor_antenna_edge"
+    },
+    "edge=false,facing=east,formed=false": {
+      "model": "alaindustrial:block/reactor_antenna",
+      "y": 90
+    },
+    "edge=true,facing=east,formed=false": {
+      "model": "alaindustrial:block/reactor_antenna",
+      "y": 90
+    },
+    "edge=false,facing=east,formed=true": {
+      "model": "alaindustrial:block/reactor_antenna_formed",
+      "y": 90
+    },
+    "edge=true,facing=east,formed=true": {
+      "model": "alaindustrial:block/reactor_antenna_edge",
+      "y": 90
+    },
+    "edge=false,facing=south,formed=false": {
+      "model": "alaindustrial:block/reactor_antenna",
+      "y": 180
+    },
+    "edge=true,facing=south,formed=false": {
+      "model": "alaindustrial:block/reactor_antenna",
+      "y": 180
+    },
+    "edge=false,facing=south,formed=true": {
+      "model": "alaindustrial:block/reactor_antenna_formed",
+      "y": 180
+    },
+    "edge=true,facing=south,formed=true": {
+      "model": "alaindustrial:block/reactor_antenna_edge",
+      "y": 180
+    },
+    "edge=false,facing=west,formed=false": {
+      "model": "alaindustrial:block/reactor_antenna",
+      "y": 270
+    },
+    "edge=true,facing=west,formed=false": {
+      "model": "alaindustrial:block/reactor_antenna",
+      "y": 270
+    },
+    "edge=false,facing=west,formed=true": {
+      "model": "alaindustrial:block/reactor_antenna_formed",
+      "y": 270
+    },
+    "edge=true,facing=west,formed=true": {
+      "model": "alaindustrial:block/reactor_antenna_edge",
+      "y": 270
+    },
+    "edge=false,facing=up,formed=false": {
+      "model": "alaindustrial:block/reactor_antenna",
+      "x": 270
+    },
+    "edge=true,facing=up,formed=false": {
+      "model": "alaindustrial:block/reactor_antenna",
+      "x": 270
+    },
+    "edge=false,facing=up,formed=true": {
+      "model": "alaindustrial:block/reactor_antenna_formed",
+      "x": 270
+    },
+    "edge=true,facing=up,formed=true": {
+      "model": "alaindustrial:block/reactor_antenna_edge",
+      "x": 270
+    },
+    "edge=false,facing=down,formed=false": {
+      "model": "alaindustrial:block/reactor_antenna",
+      "x": 90
+    },
+    "edge=true,facing=down,formed=false": {
+      "model": "alaindustrial:block/reactor_antenna",
+      "x": 90
+    },
+    "edge=false,facing=down,formed=true": {
+      "model": "alaindustrial:block/reactor_antenna_formed",
+      "x": 90
+    },
+    "edge=true,facing=down,formed=true": {
+      "model": "alaindustrial:block/reactor_antenna_edge",
+      "x": 90
+    }
+  }
+}

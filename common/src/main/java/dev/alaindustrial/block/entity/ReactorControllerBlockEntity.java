@@ -3,6 +3,7 @@ package dev.alaindustrial.block.entity;
 import dev.alaindustrial.advancement.ReactorMilestone;
 import dev.alaindustrial.block.ReactorControllerBlock;
 import dev.alaindustrial.block.entity.machine.SyncChannels;
+import dev.alaindustrial.block.entity.reactor.ReactorAntennas;
 import dev.alaindustrial.block.entity.reactor.ReactorBlastTimer;
 import dev.alaindustrial.block.entity.reactor.ReactorChannels;
 import dev.alaindustrial.block.entity.reactor.ReactorEventLog;
@@ -158,6 +159,9 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 
 	private boolean steamMilestoneOffered;
 
+	/** MOD-941: the antennas this controller links and powers — see {@link ReactorAntennas}. */
+	private final ReactorAntennas antennas = new ReactorAntennas();
+
 
 	public ReactorControllerBlockEntity(BlockPos pos, BlockState state) {
 		// Stage 2: a real HV producer. The buffer is sized to a few seconds of full output so a grid
@@ -205,6 +209,7 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 	 *   <li>the sale: power into the buffer, fuel burnt, the output row ({@link #sell});</li>
 	 *   <li>{@link #settleHeat}, then {@link #settleInstability};</li>
 	 *   <li>the stacks settled ({@link ReactorStacks#settle}), the steam puffs ({@link ReactorVoice#puffSteam});</li>
+	 *   <li>the antennas served — link and upkeep, topped up from the buffer when short ({@link ReactorAntennas});</li>
 	 *   <li>the outlets fed ({@link #feedOutlets});</li>
 	 *   <li>the voice: its latch, the log's started/stopped line, the drone painted ({@link ReactorVoice});</li>
 	 *   <li>{@link #warnOnOverheat}, {@link #runHazards}, {@link #runCountdown}.</li>
@@ -254,6 +259,7 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 		if (sealed && !room.isBare() && level instanceof ServerLevel serverLevel) {
 			voice.puffSteam(serverLevel, columns);
 		}
+		antennas.serve(level, pos, room, energy);
 		feedOutlets(level);
 		// Empty when bare, and that is the whole point (MOD-469 audit). The drone is painted ONTO the
 		// racks and taken off them only inside the box this controller last sealed — a bare rack switched
@@ -471,6 +477,14 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 	 * <p>One accessor so the countdown, the panel and the tests cannot disagree about which scale is
 	 * live. A controller is either running a room or running bare; it is never both.
 	 */
+	/**
+	 * Whether the reactor reads at or above its warning line, on the scale it is judged on — heat for a room,
+	 * instability for a bare core. A watching tablet works harder while this holds (MOD-941).
+	 */
+	public boolean isRunningHot() {
+		return criticalPercent() >= ReactorConfig.reactorHeatWarnPercent;
+	}
+
 	private int criticalPercent() {
 		return room.isBare()
 				? ReactorCore.heatPercent(instability, ReactorConfig.reactorBareInstabilityCapacity)
@@ -520,6 +534,11 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 	 * round hands every socket an equal share of what is left, and rounds stop as soon as one changes
 	 * nothing — which is also what makes a room whose sockets are all full cost a single pass.
 	 */
+	/** The antennas this controller served on its last tick (MOD-941) — the ones a tablet may hear. */
+	public List<BlockPos> servedAntennas() {
+		return antennas.served();
+	}
+
 	private void feedOutlets(Level level) {
 		List<BlockPos> outlets = room.outlets();
 		if (outlets.isEmpty() || energy.getAmount() <= 0) {

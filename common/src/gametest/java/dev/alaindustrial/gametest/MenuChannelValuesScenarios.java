@@ -84,6 +84,9 @@ public final class MenuChannelValuesScenarios {
 	private MenuChannelValuesScenarios() {}
 
 	/** Reused single cell inside the test region; each machine is placed here, read, then cleared. */
+	/** The one machine menu opened by an item (MOD-941): it has no block of its own to place and read. */
+	private static final String TABLET_VIEW = "reactor_tablet";
+
 	private static final BlockPos PROBE = new BlockPos(1, 2, 1);
 
 	/** Channels per reference line, so a wide machine (the reactor console) stays readable. */
@@ -111,6 +114,11 @@ public final class MenuChannelValuesScenarios {
 		int[] count = new int[2]; // swept, server menus checked
 		for (ContentManifest.MenuDef<?> def : ContentManifest.MENUS) {
 			if (!(def.factory().create(1, player.getInventory()) instanceof MachineMenu stub)) {
+				continue;
+			}
+			// MOD-941: the tablet's view of the controller panel opens from an item, not a block, and carries the
+			// controller's channels plus its link state; ReactorTabletScenarios checks that width instead.
+			if (TABLET_VIEW.equals(def.id())) {
 				continue;
 			}
 			Block block = BuiltInRegistries.BLOCK.getValue(Industrialization.id(def.id()));

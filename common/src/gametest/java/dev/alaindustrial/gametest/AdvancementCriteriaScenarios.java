@@ -11,6 +11,8 @@ import dev.alaindustrial.advancement.MutationCompletedTrigger;
 import dev.alaindustrial.advancement.NetworkEnergizedTrigger;
 import dev.alaindustrial.advancement.ReactorMilestone;
 import dev.alaindustrial.advancement.ReactorMilestoneTrigger;
+import dev.alaindustrial.core.radiation.RadiationConfig;
+import dev.alaindustrial.core.radiation.RadiationDose;
 import dev.alaindustrial.mutation.MutationGrade;
 import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModCriteria;
@@ -20,6 +22,8 @@ import java.util.Optional;
 import java.util.function.Function;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
@@ -49,7 +53,9 @@ public final class AdvancementCriteriaScenarios {
 				RosterEntry.of(AdvancementCriteriaScenarios::reactorMilestoneAwardsEachStep,
 								"criteria_reactor_milestone_awards").ticks(20, 40),
 				RosterEntry.of(AdvancementCriteriaScenarios::triggerInstanceCodecsRoundTrip,
-								"criteria_trigger_instance_codecs_round_trip").ticks(20, 40));
+								"criteria_trigger_instance_codecs_round_trip").ticks(20, 40),
+				RosterEntry.of(AdvancementCriteriaScenarios::firstDoseAwardsFirstIrradiated,
+								"criteria_first_dose_awards_first_irradiated").ticks(20, 40));
 
 		private Roster() {}
 	}
@@ -127,6 +133,24 @@ public final class AdvancementCriteriaScenarios {
 				expect(helper, player, MILESTONE_ADVANCEMENTS.get(later)[1], false, "after only " + row[0]);
 			}
 		}
+		helper.succeed();
+	}
+
+	/**
+	 * The first dose of radiation awards {@code first_irradiated}, the hint toast that names the Geiger counter
+	 * (MOD-930). The criterion is vanilla {@code effects_changed}, which {@link RadiationDose#apply} fires through
+	 * {@code addEffect}, so the mock player needs no ticking. A level-0 dose is used — one raw uranium ore's worth,
+	 * the moment the hint is meant for. The negative half: another effect alone does not award it.
+	 *
+	 * @implements MOD-930 — the first irradiation awards the hint advancement; no dose, no hint.
+	 */
+	public static void firstDoseAwardsFirstIrradiated(GameTestHelper helper) {
+		ServerPlayer player = AlaGameTestHelper.survivalPlayer(helper);
+		expect(helper, player, "first_irradiated", false, "by a fresh player");
+		player.addEffect(new MobEffectInstance(MobEffects.SPEED, 1200));
+		expect(helper, player, "first_irradiated", false, "after an effect that is not radiation");
+		RadiationDose.apply(player, 24, RadiationConfig.radiationDoseCapacity, false);
+		expect(helper, player, "first_irradiated", true, "after the first dose");
 		helper.succeed();
 	}
 

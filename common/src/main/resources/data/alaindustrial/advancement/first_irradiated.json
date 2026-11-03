@@ -1,0 +1,18 @@
+{
+  "parent": "alaindustrial:ore_hunter",
+  "display": {
+    "icon": { "id": "alaindustrial:geiger_counter" },
+    "title": { "translate": "advancements.alaindustrial.first_irradiated.title" },
+    "description": { "translate": "advancements.alaindustrial.first_irradiated.description" },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false
+  },
+  "criteria": {
+    "irradiated": {
+      "trigger": "minecraft:effects_changed",
+      "conditions": { "effects": { "alaindustrial:radiation": {} } }
+    }
+  },
+  "requirements": [["irradiated"]]
+}

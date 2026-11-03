@@ -1,0 +1,58 @@
+{
+  "textures": {
+    "copper": "alaindustrial:block/reactor_antenna_copper",
+    "particle": "alaindustrial:block/reactor_antenna_copper"
+  },
+  "elements": [
+    {
+      "from": [
+        4.75,
+        4.75,
+        0
+      ],
+      "to": [
+        11.25,
+        11.25,
+        4.5
+      ],
+      "faces": {
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#copper"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#copper"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#copper"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#copper"
+        }
+      }
+    }
+  ]
+}

@@ -27,6 +27,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.material.Fluid;
 
+// size-justified: one shared list of every data component both loaders replay (MOD-555) — each entry is an id,
+// its unbound supplier and its builder, side by side so a component is declared in one place.
 /**
  * Custom data components (MOD-022 facade). {@link #STORED_ENERGY} lets an energy-storage block carry
  * its buffered EU on its dropped item (R-BRK-07), so a charged BatteryBox keeps its charge through
@@ -61,6 +63,9 @@ public final class ModDataComponents {
 	public static final Identifier TELEPORTER_RTP_MODULE_ID = Industrialization.id("teleporter_rtp_module");
 	public static final Identifier TELEPORTER_OWNER_ID = Industrialization.id("teleporter_owner");
 	public static final Identifier TELEPORTER_POINTS_ID = Industrialization.id("teleporter_points");
+	/** MOD-941 — the reactor a tablet is bound to: dimension and controller position. */
+	public static final Identifier REACTOR_TABLET_LINK_ID = Industrialization.id("reactor_tablet_link");
+	public static final Identifier REACTOR_TABLET_ALARM_ID = Industrialization.id("reactor_tablet_alarm");
 	public static final Identifier TELEPORTER_LOG_ID = Industrialization.id("teleporter_log");
 	public static final Identifier FLUID_TANK_CONTENTS_ID = Industrialization.id("fluid_tank_contents");
 	public static final Identifier DISTILLATION_COLUMN_CONTENTS_ID = Industrialization.id("distillation_column_contents");
@@ -232,6 +237,9 @@ public final class ModDataComponents {
 	 * swap outright rather than migrate: the remote has never been craftable or in the creative tab,
 	 * so no player can be holding the old component.
 	 */
+	public static Supplier<DataComponentType<net.minecraft.core.GlobalPos>> REACTOR_TABLET_LINK = () -> {
+		throw new IllegalStateException("ModDataComponents.REACTOR_TABLET_LINK read before its loader bound it");
+	};
 	public static Supplier<DataComponentType<TeleportPoints>> TELEPORTER_POINTS = () -> {
 		throw new IllegalStateException("ModDataComponents.TELEPORTER_POINTS read before its loader bound it");
 	};
@@ -530,6 +538,27 @@ public final class ModDataComponents {
 	}
 
 	/**
+	 * A reactor tablet whose reactor is sounding its red alarm (MOD-941): the item model swaps its amber lamps for
+	 * slowly pulsing red ones, so the player sees the accident in the hotbar and in hand with the screen closed.
+	 *
+	 * <p><b>Absent, not false, when calm</b>, so a calm tablet stays component-identical to a fresh one. Written
+	 * only by {@link dev.alaindustrial.item.misc.ReactorTabletItem#refreshAlarm}, once a second and only when the
+	 * state flips; {@code ignoreSwapAnimation()} keeps the flip from replaying the re-equip animation in hand.
+	 */
+	public static Supplier<DataComponentType<Unit>> REACTOR_TABLET_ALARM = () -> {
+		throw new IllegalStateException("ModDataComponents.REACTOR_TABLET_ALARM read before its loader bound it");
+	};
+
+	/** Build the {@code reactor_tablet_alarm} type both loaders register (MOD-941). */
+	public static DataComponentType<Unit> createReactorTabletAlarm() {
+		return DataComponentType.<Unit>builder()
+				.persistent(Unit.CODEC)
+				.networkSynchronized(Unit.STREAM_CODEC)
+				.ignoreSwapAnimation()
+				.build();
+	}
+
+	/**
 	 * Present on an Electric Bow that holds at least one powered shot (MOD-363) — the client-side mirror
 	 * of the server's charge check. The item model picks its lit textures and its draw-frame speed from
 	 * it, and the client FOV / hand-pose hooks read the draw time from it, so the animation, the zoom and
@@ -586,6 +615,14 @@ public final class ModDataComponents {
 		return DataComponentType.<TeleportPoints>builder()
 				.persistent(TeleportPoints.CODEC)
 				.networkSynchronized(TeleportPoints.STREAM_CODEC)
+				.build();
+	}
+
+	/** Build the {@code reactor_tablet_link} type both loaders register (MOD-941): vanilla's own GlobalPos codecs. */
+	public static DataComponentType<net.minecraft.core.GlobalPos> createReactorTabletLink() {
+		return DataComponentType.<net.minecraft.core.GlobalPos>builder()
+				.persistent(net.minecraft.core.GlobalPos.CODEC)
+				.networkSynchronized(net.minecraft.core.GlobalPos.STREAM_CODEC)
 				.build();
 	}
 
@@ -785,5 +822,9 @@ public final class ModDataComponents {
 			new ComponentDef<>(SETTLEMENT_ID_ID, ModDataComponents::createSettlementId, c -> SETTLEMENT_ID = c),
 			new ComponentDef<>(PLAN_SHEET_ID, ModDataComponents::createPlanSheet, c -> PLAN_SHEET = c),
 			new ComponentDef<>(RESTORATION_PLAN_ID, ModDataComponents::createRestorationPlan,
-					c -> RESTORATION_PLAN = c));
+					c -> RESTORATION_PLAN = c),
+			new ComponentDef<>(REACTOR_TABLET_LINK_ID, ModDataComponents::createReactorTabletLink,
+					c -> REACTOR_TABLET_LINK = c),
+			new ComponentDef<>(REACTOR_TABLET_ALARM_ID, ModDataComponents::createReactorTabletAlarm,
+					c -> REACTOR_TABLET_ALARM = c));
 }

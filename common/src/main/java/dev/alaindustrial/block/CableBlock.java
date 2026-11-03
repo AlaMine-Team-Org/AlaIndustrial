@@ -57,6 +57,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import dev.alaindustrial.core.tooltip.HasMachineTooltip;
 import dev.alaindustrial.core.tooltip.MachineTooltipSpec;
 
+// size-justified: one block for every cable grade — its shape table, the arm rule toward every kind of neighbour
+// (machines, multiblock cells, the reactor shell's outlet and antenna), the breaker and the insulation states.
 /**
  * LV copper cable. Connects (visually + for routing) to adjacent cables and machines via the six
  * {@code north/south/east/west/up/down} connection properties (reused from {@link PipeBlock}),
@@ -689,7 +691,9 @@ public class CableBlock extends AbstractMachineBlock implements HasMachineToolti
 		// painting and to count as casing in the room scan — yet it publishes an energy port on every
 		// face and is the reactor's only power tap. Without this clause the cable drew no arm and the
 		// player read a working connection as a broken one.
-		return block instanceof ReactorOutletBlock;
+		// The reactor antenna (MOD-941) is the other: a shell block with an energy port on every face. Its boom joins
+		// a cable through the redirect clause above.
+		return block instanceof ReactorOutletBlock || block instanceof ReactorAntennaBlock;
 	}
 
 	/**
