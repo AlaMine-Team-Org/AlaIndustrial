@@ -1049,6 +1049,36 @@
           ]
         },
         {
+          "id": "reactor_alarm_lamp",
+          "title": "Lampa alarmowa",
+          "icon": "alaindustrial:reactor_alarm_lamp",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Lampa alarmowa",
+              "text": "Czerwona latarnia w żelaznej klatce, która świeci i miga od sygnału redstone, a przyłożona do reaktora — sama przy jego alarmie; stawia się na dowolnej ścianie."
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:red_stained_glass_pane",
+                "minecraft:iron_ingot",
+                "minecraft:red_stained_glass_pane",
+                "minecraft:redstone_lamp",
+                "minecraft:red_stained_glass_pane",
+                "minecraft:iron_ingot",
+                "minecraft:redstone",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:reactor_alarm_lamp",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "irradiated_soil",
           "title": "Napromieniowana ziemia",
           "icon": "alaindustrial:irradiated_soil",
@@ -1154,6 +1184,43 @@
               ],
               "result_id": "alaindustrial:steam_nozzle",
               "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_antenna",
+          "title": "Antena reaktora",
+          "icon": "alaindustrial:reactor_antenna",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Antena reaktora",
+              "text": "Blok powłoki pomieszczenia reaktora, który daje tabletowi łączność z reaktorem: zastępuje jedno pole obudowy, ma mały bufor EU i podczas pracy stale zużywa energię."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Bufor: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:copper_cable",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:reactor_casing",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:copper_cable",
+                "alaindustrial:shielding_alloy_plate"
+              ],
+              "result_id": "alaindustrial:reactor_antenna",
+              "result_count": 1
             }
           ]
         },
@@ -6619,6 +6686,43 @@
           ]
         },
         {
+          "id": "reactor_tablet",
+          "title": "Tablet reaktora",
+          "icon": "alaindustrial:reactor_tablet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tablet reaktora",
+              "text": "Ładowalny tablet powiązany z reaktorem przez jego antenę: pokazuje z daleka ekran sterownika, tylko do podglądu, dopóki reaktor jest w zasięgu łączności."
+            },
+            {
+              "type": "stats",
+              "title": "Statystyki",
+              "lines": [
+                "Bufor: 20000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "alaindustrial:tin_plate",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_plate",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:reactor_circuit",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:tin_plate",
+                "alaindustrial:battery",
+                "alaindustrial:tin_plate"
+              ],
+              "result_id": "alaindustrial:reactor_tablet",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "teleporter_remote",
           "title": "Pilot teleportu",
           "icon": "alaindustrial:teleporter_remote",
@@ -6704,6 +6808,36 @@
                 "alaindustrial:tin_ingot"
               ],
               "result_id": "alaindustrial:geiger_counter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "iron_to_silver_chest_upgrade",
+          "title": "Ulepszenie skrzyni: żelazo → srebro",
+          "icon": "alaindustrial:iron_to_silver_chest_upgrade",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Ulepszenie skrzyni: żelazo → srebro",
+              "text": "Przedmiot, który za pomocą Shift + PPM podnosi postawioną skrzynię o poziom wyżej na miejscu: każdy przedmiot zostaje w swoim slocie, nazwa i kierunek się nie zmieniają. Jeden przedmiot na każdy stopień, od zwykłej miedzianej skrzyni aż po diamentową."
+            },
+            {
+              "type": "recipe",
+              "title": "Przepis",
+              "recipe_type": "Wytwarzanie wg wzoru",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "minecraft:stick",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:iron_to_silver_chest_upgrade",
               "result_count": 1
             }
           ]

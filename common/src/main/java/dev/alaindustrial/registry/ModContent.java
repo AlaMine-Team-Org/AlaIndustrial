@@ -250,6 +250,7 @@ public final class ModContent {
 	public static Supplier<Block> REACTOR_DOOR = unbound("REACTOR_DOOR");
 	public static Supplier<Block> REACTOR_CONTROLLER = unbound("REACTOR_CONTROLLER");
 	public static Supplier<Block> REACTOR_LAMP = unbound("REACTOR_LAMP");
+	public static Supplier<Block> REACTOR_ALARM_LAMP = unbound("REACTOR_ALARM_LAMP");
 	public static Supplier<Block> STEAM_NOZZLE = unbound("STEAM_NOZZLE");
 	public static Supplier<Block> REACTOR_OUTLET = unbound("REACTOR_OUTLET");
 	/** MOD-941 — the shell block a reactor tablet listens to. */
@@ -490,6 +491,12 @@ public final class ModContent {
 	// Capacity Card (MOD-480): fitted into a Monitor Core's rack, it raises how many different item
 	// types the monitoring wall may watch at once. It stores nothing.
 	public static Supplier<Item> CAPACITY_CARD = unbound("CAPACITY_CARD");
+	// Chest upgrades (MOD-944): one per rung of ChestUpgrade, Shift+right-click raises a placed chest in place.
+	public static Supplier<Item> COPPER_TO_IRON_CHEST_UPGRADE = unbound("COPPER_TO_IRON_CHEST_UPGRADE");
+	public static Supplier<Item> IRON_TO_SILVER_CHEST_UPGRADE = unbound("IRON_TO_SILVER_CHEST_UPGRADE");
+	public static Supplier<Item> SILVER_TO_GOLD_CHEST_UPGRADE = unbound("SILVER_TO_GOLD_CHEST_UPGRADE");
+	public static Supplier<Item> GOLD_TO_ELECTRUM_CHEST_UPGRADE = unbound("GOLD_TO_ELECTRUM_CHEST_UPGRADE");
+	public static Supplier<Item> ELECTRUM_TO_DIAMOND_CHEST_UPGRADE = unbound("ELECTRUM_TO_DIAMOND_CHEST_UPGRADE");
 	// Choke (MOD-589): the line-smoothing part, in three tiers. Same silhouette family as the
 	// coils above - a laminated core with windings - so it reads as their neighbour on the bench.
 	public static Supplier<Item> CHOKE = unbound("CHOKE");
@@ -1014,6 +1021,7 @@ public final class ModContent {
 	public static Supplier<BlockItem> REACTOR_DOOR_ITEM = unbound("REACTOR_DOOR_ITEM");
 	public static Supplier<BlockItem> REACTOR_CONTROLLER_ITEM = unbound("REACTOR_CONTROLLER_ITEM");
 	public static Supplier<BlockItem> REACTOR_LAMP_ITEM = unbound("REACTOR_LAMP_ITEM");
+	public static Supplier<BlockItem> REACTOR_ALARM_LAMP_ITEM = unbound("REACTOR_ALARM_LAMP_ITEM");
 	public static Supplier<BlockItem> STEAM_NOZZLE_ITEM = unbound("STEAM_NOZZLE_ITEM");
 	public static Supplier<BlockItem> REACTOR_OUTLET_ITEM = unbound("REACTOR_OUTLET_ITEM");
 	public static Supplier<BlockItem> REACTOR_ANTENNA_ITEM = unbound("REACTOR_ANTENNA_ITEM");

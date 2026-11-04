@@ -1049,6 +1049,36 @@
           ]
         },
         {
+          "id": "reactor_alarm_lamp",
+          "title": "Lampada d'allarme",
+          "icon": "alaindustrial:reactor_alarm_lamp",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Lampada d'allarme",
+              "text": "Un faro rosso in una gabbia di ferro che si accende e lampeggia con un segnale redstone e, appoggiato a un reattore, da solo al suo allarme; si piazza su qualsiasi faccia."
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione sagomata",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:red_stained_glass_pane",
+                "minecraft:iron_ingot",
+                "minecraft:red_stained_glass_pane",
+                "minecraft:redstone_lamp",
+                "minecraft:red_stained_glass_pane",
+                "minecraft:iron_ingot",
+                "minecraft:redstone",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:reactor_alarm_lamp",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "irradiated_soil",
           "title": "Terra irradiata",
           "icon": "alaindustrial:irradiated_soil",
@@ -1154,6 +1184,43 @@
               ],
               "result_id": "alaindustrial:steam_nozzle",
               "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_antenna",
+          "title": "Antenna del reattore",
+          "icon": "alaindustrial:reactor_antenna",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Antenna del reattore",
+              "text": "Un blocco del guscio della stanza del reattore che dà al tablet un collegamento con il reattore: sostituisce una cella del rivestimento, ha un piccolo buffer di EU e consuma energia di continuo mentre funziona."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiche",
+              "lines": [
+                "Buffer: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione sagomata",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:copper_cable",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:reactor_casing",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:copper_cable",
+                "alaindustrial:shielding_alloy_plate"
+              ],
+              "result_id": "alaindustrial:reactor_antenna",
+              "result_count": 1
             }
           ]
         },
@@ -6619,6 +6686,43 @@
           ]
         },
         {
+          "id": "reactor_tablet",
+          "title": "Tablet del reattore",
+          "icon": "alaindustrial:reactor_tablet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Tablet del reattore",
+              "text": "Un tablet ricaricabile legato a un reattore tramite la sua antenna: mostra a distanza lo schermo del controller, in sola lettura, finché il reattore è nel raggio del collegamento."
+            },
+            {
+              "type": "stats",
+              "title": "Statistiche",
+              "lines": [
+                "Buffer: 20000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione sagomata",
+              "grid": [
+                "alaindustrial:tin_plate",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_plate",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:reactor_circuit",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:tin_plate",
+                "alaindustrial:battery",
+                "alaindustrial:tin_plate"
+              ],
+              "result_id": "alaindustrial:reactor_tablet",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "teleporter_remote",
           "title": "Telecomando di teletrasporto",
           "icon": "alaindustrial:teleporter_remote",
@@ -6704,6 +6808,36 @@
                 "alaindustrial:tin_ingot"
               ],
               "result_id": "alaindustrial:geiger_counter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "iron_to_silver_chest_upgrade",
+          "title": "Potenziamento baule: ferro → argento",
+          "icon": "alaindustrial:iron_to_silver_chest_upgrade",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Potenziamento baule: ferro → argento",
+              "text": "Un oggetto che porta un baule piazzato al livello successivo sul posto con Shift + clic destro: ogni oggetto resta nel suo slot, nome e orientamento restano invariati. Un oggetto per gradino, dal baule di rame normale fino a quello di diamante."
+            },
+            {
+              "type": "recipe",
+              "title": "Ricetta",
+              "recipe_type": "Fabbricazione sagomata",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "minecraft:stick",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:iron_to_silver_chest_upgrade",
               "result_count": 1
             }
           ]

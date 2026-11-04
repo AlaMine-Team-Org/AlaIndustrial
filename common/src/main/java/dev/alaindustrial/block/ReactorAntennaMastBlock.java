@@ -1,9 +1,11 @@
 package dev.alaindustrial.block;
 
+import dev.alaindustrial.block.entity.ReactorAntennaBlockEntity;
 import dev.alaindustrial.core.energy.EnergyHostRedirect;
 import java.util.Map;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
@@ -41,11 +43,25 @@ import org.jspecify.annotations.Nullable;
  * into the port painted in the antenna's face, and the boom lends it the antenna's energy port
  * ({@link EnergyHostRedirect}). The sleeve is drawn from the six connection flags, which follow the cable's own arm
  * toward the boom, so the two always agree.
+ *
+ * <p><b>It gives out the reactor's alarm as redstone (MOD-945)</b> — 0, 7 or 15, held in {@link #ALARM} and written by
+ * the controller only when the level changes. A weak signal, like a daylight detector's: dust, a repeater or a lamp
+ * beside the boom takes it, the solid block beside it is not powered. Only the boom gives it, never the antenna cube:
+ * the controller runs while redstone reaches it, a cube may touch the controller, and an alarm that reached it would
+ * start the reactor by itself. The boom never touches the controller. A boom showing an alarm checks every
+ * {@link #ALARM_CHECK_TICKS} ticks that its antenna still transmits and goes dark when it does not — the controller is
+ * gone, unloaded, or no longer serves it — since no block-removal hook may tell it (they deadlock on 26.2).
  */
 public class ReactorAntennaMastBlock extends Block implements EnergyHostRedirect {
 
 	/** The antenna's facing: the boom points this way, and the antenna is one cell the opposite way. */
 	public static final EnumProperty<Direction> FACING = BlockStateProperties.FACING;
+
+	/** The alarm the boom shows, and so its redstone level (MOD-945). */
+	public static final EnumProperty<ReactorAlarmLevel> ALARM = EnumProperty.create("alarm", ReactorAlarmLevel.class);
+
+	/** How often a boom showing an alarm checks that its antenna still transmits: about one second. */
+	public static final int ALARM_CHECK_TICKS = 20;
 
 	/** Whether a cable joins the boom's cell through each face (world directions). */
 	private static final Map<Direction, BooleanProperty> CABLE = PipeBlock.PROPERTY_BY_DIRECTION;
@@ -55,7 +71,8 @@ public class ReactorAntennaMastBlock extends Block implements EnergyHostRedirect
 
 	public ReactorAntennaMastBlock(Properties properties) {
 		super(properties);
-		BlockState initial = defaultBlockState().setValue(FACING, Direction.NORTH);
+		BlockState initial = defaultBlockState().setValue(FACING, Direction.NORTH)
+				.setValue(ALARM, ReactorAlarmLevel.NONE);
 		for (BooleanProperty joined : CABLE.values()) {
 			initial = initial.setValue(joined, false);
 		}
@@ -119,7 +136,7 @@ public class ReactorAntennaMastBlock extends Block implements EnergyHostRedirect
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-		builder.add(FACING);
+		builder.add(FACING, ALARM);
 		CABLE.values().forEach(builder::add);
 	}
 
@@ -150,6 +167,55 @@ public class ReactorAntennaMastBlock extends Block implements EnergyHostRedirect
 			}
 		}
 		return super.playerWillDestroy(level, pos, state, player);
+	}
+
+	/**
+	 * Shows the alarm {@code signal} on the boom of the antenna at {@code antennaPos} (MOD-945). The world is written
+	 * only when the level changes, so a steady alarm costs no neighbour updates; a lit boom keeps its self-check
+	 * scheduled.
+	 */
+	public static void showAlarm(Level level, BlockState antenna, BlockPos antennaPos, int signal) {
+		BlockPos pos = antennaPos.relative(antenna.getValue(ReactorAntennaBlock.FACING));
+		if (!level.isLoaded(pos)) {
+			return;
+		}
+		BlockState state = level.getBlockState(pos);
+		if (!(state.getBlock() instanceof ReactorAntennaMastBlock)) {
+			return;
+		}
+		ReactorAlarmLevel shown = ReactorAlarmLevel.of(signal);
+		if (state.getValue(ALARM) != shown) {
+			level.setBlock(pos, state.setValue(ALARM, shown), Block.UPDATE_ALL);
+		}
+		if (shown != ReactorAlarmLevel.NONE) {
+			// A pending check of the same block at the same cell is not scheduled twice.
+			level.scheduleTick(pos, state.getBlock(), ALARM_CHECK_TICKS);
+		}
+	}
+
+	/** The self-check: a lit boom whose antenna no longer transmits goes dark; one that still does checks again. */
+	@Override
+	protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+		if (state.getValue(ALARM) == ReactorAlarmLevel.NONE) {
+			return;
+		}
+		if (level.getBlockEntity(antennaOf(pos, state)) instanceof ReactorAntennaBlockEntity antenna
+				&& antenna.isTransmitting(level.getGameTime())) {
+			level.scheduleTick(pos, this, ALARM_CHECK_TICKS);
+			return;
+		}
+		level.setBlock(pos, state.setValue(ALARM, ReactorAlarmLevel.NONE), Block.UPDATE_ALL);
+	}
+
+	@Override
+	protected boolean isSignalSource(BlockState state) {
+		return true;
+	}
+
+	/** Weak only, read from its own state: no strong signal, so the solid block beside the boom is not powered. */
+	@Override
+	protected int ownSignal(BlockState state, BlockGetter level, BlockPos pos) {
+		return state.getValue(ALARM).signal();
 	}
 
 	/** The antenna's port, through any face a cable may join ({@link ReactorAntennaGeometry#isCableFace}). */

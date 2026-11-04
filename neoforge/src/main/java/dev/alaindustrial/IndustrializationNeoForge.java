@@ -156,8 +156,7 @@ public final class IndustrializationNeoForge {
 		dev.alaindustrial.registry.neoforge.ModRecipesNeoForge.TYPES.register(modBus);
 		dev.alaindustrial.registry.neoforge.ModRecipesNeoForge.SERIALIZERS.register(modBus);
 		dev.alaindustrial.registry.neoforge.ModCriteriaNeoForge.TRIGGERS.register(modBus);
-		// MOD-119: the alaindustrial:bonus_chest_enabled loot condition gates the bonus-chest
-		// Global Loot Modifier (data/alaindustrial/loot_modifiers/bonus_chest_inject.json) on the config flag.
+		// MOD-119, MOD-942: the shared loot conditions (ModLootConditions.CONDITIONS) the mod's loot data names.
 		dev.alaindustrial.registry.neoforge.ModLootConditionsNeoForge.LOOT_CONDITION_TYPES.register(modBus);
 		// MOD-062: Industrialist POI + profession (frozen registries → DeferredRegister only).
 		dev.alaindustrial.registry.neoforge.ModProfessionsNeoForge.POI_TYPES.register(modBus);
@@ -217,6 +216,7 @@ public final class IndustrializationNeoForge {
 		dev.alaindustrial.registry.neoforge.ModSoundsNeoForge.init();
 		dev.alaindustrial.registry.neoforge.ModEffectsNeoForge.init(); // MOD-470 radiation effect
 		dev.alaindustrial.registry.neoforge.ModParticlesNeoForge.init(); // MOD-085 — replay guard only
+		dev.alaindustrial.registry.neoforge.ModLootConditionsNeoForge.init(); // MOD-942 — replay guard only
 		dev.alaindustrial.registry.neoforge.ModDataComponentsNeoForge.init();
 		dev.alaindustrial.registry.neoforge.ModAttachmentsNeoForge.init(); // MOD-133 player-stats store seam
 		dev.alaindustrial.registry.neoforge.ModRecipesNeoForge.init();

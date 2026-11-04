@@ -47,6 +47,9 @@ public final class ReactorRoom {
 	/** The antennas in this room's shell (MOD-941), found on the same walk as the outlets. */
 	private final List<BlockPos> antennas = new ArrayList<>();
 
+	/** The alarm lamps pressed to this reactor (MOD-945): to the sealed room's shell, or to a bare core's parts. */
+	private final List<BlockPos> lamps = new ArrayList<>();
+
 	// ── MOD-469: the bare reactor ──
 	/**
 	 * Racks a controller with no sealed room drives, refreshed by the same sweep as {@link #assemblies}
@@ -132,6 +135,7 @@ public final class ReactorRoom {
 		assemblies.clear();
 		outlets.clear();
 		antennas.clear();
+		lamps.clear();
 		rods = 0;
 	}
 
@@ -149,6 +153,7 @@ public final class ReactorRoom {
 	public void rescanBare(Level level, BlockPos pos) {
 		bareRacks.clear();
 		bareShown.clear();
+		lamps.clear();
 		if (!(level instanceof ServerLevel serverLevel)) {
 			bare = false;
 			return;
@@ -159,6 +164,11 @@ public final class ReactorRoom {
 		bareShown.addAll(found.shown());
 		rods = found.rods();
 		bare = !found.isEmpty();
+		if (bare) {
+			List<BlockPos> parts = new ArrayList<>(bareRacks);
+			parts.add(pos);
+			ReactorLamps.collectAround(level, parts, lamps);
+		}
 	}
 
 	/**
@@ -223,6 +233,8 @@ public final class ReactorRoom {
 				}
 			}
 		}
+		lamps.clear();
+		ReactorLamps.collectRoom(level, box, lamps);
 		// Adjacency is NOT counted here any more (MOD-476). It used to be cached by this periodic scan
 		// while the rods were counted every tick, so for up to reactorScanIntervalTicks after a column was
 		// pulled the survivors went on being paid a neighbour bonus for a rack that was no longer there.
@@ -290,6 +302,11 @@ public final class ReactorRoom {
 	/** The antennas in the sealed room's shell; empty when the room is not sealed (MOD-941). */
 	public List<BlockPos> antennas() {
 		return antennas;
+	}
+
+	/** The alarm lamps this reactor lights by its alarm; empty unless sealed or bare (MOD-945). */
+	public List<BlockPos> lamps() {
+		return isSealed() || bare ? lamps : List.of();
 	}
 
 	public List<BlockPos> bareRacks() {

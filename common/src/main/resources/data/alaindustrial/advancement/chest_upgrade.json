@@ -1,0 +1,40 @@
+{
+  "parent": "alaindustrial:iron_chest",
+  "display": {
+    "icon": {
+      "id": "alaindustrial:iron_to_silver_chest_upgrade"
+    },
+    "title": {
+      "translate": "advancements.alaindustrial.chest_upgrade.title"
+    },
+    "description": {
+      "translate": "advancements.alaindustrial.chest_upgrade.description"
+    }
+  },
+  "criteria": {
+    "chest_upgrade": {
+      "trigger": "minecraft:item_used_on_block",
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "alaindustrial:copper_to_iron_chest_upgrade",
+                "alaindustrial:iron_to_silver_chest_upgrade",
+                "alaindustrial:silver_to_gold_chest_upgrade",
+                "alaindustrial:gold_to_electrum_chest_upgrade",
+                "alaindustrial:electrum_to_diamond_chest_upgrade"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "chest_upgrade"
+    ]
+  ]
+}

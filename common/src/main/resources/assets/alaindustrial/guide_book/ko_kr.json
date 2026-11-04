@@ -1049,6 +1049,36 @@
           ]
         },
         {
+          "id": "reactor_alarm_lamp",
+          "title": "경보등",
+          "icon": "alaindustrial:reactor_alarm_lamp",
+          "pages": [
+            {
+              "type": "text",
+              "title": "경보등",
+              "text": "철창 속 붉은 경광등. 레드스톤 신호로 켜지고 깜박이며, 원자로에 붙이면 그 원자로의 경보에 저절로 켜집니다. 어느 면에나 설치할 수 있습니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:red_stained_glass_pane",
+                "minecraft:iron_ingot",
+                "minecraft:red_stained_glass_pane",
+                "minecraft:redstone_lamp",
+                "minecraft:red_stained_glass_pane",
+                "minecraft:iron_ingot",
+                "minecraft:redstone",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:reactor_alarm_lamp",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "irradiated_soil",
           "title": "방사능 오염 흙",
           "icon": "alaindustrial:irradiated_soil",
@@ -1154,6 +1184,43 @@
               ],
               "result_id": "alaindustrial:steam_nozzle",
               "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_antenna",
+          "title": "원자로 안테나",
+          "icon": "alaindustrial:reactor_antenna",
+          "pages": [
+            {
+              "type": "text",
+              "title": "원자로 안테나",
+              "text": "원자로 방 외벽의 블록으로, 태블릿이 원자로와 연결되게 해 줍니다. 케이싱 한 칸을 대신하고, 작은 EU 버퍼를 가지며, 작동하는 동안 계속 에너지를 소비합니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "버퍼: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:copper_cable",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:reactor_casing",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:copper_cable",
+                "alaindustrial:shielding_alloy_plate"
+              ],
+              "result_id": "alaindustrial:reactor_antenna",
+              "result_count": 1
             }
           ]
         },
@@ -6619,6 +6686,43 @@
           ]
         },
         {
+          "id": "reactor_tablet",
+          "title": "원자로 태블릿",
+          "icon": "alaindustrial:reactor_tablet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "원자로 태블릿",
+              "text": "안테나를 통해 원자로에 묶이는 충전식 태블릿입니다. 원자로가 연결 범위 안에 있는 동안 멀리서 컨트롤러 화면을 보여 주며, 보기만 할 수 있습니다."
+            },
+            {
+              "type": "stats",
+              "title": "정보",
+              "lines": [
+                "버퍼: 20000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:tin_plate",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_plate",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:reactor_circuit",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:tin_plate",
+                "alaindustrial:battery",
+                "alaindustrial:tin_plate"
+              ],
+              "result_id": "alaindustrial:reactor_tablet",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "teleporter_remote",
           "title": "텔레포터 리모컨",
           "icon": "alaindustrial:teleporter_remote",
@@ -6704,6 +6808,36 @@
                 "alaindustrial:tin_ingot"
               ],
               "result_id": "alaindustrial:geiger_counter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "iron_to_silver_chest_upgrade",
+          "title": "상자 업그레이드: 철 → 은",
+          "icon": "alaindustrial:iron_to_silver_chest_upgrade",
+          "pages": [
+            {
+              "type": "text",
+              "title": "상자 업그레이드: 철 → 은",
+              "text": "설치된 상자를 Shift+우클릭으로 그 자리에서 다음 등급으로 올리는 아이템. 모든 아이템은 원래 칸에 남고 이름과 방향도 유지됩니다. 단계마다 아이템이 하나씩 있으며, 일반 구리 상자부터 다이아몬드 상자까지 이어집니다."
+            },
+            {
+              "type": "recipe",
+              "title": "레시피",
+              "recipe_type": "정형 제작",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "minecraft:stick",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:iron_to_silver_chest_upgrade",
               "result_count": 1
             }
           ]

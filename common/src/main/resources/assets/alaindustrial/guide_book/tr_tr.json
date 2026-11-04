@@ -1049,6 +1049,36 @@
           ]
         },
         {
+          "id": "reactor_alarm_lamp",
+          "title": "Alarm Lambası",
+          "icon": "alaindustrial:reactor_alarm_lamp",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Alarm Lambası",
+              "text": "Demir kafes içinde kırmızı bir işaret lambası; redstone sinyaliyle yanıp söner, bir reaktöre dayandığında o reaktörün alarmıyla kendiliğinden yanar; her yüze konabilir."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:red_stained_glass_pane",
+                "minecraft:iron_ingot",
+                "minecraft:red_stained_glass_pane",
+                "minecraft:redstone_lamp",
+                "minecraft:red_stained_glass_pane",
+                "minecraft:iron_ingot",
+                "minecraft:redstone",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:reactor_alarm_lamp",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "irradiated_soil",
           "title": "Işınlanmış Toprak",
           "icon": "alaindustrial:irradiated_soil",
@@ -1154,6 +1184,43 @@
               ],
               "result_id": "alaindustrial:steam_nozzle",
               "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_antenna",
+          "title": "Reaktör Anteni",
+          "icon": "alaindustrial:reactor_antenna",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reaktör Anteni",
+              "text": "Reaktör odasının kabuğuna ait bir blok; tablete reaktörle bağlantı sağlar: bir kasa hücresinin yerine geçer, küçük bir EU tamponu taşır ve çalışırken sürekli enerji harcar."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Tampon: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:copper_cable",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:reactor_casing",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:copper_cable",
+                "alaindustrial:shielding_alloy_plate"
+              ],
+              "result_id": "alaindustrial:reactor_antenna",
+              "result_count": 1
             }
           ]
         },
@@ -6619,6 +6686,43 @@
           ]
         },
         {
+          "id": "reactor_tablet",
+          "title": "Reaktör Tableti",
+          "icon": "alaindustrial:reactor_tablet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Reaktör Tableti",
+              "text": "Anteni aracılığıyla bir reaktöre bağlanan, şarj edilebilir bir tablet: reaktör bağlantı menzilindeyken denetleyici ekranını uzaktan, yalnızca görüntüleme amaçlı gösterir."
+            },
+            {
+              "type": "stats",
+              "title": "İstatistikler",
+              "lines": [
+                "Tampon: 20000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:tin_plate",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_plate",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:reactor_circuit",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:tin_plate",
+                "alaindustrial:battery",
+                "alaindustrial:tin_plate"
+              ],
+              "result_id": "alaindustrial:reactor_tablet",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "teleporter_remote",
           "title": "Işınlayıcı kumandası",
           "icon": "alaindustrial:teleporter_remote",
@@ -6704,6 +6808,36 @@
                 "alaindustrial:tin_ingot"
               ],
               "result_id": "alaindustrial:geiger_counter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "iron_to_silver_chest_upgrade",
+          "title": "Sandık Yükseltmesi: Demir → Gümüş",
+          "icon": "alaindustrial:iron_to_silver_chest_upgrade",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Sandık Yükseltmesi: Demir → Gümüş",
+              "text": "Yerleştirilmiş bir sandığı Shift+sağ tık ile yerinde bir üst seviyeye çıkaran eşya: her eşya kendi yuvasında kalır, ad ve yön korunur. Her basamak için bir eşya, sıradan bakır sandıktan elmas sandığa kadar."
+            },
+            {
+              "type": "recipe",
+              "title": "Tarif",
+              "recipe_type": "Şekilli Üretim",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "minecraft:stick",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:iron_to_silver_chest_upgrade",
               "result_count": 1
             }
           ]

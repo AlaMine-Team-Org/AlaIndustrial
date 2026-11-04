@@ -1049,6 +1049,36 @@
           ]
         },
         {
+          "id": "reactor_alarm_lamp",
+          "title": "Đèn báo động",
+          "icon": "alaindustrial:reactor_alarm_lamp",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Đèn báo động",
+              "text": "Đèn hiệu đỏ trong lồng sắt, sáng và nhấp nháy khi có tín hiệu redstone, và khi gắn vào lò phản ứng thì tự sáng theo báo động của lò; đặt được trên mọi mặt."
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:red_stained_glass_pane",
+                "minecraft:iron_ingot",
+                "minecraft:red_stained_glass_pane",
+                "minecraft:redstone_lamp",
+                "minecraft:red_stained_glass_pane",
+                "minecraft:iron_ingot",
+                "minecraft:redstone",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:reactor_alarm_lamp",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "irradiated_soil",
           "title": "Đất nhiễm xạ",
           "icon": "alaindustrial:irradiated_soil",
@@ -1154,6 +1184,43 @@
               ],
               "result_id": "alaindustrial:steam_nozzle",
               "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_antenna",
+          "title": "Ăng-ten lò phản ứng",
+          "icon": "alaindustrial:reactor_antenna",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Ăng-ten lò phản ứng",
+              "text": "Một khối vỏ của phòng lò phản ứng, giúp máy tính bảng liên kết với lò: nó thay thế một ô vỏ, có bộ đệm EU nhỏ và tiêu thụ năng lượng liên tục khi hoạt động."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Bộ đệm: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:copper_cable",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:reactor_casing",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:copper_cable",
+                "alaindustrial:shielding_alloy_plate"
+              ],
+              "result_id": "alaindustrial:reactor_antenna",
+              "result_count": 1
             }
           ]
         },
@@ -6619,6 +6686,43 @@
           ]
         },
         {
+          "id": "reactor_tablet",
+          "title": "Máy tính bảng lò phản ứng",
+          "icon": "alaindustrial:reactor_tablet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Máy tính bảng lò phản ứng",
+              "text": "Máy tính bảng sạc lại được, gắn với một lò phản ứng qua ăng-ten của nó: hiển thị màn hình bộ điều khiển từ xa, chỉ để xem, miễn là lò còn trong tầm liên kết."
+            },
+            {
+              "type": "stats",
+              "title": "Thông số",
+              "lines": [
+                "Bộ đệm: 20000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:tin_plate",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_plate",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:reactor_circuit",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:tin_plate",
+                "alaindustrial:battery",
+                "alaindustrial:tin_plate"
+              ],
+              "result_id": "alaindustrial:reactor_tablet",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "teleporter_remote",
           "title": "Điều khiển dịch chuyển",
           "icon": "alaindustrial:teleporter_remote",
@@ -6704,6 +6808,36 @@
                 "alaindustrial:tin_ingot"
               ],
               "result_id": "alaindustrial:geiger_counter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "iron_to_silver_chest_upgrade",
+          "title": "Nâng cấp rương: Sắt → Bạc",
+          "icon": "alaindustrial:iron_to_silver_chest_upgrade",
+          "pages": [
+            {
+              "type": "text",
+              "title": "Nâng cấp rương: Sắt → Bạc",
+              "text": "Vật phẩm nâng rương đã đặt lên cấp tiếp theo ngay tại chỗ bằng Shift + chuột phải: mọi đồ vẫn ở nguyên ô, tên và hướng được giữ nguyên. Mỗi bậc một vật phẩm, từ rương đồng thường đến rương kim cương."
+            },
+            {
+              "type": "recipe",
+              "title": "Công thức",
+              "recipe_type": "Chế tạo định hình",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "minecraft:stick",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:iron_to_silver_chest_upgrade",
               "result_count": 1
             }
           ]

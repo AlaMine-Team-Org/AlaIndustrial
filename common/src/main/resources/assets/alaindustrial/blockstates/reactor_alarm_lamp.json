@@ -1,0 +1,108 @@
+{
+  "variants": {
+    "alarm=false,facing=down,lit=false": {
+      "model": "alaindustrial:block/reactor_alarm_lamp",
+      "x": 180
+    },
+    "alarm=false,facing=down,lit=true": {
+      "model": "alaindustrial:block/reactor_alarm_lamp_on",
+      "x": 180
+    },
+    "alarm=false,facing=east,lit=false": {
+      "model": "alaindustrial:block/reactor_alarm_lamp",
+      "x": 90,
+      "y": 90
+    },
+    "alarm=false,facing=east,lit=true": {
+      "model": "alaindustrial:block/reactor_alarm_lamp_on",
+      "x": 90,
+      "y": 90
+    },
+    "alarm=false,facing=north,lit=false": {
+      "model": "alaindustrial:block/reactor_alarm_lamp",
+      "x": 90
+    },
+    "alarm=false,facing=north,lit=true": {
+      "model": "alaindustrial:block/reactor_alarm_lamp_on",
+      "x": 90
+    },
+    "alarm=false,facing=south,lit=false": {
+      "model": "alaindustrial:block/reactor_alarm_lamp",
+      "x": 90,
+      "y": 180
+    },
+    "alarm=false,facing=south,lit=true": {
+      "model": "alaindustrial:block/reactor_alarm_lamp_on",
+      "x": 90,
+      "y": 180
+    },
+    "alarm=false,facing=up,lit=false": {
+      "model": "alaindustrial:block/reactor_alarm_lamp"
+    },
+    "alarm=false,facing=up,lit=true": {
+      "model": "alaindustrial:block/reactor_alarm_lamp_on"
+    },
+    "alarm=false,facing=west,lit=false": {
+      "model": "alaindustrial:block/reactor_alarm_lamp",
+      "x": 90,
+      "y": 270
+    },
+    "alarm=false,facing=west,lit=true": {
+      "model": "alaindustrial:block/reactor_alarm_lamp_on",
+      "x": 90,
+      "y": 270
+    },
+    "alarm=true,facing=down,lit=false": {
+      "model": "alaindustrial:block/reactor_alarm_lamp_on",
+      "x": 180
+    },
+    "alarm=true,facing=down,lit=true": {
+      "model": "alaindustrial:block/reactor_alarm_lamp_on",
+      "x": 180
+    },
+    "alarm=true,facing=east,lit=false": {
+      "model": "alaindustrial:block/reactor_alarm_lamp_on",
+      "x": 90,
+      "y": 90
+    },
+    "alarm=true,facing=east,lit=true": {
+      "model": "alaindustrial:block/reactor_alarm_lamp_on",
+      "x": 90,
+      "y": 90
+    },
+    "alarm=true,facing=north,lit=false": {
+      "model": "alaindustrial:block/reactor_alarm_lamp_on",
+      "x": 90
+    },
+    "alarm=true,facing=north,lit=true": {
+      "model": "alaindustrial:block/reactor_alarm_lamp_on",
+      "x": 90
+    },
+    "alarm=true,facing=south,lit=false": {
+      "model": "alaindustrial:block/reactor_alarm_lamp_on",
+      "x": 90,
+      "y": 180
+    },
+    "alarm=true,facing=south,lit=true": {
+      "model": "alaindustrial:block/reactor_alarm_lamp_on",
+      "x": 90,
+      "y": 180
+    },
+    "alarm=true,facing=up,lit=false": {
+      "model": "alaindustrial:block/reactor_alarm_lamp_on"
+    },
+    "alarm=true,facing=up,lit=true": {
+      "model": "alaindustrial:block/reactor_alarm_lamp_on"
+    },
+    "alarm=true,facing=west,lit=false": {
+      "model": "alaindustrial:block/reactor_alarm_lamp_on",
+      "x": 90,
+      "y": 270
+    },
+    "alarm=true,facing=west,lit=true": {
+      "model": "alaindustrial:block/reactor_alarm_lamp_on",
+      "x": 90,
+      "y": 270
+    }
+  }
+}

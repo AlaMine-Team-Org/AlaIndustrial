@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"pattern": [
+		"MMM",
+		"MSM",
+		"MMM"
+	],
+	"key": {
+		"M": "minecraft:diamond",
+		"S": "#c:rods/wooden"
+	},
+	"result": {
+		"id": "alaindustrial:electrum_to_diamond_chest_upgrade",
+		"count": 1
+	}
+}

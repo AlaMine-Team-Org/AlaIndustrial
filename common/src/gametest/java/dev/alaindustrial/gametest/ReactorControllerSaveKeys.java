@@ -26,6 +26,7 @@ final class ReactorControllerSaveKeys {
 	static final Map<String, List<String>> BY_RIG = Map.of(
 			"bare_pile", List.of(
 					"AlaDataVersion:INT",
+					"AlarmMeltdownLatched:BYTE",
 					"BlastBelowTicks:INT",
 					"BlastCountdown:INT",
 					"BlastCountdownTotal:INT",
@@ -59,6 +60,7 @@ final class ReactorControllerSaveKeys {
 					"StatsItemsProcessed:LONG"),
 			"countdown", List.of(
 					"AlaDataVersion:INT",
+					"AlarmMeltdownLatched:BYTE",
 					"BlastBelowTicks:INT",
 					"BlastCountdown:INT",
 					"BlastCountdownTotal:INT",
@@ -92,6 +94,7 @@ final class ReactorControllerSaveKeys {
 					"StatsItemsProcessed:LONG"),
 			"running_room", List.of(
 					"AlaDataVersion:INT",
+					"AlarmMeltdownLatched:BYTE",
 					"BlastBelowTicks:INT",
 					"BlastCountdown:INT",
 					"BlastCountdownTotal:INT",

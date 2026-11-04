@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "IGI",
+    "GLG",
+    "IRI"
+  ],
+  "key": {
+    "I": "minecraft:iron_ingot",
+    "G": "minecraft:red_stained_glass_pane",
+    "L": "minecraft:redstone_lamp",
+    "R": "minecraft:redstone"
+  },
+  "result": {
+    "id": "alaindustrial:reactor_alarm_lamp",
+    "count": 1
+  }
+}

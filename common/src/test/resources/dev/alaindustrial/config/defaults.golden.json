@@ -1075,6 +1075,8 @@
     "oilSlimeSpawnCapPerChunk": 4,
     "_comment_oilSootChance": "Chance (0..1) that a burnt-out oil fire leaves a soot layer on a solid floor under it (0 = never, 1 = always).",
     "oilSootChance": 0.2,
+    "_comment_structureLootEnabled": "When true, mod items can be found in vanilla abandoned mineshaft, dungeon and village toolsmith chests (vanilla loot kept). Checked when a chest is opened; chests already opened keep their contents. false = purely vanilla loot there.",
+    "structureLootEnabled": true,
     "_comment_welcomeMessageEnabled": "When true, the mod writes a two-line welcome with its Discord link the first time anyone joins a world.",
     "welcomeMessageEnabled": true
   },
@@ -1700,6 +1702,7 @@
     "oilSlimeSoakSeconds": 20,
     "oilSlimeSpawnCapPerChunk": 4,
     "oilSootChance": 0.2,
+    "structureLootEnabled": true,
     "welcomeMessageEnabled": true,
     "capsuleCircuitsPerWorker": 1,
     "capsuleCopperPlatesPerWorker": 4,

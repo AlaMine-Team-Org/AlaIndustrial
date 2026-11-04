@@ -3,6 +3,7 @@ package dev.alaindustrial;
 import dev.alaindustrial.command.AlaCommand;
 import dev.alaindustrial.loot.BonusChest;
 import dev.alaindustrial.loot.DrillTemplateLoot;
+import dev.alaindustrial.loot.StructureLoot;
 import dev.alaindustrial.loot.Trellis;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -76,6 +77,7 @@ public class IndustrializationFabric implements ModInitializer {
 		loadConfig();
 		registerDataComponents();
 		registerParticles();
+		registerLootConditions();
 		registerContent();
 		registerEffects();
 		registerSounds();
@@ -86,6 +88,7 @@ public class IndustrializationFabric implements ModInitializer {
 		registerNetworkPayloads();
 		registerServerLifecycle();
 		registerGameplayHooks();
+		registerStructureLoot();
 		registerCommands();
 
 		Industrialization.LOGGER.info("Industrialization initialized.");
@@ -170,6 +173,21 @@ public class IndustrializationFabric implements ModInitializer {
 			net.minecraft.core.Registry.register(
 					net.minecraft.core.registries.BuiltInRegistries.PARTICLE_TYPE,
 					Industrialization.id(def.id()), def.instance());
+		}
+	}
+
+	/**
+	 * Registers every shared loot-condition type (MOD-942). Must run before the first data load: the mod's
+	 * loot tables name these conditions, and an unknown condition type fails the table. Fabric keeps
+	 * {@code LOOT_CONDITION_TYPE} writable during init, as it does {@code PLACEMENT_MODIFIER_TYPE}; NeoForge
+	 * replays the same list through a {@code DeferredRegister}.
+	 */
+	private void registerLootConditions() {
+		for (dev.alaindustrial.registry.ModLootConditions.ConditionDef def
+				: dev.alaindustrial.registry.ModLootConditions.CONDITIONS) {
+			net.minecraft.core.Registry.register(
+					net.minecraft.core.registries.BuiltInRegistries.LOOT_CONDITION_TYPE,
+					Industrialization.id(def.id()), def.codec());
 		}
 	}
 
@@ -392,7 +410,7 @@ public class IndustrializationFabric implements ModInitializer {
 	/**
 	 * Registers gameplay-interaction hooks: the early block-use chain of {@link ServerHookRoster} (MOD-706)
 	 * and the loot injections — bonus chest (MOD-119), bastion drill template (MOD-534), cotton seeds
-	 * (MOD-280).
+	 * (MOD-280), structure chests (MOD-942).
 	 */
 	private void registerGameplayHooks() {
 		// MOD-706: the early block-use chain (bucket deposit → oil lighting → cable dye) is
@@ -438,6 +456,25 @@ public class IndustrializationFabric implements ModInitializer {
 				tableBuilder.withPool(LootPool.lootPool()
 						.setRolls(ConstantValue.exactly(1.0f))
 						.add(NestedLootTable.lootTableReference(seedTable)));
+			}
+		});
+	}
+
+	/**
+	 * MOD-942: early-game mod items in mineshaft, dungeon and village-toolsmith chests. The same shape as
+	 * the injections above — one added pool referencing a shared sub-table, vanilla pools untouched — with
+	 * two deliberate differences. There is no {@code source.isBuiltin()}: a table a datapack or another
+	 * mod replaced gets the pool too, as a NeoForge {@code add_table} modifier does. And there is no config
+	 * check here: {@code structureLootEnabled} is a loot condition on the sub-table's pool, read when a
+	 * chest is rolled.
+	 */
+	private void registerStructureLoot() {
+		LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
+			ResourceKey<LootTable> structureTable = StructureLoot.INJECTIONS.get(key);
+			if (structureTable != null) {
+				tableBuilder.withPool(LootPool.lootPool()
+						.setRolls(ConstantValue.exactly(1.0f))
+						.add(NestedLootTable.lootTableReference(structureTable)));
 			}
 		});
 	}

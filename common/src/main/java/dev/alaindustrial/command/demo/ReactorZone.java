@@ -77,6 +77,8 @@ final class ReactorZone implements DemoZone {
 		w.place(origin.offset(24, 2, z), ModContent.REACTOR_ANTENNA_MAST.get().defaultBlockState()
 				.setValue(ReactorAntennaMastBlock.FACING, Direction.UP));
 
+		// The alarm lamp (MOD-945) between the fuel column and the nozzle: dark, as with no signal reaching it.
+		w.set(28, 1, z, ModContent.REACTOR_ALARM_LAMP.get());
 		// The exhaust, facing south into open air — a nozzle pointing at a block vents nothing, and a
 		// stand that showed one buried in a wall would be showing a broken installation.
 		w.place(origin.offset(30, 1, z),

@@ -1,5 +1,7 @@
 package dev.alaindustrial.core.structure;
 
+// size-justified: the reactor's pure rules in one place — the scales, the latches of the siren and of the boom's
+// alarm (MOD-945), the countdown's top — which share one set of thresholds and are tested as a sequence.
 /**
  * The reactor's arithmetic (MOD-468, stage 2) — output, heat and the neighbour bonus, with no
  * Minecraft type in sight so the balance can be exercised by L1 tests rather than by playing.
@@ -249,6 +251,31 @@ public final class ReactorCore {
 			return heatPercent >= floor;
 		}
 		return heatPercent >= warnPercent;
+	}
+
+	/** Redstone level of the antenna boom while the reactor is fine (MOD-945). */
+	public static final int ALARM_SIGNAL_NONE = 0;
+
+	/** Redstone level of the antenna boom while the warning latch holds (MOD-945). */
+	public static final int ALARM_SIGNAL_WARN = 7;
+
+	/** Redstone level of the antenna boom in an emergency: the meltdown latch or the countdown (MOD-945). */
+	public static final int ALARM_SIGNAL_CRITICAL = 15;
+
+	/**
+	 * The redstone level the antenna boom gives out (MOD-945), from the three latches the reactor already keeps.
+	 *
+	 * <p>Every input is a latch, never a raw percentage: the warning latch of {@link #alarmStaysLatched}
+	 * (on at the warning line, off below the rearm floor), the meltdown latch (the same function between the
+	 * meltdown line and the warning line) and the armed countdown, which only a spell under the top of the scale
+	 * calls off. So the signal inherits their deadbands and never chatters at a threshold — a raw
+	 * {@code percent >= 70 ? 7 : 0} would flip on every wobble of the gauge.
+	 */
+	public static int alarmSignal(boolean warned, boolean meltdownLatched, boolean countdownArmed) {
+		if (countdownArmed || meltdownLatched) {
+			return ALARM_SIGNAL_CRITICAL;
+		}
+		return warned ? ALARM_SIGNAL_WARN : ALARM_SIGNAL_NONE;
 	}
 
 	/** The top of the heat scale, where the warning stops being a warning. */
