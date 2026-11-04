@@ -15,6 +15,7 @@ import static dev.alaindustrial.registry.content.TabEntries.show;
 
 import dev.alaindustrial.block.AdvancedItemPipeBlock;
 import dev.alaindustrial.block.BatteryBoxBlock;
+import dev.alaindustrial.block.ChestUpgrade;
 import dev.alaindustrial.block.CesuBlock;
 import dev.alaindustrial.block.ChargePadBlock;
 import dev.alaindustrial.block.DiamondChestBlock;
@@ -46,6 +47,7 @@ import dev.alaindustrial.block.entity.SilverChestBlockEntity;
 import dev.alaindustrial.block.entity.SmartWireBlockEntity;
 import dev.alaindustrial.block.entity.StorageModuleBlockEntity;
 import dev.alaindustrial.block.entity.VacuumCollectorBlockEntity;
+import dev.alaindustrial.item.misc.ChestUpgradeItem;
 import dev.alaindustrial.item.misc.ItemPipeBlockItem;
 import dev.alaindustrial.item.misc.StockDisplayFrameItem;
 import dev.alaindustrial.menu.BatteryBoxMenu;
@@ -72,6 +74,9 @@ import dev.alaindustrial.registry.CreativeTabContent.Sink;
 import dev.alaindustrial.registry.ModBlockProperties;
 import dev.alaindustrial.registry.ModContent;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.MapColor;
 
@@ -271,7 +276,22 @@ public final class StorageContent {
 			item("capacity_card", dev.alaindustrial.item.misc.CapacityCardItem::new,
 					s -> ModContent.CAPACITY_CARD = s),
 			// MOD-802 — the vacuum collector.
-			blockItem("vacuum_collector", s -> ModContent.VACUUM_COLLECTOR_ITEM = s));
+			blockItem("vacuum_collector", s -> ModContent.VACUUM_COLLECTOR_ITEM = s),
+			// MOD-944 — the chest upgrades, one per rung of the ladder, appended at the tail.
+			chestUpgrade("copper_to_iron_chest_upgrade", ChestUpgrade.COPPER_TO_IRON,
+					s -> ModContent.COPPER_TO_IRON_CHEST_UPGRADE = s),
+			chestUpgrade("iron_to_silver_chest_upgrade", ChestUpgrade.IRON_TO_SILVER,
+					s -> ModContent.IRON_TO_SILVER_CHEST_UPGRADE = s),
+			chestUpgrade("silver_to_gold_chest_upgrade", ChestUpgrade.SILVER_TO_GOLD,
+					s -> ModContent.SILVER_TO_GOLD_CHEST_UPGRADE = s),
+			chestUpgrade("gold_to_electrum_chest_upgrade", ChestUpgrade.GOLD_TO_ELECTRUM,
+					s -> ModContent.GOLD_TO_ELECTRUM_CHEST_UPGRADE = s),
+			chestUpgrade("electrum_to_diamond_chest_upgrade", ChestUpgrade.ELECTRUM_TO_DIAMOND,
+					s -> ModContent.ELECTRUM_TO_DIAMOND_CHEST_UPGRADE = s));
+
+	private static ItemDef chestUpgrade(String id, ChestUpgrade upgrade, Consumer<Supplier<Item>> bind) {
+		return item(id, p -> new ChestUpgradeItem(p, upgrade), bind);
+	}
 
 	/*
 	 * Block entities named by a constant because code outside the list refers to the entry itself
@@ -457,6 +477,12 @@ public final class StorageContent {
 		// MOD-474 — not a rung of the ladder above, so it sits after it: same 36 slots as the iron
 		// chest, bought for the shielding.
 		show(out, ModContent.SHIELDING_CHEST_ITEM);
+		// MOD-944 — the upgrades that climb the ladder above in place, in the same order.
+		show(out, ModContent.COPPER_TO_IRON_CHEST_UPGRADE);
+		show(out, ModContent.IRON_TO_SILVER_CHEST_UPGRADE);
+		show(out, ModContent.SILVER_TO_GOLD_CHEST_UPGRADE);
+		show(out, ModContent.GOLD_TO_ELECTRUM_CHEST_UPGRADE);
+		show(out, ModContent.ELECTRUM_TO_DIAMOND_CHEST_UPGRADE);
 		show(out, ModContent.STORAGE_MODULE_ITEM);
 		// MOD-802 — gathers the drops a pipe then carries to the chests above.
 		show(out, ModContent.VACUUM_COLLECTOR_ITEM);

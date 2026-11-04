@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"pattern": [
+		"MMM",
+		"MSM",
+		"MMM"
+	],
+	"key": {
+		"M": "alaindustrial:electrum_ingot",
+		"S": "#c:rods/wooden"
+	},
+	"result": {
+		"id": "alaindustrial:gold_to_electrum_chest_upgrade",
+		"count": 1
+	}
+}

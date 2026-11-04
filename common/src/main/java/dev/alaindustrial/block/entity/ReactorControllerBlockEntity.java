@@ -3,11 +3,13 @@ package dev.alaindustrial.block.entity;
 import dev.alaindustrial.advancement.ReactorMilestone;
 import dev.alaindustrial.block.ReactorControllerBlock;
 import dev.alaindustrial.block.entity.machine.SyncChannels;
+import dev.alaindustrial.block.entity.reactor.ReactorAlarmSignal;
 import dev.alaindustrial.block.entity.reactor.ReactorAntennas;
 import dev.alaindustrial.block.entity.reactor.ReactorBlastTimer;
 import dev.alaindustrial.block.entity.reactor.ReactorChannels;
 import dev.alaindustrial.block.entity.reactor.ReactorEventLog;
 import dev.alaindustrial.block.entity.reactor.ReactorHazards;
+import dev.alaindustrial.block.entity.reactor.ReactorLamps;
 import dev.alaindustrial.block.entity.reactor.ReactorRoom;
 import dev.alaindustrial.block.entity.reactor.ReactorStacks;
 import dev.alaindustrial.block.entity.reactor.ReactorVoice;
@@ -161,6 +163,8 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 
 	/** MOD-941: the antennas this controller links and powers — see {@link ReactorAntennas}. */
 	private final ReactorAntennas antennas = new ReactorAntennas();
+	/** MOD-945: the alarm as a redstone level on the antenna booms — see {@link ReactorAlarmSignal}. */
+	private final ReactorAlarmSignal alarm = new ReactorAlarmSignal(this::setChanged);
 
 
 	public ReactorControllerBlockEntity(BlockPos pos, BlockState state) {
@@ -212,7 +216,8 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 	 *   <li>the antennas served — link and upkeep, topped up from the buffer when short ({@link ReactorAntennas});</li>
 	 *   <li>the outlets fed ({@link #feedOutlets});</li>
 	 *   <li>the voice: its latch, the log's started/stopped line, the drone painted ({@link ReactorVoice});</li>
-	 *   <li>{@link #warnOnOverheat}, {@link #runHazards}, {@link #runCountdown}.</li>
+	 *   <li>{@link #warnOnOverheat}, {@link #runHazards}, {@link #runCountdown};</li>
+	 *   <li>the alarm on antenna booms and lamps, last ({@link ReactorAlarmSignal}, {@link ReactorLamps}).</li>
 	 * </ol>
 	 *
 	 * <p><b>Fuel burns only when the energy is wanted</b> — the player's own call for this stage. A
@@ -274,6 +279,8 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 		if (level instanceof ServerLevel serverLevel) {
 			runCountdown(serverLevel, pos);
 		}
+		ReactorAlarmSignal.broadcast(level, antennas.served(), room.lamps(), alarm.level(criticalPercent(),
+				room.isSealed() && !room.isBare(), voice.overheatWarned(), blast.remaining() > 0));
 	}
 
 	/** What the reaction is asked for this tick, in EU/t, and the heat it makes. */
@@ -850,6 +857,8 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 		// Same reason as on a breach: the racks wear the drone flag, and the controller is the only thing
 		// that can take it off them (MOD-472).
 		voice.silence(level, room);
+		// A bare core's lamps stand on racks that outlive the controller: nothing but this would put them out.
+		ReactorLamps.show(level, room.lamps(), ReactorCore.ALARM_SIGNAL_NONE);
 		room.box().clear(level);
 	}
 
@@ -863,6 +872,7 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 		blast.save(output);
 		output.putLong(INSTABILITY_KEY, instability);
 		log.save(output);
+		alarm.save(output);
 	}
 
 	@Override
@@ -875,6 +885,7 @@ public class ReactorControllerBlockEntity extends MachineBlockEntity implements 
 		blast.load(input);
 		instability = input.getLongOr(INSTABILITY_KEY, 0L);
 		log.load(input);
+		alarm.load(input);
 	}
 
 	/**

@@ -53,6 +53,10 @@ import java.util.List;
 public abstract class AbstractChestBlockEntity extends BaseContainerBlockEntity implements LidBlockEntity {
 	/** Block event id the server sends when the open count changes; {@link #triggerEvent} reads it. */
 	private static final int EVENT_SET_OPEN_COUNT = 1;
+	/** Block event id of the lid bounce that marks an in-place upgrade (MOD-944); {@link #triggerEvent} reads it. */
+	private static final int EVENT_UPGRADE_BOUNCE = 2;
+	/** How many client ticks the lid stays up during the upgrade bounce. */
+	private static final int UPGRADE_BOUNCE_TICKS = 5;
 	/**
 	 * Quieter than the vanilla chest (0.5) because the iron-chest sample is bright/sharp at full
 	 * volume.
@@ -67,6 +71,12 @@ public abstract class AbstractChestBlockEntity extends BaseContainerBlockEntity 
 	private final String nameTranslationKey;
 	private NonNullList<ItemStack> items;
 	private final ChestLidController chestLidController = new ChestLidController();
+	/** Server: an upgrade placed this chest and its bounce waits for the block's next scheduled tick. */
+	private boolean upgradeBounceQueued;
+	/** Client: the open count the last {@link #EVENT_SET_OPEN_COUNT} carried, for the lid to return to. */
+	private int clientOpenCount;
+	/** Client: ticks left of a running upgrade bounce, 0 when none. */
+	private int upgradeBounceTicks;
 	private final ContainerOpenersCounter openersCounter = new ContainerOpenersCounter() {
 		@Override
 		protected void onOpen(Level level, BlockPos pos, BlockState state) {
@@ -143,7 +153,13 @@ public abstract class AbstractChestBlockEntity extends BaseContainerBlockEntity 
 	@Override
 	public boolean triggerEvent(int id, int arg) {
 		if (id == EVENT_SET_OPEN_COUNT) {
-			chestLidController.shouldBeOpen(arg > 0);
+			clientOpenCount = arg;
+			chestLidController.shouldBeOpen(arg > 0 || upgradeBounceTicks > 0);
+			return true;
+		}
+		if (id == EVENT_UPGRADE_BOUNCE) {
+			upgradeBounceTicks = UPGRADE_BOUNCE_TICKS;
+			chestLidController.shouldBeOpen(true);
 			return true;
 		}
 		return super.triggerEvent(id, arg);
@@ -155,7 +171,26 @@ public abstract class AbstractChestBlockEntity extends BaseContainerBlockEntity 
 	 * points are gone with the per-tier tickers).
 	 */
 	public void tickLid() {
+		if (upgradeBounceTicks > 0 && --upgradeBounceTicks == 0) {
+			chestLidController.shouldBeOpen(clientOpenCount > 0);
+		}
 		chestLidController.tickLid();
+	}
+
+	/** Mark this freshly upgraded chest to bounce its lid on the block's next scheduled tick (MOD-944). */
+	public void queueUpgradeBounce() {
+		upgradeBounceQueued = true;
+	}
+
+	/**
+	 * Send the queued upgrade bounce, if any. Called from the block's scheduled tick, a tick or two after the
+	 * swap, so the event reaches the new block entity on the client rather than the one it replaced.
+	 */
+	private void sendQueuedUpgradeBounce() {
+		if (upgradeBounceQueued && level != null && !remove) {
+			upgradeBounceQueued = false;
+			level.blockEvent(worldPosition, getBlockState().getBlock(), EVENT_UPGRADE_BOUNCE, 0);
+		}
 	}
 
 	/**
@@ -208,10 +243,14 @@ public abstract class AbstractChestBlockEntity extends BaseContainerBlockEntity 
 		}
 	}
 
-	/** Re-evaluate who has the chest open (scheduled-tick callback on the server). */
+	/**
+	 * Re-evaluate who has the chest open (scheduled-tick callback on the server), and send a queued upgrade
+	 * bounce (MOD-944) — the in-place upgrade schedules this same tick for it.
+	 */
 	public void recheckOpen() {
 		if (!remove) {
 			openersCounter.recheckOpeners(level, worldPosition, getBlockState());
+			sendQueuedUpgradeBounce();
 		}
 	}
 

@@ -141,6 +141,10 @@ public final class ModSounds {
 	 * Played by the server from the generator base, so it honours the mute chip there.
 	 */
 	public static Supplier<SoundEvent> WORN_ROTOR_CREAK = unbound("WORN_ROTOR_CREAK");
+	/** The one-shot of a chest raised one tier in place by a chest upgrade (MOD-944). */
+	public static Supplier<SoundEvent> CHEST_UPGRADE = unbound("CHEST_UPGRADE");
+	/** The quiet one-shot of a refused chest upgrade: wrong rung, wrong block, one item on a pair (MOD-944). */
+	public static Supplier<SoundEvent> CHEST_UPGRADE_REFUSED = unbound("CHEST_UPGRADE_REFUSED");
 
 	/**
 	 * Every sound event, in one shared registration order. Both loaders replay this list; see
@@ -249,7 +253,11 @@ public final class ModSounds {
 			// and wheels still stand in rows on a mob farm (every loop adds ~6 dB per doubling).
 			fixedRange("mob_wheel_drive", 16.0f, s -> MOB_WHEEL_DRIVE = s),
 			// MOD-654 — a one-shot creak of a worn rotor / wheel. Mills stand in rows, so a fixed range like the hums.
-			fixedRange("worn_rotor_creak", 12.0f, s -> WORN_ROTOR_CREAK = s));
+			fixedRange("worn_rotor_creak", 12.0f, s -> WORN_ROTOR_CREAK = s),
+			// MOD-944 — a one-shot of the in-place chest upgrade; variable like the chest's own open/close.
+			variableRange("chest_upgrade", s -> CHEST_UPGRADE = s),
+			// MOD-944 — the refusal: its own soft error buzz, the vanilla locked-chest sound read as a door.
+			variableRange("chest_upgrade_refused", s -> CHEST_UPGRADE_REFUSED = s));
 
 	private ModSounds() {
 	}

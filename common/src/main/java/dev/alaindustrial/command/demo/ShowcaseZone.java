@@ -51,15 +51,16 @@ final class ShowcaseZone implements DemoZone {
 	/** The wall's bottom row. y=1 is the first cell above the floor. */
 	private static final int SHOWCASE_BASE_Y = 1;
 	/**
-	 * Six rows: every frame within arm's reach without craning, and the wall spans the whole stand
-	 * instead of towering over a corner of it (MOD-659; it used to be nine rows of forty).
+	 * Seven rows: the wall spans the whole stand instead of towering over a corner of it (MOD-659; it used to
+	 * be nine rows of forty). Six rows held until MOD-944 outgrew them; the seventh still sits under the
+	 * stand's height.
 	 *
 	 * <p>The wall shows EVERY item of the mod since MOD-586, block items included. Capacity is a
 	 * deadline, not a preference: the wall fills from the registry, and the day the registry outgrows
 	 * it the coverage gametest reddens in whatever task happened to add the item. The current item
-	 * count is read from the registry, never restated here; six rows of {@code WIDTH - 2} are 492 slots.
+	 * count is read from the registry, never restated here; seven rows of {@code WIDTH - 2} are 602 slots.
 	 */
-	private static final int SHOWCASE_ROWS = 6;
+	private static final int SHOWCASE_ROWS = 7;
 
 	@Override
 	public void build(StandWriter w) {

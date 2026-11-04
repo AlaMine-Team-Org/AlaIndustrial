@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"pattern": [
+		"MMM",
+		"MSM",
+		"MMM"
+	],
+	"key": {
+		"M": "#c:ingots/iron",
+		"S": "#c:rods/wooden"
+	},
+	"result": {
+		"id": "alaindustrial:copper_to_iron_chest_upgrade",
+		"count": 1
+	}
+}

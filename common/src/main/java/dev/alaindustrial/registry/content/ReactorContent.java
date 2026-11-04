@@ -14,6 +14,7 @@ import static dev.alaindustrial.registry.content.TabEntries.show;
 
 import dev.alaindustrial.block.FuelRodAssemblyBlock;
 import dev.alaindustrial.block.IrradiatedSoilBlock;
+import dev.alaindustrial.block.ReactorAlarmLampBlock;
 import dev.alaindustrial.block.ReactorAntennaBlock;
 import dev.alaindustrial.block.ReactorAntennaMastBlock;
 import dev.alaindustrial.block.ReactorButtonBlock;
@@ -129,6 +130,12 @@ public final class ReactorContent {
 			machine(MapColor.METAL, p -> LineBlockProps.pinnedAgainstPistons(p).strength(5.0f, 30.0f)
 					.sound(SoundType.METAL).noOcclusion()), s -> ModContent.REACTOR_ANTENNA_MAST = s,
 			hiddenFromPlayers("the antenna places its own boom; the boom has no item"));
+	/** MOD-945 — a red beacon that glows and flashes on any redstone signal, the antenna boom's alarm included. */
+	public static final BlockDef<ReactorAlarmLampBlock> REACTOR_ALARM_LAMP = block("reactor_alarm_lamp",
+			ReactorAlarmLampBlock::new,
+			// A metal fixture, not a wall: none of the shell's toughness. The cage is see-through.
+			machine(MapColor.COLOR_RED, p -> p.strength(1.5f, 6.0f).sound(SoundType.METAL).noOcclusion()
+					.lightLevel(ReactorAlarmLampBlock::lightLevel)), s -> ModContent.REACTOR_ALARM_LAMP = s);
 	/**
 	 * MOD-471 — ground a reactor accident poisoned. No block item: it is left behind, never placed.
 	 */
@@ -179,6 +186,7 @@ public final class ReactorContent {
 			blockItem("steam_nozzle", s -> ModContent.STEAM_NOZZLE_ITEM = s),
 			blockItem("reactor_outlet", s -> ModContent.REACTOR_OUTLET_ITEM = s),
 			blockItem("reactor_antenna", s -> ModContent.REACTOR_ANTENNA_ITEM = s),
+			blockItem("reactor_alarm_lamp", s -> ModContent.REACTOR_ALARM_LAMP_ITEM = s),
 			// MOD-941 — tier-1 tablet: view-only, powered, one reactor at a time.
 			item("reactor_tablet", p -> new ReactorTabletItem(p.stacksTo(1)), s -> ModContent.REACTOR_TABLET = s),
 			blockItem("reactor_button", s -> ModContent.REACTOR_BUTTON_ITEM = s),
@@ -282,5 +290,6 @@ public final class ReactorContent {
 		show(out, ModContent.EMPTY_FUEL_ROD);
 		show(out, ModContent.URANIUM_FUEL_ROD);
 		show(out, ModContent.REACTOR_TABLET);
+		show(out, ModContent.REACTOR_ALARM_LAMP_ITEM);
 	}
 }

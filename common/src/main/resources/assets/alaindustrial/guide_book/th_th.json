@@ -1049,6 +1049,36 @@
           ]
         },
         {
+          "id": "reactor_alarm_lamp",
+          "title": "โคมไฟเตือนภัย",
+          "icon": "alaindustrial:reactor_alarm_lamp",
+          "pages": [
+            {
+              "type": "text",
+              "title": "โคมไฟเตือนภัย",
+              "text": "ไฟสัญญาณสีแดงในกรงเหล็ก สว่างและกะพริบเมื่อได้สัญญาณเรดสโตน และเมื่อติดกับเตาปฏิกรณ์จะสว่างเองตามสัญญาณเตือนของเตา ติดได้ทุกด้าน"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "minecraft:iron_ingot",
+                "minecraft:red_stained_glass_pane",
+                "minecraft:iron_ingot",
+                "minecraft:red_stained_glass_pane",
+                "minecraft:redstone_lamp",
+                "minecraft:red_stained_glass_pane",
+                "minecraft:iron_ingot",
+                "minecraft:redstone",
+                "minecraft:iron_ingot"
+              ],
+              "result_id": "alaindustrial:reactor_alarm_lamp",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "irradiated_soil",
           "title": "ดินปนเปื้อนรังสี",
           "icon": "alaindustrial:irradiated_soil",
@@ -1154,6 +1184,43 @@
               ],
               "result_id": "alaindustrial:steam_nozzle",
               "result_count": 2
+            }
+          ]
+        },
+        {
+          "id": "reactor_antenna",
+          "title": "เสาอากาศเครื่องปฏิกรณ์",
+          "icon": "alaindustrial:reactor_antenna",
+          "pages": [
+            {
+              "type": "text",
+              "title": "เสาอากาศเครื่องปฏิกรณ์",
+              "text": "บล็อกเปลือกของห้องเครื่องปฏิกรณ์ที่ให้แท็บเล็ตเชื่อมต่อกับเครื่องปฏิกรณ์: ใช้แทนช่องเคสหนึ่งช่อง มีบัฟเฟอร์ EU ขนาดเล็ก และใช้พลังงานคงที่ตลอดเวลาที่ทำงาน"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "บัฟเฟอร์: 4000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:copper_cable",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:reactor_casing",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:shielding_alloy_plate",
+                "alaindustrial:copper_cable",
+                "alaindustrial:shielding_alloy_plate"
+              ],
+              "result_id": "alaindustrial:reactor_antenna",
+              "result_count": 1
             }
           ]
         },
@@ -6619,6 +6686,43 @@
           ]
         },
         {
+          "id": "reactor_tablet",
+          "title": "แท็บเล็ตเครื่องปฏิกรณ์",
+          "icon": "alaindustrial:reactor_tablet",
+          "pages": [
+            {
+              "type": "text",
+              "title": "แท็บเล็ตเครื่องปฏิกรณ์",
+              "text": "แท็บเล็ตแบบชาร์จได้ที่ผูกกับเครื่องปฏิกรณ์ผ่านเสาอากาศ: แสดงหน้าจอของตัวควบคุมจากระยะไกลแบบดูอย่างเดียว ตราบใดที่เครื่องปฏิกรณ์อยู่ในระยะเชื่อมต่อ"
+            },
+            {
+              "type": "stats",
+              "title": "สถิติ",
+              "lines": [
+                "บัฟเฟอร์: 20,000 EU"
+              ]
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:tin_plate",
+                "minecraft:glass_pane",
+                "alaindustrial:tin_plate",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:reactor_circuit",
+                "alaindustrial:advanced_circuit",
+                "alaindustrial:tin_plate",
+                "alaindustrial:battery",
+                "alaindustrial:tin_plate"
+              ],
+              "result_id": "alaindustrial:reactor_tablet",
+              "result_count": 1
+            }
+          ]
+        },
+        {
           "id": "teleporter_remote",
           "title": "รีโมตเครื่องเทเลพอร์ต",
           "icon": "alaindustrial:teleporter_remote",
@@ -6704,6 +6808,36 @@
                 "alaindustrial:tin_ingot"
               ],
               "result_id": "alaindustrial:geiger_counter",
+              "result_count": 1
+            }
+          ]
+        },
+        {
+          "id": "iron_to_silver_chest_upgrade",
+          "title": "อัปเกรดหีบ: เหล็ก → เงิน",
+          "icon": "alaindustrial:iron_to_silver_chest_upgrade",
+          "pages": [
+            {
+              "type": "text",
+              "title": "อัปเกรดหีบ: เหล็ก → เงิน",
+              "text": "ไอเทมที่อัปเกรดหีบที่วางไว้ขึ้นอีกระดับในที่เดิมด้วย Shift+คลิกขวา ของทุกชิ้นยังอยู่ในช่องเดิม ชื่อและทิศทางยังคงเหมือนเดิม มีไอเทมหนึ่งชิ้นต่อหนึ่งขั้น ตั้งแต่หีบทองแดงธรรมดาไปจนถึงหีบเพชร"
+            },
+            {
+              "type": "recipe",
+              "title": "สูตร",
+              "recipe_type": "การคราฟต์แบบมีรูปแบบ",
+              "grid": [
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "minecraft:stick",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot",
+                "alaindustrial:silver_ingot"
+              ],
+              "result_id": "alaindustrial:iron_to_silver_chest_upgrade",
               "result_count": 1
             }
           ]

@@ -49,6 +49,26 @@
       }
     ]
   },
+  "chest_upgrade": {
+    "subtitle": "subtitles.alaindustrial.chest_upgrade",
+    "sounds": [
+      {
+        "name": "alaindustrial:chest_upgrade",
+        "stream": false,
+        "preload": true
+      }
+    ]
+  },
+  "chest_upgrade_refused": {
+    "subtitle": "subtitles.alaindustrial.chest_upgrade_refused",
+    "sounds": [
+      {
+        "name": "alaindustrial:chest_upgrade_refused",
+        "stream": false,
+        "preload": true
+      }
+    ]
+  },
   "iron_chest_close": {
     "subtitle": "subtitles.alaindustrial.iron_chest_close",
     "sounds": [

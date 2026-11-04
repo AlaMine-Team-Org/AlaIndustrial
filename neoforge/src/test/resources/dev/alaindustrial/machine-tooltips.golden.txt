@@ -370,6 +370,7 @@ tooltip.alaindustrial.cable_shock_warning {red}
 == alaindustrial:copper_coil plain : none
 == alaindustrial:copper_dust plain : none
 == alaindustrial:copper_plate plain : none
+== alaindustrial:copper_to_iron_chest_upgrade plain : none
 == alaindustrial:core_barrel plain
 -- plain eu
 tooltip.alaindustrial.core_barrel.role {gray}
@@ -1217,6 +1218,7 @@ tooltip.alaindustrial.storage_slots_double(162) {dark_gray}
 == alaindustrial:electrum_reinforced_plate plain : none
 == alaindustrial:electrum_slab plain : none
 == alaindustrial:electrum_stairs plain : none
+== alaindustrial:electrum_to_diamond_chest_upgrade plain : none
 == alaindustrial:electrum_wall plain : none
 == alaindustrial:emerald_dust plain : none
 == alaindustrial:empty_can plain : none
@@ -1484,6 +1486,7 @@ tooltip.alaindustrial.storage_slots_double(108) {dark_gray}
 == alaindustrial:gold_dust plain : none
 == alaindustrial:gold_gear plain : none
 == alaindustrial:gold_plate plain : none
+== alaindustrial:gold_to_electrum_chest_upgrade plain : none
 == alaindustrial:guide_book plain : none
 == alaindustrial:hazard_stripe_block plain : none
 == alaindustrial:high_altitude_wind_mill plain : none
@@ -1720,6 +1723,7 @@ tooltip.alaindustrial.storage_slots_double(72) {dark_gray}
 == alaindustrial:iron_furnace plain : none
 == alaindustrial:iron_gear plain : none
 == alaindustrial:iron_plate plain : none
+== alaindustrial:iron_to_silver_chest_upgrade plain : none
 == alaindustrial:irradiated_diamond plain : none
 == alaindustrial:irradiated_slag plain : none
 == alaindustrial:irradiated_soil plain : none
@@ -2026,7 +2030,38 @@ tooltip.alaindustrial.tier_lv {green}
 == alaindustrial:raw_sulfur plain : none
 == alaindustrial:raw_tin plain : none
 == alaindustrial:raw_uranium plain : none
-== alaindustrial:reactor_antenna plain : none
+== alaindustrial:reactor_alarm_lamp plain
+-- plain eu
+tooltip.alaindustrial.reactor_alarm_lamp.purpose {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.reactor_alarm_lamp.purpose {gray}
+tooltip.alaindustrial.reactor_alarm_lamp.reactor {gray}
+tooltip.alaindustrial.reactor_alarm_lamp.antenna {gray}
+-- plain no-eu
+tooltip.alaindustrial.reactor_alarm_lamp.purpose {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.reactor_alarm_lamp.purpose {gray}
+tooltip.alaindustrial.reactor_alarm_lamp.reactor {gray}
+tooltip.alaindustrial.reactor_alarm_lamp.antenna {gray}
+== alaindustrial:reactor_antenna plain
+-- plain eu
+tooltip.alaindustrial.reactor_antenna.alarm {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift eu
+tooltip.alaindustrial.reactor_antenna.alarm {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.reactor_antenna.alarm_stop {gray}
+tooltip.alaindustrial.reactor_antenna.alarm_silent {gray}
+-- plain no-eu
+tooltip.alaindustrial.reactor_antenna.alarm {gray}
+tooltip.alaindustrial.hold_shift {dark_gray}
+-- shift no-eu
+tooltip.alaindustrial.reactor_antenna.alarm {gray}
+tooltip.alaindustrial.tier_lv {green}
+tooltip.alaindustrial.reactor_antenna.alarm_stop {gray}
+tooltip.alaindustrial.reactor_antenna.alarm_silent {gray}
 == alaindustrial:reactor_button plain : none
 == alaindustrial:reactor_casing plain : none
 == alaindustrial:reactor_circuit plain : none
@@ -2337,6 +2372,7 @@ tooltip.alaindustrial.storage_slots_double(90) {dark_gray}
 == alaindustrial:silver_plate_block plain : none
 == alaindustrial:silver_slab plain : none
 == alaindustrial:silver_stairs plain : none
+== alaindustrial:silver_to_gold_chest_upgrade plain : none
 == alaindustrial:silver_wall plain : none
 == alaindustrial:slag plain : none
 == alaindustrial:slag_block plain : none

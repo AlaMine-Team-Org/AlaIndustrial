@@ -1382,6 +1382,17 @@ public final class Config {
 	public static boolean bonusChestEnabled = true;
 
 	/**
+	 * MOD-942: add the mod's pool to the vanilla mineshaft, dungeon and village-toolsmith chests; false
+	 * leaves them vanilla. Checked at roll time by the {@code alaindustrial:structure_loot_enabled} loot
+	 * condition, so a config reload takes effect on the next chest opened, with no {@code /reload}.
+	 */
+	@Knob(section = Section.WORLD,
+			doc = "When true, mod items can be found in vanilla abandoned mineshaft, dungeon and village toolsmith"
+					+ " chests (vanilla loot kept). Checked when a chest is opened; chests already opened keep their"
+					+ " contents. false = purely vanilla loot there.")
+	public static boolean structureLootEnabled = true;
+
+	/**
 	 * MOD-238: oil ignites from adjacent fire or lava and the burn spreads across the pool ({@code
 	 * OilLiquidBlock}); false makes oil inert.
 	 */

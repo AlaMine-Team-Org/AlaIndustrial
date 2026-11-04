@@ -2,7 +2,10 @@ package dev.alaindustrial.block;
 
 import dev.alaindustrial.block.entity.ReactorAntennaBlockEntity;
 import dev.alaindustrial.core.structure.ReactorCasingPart;
+import dev.alaindustrial.core.tooltip.HasMachineTooltip;
+import dev.alaindustrial.core.tooltip.MachineTooltipSpec;
 import dev.alaindustrial.registry.ModContent;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
@@ -36,7 +39,8 @@ import org.jspecify.annotations.Nullable;
  * <p>No ticker of its own: the controller that owns it serves it every tick (link and upkeep), the same "the
  * controller pushes" rule the outlet follows.
  */
-public class ReactorAntennaBlock extends ReactorShellBlock implements EntityBlock, ReactorCasingPart {
+public class ReactorAntennaBlock extends ReactorShellBlock implements EntityBlock, ReactorCasingPart,
+		HasMachineTooltip {
 
 	/** The way the boom points — out of the wall, towards whoever placed it. */
 	public static final EnumProperty<Direction> FACING = BlockStateProperties.FACING;
@@ -44,6 +48,21 @@ public class ReactorAntennaBlock extends ReactorShellBlock implements EntityBloc
 	public ReactorAntennaBlock(Properties properties) {
 		super(properties);
 		registerDefaultState(defaultBlockState().setValue(FACING, Direction.NORTH));
+	}
+
+	/**
+	 * The boom's alarm output (MOD-945), said where the player meets it: the levels, that the alarm must be inverted
+	 * to stop the reactor, and that a silent antenna gives no signal.
+	 */
+	@Override
+	public MachineTooltipSpec machineTooltip() {
+		return new MachineTooltipSpec(MachineTooltipSpec.Tier.LV,
+				List.of(MachineTooltipSpec.note("tooltip.alaindustrial.reactor_antenna.alarm",
+						MachineTooltipSpec.Tone.GRAY)),
+				List.of(MachineTooltipSpec.text("tooltip.alaindustrial.reactor_antenna.alarm_stop",
+								MachineTooltipSpec.Tone.GRAY),
+						MachineTooltipSpec.text("tooltip.alaindustrial.reactor_antenna.alarm_silent",
+								MachineTooltipSpec.Tone.GRAY)));
 	}
 
 	@Override

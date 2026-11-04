@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"pattern": [
+		"MMM",
+		"MSM",
+		"MMM"
+	],
+	"key": {
+		"M": "#c:ingots/gold",
+		"S": "#c:rods/wooden"
+	},
+	"result": {
+		"id": "alaindustrial:silver_to_gold_chest_upgrade",
+		"count": 1
+	}
+}
