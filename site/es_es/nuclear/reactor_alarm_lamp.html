@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="es_es" style="background:#16161a;color-scheme:dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#16161a">
+<title>Lámpara de alarma — Ala Industrial — Guía</title>
+<link rel="icon" href="../favicon.png" type="image/png">
+<script src="../../assets/guide-site.js" defer></script>
+<style>
+  .recipe-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin:14px 0; }
+  .recipe-card { background:var(--panel); border:2px solid var(--line2);
+    padding:10px 12px 12px; image-rendering:pixelated; }
+  .recipe-header { display:flex; justify-content:space-between; align-items:center;
+    gap:8px; margin-bottom:10px; padding-bottom:6px; border-bottom:2px solid var(--line2); }
+  .recipe-type { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--aqua); }
+  .recipe-energy { font-size:14px; color:var(--yellow); font-family:'VT323',monospace; white-space:nowrap; }
+  .recipe-body { display:grid; grid-template-columns:auto 52px minmax(96px,1fr); align-items:center; gap:10px; }
+  
+  .recipe-grid { display:grid; grid-template-columns:repeat(3,36px); grid-template-rows:repeat(3,36px);
+    gap:2px; padding:4px; background:#6a6a6a;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.32), inset -2px -2px 0 0 rgba(0,0,0,0.46); }
+  .evolution-grid { grid-template-columns:repeat(2,36px); grid-template-rows:36px; }
+  .recipe-process { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .recipe-process .station { width:30px; height:30px; image-rendering:pixelated; }
+  .arrow { font-size:16px; color:var(--muted); font-family:'VT323',monospace;
+    text-align:center; line-height:1; }
+  .recipe-result { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .recipe-results { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  
+  .cell { width:36px; height:36px; background:#8b8b8b; position:relative;
+    display:flex; align-items:center; justify-content:center; image-rendering:pixelated;
+    box-shadow: inset 2px 2px 0 0 rgba(255,255,255,0.42),
+                inset -2px -2px 0 0 rgba(0,0,0,0.50); }
+  
+  .cell.placeholder { color:var(--muted); font-size:9px; line-height:1;
+    text-align:center; overflow:hidden; font-family:'VT323',monospace; }
+  .cell img { width:32px; height:32px; image-rendering:pixelated; }
+  .cell.result { border:2px solid var(--gold); background:#3a3320; width:40px; height:40px; }
+  .cell.result img { width:34px; height:34px; }
+  .cell .count { position:absolute; bottom:-4px; right:-4px; background:var(--bg);
+    border:1px solid var(--line2); font-size:13px; padding:0 3px;
+    color:var(--txt); font-family:'VT323',monospace; line-height:1.1; }
+  .cell .tag-mark { position:absolute; top:1px; right:1px; width:0; height:0;
+    border-top:5px solid var(--aqua); border-left:5px solid transparent; opacity:0.85; }
+  .result-name { font-size:14px; color:var(--txt); text-align:center; max-width:130px;
+    font-family:'VT323',monospace; line-height:1.05; }
+  .ricon-ph { font-size:16px; color:var(--muted2); }
+  
+  .recipe-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    margin:12px 0 4px; padding:10px 12px; background:var(--panel);
+    border:2px solid var(--line2); position:sticky; top:0; z-index:5; }
+  .recipe-toolbar .search { flex:1 1 240px; min-width:160px; background:var(--bg);
+    border:2px solid var(--line2); color:var(--txt); padding:6px 10px;
+    font-family:'VT323',monospace; font-size:16px; image-rendering:pixelated; }
+  .recipe-toolbar .search:focus { outline:none; border-color:var(--aqua); }
+  .recipe-toolbar .pills { display:flex; flex-wrap:wrap; gap:4px; }
+  .recipe-toolbar .pill { background:var(--bg); border:2px solid var(--line2);
+    color:var(--muted); padding:7px 13px; font-family:'VT323',monospace;
+    font-size:18px; line-height:1; cursor:pointer; user-select:none; image-rendering:pixelated; }
+  .recipe-toolbar .pill:hover { border-color:var(--aqua); color:var(--txt); }
+  .recipe-toolbar .pill.active { background:var(--aqua); color:#0b0e14; border-color:var(--aqua); }
+  .recipe-toolbar .match-count { font-family:'VT323',monospace; font-size:14px; color:var(--muted); }
+  .recipe-section h2 { position:sticky; top:64px; background:var(--bg);
+    padding:6px 8px; z-index:3; border-left:4px solid var(--aqua); }
+  
+  .recipe-card.hidden { display:none; }
+  .recipe-section.hidden { display:none; }
+</style>
+<style>
+  
+  @font-face {
+    font-family:'Press Start 2P';
+    src:url('../../assets/fonts/press-start-2p-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  @font-face {
+    font-family:'VT323';
+    src:url('../../assets/fonts/vt323-latin-400-normal.woff2') format('woff2');
+    font-weight:400; font-style:normal; font-display:block;
+    }
+  :root {
+    --bg:#16161a;          
+    --bg2:#1f1f24;         
+    --panel:#2a2a31;       
+    --panel2:#34343d;      
+    --line:#555560;        
+    --line2:#0d0d10;       
+    --txt:#f5f5f5;         
+    --muted:#c0c0c8;       
+    --muted2:#909098;      
+    --gold:#fcd12a;        
+    --red:#ff5555;         
+    --aqua:#55ffff;        
+    --yellow:#ffff55;      
+    
+    color-scheme:dark;
+  }
+  * { box-sizing: border-box; }
+
+  
+  @view-transition { navigation: auto; }
+  .sitenav { view-transition-name: sitenav; }
+  .sidebar { view-transition-name: sidebar; }
+  
+  ::view-transition-old(root) { animation: none; opacity: 0; }
+  ::view-transition-new(root) { animation: none; opacity: 0; }
+  
+  .content { view-transition-name: content; }
+  ::view-transition-old(content) { animation: none; opacity: 0; }
+  ::view-transition-new(content) { animation: vt-content-in 0.16s ease both; }
+  @keyframes vt-content-in { from { opacity:0; transform: translateY(4px); } to { opacity:1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+
+  html { margin:0; padding:0; min-height:100%;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.08) 3px 4px),
+      var(--bg);
+    image-rendering:pixelated;
+    
+    scrollbar-gutter:stable; }
+  body { margin:0; padding:0; color:var(--txt);
+    font-family:'VT323','Press Start 2P',monospace;
+    font-size:20px; line-height:1.4;
+    display:flex; flex-direction:column; min-height:100vh;
+    -webkit-font-smoothing:none; font-smooth:never; }
+
+  
+  .sitenav { display:flex; align-items:center; gap:16px; padding:8px 20px;
+    border-bottom:2px solid var(--line2);
+    background:var(--panel);
+    position:sticky; top:0; z-index:40;
+    image-rendering:pixelated; }
+  .sitenav .brand { display:flex; align-items:center; gap:8px;
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    color:var(--gold); text-decoration:none; white-space:nowrap;
+    text-shadow:2px 2px 0 var(--line2); }
+  .sitenav .brand .s { color:var(--yellow); font-size:14px; }
+  
+  .sitenav-left { display:flex; align-items:center; gap:10px; width:240px; flex:0 0 240px; }
+  .sitenav-right { display:flex; align-items:center; gap:16px; flex:1; min-width:0; }
+  
+  .sitenav .nav-all-content { display:flex; align-items:center; gap:7px;
+    margin-left:28px;
+    padding:6px 12px; border:2px solid var(--edge); background:#1a1c20;
+    color:var(--txt); text-decoration:none; font-size:16px; font-weight:700;
+    white-space:nowrap;
+    box-shadow:inset 2px 2px #4a4e55, inset -2px -2px #101115, 2px 2px var(--edge); }
+  .sitenav .nav-all-content:hover { background:var(--aqua); color:var(--bg); }
+  .sitenav .nav-all-content img { width:20px; height:20px; image-rendering:pixelated; }
+  .sitenav .lang-switch { margin-left:auto; color:var(--txt);
+    font-family:'Press Start 2P',monospace; font-size:10px;
+    padding:6px 10px; border:2px solid var(--line2);
+    background:var(--panel2); text-decoration:none;
+    image-rendering:pixelated; }
+  .sitenav .lang-switch:hover { background:var(--aqua); color:var(--bg); }
+
+  
+  .layout { display:flex; flex:1; min-height:0; }
+  .sidebar { width:260px; flex:0 0 260px; padding:12px 10px; overflow-y:auto;
+    border-right:2px solid var(--line2); background:var(--bg2);
+    position:sticky; top:48px; max-height:calc(100vh - 48px); }
+  .sidebar .group-title { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:9px;
+    text-transform:uppercase; letter-spacing:0;
+    margin:14px 0 6px; padding:4px 6px; }
+  .sidebar .group-title:first-child { margin-top:0; }
+  .sidebar .cat-link { display:flex; align-items:center; gap:8px; padding:5px 8px;
+    color:var(--muted); text-decoration:none; font-size:18px;
+    border:1px solid transparent; }
+  .sidebar .cat-link:hover { background:var(--panel); color:var(--aqua);
+    border-color:var(--line2); }
+  .sidebar .cat-link.active { background:var(--panel2); color:var(--gold);
+    border-color:var(--line2); }
+  .sidebar .cat-dot { width:10px; height:10px; flex:0 0 10px;
+    image-rendering:pixelated; }
+  .sidebar .cat-count { margin-left:auto; font-size:16px; color:var(--muted2); }
+
+  
+  .content { flex:1; padding:20px 32px 60px; max-width:960px; min-width:0; }
+  .breadcrumbs { color:var(--muted); font-size:18px; margin-bottom:12px; }
+  .breadcrumbs a { color:var(--aqua); text-decoration:none; }
+  .breadcrumbs a:hover { color:var(--yellow); }
+  .breadcrumbs .sep { margin:0 4px; opacity:.6; }
+
+  
+  .block-card { display:flex; flex-direction:column; gap:0; padding:14px 16px;
+    background:var(--panel); border:2px solid var(--line2);
+    margin-bottom:20px; image-rendering:pixelated;
+    background-size:cover; background-position:center 90%; background-repeat:no-repeat; }
+  .block-card[data-hero-alt] { min-height:200px; }
+  .block-card[data-hero-alt] .card-head { position:relative; z-index:2; }
+  .block-card[data-hero-alt] .icon { filter:drop-shadow(3px 4px rgba(0,0,0,.85)); }
+  .block-card[data-hero-alt] h1 { text-shadow:2px 2px 0 #000,0 0 6px rgba(0,0,0,.9); }
+  .block-card[data-hero-alt] .bid { text-shadow:1px 1px 0 #000; }
+  .block-card .card-head { display:flex; align-items:flex-start; gap:14px; }
+  .block-card .icon { width:64px; height:64px; flex:0 0 64px;
+    background:var(--bg); border:1px solid var(--line2);
+    object-fit:contain; image-rendering:pixelated; }
+  .block-card .icon.placeholder { display:flex; align-items:center; justify-content:center;
+    font-size:22px; color:var(--muted2); }
+  .block-card .info { flex:1; min-width:0; }
+  .block-card h1 { margin:0 0 4px;
+    font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+    text-shadow:2px 2px 0 var(--line2); }
+  .block-card .block-id { color:var(--muted); font-size:16px;
+    font-family:'VT323',monospace; margin-bottom:8px; }
+  .block-card .tags { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .block-card .tag { display:inline-flex; align-items:center; justify-content:center;
+    min-height:32px; font-size:20px; padding:2px 12px; line-height:1;
+    border:2px solid var(--edge); color:var(--txt); background:var(--bg2);
+    box-shadow:inset 2px 2px rgba(255,255,255,.16),inset -2px -2px rgba(0,0,0,.34),3px 3px var(--edge);
+    font-family:'VT323',monospace; }
+  
+  .block-card .tag.cat { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+  .block-card .tag.tier { color:var(--gold); }
+  .block-card .tag.lifecycle { font-size:20px; font-weight:700; color:var(--bg); padding:2px 12px; }
+
+  
+  .content h2 { color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:14px;
+    margin:28px 0 10px; padding:6px 0;
+    text-shadow:2px 2px 0 var(--line2);
+    border-bottom:2px solid var(--line2); }
+  .content h3 { color:var(--yellow);
+    font-family:'Press Start 2P',monospace; font-size:12px;
+    margin:20px 0 6px; }
+  .content p { line-height:1.5; margin:6px 0; color:var(--txt); }
+  .content ul, .content ol { line-height:1.5; margin:6px 0; padding-left:24px; color:var(--txt); }
+  .content li { margin:3px 0; }
+  .content ul li::marker { color:var(--aqua); }
+  .content code { background:var(--bg2); padding:1px 5px;
+    color:var(--aqua); font-size:18px;
+    font-family:'VT323',monospace;
+    border:1px solid var(--line2); }
+  .content pre { background:var(--bg); border:2px solid var(--line2);
+    padding:12px 14px; overflow-x:auto; margin:10px 0; }
+  .content pre code { background:none; padding:0; color:var(--aqua);
+    font-size:17px; border:none; }
+  .content a { color:var(--aqua); text-decoration:none; }
+  .content a:hover { color:var(--yellow); text-decoration:underline; }
+  
+  .content blockquote {
+    margin:10px 0; padding:8px 14px;
+    border-left:3px solid var(--gold);
+    background:var(--bg2); color:var(--muted);
+    font-size:18px; line-height:1.4; }
+  .content table { border-collapse:collapse; width:100%; margin:10px 0; font-size:18px; }
+  .content th, .content td { border:1px solid var(--line2); padding:6px 10px; text-align:left; }
+  .content th { background:var(--panel2); color:var(--gold);
+    font-family:'Press Start 2P',monospace; font-size:9px; }
+  .content td { color:var(--txt); background:var(--bg2); }
+  .content tr:nth-child(even) td { background:var(--panel); }
+
+  
+  .index-hero { text-align:center; padding:32px 20px 24px; }
+  .index-hero h1 { font-family:'Press Start 2P',monospace; font-size:26px;
+    margin:0 0 12px; color:var(--gold);
+    text-shadow:3px 3px 0 var(--line2); }
+  .index-hero .sub { color:var(--muted); font-size:20px; max-width:600px; margin:0 auto; }
+  .category-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:10px; margin-top:20px; }
+  .category-tile { display:block; padding:14px; background:var(--panel);
+    border:2px solid var(--line2); text-decoration:none; }
+  .category-tile:hover { background:var(--panel2); transform:translate(-1px,-1px);
+    box-shadow:2px 2px 0 var(--line2); }
+  .category-tile .ct-title { font-family:'Press Start 2P',monospace; font-size:10px;
+    color:var(--c,#f5f5f5); margin-bottom:4px; }
+  .category-tile .ct-desc { font-size:16px; color:var(--muted); line-height:1.3; }
+  .category-tile .ct-count { font-size:13px; color:var(--muted2); margin-top:6px;
+    font-family:'Press Start 2P',monospace; font-size:8px; }
+
+  
+  .concept-list { list-style:none; padding:0; margin:16px 0;
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:12px; align-items:stretch; }
+  .concept-list li { margin:0; padding:0; list-style:none; }
+  .concept-card { display:flex; align-items:center; gap:12px;
+    height:100%; padding:12px; text-decoration:none; color:var(--txt);
+    background:var(--panel); border:2px solid var(--line2);
+    
+    box-shadow:3px 3px 0 var(--line2);
+    transition:transform .08s steps(2), box-shadow .08s steps(2), background .08s; }
+  .concept-card:hover {
+    background:var(--panel2);
+    
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 var(--c,var(--line2)); }
+  .concept-card:active {
+    transform:translate(1px,1px); box-shadow:1px 1px 0 var(--line2); }
+  
+  .concept-card .cc-icon {
+    width:56px; height:56px; flex:0 0 56px;
+    background:var(--bg); border:2px solid var(--line2);
+    display:flex; align-items:center; justify-content:center;
+    image-rendering:pixelated; }
+  .concept-card .cc-icon img { width:40px; height:40px; image-rendering:pixelated; }
+  .concept-card .cc-icon.placeholder { color:var(--muted2); font-size:22px; }
+  .concept-card .cc-body { flex:1; min-width:0; }
+  .concept-card .cc-title {
+    font-family:'Press Start 2P',monospace; font-size:11px;
+    color:var(--gold); margin-bottom:4px;
+    text-shadow:1px 1px 0 var(--line2); }
+  .concept-card .cc-desc { color:var(--muted); font-size:17px; line-height:1.3;
+    margin-bottom:6px;
+    
+    overflow:hidden;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  
+  .intro-list .cc-desc { -webkit-line-clamp:unset; display:block; overflow:visible; }
+  .concept-card .cc-badges { display:flex; gap:4px; flex-wrap:wrap; }
+  .concept-card .badge { font-family:'VT323',monospace; font-size:15px;
+    padding:1px 5px; background:var(--bg2); color:var(--muted);
+    border:1px solid var(--line2); }
+  
+  .content .concept-card:hover,
+  .content .concept-card:focus,
+  .content .category-tile:hover,
+  .content .category-tile:focus {
+    text-decoration:none; }
+  
+  .content .concept-card,
+  .content .category-tile { text-decoration:none; }
+
+  
+  .notfound { text-align:center; padding:48px 20px; }
+  .notfound h1 { font-family:'Press Start 2P',monospace; font-size:36px;
+    color:var(--red); margin:0 0 12px; text-shadow:3px 3px 0 var(--line2); }
+  .notfound p { color:var(--muted); }
+</style>
+<link rel="stylesheet" href="../../assets/guide-site.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <div class="sitenav-left">
+    <button class="nav-toggle" type="button" aria-label="Abrir menú" aria-controls="wiki-sidebar" aria-expanded="false">☰</button>
+    <a class="brand" href="../index.html"><img class="brand-icon" src="../favicon.png" alt=""> Ala Industrial</a>
+  </div>
+  <div class="sitenav-right">
+    <a class="nav-all-content" href="../all-content.html"><img src="../../assets/item/guide_book_3d.png" alt="">Todo el contenido</a>
+    <div class="platform-links" aria-label="Project links">
+      <a class="platform-link" href="https://www.curseforge.com/minecraft/mc-mods/ala-industrial" target="_blank" rel="noopener noreferrer" title="CurseForge"><img src="../../assets/platform/curseforge.png" alt="CurseForge"></a>
+      <a class="platform-link" href="https://modrinth.com/mod/ala-industrial" target="_blank" rel="noopener noreferrer" title="Modrinth"><img src="../../assets/platform/modrinth.ico" alt="Modrinth"></a>
+      <a class="platform-link" href="https://github.com/AlaMine-Team-Org/AlaIndustrial" target="_blank" rel="noopener noreferrer" title="GitHub"><img src="../../assets/platform/github.svg" alt="GitHub"></a>
+      <a class="platform-link" href="https://discord.gg/ky7cFDF8JD" target="_blank" rel="noopener noreferrer" title="Discord"><img src="../../assets/platform/discord.svg" alt="Discord"></a>
+      <a class="platform-link" href="https://alalab.work" target="_blank" rel="noopener noreferrer" title="Ala Lab"><img src="../../assets/platform/alalab.png" alt="Ala Lab"></a>
+    </div>
+    <search class="site-search"><input type="search" data-wiki-search placeholder="Buscar en la wiki…" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-haspopup="listbox" aria-label="Buscar en la guía" autocomplete="off" spellcheck="false" data-index="../search-index.json" data-root="../" data-l10n="{&quot;list&quot;:&quot;Resultados de la búsqueda&quot;,&quot;one&quot;:&quot;página encontrada&quot;,&quot;few&quot;:&quot;páginas encontradas&quot;,&quot;many&quot;:&quot;páginas encontradas&quot;,&quot;loading&quot;:&quot;Cargando el índice de búsqueda…&quot;,&quot;nothing&quot;:&quot;Nada encontrado&quot;}"></search>
+    <details class="language-menu"><summary aria-label="Language">ES</summary><div class="language-popover"><span>ES</span><a href="../../en/nuclear/reactor_alarm_lamp.html">EN</a><a href="../../ru/nuclear/reactor_alarm_lamp.html">RU</a><a href="../../uk/nuclear/reactor_alarm_lamp.html">UA</a><a href="../../zh_cn/nuclear/reactor_alarm_lamp.html">中文</a><a href="../../ja_jp/nuclear/reactor_alarm_lamp.html">日本語</a></div></details>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar" id="wiki-sidebar">
+<div class="group-title">Explorar</div>
+<a class="cat-link" href="../getting-started.html"><img class="nav-icon" src="../../assets/item/tempered_iron_pickaxe.png" alt=""><span>Primeros pasos</span></a>
+<a class="cat-link" href="../recipes.html"><img class="nav-icon" src="../../assets/item/crafting_table_3d.png" alt=""><span>Recetas</span></a>
+<a class="cat-link" href="../utility/player_profile.html"><img class="nav-icon" src="../../assets/vanilla/item/player_head.png" alt=""><span>Perfil del jugador</span></a>
+<div class="group-title">Energía</div>
+<a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>Generadores</span><span class="cat-count" aria-label="14 páginas">14</span></a>
+<a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>Almacenamiento de energía</span><span class="cat-count" aria-label="4 páginas">4</span></a>
+<a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>Transferencia de energía</span><span class="cat-count" aria-label="9 páginas">9</span></a>
+<a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>Energía nuclear</span><span class="cat-count" aria-label="17 páginas">17</span></a>
+<div class="group-title">Procesamiento</div>
+<a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>Máquinas</span><span class="cat-count" aria-label="18 páginas">18</span></a>
+<a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>Máquinas de fluidos</span><span class="cat-count" aria-label="3 páginas">3</span></a>
+<div class="group-title">Logística</div>
+<a class="cat-link" href="../item-transport/index.html"><img class="nav-icon" src="../../assets/item/item_pipe.png" alt=""><span>Transporte de objetos</span><span class="cat-count" aria-label="3 páginas">3</span></a>
+<a class="cat-link" href="../fluid-transport/index.html"><img class="nav-icon" src="../../assets/item/fluid_pipe.png" alt=""><span>Transporte de fluidos</span><span class="cat-count" aria-label="5 páginas">5</span></a>
+<a class="cat-link" href="../fluid-storage/index.html"><img class="nav-icon" src="../../assets/item/fluid_tank_3d.png" alt=""><span>Almacenamiento de fluidos</span><span class="cat-count" aria-label="2 páginas">2</span></a>
+<div class="group-title">Mundo y automatización</div>
+<a class="cat-link" href="../materials/index.html"><img class="nav-icon" src="../../assets/item/uranium_ore_3d.png" alt=""><span>Materiales</span><span class="cat-count" aria-label="27 páginas">27</span></a>
+<a class="cat-link" href="../agriculture/index.html"><img class="nav-icon" src="../../assets/item/cotton_fiber.png" alt=""><span>Agricultura</span><span class="cat-count" aria-label="7 páginas">7</span></a>
+<a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>Máquinas avanzadas</span><span class="cat-count" aria-label="1 página">1</span></a>
+<div class="group-title">Otros</div>
+<a class="cat-link" href="../construction/index.html"><img class="nav-icon" src="../../assets/item/engraved_plate_0_3d.png" alt=""><span>Construcción</span><span class="cat-count" aria-label="5 páginas">5</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>Utilidades</span><span class="cat-count" aria-label="30 páginas">30</span></a>
+<div class="group-title">Objetos</div>
+<a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>Mejoras</span><span class="cat-count" aria-label="3 páginas">3</span></a>
+<a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>Componentes</span><span class="cat-count" aria-label="33 páginas">33</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>Objetos</span><span class="cat-count" aria-label="37 páginas">37</span></a>
+  </aside>
+  <main class="content" id="main-content">
+    <div class="breadcrumbs"><a href="../index.html">Inicio</a><span class="sep">/</span><a href="../nuclear/index.html">Energía nuclear</a><span class="sep">/</span><span>Lámpara de alarma</span></div>
+<div class="block-card">
+  <div class="card-head">
+    <img class="icon" src="../../assets/item/reactor_alarm_lamp_3d.png" alt="Lámpara de alarma" width="64" height="64">
+    <div class="info">
+      <h1>Lámpara de alarma</h1>
+      <div class="block-id">alaindustrial:reactor_alarm_lamp</div>
+      <div class="tags"><span class="tag cat" style="background:#ef4444">Energía nuclear</span><span class="tag lifecycle" style="background:#22c55e">Implementado</span><span class="tag">nuclear</span><span class="tag">reactor</span><span class="tag">alarm</span><span class="tag">redstone</span><span class="tag">light</span></div>
+    </div>
+  </div>
+</div>
+<h2 id="resumen">Resumen</h2>
+
+<p>La <strong>lámpara de alarma</strong> es un faro rojo dentro de una jaula de hierro. La encienden **dos cosas, y basta con</p>
+
+<ol><li><strong>El reactor al que está pegada.</strong> Una lámpara colocada con su base sobre la carcasa de una sala de reactor formada —en el techo, en una pared por fuera o por dentro— o sobre el controlador o una pila de un reactor desnudo pasa a formar parte del reactor y se enciende <strong>sola</strong> con su alarma: sin polvo, sin antena. Puede haber tantas lámparas como se quiera (decisión del propietario, 2026-11-04).</li><li><strong>Redstone, en cualquier sitio.</strong> Desde el <a href="reactor_antenna.html">mástil de la antena del reactor</a> por cualquier circuito del jugador —polvo, repetidores, inversor— en la otra punta de la base, junto a la cama, en la entrada; y lo mismo desde una placa de presión en la puerta o una granja de mobs: a la lámpara le da igual de dónde venga la señal.</li></ol>
+
+<p>Se coloca en cualquiera de las seis caras: con la base hacia el bloque sobre el que se pone y la jaula hacia fuera.</p>
+
+<p>La lámpara no hace ruido (el sonido de la alarma corresponde a la futura sirena del reactor, y no distingue la intensidad de la señal: cualquier señal mayor que cero la enciende, y con el reactor luce desde el aviso hasta la emergencia.</p>
+
+<h2 id="qué-hace">Qué hace</h2>
+
+<table><thead><tr><th>Propiedad</th><th>Valor</th></tr></thead><tbody><tr><td>Entrada</td><td>señal de redstone de cualquier intensidad por cualquier lado (como la lámpara de redstone vanilla) <strong>o</strong> la alarma del reactor al que está pegada su base</td></tr><tr><td>Encendida</td><td>luz <strong>14</strong> (como una antorcha), lente roja que parpadea</td></tr><tr><td>Sin señal</td><td>se apaga a los <strong>4 ticks</strong> (como la lámpara vanilla): un pulso corto no se corta a medias</td></tr><tr><td>Distingue 7 y 15</td><td><strong>no</strong>: encendido/apagado; el nivel lo distinguen un comparador o la longitud del polvo (ver «Cómo distinguir el aviso de la emergencia»)</td></tr><tr><td>Sonido</td><td>no</td></tr><tr><td>BlockEntity</td><td><strong>no</strong></td></tr><tr><td>Vínculo con el reactor</td><td>solo por su base: pegada a la carcasa de una sala formada, al controlador o a una pila de un reactor desnudo, luce con su alarma; colocada en otro sitio, solo con redstone</td></tr></tbody></table>
+
+<h3 id="la-lámpara-sobre-el-reactor">La lámpara sobre el reactor</h3>
+
+<table><thead><tr><th>Propiedad</th><th>Valor</th></tr></thead><tbody><tr><td>Dónde</td><td>con la base sobre cualquier celda de la carcasa de una sala <strong>formada</strong> (por fuera o por dentro), sobre el controlador, sobre una pila de un reactor desnudo</td></tr><tr><td>Luce</td><td>con la alarma <strong>de 7 en adelante</strong>: los mismos enclavamientos que el mástil de la antena; se enciende al 70 % y se apaga por debajo del 60 %; con la fusión (85 ↔ 70 %) y la cuenta atrás luce</td></tr><tr><td>En normal</td><td>apagada</td></tr><tr><td>Cuántas</td><td>tantas como se quiera</td></tr><tr><td>Cómo se encuentra</td><td>el controlador recoge esas lámparas al recorrer la carcasa (cada 40 ticks); en un reactor desnudo, alrededor del controlador y de las pilas; una colocada a mano empieza a lucir desde el recorrido siguiente</td></tr><tr><td>Quién la escribe</td><td>el controlador, como último paso de su tick, y solo cuando cambia: no hay actualizaciones de más</td></tr><tr><td>Cuándo se apaga sola</td><td>una lámpara que luce por el reactor comprueba su apoyo cada <strong>20</strong> ticks: si la celda no es carcasa de una sala formada, ni el controlador, ni una pila, se apaga</td></tr></tbody></table>
+
+<p>El reactor con antena y polvo y la lámpara pegada al reactor son dos caminos independientes: con redstone la lámpara funciona como antes, y luce si hay <strong>al menos uno</strong> de ellos.</p>
+
+<p>Salvedad conocida: un controlador destruido por una explosión (y no por el jugador) deja la carcasa «formada» hasta la siguiente construcción —la misma imperfección cosmética que la textura sin juntas de la carcasa—, y una lámpara sobre esa carcasa puede seguir encendida. El jugador que rompe el controlador desmonta la sala, y las lámparas se apagan.</p>
+
+<h3 id="cómo-distinguir-el-aviso-de-la-emergencia">Cómo distinguir el aviso de la emergencia</h3>
+
+<p>El mástil de la antena da <strong>7</strong> con el aviso y <strong>15</strong> con la emergencia (ver <a href="reactor_antenna.html">la antena</a>). La lámpara se enciende con cualquiera de los dos; se distinguen con el circuito:</p>
+
+<ul><li><strong>Longitud del polvo.</strong> La señal baja 1 por cada bloque de polvo. Una lámpara a más de 7 bloques de polvo del mástil solo recibe la señal de 15, es decir, se enciende <strong>solo en una emergencia</strong>; la más cercana, ya con el aviso.</li><li><strong>Un comparador</strong> en modo resta o comparación separa el 7 del 15 igual que cualquier otra señal.</li></ul>
+
+<h3 id="parada-de-emergencia-hecha-a-mano">Parada de emergencia hecha a mano</h3>
+
+<p>El <a href="reactor_controller.html">controlador</a> funciona mientras le llega señal. Si la señal de alarma se lleva al controlador a través de un <strong>inversor</strong> (una antorcha de redstone), el reactor se para solo con la alarma. Sin inversor, la señal de alarma haría lo contrario y encendería el reactor; por eso la descripción del mástil y la guía lo dicen claramente. El mástil en sí nunca toca el controlador ni le da señal (ver la antena).</p>
+
+<h2 id="luz-y-parpadeo">Luz y parpadeo</h2>
+
+<ul><li>El nivel de luz de la lámpara encendida es un <strong>14</strong> constante, como el de una antorcha (decisión del propietario, 2026-11-04). Solo parpadea la imagen: la luz del bloque no salta; si lo hiciera, el mundo recalcularía la iluminación en cada destello.</li><li>El parpadeo es la textura animada de la lente (<code>.mcmeta</code>): un brillo que recorre la lente <strong>no más de una vez por segundo</strong>, regular, sin caídas al azar (la misma regla que la pantalla de la tableta en.</li><li>La lente se dibuja con brillo <code>light_emission: 15</code> en el modelo, así que el destello se ve en plena oscuridad.</li><li>La animación sigue el reloj común del atlas: todas las lámparas del mundo parpadean a la vez. Es lo esperado: así parpadean también los bloques animados vanilla.</li><li>Apagada, la lámpara es una lente rojo oscuro sin brillo, igual que una lámpara sin señal.</li></ul>
+
+<h2 id="energía">Energía</h2>
+
+<table><thead><tr><th>Campo</th><th>Valor</th></tr></thead><tbody><tr><td>Papel</td><td>ninguno</td></tr><tr><td>Búfer (EU/FE)</td><td>0</td></tr><tr><td>Entrada / salida máx. (EU/FE/tick)</td><td>n/a</td></tr></tbody></table>
+
+<p>La lámpara no consume EU/FE: la alimenta la propia señal de redstone, como a la lámpara vanilla, o la alarma de su reactor. La alarma no debe depender de que haya un cable hasta la lámpara.</p>
+
+<h2 id="propiedades-del-bloque">Propiedades del bloque</h2>
+
+<table><thead><tr><th>Campo</th><th>Valor</th></tr></thead><tbody><tr><td>Forma</td><td>casi un cubo completo: 14 × 15 × 14 px, base pegada al apoyo (de pie en el suelo: x y z 1..15, y 0..15), girada según la cara; la jaula es transparente ⇒; las seis formas se construyen una sola vez (ADR-023)</td></tr><tr><td>Colisión</td><td>coincide con la forma</td></tr><tr><td>Colocación</td><td>en cualquiera de las 6 caras (<code>facing</code> = cara pulsada): base hacia el apoyo, jaula hacia fuera; en una pared mira hacia fuera de ella</td></tr><tr><td>Apoyo</td><td>no hace falta para sostenerse: quitar el apoyo no tira la lámpara; para el vínculo con el reactor, el apoyo es aquello a lo que está pegada la base</td></tr><tr><td>Dureza</td><td>1.5</td></tr><tr><td>Resistencia a explosiones</td><td>6.0</td></tr><tr><td>Herramienta</td><td>pico (necesario para soltar el bloque), etiqueta <code>mineable/pickaxe</code></td></tr><tr><td>Sonido</td><td>metal</td></tr><tr><td>Emisión de luz</td><td>14 con <code>lit</code> o <code>alarm</code>, 0 sin ellos</td></tr><tr><td>Estados de bloque</td><td><code>facing</code> (6) × <code>lit</code> (2, por redstone) × <code>alarm</code> (2, por el reactor = 24</td></tr><tr><td>Suelta</td><td>la propia lámpara, ×1</td></tr></tbody></table>
+
+<p>La lámpara es una luminaria de metal, no un bloque de la pared del reactor: no necesita la dureza de la carcasa. No ocupa una celda de la pared de la sala ni cuenta como brecha: va pegada a la carcasa por fuera o por dentro.</p>
+
+<h2 id="apariencia">Apariencia</h2>
+
+<p>El aspecto es la variante 01 <strong>«Faro en jaula»</strong>, elegida por el propietario el 2026-11-03 entre tres bocetos (<code>tools/model_sources/reactor_alarm_lamp_concepts/</code>, fuente <code>v01_cage_beacon/reactor_alarm_lamp.bbmodel</code>): una lente de cristal rojo en una jaula de hierro sobre una base oscura, con un capuchón arriba.</p>
+
+<ul><li>Dos modelos: apagado (lente rojo oscuro) y encendido (lente con textura animada y <code>light_emission: 15</code>), girados por el estado de bloque según las seis caras, como la vara del End vanilla.</li><li>El icono del objeto es el modelo apagado.</li><li>La jaula no tapa a los vecinos: el bloque no ocluye, y las caras vecinas se dibujan.</li></ul>
+
+<h2 id="recetas">Recetas</h2>
+
+<ul><li>Fabricación:, forma «3×3», <strong>×1</strong> por vez.</li></ul>
+
+<pre><code class="lang-">I G I I = lingote de hierro ×4
+G L G G = panel de cristal tintado de rojo (minecraft:red_stained_glass_pane) ×3
+I R I L = lámpara de redstone (minecraft:redstone_lamp) ×1
+R = redstone ×1</code></pre>
+
+<p>Se lee como el aparato: una lámpara vanilla en una carcasa de hierro tras cristal rojo, más un cable. La receta no depende de la fase nuclear: la lámpara sirve para cualquier circuito y se desbloquea desde el principio.</p>
+
+<h2 id="progresión">Progresión</h2>
+
+<ul><li>Nivel: ninguno (bloque pasivo, sin EU/FE).</li><li>Requiere: solo materiales vanilla.</li><li>Desbloquea: nada nuevo; es la pareja de la salida de redstone de la <a href="reactor_antenna.html">antena del reactor</a>.</li></ul>
+
+<h2 id="relacionado">Relacionado</h2>
+
+<ul><li><a href="reactor_antenna.html">Antena de reactor</a>: su mástil da la señal de redstone de la alarma.</li><li><a href="reactor_controller.html">Controlador de reactor</a>: de donde viene la alarma; funciona con señal.</li><li><a href="reactor_lamp.html">Lámpara de reactor</a>: otra luminaria, un bloque de la carcasa que luce con <code>formed</code>.</li></ul>
+
+<h2>Fabricación</h2>
+<div class="recipe-cards"><div class="recipe-card" data-name="lámpara de alarma alaindustrial:reactor_alarm_lamp" data-type="minecraft:crafting_shaped"><div class="recipe-header"><span class="recipe-type">Fabricación con forma</span></div><div class="recipe-body"><div class="recipe-grid"><div class="cell" title="Lingote de hierro"><img src="../../assets/item/iron_ingot_3d.png" alt="Lingote de hierro" width="32" height="32"></div> <div class="cell placeholder" title="Panel de cristal tintado de rojo" aria-label="Panel de cristal tintado de rojo"><span>red st</span></div> <div class="cell" title="Lingote de hierro"><img src="../../assets/item/iron_ingot_3d.png" alt="Lingote de hierro" width="32" height="32"></div> <div class="cell placeholder" title="Panel de cristal tintado de rojo" aria-label="Panel de cristal tintado de rojo"><span>red st</span></div> <div class="cell placeholder" title="Lámpara de redstone" aria-label="Lámpara de redstone"><span>redsto</span></div> <div class="cell placeholder" title="Panel de cristal tintado de rojo" aria-label="Panel de cristal tintado de rojo"><span>red st</span></div> <div class="cell" title="Lingote de hierro"><img src="../../assets/item/iron_ingot_3d.png" alt="Lingote de hierro" width="32" height="32"></div> <div class="cell" title="Polvo de redstone"><img src="../../assets/item/redstone_3d.png" alt="Polvo de redstone" width="32" height="32"></div> <div class="cell" title="Lingote de hierro"><img src="../../assets/item/iron_ingot_3d.png" alt="Lingote de hierro" width="32" height="32"></div></div><div class="recipe-process"><img class="station" src="../../assets/item/crafting_table_3d.png" alt="Mesa de trabajo" title="Mesa de trabajo" width="30" height="30"><div class="arrow" aria-label="Fabricación">▶</div></div><div class="recipe-result"><div class="cell result" title="Lámpara de alarma"><img src="../../assets/item/reactor_alarm_lamp_3d.png" alt="Lámpara de alarma" width="32" height="32"></div><div class="result-name">Lámpara de alarma</div></div></div></div></div>
+  </main>
+</div>
+
+</body>
+</html>

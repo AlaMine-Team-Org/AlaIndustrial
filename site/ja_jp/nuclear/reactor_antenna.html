@@ -364,7 +364,7 @@
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>発電機</span><span class="cat-count" aria-label="14 ページ">14</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>エネルギー貯蔵</span><span class="cat-count" aria-label="4 ページ">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>エネルギー送電</span><span class="cat-count" aria-label="9 ページ">9</span></a>
-<a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>原子力</span><span class="cat-count" aria-label="16 ページ">16</span></a>
+<a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>原子力</span><span class="cat-count" aria-label="17 ページ">17</span></a>
 <div class="group-title">加工</div>
 <a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>マシン</span><span class="cat-count" aria-label="18 ページ">18</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>液体マシン</span><span class="cat-count" aria-label="3 ページ">3</span></a>
@@ -378,11 +378,11 @@
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>高度なマシン</span><span class="cat-count" aria-label="1 ページ">1</span></a>
 <div class="group-title">その他</div>
 <a class="cat-link" href="../construction/index.html"><img class="nav-icon" src="../../assets/item/engraved_plate_0_3d.png" alt=""><span>建築ブロック</span><span class="cat-count" aria-label="5 ページ">5</span></a>
-<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="29 ページ">29</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>ユーティリティ</span><span class="cat-count" aria-label="30 ページ">30</span></a>
 <div class="group-title">アイテム</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>アップグレード</span><span class="cat-count" aria-label="3 ページ">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>部品</span><span class="cat-count" aria-label="33 ページ">33</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="36 ページ">36</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>ゲームアイテム</span><span class="cat-count" aria-label="37 ページ">37</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">ホーム</a><span class="sep">/</span><a href="../nuclear/index.html">原子力</a><span class="sep">/</span><span>原子炉アンテナ</span></div>
@@ -438,6 +438,14 @@
 
 <p>原子炉のバッファが共通で足りないとき、「アンテナを先にするか、エネルギーの販売を先にするか」の順序は 実装時に決め、ここに記します。あらかじめ分かっている制約がひとつあります。バッファからの配給は バッファが空のとき（ は充電ゼロで）止まるので、原子炉だけで生きているアンテナは、空に なった原子炉と一緒に消えます。これは想定どおりです。エネルギーの無い停止中の原子炉を見たいなら、 アンテナをケーブルで給電しなければなりません。</p>
 
+<h2 id="警報のレッドストーン出力">警報のレッドストーン出力</h2>
+
+<p>アンテナのブームは原子炉の状態に応じて<strong>弱いレッドストーン信号</strong>を出します（）。ブームからダストや リピーターを引き、先に<a href="reactor_alarm_lamp.html">非常灯</a>、のちにはサイレン（）、あるいはプレイヤー の好きな回路をつなぎます。信号を出すのは<strong>ブームだけ</strong>で、壁の中のアンテナブロックは出しません。</p>
+
+<table><thead><tr><th>強度</th><th>いつ</th><th>オンとオフ（原子炉のゲージ）</th></tr></thead><tbody><tr><td><strong>0</strong></td><td>通常</td><td>—</td></tr><tr><td><strong>7</strong></td><td>警告</td><td>= <strong>70 %</strong> でオン、 = <strong>60 %</strong> 未満でオフ — コントローラーのサイレンと同じラッチ</td></tr><tr><td><strong>15</strong></td><td>事故</td><td>カウントダウンが始まっている<strong>か</strong>、炉心溶融ラッチが保持されている： = <strong>85 %</strong> でオン、 = <strong>70 %</strong> 未満でオフ</td></tr></tbody></table>
+
+<ul><li><strong>ゲージ</strong>はパネルやサイレンと同じもの：部屋の熱、むき出しの原子炉なら不安定度です。むき出しの原子炉には 炉心溶融のラインがないので、15 を出すのはカウントダウン中だけです。ラック 3 基でゲージは 90 % に保たれる ため、ラック 3 基の溶岩ファームは<strong>常に 7</strong> を出します — これは正しい動作です。</li><li><strong>ヒステリシス。</strong>どちらの段もオンより低い値でオフになるので、ゲージがしきい値付近で揺れても信号はばたつき ません：7 は 70 ↔ 60、15 は 85 ↔ 70。炉心溶融ラッチはコントローラーと一緒に保存されます。</li><li><strong>信号はコントローラーのティックの最後の段階で計算</strong>され、カウントダウンの後なので 1 ティック遅れることは ありません。ワールドへの書き込みは強度が変わったときだけで、余計な隣接更新はありません。</li><li><strong>弱い信号</strong>で、日照センサーと同じです。ブームの隣のダスト、リピーター、コンパレーター、ランプが受け取り ます。隣の不透過ブロックには信号を<strong>伝えません</strong>。</li><li><strong>リンクがなければ無信号。</strong>電力がない、維持費が払われていない、ブームの場所がふさがれた、コントローラーが 壊された、コントローラーのチャンクが読み込まれていない — そのようなアンテナは <strong>0</strong> を出します。信号を 出しているブームは <strong>20</strong> ティックごとに背後のアンテナを確かめ、送信していなければ信号を消します。つまり 電力のないアンテナは通常時と同じに見えます。リンクはタブレットで確認でき（「リンクなし」と表示されます）、 ブームのツールチップもこのことを警告します。</li><li><strong>コントローラーがこの信号を受け取ることは決してありません。</strong>コントローラーはレッドストーンが届いている間 動作するため、警報が入れば原子炉をひとりでに起動してしまいます。ブームは壁でも、むき出しの原子炉の隣でも コントローラーに接しません（ブームのマスはアンテナの前、コントローラーは横か後ろ）。また弱い信号は不透過 ブロックを通り抜けません。<strong>自動緊急停止</strong>を作るなら、コントローラーへの経路にインバーター（レッドストーン トーチ）を置きます：警報がトーチを消す — コントローラーが信号を失う — 原子炉が止まる。</li><li>7 と 15 はダストの長さ（ブームからダスト 7 ブロックより遠いランプは事故のときだけ点く）かコンパレーターで 見分けられます。</li></ul>
+
 <h2 id="ブロックの性質">ブロックの性質</h2>
 
 <table><thead><tr><th>項目</th><th>値</th></tr></thead><tbody><tr><td>形状</td><td>完全な立方体 16³（遮蔽）</td></tr><tr><td>硬さ</td><td>他のシェルと同じ（5.0）、実装時に確定</td></tr><tr><td>爆発耐性</td><td>他のシェルと同じ（30.0）、実装時に確定</td></tr><tr><td>道具</td><td>ツルハシ（ドロップに必須）</td></tr><tr><td>音</td><td>金属</td></tr><tr><td>ブロックステート</td><td><code>formed</code>、<code>edge</code> — シェル全体と同じく見た目だけ</td></tr><tr><td>BlockEntity</td><td>あり（バッファと消費）</td></tr></tbody></table>
@@ -464,7 +472,7 @@
 
 <h2 id="今後この仕様の範囲外">今後（この仕様の範囲外）</h2>
 
-<ul><li>アンテナ内の信号増幅カード — 。</li><li>アンテナの警報のレッドストーン出力と非常灯 — 。</li><li>原子炉のサイレン — 。</li></ul>
+<ul><li>アンテナ内の信号増幅カード — 。</li><li>原子炉のサイレン — 。</li></ul>
 
 <p>最初のバージョンに、「将来のため」の空のスロットや出力はありません。</p>
 

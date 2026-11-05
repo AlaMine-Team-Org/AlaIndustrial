@@ -364,7 +364,7 @@
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>Generadores</span><span class="cat-count" aria-label="14 páginas">14</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>Almacenamiento de energía</span><span class="cat-count" aria-label="4 páginas">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>Transferencia de energía</span><span class="cat-count" aria-label="9 páginas">9</span></a>
-<a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>Energía nuclear</span><span class="cat-count" aria-label="16 páginas">16</span></a>
+<a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>Energía nuclear</span><span class="cat-count" aria-label="17 páginas">17</span></a>
 <div class="group-title">Procesamiento</div>
 <a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>Máquinas</span><span class="cat-count" aria-label="18 páginas">18</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>Máquinas de fluidos</span><span class="cat-count" aria-label="3 páginas">3</span></a>
@@ -378,11 +378,11 @@
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>Máquinas avanzadas</span><span class="cat-count" aria-label="1 página">1</span></a>
 <div class="group-title">Otros</div>
 <a class="cat-link" href="../construction/index.html"><img class="nav-icon" src="../../assets/item/engraved_plate_0_3d.png" alt=""><span>Construcción</span><span class="cat-count" aria-label="5 páginas">5</span></a>
-<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>Utilidades</span><span class="cat-count" aria-label="29 páginas">29</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>Utilidades</span><span class="cat-count" aria-label="30 páginas">30</span></a>
 <div class="group-title">Objetos</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>Mejoras</span><span class="cat-count" aria-label="3 páginas">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>Componentes</span><span class="cat-count" aria-label="33 páginas">33</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>Objetos</span><span class="cat-count" aria-label="36 páginas">36</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>Objetos</span><span class="cat-count" aria-label="37 páginas">37</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Inicio</a><span class="sep">/</span><a href="../nuclear/index.html">Energía nuclear</a><span class="sep">/</span><span>Antena de reactor</span></div>
@@ -438,6 +438,14 @@
 
 <p>El orden «la antena antes de vender la energía o después» cuando el búfer del reactor no alcanza para todo se decide al implementar y se anota aquí. De antemano se conoce una limitación: el reparto desde el búfer termina cuando el búfer está vacío — con carga cero), así que una antena que vive solo del reactor se apaga junto con el reactor vacío. Es lo esperado: para mirar un reactor parado sin energía dentro, hay que alimentar la antena con un cable.</p>
 
+<h2 id="salida-de-redstone-de-alarma">Salida de redstone de alarma</h2>
+
+<p>El mástil de la antena emite una <strong>señal de redstone débil</strong> según el estado del reactor: de él se lleva polvo o repetidores hasta una <a href="reactor_alarm_lamp.html">lámpara de alarma</a>, más adelante una sirena o cualquier circuito del jugador. <strong>Solo el mástil</strong> da la señal; el cubo de la antena en la pared no.</p>
+
+<table><thead><tr><th>Nivel</th><th>Cuándo</th><th>Encendido y apagado (escala del reactor)</th></tr></thead><tbody><tr><td><strong>0</strong></td><td>normal</td><td>—</td></tr><tr><td><strong>7</strong></td><td>aviso</td><td>se enciende en = <strong>70 %</strong>, se apaga por debajo de = <strong>60 %</strong> — el mismo enclavamiento que la sirena del controlador</td></tr><tr><td><strong>15</strong></td><td>emergencia</td><td>la cuenta atrás está armada <strong>o</strong> se mantiene el enclavamiento de fusión: se enciende en = <strong>85 %</strong>, se apaga por debajo de = <strong>70 %</strong></td></tr></tbody></table>
+
+<ul><li><strong>La escala</strong> es la del panel y la sirena: el calor de la sala o, en un reactor desnudo, la inestabilidad. Un reactor desnudo no tiene línea de fusión, así que da 15 solo durante la cuenta atrás; tres pilas mantienen su escala en el 90 %, de modo que una granja de lava de tres pilas da <strong>7 siempre</strong>, y es lo correcto.</li><li><strong>Histéresis.</strong> Los dos niveles se apagan más abajo de donde se encienden, así que la señal no parpadea mientras la escala tiembla junto a un umbral: 70 ↔ 60 para el 7 y 85 ↔ 70 para el 15. El enclavamiento de fusión se guarda con el controlador.</li><li><strong>La señal es el último paso del tick del controlador</strong>, después de la cuenta atrás, así que nunca va un tick por detrás. El mundo solo se escribe cuando cambia el nivel: no hay actualizaciones de vecinos de más.</li><li><strong>Una señal débil</strong>, como la del sensor de luz solar: la recogen el polvo, un repetidor, un comparador o una lámpara junto al mástil; <strong>no</strong> alimenta el bloque sólido de al lado.</li><li><strong>Sin enlace, sin señal.</strong> Una antena sin energía, sin mantenimiento pagado, con el mástil tapado, con el controlador roto o con el chunk del controlador descargado da <strong>0</strong>: un mástil con señal comprueba cada <strong>20</strong> ticks la antena que tiene detrás y apaga la señal si no está transmitiendo. Por eso una antena sin energía se ve igual que en normal; el enlace se comprueba con la tableta (muestra «sin enlace») y la descripción del mástil lo advierte.</li><li><strong>El controlador nunca recibe la señal.</strong> Funciona mientras le llega redstone, y una alarma que le llegara encendería el reactor por sí sola. El mástil nunca toca el controlador, ni en una pared ni junto a un reactor desnudo (su celda está delante de la antena, el controlador al lado o detrás), y una señal débil no atraviesa un bloque sólido. Para una <strong>parada de emergencia automática</strong>, pon un inversor (una antorcha de redstone) en el camino al controlador: la alarma apaga la antorcha, el controlador pierde la señal y el reactor se para.</li><li>El 7 se distingue del 15 por la longitud del polvo (una lámpara a más de 7 bloques de polvo del mástil solo se enciende en una emergencia) o con un comparador.</li></ul>
+
 <h2 id="propiedades-del-bloque">Propiedades del bloque</h2>
 
 <table><thead><tr><th>Campo</th><th>Valor</th></tr></thead><tbody><tr><td>Forma</td><td>cubo completo 16³ (oclusor)</td></tr><tr><td>Dureza</td><td>como el resto de la carcasa (5.0), se confirma al implementar</td></tr><tr><td>Resistencia a explosiones</td><td>como el resto de la carcasa (30.0), se confirma al implementar</td></tr><tr><td>Herramienta</td><td>pico (necesario para el botín)</td></tr><tr><td>Sonido</td><td>metal</td></tr><tr><td>Blockstates</td><td><code>formed</code>, <code>edge</code> — cosméticos, como en toda la carcasa</td></tr><tr><td>BlockEntity</td><td>sí (búfer y consumo)</td></tr></tbody></table>
@@ -464,7 +472,7 @@
 
 <h2 id="más-adelante-no-en-esta-especificación">Más adelante (no en esta especificación)</h2>
 
-<ul><li>Tarjetas amplificadoras de señal en la antena —.</li><li>Salida de redstone de alarma de la antena y lámparas de emergencia —.</li><li>Sirena del reactor —.</li></ul>
+<ul><li>Tarjetas amplificadoras de señal en la antena —.</li><li>Sirena del reactor —.</li></ul>
 
 <p>En la primera versión no hay ranuras vacías ni salidas «para el futuro».</p>
 

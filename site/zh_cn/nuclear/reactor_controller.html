@@ -364,7 +364,7 @@
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>发电机</span><span class="cat-count" aria-label="14 个页面">14</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>储能装置</span><span class="cat-count" aria-label="4 个页面">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>能量传输</span><span class="cat-count" aria-label="9 个页面">9</span></a>
-<a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>核能设施</span><span class="cat-count" aria-label="16 个页面">16</span></a>
+<a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>核能设施</span><span class="cat-count" aria-label="17 个页面">17</span></a>
 <div class="group-title">加工</div>
 <a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>机器</span><span class="cat-count" aria-label="18 个页面">18</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>流体机器</span><span class="cat-count" aria-label="3 个页面">3</span></a>
@@ -378,11 +378,11 @@
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>高级机器</span><span class="cat-count" aria-label="1 个页面">1</span></a>
 <div class="group-title">其他</div>
 <a class="cat-link" href="../construction/index.html"><img class="nav-icon" src="../../assets/item/engraved_plate_0_3d.png" alt=""><span>建筑方块</span><span class="cat-count" aria-label="5 个页面">5</span></a>
-<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="29 个页面">29</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>实用方块</span><span class="cat-count" aria-label="30 个页面">30</span></a>
 <div class="group-title">物品</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>升级配件</span><span class="cat-count" aria-label="3 个页面">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>组件</span><span class="cat-count" aria-label="33 个页面">33</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="36 个页面">36</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>游戏物品</span><span class="cat-count" aria-label="37 个页面">37</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">首页</a><span class="sep">/</span><a href="../nuclear/index.html">核能设施</a><span class="sep">/</span><span>反应堆控制器</span></div>
@@ -485,6 +485,10 @@
 <p>刻意不再有别的操作机构：两个，正好是站在冒烟的大厅里的玩家脑子里装得下的数量。</p>
 
 <p>滑块在<strong>任何规模上都有效</strong>：它切的是已经被上限钳过的值，所以 3×3 一层用 50% 就是 256 EU/FE/刻——热量、 水和每小时的铀也正好减半。</p>
+
+<h4 id="红石警报输出">红石警报输出（）</h4>
+
+<p>控制器通过<strong><a href="reactor_antenna.html">天线</a>的支杆</strong>向外发出警报：0——正常，7——警告（警笛的锁存， 70 ↔ 60 %），15——熔毁（自己的锁存，85 ↔ 70 %）或倒计时。强度在每刻的最后一步按与面板、警笛相同的刻度 计算，并分发给控制器这一刻服务的所有天线。控制器本身收不到这个信号：如果想把警报接到它上面实现自动停堆， 需要一个反相器——否则警报会启动反应堆而不是停下它。</p>
 
 <h3 id="冷却水是运行中的房间唯一的降温手段">冷却：水是运行中的房间唯一的降温手段</h3>
 

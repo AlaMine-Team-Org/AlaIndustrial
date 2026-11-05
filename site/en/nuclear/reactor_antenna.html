@@ -364,7 +364,7 @@
 <a class="cat-link" href="../generators/index.html"><img class="nav-icon" src="../../assets/item/solar_panel_3d.png" alt=""><span>Generators</span><span class="cat-count" aria-label="14 pages">14</span></a>
 <a class="cat-link" href="../energy-storage/index.html"><img class="nav-icon" src="../../assets/item/battery_box_3d.png" alt=""><span>Energy Storage</span><span class="cat-count" aria-label="4 pages">4</span></a>
 <a class="cat-link" href="../energy-transfer/index.html"><img class="nav-icon" src="../../assets/item/copper_cable_3d.png" alt=""><span>Energy Transfer</span><span class="cat-count" aria-label="9 pages">9</span></a>
-<a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>Nuclear</span><span class="cat-count" aria-label="16 pages">16</span></a>
+<a class="cat-link active" href="../nuclear/index.html"><img class="nav-icon" src="../../assets/item/reactor_room_3d.png" alt=""><span>Nuclear</span><span class="cat-count" aria-label="17 pages">17</span></a>
 <div class="group-title">Processing</div>
 <a class="cat-link" href="../machines/index.html"><img class="nav-icon" src="../../assets/item/macerator_3d.png" alt=""><span>Machines</span><span class="cat-count" aria-label="18 pages">18</span></a>
 <a class="cat-link" href="../fluid-machines/index.html"><img class="nav-icon" src="../../assets/item/pump_3d.png" alt=""><span>Fluid Machines</span><span class="cat-count" aria-label="3 pages">3</span></a>
@@ -378,11 +378,11 @@
 <a class="cat-link" href="../advanced-machines/index.html"><img class="nav-icon" src="../../assets/item/teleporter_3d.png" alt=""><span>Advanced Machines</span><span class="cat-count" aria-label="1 page">1</span></a>
 <div class="group-title">Other</div>
 <a class="cat-link" href="../construction/index.html"><img class="nav-icon" src="../../assets/item/engraved_plate_0_3d.png" alt=""><span>Construction</span><span class="cat-count" aria-label="5 pages">5</span></a>
-<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="29 pages">29</span></a>
+<a class="cat-link" href="../utility/index.html"><img class="nav-icon" src="../../assets/item/iron_chest_3d.png" alt=""><span>Utility</span><span class="cat-count" aria-label="30 pages">30</span></a>
 <div class="group-title">Items</div>
 <a class="cat-link" href="../upgrades/index.html"><img class="nav-icon" src="../../assets/item/empty_chip.png" alt=""><span>Upgrades</span><span class="cat-count" aria-label="3 pages">3</span></a>
 <a class="cat-link" href="../components/index.html"><img class="nav-icon" src="../../assets/item/electronic_circuit_3d.png" alt=""><span>Components</span><span class="cat-count" aria-label="33 pages">33</span></a>
-<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="36 pages">36</span></a>
+<a class="cat-link" href="../items/index.html"><img class="nav-icon" src="../../assets/item/battery_pouch.png" alt=""><span>Items</span><span class="cat-count" aria-label="37 pages">37</span></a>
   </aside>
   <main class="content" id="main-content">
     <div class="breadcrumbs"><a href="../index.html">Home</a><span class="sep">/</span><a href="../nuclear/index.html">Nuclear</a><span class="sep">/</span><span>Reactor Antenna</span></div>
@@ -438,6 +438,14 @@
 
 <p>The order, "antenna before selling energy or after", when the reactor's buffer is short for both, is settled at implementation and written down here. One limit is known in advance: feeding from the buffer stops when the buffer is empty — at zero charge), so an antenna that lives on the reactor alone goes dark with an empty reactor. This is expected: to look at a stopped reactor with no energy in it, the antenna has to be powered by a cable.</p>
 
+<h2 id="redstone-alarm-output">Redstone alarm output</h2>
+
+<p>The antenna's boom gives out a <strong>weak redstone signal</strong> from the reactor's state: run dust or repeaters from it to an <a href="reactor_alarm_lamp.html">alarm lamp</a>, later a siren, or any circuit of the player's. <strong>Only the boom</strong> gives the signal; the antenna cube in the wall does not.</p>
+
+<table><thead><tr><th>Level</th><th>When</th><th>On and off (the reactor's scale)</th></tr></thead><tbody><tr><td><strong>0</strong></td><td>normal</td><td>—</td></tr><tr><td><strong>7</strong></td><td>warning</td><td>on at = <strong>70 %</strong>, off below = <strong>60 %</strong> — the same latch as the controller's siren</td></tr><tr><td><strong>15</strong></td><td>emergency</td><td>the countdown is armed <strong>or</strong> the meltdown latch holds: on at = <strong>85 %</strong>, off below = <strong>70 %</strong></td></tr></tbody></table>
+
+<ul><li><strong>The scale</strong> is the one the panel and the siren use: the room's heat, or instability for a bare reactor. A bare reactor has no meltdown line, so it gives 15 only during the countdown; three racks hold its scale at 90 %, so a lava farm on three racks gives <strong>7 all the time</strong> — that is correct.</li><li><strong>Hysteresis.</strong> Both levels switch off lower than they switch on, so the signal does not chatter while the scale wobbles at a threshold: 70 ↔ 60 for 7 and 85 ↔ 70 for 15. The meltdown latch is saved with the controller.</li><li><strong>The signal is the last step of the controller's tick</strong>, after the countdown, so it never lags a tick behind. The world is written only when the level changes — no extra neighbour updates.</li><li><strong>A weak signal</strong>, like a daylight detector's: dust, a repeater, a comparator or a lamp next to the boom takes it; it does <strong>not</strong> power the solid block beside it.</li><li><strong>No link — no signal.</strong> An antenna with no power, no upkeep paid, a built-over boom, a broken controller or the controller's chunk unloaded gives <strong>0</strong>: a boom with a signal checks the antenna behind it every <strong>20</strong> ticks and drops the signal when it is not transmitting. So an unpowered antenna looks just like normal; check the link with the tablet (it shows "no link"), and the boom's tooltip warns about this.</li><li><strong>The controller never gets the signal.</strong> It runs while redstone reaches it, and an alarm reaching it would start the reactor by itself. The boom never touches the controller, in a wall or by a bare reactor (its cell is in front of the antenna, the controller beside or behind), and a weak signal does not pass through a solid block. For an <strong>automatic emergency stop</strong>, put an inverter (a redstone torch) on the way to the controller: the alarm turns the torch off — the controller loses its signal — the reactor stops.</li><li>Tell 7 from 15 by dust length (a lamp more than 7 dust from the boom lights only in an emergency) or with a comparator.</li></ul>
+
 <h2 id="block-properties">Block properties</h2>
 
 <table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Shape</td><td>full cube 16³ (occluder)</td></tr><tr><td>Hardness</td><td>the same as the rest of the shell (5.0), confirmed at implementation</td></tr><tr><td>Blast resistance</td><td>the same as the rest of the shell (30.0), confirmed at implementation</td></tr><tr><td>Tool</td><td>pickaxe (required for drops)</td></tr><tr><td>Sound</td><td>metal</td></tr><tr><td>Blockstates</td><td><code>formed</code>, <code>edge</code> — cosmetic, as for the whole shell</td></tr><tr><td>BlockEntity</td><td>yes (buffer and upkeep)</td></tr></tbody></table>
@@ -464,7 +472,7 @@
 
 <h2 id="what-comes-next-not-in-this-spec">What comes next (not in this spec)</h2>
 
-<ul><li>Signal booster cards in the antenna —.</li><li>A redstone alarm output of the antenna and emergency lamps —.</li><li>A reactor siren —.</li></ul>
+<ul><li>Signal booster cards in the antenna —.</li><li>A reactor siren —.</li></ul>
 
 <p>There are no empty slots or outputs "for the future" in the first version.</p>
 
