@@ -28,6 +28,7 @@ import dev.alaindustrial.block.ReinforcedGlassTrapdoorBlock;
 import dev.alaindustrial.block.SoundAbsorberBlock;
 import dev.alaindustrial.block.TemperedIronBarsBlock;
 import dev.alaindustrial.block.TemperedIronLadderBlock;
+import dev.alaindustrial.block.QuarryFoundationBlock;
 import dev.alaindustrial.block.TemperedIronScaffoldBlock;
 import dev.alaindustrial.block.TemperedIronTrapdoorBlock;
 import dev.alaindustrial.block.entity.ElectricMobTrapBlockEntity;
@@ -422,30 +423,35 @@ public final class DecorContent {
 			p -> new MetalStairBlock(registeredBlock("industrial_concrete").defaultBlockState(), p),
 			machine(MapColor.COLOR_GRAY, p -> p.strength(3.0f, 9.0f).sound(SoundType.STONE)),
 			s -> ModContent.INDUSTRIAL_CONCRETE_STAIRS = s);
-	public static final BlockDef<Block> QUARRY_FOUNDATION = block("quarry_foundation", Block::new,
-			machine(MapColor.TERRACOTTA_LIGHT_BLUE, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+	// MOD-950 - the tier is the frame's size rule; the main tower's foundation lends the controller's power port. The
+	// quarry's building blocks take a dynamic shape: a formed cell takes the designer's model in it from the world.
+	public static final BlockDef<QuarryFoundationBlock> QUARRY_FOUNDATION = block("quarry_foundation",
+			p -> new QuarryFoundationBlock(1, p),
+			machine(MapColor.TERRACOTTA_LIGHT_BLUE, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL).dynamicShape()),
 			s -> ModContent.QUARRY_FOUNDATION = s);
-	public static final BlockDef<Block> INVAR_QUARRY_FOUNDATION = block("invar_quarry_foundation", Block::new,
-			machine(MapColor.STONE, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+	public static final BlockDef<QuarryFoundationBlock> INVAR_QUARRY_FOUNDATION = block("invar_quarry_foundation",
+			p -> new QuarryFoundationBlock(2, p),
+			machine(MapColor.STONE, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL).dynamicShape()),
 			s -> ModContent.INVAR_QUARRY_FOUNDATION = s);
-	public static final BlockDef<Block> NETHERITE_ALLOY_QUARRY_FOUNDATION = block("netherite_alloy_quarry_foundation",
-			Block::new,
+	public static final BlockDef<QuarryFoundationBlock> NETHERITE_ALLOY_QUARRY_FOUNDATION =
+			block("netherite_alloy_quarry_foundation", p -> new QuarryFoundationBlock(3, p),
 			// The netherite alloy block's numbers: ancient debris in blast resistance.
-			machine(MapColor.COLOR_BROWN, p -> p.strength(50.0f, 1200.0f).sound(SoundType.NETHERITE_BLOCK)),
+			machine(MapColor.COLOR_BROWN,
+					p -> p.strength(50.0f, 1200.0f).sound(SoundType.NETHERITE_BLOCK).dynamicShape()),
 			s -> ModContent.NETHERITE_ALLOY_QUARRY_FOUNDATION = s);
 	public static final BlockDef<TemperedIronScaffoldBlock> TEMPERED_IRON_SCAFFOLD = block("tempered_iron_scaffold",
 			TemperedIronScaffoldBlock::new,
 			// A lattice: see-through, never suffocates; the collision is the scaffolding one (see the class).
 			machine(MapColor.TERRACOTTA_LIGHT_BLUE, p -> LineBlockProps.seeThrough(p.strength(3.0f, 6.0f)
-					.sound(SoundType.METAL).noOcclusion())), s -> ModContent.TEMPERED_IRON_SCAFFOLD = s);
+					.sound(SoundType.METAL).noOcclusion().dynamicShape())), s -> ModContent.TEMPERED_IRON_SCAFFOLD = s);
 	public static final BlockDef<ConcreteRailBeamBlock> CONCRETE_RAIL_BEAM = block("concrete_rail_beam",
 			ConcreteRailBeamBlock::new,
-			machine(MapColor.COLOR_GRAY, p -> p.strength(3.0f, 9.0f).sound(SoundType.STONE)),
+			machine(MapColor.COLOR_GRAY, p -> p.strength(3.0f, 9.0f).sound(SoundType.STONE).dynamicShape()),
 			s -> ModContent.CONCRETE_RAIL_BEAM = s);
 	// The same beam in tempered iron plates: the rail beam class, metal numbers.
 	public static final BlockDef<ConcreteRailBeamBlock> PLATE_RAIL_BEAM = block("plate_rail_beam",
 			ConcreteRailBeamBlock::new,
-			machine(MapColor.TERRACOTTA_LIGHT_BLUE, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),
+			machine(MapColor.TERRACOTTA_LIGHT_BLUE, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL).dynamicShape()),
 			s -> ModContent.PLATE_RAIL_BEAM = s);
 	public static final BlockDef<Block> REINFORCED_PLATE_BLOCK = block("reinforced_plate_block", Block::new,
 			machine(MapColor.TERRACOTTA_LIGHT_BLUE, p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL)),

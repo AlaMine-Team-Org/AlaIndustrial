@@ -1,0 +1,11 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "alaindustrial:block/quarry_bridge_beam",
+      "y": 90
+    },
+    "axis=z": {
+      "model": "alaindustrial:block/quarry_bridge_beam"
+    }
+  }
+}

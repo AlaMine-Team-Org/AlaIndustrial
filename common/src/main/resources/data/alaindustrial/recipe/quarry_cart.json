@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "PBP",
+    "GCG",
+    "PBP"
+  ],
+  "key": {
+    "P": "alaindustrial:tempered_iron_plate",
+    "B": "alaindustrial:reinforced_bearing",
+    "G": "alaindustrial:iron_gear",
+    "C": "alaindustrial:copper_coil"
+  },
+  "result": {
+    "id": "alaindustrial:quarry_cart",
+    "count": 1
+  }
+}

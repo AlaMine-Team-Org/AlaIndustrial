@@ -1,6 +1,7 @@
 {
 	"sources": [
 		{ "type": "single", "resource": "alaindustrial:block/stock_display_frame_wood" },
-		{ "type": "directory", "source": "entity/mob_wheel", "prefix": "entity/mob_wheel/" }
+		{ "type": "directory", "source": "entity/mob_wheel", "prefix": "entity/mob_wheel/" },
+		{ "type": "directory", "source": "entity/quarry", "prefix": "entity/quarry/" }
 	]
 }

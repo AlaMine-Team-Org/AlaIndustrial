@@ -2009,7 +2009,12 @@ tooltip.alaindustrial.tier_lv {green}
 tooltip.alaindustrial.hold_shift {dark_gray}
 -- shift no-eu
 tooltip.alaindustrial.tier_lv {green}
+== alaindustrial:quarry_bridge_beam plain : none
+== alaindustrial:quarry_cart plain : none
+== alaindustrial:quarry_controller plain : none
+== alaindustrial:quarry_drill_bit plain : none
 == alaindustrial:quarry_foundation plain : none
+== alaindustrial:quarry_head plain : none
 == alaindustrial:radiant_solar_panel plain
 -- plain eu
 tooltip.alaindustrial.energy_output_day(8) {gray}

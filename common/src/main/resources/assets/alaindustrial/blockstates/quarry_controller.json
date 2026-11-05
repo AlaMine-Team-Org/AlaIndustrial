@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "formed=false": {
+      "model": "alaindustrial:block/quarry_controller"
+    },
+    "formed=true": {
+      "model": "alaindustrial:block/quarry_controller_formed"
+    }
+  }
+}

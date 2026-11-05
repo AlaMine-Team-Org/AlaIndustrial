@@ -181,7 +181,10 @@ public final class AlaCommonScenarios {
 			}
 			// The Mob Wheel's cells (MOD-763) are placed by the assembly in the wheel's empty cells and
 			// vanish when it comes apart: no block item, an empty loot table, nothing to drop by design.
-			if (id.getPath().equals("mob_wheel_cell")) {
+			// The quarry's shell cells (MOD-951) are the same: a formed frame puts them where its model rises
+			// above its blocks and takes them away when it comes apart; no item, an empty loot table, and no
+			// occlusion, for the drawn frame shows through them.
+			if (id.getPath().equals("mob_wheel_cell") || id.getPath().equals("quarry_shell")) {
 				continue;
 			}
 			// The Distillation Column's middle/top segments (MOD-251) are placed by the base and have
@@ -358,7 +361,7 @@ public final class AlaCommonScenarios {
 			// The Mob Wheel's cells (MOD-763): no block item on purpose — the assembly fills the wheel's
 			// empty cells with them. A solid cell is an invisible full-cube wall that must NOT occlude: the
 			// drive's renderer draws the wheel's frame through it, and an occluding cell would cull it away.
-			if (id.getPath().equals("mob_wheel_cell")) {
+			if (id.getPath().equals("mob_wheel_cell") || id.getPath().equals("quarry_shell")) {
 				continue;
 			}
 			// The Distillation Column's middle/top segments (MOD-251): no block items on purpose — the

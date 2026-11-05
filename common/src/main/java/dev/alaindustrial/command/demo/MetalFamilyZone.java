@@ -35,7 +35,10 @@ import net.minecraft.world.level.block.StairBlock;
  * <p>MOD-927 puts the quarry's building blocks in two rows behind them (x=72..84, one block every other column):
  * concrete fresh and set, its slab and stairs, the hazard stripes, the concrete rail beam lying along x and the
  * scaffold at z=40; the three quarry foundations, the reinforced plate block with its slab and stairs and the plate
- * rail beam, also along x, at z=42. The reactor row ends near x=40, far to the west of z=42.
+ * rail beam, also along x, at z=42. The reactor row ends near x=40, far to the west of z=42. MOD-950 adds the
+ * quarry's frame parts at z=46 (x=72..80): the controller head, a plain head, the bridge beam, a loose quarry shell
+ * (invisible and shapeless outside a frame; its coverage needs it somewhere) and the cart; the working frame they
+ * make stands on the quarry stand ({@code /ala demo quarry build}).
  *
  * <p>Domain (coding standard, section 1): Decor.
  */
@@ -58,6 +61,8 @@ final class MetalFamilyZone implements DemoZone {
 	private static final int CONCRETE_Z = 40;
 	private static final int FOUNDATION_Z = 42;
 	private static final int QUARRY_X0 = 72;
+	/** MOD-950: the quarry's frame parts, one loose block each; the working frame is the quarry stand's. */
+	private static final int FRAME_PARTS_Z = 46;
 
 	@Override
 	public void build(StandWriter w) {
@@ -108,6 +113,13 @@ final class MetalFamilyZone implements DemoZone {
 		w.set(QUARRY_X0 + 4 * STEP, 1, FOUNDATION_Z, block("reinforced_plate_slab"));
 		w.place(w.origin().offset(QUARRY_X0 + 5 * STEP, 1, FOUNDATION_Z), block("reinforced_plate_stairs")
 				.defaultBlockState().setValue(StairBlock.FACING, Direction.SOUTH));
+		// MOD-950: two rows further back (z=44 is the item-less row), east of the farms, which end at x=70.
+		w.set(QUARRY_X0, 1, FRAME_PARTS_Z, block("quarry_controller"));
+		w.set(QUARRY_X0 + STEP, 1, FRAME_PARTS_Z, block("quarry_head"));
+		w.place(w.origin().offset(QUARRY_X0 + 2 * STEP, 1, FRAME_PARTS_Z), block("quarry_bridge_beam")
+				.defaultBlockState().setValue(ConcreteRailBeamBlock.AXIS, Direction.Axis.X));
+		w.set(QUARRY_X0 + 3 * STEP, 1, FRAME_PARTS_Z, block("quarry_shell"));
+		w.set(QUARRY_X0 + 4 * STEP, 1, FRAME_PARTS_Z, block("quarry_cart"));
 	}
 
 	/** A block of the family by its id; a missing one throws rather than leaving a hole in the row. */

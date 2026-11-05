@@ -63,6 +63,12 @@ public final class ShotFamilies {
                             + "wall a moss carpet, a spruce door of two cells, a chest and a double chest drawn as "
                             + "chests with lids and latches, not as boxes of planks; the real blocks between "
                             + "them unchanged and not hidden; the _off frames are the same view without the ghosts")},
+            new Object[] {"quarry_frame_", new Family(ShotGroup.WORLD, List.of("R-VIS-04"),
+                    "Quarry frame (MOD-950): in quarry_frame_formed and _formed_again the 9 x 9 frame is the "
+                            + "designer's model - four towers with lattices, cables and grey boxes at their feet, the "
+                            + "two paths, the bridge with its saddles and the cart with its drill - and no cube of the "
+                            + "blocks under it shows through, flickers or pokes out; in quarry_frame_loose the same "
+                            + "view with the far tower's top head layer gone and every block of the frame visible")},
             new Object[] {"root_inspect_", new Family(ShotGroup.WORLD, List.of("R-VIS-04"),
                     "One and two root segments appear through original soil only while crouching")},
             // ── Screens ──────────────────────────────────────────────────────────────────────

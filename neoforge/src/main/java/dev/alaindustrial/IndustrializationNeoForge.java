@@ -421,7 +421,7 @@ public final class IndustrializationNeoForge {
 				registerItemContainer(event, def);
 			}
 		}
-
+		dev.alaindustrial.core.neoforge.ItemLenderCapabilities.register(event); // MOD-951: the quarry's socket
 		// MOD-063: item-side fluid capability for the Vacuum Capsule, so other mods' pipes/tanks can fill
 		// or drain a capsule sitting in a slot. One CapsuleResourceHandler per stack access, both items.
 		event.registerItem(Capabilities.Fluid.ITEM,

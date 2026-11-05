@@ -62,6 +62,7 @@ final class BlockEntityDisplayNameSnapshot {
 			"reception_capsule @reception_capsule: block.alaindustrial.reception_capsule",
 			"town_dispatcher @town_dispatcher: block.alaindustrial.town_dispatcher",
 			"warehouse_shelf @warehouse_shelf: block.alaindustrial.warehouse_shelf",
+			"quarry_controller @quarry_controller: block.alaindustrial.quarry_controller",
 			"distillation_column @distillation_column: block.alaindustrial.distillation_column",
 			"pump @pump: block.alaindustrial.pump",
 			"fermenter @fermenter: block.alaindustrial.fermenter",

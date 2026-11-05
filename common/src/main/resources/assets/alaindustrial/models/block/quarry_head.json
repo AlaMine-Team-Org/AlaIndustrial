@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "side": "alaindustrial:block/reinforced_plate_block",
+    "top": "alaindustrial:block/hazard_stripe_block_top",
+    "bottom": "alaindustrial:block/reinforced_plate_block_bottom"
+  }
+}

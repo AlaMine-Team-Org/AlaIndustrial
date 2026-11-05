@@ -110,6 +110,8 @@ public final class MenuScreenManifest {
 			screen(() -> ModContent.CANNING_MACHINE_MENU.get(), CanningMachineScreen::new),
 			screen(() -> ModContent.SAWMILL_MENU.get(), SawmillScreen::new),
 			screen(() -> ModContent.BLOCK_BREAKER_MENU.get(), BlockBreakerScreen::new),
+			// MOD-951: the quarry controller - drill bit, haul buffer, the layer and why it stands.
+			screen(() -> ModContent.QUARRY_CONTROLLER_MENU.get(), QuarryControllerScreen::new),
 			// MOD-810: the advanced workbench - crafting grid, recipe book, Clear button.
 			screen(() -> ModContent.ADVANCED_INDUSTRIAL_WORKBENCH_MENU.get(), AdvancedIndustrialWorkbenchScreen::new),
 			// MOD-831: the settlement core - the town's readout and the claim button.

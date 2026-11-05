@@ -183,6 +183,8 @@ public final class ScenarioRoster {
 			PoweredItemEnergySnapshotScenarios.Roster.ENTRIES,
 			PoweredItemShownCapacityScenarios.Roster.ENTRIES,
 			QuarryConstructionScenarios.Roster.ENTRIES,
+			QuarryDigScenarios.Roster.ENTRIES,
+			QuarryFrameScenarios.Roster.ENTRIES,
 			RadiationEmitterScenarios.Roster.ENTRIES,
 			RadiationHolderScenarios.Roster.ENTRIES,
 			RadiationIconScenarios.Roster.ENTRIES,
