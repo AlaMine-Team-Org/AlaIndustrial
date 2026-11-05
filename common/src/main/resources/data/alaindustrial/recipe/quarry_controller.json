@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "RCR",
+    "CHC",
+    "RAR"
+  ],
+  "key": {
+    "R": "alaindustrial:reinforced_plate_block",
+    "C": "alaindustrial:advanced_circuit",
+    "H": "alaindustrial:quarry_head",
+    "A": "alaindustrial:advanced_machine_casing"
+  },
+  "result": {
+    "id": "alaindustrial:quarry_controller",
+    "count": 1
+  }
+}

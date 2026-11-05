@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "PBP",
+    "RRR"
+  ],
+  "key": {
+    "P": "alaindustrial:tempered_iron_plate",
+    "B": "alaindustrial:reinforced_bearing",
+    "R": "alaindustrial:plate_rail_beam"
+  },
+  "result": {
+    "id": "alaindustrial:quarry_bridge_beam",
+    "count": 3
+  }
+}

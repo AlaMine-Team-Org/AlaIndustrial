@@ -169,6 +169,8 @@ public final class CreativeTabContent {
 		DecorContent.metalFamily(out);
 		// MOD-927 — the quarry's building blocks, building material like the metal family above.
 		DecorContent.quarryConstruction(out);
+		// MOD-950 — and right after them the quarry's frame parts, so a player finds the whole frame in one place.
+		ProcessingContent.quarry(out);
 		StorageContent.chestBoats(out);
 	}
 
@@ -240,6 +242,7 @@ public final class CreativeTabContent {
 		DecorContent.metalBlocks(out);
 		DecorContent.metalFamily(out);
 		DecorContent.quarryConstruction(out);
+		ProcessingContent.quarry(out);
 		DecorContent.labPlaque(out);
 	}
 

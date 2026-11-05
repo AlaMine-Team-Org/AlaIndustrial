@@ -1,7 +1,9 @@
 package dev.alaindustrial.registry;
 
+import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.core.energy.EnergyPortHost;
 import dev.alaindustrial.core.fluid.FluidPortHost;
+import dev.alaindustrial.core.item.ItemHostRedirect;
 import dev.alaindustrial.registry.content.AgricultureContent;
 import dev.alaindustrial.registry.content.FluidContent;
 import dev.alaindustrial.registry.content.ProcessingContent;
@@ -9,7 +11,9 @@ import dev.alaindustrial.registry.content.StorageContent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.Container;
+import net.minecraft.world.level.block.Block;
 
 /**
  * Which block entities publish which capability, derived from {@link ContentManifest#BLOCK_ENTITIES}
@@ -108,5 +112,21 @@ public final class BlockCapabilityRoster {
 			}
 		}
 		return List.copyOf(containers);
+	}
+
+	/**
+	 * Every block of the mod that lends another block's inventory ({@link ItemHostRedirect}, MOD-951): both loaders
+	 * publish the lent inventory as that block's item capability. Read from the registered blocks rather than from a
+	 * list of ids, so a new lender needs no line anywhere else; call it once the blocks are registered.
+	 */
+	public static List<Block> itemLenders() {
+		List<Block> lenders = new ArrayList<>();
+		for (Block block : BuiltInRegistries.BLOCK) {
+			if (block instanceof ItemHostRedirect
+					&& Industrialization.MOD_ID.equals(BuiltInRegistries.BLOCK.getKey(block).getNamespace())) {
+				lenders.add(block);
+			}
+		}
+		return List.copyOf(lenders);
 	}
 }

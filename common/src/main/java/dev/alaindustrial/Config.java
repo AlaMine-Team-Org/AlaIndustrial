@@ -516,6 +516,91 @@ public final class Config {
 	@Knob(section = Section.MACHINES, min = 0,
 			doc = "Energy buffer of a crystal farm controller, in EU.")
 	public static int crystalFarmBuffer = 4000;
+
+	// --- quarry (MOD-950, stage A of MOD-637): the frame's size rules and the controller's buffer ---------------
+
+	@Knob(section = Section.MACHINES, min = 1,
+			doc = "Ticks between full re-scans of a quarry frame by its controller head.")
+	public static int quarryScanIntervalTicks = 40;
+
+	@Knob(section = Section.MACHINES, min = 1,
+			doc = "Smallest span of a quarry frame, in cells between two towers, on either axis.")
+	public static int quarryMinSpan = 5;
+
+	@Knob(section = Section.MACHINES, min = 1,
+			doc = "Largest span of a quarry frame whose weakest foundation is tempered iron (tier 1).")
+	public static int quarryMaxSpanTier1 = 9;
+
+	@Knob(section = Section.MACHINES, min = 1,
+			doc = "Largest span of a quarry frame whose weakest foundation is invar (tier 2).")
+	public static int quarryMaxSpanTier2 = 17;
+
+	@Knob(section = Section.MACHINES, min = 1,
+			doc = "Largest span of a quarry frame whose foundations are all netherite alloy (tier 3).")
+	public static int quarryMaxSpanTier3 = 33;
+
+	@Knob(section = Section.MACHINES, min = 0,
+			doc = "Energy buffer of a quarry controller head, in EU.")
+	public static int quarryBuffer = 40000;
+
+	// --- quarry digging (MOD-951, stage B of MOD-637): what an operation costs and how deep the pit goes ---------
+
+	@Knob(section = Section.MACHINES,
+			doc = "Whether a formed quarry digs. Off until the quarry's bridge, cart and drill move (stage C).")
+	public static boolean quarryDiggingEnabled = false;
+
+	@Knob(section = Section.MACHINES, min = 0,
+			doc = "Quarry drilling energy per unit of the block's hardness, in EU (stone, 1.5, costs about 200).")
+	public static int quarryDrillEuPerHardness = 133;
+
+	@Knob(section = Section.MACHINES, min = 0,
+			doc = "Least energy a quarry spends drilling one block, in EU.")
+	public static int quarryDrillMinEu = 20;
+
+	@Knob(section = Section.MACHINES, min = 1,
+			doc = "Ticks a quarry drills one block of stone; other blocks take time in proportion to their hardness.")
+	public static int quarryStoneDrillTicks = 40;
+
+	@Knob(section = Section.MACHINES, min = 1,
+			doc = "Least ticks a quarry drills one block.")
+	public static int quarryDrillMinTicks = 10;
+
+	@Knob(section = Section.MACHINES, min = 1,
+			doc = "Blocks a second the quarry's bridge and cart travel to the next cell.")
+	public static int quarryTravelBlocksPerSecond = 4;
+
+	@Knob(section = Section.MACHINES, min = 0,
+			doc = "Energy per block the quarry's bridge or cart travels, in EU.")
+	public static int quarryTravelEuPerBlock = 8;
+
+	@Knob(section = Section.MACHINES, min = 1,
+			doc = "Blocks a second the quarry's drill rope runs down or up.")
+	public static int quarryRopeBlocksPerSecond = 8;
+
+	@Knob(section = Section.MACHINES, min = 0,
+			doc = "Energy per block of the quarry's drill rope, in EU.")
+	public static int quarryRopeEuPerBlock = 2;
+
+	@Knob(section = Section.MACHINES, min = 1,
+			doc = "Blocks a quarry drill bit breaks before it wears out.")
+	public static int quarryDrillBitDurability = 1000;
+
+	@Knob(section = Section.MACHINES, min = 0,
+			doc = "Deepest pit, in layers, of a quarry on tempered iron foundations (tier 1); 0 is down to the bottom.")
+	public static int quarryMaxDepthTier1 = 24;
+
+	@Knob(section = Section.MACHINES, min = 0,
+			doc = "Deepest pit, in layers, of a quarry on invar foundations (tier 2); 0 is down to the bottom.")
+	public static int quarryMaxDepthTier2 = 48;
+
+	@Knob(section = Section.MACHINES, min = 0,
+			doc = "Deepest pit, in layers, of a quarry on netherite alloy foundations (tier 3); 0 is down to the "
+					+ "bottom.")
+	public static int quarryMaxDepthTier3 = 0;
+
+	@Knob(section = Section.MACHINES, min = 1,
+			doc = "Cells a quarry may pass over in one tick while it looks for the next block to drill.")
+	public static int quarryCellsPerTick = 64;
 	/**
 	 * Ticks a hand-opened greenhouse door stays open before sealing itself (the room only grows closed).
 	 * Redstone-held doors ignore it.

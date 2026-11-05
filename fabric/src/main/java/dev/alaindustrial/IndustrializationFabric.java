@@ -55,6 +55,8 @@ import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.NestedLootTable;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 
+// size-justified: the loader's one entry point, replaying every shared list in order; its growing parts
+// already live in core/fabric (MOD-951 moved the item lenders there and keeps only the call here).
 /**
  * Fabric {@code ModInitializer} entrypoint. Loader-neutral constants/helpers live in
  * {@link Industrialization} (common); this class only wires the Fabric side: the balance config
@@ -85,6 +87,7 @@ public class IndustrializationFabric implements ModInitializer {
 		// MOD-133/MOD-483: the player attachments of ModPlayerAttachments + their store seams (MOD-708).
 		dev.alaindustrial.registry.ModAttachments.init();
 		registerChestStorage();
+		dev.alaindustrial.core.fabric.ItemLenderStorage.register(); // MOD-951: the quarry socket lends items
 		registerNetworkPayloads();
 		registerServerLifecycle();
 		registerGameplayHooks();

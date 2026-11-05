@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "side": "alaindustrial:block/reactor_controller_side_formed",
+    "top": "alaindustrial:block/reactor_controller_top_formed",
+    "bottom": "alaindustrial:block/reinforced_plate_block_bottom"
+  }
+}

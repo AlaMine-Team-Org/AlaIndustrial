@@ -236,7 +236,8 @@ public class ScreensClientGameTest implements FabricClientGameTest {
      */
     @Override
     public void runTest(ClientGameTestContext context) {
-        if (System.getProperty("alaindustrial.rootonly") != null) return;
+        if (System.getProperty("alaindustrial.rootonly") != null
+                || System.getProperty("alaindustrial.quarryguionly") != null) return;
         try (TestSingleplayerContext singleplayer = context.worldBuilder()
                 // Same generator settings on every machine — the precondition for comparing a frame
                 // against anything other than itself.

@@ -386,6 +386,12 @@ pitest {
                      // (HoneyCentrifugeStatusTest).
                      'dev.alaindustrial.block.entity.HoneyCentrifugeStatus',
                      'dev.alaindustrial.block.entity.IncubatorStatus',
+                     // MOD-950: the cells a formed quarry frame covers and where its drawn parts stand;
+                     // added WITH its L1 suite (QuarryFrameLayoutTest).
+                     'dev.alaindustrial.block.entity.quarry.QuarryFrameLayout',
+                     'dev.alaindustrial.block.entity.quarry.QuarryFramePlacements',
+                     // MOD-951: the quarry's work states; added WITH its L1 suite (QuarryWorkStatusTest).
+                     'dev.alaindustrial.block.entity.quarry.QuarryWorkStatus',
                      'dev.alaindustrial.mutation.MutationGrade',
                      'dev.alaindustrial.mutation.MutationRoll',
                      // MOD-695: server->client config sync. The snapshot's wire format and the client's
@@ -762,6 +768,10 @@ pitest {
             'dev.alaindustrial.client.render.UpgradeTableGeometry',
             // MOD-763: the mob wheel's formed structure, written by tools/gen_mob_wheel_assets.py.
             'dev.alaindustrial.client.render.MobWheelGeometry',
+            // MOD-950: the formed quarry frame's cubes and collision boxes, written by tools/gen_quarry_assets.py
+            // (its `--check` holds them to the .bbmodel) — generated number tables like the above.
+            'dev.alaindustrial.client.render.QuarryGeometry',
+            'dev.alaindustrial.block.entity.quarry.QuarryFrameBoxes',
             // MOD-858: the builder drone's cubes, written by tools/gen_town_drone_assets.py — a generated table.
             'dev.alaindustrial.client.render.ConstructionDroneGeometry',
             // MOD-787: the block breaker's moving parts, written by
@@ -830,6 +840,10 @@ pitest {
             // MOD-764: the floor lender, a static rule reading two BlockStates from a Level — every one of its
             // few mutants is NO_COVERAGE in the MC-free run. Covered by PiezoPlateScenarios on both loaders.
             'dev.alaindustrial.core.energy.FloorPortLender',
+            // MOD-951: the item twin of the multiblock redirect. Its one body, lent, reads a block entity from a
+            // BlockGetter, so every mutant it has is a NO_COVERAGE in the MC-free run. Covered by
+            // QuarryDigScenarios (the socket lends the buffer and the bit slot) on both loaders.
+            'dev.alaindustrial.core.item.ItemHostRedirect',
             'dev.alaindustrial.core.energy.DirectAdjacencyDistributor', // was EnergyNet (renamed MOD-168 #7)
             'dev.alaindustrial.core.energy.EnergyNetwork',
             'dev.alaindustrial.core.energy.EnergyPortHost',

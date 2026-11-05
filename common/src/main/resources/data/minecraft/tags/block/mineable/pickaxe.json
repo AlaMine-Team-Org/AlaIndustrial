@@ -221,6 +221,11 @@
     "alaindustrial:reinforced_plate_slab",
     "alaindustrial:reinforced_plate_stairs",
     "alaindustrial:hazard_stripe_block",
-    "alaindustrial:plate_rail_beam"
+    "alaindustrial:plate_rail_beam",
+    "alaindustrial:quarry_controller",
+    "alaindustrial:quarry_head",
+    "alaindustrial:quarry_bridge_beam",
+    "alaindustrial:quarry_cart",
+    "alaindustrial:quarry_shell"
   ]
 }

@@ -98,6 +98,16 @@ public class GuiClientGameTest implements FabricClientGameTest {
                 ShotRecorder.finish();
                 return;
             }
+            if (System.getProperty("alaindustrial.quarryonly") != null) {
+                QuarryFrameStand.check(context, singleplayer);
+                ShotRecorder.finish();
+                return;
+            }
+            if (System.getProperty("alaindustrial.quarryguionly") != null) {
+                QuarryControllerGuiStand.shootStates(context);
+                ShotRecorder.finish();
+                return;
+            }
             if (System.getProperty("alaindustrial.rootonly") != null) {
                 RootInspectionStand.check(context, singleplayer);
                 ShotRecorder.finish();
@@ -127,6 +137,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
                 TeleporterCapsuleStand.checkGlassFromInside(context, singleplayer); // MOD-632 door glass from inside
                 ShiftWorkerStand.check(context, singleplayer);                   // MOD-832 shift workers
                 HallSchematicStand.check(context, singleplayer);                 // MOD-857 town hall schematic
+                QuarryFrameStand.check(context, singleplayer);                   // MOD-950 formed quarry frame
                 StorageModuleStands.checkStorageModuleSeams(context, singleplayer); // MOD-287 connected textures
                 // R-PHY-10: mc.debugHitboxes removed in MC 26.2; re-enable when API is found.
             }
@@ -136,6 +147,7 @@ public class GuiClientGameTest implements FabricClientGameTest {
 
             // ── GUI screenshots (always runs) ─────────────────────────────────────────
             MachineGuiStands.shootGuiScreenshots(context);
+            QuarryControllerGuiStand.shootStates(context); // MOD-951: digging, no bit, the frame's broken rule
             // MOD-716 batch 0: a click on a screen's own control under each open overlay (CLI-2 baseline) …
             OverlayInputStands.shoot(context);
             // … and six hand-drawn status lines, blocking, in de_de and ru_ru (CLI-3 baseline; restores en_us).

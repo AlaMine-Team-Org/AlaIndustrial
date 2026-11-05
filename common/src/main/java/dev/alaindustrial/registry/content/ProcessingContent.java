@@ -12,6 +12,7 @@ import static dev.alaindustrial.registry.content.ContentDeclarations.menu;
 import static dev.alaindustrial.registry.content.TabEntries.show;
 import static dev.alaindustrial.registry.content.TabEntries.showStack;
 
+import dev.alaindustrial.Config;
 import dev.alaindustrial.block.AlloySmelterBlock;
 import dev.alaindustrial.block.AssemblerBlock;
 import dev.alaindustrial.block.BlockBreakerBlock;
@@ -36,6 +37,10 @@ import dev.alaindustrial.block.TownDispatcherBlock;
 import dev.alaindustrial.block.RecyclerBlock;
 import dev.alaindustrial.block.SawmillBlock;
 import dev.alaindustrial.block.SettlementCoreBlock;
+import dev.alaindustrial.block.ConcreteRailBeamBlock;
+import dev.alaindustrial.block.QuarryControllerBlock;
+import dev.alaindustrial.block.QuarryPartBlock;
+import dev.alaindustrial.block.QuarryShellBlock;
 import dev.alaindustrial.block.TeleporterBlock;
 import dev.alaindustrial.block.ThermalCentrifugeBlock;
 import dev.alaindustrial.block.UpgradeTableBlock;
@@ -56,6 +61,7 @@ import dev.alaindustrial.block.entity.IndustrialWorkbenchBlockEntity;
 import dev.alaindustrial.block.entity.IronFurnaceBlockEntity;
 import dev.alaindustrial.block.entity.MaceratorBlockEntity;
 import dev.alaindustrial.block.entity.PolymerizerBlockEntity;
+import dev.alaindustrial.block.entity.QuarryControllerBlockEntity;
 import dev.alaindustrial.block.entity.DroneNestBlockEntity;
 import dev.alaindustrial.block.entity.HouseInletBlockEntity;
 import dev.alaindustrial.block.entity.WarehouseShelfBlockEntity;
@@ -88,13 +94,14 @@ import dev.alaindustrial.menu.ExtractorMenu;
 import dev.alaindustrial.menu.GalvanicBathMenu;
 import dev.alaindustrial.menu.MaceratorMenu;
 import dev.alaindustrial.menu.PolymerizerMenu;
+import dev.alaindustrial.menu.QuarryControllerMenu;
 import dev.alaindustrial.menu.ReceptionCapsuleMenu;
-import dev.alaindustrial.menu.TownDispatcherMenu;
 import dev.alaindustrial.menu.RecyclerMenu;
 import dev.alaindustrial.menu.SawmillMenu;
 import dev.alaindustrial.menu.SettlementCoreMenu;
 import dev.alaindustrial.menu.TeleporterStationMenu;
 import dev.alaindustrial.menu.ThermalCentrifugeMenu;
+import dev.alaindustrial.menu.TownDispatcherMenu;
 import dev.alaindustrial.menu.UpgradeTableMenu;
 import dev.alaindustrial.menu.VulcanizerMenu;
 import dev.alaindustrial.registry.ContentManifest.BlockDef;
@@ -108,6 +115,7 @@ import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.settlement.plan.PlanSheetRules;
 import java.util.List;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.MapColor;
 
@@ -272,6 +280,27 @@ public final class ProcessingContent {
 			WarehouseShelfBlock::new, machine(p -> p.strength(3.0f, 6.0f).sound(SoundType.METAL)),
 			s -> ModContent.WAREHOUSE_SHELF = s);
 
+	// MOD-950 - the quarry's frame parts beyond the MOD-927 building blocks: the controller head, a plain tower
+	// head, the bridge beam laid across the rails and the cart on it. Tempered iron's numbers, like the foundations;
+	// a dynamic shape, because a formed cell takes the designer's model in its cell from the world (QuarryFrameShapes).
+	public static final BlockDef<QuarryControllerBlock> QUARRY_CONTROLLER = block("quarry_controller",
+			QuarryControllerBlock::new, machine(p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL).dynamicShape()),
+			s -> ModContent.QUARRY_CONTROLLER = s);
+	public static final BlockDef<QuarryPartBlock> QUARRY_HEAD = block("quarry_head", QuarryPartBlock::new,
+			machine(p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL).dynamicShape()),
+			s -> ModContent.QUARRY_HEAD = s);
+	public static final BlockDef<ConcreteRailBeamBlock> QUARRY_BRIDGE_BEAM = block("quarry_bridge_beam",
+			ConcreteRailBeamBlock::new, machine(p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL).dynamicShape()),
+			s -> ModContent.QUARRY_BRIDGE_BEAM = s);
+	public static final BlockDef<QuarryPartBlock> QUARRY_CART = block("quarry_cart", QuarryPartBlock::new,
+			machine(p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL).dynamicShape()),
+			s -> ModContent.QUARRY_CART = s);
+	// The invisible cells a formed frame puts where its model rises above its blocks; no item, no drop.
+	public static final BlockDef<QuarryShellBlock> QUARRY_SHELL = block("quarry_shell", QuarryShellBlock::new,
+			machine(p -> p.strength(5.0f, 6.0f).sound(SoundType.METAL).noOcclusion().dynamicShape()),
+			s -> ModContent.QUARRY_SHELL = s,
+			hiddenFromPlayers("cell of a formed quarry frame above its blocks: the frame places it"));
+
 	private static final List<BlockDef<?>> BLOCKS = endBlocks();
 
 	private static final List<ItemDef> ITEMS = List.of(
@@ -323,7 +352,16 @@ public final class ProcessingContent {
 			// MOD-862 - the house plans, one per capsule house type; appended at the very tail.
 			item("house_plan", p -> new HousePlanItem(p.stacksTo(1)), s -> ModContent.HOUSE_PLAN = s),
 			// MOD-885 - the warehouse shelf; appended at the very tail.
-			blockItem("warehouse_shelf", s -> ModContent.WAREHOUSE_SHELF_ITEM = s));
+			blockItem("warehouse_shelf", s -> ModContent.WAREHOUSE_SHELF_ITEM = s),
+			// MOD-950 - the quarry's frame parts; appended at the very tail.
+			blockItem("quarry_controller", s -> ModContent.QUARRY_CONTROLLER_ITEM = s),
+			blockItem("quarry_head", s -> ModContent.QUARRY_HEAD_ITEM = s),
+			blockItem("quarry_bridge_beam", s -> ModContent.QUARRY_BRIDGE_BEAM_ITEM = s),
+			blockItem("quarry_cart", s -> ModContent.QUARRY_CART_ITEM = s),
+			// MOD-951 - the quarry's drill bit: it wears one point a block; the ceiling is read at registration.
+			item("quarry_drill_bit", p -> new Item(p.durability(Config.quarryDrillBitDurability)),
+					s -> ModContent.QUARRY_DRILL_BIT = s,
+					hiddenFromPlayers("the drill bit waits for digging: the first release builds the frame only")));
 
 	// MOD-858 - constants, because the capability roster names them (no energy: BlockCapabilityRoster).
 	public static final BlockEntityDef<TownDispatcherBlockEntity> TOWN_DISPATCHER_BE =
@@ -399,7 +437,10 @@ public final class ProcessingContent {
 					s -> ModContent.HOUSE_INLET_BE = s, HOUSE_INLET),
 			// MOD-885: the warehouse shelf, a plain container, so the item capability follows.
 			blockEntity("warehouse_shelf", WarehouseShelfBlockEntity.class, WarehouseShelfBlockEntity::new,
-					s -> ModContent.WAREHOUSE_SHELF_BE = s, WAREHOUSE_SHELF));
+					s -> ModContent.WAREHOUSE_SHELF_BE = s, WAREHOUSE_SHELF),
+			// MOD-950: the quarry controller, an EnergyPortHost (HV in), so the energy capability follows.
+			blockEntity("quarry_controller", QuarryControllerBlockEntity.class, QuarryControllerBlockEntity::new,
+					s -> ModContent.QUARRY_CONTROLLER_BE = s, QUARRY_CONTROLLER));
 
 	private static final List<MenuDef<?>> MENUS = List.of(
 			menu("macerator", MaceratorMenu::new, s -> ModContent.MACERATOR_MENU = s),
@@ -426,6 +467,8 @@ public final class ProcessingContent {
 			menu("thermal_centrifuge", ThermalCentrifugeMenu::new, s -> ModContent.THERMAL_CENTRIFUGE_MENU = s),
 			// MOD-787 — the block breaker: tool slot, break progress, redstone-mode button.
 			menu("block_breaker", BlockBreakerMenu::new, s -> ModContent.BLOCK_BREAKER_MENU = s),
+			// MOD-951 - the quarry controller: the drill bit, the buffer and the work.
+			menu("quarry_controller", QuarryControllerMenu::new, s -> ModContent.QUARRY_CONTROLLER_MENU = s),
 			// MOD-810 - the advanced workbench: crafting grid shared by its viewers.
 			menu("advanced_industrial_workbench", AdvancedIndustrialWorkbenchMenu::new,
 					s -> ModContent.ADVANCED_INDUSTRIAL_WORKBENCH_MENU = s),
@@ -470,6 +513,19 @@ public final class ProcessingContent {
 		show(out, ModContent.THERMAL_CENTRIFUGE_ITEM);
 		show(out, ModContent.BLOCK_BREAKER_ITEM);
 	}
+
+	/**
+	 * The quarry's frame parts (MOD-950): the controller head, the plain head, the bridge beam and the cart. Shown
+	 * right after the quarry's building blocks (MOD-927) — foundations, scaffolding, rail beams — in the mod's tab
+	 * and in vanilla Building Blocks, so the whole frame is found in one place.
+	 */
+	public static void quarry(Sink out) {
+		show(out, ModContent.QUARRY_CONTROLLER_ITEM);
+		show(out, ModContent.QUARRY_HEAD_ITEM);
+		show(out, ModContent.QUARRY_BRIDGE_BEAM_ITEM);
+		show(out, ModContent.QUARRY_CART_ITEM);
+	}
+
 
 	/**
 	 * The two stacked work stations. MOD-483 — the workstation's casing: one item for the whole machine, two

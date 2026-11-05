@@ -376,6 +376,8 @@ final class EnergyRoleForFaceSnapshot {
 			"house_inlet[facing=south] DUNSWE=NNNINN",
 			"house_inlet[facing=west] DUNSWE=NNNNIN",
 			"house_inlet[facing=east] DUNSWE=NNNNNI",
+			"quarry_controller[formed=true] DUNSWE=IIIIII",
+			"quarry_controller[formed=false] DUNSWE=IIIIII",
 			"fluid_pipe[down_mode=disabled,east_mode=disabled,filled=false,north_mode=disabled,south_mo"
 					+ "de=disabled,up_mode=disabled,west_mode=disabled] DUNSWE=NNNNNN",
 			"fluid_pipe@fluid_pipe_advanced[down_mode=disabled,east_mode=disabled,filled=false,north_mo"

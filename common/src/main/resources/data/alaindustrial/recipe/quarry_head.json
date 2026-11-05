@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "RPR",
+    "PGP",
+    "RPR"
+  ],
+  "key": {
+    "R": "alaindustrial:reinforced_plate_block",
+    "P": "alaindustrial:tempered_iron_plate",
+    "G": "alaindustrial:iron_gear"
+  },
+  "result": {
+    "id": "alaindustrial:quarry_head",
+    "count": 1
+  }
+}

@@ -298,8 +298,8 @@ public final class AlaCommandCommon {
 									return builder.buildFuture();
 								})
 								.executes(AlaCommandCommon::demoTp)))
-				// MOD-799: the energy test stand, its own arena north of the showcase.
-				.then(EnergyStandCommand.tree());
+				// MOD-799, MOD-950: the energy test stand north of the showcase, the quarry stand west of it.
+				.then(EnergyStandCommand.tree()).then(dev.alaindustrial.command.demo.QuarryStandCommand.tree());
 	}
 
 	/**
