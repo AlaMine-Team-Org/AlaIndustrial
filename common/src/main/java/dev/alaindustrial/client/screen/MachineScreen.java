@@ -432,8 +432,17 @@ public abstract class MachineScreen<T extends MachineMenu> extends AbstractConta
 		if (slot == null || !slot.isActive() || slot.hasItem()) {
 			return;
 		}
-		int x = this.leftPos + slot.x;
-		int y = this.topPos + slot.y;
+		drawGhost(graphics, hint, this.leftPos + slot.x, this.topPos + slot.y);
+	}
+
+	/**
+	 * The ghost itself: {@code hint} drawn at a slot's item position with the slot-grey wash over it. Shared with
+	 * the upgrade panel's empty arms (MOD-954), so every hint in the mod looks the same.
+	 */
+	static void drawGhost(GuiGraphicsExtractor graphics, ItemStack hint, int x, int y) {
+		if (hint.isEmpty()) {
+			return;
+		}
 		graphics.item(hint, x, y);
 		graphics.fill(x, y, x + SLOT_INNER, y + SLOT_INNER, GHOST_WASH);
 	}

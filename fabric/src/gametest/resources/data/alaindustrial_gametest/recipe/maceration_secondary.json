@@ -1,0 +1,7 @@
+{
+	"type": "alaindustrial:maceration",
+	"ingredient": "minecraft:emerald_block",
+	"result": { "id": "minecraft:emerald", "count": 9 },
+	"secondary_result": { "id": "minecraft:gravel", "count": 2, "chance": 0.25 },
+	"energy": 300
+}

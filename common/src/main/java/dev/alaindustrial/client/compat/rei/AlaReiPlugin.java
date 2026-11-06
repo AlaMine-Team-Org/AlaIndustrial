@@ -1,4 +1,4 @@
-package dev.alaindustrial.compat.rei;
+package dev.alaindustrial.client.compat.rei;
 
 import dev.alaindustrial.client.compat.RecipeCategoryTitle;
 import dev.alaindustrial.client.screen.GuiRect;
@@ -7,8 +7,9 @@ import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.client.compat.MachineRecipeViewerTargets;
 import dev.alaindustrial.client.compat.RecipeViewerForm;
 import dev.alaindustrial.client.compat.RecipeViewerInfo;
-import dev.alaindustrial.registry.ModBlocks;
+import dev.alaindustrial.registry.ModContent;
 import dev.alaindustrial.registry.ModRecipes;
+import dev.alaindustrial.compat.rei.AlaProcessingDisplay;
 import java.util.function.Supplier;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.entry.renderer.EntryRendererRegistry;
@@ -36,8 +37,9 @@ import net.minecraft.world.level.block.Block;
  *       {@link #registerDisplays(DisplayRegistry)} without going through the server-side registry.</li>
  * </ul>
  *
- * <p>Optional dependency: this class is only loaded when REI itself invokes the {@code rei_client}
- * entrypoint, so the mod runs fine without REI installed.
+ * <p>Optional dependency: this class is only loaded when REI itself finds it, through the {@code rei_client}
+ * entrypoint on Fabric or the annotated subclass {@code AlaReiPluginNeoForge} on NeoForge, so the mod runs
+ * fine without REI installed.
  */
 public class AlaReiPlugin implements REIClientPlugin {
 
@@ -75,11 +77,11 @@ public class AlaReiPlugin implements REIClientPlugin {
 		// jar, not the compileOnly api jar, so the string form is used to stay compile-clean.
 		registry.addWorkstations(
 				CategoryIdentifier.of("minecraft", "plugins/smelting"),
-				EntryStacks.of(ModBlocks.ELECTRIC_FURNACE));
+				EntryStacks.of(ModContent.ELECTRIC_FURNACE.get()));
 		// Iron furnace (MOD-115) — fuel-burning station for the same vanilla smelting category.
 		registry.addWorkstations(
 				CategoryIdentifier.of("minecraft", "plugins/smelting"),
-				EntryStacks.of(ModBlocks.IRON_FURNACE));
+				EntryStacks.of(ModContent.IRON_FURNACE.get()));
 		// MOD-716: the special recipe forms (polymerizing, distilling, alloying, canning, the evolution, machine
 		// and plant pages), each declared once in RecipeViewerForm and drawn by its ReiRecipeForms adapter, in
 		// REI's own tab order. A form is worked at the machines it names, so clicking one in REI opens the tab
@@ -160,8 +162,9 @@ public class AlaReiPlugin implements REIClientPlugin {
 	}
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
-	private static void registerClickArea(ScreenRegistry registry, Class<? extends AbstractContainerScreen<?>> screenClass,
-			GuiRect rect, CategoryIdentifier<?>... categoryIds) {
+	private static void registerClickArea(ScreenRegistry registry,
+			Class<? extends AbstractContainerScreen<?>> screenClass, GuiRect rect,
+			CategoryIdentifier<?>... categoryIds) {
 		registry.registerContainerClickArea(
 				new Rectangle(rect.x(), rect.y(), rect.width(), rect.height()),
 				(Class) screenClass,

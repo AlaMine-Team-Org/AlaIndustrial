@@ -490,6 +490,7 @@ final class CreativeTabSnapshot {
 			"main alaindustrial:quarry_head",
 			"main alaindustrial:quarry_bridge_beam",
 			"main alaindustrial:quarry_cart",
+			"main alaindustrial:quarry_drill_bit",
 			"main alaindustrial:oak_iron_chest_boat",
 			"main alaindustrial:spruce_iron_chest_boat",
 			"main alaindustrial:birch_iron_chest_boat",

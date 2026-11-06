@@ -21,11 +21,12 @@ public enum QuarryWorkStatus implements StatusLine {
 	CHUNK_NOT_LOADED(true),
 	NO_OWNER(true),
 	DONE(false),
-	/**
-	 * The frame stands but digging is switched off ({@code Config.quarryDiggingEnabled}, owner 2026-11-05): the
-	 * first release of the quarry builds and powers the frame, and digs once the bridge and the drill move.
-	 */
-	DIGGING_OFF(false);
+	/** The frame stands but the operator switched digging off ({@code Config.quarryDiggingEnabled}). */
+	DIGGING_OFF(false),
+	/** The drill reached the top of its heat scale and stands until it has cooled to half (MOD-952). */
+	OVERHEATED(true),
+	/** The redstone mode keeps it standing (MOD-952). */
+	REDSTONE_STOPPED(true);
 
 	private final boolean blocking;
 

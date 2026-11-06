@@ -4,13 +4,18 @@ import dev.alaindustrial.Config;
 import dev.alaindustrial.block.QuarryControllerBlock;
 import dev.alaindustrial.block.QuarryFoundationBlock;
 import dev.alaindustrial.block.entity.machine.SyncChannels;
+import dev.alaindustrial.block.entity.quarry.QuarryCooling;
 import dev.alaindustrial.block.entity.quarry.QuarryDigger;
+import dev.alaindustrial.block.entity.quarry.QuarryDrillBodies;
+import dev.alaindustrial.block.entity.quarry.QuarryDrillEffects;
 import dev.alaindustrial.block.entity.quarry.QuarryFrameLayout;
 import dev.alaindustrial.block.entity.quarry.QuarryFrameShapes;
 import dev.alaindustrial.block.entity.quarry.QuarryFrameWorld;
 import dev.alaindustrial.block.entity.quarry.QuarryWorkStatus;
 import dev.alaindustrial.core.energy.EnergyRole;
 import dev.alaindustrial.core.energy.EnergyTier;
+import dev.alaindustrial.core.fluid.FluidPort;
+import dev.alaindustrial.core.fluid.FluidPortHost;
 import dev.alaindustrial.core.structure.QuarryFrameScan.Status;
 import dev.alaindustrial.core.structure.QuarryFrameScan;
 import dev.alaindustrial.menu.QuarryControllerMenu;
@@ -42,6 +47,9 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jspecify.annotations.Nullable;
 
+// size-justified: the controller of a whole multiblock - the frame's scan, painting and port, the digger's host (bit
+// slot, buffer, energy, owner), its water and redstone, and the screen's channels; the cycle, the cooling and the
+// frame's world rules already live in their own classes in block/entity/quarry.
 /**
  * The brain of a quarry (MOD-950, stage A of MOD-637): it reads the portal frame around it, lights up when the frame
  * stands, opens its tower's foundation as the power socket, and tells the player what is wrong when it does not.
@@ -58,7 +66,8 @@ import org.jspecify.annotations.Nullable;
  * offsets from this block, so taking the frame apart needs no remembered box: the socket is closed by the next failed
  * scan, or at once when this block goes. The rest of the frame turns into the designer's model later (stages C/D).
  */
-public class QuarryControllerBlockEntity extends MachineBlockEntity implements MenuProvider, NoUpgradePanel {
+public class QuarryControllerBlockEntity extends MachineBlockEntity
+		implements MenuProvider, NoUpgradePanel, FluidPortHost {
 
 	/** The drill bit's slot. */
 	public static final int BIT_SLOT = 0;
@@ -70,15 +79,28 @@ public class QuarryControllerBlockEntity extends MachineBlockEntity implements M
 
 	/** The screen's channels: the four of every machine, then the digger's and the frame's state. */
 	public enum Channel {
-		ENERGY, CAPACITY, PROGRESS, MAX_PROGRESS, STATUS, FRAME_STATUS, LAYER, LAYERS, LAYER_PERMILLE
+		ENERGY, CAPACITY, PROGRESS, MAX_PROGRESS, STATUS, FRAME_STATUS, LAYER, LAYERS, LAYER_PERMILLE,
+		/** MOD-952: the drill's heat and the water tank, per mille of their scale; the redstone mode. */
+		HEAT_PERMILLE, WATER_PERMILLE, REDSTONE
 	}
 
 	public static final int DATA_COUNT = Channel.values().length;
 
 	private final QuarryDigger digger = new QuarryDigger();
+	/** The drill's solid bodies (MOD-952): a player bumps into the drill, which is otherwise only drawn. */
+	private final QuarryDrillBodies bodies = new QuarryDrillBodies();
+
+	/** The water tank and the drill's heat (MOD-952). */
+	public final QuarryCooling cooling = new QuarryCooling(this::setChanged);
+	/** How a redstone signal on the main tower is read (MOD-952), as the block breaker reads one. */
+	private BlockBreakerBlockEntity.RedstoneMode redstoneMode = BlockBreakerBlockEntity.RedstoneMode.IGNORE;
+	/** Whether a block of the main tower was powered at the last scan. */
+	private boolean powered;
 
 	private QuarryFrameScan.Result result = QuarryFrameScan.Result.unscanned();
 	private int scanCooldown;
+	/** Whether this loaded controller has swept its frame's shells once ({@link QuarryFrameWorld#sweepShells}). */
+	private boolean swept;
 	/** The frame this controller painted formed, or {@code null}: what to unpaint, and what the renderer draws. */
 	private @Nullable QuarryFrameLayout layout;
 
@@ -109,13 +131,23 @@ public class QuarryControllerBlockEntity extends MachineBlockEntity implements M
 			rescan(level, pos, state);
 		}
 		if (level instanceof ServerLevel server && layout != null && result.formed()) {
-			if (Config.quarryDiggingEnabled) {
-				digger.tick(server, pos, layout, result.tier(), host);
-			} else {
+			boolean steaming = cooling.tick();
+			if (!Config.quarryDiggingEnabled) {
 				digger.switchedOff();
+			} else if (!redstoneMode.allows(powered)) {
+				digger.redstoneStopped();
+			} else {
+				digger.tick(server, pos, layout, result.tier(), host);
+			}
+			if (hasDrillBit()) {
+				bodies.update(server, layout, digger);
+				QuarryDrillEffects.tick(server, layout, digger, cooling.heatPermille(), cooling.overheated(), steaming);
+			} else {
+				bodies.clear();
 			}
 		} else {
 			digger.notFormed();
+			bodies.clear();
 		}
 		progress = digger.opElapsed();
 		maxProgress = digger.opTicks();
@@ -183,7 +215,45 @@ public class QuarryControllerBlockEntity extends MachineBlockEntity implements M
 		public void changed() {
 			setChanged();
 		}
+
+		@Override
+		public void moved() {
+			setChanged();
+			syncBlockEntityToClient();
+		}
+
+		@Override
+		public boolean overheated() {
+			return cooling.overheated();
+		}
+
+		@Override
+		public void drilled() {
+			cooling.drilled();
+		}
 	};
+
+	/** The water tank on every face: the socket lends it ({@code FluidHostRedirect}); it takes water only. */
+	@Override
+	public FluidPort fluidPort(Direction side) {
+		return cooling.waterTank;
+	}
+
+	public BlockBreakerBlockEntity.RedstoneMode redstoneMode() {
+		return redstoneMode;
+	}
+
+	public void setRedstoneMode(BlockBreakerBlockEntity.RedstoneMode mode) {
+		if (mode != redstoneMode) {
+			redstoneMode = mode;
+			setChanged();
+		}
+	}
+
+	/** The drill's heat now, for gametests. */
+	public int heat() {
+		return cooling.heat();
+	}
 
 	/** Merges {@code stack} into {@code slots}: onto matching stacks first, then into empty slots. */
 	private static void merge(List<ItemStack> slots, ItemStack stack) {
@@ -219,6 +289,10 @@ public class QuarryControllerBlockEntity extends MachineBlockEntity implements M
 			}
 			// Every scan, not only on the change: a cell broken and placed back while the frame stood comes in loose.
 			QuarryFrameWorld.paint(level, now, shapesOf(level, pos, now), true, null);
+			if (!swept || !now.equals(layout)) {
+				QuarryFrameWorld.sweepShells(level, now, shapesOf(level, pos, now));
+				swept = true;
+			}
 		}
 		if (!Objects.equals(layout, now)) {
 			layout = now;
@@ -231,6 +305,7 @@ public class QuarryControllerBlockEntity extends MachineBlockEntity implements M
 			level.setBlock(pos, current.setValue(QuarryControllerBlock.FORMED, false), Block.UPDATE_ALL);
 		}
 		setPort(level, QuarryFoundationBlock.foundationBelow(pos), formed);
+		powered = formed && QuarryFrameWorld.mainTowerPowered(level, now, pos);
 		if (level instanceof ServerLevel server) {
 			if (formed && !wasFormed) {
 				server.playSound(null, pos, SoundEvents.BEACON_ACTIVATE, SoundSource.BLOCKS, 0.6f, 1.2f);
@@ -296,6 +371,7 @@ public class QuarryControllerBlockEntity extends MachineBlockEntity implements M
 	 */
 	@Override
 	public void preRemoveSideEffects(BlockPos pos, BlockState state) {
+		bodies.clear();
 		if (level != null) {
 			setPort(level, QuarryFoundationBlock.foundationBelow(pos), false);
 			if (layout != null) {
@@ -314,12 +390,16 @@ public class QuarryControllerBlockEntity extends MachineBlockEntity implements M
 			output.putIntArray("Frame", layout.toArray());
 		}
 		digger.save(output);
+		cooling.save(output);
+		output.putInt("RedstoneMode", redstoneMode.ordinal());
 	}
 
 	@Override
 	protected void loadMachineData(ValueInput input) {
 		super.loadMachineData(input);
 		digger.load(input);
+		cooling.load(input);
+		redstoneMode = BlockBreakerBlockEntity.RedstoneMode.byOrdinal(input.getIntOr("RedstoneMode", 0));
 		layout = QuarryFrameLayout.fromArray(input.getIntArray("Frame").orElse(null));
 		// On the client this is the update tag: the frame's shapes follow it, formed or not.
 		if (level != null) {
@@ -390,6 +470,10 @@ public class QuarryControllerBlockEntity extends MachineBlockEntity implements M
 				.read(Channel.LAYER, digger::layerShown)
 				.read(Channel.LAYERS, digger::layers)
 				.read(Channel.LAYER_PERMILLE, digger::layerPermille)
+				.read(Channel.HEAT_PERMILLE, cooling::heatPermille)
+				.read(Channel.WATER_PERMILLE,
+						() -> SyncChannels.permille(cooling.waterTank.amount, cooling.waterTank.capacity))
+				.read(Channel.REDSTONE, () -> redstoneMode.ordinal())
 				.build();
 	}
 

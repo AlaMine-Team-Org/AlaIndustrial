@@ -1,6 +1,7 @@
-package dev.alaindustrial.compat.rei;
+package dev.alaindustrial.client.compat.rei;
 
 import dev.alaindustrial.client.compat.RecipeViewerLayout;
+import dev.alaindustrial.compat.rei.CanningDisplay;
 import java.util.ArrayList;
 import java.util.List;
 import me.shedaniel.math.Point;
@@ -15,22 +16,24 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.ItemLike;
 
 /**
- * REI category for the Polymerizer (MOD-019): fluid → arrow → item, with an "EU · time · volume" label.
- * The same single-row layout as {@link AlaProcessingCategory}; it is a separate class only because its
- * display type differs (a fluid input instead of an item one) and the label carries the consumed volume.
+ * REI category for the Canning Machine (MOD-383): food + empty can → arrow → canned ration, with the
+ * shared "EU · time" label.
+ *
+ * <p>The same fixed two-in / one-out row as {@link AlaProcessingCategory}; a separate class only
+ * because its display type differs and carries no recipe.
  */
-public class PolymerizingCategory implements DisplayCategory<PolymerizingDisplay> {
+public class CanningCategory implements DisplayCategory<CanningDisplay> {
 	private final Component title;
 	private final ItemLike icon;
 
-	public PolymerizingCategory(ItemLike icon, Component title) {
+	public CanningCategory(ItemLike icon, Component title) {
 		this.icon = icon;
 		this.title = title;
 	}
 
 	@Override
-	public CategoryIdentifier<? extends PolymerizingDisplay> getCategoryIdentifier() {
-		return PolymerizingDisplay.CATEGORY;
+	public CategoryIdentifier<? extends CanningDisplay> getCategoryIdentifier() {
+		return CanningDisplay.CATEGORY;
 	}
 
 	@Override
@@ -49,29 +52,30 @@ public class PolymerizingCategory implements DisplayCategory<PolymerizingDisplay
 	}
 
 	@Override
-	public int getDisplayWidth(PolymerizingDisplay display) {
+	public int getDisplayWidth(CanningDisplay display) {
 		return RecipeViewerLayout.WIDTH;
 	}
 
 	@Override
-	public List<Widget> setupDisplay(PolymerizingDisplay display, Rectangle bounds) {
+	public List<Widget> setupDisplay(CanningDisplay display, Rectangle bounds) {
 		List<Widget> widgets = new ArrayList<>();
 		widgets.add(Widgets.createRecipeBase(bounds));
 
 		widgets.add(Widgets.createArrow(new Point(
 				bounds.getX() + RecipeViewerLayout.ARROW_X,
 				bounds.getY() + RecipeViewerLayout.ARROW_Y)));
-		Point input = new Point(bounds.getX() + RecipeViewerLayout.inputXs(1).getFirst(),
-				bounds.getY() + RecipeViewerLayout.SLOT_Y);
-		widgets.add(Widgets.createSlot(input).entries(display.getInputEntries().getFirst()).markInput());
+
+		List<Integer> inputXs = RecipeViewerLayout.inputXs(display.getInputEntries().size());
+		for (int i = 0; i < inputXs.size(); i++) {
+			Point point = new Point(bounds.getX() + inputXs.get(i), bounds.getY() + RecipeViewerLayout.SLOT_Y);
+			widgets.add(Widgets.createSlot(point).entries(display.getInputEntries().get(i)).markInput());
+		}
 		Point output = new Point(bounds.getX() + RecipeViewerLayout.outputXs(1).getFirst(),
 				bounds.getY() + RecipeViewerLayout.SLOT_Y);
 		widgets.add(Widgets.createSlot(output).entries(display.getOutputEntries().getFirst()).markOutput());
 
-		// EU cost, intrinsic time and the volume one operation drinks. Units (EU / s / mB) are symbols —
-		// literal, no lang keys, as in every other machine category.
-		String cost = RecipeViewerLayout.fluidCostLabel(
-				display.energy(), display.processingTicks(), display.amountMb());
+		// EU cost and time, in the same units every other machine category prints.
+		String cost = RecipeViewerLayout.costLabel(display.energy(), display.processingTicks());
 		widgets.add(Widgets.createLabel(new Point(bounds.getCenterX(),
 				bounds.getY() + RecipeViewerLayout.LABEL_Y), Component.literal(cost))
 				.noShadow().color(0xFF404040, 0xFFBBBBBB));

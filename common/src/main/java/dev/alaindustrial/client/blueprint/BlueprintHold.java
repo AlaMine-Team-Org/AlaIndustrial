@@ -32,6 +32,17 @@ public final class BlueprintHold {
 	private BlueprintHold() {
 	}
 
+	/** Whether the sheet key is still held from the press that opened a sheet: its key repeats must not close it. */
+	public static boolean heldSinceOpening() {
+		return waitForRelease;
+	}
+
+	/** A sheet was closed by its own key: the key still held must not open it again over the same item. */
+	public static void holdUntilReleased() {
+		reset();
+		waitForRelease = true;
+	}
+
 	/** One client tick: start, continue, finish or drop the hold. */
 	public static void tick() {
 		if (!keyDown()) {

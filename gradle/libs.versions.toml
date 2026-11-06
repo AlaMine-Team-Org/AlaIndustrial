@@ -29,9 +29,11 @@ archunit = "1.4.1"
 gson = "2.14.0"
 slf4j = "2.0.9"
 
-# Fabric-only compile-time helpers pulled in by optional integrations.
+# Compile-time helpers pulled in by the optional REI integration (MOD-018, MOD-955). Architectury
+# follows REI: rei_version 26.3.824 declares architectury 22.0.3 in its POM; 22.0.5 is taken because 22.0.3
+# crashes NeoForge 26.3.0.99 (its block-transform mixin finds no target, MOD-955).
 cloth-basic-math = "0.6.1"
-architectury = "22.0.2"
+architectury = "22.0.5"
 
 # Build plugins.
 fabric-loom = "1.17.21"
@@ -56,7 +58,9 @@ gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
 slf4j-nop = { module = "org.slf4j:slf4j-nop", version.ref = "slf4j" }
 cloth-basic-math = { module = "me.shedaniel.cloth:basic-math", version.ref = "cloth-basic-math" }
+architectury-common = { module = "dev.architectury:architectury", version.ref = "architectury" }
 architectury-fabric = { module = "dev.architectury:architectury-fabric", version.ref = "architectury" }
+architectury-neoforge = { module = "dev.architectury:architectury-neoforge", version.ref = "architectury" }
 
 [plugins]
 fabric-loom = { id = "net.fabricmc.fabric-loom", version.ref = "fabric-loom" }

@@ -1,9 +1,15 @@
-package dev.alaindustrial.compat.rei;
+package dev.alaindustrial.client.compat.rei;
 
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.client.compat.CanningExchange;
 import dev.alaindustrial.client.compat.RecipeViewerForm;
 import dev.alaindustrial.client.compat.RecipeViewerInfo;
+import dev.alaindustrial.compat.rei.AlaInfoDisplay;
+import dev.alaindustrial.compat.rei.AlloyingDisplay;
+import dev.alaindustrial.compat.rei.CanningDisplay;
+import dev.alaindustrial.compat.rei.FluidOutputDisplay;
+import dev.alaindustrial.compat.rei.ItemToFluidDisplay;
+import dev.alaindustrial.compat.rei.PolymerizingDisplay;
 import java.util.ArrayList;
 import java.util.List;
 import me.shedaniel.rei.api.client.registry.display.DisplayCategory;

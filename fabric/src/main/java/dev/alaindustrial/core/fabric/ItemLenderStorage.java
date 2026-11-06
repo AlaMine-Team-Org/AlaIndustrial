@@ -18,8 +18,9 @@ public final class ItemLenderStorage {
 	private ItemLenderStorage() {
 	}
 
-	/** Called once the blocks are registered. */
+	/** Called once the blocks are registered; registers the tank lenders too ({@link FluidLenderStorage}). */
 	public static void register() {
+		FluidLenderStorage.register();
 		List<Block> lenders = BlockCapabilityRoster.itemLenders();
 		if (lenders.isEmpty()) {
 			return;

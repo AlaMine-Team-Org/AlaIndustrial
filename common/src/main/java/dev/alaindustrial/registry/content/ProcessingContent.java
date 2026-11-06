@@ -360,8 +360,7 @@ public final class ProcessingContent {
 			blockItem("quarry_cart", s -> ModContent.QUARRY_CART_ITEM = s),
 			// MOD-951 - the quarry's drill bit: it wears one point a block; the ceiling is read at registration.
 			item("quarry_drill_bit", p -> new Item(p.durability(Config.quarryDrillBitDurability)),
-					s -> ModContent.QUARRY_DRILL_BIT = s,
-					hiddenFromPlayers("the drill bit waits for digging: the first release builds the frame only")));
+					s -> ModContent.QUARRY_DRILL_BIT = s));
 
 	// MOD-858 - constants, because the capability roster names them (no energy: BlockCapabilityRoster).
 	public static final BlockEntityDef<TownDispatcherBlockEntity> TOWN_DISPATCHER_BE =
@@ -524,6 +523,11 @@ public final class ProcessingContent {
 		show(out, ModContent.QUARRY_HEAD_ITEM);
 		show(out, ModContent.QUARRY_BRIDGE_BEAM_ITEM);
 		show(out, ModContent.QUARRY_CART_ITEM);
+	}
+
+	/** MOD-951 — the quarry's drill bit, after its frame in the mod's tab only: an item, not a building block. */
+	public static void quarryDrillBit(Sink out) {
+		show(out, ModContent.QUARRY_DRILL_BIT);
 	}
 
 

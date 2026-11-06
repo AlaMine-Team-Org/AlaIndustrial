@@ -1,6 +1,7 @@
 package dev.alaindustrial.client.blueprint;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import dev.alaindustrial.client.ModKeyMappings;
 import dev.alaindustrial.client.blueprint.BlueprintDef.Placement;
 import dev.alaindustrial.client.blueprint.BlueprintDef.Step;
 import dev.alaindustrial.mixin.client.GuiGraphicsExtractorAccessor;
@@ -8,6 +9,7 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
@@ -56,6 +58,27 @@ public final class BlueprintScreen extends Screen {
 	@Override
 	public boolean isPauseScreen() {
 		return false;
+	}
+
+	/**
+	 * The inventory key and the sheet's own key close it too, as they close every other window (MOD-956: a player
+	 * pressed them, saw nothing happen and took the sheet for stuck). Esc closes it the vanilla way.
+	 */
+	@Override
+	public boolean keyPressed(KeyEvent event) {
+		if (ModKeyMappings.OPEN_BLUEPRINT.matches(event)) {
+			// The hold that opened the sheet keeps the key down, and its repeats arrive here.
+			if (!BlueprintHold.heldSinceOpening()) {
+				BlueprintHold.holdUntilReleased();
+				onClose();
+			}
+			return true;
+		}
+		if (Minecraft.getInstance().options.keyInventory.matches(event)) {
+			onClose();
+			return true;
+		}
+		return super.keyPressed(event);
 	}
 
 	@Override

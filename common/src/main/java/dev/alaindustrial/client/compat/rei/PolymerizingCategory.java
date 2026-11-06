@@ -1,6 +1,7 @@
-package dev.alaindustrial.compat.rei;
+package dev.alaindustrial.client.compat.rei;
 
 import dev.alaindustrial.client.compat.RecipeViewerLayout;
+import dev.alaindustrial.compat.rei.PolymerizingDisplay;
 import java.util.ArrayList;
 import java.util.List;
 import me.shedaniel.math.Point;
@@ -15,22 +16,22 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.ItemLike;
 
 /**
- * REI category for an item → fluid family (MOD-924, the Honey Centrifuge): item → arrow → fluid (and the
- * returned container), with an "EU · time · volume" label. The same single-row layout as the other machine
- * categories.
+ * REI category for the Polymerizer (MOD-019): fluid → arrow → item, with an "EU · time · volume" label.
+ * The same single-row layout as {@link AlaProcessingCategory}; it is a separate class only because its
+ * display type differs (a fluid input instead of an item one) and the label carries the consumed volume.
  */
-public class ItemToFluidCategory implements DisplayCategory<ItemToFluidDisplay> {
+public class PolymerizingCategory implements DisplayCategory<PolymerizingDisplay> {
 	private final Component title;
 	private final ItemLike icon;
 
-	public ItemToFluidCategory(ItemLike icon, Component title) {
+	public PolymerizingCategory(ItemLike icon, Component title) {
 		this.icon = icon;
 		this.title = title;
 	}
 
 	@Override
-	public CategoryIdentifier<? extends ItemToFluidDisplay> getCategoryIdentifier() {
-		return ItemToFluidDisplay.CATEGORY;
+	public CategoryIdentifier<? extends PolymerizingDisplay> getCategoryIdentifier() {
+		return PolymerizingDisplay.CATEGORY;
 	}
 
 	@Override
@@ -49,12 +50,12 @@ public class ItemToFluidCategory implements DisplayCategory<ItemToFluidDisplay> 
 	}
 
 	@Override
-	public int getDisplayWidth(ItemToFluidDisplay display) {
+	public int getDisplayWidth(PolymerizingDisplay display) {
 		return RecipeViewerLayout.WIDTH;
 	}
 
 	@Override
-	public List<Widget> setupDisplay(ItemToFluidDisplay display, Rectangle bounds) {
+	public List<Widget> setupDisplay(PolymerizingDisplay display, Rectangle bounds) {
 		List<Widget> widgets = new ArrayList<>();
 		widgets.add(Widgets.createRecipeBase(bounds));
 
@@ -64,13 +65,12 @@ public class ItemToFluidCategory implements DisplayCategory<ItemToFluidDisplay> 
 		Point input = new Point(bounds.getX() + RecipeViewerLayout.inputXs(1).getFirst(),
 				bounds.getY() + RecipeViewerLayout.SLOT_Y);
 		widgets.add(Widgets.createSlot(input).entries(display.getInputEntries().getFirst()).markInput());
-		int outputs = display.getOutputEntries().size();
-		List<Integer> outputXs = RecipeViewerLayout.outputXs(outputs);
-		for (int i = 0; i < outputs; i++) {
-			Point output = new Point(bounds.getX() + outputXs.get(i), bounds.getY() + RecipeViewerLayout.SLOT_Y);
-			widgets.add(Widgets.createSlot(output).entries(display.getOutputEntries().get(i)).markOutput());
-		}
+		Point output = new Point(bounds.getX() + RecipeViewerLayout.outputXs(1).getFirst(),
+				bounds.getY() + RecipeViewerLayout.SLOT_Y);
+		widgets.add(Widgets.createSlot(output).entries(display.getOutputEntries().getFirst()).markOutput());
 
+		// EU cost, intrinsic time and the volume one operation drinks. Units (EU / s / mB) are symbols —
+		// literal, no lang keys, as in every other machine category.
 		String cost = RecipeViewerLayout.fluidCostLabel(
 				display.energy(), display.processingTicks(), display.amountMb());
 		widgets.add(Widgets.createLabel(new Point(bounds.getCenterX(),

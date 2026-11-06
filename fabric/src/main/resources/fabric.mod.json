@@ -36,7 +36,7 @@
 			"dev.alaindustrial.compat.rei.AlaReiCommonPlugin"
 		],
 		"rei_client": [
-			"dev.alaindustrial.compat.rei.AlaReiPlugin"
+			"dev.alaindustrial.client.compat.rei.AlaReiPlugin"
 		],
 		"jei_mod_plugin": [
 			"dev.alaindustrial.client.compat.jei.AlaJeiPlugin"

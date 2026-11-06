@@ -376,6 +376,10 @@ public final class RecipeCoverageScenarios {
 		for (RecipeHolder<AlaProcessingRecipe> holder : recipes) {
 			// MC 26.2: RecipeHolder.id() returns ResourceKey<Recipe<?>>; .identifier() gives the path.
 			Identifier id = holder.id().identifier();
+			// The test data pack of RecipeDatapackScenarios (MOD-953) adds machine recipes on purpose.
+			if (id.getNamespace().equals("alaindustrial_gametest")) {
+				continue;
+			}
 			// Namespace must be alaindustrial (a vanilla recipe leaking into our type is a registration bug).
 			if (!id.getNamespace().equals("alaindustrial")) {
 				helper.fail(label + " recipe " + id + " has namespace '" + id.getNamespace()

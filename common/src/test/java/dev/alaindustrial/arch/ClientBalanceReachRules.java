@@ -167,12 +167,7 @@ public class ClientBalanceReachRules {
 			renderAnimation("TeleporterCapsuleDoorRenderer", "TeleporterBlockEntity", "doorOpenness(long, float)"),
 			"renderer animation: the capsule door's slide in ticks, shows no number (owner, 2026-10-08)",
 			renderAnimation("ThermalCentrifugeBlockEntityRenderer", "ThermalCentrifugeBlockEntity", "spinPermille()"),
-			"renderer animation: the drum's spin-up in ticks, shows no number (owner, 2026-10-08)",
-			"dev.alaindustrial.compat.rei.AlaReiCommonPlugin.registerDisplays("
-					+ "me.shedaniel.rei.api.common.registry.display.ServerDisplayRegistry)"
-					+ " -> dev.alaindustrial.compat.rei.AlaReiCommonPlugin.vanillaSmeltEu()",
-			"runs on the server: REI's common plugin fills the displays there (MOD-743); lives in fabric/src/main, "
-					+ "outside this lane, and compat.rei is not a client package anyway");
+			"renderer animation: the drum's spin-up in ticks, shows no number (owner, 2026-10-08)");
 
 	/**
 	 * The last links of known paths that have a task of their own, by full name with parameter types: the walk

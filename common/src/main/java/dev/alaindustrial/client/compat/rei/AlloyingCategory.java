@@ -1,6 +1,7 @@
-package dev.alaindustrial.compat.rei;
+package dev.alaindustrial.client.compat.rei;
 
 import dev.alaindustrial.client.compat.RecipeViewerLayout;
+import dev.alaindustrial.compat.rei.AlloyingDisplay;
 import java.util.ArrayList;
 import java.util.List;
 import me.shedaniel.math.Point;

@@ -171,6 +171,7 @@ public final class CreativeTabContent {
 		DecorContent.quarryConstruction(out);
 		// MOD-950 — and right after them the quarry's frame parts, so a player finds the whole frame in one place.
 		ProcessingContent.quarry(out);
+		ProcessingContent.quarryDrillBit(out);
 		StorageContent.chestBoats(out);
 	}
 

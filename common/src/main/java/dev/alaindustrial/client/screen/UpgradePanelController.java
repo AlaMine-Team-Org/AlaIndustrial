@@ -7,6 +7,7 @@ import dev.alaindustrial.menu.MachineMenu;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -19,6 +20,7 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -219,6 +221,10 @@ public final class UpgradePanelController implements ScreenOverlay {
 			if (slot == hovered) {
 				graphics.fill(sx, sy, sx + 16, sy + 16, HOVER_TINT);
 			}
+			if (item.isEmpty() && !up.isLocked()) {
+				// MOD-954: the empty arm shows what it takes, as a machine's own slots do.
+				MachineScreen.drawGhost(graphics, MachineScreen.cyclingHint(up.kind().hintItems()), sx, sy);
+			}
 			if (!item.isEmpty()) {
 				graphics.item(item, sx, sy);
 				graphics.itemDecorations(host.font(), item, sx, sy, null);
@@ -292,6 +298,14 @@ public final class UpgradePanelController implements ScreenOverlay {
 			ItemStack item = hovered.getItem();
 			graphics.setTooltipForNextFrame(host.font(), host.containerTooltip(item), item.getTooltipImage(),
 					mouseX, mouseY);
+		} else if (hovered instanceof MachineMenu.UpgradeSlot up && !up.isLocked()
+				&& !up.kind().hintItems().isEmpty()) {
+			// MOD-954: an empty open arm names the chips that go into it, in their own translated names.
+			List<Component> names = new ArrayList<>();
+			for (Item chip : up.kind().hintItems()) {
+				names.add(new ItemStack(chip).getHoverName());
+			}
+			graphics.setTooltipForNextFrame(host.font(), names, Optional.empty(), mouseX, mouseY);
 		}
 		return true;
 	}

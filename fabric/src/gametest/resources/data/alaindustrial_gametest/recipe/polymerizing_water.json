@@ -1,0 +1,7 @@
+{
+	"type": "alaindustrial:polymerizing",
+	"fluid": "minecraft:water",
+	"amount": 500,
+	"result": { "id": "minecraft:sponge", "count": 1 },
+	"energy": 123
+}

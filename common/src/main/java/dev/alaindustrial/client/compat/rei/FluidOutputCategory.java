@@ -1,6 +1,7 @@
-package dev.alaindustrial.compat.rei;
+package dev.alaindustrial.client.compat.rei;
 
 import dev.alaindustrial.client.compat.RecipeViewerLayout;
+import dev.alaindustrial.compat.rei.FluidOutputDisplay;
 import java.util.ArrayList;
 import java.util.List;
 import me.shedaniel.math.Point;
@@ -12,28 +13,27 @@ import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.ItemLike;
 
 /**
- * REI category for one processing machine. All four machines share this class — they differ only by
- * their {@link CategoryIdentifier}, title and icon (the machine block). Layout is a single
- * input → arrow → output row with an "EU · time" label underneath.
+ * Reusable REI category for {@link FluidOutputDisplay}.
+ *
+ * <p>The owning content task must register it with its real machine block, workstation and click
+ * target. MOD-257 intentionally does not invent a placeholder workstation.
  */
-public class AlaProcessingCategory implements DisplayCategory<AlaProcessingDisplay> {
-	private final CategoryIdentifier<AlaProcessingDisplay> identifier;
+public final class FluidOutputCategory implements DisplayCategory<FluidOutputDisplay> {
+	private final CategoryIdentifier<FluidOutputDisplay> identifier;
 	private final Component title;
-	private final Block icon;
+	private final ItemLike icon;
 
-	public AlaProcessingCategory(CategoryIdentifier<AlaProcessingDisplay> identifier, Block icon,
-			Component title) {
+	public FluidOutputCategory(CategoryIdentifier<FluidOutputDisplay> identifier, ItemLike icon, Component title) {
 		this.identifier = identifier;
 		this.icon = icon;
-		// Composed by the caller from already-localised parts (block name + mode) — no new lang keys.
 		this.title = title;
 	}
 
 	@Override
-	public CategoryIdentifier<? extends AlaProcessingDisplay> getCategoryIdentifier() {
+	public CategoryIdentifier<? extends FluidOutputDisplay> getCategoryIdentifier() {
 		return identifier;
 	}
 
@@ -53,15 +53,14 @@ public class AlaProcessingCategory implements DisplayCategory<AlaProcessingDispl
 	}
 
 	@Override
-	public int getDisplayWidth(AlaProcessingDisplay display) {
+	public int getDisplayWidth(FluidOutputDisplay display) {
 		return RecipeViewerLayout.WIDTH;
 	}
 
 	@Override
-	public List<Widget> setupDisplay(AlaProcessingDisplay display, Rectangle bounds) {
+	public List<Widget> setupDisplay(FluidOutputDisplay display, Rectangle bounds) {
 		List<Widget> widgets = new ArrayList<>();
 		widgets.add(Widgets.createRecipeBase(bounds));
-
 		widgets.add(Widgets.createArrow(new Point(
 				bounds.getX() + RecipeViewerLayout.ARROW_X,
 				bounds.getY() + RecipeViewerLayout.ARROW_Y)));
@@ -77,14 +76,11 @@ public class AlaProcessingCategory implements DisplayCategory<AlaProcessingDispl
 			widgets.add(Widgets.createSlot(point).entries(display.getOutputEntries().get(i)).markOutput());
 		}
 
-		// EU cost + intrinsic time, and the success chance where the operation is a gamble (the
-		// incubator). Units (EU / s / %) are symbols — literal, no lang keys.
-		String cost = RecipeViewerLayout.withChance(
-				display.cost().label(), display.chance());
+		String cost = RecipeViewerLayout.fluidCostLabel(
+				display.energy(), display.processingTicks(), display.inputAmountMb());
 		widgets.add(Widgets.createLabel(new Point(bounds.getCenterX(),
 				bounds.getY() + RecipeViewerLayout.LABEL_Y), Component.literal(cost))
 				.noShadow().color(0xFF404040, 0xFFBBBBBB));
-
 		return widgets;
 	}
 }

@@ -1,6 +1,7 @@
-package dev.alaindustrial.compat.rei;
+package dev.alaindustrial.client.compat.rei;
 
 import dev.alaindustrial.client.compat.RecipeViewerLayout;
+import dev.alaindustrial.compat.rei.ItemToFluidDisplay;
 import java.util.ArrayList;
 import java.util.List;
 import me.shedaniel.math.Point;
@@ -15,24 +16,22 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.ItemLike;
 
 /**
- * REI category for the Canning Machine (MOD-383): food + empty can → arrow → canned ration, with the
- * shared "EU · time" label.
- *
- * <p>The same fixed two-in / one-out row as {@link AlaProcessingCategory}; a separate class only
- * because its display type differs and carries no recipe.
+ * REI category for an item → fluid family (MOD-924, the Honey Centrifuge): item → arrow → fluid (and the
+ * returned container), with an "EU · time · volume" label. The same single-row layout as the other machine
+ * categories.
  */
-public class CanningCategory implements DisplayCategory<CanningDisplay> {
+public class ItemToFluidCategory implements DisplayCategory<ItemToFluidDisplay> {
 	private final Component title;
 	private final ItemLike icon;
 
-	public CanningCategory(ItemLike icon, Component title) {
+	public ItemToFluidCategory(ItemLike icon, Component title) {
 		this.icon = icon;
 		this.title = title;
 	}
 
 	@Override
-	public CategoryIdentifier<? extends CanningDisplay> getCategoryIdentifier() {
-		return CanningDisplay.CATEGORY;
+	public CategoryIdentifier<? extends ItemToFluidDisplay> getCategoryIdentifier() {
+		return ItemToFluidDisplay.CATEGORY;
 	}
 
 	@Override
@@ -51,30 +50,30 @@ public class CanningCategory implements DisplayCategory<CanningDisplay> {
 	}
 
 	@Override
-	public int getDisplayWidth(CanningDisplay display) {
+	public int getDisplayWidth(ItemToFluidDisplay display) {
 		return RecipeViewerLayout.WIDTH;
 	}
 
 	@Override
-	public List<Widget> setupDisplay(CanningDisplay display, Rectangle bounds) {
+	public List<Widget> setupDisplay(ItemToFluidDisplay display, Rectangle bounds) {
 		List<Widget> widgets = new ArrayList<>();
 		widgets.add(Widgets.createRecipeBase(bounds));
 
 		widgets.add(Widgets.createArrow(new Point(
 				bounds.getX() + RecipeViewerLayout.ARROW_X,
 				bounds.getY() + RecipeViewerLayout.ARROW_Y)));
-
-		List<Integer> inputXs = RecipeViewerLayout.inputXs(display.getInputEntries().size());
-		for (int i = 0; i < inputXs.size(); i++) {
-			Point point = new Point(bounds.getX() + inputXs.get(i), bounds.getY() + RecipeViewerLayout.SLOT_Y);
-			widgets.add(Widgets.createSlot(point).entries(display.getInputEntries().get(i)).markInput());
-		}
-		Point output = new Point(bounds.getX() + RecipeViewerLayout.outputXs(1).getFirst(),
+		Point input = new Point(bounds.getX() + RecipeViewerLayout.inputXs(1).getFirst(),
 				bounds.getY() + RecipeViewerLayout.SLOT_Y);
-		widgets.add(Widgets.createSlot(output).entries(display.getOutputEntries().getFirst()).markOutput());
+		widgets.add(Widgets.createSlot(input).entries(display.getInputEntries().getFirst()).markInput());
+		int outputs = display.getOutputEntries().size();
+		List<Integer> outputXs = RecipeViewerLayout.outputXs(outputs);
+		for (int i = 0; i < outputs; i++) {
+			Point output = new Point(bounds.getX() + outputXs.get(i), bounds.getY() + RecipeViewerLayout.SLOT_Y);
+			widgets.add(Widgets.createSlot(output).entries(display.getOutputEntries().get(i)).markOutput());
+		}
 
-		// EU cost and time, in the same units every other machine category prints.
-		String cost = RecipeViewerLayout.costLabel(display.energy(), display.processingTicks());
+		String cost = RecipeViewerLayout.fluidCostLabel(
+				display.energy(), display.processingTicks(), display.amountMb());
 		widgets.add(Widgets.createLabel(new Point(bounds.getCenterX(),
 				bounds.getY() + RecipeViewerLayout.LABEL_Y), Component.literal(cost))
 				.noShadow().color(0xFF404040, 0xFFBBBBBB));

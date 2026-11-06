@@ -7,8 +7,8 @@ package dev.alaindustrial.block.entity.quarry;
  *
  * <p>The solid parts of the formed quarry frame (MOD-950) as axis-aligned boxes, {@code x0, y0, z0, x1, y1, z1} in
  * pixels of the same part frames as {@code QuarryGeometry}: a turned cube is the box around it. Read by
- * {@link QuarryFrameShapes}, which cuts them into each cell's collision and outline. The cart has none: it moves
- * once the quarry digs.
+ * {@link QuarryFrameShapes}, which cuts them into each cell's collision and outline. The bridge, the cart and the
+ * drill have none: they move as the quarry digs (MOD-952).
  */
 final class QuarryFrameBoxes {
 
@@ -92,15 +92,8 @@ final class QuarryFrameBoxes {
 			{8F, 112F, 0F, 40F, 128F, 16F},
 	};
 
-	static final float[][] SADDLE = {
-			{-32F, 112F, 0F, -16F, 128F, 16F},
-			{-32F, 128F, 0F, 24F, 136F, 16F},
-			{16F, 112F, 0F, 24F, 128F, 16F},
-	};
-
-	static final float[][] BRIDGE = {
-			{0F, 112F, 0F, 16F, 128F, 16F},
-			{0F, 130.585786F, 2.585786F, 16F, 133.414214F, 5.414214F},
-			{0F, 130.585786F, 10.585786F, 16F, 133.414214F, 13.414214F},
-	};
+	/** The drill (MOD-952), pixels: its head's lowest point and the top of the head's cage, both of the
+	 * model's height at rest. */
+	static final float DRILL_TIP = 45.205857F;
+	static final float DRILL_CAGE_TOP = 80F;
 }

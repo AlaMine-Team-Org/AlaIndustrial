@@ -27,8 +27,9 @@ import net.minecraft.world.item.ItemStack;
  * {@link ModRecipes.AlloyKind}, and its per-component counts are not the positional
  * {@code inputCounts} of a processing recipe.
  *
- * <p>Lives in the Fabric subproject's <em>main</em> source set (REI is a Fabric-side dependency), and
- * holds pure recipe data on REI's common API only, with no client/GUI types. Displays are built server-side by {@link AlaReiCommonPlugin} (where the
+ * <p>Lives in {@code common} outside the client packages (MOD-955: it is built on the server), and
+ * holds pure recipe data on REI's common API only, with no client/GUI types. Displays are built
+ * server-side by {@link AlaReiCommonPlugin} (where the
  * {@code RecipeManager} is populated) and synced to the client via {@link #SERIALIZER}; the client
  * supplies only the category widgets ({@code AlloyingCategory}). Required on MC 26.2, where the
  * client no longer receives full recipes.

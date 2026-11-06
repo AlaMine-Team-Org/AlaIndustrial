@@ -26,7 +26,8 @@ import org.jspecify.annotations.Nullable;
  *
  * <p>The model rises above the blocks it hides (the heads reach 8 3/4 blocks, the paths 8), so some of its cells hold
  * no frame block at all; the controller fills those with quarry shell blocks ({@link #cells}) that take their shape
- * from here too. Only the solid parts count: the cart and its drill move once the quarry digs.
+ * from here too. Only the towers and the paths count: the bridge, the cart and the drill move as the quarry digs
+ * (MOD-952), so they are drawn and never bumped into.
  */
 public final class QuarryFrameShapes {
 
@@ -125,9 +126,7 @@ public final class QuarryFrameShapes {
 		return switch (part) {
 			case TOWER -> QuarryFrameBoxes.TOWER;
 			case PATH -> QuarryFrameBoxes.PATH;
-			case SADDLE -> QuarryFrameBoxes.SADDLE;
-			case BRIDGE -> QuarryFrameBoxes.BRIDGE;
-			case CART, DRILL -> null;
+			case SADDLE, BRIDGE, CART, DRILL -> null;
 		};
 	}
 

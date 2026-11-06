@@ -49,7 +49,7 @@ public final class QuarryDigScenarios {
 						"quarry_dig_socket_lends_items").ticks(40),
 				RosterEntry.of(QuarryDigScenarios::progressOutlivesTheFrameComingApart, "quarry_dig_progress_kept")
 						.ticks(40),
-				RosterEntry.of(QuarryDigScenarios::itDoesNotDigWhileDiggingIsOff, "quarry_dig_off_by_default")
+				RosterEntry.of(QuarryDigScenarios::itDoesNotDigWhileDiggingIsOff, "quarry_dig_off_by_switch")
 						.ticks(40));
 
 		private Roster() {
@@ -58,18 +58,18 @@ public final class QuarryDigScenarios {
 
 	private static final int FULL = 40_000;
 	/** Enough controller ticks for any one operation of the rig's pit. */
-	private static final int OPERATION_TICKS = 400;
+	static final int OPERATION_TICKS = 400;
 
 	/** The pit's first cell, and the one {@code along} steps further down the first row (along Z). */
-	private static BlockPos pit(Rig rig, int along) {
+	static BlockPos pit(Rig rig, int along) {
 		return rig.at(T, BASE, T + along);
 	}
 
 	/**
-	 * Runs {@code body} with digging switched on: it is off by default until the quarry's bridge and drill move
-	 * (owner, 2026-11-05). The scenarios are synchronous, so the switch covers exactly their one call.
+	 * Runs {@code body} with digging switched on, whatever an operator's config or a concurrent scenario holds: the
+	 * scenarios are synchronous, so the switch covers exactly their one call.
 	 */
-	private static void withDigging(Runnable body) {
+	static void withDigging(Runnable body) {
 		try (ConfigOverrides o = ConfigOverrides.sync().set("quarryDiggingEnabled", true)) {
 			body.run();
 		}
@@ -79,7 +79,7 @@ public final class QuarryDigScenarios {
 	 * A rig with an owner, a drill bit and a full buffer of energy, not scanned yet: the caller lays the pit's blocks
 	 * first and then scans, or the first tick would pass the empty layer over before they are there.
 	 */
-	private static Rig ready(GameTestHelper helper) {
+	static Rig ready(GameTestHelper helper) {
 		Rig rig = QuarryFrameScenarios.rig(helper, true);
 		QuarryControllerBlockEntity controller = rig.controller();
 		controller.setOwner(UUID.nameUUIDFromBytes("quarry-tester".getBytes()), "QuarryTester");
@@ -92,7 +92,7 @@ public final class QuarryDigScenarios {
 	 * Ticks the controller until {@code pos} is air, at most one operation's worth; whether it became air. It stops
 	 * the tick the block goes, at the end of the drilling, before the next operation could start and be paid for.
 	 */
-	private static boolean digUntilGone(Rig rig, BlockPos pos) {
+	static boolean digUntilGone(Rig rig, BlockPos pos) {
 		for (int i = 0; i < OPERATION_TICKS; i++) {
 			rig.tick(rig.controllerPos());
 			if (rig.state(pos).isAir()) {
@@ -202,7 +202,9 @@ public final class QuarryDigScenarios {
 					+ " lava must all stay");
 			return;
 		}
-		long travel = (long) Config.quarryTravelEuPerBlock * 4;
+		// The drill takes 2 x 2 tiles (MOD-952): the stone at cell 4 of the 5-cell row is in the row's last tile, moved
+		// back to start at cell 3, so the bridge travels three cells.
+		long travel = (long) Config.quarryTravelEuPerBlock * 3;
 		long rope = (long) Config.quarryRopeEuPerBlock * (HEAD - BASE + 1);
 		long drill = Math.round(Config.quarryDrillEuPerHardness * 1.5D);
 		long spent = FULL - controller.getEnergyStorage().getAmount();
@@ -332,7 +334,8 @@ public final class QuarryDigScenarios {
 		QuarryControllerBlockEntity controller = rig.controller();
 		BlockPos first = pit(rig, 0);
 		rig.set(first, Blocks.STONE.defaultBlockState());
-		rig.set(pit(rig, 1), Blocks.STONE.defaultBlockState());
+		// In the next tile (MOD-952: the drill takes 2 x 2 at once), so step 1 has a block to wait on.
+		rig.set(pit(rig, 2), Blocks.STONE.defaultBlockState());
 		rig.scanNow();
 		if (!digUntilGone(rig, first)) {
 			helper.fail("the first stone was not dug: " + controller.workStatus());
@@ -364,12 +367,18 @@ public final class QuarryDigScenarios {
 	}
 
 	/**
-	 * Digging is off by default for the quarry's first release (owner, 2026-11-05): a formed frame with an owner, a
-	 * bit and energy leaves the pit alone, spends nothing and says digging comes later.
+	 * With digging switched off by the operator a formed frame with an owner, a bit and energy leaves the pit alone,
+	 * spends nothing and says so. Digging is on by default since stage C (MOD-952); the switch stays for operators.
 	 *
-	 * @implements MOD-951 — the first release builds and powers the frame; digging waits for the moving bridge
+	 * @implements MOD-952 — the operator's switch stands a formed quarry still
 	 */
 	public static void itDoesNotDigWhileDiggingIsOff(GameTestHelper helper) {
+		try (ConfigOverrides o = ConfigOverrides.sync().set("quarryDiggingEnabled", false)) {
+			itDoesNotDigWhileDiggingIsOffBody(helper);
+		}
+	}
+
+	private static void itDoesNotDigWhileDiggingIsOffBody(GameTestHelper helper) {
 		Rig rig = ready(helper);
 		BlockPos first = pit(rig, 0);
 		rig.set(first, Blocks.STONE.defaultBlockState());

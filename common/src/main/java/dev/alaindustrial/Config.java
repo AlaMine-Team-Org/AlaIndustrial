@@ -546,8 +546,8 @@ public final class Config {
 	// --- quarry digging (MOD-951, stage B of MOD-637): what an operation costs and how deep the pit goes ---------
 
 	@Knob(section = Section.MACHINES,
-			doc = "Whether a formed quarry digs. Off until the quarry's bridge, cart and drill move (stage C).")
-	public static boolean quarryDiggingEnabled = false;
+			doc = "Whether a formed quarry digs. Off stands a formed quarry still, holding its progress.")
+	public static boolean quarryDiggingEnabled = true;
 
 	@Knob(section = Section.MACHINES, min = 0,
 			doc = "Quarry drilling energy per unit of the block's hardness, in EU (stone, 1.5, costs about 200).")
@@ -601,6 +601,28 @@ public final class Config {
 	@Knob(section = Section.MACHINES, min = 1,
 			doc = "Cells a quarry may pass over in one tick while it looks for the next block to drill.")
 	public static int quarryCellsPerTick = 64;
+
+	// --- quarry water and heat (MOD-952, stage C of MOD-637) ---------------------------------------------------------
+
+	@Knob(section = Section.MACHINES, min = 0,
+			doc = "Heat one block drilled by the quarry adds to its drill.")
+	public static int quarryHeatPerBlock = 10;
+
+	@Knob(section = Section.MACHINES, min = 1,
+			doc = "Top of the quarry's heat scale: the drill stops there and goes on once cooled to half.")
+	public static int quarryHeatMax = 1000;
+
+	@Knob(section = Section.MACHINES, min = 0,
+			doc = "Heat the quarry's drill loses a second with no water.")
+	public static int quarryCoolPerSecond = 1;
+
+	@Knob(section = Section.MACHINES, min = 0,
+			doc = "Heat one millibucket of water takes from the quarry's drill.")
+	public static int quarryHeatPerWaterMb = 1;
+
+	@Knob(section = Section.MACHINES, min = 1,
+			doc = "Water tank of a quarry controller, in millibuckets; filled through the main tower's socket.")
+	public static int quarryWaterTankMb = 8000;
 	/**
 	 * Ticks a hand-opened greenhouse door stays open before sealing itself (the room only grows closed).
 	 * Redstone-held doors ignore it.

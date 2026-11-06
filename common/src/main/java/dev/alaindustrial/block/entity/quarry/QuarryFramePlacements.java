@@ -32,7 +32,10 @@ public final class QuarryFramePlacements {
 		SADDLE(0.0F, 8.0F),
 		BRIDGE(8.0F, 8.0F),
 		CART(0.0F, 0.0F),
-		/** The cart's drill pipe and drill head: drawn only while a drill bit is in the controller's slot. */
+		/**
+		 * Where the drill hangs from the cart (the cart's frame): its mount, pipe and head are drawn here, lowered and
+		 * turning (MOD-952), and only while a drill bit is in the controller's slot.
+		 */
 		DRILL(0.0F, 0.0F);
 
 		private final float localX;
@@ -64,8 +67,19 @@ public final class QuarryFramePlacements {
 	public record Placement(Part part, float x, float z, float yaw, int lightY) {
 	}
 
-	/** Every part of the frame. The model's own y is kept: 0 is the bottom of the foundations. */
+	/**
+	 * Every part of the frame with the bridge and the cart where the player set them. The model's own y is kept: 0 is
+	 * the bottom of the foundations.
+	 */
 	public static List<Placement> of(QuarryFrameLayout layout) {
+		return of(layout, layout.bridgeAt() + 0.5F, layout.cartAt() + 0.5F);
+	}
+
+	/**
+	 * Every part of the frame with the bridge at {@code bridge} along the paths and the cart at {@code cart} along the
+	 * bridge, both in world blocks (MOD-952: they move as the quarry digs).
+	 */
+	public static List<Placement> of(QuarryFrameLayout layout, float bridge, float cart) {
 		List<Placement> out = new ArrayList<>();
 		boolean alongX = layout.alongX();
 		int aboveHeads = layout.headY() + QuarryFrameScan.HEAD_LAYERS;
@@ -80,7 +94,6 @@ public final class QuarryFramePlacements {
 				out.add(at(Part.PATH, alongX, t + 0.5F, row + T / 2.0F, alongX ? 90.0F : 0.0F, abovePaths));
 			}
 		}
-		float bridge = layout.bridgeAt() + 0.5F;
 		float nearCentre = layout.nearPath() + T / 2.0F;
 		float farCentre = layout.farPath() + T / 2.0F;
 		out.add(at(Part.SADDLE, alongX, bridge, nearCentre, alongX ? 90.0F : 180.0F, abovePaths));
@@ -89,9 +102,19 @@ public final class QuarryFramePlacements {
 		for (float across = nearCentre + SADDLE_REACH + 0.5F; across < farCentre - SADDLE_REACH; across += 1.0F) {
 			out.add(at(Part.BRIDGE, alongX, bridge, across, alongX ? 90.0F : 0.0F, abovePaths));
 		}
-		out.add(at(Part.CART, alongX, bridge, layout.cartAt() + 0.5F, alongX ? 90.0F : 0.0F, aboveHeads));
-		out.add(at(Part.DRILL, alongX, bridge, layout.cartAt() + 0.5F, alongX ? 90.0F : 0.0F, aboveHeads));
+		out.add(at(Part.CART, alongX, bridge, cart, alongX ? 90.0F : 0.0F, aboveHeads));
+		out.add(at(Part.DRILL, alongX, bridge, cart, alongX ? 90.0F : 0.0F, aboveHeads));
 		return out;
+	}
+
+	/** The drill head's lowest point at rest, above the bottom of the foundations, in blocks. */
+	public static float drillRestingTip() {
+		return QuarryFrameBoxes.DRILL_TIP / 16.0F;
+	}
+
+	/** How tall the drill's head is, cage included, in blocks. */
+	public static float drillHeadHeight() {
+		return (QuarryFrameBoxes.DRILL_CAGE_TOP - QuarryFrameBoxes.DRILL_TIP) / 16.0F;
 	}
 
 	/** A placement given along and across the paths rather than in X and Z. */

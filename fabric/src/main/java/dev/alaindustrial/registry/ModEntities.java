@@ -3,6 +3,7 @@ package dev.alaindustrial.registry;
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.entity.ChestBoatVariants;
 import dev.alaindustrial.entity.ModChestBoat;
+import dev.alaindustrial.entity.QuarryDrillBody;
 import dev.alaindustrial.entity.StockDisplayFrameEntity;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
@@ -40,6 +41,20 @@ public final class ModEntities {
 					.eyeHeight(0.0F)
 					.clientTrackingRange(10)
 					.updateInterval(Integer.MAX_VALUE));
+
+	/**
+	 * The quarry's drill body (MOD-952): an invisible solid box the quarry moves with its drill every tick, never
+	 * saved, never summoned, sized by its synced data; updated every tick so the box follows the drawn drill.
+	 */
+	public static final EntityType<QuarryDrillBody> QUARRY_DRILL_BODY = register("quarry_drill_body",
+			EntityType.Builder.<QuarryDrillBody>of(QuarryDrillBody::new, MobCategory.MISC)
+					.noLootTable()
+					.noSummon()
+					.noSave()
+					.fireImmune()
+					.sized(1.0F, 1.0F)
+					.clientTrackingRange(10)
+					.updateInterval(1));
 
 	/**
 	 * The chest boats (MOD-785), one entity type per wood × chest pair of {@link ChestBoatVariants#ALL},

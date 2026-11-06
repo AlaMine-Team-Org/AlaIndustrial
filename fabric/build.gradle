@@ -38,8 +38,10 @@ dependencies {
     // Gradle configs and Loom auto-remaps them (see docs/BUILD.md).
     include(implementation("teamreborn:energy:${energy_version}"))
 
-    // REI — optional dev/runtime recipe viewer (MOD-018). The compat plugin (compat/rei/*) is
-    // client-only and the mod loads fine without REI installed, so REI stays off the shipped jar:
+    // REI — optional dev/runtime recipe viewer (MOD-018). The plugin is shared code since MOD-955
+    // (common: compat/rei for the server-side display filler, client/compat/rei for the rest); this
+    // module only names its two classes in fabric.mod.json, and still compiles the common sources, so
+    // it needs the API too. The mod loads fine without REI installed, so REI stays off the shipped jar:
     // API on the compile classpath, full REI on the dev-run classpath only.
     compileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${rei_version}")
     // REI's GUI API exposes me.shedaniel.math (Point/Rectangle) via this helper lib, and its display
@@ -54,12 +56,10 @@ dependencies {
     compileOnly("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}@jar")
     compileOnly("mezz.jei:jei-${minecraft_version}-fabric-api:${jei_version}@jar")
 
-    // One viewer at a time in the dev client (MOD-541). On this game version JEI is the default:
-    // REI has no build for it yet, and its last jar hard-depends on the previous game version, so
-    // the loader refuses to start with it on the run classpath (MOD-226). The REI plugin still
-    // compiles against the older API above; opt back in with -Pviewer=rei once REI ships.
-    // Both viewers at once stack two overlays over the same screen edge and hide regressions
-    // instead of showing them, so the dev-run classpath carries exactly one of the two.
+    // One viewer at a time in the dev client (MOD-541). JEI is the default; -Pviewer=rei runs REI
+    // instead (REI ships for this game version since 26.3.822, MOD-955). The same switch exists in
+    // neoforge/build.gradle. Both viewers at once stack two overlays over the same screen edge and
+    // hide regressions instead of showing them, so the dev-run classpath carries exactly one of the two.
     if ((project.findProperty('viewer') ?: 'jei').toString().equalsIgnoreCase('jei')) {
         runtimeOnly("mezz.jei:jei-${minecraft_version}-fabric:${jei_version}") {
             // JEI's POM drags its own fabric-api and fabric-loader, and Gradle's highest-wins

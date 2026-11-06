@@ -80,6 +80,59 @@ public final class QuarryFrameWorld {
 		}
 	}
 
+	/**
+	 * Takes out every quarry shell over the frame's heads and paths that its model no longer reaches into: before
+	 * MOD-952 the bridge's saddles were solid and stood in shells of their own, and a frame formed in 0.1.229 keeps
+	 * them until this sweep. Run once per loaded controller, and whenever its frame changes; a shell over the frame
+	 * that is still needed is left alone.
+	 */
+	public static void sweepShells(Level level, QuarryFrameLayout layout, Map<Long, VoxelShape> shapes) {
+		Set<Long> needed = new HashSet<>(QuarryFrameShapes.solidCells(shapes));
+		Block shell = ModContent.QUARRY_SHELL.get();
+		BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
+		int top = layout.headY() + QuarryFrameScan.HEAD_LAYERS + 1;
+		for (int x = layout.minX(); x <= layout.maxX(); x++) {
+			for (int z = layout.minZ(); z <= layout.maxZ(); z++) {
+				for (int y = layout.headY(); y <= top; y++) {
+					cursor.set(x, y, z);
+					if (!needed.contains(cursor.asLong()) && level.isLoaded(cursor)
+							&& level.getBlockState(cursor).is(shell)) {
+						level.setBlock(cursor.immutable(), Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Whether any block of the main tower - the one the controller at {@code pos} heads - takes a redstone signal:
+	 * the spec reads the signal on the whole tower, so a lever anywhere on it works. Read with each scan, not every
+	 * tick.
+	 */
+	public static boolean mainTowerPowered(Level level, @Nullable QuarryFrameLayout frame, BlockPos pos) {
+		if (frame == null) {
+			return false;
+		}
+		for (int[] tower : frame.towers()) {
+			if (pos.getX() < tower[0] || pos.getX() >= tower[0] + QuarryFrameScan.TOWER
+					|| pos.getZ() < tower[1] || pos.getZ() >= tower[1] + QuarryFrameScan.TOWER) {
+				continue;
+			}
+			BlockPos.MutableBlockPos cell = new BlockPos.MutableBlockPos();
+			for (int y = frame.baseY(); y < frame.headY() + QuarryFrameScan.HEAD_LAYERS; y++) {
+				for (int dx = 0; dx < QuarryFrameScan.TOWER; dx++) {
+					for (int dz = 0; dz < QuarryFrameScan.TOWER; dz++) {
+						cell.set(tower[0] + dx, y, tower[1] + dz);
+						if (level.isLoaded(cell) && level.hasNeighborSignal(cell)) {
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+
 	/** The size rules as the config sets them now, read per scan so a reload applies at the next one. */
 	public static QuarryFrameScan.Limits limits() {
 		return new QuarryFrameScan.Limits(Math.max(1, Config.quarryMinSpan), new int[] {

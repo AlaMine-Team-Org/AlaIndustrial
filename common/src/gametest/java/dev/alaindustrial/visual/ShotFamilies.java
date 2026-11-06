@@ -75,6 +75,9 @@ public final class ShotFamilies {
             new Object[] {"gui_", new Family(ShotGroup.GUI, List.of("R-GUI-03"),
                     "Machine screen: the energy and progress bars match the numbers behind them, "
                             + "nothing is clipped and no label overlaps a slot")},
+            new Object[] {"gui_macerator_upgrades_empty", new Family(ShotGroup.GUI, List.of("R-GUI-03"),
+                    "Upgrade panel with no chip (MOD-954): each open arm shows a faded ghost of the chip it "
+                            + "takes, the reserved bottom arm stays dimmed and empty, no glyph is drawn twice")},
             new Object[] {"gui_macerator_stats_", new Family(ShotGroup.GUI, List.of("R-GUI-03"),
                     "Statistics panel (MOD-125): docked left of the GUI with nothing printed over it, "
                             + "every row inside the frame, the close cross centred on its plate, and the "
