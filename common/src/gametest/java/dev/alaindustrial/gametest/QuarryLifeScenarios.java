@@ -132,6 +132,7 @@ public final class QuarryLifeScenarios {
 	 * @implements MOD-952 — the drill collides with a player, working or not (owner, 2026-11-06)
 	 */
 	public static void theDrillHasABodyWhileItHasABit(GameTestHelper helper) {
+		Rig[] made = new Rig[1];
 		withDigging(() -> {
 			Rig rig = ready(helper);
 			rig.set(pit(rig, 0), Blocks.STONE.defaultBlockState());
@@ -139,20 +140,28 @@ public final class QuarryLifeScenarios {
 			for (int i = 0; i < 5; i++) {
 				rig.tick(rig.controllerPos());
 			}
-			List<QuarryDrillBody> bodies = bodies(rig);
-			if (bodies.size() != 2 || !bodies.stream().allMatch(body -> body.canBeCollidedWith(null))) {
-				helper.fail("a formed quarry with a bit must keep two solid drill bodies, it has " + bodies.size());
-				return;
-			}
-			rig.controller().setItem(QuarryControllerBlockEntity.BIT_SLOT, ItemStack.EMPTY);
-			rig.tick(rig.controllerPos());
-			if (!bodies(rig).isEmpty()) {
-				helper.fail("without a bit the drill is not drawn and must have no body, it has " + bodies(rig).size());
-				return;
-			}
-			rig.hold().release();
-			helper.succeed();
+			made[0] = rig;
 		});
+		// The rig's chunks were taken this very tick, and an entity added there is not seen by a search until the
+		// loading tickets have been worked, a tick on: count the bodies a few ticks later.
+		helper.runAfterDelay(3, () -> withDigging(() -> countTheBodies(helper, made[0])));
+	}
+
+	private static void countTheBodies(GameTestHelper helper, Rig rig) {
+		rig.tick(rig.controllerPos());
+		List<QuarryDrillBody> bodies = bodies(rig);
+		if (bodies.size() != 2 || !bodies.stream().allMatch(body -> body.canBeCollidedWith(null))) {
+			helper.fail("a formed quarry with a bit must keep two solid drill bodies, it has " + bodies.size());
+			return;
+		}
+		rig.controller().setItem(QuarryControllerBlockEntity.BIT_SLOT, ItemStack.EMPTY);
+		rig.tick(rig.controllerPos());
+		if (!bodies(rig).isEmpty()) {
+			helper.fail("without a bit the drill is not drawn and must have no body, it has " + bodies(rig).size());
+			return;
+		}
+		rig.hold().release();
+		helper.succeed();
 	}
 
 	/**
