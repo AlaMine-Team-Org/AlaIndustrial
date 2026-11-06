@@ -6,6 +6,9 @@ plugins {
 repositories {
     // JEI (recipe viewer) optional compat for NeoForge.
     maven { url = 'https://maven.blamejared.com/' }
+    // REI + Cloth Config (MOD-955), and Architectury, which REI requires.
+    maven { url = 'https://maven.shedaniel.me/' }
+    maven { url = 'https://maven.architectury.dev/' }
     // WTHIT + Bad Packets (MOD-938).
     maven {
         url = 'https://maven2.bai.lol'
@@ -109,7 +112,26 @@ dependencies {
     // JEI - optional dev/runtime recipe viewer. API only at compile time; full JEI only in dev runs.
     compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}@jar"
     compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}@jar"
-    runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}@jar"
+
+    // REI - the other optional recipe viewer (MOD-955). The plugin is shared code in common; this module
+    // compiles it and adds two empty subclasses carrying REI's NeoForge annotations (@REIPluginClient,
+    // @REIPluginCommon). Those annotations live only in the full REI jar, not in RoughlyEnoughItems-api-neoforge,
+    // so the full jar is the compile dependency; compileOnly keeps it off the shipped jar and the mod
+    // loads without REI (REI finds the subclasses by their annotations, nothing else touches them).
+    compileOnly "me.shedaniel:RoughlyEnoughItems-neoforge:${rei_version}"
+
+    // One viewer at a time in the dev client, as on Fabric (MOD-541): JEI by default, -Pviewer=rei for REI.
+    // Two viewers stack two overlays over the same screen edge and hide regressions instead of showing them.
+    // The test lanes run on the default, so they keep JEI exactly as before.
+    if ((project.findProperty('viewer') ?: 'jei').toString().equalsIgnoreCase('jei')) {
+        runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}@jar"
+    } else {
+        // The REI jar carries its API and default plugin; its POM adds Cloth Config and Architectury.
+        // Architectury is pinned to the catalog version so the POM does not choose it (same reason as
+        // the Fabric pin: an older Architectury broke text input there).
+        runtimeOnly "me.shedaniel:RoughlyEnoughItems-neoforge:${rei_version}"
+        runtimeOnly libs.architectury.neoforge
+    }
 
     // WTHIT tank plugin (MOD-938): API to compile the shared plugin; the full mod only with `-PwithWthit`
     // (its only build is for 26.2 — opt in on the 26.2 line).

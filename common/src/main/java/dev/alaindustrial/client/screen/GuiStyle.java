@@ -64,6 +64,9 @@ public final class GuiStyle {
 	public static final int LEVEL_FILL = 0xFF57C7FF;
 	public static final int LEVEL_FILL_HI = 0xFFBFEBFF;
 	public static final int LEVEL_TRACK = 0xFF23262B;
+	/** A heat bar (the quarry's drill, MOD-952): its fill and its bright leading edge; the track is LEVEL_TRACK. */
+	public static final int HEAT_FILL = 0xFFE0582A;
+	public static final int HEAT_FILL_HI = 0xFFFFB27A;
 	/** Laid over the model of a closed record, so it reads as a photograph in a file. */
 	public static final int CLOSED_WASH = 0xB0707070;
 

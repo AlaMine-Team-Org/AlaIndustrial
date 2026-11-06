@@ -1,6 +1,7 @@
-package dev.alaindustrial.compat.rei;
+package dev.alaindustrial.client.compat.rei;
 
 import dev.alaindustrial.client.compat.InfoPageLayout;
+import dev.alaindustrial.compat.rei.AlaInfoDisplay;
 import java.util.ArrayList;
 import java.util.List;
 import me.shedaniel.math.Point;

@@ -26,6 +26,10 @@ repositories {
     // JEI. The recipe-viewer integration is loader-neutral since MOD-558 and therefore compiles
     // here; the loaders keep only their entry point. Same BlameJared maven both of them already use.
     maven { url = 'https://maven.blamejared.com/' }
+    // REI and Cloth Config (MOD-955): the REI integration is loader-neutral too and compiles here.
+    maven { url = 'https://maven.shedaniel.me/' }
+    // Architectury: REI's API exposes dev.architectury types (FluidStack, GameInstance).
+    maven { url = 'https://maven.architectury.dev/' }
     // WTHIT API (MOD-938).
     maven {
         url = 'https://maven2.bai.lol'
@@ -49,6 +53,16 @@ dependencies {
     // interface used here live in it. The two loader-specific api jars carry only their own fluid
     // ingredient types, which this integration does not touch, and they stay in the loader modules.
     compileOnly("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}@jar")
+
+    // REI — the other recipe viewer both loaders ship a plugin for (MOD-955, after MOD-558 did the same
+    // for JEI). compileOnly for the same two reasons as JEI: the mod loads without REI (only REI's own
+    // entry points touch the plugin classes), and the L1 lane stays REI-free. The loader-neutral api
+    // artifact; its POM adds Cloth Config and the loader-neutral Architectury at compile scope. The
+    // entry points stay in the loaders: Fabric names the classes in fabric.mod.json, NeoForge annotates
+    // two empty subclasses with REI's NeoForge-only annotations.
+    compileOnly("me.shedaniel:RoughlyEnoughItems-api:${rei_version}")
+    compileOnly(libs.cloth.basic.math)
+    compileOnly(libs.architectury.common)
 
     // WTHIT — the tank plugin (MOD-938). compileOnly for the same two reasons as JEI: the mod loads
     // without WTHIT (only WTHIT reads waila_plugins.json and touches the plugin classes), and the L1
@@ -665,6 +679,11 @@ pitest {
             // registration call; the line they register is checked in the dev client with -PwithWthit.
             'dev.alaindustrial.compat.wthit.AlaWthitCommonPlugin',
             'dev.alaindustrial.client.compat.wthit.AlaWthitClientPlugin',
+            // MOD-955: REI's tab list for the special recipe forms. It names no Minecraft type, but every entry
+            // is a REI category built against the REI API, which is compileOnly and so not on the L1 classpath.
+            // Its order is pinned from the source text by ReiTabOrderTest; the tabs are checked in the dev
+            // client with -Pviewer=rei.
+            'dev.alaindustrial.client.compat.rei.ReiRecipeForms',
             // MOD-862: which buildings are houses, which count against the limit, and which building the
             // dispatcher is about. They import no Minecraft type themselves, but they read TownBuilding,
             // whose BlockPos and Identifier the L1 classpath cannot load, so no L1 suite reaches them.
@@ -844,6 +863,9 @@ pitest {
             // BlockGetter, so every mutant it has is a NO_COVERAGE in the MC-free run. Covered by
             // QuarryDigScenarios (the socket lends the buffer and the bit slot) on both loaders.
             'dev.alaindustrial.core.item.ItemHostRedirect',
+            // MOD-952: its fluid twin, the same lookup through a BlockGetter; covered by the quarry's
+            // water through the socket on both loaders.
+            'dev.alaindustrial.core.fluid.FluidHostRedirect',
             'dev.alaindustrial.core.energy.DirectAdjacencyDistributor', // was EnergyNet (renamed MOD-168 #7)
             'dev.alaindustrial.core.energy.EnergyNetwork',
             'dev.alaindustrial.core.energy.EnergyPortHost',

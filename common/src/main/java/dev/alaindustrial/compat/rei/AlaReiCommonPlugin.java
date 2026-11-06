@@ -24,14 +24,16 @@ import me.shedaniel.rei.api.common.registry.display.ServerDisplayRegistry;
  *
  * <p>On MC 26.2 the client no longer receives the full {@code RecipeManager} (it is display-centric:
  * only synced recipe displays reach the client). REI therefore exposes recipe-based display filling
- * only on {@link ServerDisplayRegistry} (the {@code rei_common} entrypoint), which runs where the
+ * only on {@link ServerDisplayRegistry} (the common plugin), which runs where the
  * recipe manager is populated. REI then serialises the produced displays with {@link
  * AlaProcessingDisplay#SERIALIZER} and syncs them to every client, so they appear in singleplayer and
  * on dedicated servers alike. The client half ({@code AlaReiPlugin}) only registers categories and
  * workstations.
  *
- * <p>Optional dependency: this class is loaded only when REI itself invokes the {@code rei_common}
- * entrypoint, so the mod runs fine without REI installed.
+ * <p>Optional dependency: this class is loaded only when REI itself finds it, through the {@code rei_common}
+ * entrypoint on Fabric or the annotated subclass {@code AlaReiCommonPluginNeoForge} on NeoForge, so the mod
+ * runs fine without REI installed. It sits outside the client packages on purpose (MOD-955): it runs on the
+ * server and reads the server's own {@code Config}, which no class under {@code client..} may do.
  */
 public class AlaReiCommonPlugin implements REICommonPlugin {
 

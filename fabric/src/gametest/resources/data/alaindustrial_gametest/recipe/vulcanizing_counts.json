@@ -1,0 +1,7 @@
+{
+	"type": "alaindustrial:vulcanizing",
+	"ingredients": [ "minecraft:clay_ball", "minecraft:gunpowder" ],
+	"input_counts": [ 3, 2 ],
+	"result": { "id": "minecraft:brick", "count": 2 },
+	"energy": 400
+}

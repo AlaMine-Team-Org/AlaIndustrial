@@ -18,12 +18,12 @@ import org.junit.jupiter.api.Test;
  * The order of the REI recipe tabs of the special recipe forms (MOD-716, batches 11–12), read from the
  * source of the REI adapter — and the rule that each viewer shows every form of {@link RecipeViewerForm}.
  *
- * <p><b>Why source text and not a run.</b> REI has no build for Minecraft 26.3 (`fabric/build.gradle`): the
- * plugin compiles against the older REI API, but no lane of this line can load it — the Fabric world lane
- * has no REI on its runtime classpath, and the Fabric module has no unit-test lane at all. So the tab order
- * REI registers is pinned where it is written: {@code ReiRecipeForms.TAB_ORDER}, which
- * {@code AlaReiPlugin.registerCategories} replays after the processing families. On {@code mc/26.2} REI
- * runs, and the dev client with {@code -Pviewer=rei} shows the tabs themselves.
+ * <p><b>Why source text and not a run.</b> No test lane loads REI: the world lanes of both loaders run with
+ * JEI on the runtime classpath (one viewer at a time, MOD-541), and this L1 lane has no REI at all
+ * ({@code compileOnly}). So the tab order REI registers is pinned where it is written:
+ * {@code ReiRecipeForms.TAB_ORDER}, which {@code AlaReiPlugin.registerCategories} replays after the
+ * processing families. Since MOD-955 both files are shared code in {@code common} and serve REI on both
+ * loaders; the dev client with {@code -Pviewer=rei} (Fabric or NeoForge) shows the tabs themselves.
  *
  * <p>The owner decided (2026-10-04) that each viewer keeps its own tab order: REI files the distillation
  * column before the alloy smelter and the evolution pages before the machine pages; JEI does neither. The
@@ -35,10 +35,10 @@ import org.junit.jupiter.api.Test;
 class ReiTabOrderTest {
 
 	private static final Path PLUGIN = Path.of(
-			"../fabric/src/main/java/dev/alaindustrial/compat/rei/AlaReiPlugin.java");
+			"src/main/java/dev/alaindustrial/client/compat/rei/AlaReiPlugin.java");
 
 	private static final Path REI_FORMS = Path.of(
-			"../fabric/src/main/java/dev/alaindustrial/compat/rei/ReiRecipeForms.java");
+			"src/main/java/dev/alaindustrial/client/compat/rei/ReiRecipeForms.java");
 
 	private static final Path JEI_FORMS = Path.of(
 			"src/main/java/dev/alaindustrial/client/compat/jei/JeiRecipeForms.java");

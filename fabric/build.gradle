@@ -38,8 +38,10 @@ dependencies {
     // Gradle configs and Loom auto-remaps them (see docs/BUILD.md).
     include(implementation("teamreborn:energy:${energy_version}"))
 
-    // REI — optional dev/runtime recipe viewer (MOD-018). The compat plugin (compat/rei/*) is
-    // client-only and the mod loads fine without REI installed, so REI stays off the shipped jar:
+    // REI — optional dev/runtime recipe viewer (MOD-018). The plugin is shared code since MOD-955
+    // (common: compat/rei for the server-side display filler, client/compat/rei for the rest); this
+    // module only names its two classes in fabric.mod.json, and still compiles the common sources, so
+    // it needs the API too. The mod loads fine without REI installed, so REI stays off the shipped jar:
     // API on the compile classpath, full REI on the dev-run classpath only.
     compileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${rei_version}")
     // REI's GUI API exposes me.shedaniel.math (Point/Rectangle) via this helper lib, and its display

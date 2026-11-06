@@ -87,7 +87,7 @@ public class IndustrializationFabric implements ModInitializer {
 		// MOD-133/MOD-483: the player attachments of ModPlayerAttachments + their store seams (MOD-708).
 		dev.alaindustrial.registry.ModAttachments.init();
 		registerChestStorage();
-		dev.alaindustrial.core.fabric.ItemLenderStorage.register(); // MOD-951: the quarry socket lends items
+		dev.alaindustrial.core.fabric.ItemLenderStorage.register(); // MOD-951/952: the quarry socket lends items, water
 		registerNetworkPayloads();
 		registerServerLifecycle();
 		registerGameplayHooks();

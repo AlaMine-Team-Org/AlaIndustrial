@@ -1,14 +1,25 @@
 package dev.alaindustrial.block;
 
+import dev.alaindustrial.block.entity.QuarryControllerBlockEntity;
 import dev.alaindustrial.core.energy.EnergyHostRedirect;
+import dev.alaindustrial.core.energy.EnergyTransactions;
+import dev.alaindustrial.core.fluid.FluidAmounts;
+import dev.alaindustrial.core.fluid.FluidHolder;
+import dev.alaindustrial.core.fluid.FluidHostRedirect;
 import dev.alaindustrial.core.item.ItemHostRedirect;
 import dev.alaindustrial.core.structure.QuarryFrameScan;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.WorldlyContainerHolder;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemUtils;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -18,6 +29,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -41,7 +53,7 @@ import org.jspecify.annotations.Nullable;
  * hopper).
  */
 public class QuarryFoundationBlock extends Block
-		implements EnergyHostRedirect, ItemHostRedirect, WorldlyContainerHolder {
+		implements EnergyHostRedirect, ItemHostRedirect, FluidHostRedirect, WorldlyContainerHolder {
 
 	/** Whether this foundation stands under the controller of a formed frame and lends its energy port. */
 	public static final BooleanProperty PORT = BooleanProperty.create("port");
@@ -92,6 +104,40 @@ public class QuarryFoundationBlock extends Block
 	@Nullable
 	public WorldlyContainer getContainer(BlockState state, LevelAccessor level, BlockPos pos) {
 		return ItemHostRedirect.lent(level, pos, state, null);
+	}
+
+	/** The socket lends the controller's water tank too (MOD-952), by the same rule. */
+	@Override
+	public @Nullable BlockPos fluidHost(BlockState state, BlockPos pos, @Nullable Direction face) {
+		return itemHost(state, pos, face);
+	}
+
+	/**
+	 * A water bucket on the socket of a formed frame pours into the controller's tank (MOD-952): the spec feeds the
+	 * quarry water by pipe or by bucket into the main tower's foot. Anything else in hand falls through to the click
+	 * that opens the screen.
+	 */
+	@Override
+	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
+			Player player, InteractionHand hand, BlockHitResult hit) {
+		if (!stack.is(Items.WATER_BUCKET) || !state.getValue(PORT)) {
+			return super.useItemOn(stack, state, level, pos, player, hand, hit);
+		}
+		if (!(level.getBlockEntity(pos.above(QuarryFrameScan.HEAD_HEIGHT))
+				instanceof QuarryControllerBlockEntity controller)) {
+			return super.useItemOn(stack, state, level, pos, player, hand, hit);
+		}
+		if (level.isClientSide()) {
+			return InteractionResult.SUCCESS;
+		}
+		boolean[] poured = {false};
+		EnergyTransactions.get().runCommitting(txn -> poured[0] = controller.cooling.waterTank.insert(
+				FluidHolder.of(Fluids.WATER), FluidAmounts.BUCKET, txn) == FluidAmounts.BUCKET);
+		if (poured[0]) {
+			player.setItemInHand(hand, ItemUtils.createFilledResult(stack, player, new ItemStack(Items.BUCKET)));
+			level.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 1.0F, 1.0F);
+		}
+		return InteractionResult.SUCCESS;
 	}
 
 	/** Where the socket foundation of the controller at {@code head} is: the bottom layer, straight under it. */

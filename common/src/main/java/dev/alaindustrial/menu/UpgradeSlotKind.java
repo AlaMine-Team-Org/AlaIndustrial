@@ -1,6 +1,10 @@
 package dev.alaindustrial.menu;
 
 import dev.alaindustrial.registry.ModTags;
+import java.util.ArrayList;
+import java.util.List;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -10,8 +14,8 @@ import org.jspecify.annotations.Nullable;
  * What each slot of a machine's upgrade panel accepts (MOD-080, typed again in MOD-393).
  *
  * <p>One kind per panel arm, in panel order. Typing the slots rather than letting every slot take
- * every upgrade is what makes the panel readable without a word of text: each arm carries a baked
- * hint icon in the atlas (a speaker for the mute arm, a double arrow for the overclocker arm), so the
+ * every upgrade is what makes the panel readable: an empty open arm shows a ghost of the chips it takes
+ * and names them under the cursor (MOD-954, after a player could not tell what went where), so the
  * player sees where a chip goes before trying it. It also caps stacking for free — one overclocker
  * per machine, because there is exactly one arm that takes one.
  *
@@ -70,6 +74,20 @@ public enum UpgradeSlotKind {
 	/** Whether this arm takes anything at all — false for the arms held for future modules. */
 	public boolean isOpen() {
 		return accepted != null;
+	}
+
+	/**
+	 * The items an empty arm shows as its ghost hint (MOD-954): every item of the tag it accepts, in the tag's own
+	 * order, so the hint can never promise an item the arm refuses. Empty for a reserved arm.
+	 */
+	public List<Item> hintItems() {
+		List<Item> items = new ArrayList<>();
+		if (accepted != null) {
+			for (Holder<Item> holder : BuiltInRegistries.ITEM.getTagOrEmpty(accepted)) {
+				items.add(holder.value());
+			}
+		}
+		return items;
 	}
 
 	/** Whether {@code stack} belongs in this arm. A reserved arm refuses everything. */

@@ -92,9 +92,15 @@ final class AffineCubeMesh {
 
 	/** White vertices and the shader's own lighting by normal, as {@link CubeMesh#emit} explains. */
 	void emit(PoseStack.Pose pose, VertexConsumer consumer, TextureAtlasSprite sprite, int light) {
+		emit(pose, consumer, sprite, light, 255, 255, 255);
+	}
+
+	/** The same, the texture tinted by {@code red, green, blue} (0..255): the quarry's hot drill head, MOD-952. */
+	void emit(PoseStack.Pose pose, VertexConsumer consumer, TextureAtlasSprite sprite, int light, int red, int green,
+			int blue) {
 		for (int at = 0; at < this.data.length; at += STRIDE) {
 			consumer.addVertex(pose, this.data[at], this.data[at + 1], this.data[at + 2])
-					.setColor(255, 255, 255, 255)
+					.setColor(red, green, blue, 255)
 					.setUv(sprite.getU(this.data[at + 3]), sprite.getV(this.data[at + 4]))
 					.setOverlay(OverlayTexture.NO_OVERLAY)
 					.setLight(light)

@@ -17,7 +17,9 @@ public final class ItemLenderCapabilities {
 	private ItemLenderCapabilities() {
 	}
 
+	/** Registers the inventory lenders, and the tank lenders with them ({@link FluidLenderCapabilities}). */
 	public static void register(RegisterCapabilitiesEvent event) {
+		FluidLenderCapabilities.register(event);
 		List<Block> lenders = BlockCapabilityRoster.itemLenders();
 		if (lenders.isEmpty()) {
 			return;

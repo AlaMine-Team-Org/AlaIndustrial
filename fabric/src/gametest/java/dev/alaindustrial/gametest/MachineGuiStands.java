@@ -143,6 +143,8 @@ public final class MachineGuiStands {
         shootMenuWithPanelOpen(context, "gui_macerator_upgrades_open", ModContent.MACERATOR_MENU.get(), "Macerator", CAP, CAP, 0, 0);
         // Dragged over the GUI: proves the panel is a top overlay (GUI slots/text do not bleed over it).
         shootMenuWithPanelOpen(context, "gui_macerator_upgrades_dragged", ModContent.MACERATOR_MENU.get(), "Macerator", CAP, CAP, -120, 60);
+        shootMenuWithPanelOpen(context, "gui_macerator_upgrades_empty", ModContent.MACERATOR_MENU.get(), "Macerator",
+                CAP, CAP, 0, 0, false);
 
         // ── MOD-125: statistics panel — the two states a player can actually meet ──
         // Without a chip the panel must say so rather than showing an empty box.
@@ -561,6 +563,13 @@ public final class MachineGuiStands {
     private static void shootMenuWithPanelOpen(ClientGameTestContext context, String name,
                                                MenuType<?> type, String displayName, int energy, int capacity,
                                                int dragDX, int dragDY) {
+        shootMenuWithPanelOpen(context, name, type, displayName, energy, capacity, dragDX, dragDY, true);
+    }
+
+    /** The same, with or without the mute chip in the first arm (MOD-954 shoots the empty panel's ghosts). */
+    private static void shootMenuWithPanelOpen(ClientGameTestContext context, String name,
+                                               MenuType<?> type, String displayName, int energy, int capacity,
+                                               int dragDX, int dragDY, boolean withChip) {
         LOG.info("[GUITEST][MOD-080] opening {} (upgrade panel open, drag {},{})", name, dragDX, dragDY);
         context.runOnClient(mc -> {
             // The screen reads the docked/dragged offset from AlaClientConfig in init(); set it before
@@ -575,7 +584,7 @@ public final class MachineGuiStands {
                 menu.injectTestData(energy, capacity, 0, 0);
                 menu.togglePanel();
                 for (net.minecraft.world.inventory.Slot s : menu.slots) {
-                    if (s instanceof MachineMenu.UpgradeSlot) {
+                    if (withChip && s instanceof MachineMenu.UpgradeSlot) {
                         s.set(new ItemStack(dev.alaindustrial.registry.ModContent.MUTE_CHIP.get()));
                         break;
                     }

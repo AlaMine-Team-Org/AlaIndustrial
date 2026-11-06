@@ -1,6 +1,7 @@
 package dev.alaindustrial.registry.neoforge;
 
 import dev.alaindustrial.Industrialization;
+import dev.alaindustrial.entity.QuarryDrillBody;
 import dev.alaindustrial.entity.ChestBoatVariants;
 import dev.alaindustrial.entity.ModChestBoat;
 import dev.alaindustrial.entity.StockDisplayFrameEntity;
@@ -42,6 +43,19 @@ public final class ModEntitiesNeoForge {
 							.updateInterval(Integer.MAX_VALUE)
 							.build(ResourceKey.create(Registries.ENTITY_TYPE,
 									Industrialization.id("stock_display_frame"))));
+
+	/** The quarry's drill body (MOD-952) - same id and builder values as the Fabric {@code ModEntities}. */
+	public static final DeferredHolder<EntityType<?>, EntityType<QuarryDrillBody>> QUARRY_DRILL_BODY =
+			ENTITY_TYPES.register("quarry_drill_body",
+					() -> EntityType.Builder.<QuarryDrillBody>of(QuarryDrillBody::new, MobCategory.MISC)
+							.noLootTable()
+							.noSummon()
+							.noSave()
+							.fireImmune()
+							.sized(1.0F, 1.0F)
+							.clientTrackingRange(10)
+							.updateInterval(1)
+							.build(ResourceKey.create(Registries.ENTITY_TYPE, QuarryDrillBody.ID)));
 
 	/** The chest boats (MOD-785) — same pairs, ids and builder values as the Fabric {@code ModEntities}. */
 	public static final Map<String, DeferredHolder<EntityType<?>, EntityType<ModChestBoat>>> CHEST_BOATS =

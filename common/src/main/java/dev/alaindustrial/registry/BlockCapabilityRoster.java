@@ -2,6 +2,7 @@ package dev.alaindustrial.registry;
 
 import dev.alaindustrial.Industrialization;
 import dev.alaindustrial.core.energy.EnergyPortHost;
+import dev.alaindustrial.core.fluid.FluidHostRedirect;
 import dev.alaindustrial.core.fluid.FluidPortHost;
 import dev.alaindustrial.core.item.ItemHostRedirect;
 import dev.alaindustrial.registry.content.AgricultureContent;
@@ -123,6 +124,22 @@ public final class BlockCapabilityRoster {
 		List<Block> lenders = new ArrayList<>();
 		for (Block block : BuiltInRegistries.BLOCK) {
 			if (block instanceof ItemHostRedirect
+					&& Industrialization.MOD_ID.equals(BuiltInRegistries.BLOCK.getKey(block).getNamespace())) {
+				lenders.add(block);
+			}
+		}
+		return List.copyOf(lenders);
+	}
+
+	/**
+	 * Every block of the mod that lends another block's tank ({@link FluidHostRedirect}, MOD-952): both loaders
+	 * publish the lent tank as that block's fluid capability. Read from the registered blocks, like
+	 * {@link #itemLenders}; call it once the blocks are registered.
+	 */
+	public static List<Block> fluidLenders() {
+		List<Block> lenders = new ArrayList<>();
+		for (Block block : BuiltInRegistries.BLOCK) {
+			if (block instanceof FluidHostRedirect
 					&& Industrialization.MOD_ID.equals(BuiltInRegistries.BLOCK.getKey(block).getNamespace())) {
 				lenders.add(block);
 			}

@@ -319,6 +319,10 @@ public final class IndustrializationNeoForgeClient {
 		event.registerEntityRenderer(
 				dev.alaindustrial.registry.neoforge.ModEntitiesNeoForge.STOCK_DISPLAY_FRAME.get(),
 				dev.alaindustrial.client.render.StockDisplayFrameRenderer::new);
+		// The quarry's drill body (MOD-952) is invisible: the controller draws the drill.
+		event.registerEntityRenderer(
+				dev.alaindustrial.registry.neoforge.ModEntitiesNeoForge.QUARRY_DRILL_BODY.get(),
+				net.minecraft.client.renderer.entity.NoopRenderer::new);
 		// Chest boats (MOD-785) — counterpart to the Fabric registration in IndustrializationClient.
 		for (dev.alaindustrial.entity.ChestBoatVariants.Variant variant
 				: dev.alaindustrial.entity.ChestBoatVariants.ALL) {

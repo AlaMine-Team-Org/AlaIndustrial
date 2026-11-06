@@ -1,4 +1,4 @@
-package dev.alaindustrial.compat.rei;
+package dev.alaindustrial.client.compat.rei;
 
 import dev.alaindustrial.client.screen.FluidGauge;
 import dev.architectury.fluid.FluidStack;
@@ -19,7 +19,8 @@ import org.jetbrains.annotations.Nullable;
  * supplier returns {@code null}: REI of this build renders <em>no</em> fluid at all, not just modded
  * ones — vanilla water in a vanilla category comes out as an empty slot too. Found by playtest on the
  * Polymerizer's card, where the oil input read as a blank square. JEI on NeoForge is unaffected (it
- * draws fluids through vanilla's {@code FluidStateModelSet}), so this is a Fabric-only patch.
+ * draws fluids through vanilla's {@code FluidStateModelSet}), so this is a patch for REI alone; since
+ * MOD-955 it applies to REI on both loaders.
  *
  * <p>Registered for the whole {@code VanillaEntryTypes.FLUID} type rather than patched into our one
  * category, so every place REI shows a fluid — recipe cards, the entry list, favourites — gets a

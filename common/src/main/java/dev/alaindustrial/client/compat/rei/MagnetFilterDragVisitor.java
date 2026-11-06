@@ -1,4 +1,4 @@
-package dev.alaindustrial.compat.rei;
+package dev.alaindustrial.client.compat.rei;
 
 import dev.alaindustrial.client.screen.MagnetScreen;
 import dev.alaindustrial.item.tool.MagnetFilter;

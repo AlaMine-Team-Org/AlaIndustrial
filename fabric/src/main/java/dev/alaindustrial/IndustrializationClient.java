@@ -1,5 +1,8 @@
 package dev.alaindustrial;
 
+import dev.alaindustrial.registry.ModEntities;
+import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.client.renderer.entity.NoopRenderer;
 import dev.alaindustrial.client.AlaClientConfig;
 import dev.alaindustrial.client.ClientContentManifest;
 import dev.alaindustrial.client.ClientPayloadManifest;
@@ -347,6 +350,7 @@ public class IndustrializationClient implements ClientModInitializer {
 		net.minecraft.client.renderer.entity.EntityRenderers.register(
 				dev.alaindustrial.registry.ModEntities.STOCK_DISPLAY_FRAME,
 				dev.alaindustrial.client.render.StockDisplayFrameRenderer::new);
+		EntityRenderers.register(ModEntities.QUARRY_DRILL_BODY, NoopRenderer::new); // MOD-952: drawn by the quarry
 		// Chest boats (MOD-785): vanilla boat model + the mod chest model, composed per wood × chest pair.
 		for (dev.alaindustrial.entity.ChestBoatVariants.Variant variant
 				: dev.alaindustrial.entity.ChestBoatVariants.ALL) {
